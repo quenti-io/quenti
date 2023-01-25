@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "./trpc";
 import { studySetsRouter } from "./routers/studySets";
 import { termsRouter } from "./routers/terms";
+import { autoSaveRouter } from "./routers/autoSave";
 
 /**
  * This is the primary router for your server.
@@ -9,6 +10,7 @@ import { termsRouter } from "./routers/terms";
  */
 export const appRouter = createTRPCRouter({
   studySets: studySetsRouter,
+  autoSave: autoSaveRouter,
   terms: termsRouter,
 });
 

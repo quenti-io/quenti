@@ -1,9 +1,37 @@
+import {
+  Center,
+  Text,
+  Container,
+  Heading,
+  Spinner,
+  Stack,
+  Button,
+  Link,
+  HStack,
+  Card,
+  Flex,
+  IconButton,
+  Divider,
+  Box,
+  useColorModeValue
+} from "@chakra-ui/react";
 import { Term } from "@prisma/client";
-import { IconLoader2, IconPlus } from "@tabler/icons";
+import {
+  IconArrowLeft,
+  IconArrowsMaximize,
+  IconArrowsShuffle,
+  IconBooks,
+  IconCards,
+  IconEdit,
+  IconPlayerPlay,
+  IconSettings,
+  IconStar,
+} from "@tabler/icons";
 import { useRouter } from "next/router";
 import React from "react";
-import { IconButton } from "../../components/icon-button";
+import { FlashcardWrapper } from "../../components/flashcard-wrapper";
 import { api } from "../../utils/api";
+import { shuffleArray } from "../../utils/array";
 
 export default function Set() {
   const utils = api.useContext();
@@ -11,94 +39,161 @@ export default function Set() {
   const id = useRouter().query.id as string;
   const { data } = api.studySets.byId.useQuery(id);
 
-  const addTerm = api.terms.add.useMutation({
-    async onSuccess() {
-      await utils.studySets.invalidate();
-    },
-  });
+  const [shuffle, setShuffle] = React.useState(false);
 
   if (!data)
     return (
-      <div className="container">
-        <IconLoader2 className="animate-spin" />
-      </div>
+      <Center height="calc(100vh - 120px)">
+        <Spinner color="blue.200" />
+      </Center>
     );
 
   return (
-    <main className="container">
-      <h1 className="text-3xl font-bold">{data?.title}</h1>
-      <div className="mt-3 text-slate-500">{data?.terms.length} terms</div>
-      {data.terms.map((term) => (
-        <Term term={term} />
-      ))}
-      <div className="mt-4">
-        <IconButton
-          className="default-button mt-4 flex w-full items-center justify-center gap-2"
-          label="Add Term"
-          icon={IconPlus}
-          loading={addTerm.isLoading}
-          onClick={() =>
-            addTerm.mutateAsync({
-              studySetId: id,
-              term: {
-                definition: "",
-                term: "",
-              },
-            })
-          }
-        />
-      </div>
-    </main>
+    <Container maxW="7xl" marginTop="10" marginBottom="20">
+      <Stack spacing={10}>
+        <Stack spacing={4}>
+          <HStack>
+            <Button
+              leftIcon={<IconArrowLeft />}
+              as={Link}
+              href="/sets"
+              variant="ghost"
+            >
+              All sets
+            </Button>
+          </HStack>
+          <Heading size="2xl">{data.title}</Heading>
+          <Text color="gray.400">{data.terms.length} terms</Text>
+        </Stack>
+        <HStack spacing={4}>
+          <Button leftIcon={<IconBooks />} fontWeight={700}>
+            Learn
+          </Button>
+          <Button leftIcon={<IconCards />} fontWeight={700} variant="outline">
+            Flashcards
+          </Button>
+          <Button leftIcon={<IconEdit />} variant="ghost" colorScheme="orange">
+            Edit
+          </Button>
+        </HStack>
+        <Divider />
+        <Flex
+          gap={8}
+          flexDir={["column", "column", "column", "row"]}
+          alignItems="stretch"
+          w="full"
+        >
+          <Flex maxW="1000px" flex="1">
+            <FlashcardWrapper
+              terms={data.terms}
+              termOrder={
+                !shuffle
+                  ? data.termOrder
+                  : shuffleArray(Array.from(data.termOrder))
+              }
+            />
+          </Flex>
+          <Flex
+            flexDir={["row", "row", "row", "column"]}
+            justifyContent="space-between"
+          >
+            <Stack
+              spacing={4}
+              pr="4"
+              direction={["row", "row", "row", "column"]}
+            >
+              <Button
+                leftIcon={<IconArrowsShuffle />}
+                variant={shuffle ? "solid" : "outline"}
+                onClick={() => {
+                  setShuffle((s) => !s);
+                }}
+              >
+                Shuffle
+              </Button>
+              <Button leftIcon={<IconPlayerPlay />} variant="outline">
+                Autoplay
+              </Button>
+              <Button
+                leftIcon={<IconSettings />}
+                variant="ghost"
+                display={{ base: "none", md: "flex" }}
+              >
+                Settings
+              </Button>
+              <IconButton
+                icon={<IconSettings />}
+                rounded="full"
+                variant="ghost"
+                display={{ base: "flex", md: "none" }}
+                aria-label="Settings"
+              />
+            </Stack>
+            <IconButton
+              w="max"
+              rounded="full"
+              variant="ghost"
+              icon={<IconArrowsMaximize />}
+              aria-label="Full screen"
+              colorScheme="gray"
+            />
+          </Flex>
+        </Flex>
+        <Text>{data.description}</Text>
+        <Stack spacing={4}>
+          {data.terms
+            .sort(
+              (a, b) =>
+                data.termOrder.indexOf(a.id) - data.termOrder.indexOf(b.id)
+            )
+            .map((term, i) => (
+              <DisplayableTerm term={term} key={term.id} index={i} />
+            ))}
+        </Stack>
+      </Stack>
+    </Container>
   );
 }
 
-const Term: React.FC<{ term: Term }> = ({ term }) => {
-  const id = useRouter().query.id as string;
+interface DisplayableTermProps {
+  term: Term;
+  index: number;
+}
 
-  const [termValue, setTermValue] = React.useState(term.term);
-  const [definition, setDefinition] = React.useState(term.definition);
-
-  const editTerm = api.terms.edit.useMutation();
-
-  const finalize = () => {
-    editTerm.mutateAsync({
-      studySetId: id,
-      term: {
-        termId: term.id,
-        definition: definition,
-        term: termValue,
-      },
-    });
-  };
-
+const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term, index }) => {
   return (
-    <div
-      key={term.id}
-      className="mt-4 rounded-md border border-slate-300 bg-slate-200 px-6 py-4 shadow-md dark:border-slate-700 dark:bg-slate-800"
-    >
-      <div className="text-lg text-slate-600 dark:text-slate-400">
-        {term.index + 1}
-      </div>
-      <div className="mt-3 flex gap-4">
-        <input
-          className="w-1/3 border-b-2 border-slate-500 bg-transparent focus:outline-none"
-          value={termValue}
-          onChange={(e) => {
-            setTermValue(e.target.value);
-          }}
-          onBlur={() => void finalize()}
-          placeholder="TERM"
-        />
-        <input
-          className="w-2/3 border-b-2 border-slate-500 bg-transparent focus:outline-none"
-          value={definition}
-          onChange={(e) => {
-            setDefinition(e.target.value);
-          }}
-          onBlur={() => void finalize()}
-          placeholder="DEFINITION"
-        />
-      </div>
-    </div>
+    <Card px="4" py="5">
+      <Flex
+        flexDir={["column-reverse", "row", "row"]}
+        alignItems="stretch"
+        gap={[0, 6, 6]}
+      >
+        <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
+          <Text w="full">{term.word}</Text>
+          <Box bg={useColorModeValue("black", "white")} h="full" w="3px" />
+          <Text w="full">{term.definition}</Text>
+        </Flex>
+        <Box h="full">
+          <Flex w="full" justifyContent="end">
+            <HStack spacing={1} height="24px">
+              <IconButton
+                icon={<IconEdit />}
+                variant="ghost"
+                aria-label="Edit"
+                rounded="full"
+              />
+              <IconButton
+                icon={<IconStar />}
+                variant="ghost"
+                aria-label="Edit"
+                rounded="full"
+              />
+            </HStack>
+          </Flex>
+        </Box>
+      </Flex>
+    </Card>
   );
 };
+
+export { getServerSideProps } from "../../components/chakra";

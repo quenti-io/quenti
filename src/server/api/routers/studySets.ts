@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -32,19 +33,46 @@ export const studySetsRouter = createTRPCRouter({
     return studySet;
   }),
 
-  create: protectedProcedure
-    .input(
-      z.object({
-        title: z.string().min(1).max(100),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const studySet = await ctx.prisma.studySet.create({
-        data: {
-          ...input,
-          userId: ctx.session.user.id,
-        },
+  createFromAutosave: protectedProcedure.mutation(async ({ ctx }) => {
+    const autoSave = await ctx.prisma.setAutoSave.findFirst({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      include: {
+        autoSaveTerms: true,
+      },
+    });
+
+    if (!autoSave) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
       });
-      return studySet;
-    }),
+    }
+
+    const studySet = await ctx.prisma.studySet.create({
+      data: {
+        title: autoSave.title,
+        description: autoSave.description,
+        userId: ctx.session.user.id,
+        terms: {
+          createMany: {
+            data: autoSave.autoSaveTerms.map((x) => ({
+              id: x.id,
+              word: x.word,
+              definition: x.definition,
+            })),
+          },
+        },
+        termOrder: autoSave.autoSaveTermOrder,
+      },
+    });
+
+    await ctx.prisma.setAutoSave.delete({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+
+    return studySet;
+  }),
 });
