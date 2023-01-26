@@ -39,9 +39,7 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
 }) => {
   const getVal = (data: SetData): Partial<ExperienceStoreProps> => ({
     shuffleFlashcards: data.experience.shuffleFlashcards,
-    starredTerms: data.experience.starredTerms.map(
-      (x) => x.termId
-    ),
+    starredTerms: data.experience.starredTerms,
   });
 
   const storeRef = React.useRef<ExperienceStore>();

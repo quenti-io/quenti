@@ -35,7 +35,7 @@ export const experienceRouter = createTRPCRouter({
         },
       });
 
-      return await ctx.prisma.starredTerm.create({
+      await ctx.prisma.starredTerm.create({
         data: {
           termId: input.termId,
           experienceId: experience.id,
@@ -47,7 +47,7 @@ export const experienceRouter = createTRPCRouter({
   unstarTerm: protectedProcedure
     .input(z.object({ studySetId: z.string(), termId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.starredTerm.delete({
+      await ctx.prisma.starredTerm.delete({
         where: {
           userId_termId: {
             termId: input.termId,

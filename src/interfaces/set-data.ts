@@ -2,7 +2,7 @@ import { StarredTerm, Term } from "@prisma/client";
 
 export type SetData = {
   experience: {
-    starredTerms: StarredTerm[];
+    starredTerms: string[];
     id: string;
     userId: string;
     studySetId: string;

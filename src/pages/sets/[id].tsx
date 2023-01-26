@@ -12,6 +12,7 @@ import {
   Divider,
   Box,
   useColorModeValue,
+  Input,
 } from "@chakra-ui/react";
 import { Term } from "@prisma/client";
 import {
@@ -28,6 +29,7 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
+import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { HydrateSetData } from "../../modules/hydrate-set-data";
 import { useExperienceContext } from "../../stores/use-experience-store";
@@ -212,6 +214,8 @@ interface DisplayableTermProps {
 }
 
 const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
+  const utils = api.useContext();
+
   const starMutation = api.experience.starTerm.useMutation();
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
@@ -222,26 +226,99 @@ const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const starred = starredTerms.includes(term.id);
   const Star = starred ? IconStarFilled : IconStar;
 
+  const [isEditing, setIsEditing] = React.useState(false);
+
+  const [editWord, setEditWord] = React.useState(term.word);
+  const wordRef = React.useRef(editWord);
+  wordRef.current = editWord;
+
+  const [editDefinition, setEditDefinition] = React.useState(term.definition);
+  const definitionRef = React.useRef(editDefinition);
+  definitionRef.current = editDefinition;
+
+  React.useEffect(() => {
+    setEditWord(term.word);
+    setEditDefinition(term.definition);
+  }, [term.word, term.definition]);
+
+  const edit = api.terms.edit.useMutation({
+    async onSuccess() {
+      utils.studySets.invalidate();
+    },
+  });
+
+  const doEdit = () => {
+    setIsEditing((e) => {
+      if (e) {
+        edit.mutateAsync({
+          id: term.id,
+          studySetId: term.studySetId,
+          word: wordRef.current!,
+          definition: definitionRef.current!,
+        });
+      }
+
+      return false;
+    });
+  };
+
+  const ref = useOutsideClick(doEdit);
+
   return (
-    <Card px="4" py="5">
+    <Card px="4" py="5" ref={ref}>
       <Flex
         flexDir={["column-reverse", "row", "row"]}
         alignItems="stretch"
         gap={[0, 6, 6]}
       >
         <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
-          <Text w="full">{term.word}</Text>
+          {isEditing ? (
+            <Input
+              value={editWord}
+              onChange={(e) => setEditWord(e.target.value)}
+              w="full"
+              variant="flushed"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") doEdit();
+              }}
+            />
+          ) : (
+            <Text w="full">{editWord}</Text>
+          )}
           <Box bg={useColorModeValue("black", "white")} h="full" w="3px" />
-          <Text w="full">{term.definition}</Text>
+          {isEditing ? (
+            <Input
+              value={editDefinition}
+              onChange={(e) => setEditDefinition(e.target.value)}
+              w="full"
+              variant="flushed"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") doEdit();
+              }}
+            />
+          ) : (
+            <Text w="full">{editDefinition}</Text>
+          )}
         </Flex>
         <Box h="full">
           <Flex w="full" justifyContent="end">
             <HStack spacing={1} height="24px">
               <IconButton
                 icon={<IconEdit />}
-                variant="ghost"
+                variant={isEditing ? "solid" : "ghost"}
                 aria-label="Edit"
                 rounded="full"
+                onClick={() => {
+                  if (isEditing) {
+                    edit.mutate({
+                      id: term.id,
+                      studySetId: term.studySetId,
+                      word: editWord,
+                      definition: editDefinition,
+                    });
+                  }
+                  setIsEditing(!isEditing);
+                }}
               />
               <IconButton
                 icon={<Star />}

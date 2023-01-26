@@ -1,4 +1,4 @@
-import { StudySetExperience } from "@prisma/client";
+import { StarredTerm, StudySetExperience } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -61,7 +61,13 @@ export const studySetsRouter = createTRPCRouter({
       };
     }
 
-    return { ...studySet, experience };
+    return {
+      ...studySet,
+      experience: {
+        ...experience,
+        starredTerms: experience.starredTerms.map((x: StarredTerm) => x.termId),
+      },
+    };
   }),
 
   createFromAutosave: protectedProcedure.mutation(async ({ ctx }) => {
