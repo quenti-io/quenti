@@ -1,14 +1,25 @@
+import React from "react";
 import {
-  Button, Container,
+  Button,
+  Container,
   Flex,
   Heading,
   IconButton,
-  Link, Stack
+  Link,
+  Stack,
 } from "@chakra-ui/react";
 import { FlashcardWrapper } from "../../../components/flashcard-wrapper";
-import { IconChevronDown, IconX } from "@tabler/icons-react";
+import {
+  IconArrowsShuffle,
+  IconChevronDown,
+  IconPlayerPlay,
+  IconX,
+} from "@tabler/icons-react";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
 import { useSet } from "../../../hooks/use-set";
+import { useExperienceContext } from "../../../stores/use-experience-store";
+import { shuffleArray } from "../../../utils/array";
+import { api } from "../../../utils/api";
 
 export default function Flashcards() {
   return (
@@ -18,6 +29,7 @@ export default function Flashcards() {
           <Stack spacing={6}>
             <TitleBar />
             <Flashcard />
+            <ControlsBar />
           </Stack>
         </Container>
       </Container>
@@ -38,7 +50,12 @@ const TitleBar = () => {
       >
         Flashcards
       </Button>
-      <Heading size="md" flex="1" textAlign="center" display={{base: "none", md: "block"}}>
+      <Heading
+        size="md"
+        flex="1"
+        textAlign="center"
+        display={{ base: "none", md: "block" }}
+      >
         {title}
       </Heading>
       <Flex w="150px" justifyContent="end">
@@ -57,14 +74,56 @@ const TitleBar = () => {
 };
 
 const Flashcard = () => {
-  const { terms, termOrder } = useSet();
+  const { terms, termOrder: _termOrder } = useSet();
+
+  const shuffle = useExperienceContext((s) => s.shuffleFlashcards);
+  const [termOrder, setTermOrder] = React.useState<string[]>(
+    shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder
+  );
+
+  React.useEffect(() => {
+    setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
+  }, [shuffle]);
 
   return (
     <FlashcardWrapper
-      h="calc(100vh - 180px)"
+      h="calc(100vh - 240px)"
       terms={terms}
       termOrder={termOrder}
     />
+  );
+};
+
+const ControlsBar = () => {
+  const { id } = useSet();
+  const setShuffle = api.experience.setShuffle.useMutation();
+
+  const [shuffle, toggle] = useExperienceContext((s) => [
+    s.shuffleFlashcards,
+    s.toggleShuffleFlashcards,
+  ]);
+
+  return (
+    <Flex justifyContent="space-between">
+      <IconButton
+        icon={<IconArrowsShuffle />}
+        aria-label="Shuffle"
+        rounded="full"
+        variant={shuffle ? "solid" : "ghost"}
+        colorScheme="gray"
+        onClick={() => {
+          toggle();
+          setShuffle.mutate({ studySetId: id, shuffle: !shuffle });
+        }}
+      />
+      <IconButton
+        icon={<IconPlayerPlay />}
+        aria-label="Shuffle"
+        rounded="full"
+        variant="ghost"
+        colorScheme="gray"
+      />
+    </Flex>
   );
 };
 
