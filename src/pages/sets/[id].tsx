@@ -105,6 +105,15 @@ const FlashcardPreview = () => {
     s.shuffleFlashcards,
     s.toggleShuffleFlashcards,
   ]);
+  const [termOrder, setTermOrder] = React.useState<string[]>(
+    shuffle ? shuffleArray(Array.from(data.termOrder)) : data.termOrder
+  );
+
+  React.useEffect(() => {
+    setTermOrder(
+      shuffle ? shuffleArray(Array.from(data.termOrder)) : data.termOrder
+    );
+  }, [shuffle]);
 
   return (
     <Flex
@@ -114,12 +123,7 @@ const FlashcardPreview = () => {
       w="full"
     >
       <Flex maxW="1000px" flex="1">
-        <FlashcardWrapper
-          terms={data.terms}
-          termOrder={
-            !shuffle ? data.termOrder : shuffleArray(Array.from(data.termOrder))
-          }
-        />
+        <FlashcardWrapper terms={data.terms} termOrder={termOrder} />
       </Flex>
       <Flex
         flexDir={["row", "row", "row", "column"]}
