@@ -24,8 +24,10 @@ export interface FlashcardProps {
   isFlipped: boolean;
   index: number;
   numTerms: number;
+  h?: string;
   onPrev: () => void;
   onNext: () => void;
+  onRequestEdit: () => void;
 }
 
 export const Flashcard: React.FC<FlashcardProps> = ({
@@ -33,17 +35,13 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   isFlipped,
   index,
   numTerms,
+  h = "500px",
   onPrev,
   onNext,
+  onRequestEdit,
 }) => {
   return (
-    <Card
-      w="full"
-      height={500}
-      rounded="xl"
-      shadow="xl"
-      overflow="hidden"
-    >
+    <Card w="full" h={h} rounded="xl" shadow="xl" overflow="hidden">
       <Box
         bg="orange.300"
         height="1"
@@ -71,6 +69,10 @@ export const Flashcard: React.FC<FlashcardProps> = ({
                 rounded="full"
                 variant="ghost"
                 size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRequestEdit();
+                }}
               />
               <IconButton
                 icon={<IconStar />}

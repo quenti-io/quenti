@@ -13,7 +13,7 @@ import {
   IconButton,
   Divider,
   Box,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Term } from "@prisma/client";
 import {
@@ -49,7 +49,7 @@ export default function Set() {
     );
 
   return (
-    <Container maxW="7xl" marginTop="10" marginBottom="20">
+    <Container maxW="7xl" marginBottom="20">
       <Stack spacing={10}>
         <Stack spacing={4}>
           <HStack>
@@ -133,6 +133,8 @@ export default function Set() {
               w="max"
               rounded="full"
               variant="ghost"
+              as={Link}
+              href={`/sets/${id}/flashcards`}
               icon={<IconArrowsMaximize />}
               aria-label="Full screen"
               colorScheme="gray"

@@ -1,7 +1,7 @@
 import { createTRPCRouter } from "./trpc";
-import { studySetsRouter } from "./routers/studySets";
+import { studySetsRouter } from "./routers/study-sets";
 import { termsRouter } from "./routers/terms";
-import { autoSaveRouter } from "./routers/autoSave";
+import { autoSaveRouter } from "./routers/auto-save";
 
 /**
  * This is the primary router for your server.

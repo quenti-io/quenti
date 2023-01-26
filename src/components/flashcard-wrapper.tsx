@@ -4,19 +4,25 @@ import { motion, MotionConfig, useAnimationControls } from "framer-motion";
 import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
 import { Box } from "@chakra-ui/react";
+import { EditTermModal } from "./edit-term-modal";
 
 export interface FlashcardWrapperProps {
   terms: Term[];
   termOrder: string[];
+  h?: string;
 }
 
 export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
   terms,
   termOrder,
+  h = "500px",
 }) => {
   const controls = useAnimationControls();
 
   const sortedTerms = termOrder.map((id) => terms.find((t) => t.id === id)!);
+
+  const [editModalOpen, setEditModalOpen] = React.useState(false);
+  const [editTerm, setEditTerm] = React.useState<Term | null>(null);
 
   const [index, setIndex] = React.useState(0);
   const [isFlipped, setIsFlipped] = React.useState(false);
@@ -71,7 +77,15 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
 
   // TODO: fix shifting of card when previous is clicked
   return (
-    <Box w="full" h="500px">
+    <Box w="full" h={h}>
+      <EditTermModal
+        term={editTerm}
+        isOpen={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false);
+        }}
+        onDefinition={isFlipped}
+      />
       <motion.div
         animate={controls}
         style={{
@@ -93,6 +107,11 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
           numTerms={terms.length}
           onPrev={onPrev}
           onNext={onNext}
+          onRequestEdit={() => {
+            setEditTerm(sortedTerms[index]!);
+            setEditModalOpen(true);
+          }}
+          h={h}
         />
       </motion.div>
     </Box>

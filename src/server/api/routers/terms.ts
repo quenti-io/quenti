@@ -48,11 +48,9 @@ export const termsRouter = createTRPCRouter({
     .input(
       z.object({
         studySetId: z.string(),
-        term: z.object({
-          termId: z.string(),
-          word: z.string().max(50),
-          definition: z.string().max(100),
-        }),
+        id: z.string(),
+        word: z.string(),
+        definition: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -71,11 +69,11 @@ export const termsRouter = createTRPCRouter({
 
       const term = await ctx.prisma.term.update({
         where: {
-          id: input.term.termId,
+          id: input.id,
         },
         data: {
-          word: input.term.word,
-          definition: input.term.definition,
+          word: input.word,
+          definition: input.definition,
         },
       });
       return term;
