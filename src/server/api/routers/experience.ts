@@ -2,17 +2,22 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 
 export const experienceRouter = createTRPCRouter({
-  // get: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
-  //   const experience = ctx.prisma.studySetExperience.findFirst({
-  //     where: {
-  //       studySetId: input,
-  //       userId: ctx.session.user.id,
-  //     },
-  //     include: {
-  //       starredTerms: true,
-  //     }
-  //   });
-  // }
+  setShuffle: protectedProcedure
+    .input(z.object({ studySetId: z.string(), shuffle: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        data: {
+          shuffleFlashcards: input.shuffle,
+        },
+      });
+    }),
+
   starTerm: protectedProcedure
     .input(z.object({ studySetId: z.string(), termId: z.string() }))
     .mutation(async ({ ctx, input }) => {

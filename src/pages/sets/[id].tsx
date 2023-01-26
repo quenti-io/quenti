@@ -1,9 +1,7 @@
 import {
-  Center,
   Text,
   Container,
   Heading,
-  Spinner,
   Stack,
   Button,
   Link,
@@ -15,12 +13,7 @@ import {
   Box,
   useColorModeValue,
 } from "@chakra-ui/react";
-import {
-  StarredTerm,
-  StudySet,
-  StudySetExperience,
-  Term,
-} from "@prisma/client";
+import { Term } from "@prisma/client";
 import {
   IconArrowLeft,
   IconArrowsMaximize,
@@ -33,175 +26,160 @@ import {
   IconStar,
   IconStarFilled,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
-import {
-  createExperienceStore,
-  ExperienceContext,
-  ExperienceStore,
-  useExperienceContext,
-} from "../../stores/use-experience-store";
+import { useSet } from "../../hooks/use-set";
+import { HydrateSetData } from "../../modules/hydrate-set-data";
+import { useExperienceContext } from "../../stores/use-experience-store";
 import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
 
-type DataType = StudySet & {
-  terms: Term[];
-  studySetExperiences: (StudySetExperience & {
-    starredTerms: StarredTerm[];
-  })[];
-};
-
 export default function Set() {
-  const id = useRouter().query.id as string;
-  const { data } = api.studySets.byId.useQuery(id);
-
-  if (!data)
-    return (
-      <Center height="calc(100vh - 120px)">
-        <Spinner color="blue.200" />
-      </Center>
-    );
-
-  return <LoadedSet data={data} />;
+  return (
+    <HydrateSetData>
+      <Container maxW="7xl" marginBottom="20">
+        <Stack spacing={10}>
+          <HeadingArea />
+          <LinkArea />
+          <Divider />
+          <FlashcardPreview />
+          <Description />
+          <TermsOverview />
+        </Stack>
+      </Container>
+    </HydrateSetData>
+  );
 }
 
-const LoadedSet: React.FC<{ data: DataType }> = ({ data }) => {
-  const storeRef = React.useRef<ExperienceStore>();
-  if (!storeRef.current) {
-    storeRef.current = createExperienceStore({
-      starredTerms: data.studySetExperiences[0]?.starredTerms.map(
-        (x) => x.termId
-      ),
-    });
-  }
-
-  React.useEffect(() => {
-    storeRef.current?.setState({
-      starredTerms: data.studySetExperiences[0]?.starredTerms.map(
-        (x) => x.termId
-      ),
-    });
-  }, [data]);
+const HeadingArea = () => {
+  const data = useSet();
 
   return (
-    <ExperienceContext.Provider value={storeRef.current}>
-      <HydratedSet data={data} />
-    </ExperienceContext.Provider>
+    <Stack spacing={4}>
+      <HStack>
+        <Button
+          leftIcon={<IconArrowLeft />}
+          as={Link}
+          href="/sets"
+          variant="ghost"
+        >
+          All sets
+        </Button>
+      </HStack>
+      <Heading size="2xl">{data.title}</Heading>
+      <Text color="gray.400">{data.terms.length} terms</Text>
+    </Stack>
   );
 };
 
-const HydratedSet: React.FC<{ data: DataType }> = ({ data }) => {
-  const id = useRouter().query.id as string;
+const LinkArea = () => {
+  return (
+    <HStack spacing={4}>
+      <Button leftIcon={<IconBooks />} fontWeight={700}>
+        Learn
+      </Button>
+      <Button leftIcon={<IconCards />} fontWeight={700} variant="outline">
+        Flashcards
+      </Button>
+      <Button leftIcon={<IconEdit />} variant="ghost" colorScheme="orange">
+        Edit
+      </Button>
+    </HStack>
+  );
+};
 
-  const [shuffle, setShuffle] = React.useState(false);
+const FlashcardPreview = () => {
+  const data = useSet();
+
+  const setShuffle = api.experience.setShuffle.useMutation();
+
+  const [shuffle, toggle] = useExperienceContext((s) => [
+    s.shuffleFlashcards,
+    s.toggleShuffleFlashcards,
+  ]);
 
   return (
-    <Container maxW="7xl" marginBottom="20">
-      <Stack spacing={10}>
-        <Stack spacing={4}>
-          <HStack>
-            <Button
-              leftIcon={<IconArrowLeft />}
-              as={Link}
-              href="/sets"
-              variant="ghost"
-            >
-              All sets
-            </Button>
-          </HStack>
-          <Heading size="2xl">{data.title}</Heading>
-          <Text color="gray.400">{data.terms.length} terms</Text>
-        </Stack>
-        <HStack spacing={4}>
-          <Button leftIcon={<IconBooks />} fontWeight={700}>
-            Learn
-          </Button>
-          <Button leftIcon={<IconCards />} fontWeight={700} variant="outline">
-            Flashcards
-          </Button>
-          <Button leftIcon={<IconEdit />} variant="ghost" colorScheme="orange">
-            Edit
-          </Button>
-        </HStack>
-        <Divider />
-        <Flex
-          gap={8}
-          flexDir={["column", "column", "column", "row"]}
-          alignItems="stretch"
-          w="full"
-        >
-          <Flex maxW="1000px" flex="1">
-            <FlashcardWrapper
-              terms={data.terms}
-              termOrder={
-                !shuffle
-                  ? data.termOrder
-                  : shuffleArray(Array.from(data.termOrder))
-              }
-            />
-          </Flex>
-          <Flex
-            flexDir={["row", "row", "row", "column"]}
-            justifyContent="space-between"
+    <Flex
+      gap={8}
+      flexDir={["column", "column", "column", "row"]}
+      alignItems="stretch"
+      w="full"
+    >
+      <Flex maxW="1000px" flex="1">
+        <FlashcardWrapper
+          terms={data.terms}
+          termOrder={
+            !shuffle ? data.termOrder : shuffleArray(Array.from(data.termOrder))
+          }
+        />
+      </Flex>
+      <Flex
+        flexDir={["row", "row", "row", "column"]}
+        justifyContent="space-between"
+      >
+        <Stack spacing={4} pr="4" direction={["row", "row", "row", "column"]}>
+          <Button
+            leftIcon={<IconArrowsShuffle />}
+            variant={shuffle ? "solid" : "outline"}
+            onClick={() => {
+              toggle();
+              setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
+            }}
           >
-            <Stack
-              spacing={4}
-              pr="4"
-              direction={["row", "row", "row", "column"]}
-            >
-              <Button
-                leftIcon={<IconArrowsShuffle />}
-                variant={shuffle ? "solid" : "outline"}
-                onClick={() => {
-                  setShuffle((s) => !s);
-                }}
-              >
-                Shuffle
-              </Button>
-              <Button leftIcon={<IconPlayerPlay />} variant="outline">
-                Autoplay
-              </Button>
-              <Button
-                leftIcon={<IconSettings />}
-                variant="ghost"
-                display={{ base: "none", md: "flex" }}
-              >
-                Settings
-              </Button>
-              <IconButton
-                icon={<IconSettings />}
-                rounded="full"
-                variant="ghost"
-                display={{ base: "flex", md: "none" }}
-                aria-label="Settings"
-              />
-            </Stack>
-            <IconButton
-              w="max"
-              rounded="full"
-              variant="ghost"
-              as={Link}
-              href={`/sets/${id}/flashcards`}
-              icon={<IconArrowsMaximize />}
-              aria-label="Full screen"
-              colorScheme="gray"
-            />
-          </Flex>
-        </Flex>
-        <Text>{data.description}</Text>
-        <Stack spacing={4}>
-          {data.terms
-            .sort(
-              (a, b) =>
-                data.termOrder.indexOf(a.id) - data.termOrder.indexOf(b.id)
-            )
-            .map((term, i) => (
-              <DisplayableTerm term={term} key={term.id} />
-            ))}
+            Shuffle
+          </Button>
+          <Button leftIcon={<IconPlayerPlay />} variant="outline">
+            Autoplay
+          </Button>
+          <Button
+            leftIcon={<IconSettings />}
+            variant="ghost"
+            display={{ base: "none", md: "flex" }}
+          >
+            Settings
+          </Button>
+          <IconButton
+            icon={<IconSettings />}
+            rounded="full"
+            variant="ghost"
+            display={{ base: "flex", md: "none" }}
+            aria-label="Settings"
+          />
         </Stack>
-      </Stack>
-    </Container>
+        <IconButton
+          w="max"
+          rounded="full"
+          variant="ghost"
+          as={Link}
+          href={`/sets/${data.id}/flashcards`}
+          icon={<IconArrowsMaximize />}
+          aria-label="Full screen"
+          colorScheme="gray"
+        />
+      </Flex>
+    </Flex>
+  );
+};
+
+const Description = () => {
+  const { description } = useSet();
+
+  return <Text>{description}</Text>;
+};
+
+const TermsOverview = () => {
+  const data = useSet();
+
+  return (
+    <Stack spacing={4}>
+      {data.terms
+        .sort(
+          (a, b) => data.termOrder.indexOf(a.id) - data.termOrder.indexOf(b.id)
+        )
+        .map((term, i) => (
+          <DisplayableTerm term={term} key={term.id} />
+        ))}
+    </Stack>
   );
 };
 

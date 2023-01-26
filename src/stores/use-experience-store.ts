@@ -2,11 +2,13 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-interface ExperienceStoreProps {
+export interface ExperienceStoreProps {
+  shuffleFlashcards: boolean;
   starredTerms: string[];
 }
 
 interface ExperienceState extends ExperienceStoreProps {
+  toggleShuffleFlashcards: () => void;
   starTerm: (termId: string) => void;
   unstarTerm: (termId: string) => void;
 }
@@ -17,6 +19,7 @@ export const createExperienceStore = (
   initProps?: Partial<ExperienceStoreProps>
 ) => {
   const DEFAULT_PROPS: ExperienceStoreProps = {
+    shuffleFlashcards: false,
     starredTerms: [],
   };
 
@@ -24,6 +27,13 @@ export const createExperienceStore = (
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
+      toggleShuffleFlashcards: () => {
+        set((state) => {
+          return {
+            shuffleFlashcards: !state.shuffleFlashcards,
+          };
+        });
+      },
       starTerm: (termId: string) => {
         set((state) => {
           return {

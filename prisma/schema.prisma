@@ -104,11 +104,12 @@ model AutoSaveTerm {
 }
 
 model StudySetExperience {
-  id         String   @id @default(cuid())
-  userId     String
-  studySetId String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  id                String   @id @default(cuid())
+  userId            String
+  studySetId        String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studySet          StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  shuffleFlashcards Boolean  @default(false)
 
   starredTerms StarredTerm[]
 
