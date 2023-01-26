@@ -1,3 +1,4 @@
+import { StudySetExperience } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -20,25 +21,47 @@ export const studySetsRouter = createTRPCRouter({
     return studySet;
   }),
 
-  byId: protectedProcedure.input(z.string()).query(({ ctx, input }) => {
-    const studySet = ctx.prisma.studySet.findFirst({
+  byId: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    const studySet = await ctx.prisma.studySet.findUnique({
       where: {
         id: input,
-        userId: ctx.session.user.id,
       },
       include: {
         terms: true,
-        studySetExperiences: {
-          where: {
-            userId: ctx.session.user.id,
-          },
-          include: {
-            starredTerms: true,
-          },
-        },
       },
     });
-    return studySet;
+
+    if (!studySet) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+      });
+    }
+
+    let experience = await ctx.prisma.studySetExperience.findUnique({
+      where: {
+        userId_studySetId: {
+          userId: ctx.session.user.id,
+          studySetId: input,
+        },
+      },
+      include: {
+        starredTerms: true,
+      },
+    });
+
+    if (!experience) {
+      experience = {
+        ...(await ctx.prisma.studySetExperience.create({
+          data: {
+            studySetId: input,
+            userId: ctx.session.user.id,
+          },
+        })),
+        starredTerms: [],
+      };
+    }
+
+    return { ...studySet, experience };
   }),
 
   createFromAutosave: protectedProcedure.mutation(async ({ ctx }) => {

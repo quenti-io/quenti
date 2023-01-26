@@ -38,8 +38,8 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   children,
 }) => {
   const getVal = (data: SetData): Partial<ExperienceStoreProps> => ({
-    shuffleFlashcards: data.studySetExperiences[0]!.shuffleFlashcards,
-    starredTerms: data.studySetExperiences[0]!.starredTerms.map(
+    shuffleFlashcards: data.experience.shuffleFlashcards,
+    starredTerms: data.experience.starredTerms.map(
       (x) => x.termId
     ),
   });
@@ -48,10 +48,6 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   if (!storeRef.current) {
     storeRef.current = createExperienceStore(getVal(data));
   }
-
-  React.useEffect(() => {
-    storeRef.current?.setState(getVal(data));
-  }, [data]);
 
   return (
     <SetContext.Provider value={{ data }}>

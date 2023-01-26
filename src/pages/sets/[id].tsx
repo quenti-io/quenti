@@ -73,12 +73,20 @@ const HeadingArea = () => {
 };
 
 const LinkArea = () => {
+  const { id } = useSet();
+
   return (
     <HStack spacing={4}>
       <Button leftIcon={<IconBooks />} fontWeight={700}>
         Learn
       </Button>
-      <Button leftIcon={<IconCards />} fontWeight={700} variant="outline">
+      <Button
+        leftIcon={<IconCards />}
+        fontWeight={700}
+        variant="outline"
+        as={Link}
+        href={`/sets/${id}/flashcards`}
+      >
         Flashcards
       </Button>
       <Button leftIcon={<IconEdit />} variant="ghost" colorScheme="orange">
