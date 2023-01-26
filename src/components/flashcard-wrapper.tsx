@@ -5,6 +5,8 @@ import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
 import { Box } from "@chakra-ui/react";
 import { EditTermModal } from "./edit-term-modal";
+import { api } from "../utils/api";
+import { useExperienceContext } from "../stores/use-experience-store";
 
 export interface FlashcardWrapperProps {
   terms: Term[];
@@ -26,6 +28,16 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
 
   const [index, setIndex] = React.useState(0);
   const [isFlipped, setIsFlipped] = React.useState(false);
+
+  const starMutation = api.experience.starTerm.useMutation();
+  const unstarMutation = api.experience.unstarTerm.useMutation();
+
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starTerm = useExperienceContext((s) => s.starTerm);
+  const unstarTerm = useExperienceContext((s) => s.unstarTerm);
+
+  const term = sortedTerms[index]!;
+  const starred = starredTerms.includes(term.id);
 
   const onPrev = () => {
     if (index === 0) return;
@@ -101,17 +113,33 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
           triggerNext={onNext}
         />
         <Flashcard
-          term={sortedTerms[index]!}
+          h={h}
+          term={term}
           index={index}
           isFlipped={isFlipped}
           numTerms={terms.length}
           onPrev={onPrev}
           onNext={onNext}
+          starred={starred}
           onRequestEdit={() => {
-            setEditTerm(sortedTerms[index]!);
+            setEditTerm(term);
             setEditModalOpen(true);
           }}
-          h={h}
+          onRequestStar={() => {
+            if (!starred) {
+              starMutation.mutate({
+                termId: term.id,
+                studySetId: term.studySetId,
+              });
+              starTerm(sortedTerms[index]!.id);
+            } else {
+              unstarMutation.mutate({
+                termId: term.id,
+                studySetId: term.studySetId,
+              });
+              unstarTerm(sortedTerms[index]!.id);
+            }
+          }}
         />
       </motion.div>
     </Box>

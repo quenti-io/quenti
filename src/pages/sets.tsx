@@ -16,7 +16,7 @@ import {
   Skeleton,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconPlus } from "@tabler/icons";
+import { IconPlus } from "@tabler/icons-react";
 
 const Home: NextPage = () => {
   const utils = api.useContext();

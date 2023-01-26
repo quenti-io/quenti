@@ -17,17 +17,20 @@ import {
   IconChevronRight,
   IconEdit,
   IconStar,
-} from "@tabler/icons";
+  IconStarFilled,
+} from "@tabler/icons-react";
 
 export interface FlashcardProps {
   term: Term;
   isFlipped: boolean;
   index: number;
   numTerms: number;
+  starred: boolean;
   h?: string;
   onPrev: () => void;
   onNext: () => void;
   onRequestEdit: () => void;
+  onRequestStar: () => void;
 }
 
 export const Flashcard: React.FC<FlashcardProps> = ({
@@ -35,11 +38,15 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   isFlipped,
   index,
   numTerms,
+  starred,
   h = "500px",
   onPrev,
   onNext,
   onRequestEdit,
+  onRequestStar,
 }) => {
+  const Star = starred ? IconStarFilled : IconStar;
+
   return (
     <Card w="full" h={h} rounded="xl" shadow="xl" overflow="hidden">
       <Box
@@ -75,11 +82,15 @@ export const Flashcard: React.FC<FlashcardProps> = ({
                 }}
               />
               <IconButton
-                icon={<IconStar />}
+                icon={<Star />}
                 aria-label="Star"
                 rounded="full"
                 variant="ghost"
                 size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRequestStar();
+                }}
               />
             </HStack>
           </Flex>

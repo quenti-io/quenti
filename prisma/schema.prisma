@@ -14,12 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
@@ -56,8 +50,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  studySets   StudySet[]
-  setAutoSave SetAutoSave?
+  studySets           StudySet[]
+  setAutoSave         SetAutoSave?
+  studySetExperiences StudySetExperience[]
+  starredTerms        StarredTerm[]
 }
 
 model VerificationToken {
@@ -69,13 +65,14 @@ model VerificationToken {
 }
 
 model StudySet {
-  id          String   @id @default(cuid())
-  userId      String
-  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction)
-  title       String
-  description String
-  terms       Term[]
-  termOrder   String[]
+  id                  String               @id @default(cuid())
+  userId              String
+  User                User                 @relation(fields: [userId], references: [id], onDelete: NoAction)
+  title               String
+  description         String
+  terms               Term[]
+  termOrder           String[]
+  studySetExperiences StudySetExperience[]
 }
 
 model SetAutoSave {
@@ -94,6 +91,8 @@ model Term {
   definition String
   StudySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
   studySetId String
+
+  starredTerms StarredTerm[]
 }
 
 model AutoSaveTerm {
@@ -102,4 +101,28 @@ model AutoSaveTerm {
   definition    String
   setAutoSaveId String
   setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
+}
+
+model StudySetExperience {
+  id         String   @id @default(cuid())
+  userId     String
+  studySetId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+
+  starredTerms StarredTerm[]
+
+  @@unique([userId, studySetId])
+}
+
+model StarredTerm {
+  userId       String
+  termId       String
+  experienceId String
+
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  term               Term               @relation(fields: [termId], references: [id], onDelete: Cascade)
+  studySetExperience StudySetExperience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, termId])
 }

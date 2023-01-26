@@ -28,6 +28,14 @@ export const studySetsRouter = createTRPCRouter({
       },
       include: {
         terms: true,
+        studySetExperiences: {
+          where: {
+            userId: ctx.session.user.id,
+          },
+          include: {
+            starredTerms: true,
+          },
+        },
       },
     });
     return studySet;

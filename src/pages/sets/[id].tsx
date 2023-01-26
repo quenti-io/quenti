@@ -15,7 +15,12 @@ import {
   Box,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Term } from "@prisma/client";
+import {
+  StarredTerm,
+  StudySet,
+  StudySetExperience,
+  Term,
+} from "@prisma/client";
 import {
   IconArrowLeft,
   IconArrowsMaximize,
@@ -26,20 +31,30 @@ import {
   IconPlayerPlay,
   IconSettings,
   IconStar,
-} from "@tabler/icons";
+  IconStarFilled,
+} from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
+import {
+  createExperienceStore,
+  ExperienceContext,
+  ExperienceStore,
+  useExperienceContext,
+} from "../../stores/use-experience-store";
 import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
 
-export default function Set() {
-  const utils = api.useContext();
+type DataType = StudySet & {
+  terms: Term[];
+  studySetExperiences: (StudySetExperience & {
+    starredTerms: StarredTerm[];
+  })[];
+};
 
+export default function Set() {
   const id = useRouter().query.id as string;
   const { data } = api.studySets.byId.useQuery(id);
-
-  const [shuffle, setShuffle] = React.useState(false);
 
   if (!data)
     return (
@@ -47,6 +62,39 @@ export default function Set() {
         <Spinner color="blue.200" />
       </Center>
     );
+
+  return <LoadedSet data={data} />;
+}
+
+const LoadedSet: React.FC<{ data: DataType }> = ({ data }) => {
+  const storeRef = React.useRef<ExperienceStore>();
+  if (!storeRef.current) {
+    storeRef.current = createExperienceStore({
+      starredTerms: data.studySetExperiences[0]?.starredTerms.map(
+        (x) => x.termId
+      ),
+    });
+  }
+
+  React.useEffect(() => {
+    storeRef.current?.setState({
+      starredTerms: data.studySetExperiences[0]?.starredTerms.map(
+        (x) => x.termId
+      ),
+    });
+  }, [data]);
+
+  return (
+    <ExperienceContext.Provider value={storeRef.current}>
+      <HydratedSet data={data} />
+    </ExperienceContext.Provider>
+  );
+};
+
+const HydratedSet: React.FC<{ data: DataType }> = ({ data }) => {
+  const id = useRouter().query.id as string;
+
+  const [shuffle, setShuffle] = React.useState(false);
 
   return (
     <Container maxW="7xl" marginBottom="20">
@@ -149,20 +197,29 @@ export default function Set() {
                 data.termOrder.indexOf(a.id) - data.termOrder.indexOf(b.id)
             )
             .map((term, i) => (
-              <DisplayableTerm term={term} key={term.id} index={i} />
+              <DisplayableTerm term={term} key={term.id} />
             ))}
         </Stack>
       </Stack>
     </Container>
   );
-}
+};
 
 interface DisplayableTermProps {
   term: Term;
-  index: number;
 }
 
-const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term, index }) => {
+const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
+  const starMutation = api.experience.starTerm.useMutation();
+  const unstarMutation = api.experience.unstarTerm.useMutation();
+
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starTerm = useExperienceContext((s) => s.starTerm);
+  const unstarTerm = useExperienceContext((s) => s.unstarTerm);
+
+  const starred = starredTerms.includes(term.id);
+  const Star = starred ? IconStarFilled : IconStar;
+
   return (
     <Card px="4" py="5">
       <Flex
@@ -185,10 +242,25 @@ const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term, index }) => {
                 rounded="full"
               />
               <IconButton
-                icon={<IconStar />}
+                icon={<Star />}
                 variant="ghost"
                 aria-label="Edit"
                 rounded="full"
+                onClick={() => {
+                  if (!starred) {
+                    starTerm(term.id);
+                    starMutation.mutate({
+                      termId: term.id,
+                      studySetId: term.studySetId,
+                    });
+                  } else {
+                    unstarTerm(term.id);
+                    unstarMutation.mutate({
+                      termId: term.id,
+                      studySetId: term.studySetId,
+                    });
+                  }
+                }}
               />
             </HStack>
           </Flex>

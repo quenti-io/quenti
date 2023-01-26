@@ -1373,10 +1373,18 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tabler/icons@^1.119.0":
-  version "1.119.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-1.119.0.tgz#8c590bc5a563c8673a78ccd451bedabd584b376e"
-  integrity sha512-Fk3Qq4w2SXcTjc/n1cuL5bccPkylrOMo7cYpQIf/yw6zP76LQV9dtLcHQUjFiUnaYuswR645CnURIhlafyAh9g==
+"@tabler/icons-react@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-2.1.0.tgz#c01d6f1eafdd73c6b542834f2a04da664ec383db"
+  integrity sha512-0fAGKONUPFJADmnAnsvNggCRpll5AohbktpEvXXGlHC4qgNR+AUrgNRRby+qTqCJb+ZLu6I137HIWEKHoJDHnw==
+  dependencies:
+    "@tabler/icons" "2.1.0"
+    prop-types "^15.7.2"
+
+"@tabler/icons@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.1.0.tgz#c5342902c5e7c6ce55e8a5220906d193586a94cb"
+  integrity sha512-pvDUqR/Vu8K8gwRgie1LyM5Ob03eChm/eKFbp+crgXcKHy8m+eGfhoNqzQfr8bc5YPofJD1lht3O/YdIYbFByA==
 
 "@tanstack/query-core@4.22.0":
   version "4.22.0"
@@ -4028,7 +4036,7 @@ prisma@^4.8.0:
   dependencies:
     "@prisma/engines" "4.8.1"
 
-prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==

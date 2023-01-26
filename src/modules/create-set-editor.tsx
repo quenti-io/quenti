@@ -25,7 +25,7 @@ import {
   IconPlus,
   IconSwitchHorizontal,
   IconTrash,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import { AutoResizeTextarea } from "../components/auto-resize-textarea";
 import {
   closestCenter,

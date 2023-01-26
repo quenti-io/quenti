@@ -1,7 +1,7 @@
 import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { IconMenu, IconMoon, IconSun, IconUser, IconX } from "@tabler/icons";
+import { IconMenu, IconMoon, IconSun, IconUser, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import {
   Avatar,

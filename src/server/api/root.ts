@@ -2,6 +2,7 @@ import { createTRPCRouter } from "./trpc";
 import { studySetsRouter } from "./routers/study-sets";
 import { termsRouter } from "./routers/terms";
 import { autoSaveRouter } from "./routers/auto-save";
+import { experienceRouter } from "./routers/experience";
 
 /**
  * This is the primary router for your server.
@@ -10,8 +11,9 @@ import { autoSaveRouter } from "./routers/auto-save";
  */
 export const appRouter = createTRPCRouter({
   studySets: studySetsRouter,
-  autoSave: autoSaveRouter,
   terms: termsRouter,
+  experience: experienceRouter,
+  autoSave: autoSaveRouter,
 });
 
 // export type definition of API

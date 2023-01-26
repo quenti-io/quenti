@@ -10,7 +10,7 @@ import {
   Stack
 } from "@chakra-ui/react";
 import { FlashcardWrapper } from "../../../components/flashcard-wrapper";
-import { IconChevronDown, IconX } from "@tabler/icons";
+import { IconChevronDown, IconX } from "@tabler/icons-react";
 
 export default function Flashcards() {
   const id = useRouter().query.id as string;
