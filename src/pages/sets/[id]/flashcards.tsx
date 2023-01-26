@@ -29,7 +29,7 @@ const TitleBar = () => {
   const { id, title } = useSet();
 
   return (
-    <Flex w="full" alignItems="center" mt="2">
+    <Flex w="full" alignItems="center" mt="2" justifyContent="space-between">
       <Button
         variant="ghost"
         rightIcon={<IconChevronDown />}
@@ -38,7 +38,7 @@ const TitleBar = () => {
       >
         Flashcards
       </Button>
-      <Heading size="md" flex="1" textAlign="center">
+      <Heading size="md" flex="1" textAlign="center" display={{base: "none", md: "block"}}>
         {title}
       </Heading>
       <Flex w="150px" justifyContent="end">

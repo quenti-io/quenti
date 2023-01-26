@@ -89,7 +89,7 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
 
   // TODO: fix shifting of card when previous is clicked
   return (
-    <Box w="full" h={h}>
+    <Box w="full" h={h} zIndex="100">
       <EditTermModal
         term={editTerm}
         isOpen={editModalOpen}

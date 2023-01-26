@@ -37,12 +37,20 @@ import { shuffleArray } from "../../utils/array";
 export default function Set() {
   return (
     <HydrateSetData>
-      <Container maxW="7xl" marginBottom="20">
+      <Container maxW="7xl">
         <Stack spacing={10}>
           <HeadingArea />
           <LinkArea />
           <Divider />
+        </Stack>
+      </Container>
+      <Container maxW="full" overflow="hidden" p="0" py="8">
+        <Container maxW="7xl">
           <FlashcardPreview />
+        </Container>
+      </Container>
+      <Container maxW="7xl" marginBottom="20">
+        <Stack spacing={10}>
           <Description />
           <TermsOverview />
         </Stack>
@@ -118,31 +126,31 @@ const FlashcardPreview = () => {
   return (
     <Flex
       gap={8}
-      flexDir={["column", "column", "column", "row"]}
+      flexDir={{ base: "column", md: "row" }}
       alignItems="stretch"
       w="full"
     >
       <Flex maxW="1000px" flex="1">
         <FlashcardWrapper terms={data.terms} termOrder={termOrder} />
       </Flex>
-      <Flex
-        flexDir={["row", "row", "row", "column"]}
-        justifyContent="space-between"
-      >
-        <Stack spacing={4} pr="4" direction={["row", "row", "row", "column"]}>
-          <Button
-            leftIcon={<IconArrowsShuffle />}
-            variant={shuffle ? "solid" : "outline"}
-            onClick={() => {
-              toggle();
-              setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
-            }}
-          >
-            Shuffle
-          </Button>
-          <Button leftIcon={<IconPlayerPlay />} variant="outline">
-            Autoplay
-          </Button>
+      <Flex flexDir="column" justifyContent="space-between">
+        <Stack spacing={4}>
+          <Stack direction={{ base: "row", md: "column" }} w="full" spacing={4}>
+            <Button
+              w="full"
+              leftIcon={<IconArrowsShuffle />}
+              variant={shuffle ? "solid" : "outline"}
+              onClick={() => {
+                toggle();
+                setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
+              }}
+            >
+              Shuffle
+            </Button>
+            <Button leftIcon={<IconPlayerPlay />} variant="outline" w="full">
+              Autoplay
+            </Button>
+          </Stack>
           <Button
             leftIcon={<IconSettings />}
             variant="ghost"
@@ -150,24 +158,28 @@ const FlashcardPreview = () => {
           >
             Settings
           </Button>
+        </Stack>
+        <Flex justifyContent={{ base: "end", md: "start" }} marginTop="4">
           <IconButton
+            w="max"
             icon={<IconSettings />}
             rounded="full"
             variant="ghost"
             display={{ base: "flex", md: "none" }}
             aria-label="Settings"
+            colorScheme="gray"
           />
-        </Stack>
-        <IconButton
-          w="max"
-          rounded="full"
-          variant="ghost"
-          as={Link}
-          href={`/sets/${data.id}/flashcards`}
-          icon={<IconArrowsMaximize />}
-          aria-label="Full screen"
-          colorScheme="gray"
-        />
+          <IconButton
+            w="max"
+            rounded="full"
+            variant="ghost"
+            as={Link}
+            href={`/sets/${data.id}/flashcards`}
+            icon={<IconArrowsMaximize />}
+            aria-label="Full screen"
+            colorScheme="gray"
+          />
+        </Flex>
       </Flex>
     </Flex>
   );
