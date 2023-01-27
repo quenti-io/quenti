@@ -30,6 +30,7 @@ export const studySetsRouter = createTRPCRouter({
         terms: true,
       },
     });
+    console.log(studySet?.terms);
 
     if (!studySet) {
       throw new TRPCError({

@@ -87,7 +87,12 @@ const LinkArea = () => {
 
   return (
     <HStack spacing={4}>
-      <Button leftIcon={<IconBooks />} fontWeight={700}>
+      <Button
+        leftIcon={<IconBooks />}
+        fontWeight={700}
+        as={Link}
+        href={`/sets/${id}/learn`}
+      >
         Learn
       </Button>
       <Button
