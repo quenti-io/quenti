@@ -65,8 +65,15 @@ const InteractionCard = () => {
           </Stack>
           <Grid gridTemplateColumns="1fr 1fr" gap="6">
             {choices.map((choice, i) => (
-              <GridItem>
-                <Button w="full" variant="outline" border="2px" p="8">
+              <GridItem h="auto">
+                <Button
+                  w="full"
+                  variant="outline"
+                  border="2px"
+                  px="8"
+                  py="5"
+                  h="full"
+                >
                   <Flex alignItems="center" w="full" gap={4}>
                     <Flex
                       outline="solid 2px"
@@ -74,6 +81,7 @@ const InteractionCard = () => {
                       rounded="full"
                       w="6"
                       h="6"
+                      minW="6"
                       alignItems="center"
                       justifyContent="center"
                     >
@@ -84,7 +92,13 @@ const InteractionCard = () => {
                         {i + 1}
                       </Text>
                     </Flex>
-                    <Text size="lg" color={useColorModeValue("black", "white")}>
+                    <Text
+                      size="lg"
+                      color={useColorModeValue("black", "white")}
+                      whiteSpace="normal"
+                      textAlign="start"
+                      fontWeight="normal"
+                    >
                       {choice.definition}
                     </Text>
                   </Flex>
