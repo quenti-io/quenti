@@ -15,6 +15,7 @@ import {
   Text,
   useColorMode,
   useColorModeValue as mode,
+  useColorModeValue,
   useDisclosure,
   Wrap,
   WrapItem,
@@ -52,7 +53,7 @@ export const Navbar: React.FC = () => {
         >
           <HStack as={Link} href="/" rel="home" ml="2">
             <Logo boxSize="35px" />
-            <Heading as="p" fontSize="lg">
+            <Heading as="p" fontSize="lg" color={useColorModeValue("black", "white")}>
               Quizlet.cc
             </Heading>
           </HStack>

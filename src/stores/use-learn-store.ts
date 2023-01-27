@@ -2,27 +2,22 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { Term } from "@prisma/client";
-import { LearnTerm } from "../interfaces/learn-term";
-import { ActiveQuestion } from "../interfaces/active-question";
+import { Question } from "../interfaces/question";
 import { shuffleArray, takeNRandom } from "../utils/array";
 
 export interface LearnStoreProps {
-  unstudiedTerms: LearnTerm[];
-  familiarTerms: LearnTerm[];
-  masteredTerms: LearnTerm[];
-  termsThisRound: LearnTerm[];
-  repeatsThisRound: LearnTerm[];
+  numTerms: number;
+  termsThisRound: number;
   currentRound: number;
+  roundProgress: number;
   roundCounter: number;
-  active?: ActiveQuestion;
+  roundTimeline: Question[];
   answered?: string;
   status?: "correct" | "incorrect";
 }
 
 interface LearnState extends LearnStoreProps {
   loadTerms: (terms: Term[]) => void;
-  familiarize: (termId: string) => void;
-  master: (termId: string) => void;
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
   acknowledgeIncorrect: () => void;
@@ -32,13 +27,12 @@ export type LearnStore = ReturnType<typeof createLearnStore>;
 
 export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
   const DEFAULT_PROPS: LearnStoreProps = {
-    unstudiedTerms: [],
-    familiarTerms: [],
-    masteredTerms: [],
-    termsThisRound: [],
-    repeatsThisRound: [],
+    numTerms: 0,
+    termsThisRound: 0,
     currentRound: 0,
+    roundProgress: 0,
     roundCounter: 0,
+    roundTimeline: [],
   };
 
   return createStore<LearnState>()(
@@ -46,67 +40,51 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       ...DEFAULT_PROPS,
       ...initProps,
       loadTerms: (terms) => {
-        const learnTerms = terms.map((term) => ({
-          ...term,
-          failCount: 0,
-        }));
-        const termsThisRound = learnTerms.slice(0, 6);
+        const learnTerms = terms.map((term) => ({ ...term, failCount: 0 }));
+        const termsThisRound = learnTerms.slice(0, 7);
 
-        const term = termsThisRound[0]!;
-        set({
-          unstudiedTerms: learnTerms,
-          termsThisRound: termsThisRound,
-          active: {
-            term,
-            choices: shuffleArray([
-              ...takeNRandom(
-                termsThisRound.filter((x) => x.id != term.id),
-                3
-              ),
-              term,
-            ]),
-            type: "choice",
-          },
-        });
-      },
-      familiarize: (termId) => {},
-      master: (termId) => {},
-      answerCorrectly: (termId) => {
-        set((state) => {
-          const isFamiliar = !!state.familiarTerms.find((x) => x.id == termId);
+        const allChoices = Array.from(
+          new Set(
+            termsThisRound.concat(
+              takeNRandom(learnTerms, termsThisRound.length)
+            )
+          )
+        );
+
+        const roundTimeline: Question[] = termsThisRound.map((term) => {
+          const choices = shuffleArray(
+            takeNRandom(
+              allChoices.filter((choice) => choice.id !== term.id),
+              Math.min(3, learnTerms.length)
+            ).concat(term)
+          );
 
           return {
-            answered: termId,
-            status: "correct",
-            familiarTerms: isFamiliar
-              ? state.familiarTerms.filter((x) => x.id != termId)
-              : [...state.familiarTerms, state.active!.term],
-            masteredTerms: isFamiliar
-              ? [...state.masteredTerms, state.active!.term]
-              : state.masteredTerms,
+            choices,
+            term,
+            type: "choice",
           };
+        });
+
+        set({
+          numTerms: learnTerms.length,
+          termsThisRound: termsThisRound.length,
+          roundTimeline,
+        });
+      },
+      answerCorrectly: (termId) => {
+        set({
+          answered: termId,
+          status: "correct",
         });
 
         setTimeout(() => {
           set((state) => {
-            const counter = state.roundCounter + 1;
-            const term = state.termsThisRound[counter]!;
-
             return {
+              roundCounter: state.roundCounter + 1,
+              roundProgress: state.roundProgress + 1,
               answered: undefined,
               status: undefined,
-              roundCounter: counter,
-              active: {
-                term,
-                choices: shuffleArray([
-                  ...takeNRandom(
-                    state.termsThisRound.filter((x) => x.id != term.id),
-                    3
-                  ),
-                  term,
-                ]),
-                type: "choice",
-              },
             };
           });
         }, 1000);
@@ -115,29 +93,23 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         set((state) => ({
           answered: termId,
           status: "incorrect",
-          repeatsThisRound: [...state.repeatsThisRound, state.active!.term],
+          roundTimeline:
+            state.roundProgress != state.termsThisRound - 1
+              ? [
+                  ...state.roundTimeline,
+                  state.roundTimeline[state.roundCounter]!,
+                ]
+              : state.roundTimeline,
         }));
       },
       acknowledgeIncorrect: () => {
         set((state) => {
-          const counter = state.roundCounter + 1;
-          const term = state.termsThisRound[counter]!;
+          state.roundTimeline[state.roundCounter]!.term.failCount++;
 
           return {
+            roundCounter: state.roundCounter + 1,
             answered: undefined,
             status: undefined,
-            roundCounter: counter,
-            active: {
-              term,
-              choices: shuffleArray([
-                ...takeNRandom(
-                  state.termsThisRound.filter((x) => x.id != term.id),
-                  3
-                ),
-                term,
-              ]),
-              type: "choice",
-            },
           };
         });
       },

@@ -7,6 +7,7 @@ import {
   Grid,
   GridItem,
   Heading,
+  HStack,
   Stack,
   Text,
   useColorModeValue,
@@ -16,9 +17,10 @@ import { CreateLearnData } from "../../../modules/create-learn-data";
 import { useLearnContext } from "../../../stores/use-learn-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { Term } from "@prisma/client";
-import { IconCheck, IconX } from "@tabler/icons-react";
 import { useShortcut } from "../../../hooks/use-shortcut";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
+import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
+import { AnimatedXCircle } from "../../../components/animated-icons/x";
 
 export default function Learn() {
   return (
@@ -47,11 +49,16 @@ const Titlebar = () => {
 };
 
 const InteractionCard = () => {
-  const active = useLearnContext((s) => s.active);
+  const timeline = useLearnContext((s) => s.roundTimeline);
+  const termsThisRound = useLearnContext((s) => s.termsThisRound);
   const answered = useLearnContext((s) => s.answered);
   const status = useLearnContext((s) => s.status);
+  const roundCounter = useLearnContext((s) => s.roundCounter);
+  const roundProgress = useLearnContext((s) => s.roundProgress);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
+
+  const active = timeline[roundCounter];
 
   if (!active) return null;
 
@@ -66,6 +73,8 @@ const InteractionCard = () => {
   const isCorrectTerm = (id: string) => !!answered && id === active.term.id;
   const isIncorrectTerm = (id: string) =>
     id === answered && status === "incorrect";
+  const isHighlightedTerm = (id: string) =>
+    isCorrectTerm(id) || isIncorrectTerm(id);
 
   const colorForTerm = (id: string) => {
     if (!answered) return "blue";
@@ -85,11 +94,44 @@ const InteractionCard = () => {
       initial={{ translateY: -20, opacity: 0.5 }}
       animate={{ translateY: 0, opacity: 1 }}
     >
-      <Card px="8" py="6" shadow="2xl">
-        <Stack spacing={6}>
-          <Text textColor="gray.500" fontSize="sm" fontWeight={600}>
-            Term
-          </Text>
+      <Card overflow="hidden" shadow="2xl">
+        <motion.div
+          style={{
+            overflow: "hidden",
+          }}
+          initial={{
+            width: `calc(100% * ${Math.max(
+              roundProgress - 1,
+              0
+            )} / ${termsThisRound})`,
+          }}
+          animate={{
+            width: `calc(100% * ${roundProgress} / ${termsThisRound})`,
+          }}
+          transition={{
+            duration: 0.5,
+            ease: "easeOut",
+          }}
+        >
+          <Box height="1" w="full" bg="orange.300" />
+        </motion.div>
+        <Stack spacing={6} px="8" py="6">
+          <HStack>
+            <Text textColor="gray.500" fontSize="sm" fontWeight={600}>
+              Term
+            </Text>
+            <Box
+              bg={useColorModeValue("gray.200", "gray.800")}
+              py="1"
+              px="3"
+              rounded="full"
+              visibility={!!active.term.failCount ? "visible" : "hidden"}
+            >
+              <Text fontSize="sm" fontWeight={600}>
+                Let's try again
+              </Text>
+            </Box>
+          </HStack>
           <Box h={140}>
             <Text fontSize="xl">{active.term.word}</Text>
           </Box>
@@ -126,29 +168,34 @@ const InteractionCard = () => {
                   onClick={() => choose(choice)}
                 >
                   <Flex alignItems="center" w="full" gap={4}>
-                    <Flex
-                      outline="solid 2px"
-                      outlineColor={colorModeValue(colorForTerm(choice.id))}
-                      rounded="full"
-                      w="6"
-                      h="6"
-                      minW="6"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      {isCorrectTerm(choice.id) ? (
-                        <IconCheck size={20} />
-                      ) : isIncorrectTerm(choice.id) ? (
-                        <IconX size={20} />
-                      ) : (
+                    {!answered || !isHighlightedTerm(choice.id) ? (
+                      <Flex
+                        border="solid 2px"
+                        borderColor={colorModeValue(colorForTerm("blue"))}
+                        rounded="full"
+                        w="6"
+                        h="6"
+                        minW="6"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
                         <Text
-                          fontSize="sm"
+                          fontSize="xs"
+                          lineHeight={0}
                           color={useColorModeValue("gray.800", "gray.200")}
                         >
                           {i + 1}
                         </Text>
-                      )}
-                    </Flex>
+                      </Flex>
+                    ) : isCorrectTerm(choice.id) ? (
+                      <div style={{ transform: "scale(1.125)" }}>
+                        <AnimatedCheckCircle />
+                      </div>
+                    ) : (
+                      <div style={{ transform: "scale(1.125)" }}>
+                        <AnimatedXCircle />
+                      </div>
+                    )}
                     <Text
                       size="lg"
                       color={useColorModeValue("black", "white")}
@@ -174,33 +221,37 @@ const IncorrectBar = () => {
   const acknowledgeIncorrect = useLearnContext((s) => s.acknowledgeIncorrect);
 
   return (
-    <AnimatePresence>
+    <>
       {status == "incorrect" && (
-        <motion.div
-          style={{ position: "fixed", bottom: 0, width: "100%" }}
-          initial={{ translateY: 80 }}
-          animate={{ translateY: 0 }}
-          exit={{ translateY: 80 }}
-        >
-          <AnyKeyPressLayer onSubmit={acknowledgeIncorrect} />
-          <Box w="full" bg={useColorModeValue("gray.200", "gray.800")}>
-            <Container maxW="4xl" py="4">
-              <Flex alignItems="center" justifyContent="space-between">
-                <Text
-                  fontSize="lg"
-                  color={useColorModeValue("gray.600", "gray.400")}
-                >
-                  Press any key to continue
-                </Text>
-                <Button size="lg" onClick={acknowledgeIncorrect}>
-                  Continue
-                </Button>
-              </Flex>
-            </Container>
-          </Box>
-        </motion.div>
+        <AnyKeyPressLayer onSubmit={acknowledgeIncorrect} />
       )}
-    </AnimatePresence>
+      <AnimatePresence>
+        {status == "incorrect" && (
+          <motion.div
+            style={{ position: "fixed", bottom: 0, width: "100%" }}
+            initial={{ translateY: 80 }}
+            animate={{ translateY: 0 }}
+            exit={{ translateY: 80 }}
+          >
+            <Box w="full" bg={useColorModeValue("gray.200", "gray.800")}>
+              <Container maxW="4xl" py="4">
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Text
+                    fontSize="lg"
+                    color={useColorModeValue("gray.600", "gray.400")}
+                  >
+                    Press any key to continue
+                  </Text>
+                  <Button size="lg" onClick={acknowledgeIncorrect}>
+                    Continue
+                  </Button>
+                </Flex>
+              </Container>
+            </Box>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

@@ -44,7 +44,6 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
 
     animateTransition(false);
     setIndex((i) => (i - 1 + terms.length) % terms.length);
-    setIsFlipped(false);
   };
 
   const onNext = () => {
@@ -52,7 +51,6 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
 
     animateTransition();
     setIndex((i) => (i + 1) % terms.length);
-    setIsFlipped(false);
   };
 
   const flipCard = async () => {

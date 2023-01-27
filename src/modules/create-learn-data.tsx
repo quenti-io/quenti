@@ -5,7 +5,6 @@ import {
   LearnContext,
   LearnStore,
 } from "../stores/use-learn-store";
-import { chunkArray, takeNRandom } from "../utils/array";
 
 export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -15,7 +14,11 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
   const storeRef = React.useRef<LearnStore>();
   if (!storeRef.current) {
     storeRef.current = createLearnStore();
-    storeRef.current.getState().loadTerms(terms);
+    storeRef.current
+      .getState()
+      .loadTerms(
+        terms.sort((a, b) => termOrder.indexOf(a.id) - termOrder.indexOf(b.id))
+      );
   }
 
   return (
