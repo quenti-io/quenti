@@ -7,6 +7,7 @@ export const useShortcut = (
   ctrlKey: boolean = true,
   shiftKey: boolean | string | undefined = undefined,
   allowInput: boolean = false,
+  anyKey: boolean = false,
   node = null
 ) => {
   // implement the callback ref pattern
@@ -31,7 +32,10 @@ export const useShortcut = (
         }
       }
 
-      if (ctrlKey == event.ctrlKey && keys.some((key) => event.key === key)) {
+      if (
+        (ctrlKey == event.ctrlKey && keys.some((key) => event.key === key)) ||
+        anyKey
+      ) {
         if (allowInput && event.target instanceof HTMLInputElement) return;
 
         event.preventDefault();

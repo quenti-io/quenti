@@ -14,12 +14,8 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
 
   const storeRef = React.useRef<LearnStore>();
   if (!storeRef.current) {
-    storeRef.current = createLearnStore({
-      chunks: chunkArray(terms, 7),
-      activeTerm: terms[0],
-      activeQuestionType: "choice",
-      choices: takeNRandom(terms, 4),
-    });
+    storeRef.current = createLearnStore();
+    storeRef.current.getState().loadTerms(terms);
   }
 
   return (

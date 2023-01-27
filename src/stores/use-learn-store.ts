@@ -2,75 +2,142 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { Term } from "@prisma/client";
+import { LearnTerm } from "../interfaces/learn-term";
+import { ActiveQuestion } from "../interfaces/active-question";
+import { shuffleArray, takeNRandom } from "../utils/array";
 
 export interface LearnStoreProps {
-  chunks: Term[][];
+  unstudiedTerms: LearnTerm[];
+  familiarTerms: LearnTerm[];
+  masteredTerms: LearnTerm[];
+  termsThisRound: LearnTerm[];
+  repeatsThisRound: LearnTerm[];
   currentRound: number;
-  activeTerm: Term;
-  activeQuestionType: "choice" | "write";
-  choices: Term[];
+  roundCounter: number;
+  active?: ActiveQuestion;
+  answered?: string;
+  status?: "correct" | "incorrect";
 }
 
 interface LearnState extends LearnStoreProps {
-  setChunks: (chunks: Term[][]) => void;
-  setCurrentRound: (round: number) => void;
-  setActiveTerm: (term: Term) => void;
-  setActiveQuestionType: (type: "choice" | "write") => void;
-  setChoices: (choices: Term[]) => void;
+  loadTerms: (terms: Term[]) => void;
+  familiarize: (termId: string) => void;
+  master: (termId: string) => void;
+  answerCorrectly: (termId: string) => void;
+  answerIncorrectly: (termId: string) => void;
+  acknowledgeIncorrect: () => void;
 }
 
 export type LearnStore = ReturnType<typeof createLearnStore>;
 
 export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
   const DEFAULT_PROPS: LearnStoreProps = {
-    chunks: [],
+    unstudiedTerms: [],
+    familiarTerms: [],
+    masteredTerms: [],
+    termsThisRound: [],
+    repeatsThisRound: [],
     currentRound: 0,
-    activeTerm: {
-      id: "",
-      word: "",
-      definition: "",
-      studySetId: "",
-    },
-    activeQuestionType: "choice",
-    choices: [],
+    roundCounter: 0,
   };
 
   return createStore<LearnState>()(
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
-      setChunks: (chunks: Term[][]) => {
-        set((state) => {
-          return {
-            chunks,
-          };
+      loadTerms: (terms) => {
+        const learnTerms = terms.map((term) => ({
+          ...term,
+          failCount: 0,
+        }));
+        const termsThisRound = learnTerms.slice(0, 6);
+
+        const term = termsThisRound[0]!;
+        set({
+          unstudiedTerms: learnTerms,
+          termsThisRound: termsThisRound,
+          active: {
+            term,
+            choices: shuffleArray([
+              ...takeNRandom(
+                termsThisRound.filter((x) => x.id != term.id),
+                3
+              ),
+              term,
+            ]),
+            type: "choice",
+          },
         });
       },
-      setCurrentRound: (round: number) => {
+      familiarize: (termId) => {},
+      master: (termId) => {},
+      answerCorrectly: (termId) => {
         set((state) => {
+          const isFamiliar = !!state.familiarTerms.find((x) => x.id == termId);
+
           return {
-            currentRound: round,
+            answered: termId,
+            status: "correct",
+            familiarTerms: isFamiliar
+              ? state.familiarTerms.filter((x) => x.id != termId)
+              : [...state.familiarTerms, state.active!.term],
+            masteredTerms: isFamiliar
+              ? [...state.masteredTerms, state.active!.term]
+              : state.masteredTerms,
           };
         });
+
+        setTimeout(() => {
+          set((state) => {
+            const counter = state.roundCounter + 1;
+            const term = state.termsThisRound[counter]!;
+
+            return {
+              answered: undefined,
+              status: undefined,
+              roundCounter: counter,
+              active: {
+                term,
+                choices: shuffleArray([
+                  ...takeNRandom(
+                    state.termsThisRound.filter((x) => x.id != term.id),
+                    3
+                  ),
+                  term,
+                ]),
+                type: "choice",
+              },
+            };
+          });
+        }, 1000);
       },
-      setActiveTerm: (term: Term) => {
-        set((state) => {
-          return {
-            activeTerm: term,
-          };
-        });
+      answerIncorrectly: (termId) => {
+        set((state) => ({
+          answered: termId,
+          status: "incorrect",
+          repeatsThisRound: [...state.repeatsThisRound, state.active!.term],
+        }));
       },
-      setActiveQuestionType: (type: "choice" | "write") => {
+      acknowledgeIncorrect: () => {
         set((state) => {
+          const counter = state.roundCounter + 1;
+          const term = state.termsThisRound[counter]!;
+
           return {
-            activeQuestionType: type,
-          };
-        });
-      },
-      setChoices: (choices: Term[]) => {
-        set((state) => {
-          return {
-            choices,
+            answered: undefined,
+            status: undefined,
+            roundCounter: counter,
+            active: {
+              term,
+              choices: shuffleArray([
+                ...takeNRandom(
+                  state.termsThisRound.filter((x) => x.id != term.id),
+                  3
+                ),
+                term,
+              ]),
+              type: "choice",
+            },
           };
         });
       },
