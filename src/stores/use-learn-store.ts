@@ -2,6 +2,7 @@ import type { Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import { SPECIAL_CHAR_REGEXP } from "../constants/characters";
 import type { LearnTerm } from "../interfaces/learn-term";
 import type { Question } from "../interfaces/question";
 import type { RoundSummary } from "../interfaces/round-summary";
@@ -15,6 +16,7 @@ export interface LearnStoreProps {
   roundProgress: number;
   roundCounter: number;
   roundTimeline: Question[];
+  specialCharacters: string[];
   answered?: string;
   status?: "correct" | "incorrect";
   roundSummary?: RoundSummary;
@@ -41,6 +43,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
     roundProgress: 0,
     roundCounter: 0,
     roundTimeline: [],
+    specialCharacters: [],
   };
 
   return createStore<LearnState>()(
@@ -74,11 +77,24 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           };
         });
 
+        const specialCharacters = Array.from(
+          new Set(
+            learnTerms
+              .map((x) => SPECIAL_CHAR_REGEXP.exec(x.definition) || [])
+              .flat()
+              .map((x) => x.split(""))
+              .flat()
+          )
+        );
+
+        console.log(specialCharacters);
+
         set({
           terms: learnTerms,
           numTerms: learnTerms.length,
           termsThisRound: termsThisRound.length,
           roundTimeline,
+          specialCharacters,
         });
       },
       answerCorrectly: (termId) => {

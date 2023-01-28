@@ -26,7 +26,9 @@
     "@trpc/next": "^10.7.0",
     "@trpc/react-query": "^10.7.0",
     "@trpc/server": "^10.7.0",
+    "diff": "^5.1.0",
     "framer-motion": "^8.5.2",
+    "js-levenshtein": "^1.1.6",
     "lodash.debounce": "^4.0.8",
     "nanoid": "^4.0.0",
     "next": "13.1.1",
@@ -39,6 +41,8 @@
   },
   "devDependencies": {
     "@chakra-ui/cli": "^2.3.0",
+    "@types/diff": "^5.0.2",
+    "@types/js-levenshtein": "^1.1.1",
     "@types/lodash.debounce": "^4.0.7",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.7.2",

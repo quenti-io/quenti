@@ -3,12 +3,11 @@ import {
   Flex,
   Grid,
   GridItem,
-  Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
-import type React from "react";
+import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";

@@ -3,12 +3,15 @@ import {
   Button,
   ButtonGroup,
   Flex,
+  HStack,
   Input,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
+import { diffChars } from "diff";
 import { motion, useAnimationControls } from "framer-motion";
+import levenshtein from "js-levenshtein";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
@@ -21,9 +24,9 @@ export interface WriteCardProps {
 
 export const WriteCard: React.FC<WriteCardProps> = ({ active }) => {
   const status = useLearnContext((s) => s.status);
-  const [guess, setGuess] = React.useState("");
+  const [guess, setGuess] = React.useState<string | undefined>();
 
-  if (status === "correct") return <CorrectState />;
+  if (status === "correct") return <CorrectState active={active} />;
   if (status === "incorrect")
     return <IncorrectState active={active} guess={guess} />;
 
@@ -35,15 +38,36 @@ interface ActiveProps {
 }
 
 const InputState: React.FC<
-  ActiveProps & { onSubmit: (guess: string) => void }
+  ActiveProps & { onSubmit: (guess?: string) => void }
 > = ({ active, onSubmit }) => {
   const inputBg = useColorModeValue("gray.100", "gray.900");
   const placeholderColor = useColorModeValue("gray.600", "gray.200");
+  const characterTextColor = useColorModeValue("black", "white");
 
   const [answer, setAnswer] = React.useState("");
 
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
+  const specialCharacters = useLearnContext((s) => s.specialCharacters);
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleSubmit = (skip = false) => {
+    if (skip) {
+      onSubmit();
+      answerIncorrectly(active.term.id);
+      return;
+    }
+
+    onSubmit(answer.trim());
+    if (
+      answer.trim().toLowerCase() == active.term.definition.trim().toLowerCase()
+    ) {
+      answerCorrectly(active.term.id);
+    } else {
+      answerIncorrectly(active.term.id);
+    }
+  };
 
   return (
     <Stack spacing={6}>
@@ -51,7 +75,26 @@ const InputState: React.FC<
         <Text fontWeight={600} color="gray.400">
           Your answer
         </Text>
+        {!!specialCharacters.length && (
+          <HStack>
+            {specialCharacters.sort().map((c, i) => (
+              <Button
+                key={i}
+                size="sm"
+                variant="outline"
+                fontWeight={600}
+                onClick={() => {
+                  setAnswer(answer + c);
+                  inputRef.current?.focus();
+                }}
+              >
+                <Text color={characterTextColor}>{c}</Text>
+              </Button>
+            ))}
+          </HStack>
+        )}
         <Input
+          ref={inputRef}
           placeholder="Type the answer"
           py="6"
           px="4"
@@ -64,34 +107,28 @@ const InputState: React.FC<
           }}
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setTimeout(() => {
+                handleSubmit();
+              });
+            }
+          }}
         />
       </Stack>
       <Flex justifyContent="end">
         <ButtonGroup>
-          <Button variant="ghost">Don&apos;t know?</Button>
-          <Button
-            onClick={() => {
-              onSubmit(answer.trim());
-
-              if (
-                answer.trim().toLowerCase() ==
-                active.term.definition.trim().toLowerCase()
-              ) {
-                answerCorrectly(active.term.id);
-              } else {
-                answerIncorrectly(active.term.id);
-              }
-            }}
-          >
-            Answer
+          <Button variant="ghost" onClick={() => handleSubmit(true)}>
+            Don&apos;t know?
           </Button>
+          <Button onClick={() => handleSubmit}>Answer</Button>
         </ButtonGroup>
       </Flex>
     </Stack>
   );
 };
 
-const CorrectState = () => {
+const CorrectState: React.FC<ActiveProps> = ({ active }) => {
   const colorScheme = useColorModeValue("green.600", "green.200");
 
   return (
@@ -109,13 +146,13 @@ const CorrectState = () => {
         <Text fontWeight={600} color={colorScheme}>
           Excellent!
         </Text>
-        <AnswerCard text="The correct answer" correct />
+        <AnswerCard text={active.term.definition} correct />
       </Stack>
     </motion.div>
   );
 };
 
-const IncorrectState: React.FC<ActiveProps & { guess: string }> = ({
+const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
   active,
   guess,
 }) => {
@@ -130,19 +167,26 @@ const IncorrectState: React.FC<ActiveProps & { guess: string }> = ({
   const [checkVisible, setCheckVisible] = React.useState(false);
 
   React.useEffect(() => {
-    controls.set({
-      height: `${stackRef.current!.clientHeight}px`,
-    });
-    controls.start({
-      height: `${fullStackRef.current!.clientHeight}px`,
-      transition: {
-        duration: 0.5,
-        delay: 0.5,
-      },
-    });
+    void (async () => {
+      controls.set({
+        height: `${stackRef.current!.clientHeight + 12}px`,
+      });
+      await controls.start({
+        height: `${fullStackRef.current!.clientHeight + 12}px`,
+        transition: {
+          duration: 0.5,
+          delay: 0.5,
+        },
+      });
+    })();
 
     setTimeout(() => setCheckVisible(true), 1000);
-  }, []);
+  }, [controls]);
+
+  const diff = guess ? diffChars(guess, active.term.definition) : [];
+  const showDiff = guess
+    ? levenshtein(guess, active.term.definition) <= 3
+    : false;
 
   return (
     <motion.div
@@ -151,17 +195,23 @@ const IncorrectState: React.FC<ActiveProps & { guess: string }> = ({
       }}
       animate={controls}
     >
-      <Stack spacing={6} ref={fullStackRef}>
+      <Stack spacing={6} marginTop="0" ref={fullStackRef}>
         <Stack spacing={4} ref={stackRef}>
           <Flex justifyContent="space-between" alignItems="center">
-            <Text fontWeight={600} color={colorScheme}>
-              Incorrect!
+            <Text fontWeight={600} color={guess ? colorScheme : grayText}>
+              {guess ? "Incorrect!" : "You skipped this term"}
             </Text>
-            <Button size="sm" variant="ghost">
-              Override: I was correct
-            </Button>
+            {guess && (
+              <Button size="sm" variant="ghost">
+                Override: I was correct
+              </Button>
+            )}
           </Flex>
-          <AnswerCard text={guess} correct={false} />
+          <AnswerCard
+            text={guess || "Skipped"}
+            correct={false}
+            skipped={!guess}
+          />
         </Stack>
         <motion.div
           initial={{ opacity: 0 }}
@@ -172,7 +222,21 @@ const IncorrectState: React.FC<ActiveProps & { guess: string }> = ({
               Correct answer
             </Text>
             <AnswerCard
-              text={active.term.definition}
+              text={
+                <>
+                  {showDiff
+                    ? diff.map((x, i) =>
+                        x.added && x.value.length <= 3 ? (
+                          <b key={i}>{x.value}</b>
+                        ) : x.removed ? (
+                          ""
+                        ) : (
+                          x.value
+                        )
+                      )
+                    : active.term.definition}
+                </>
+              }
               correct
               showIcon={checkVisible}
             />
@@ -184,20 +248,23 @@ const IncorrectState: React.FC<ActiveProps & { guess: string }> = ({
 };
 
 interface AnswerCardProps {
-  text: string;
+  text: string | React.ReactNode;
   correct: boolean;
+  skipped?: boolean;
   showIcon?: boolean;
 }
 
 const AnswerCard: React.FC<AnswerCardProps> = ({
   text,
   correct,
+  skipped = false,
   showIcon = true,
 }) => {
   const correctBg = useColorModeValue("green.200", "green.600");
   const correctColor = useColorModeValue("green.600", "green.200");
   const incorrectColor = useColorModeValue("red.600", "red.200");
 
+  const grayColor = useColorModeValue("gray.600", "gray.400");
   const textColor = useColorModeValue("black", "white");
 
   return (
@@ -207,8 +274,10 @@ const AnswerCard: React.FC<AnswerCardProps> = ({
       py="4"
       border="2px"
       bg={correct ? correctBg : "transparent"}
-      borderColor={correct ? correctColor : incorrectColor}
-      color={correct ? correctColor : incorrectColor}
+      borderColor={
+        correct ? correctColor : !skipped ? incorrectColor : grayColor
+      }
+      color={correct ? correctColor : !skipped ? incorrectColor : grayColor}
       rounded="lg"
     >
       <Flex alignItems="center" w="full" gap={4}>
@@ -220,9 +289,8 @@ const AnswerCard: React.FC<AnswerCardProps> = ({
           <div style={{ width: 24, height: 24 }} />
         )}
         <Text
-          size="lg"
           whiteSpace="normal"
-          color={textColor}
+          color={!skipped ? textColor : grayColor}
           textAlign="start"
           fontWeight="normal"
         >
