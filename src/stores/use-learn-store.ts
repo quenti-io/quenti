@@ -83,9 +83,6 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       },
       answerCorrectly: (termId) => {
         set((state) => {
-          const active = state.roundTimeline[state.roundCounter]!;
-          active.term.correctness = 1;
-
           return {
             answered: termId,
             status: "correct",
@@ -95,6 +92,9 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
 
         setTimeout(() => {
           set((state) => {
+            const active = state.roundTimeline[state.roundCounter]!;
+            active.term.correctness = 1;
+
             state.endQuestionCallback(true);
             return {};
           });

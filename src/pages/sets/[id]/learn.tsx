@@ -1,3 +1,4 @@
+import React, { cache } from "react";
 import {
   Box,
   Button,
@@ -22,6 +23,8 @@ import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { GenericTermCard } from "../../../components/generic-term-card";
+import { Question } from "../../../interfaces/question";
+import { LearnTerm } from "../../../interfaces/learn-term";
 
 export default function Learn() {
   return (
@@ -68,7 +71,6 @@ const InteractionCard = () => {
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
 
   const active = timeline[roundCounter];
-
   if (!active) return null;
 
   const choose = (term: Term) => {
