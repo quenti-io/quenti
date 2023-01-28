@@ -28,6 +28,7 @@ interface LearnState extends LearnStoreProps {
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
   acknowledgeIncorrect: () => void;
+  overrideCorrect: () => void;
   endQuestionCallback: (correct: boolean) => void;
   nextRound: () => void;
 }
@@ -134,6 +135,15 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           active.term.correctness = -1;
 
           state.endQuestionCallback(false);
+          return {};
+        });
+      },
+      overrideCorrect: () => {
+        set((state) => {
+          const active = state.roundTimeline[state.roundCounter]!;
+          active.term.correctness = 1;
+
+          state.endQuestionCallback(true);
           return {};
         });
       },

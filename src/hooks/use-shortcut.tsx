@@ -20,7 +20,7 @@ export const useShortcut = (
     (event: KeyboardEvent) => {
       if (
         (ctrlKey == event.ctrlKey && keys.some((key) => event.key === key)) ||
-        anyKey
+        (anyKey && !(event.ctrlKey || event.altKey || event.metaKey))
       ) {
         if (allowInput && event.target instanceof HTMLInputElement) return;
 

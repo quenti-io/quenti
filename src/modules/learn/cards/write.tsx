@@ -7,7 +7,7 @@ import {
   Input,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { diffChars } from "diff";
 import { motion, useAnimationControls } from "framer-motion";
@@ -59,8 +59,11 @@ const InputState: React.FC<
       return;
     }
 
+    if (!answer.trim().length) return;
+
     onSubmit(answer.trim());
     if (
+      // TODO evaluate upper/lowercase correctness based on the language
       answer.trim().toLowerCase() == active.term.definition.trim().toLowerCase()
     ) {
       answerCorrectly(active.term.id);
@@ -121,7 +124,7 @@ const InputState: React.FC<
           <Button variant="ghost" onClick={() => handleSubmit(true)}>
             Don&apos;t know?
           </Button>
-          <Button onClick={() => handleSubmit}>Answer</Button>
+          <Button onClick={() => handleSubmit()}>Answer</Button>
         </ButtonGroup>
       </Flex>
     </Stack>
@@ -157,6 +160,7 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
   guess,
 }) => {
   const controls = useAnimationControls();
+  const overrideCorrect = useLearnContext((s) => s.overrideCorrect);
 
   const colorScheme = useColorModeValue("red.600", "red.200");
   const grayText = useColorModeValue("gray.600", "gray.400");
@@ -202,7 +206,7 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
               {guess ? "Incorrect!" : "You skipped this term"}
             </Text>
             {guess && (
-              <Button size="sm" variant="ghost">
+              <Button size="sm" variant="ghost" onClick={overrideCorrect}>
                 Override: I was correct
               </Button>
             )}
