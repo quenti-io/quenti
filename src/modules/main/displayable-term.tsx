@@ -1,0 +1,157 @@
+import {
+  Box,
+  Card,
+  Flex,
+  HStack,
+  IconButton,
+  Input,
+  Text,
+  useColorModeValue
+} from "@chakra-ui/react";
+import type { Term } from "@prisma/client";
+import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
+import React from "react";
+import { useOutsideClick } from "../../hooks/use-outside-click";
+import { useExperienceContext } from "../../stores/use-experience-store";
+import { api } from "../../utils/api";
+
+export interface DisplayableTermProps {
+  term: Term;
+}
+
+export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
+  const utils = api.useContext();
+
+  const starMutation = api.experience.starTerm.useMutation();
+  const unstarMutation = api.experience.unstarTerm.useMutation();
+
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starTerm = useExperienceContext((s) => s.starTerm);
+  const unstarTerm = useExperienceContext((s) => s.unstarTerm);
+
+  const starred = starredTerms.includes(term.id);
+  const Star = starred ? IconStarFilled : IconStar;
+
+  const [isEditing, setIsEditing] = React.useState(false);
+
+  const [editWord, setEditWord] = React.useState(term.word);
+  const wordRef = React.useRef(editWord);
+  wordRef.current = editWord;
+
+  const [editDefinition, setEditDefinition] = React.useState(term.definition);
+  const definitionRef = React.useRef(editDefinition);
+  definitionRef.current = editDefinition;
+
+  React.useEffect(() => {
+    setEditWord(term.word);
+    setEditDefinition(term.definition);
+  }, [term.word, term.definition]);
+
+  const edit = api.terms.edit.useMutation({
+    async onSuccess() {
+      await utils.studySets.invalidate();
+    },
+  });
+
+  const doEdit = () => {
+    setIsEditing((e) => {
+      if (e) {
+        void (async () =>
+          await edit.mutateAsync({
+            id: term.id,
+            studySetId: term.studySetId,
+            word: wordRef.current,
+            definition: definitionRef.current,
+          }))();
+      }
+
+      return false;
+    });
+  };
+
+  const ref = useOutsideClick(doEdit);
+
+  return (
+    <Card px="4" py="5" ref={ref}>
+      <Flex
+        flexDir={["column-reverse", "row", "row"]}
+        alignItems="stretch"
+        gap={[0, 6, 6]}
+      >
+        <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
+          {isEditing ? (
+            <Input
+              value={editWord}
+              onChange={(e) => setEditWord(e.target.value)}
+              w="full"
+              variant="flushed"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") doEdit();
+              }}
+            />
+          ) : (
+            <Text w="full">{editWord}</Text>
+          )}
+          <Box bg={useColorModeValue("black", "white")} h="full" w="3px" />
+          {isEditing ? (
+            <Input
+              value={editDefinition}
+              onChange={(e) => setEditDefinition(e.target.value)}
+              w="full"
+              variant="flushed"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") doEdit();
+              }}
+            />
+          ) : (
+            <Text w="full">{editDefinition}</Text>
+          )}
+        </Flex>
+        <Box h="full">
+          <Flex w="full" justifyContent="end">
+            <HStack spacing={1} height="24px">
+              <IconButton
+                icon={<IconEdit />}
+                variant={isEditing ? "solid" : "ghost"}
+                aria-label="Edit"
+                rounded="full"
+                onClick={() => {
+                  if (isEditing) {
+                    edit.mutate({
+                      id: term.id,
+                      studySetId: term.studySetId,
+                      word: editWord,
+                      definition: editDefinition,
+                    });
+                  }
+                  setIsEditing(!isEditing);
+                }}
+              />
+              <IconButton
+                icon={<Star />}
+                variant="ghost"
+                aria-label="Edit"
+                rounded="full"
+                onClick={() => {
+                  if (!starred) {
+                    starTerm(term.id);
+                    starMutation.mutate({
+                      termId: term.id,
+                      studySetId: term.studySetId,
+                    });
+                  } else {
+                    unstarTerm(term.id);
+                    unstarMutation.mutate({
+                      termId: term.id,
+                      studySetId: term.studySetId,
+                    });
+                  }
+                }}
+              />
+            </HStack>
+          </Flex>
+        </Box>
+      </Flex>
+    </Card>
+  );
+};
