@@ -10,6 +10,10 @@ export type SetData = {
   };
   id: string;
   userId: string;
+  user: {
+    name: string;
+    image: string;
+  };
   title: string;
   description: string;
   termOrder: string[];

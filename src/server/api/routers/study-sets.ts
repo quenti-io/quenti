@@ -27,6 +27,7 @@ export const studySetsRouter = createTRPCRouter({
         id: input,
       },
       include: {
+        user: true,
         terms: true,
       },
     });
@@ -63,6 +64,10 @@ export const studySetsRouter = createTRPCRouter({
 
     return {
       ...studySet,
+      user: {
+        name: studySet.user.name!,
+        image: studySet.user.image!,
+      },
       experience: {
         ...experience,
         starredTerms: experience.starredTerms.map((x: StarredTerm) => x.termId),

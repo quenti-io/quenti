@@ -18,12 +18,14 @@ export default function Set() {
       </Container>
       <Container maxW="full" overflow="hidden" p="0" py="8">
         <Container maxW="7xl">
-          <FlashcardPreview />
+          <Stack spacing={10}>
+            <FlashcardPreview />
+            <DescriptionArea />
+          </Stack>
         </Container>
       </Container>
       <Container maxW="7xl" marginBottom="20">
         <Stack spacing={10}>
-          <DescriptionArea />
           <TermsOverview />
         </Stack>
       </Container>
