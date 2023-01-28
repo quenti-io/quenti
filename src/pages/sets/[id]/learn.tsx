@@ -63,6 +63,7 @@ const InteractionCard = () => {
   const status = useLearnContext((s) => s.status);
   const roundCounter = useLearnContext((s) => s.roundCounter);
   const roundProgress = useLearnContext((s) => s.roundProgress);
+  const prevTermWasIncorrect = useLearnContext((s) => s.prevTermWasIncorrect);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
 
@@ -109,7 +110,7 @@ const InteractionCard = () => {
           }}
           initial={{
             width: `calc(100% * ${Math.max(
-              roundProgress - 1,
+              roundProgress - (prevTermWasIncorrect ? 0 : 1),
               0
             )} / ${termsThisRound})`,
           }}

@@ -18,6 +18,7 @@ export interface LearnStoreProps {
   answered?: string;
   status?: "correct" | "incorrect";
   roundSummary?: RoundSummary;
+  prevTermWasIncorrect?: boolean;
 }
 
 interface LearnState extends LearnStoreProps {
@@ -25,7 +26,7 @@ interface LearnState extends LearnStoreProps {
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
   acknowledgeIncorrect: () => void;
-  endQuestionCallback: (termId: string, correct: boolean) => void;
+  endQuestionCallback: (correct: boolean) => void;
   nextRound: () => void;
 }
 
@@ -88,12 +89,13 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           return {
             answered: termId,
             status: "correct",
+            prevTermWasIncorrect: false,
           };
         });
 
         setTimeout(() => {
           set((state) => {
-            state.endQuestionCallback(termId, true);
+            state.endQuestionCallback(true);
             return {};
           });
         }, 1000);
@@ -109,6 +111,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
                   state.roundTimeline[state.roundCounter]!,
                 ]
               : state.roundTimeline,
+          prevTermWasIncorrect: true,
         }));
       },
       acknowledgeIncorrect: () => {
@@ -116,11 +119,11 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           const active = state.roundTimeline[state.roundCounter]!;
           active.term.correctness--;
 
-          state.endQuestionCallback(active.term.id, false);
+          state.endQuestionCallback(false);
           return {};
         });
       },
-      endQuestionCallback: (termId, correct) => {
+      endQuestionCallback: (correct) => {
         set((state) => {
           if (state.roundProgress === state.termsThisRound - 1) {
             return {
