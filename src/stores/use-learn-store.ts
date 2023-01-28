@@ -4,8 +4,11 @@ import { subscribeWithSelector } from "zustand/middleware";
 import { Term } from "@prisma/client";
 import { Question } from "../interfaces/question";
 import { shuffleArray, takeNRandom } from "../utils/array";
+import { RoundSummary } from "../interfaces/round-summary";
+import { LearnTerm } from "../interfaces/learn-term";
 
 export interface LearnStoreProps {
+  terms: LearnTerm[];
   numTerms: number;
   termsThisRound: number;
   currentRound: number;
@@ -14,6 +17,7 @@ export interface LearnStoreProps {
   roundTimeline: Question[];
   answered?: string;
   status?: "correct" | "incorrect";
+  roundSummary?: RoundSummary;
 }
 
 interface LearnState extends LearnStoreProps {
@@ -21,12 +25,15 @@ interface LearnState extends LearnStoreProps {
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
   acknowledgeIncorrect: () => void;
+  endQuestionCallback: (termId: string, correct: boolean) => void;
+  nextRound: () => void;
 }
 
 export type LearnStore = ReturnType<typeof createLearnStore>;
 
 export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
   const DEFAULT_PROPS: LearnStoreProps = {
+    terms: [],
     numTerms: 0,
     termsThisRound: 0,
     currentRound: 0,
@@ -40,7 +47,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       ...DEFAULT_PROPS,
       ...initProps,
       loadTerms: (terms) => {
-        const learnTerms = terms.map((term) => ({ ...term, failCount: 0 }));
+        const learnTerms = terms.map((term) => ({ ...term, correctness: 0 }));
         const termsThisRound = learnTerms.slice(0, 7);
 
         const allChoices = Array.from(
@@ -67,25 +74,27 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         });
 
         set({
+          terms: learnTerms,
           numTerms: learnTerms.length,
           termsThisRound: termsThisRound.length,
           roundTimeline,
         });
       },
       answerCorrectly: (termId) => {
-        set({
-          answered: termId,
-          status: "correct",
+        set((state) => {
+          const active = state.roundTimeline[state.roundCounter]!;
+          active.term.correctness++;
+
+          return {
+            answered: termId,
+            status: "correct",
+          };
         });
 
         setTimeout(() => {
           set((state) => {
-            return {
-              roundCounter: state.roundCounter + 1,
-              roundProgress: state.roundProgress + 1,
-              answered: undefined,
-              status: undefined,
-            };
+            state.endQuestionCallback(termId, true);
+            return {};
           });
         }, 1000);
       },
@@ -104,12 +113,78 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       },
       acknowledgeIncorrect: () => {
         set((state) => {
-          state.roundTimeline[state.roundCounter]!.term.failCount++;
+          const active = state.roundTimeline[state.roundCounter]!;
+          active.term.correctness--;
+
+          state.endQuestionCallback(active.term.id, false);
+          return {};
+        });
+      },
+      endQuestionCallback: (termId, correct) => {
+        set((state) => {
+          if (state.roundProgress === state.termsThisRound - 1) {
+            return {
+              roundSummary: {
+                round: state.currentRound,
+                termsThisRound: Array.from(
+                  new Set(state.roundTimeline.map((q) => q.term))
+                ),
+                progress: state.termsThisRound,
+                totalTerms: state.numTerms,
+              },
+              status: undefined,
+            };
+          }
+
+          const roundCounter = state.roundCounter + 1;
+          const roundProgress = state.roundProgress + (correct ? 1 : 0);
 
           return {
-            roundCounter: state.roundCounter + 1,
+            roundCounter,
+            roundProgress,
             answered: undefined,
             status: undefined,
+          };
+        });
+      },
+      nextRound: () => {
+        set((state) => {
+          const incorrectTerms = state.terms.filter((x) => x.correctness < 0);
+          const unstudied = state.terms.filter((x) => x.correctness == 0);
+          const termsThisRound = incorrectTerms.concat(unstudied).slice(0, 7);
+
+          const allChoices = Array.from(
+            new Set(
+              termsThisRound.concat(
+                takeNRandom(state.terms, termsThisRound.length)
+              )
+            )
+          );
+
+          const roundTimeline: Question[] = termsThisRound.map((term) => {
+            const choices = shuffleArray(
+              takeNRandom(
+                allChoices.filter((choice) => choice.id !== term.id),
+                Math.min(3, state.terms.length)
+              ).concat(term)
+            );
+
+            return {
+              choices,
+              term,
+              type: "choice",
+            };
+          });
+
+          return {
+            roundSummary: undefined,
+            termsThisRound: termsThisRound.length,
+            roundTimeline,
+            roundCounter: 0,
+            roundProgress: 0,
+            answered: undefined,
+            status: undefined,
+            currentRound: state.currentRound + 1,
           };
         });
       },

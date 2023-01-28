@@ -8,6 +8,7 @@ import {
   GridItem,
   Heading,
   HStack,
+  Progress,
   Stack,
   Text,
   useColorModeValue,
@@ -29,10 +30,10 @@ export default function Learn() {
         <Container maxW="4xl">
           <Stack spacing={8}>
             <Titlebar />
-            <InteractionCard />
+            <LearnContainer />
           </Stack>
         </Container>
-        <IncorrectBar />
+        <ActionBar />
       </CreateLearnData>
     </HydrateSetData>
   );
@@ -46,6 +47,13 @@ const Titlebar = () => {
       Round {currentRound + 1}
     </Heading>
   );
+};
+
+const LearnContainer = () => {
+  const roundSummary = useLearnContext((s) => s.roundSummary);
+
+  if (roundSummary) return <RoundSummary />;
+  else return <InteractionCard />;
 };
 
 const InteractionCard = () => {
@@ -125,7 +133,7 @@ const InteractionCard = () => {
               py="1"
               px="3"
               rounded="full"
-              visibility={!!active.term.failCount ? "visible" : "hidden"}
+              visibility={active.term.correctness < 0 ? "visible" : "hidden"}
             >
               <Text fontSize="sm" fontWeight={600}>
                 Let's try again
@@ -216,17 +224,59 @@ const InteractionCard = () => {
   );
 };
 
-const IncorrectBar = () => {
-  const status = useLearnContext((s) => s.status);
-  const acknowledgeIncorrect = useLearnContext((s) => s.acknowledgeIncorrect);
+export const RoundSummary = () => {
+  const roundSummary = useLearnContext((s) => s.roundSummary);
 
   return (
     <>
-      {status == "incorrect" && (
-        <AnyKeyPressLayer onSubmit={acknowledgeIncorrect} />
-      )}
+      <Heading size="md">
+        {roundSummary?.progress} / {roundSummary?.totalTerms} terms
+      </Heading>
+      <Box
+        h="2"
+        w="full"
+        rounded="full"
+        bg={useColorModeValue("gray.300", "gray.700")}
+        overflow="hidden"
+      >
+        <motion.div
+          style={{
+            height: "100%",
+          }}
+          initial={{ width: 0 }}
+          animate={{ width: "20%" }}
+          transition={{
+            duration: 1,
+            stiffness: 0,
+            delay: 0.5,
+            mass: 100,
+          }}
+        >
+          <Box
+            w="full"
+            h="full"
+            bg={useColorModeValue("blue.600", "blue.300")}
+          />
+        </motion.div>
+      </Box>
+    </>
+  );
+};
+
+const ActionBar = () => {
+  const status = useLearnContext((s) => s.status);
+  const roundSummary = useLearnContext((s) => s.roundSummary);
+  const acknowledgeIncorrect = useLearnContext((s) => s.acknowledgeIncorrect);
+  const nextRound = useLearnContext((s) => s.nextRound);
+
+  const visible = status == "incorrect" || !!roundSummary;
+  const action = status == "incorrect" ? acknowledgeIncorrect : nextRound;
+
+  return (
+    <>
+      {visible && <AnyKeyPressLayer onSubmit={action} />}
       <AnimatePresence>
-        {status == "incorrect" && (
+        {visible && (
           <motion.div
             style={{ position: "fixed", bottom: 0, width: "100%" }}
             initial={{ translateY: 80 }}
@@ -242,8 +292,9 @@ const IncorrectBar = () => {
                   >
                     Press any key to continue
                   </Text>
-                  <Button size="lg" onClick={acknowledgeIncorrect}>
+                  <Button size="lg" onClick={action}>
                     Continue
+                    {roundSummary && ` to round ${roundSummary.round + 2}`}
                   </Button>
                 </Flex>
               </Container>
