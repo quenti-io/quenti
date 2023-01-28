@@ -4,7 +4,7 @@ import {
   Grid,
   GridItem,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import React from "react";
@@ -55,7 +55,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
   return (
     <>
       <Text fontWeight={600}>Choose matching definition</Text>
-      <Grid gridTemplateColumns="1fr 1fr" gap="6">
+      <Grid gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }} gap="6">
         <ChoiceShortcutLayer
           choose={(i) => {
             if (active.choices.length > i) choose(active.choices[i]!);

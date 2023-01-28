@@ -67,7 +67,7 @@ export const InteractionCard = () => {
               </Text>
             </Box>
           </HStack>
-          <Box h={140}>
+          <Box h={{base: "60px", md: "140px"}}>
             <Text fontSize="xl">{active.term.word}</Text>
           </Box>
           {active.type == "choice" ? (

@@ -1,9 +1,10 @@
-import { Container, Heading, Stack } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
 import { ActionBar } from "../../../modules/learn/action-bar";
 import { InteractionCard } from "../../../modules/learn/interaction-card";
 import { RoundSummary } from "../../../modules/learn/round-summary";
+import { Titlebar } from "../../../modules/learn/titlebar";
 import { useLearnContext } from "../../../stores/use-learn-store";
 
 export default function Learn() {
@@ -21,16 +22,6 @@ export default function Learn() {
     </HydrateSetData>
   );
 }
-
-const Titlebar = () => {
-  const currentRound = useLearnContext((s) => s.currentRound);
-
-  return (
-    <Heading size="lg" textAlign="center">
-      Round {currentRound + 1}
-    </Heading>
-  );
-};
 
 const LearnContainer = () => {
   const roundSummary = useLearnContext((s) => s.roundSummary);

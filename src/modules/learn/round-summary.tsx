@@ -33,7 +33,7 @@ export const RoundSummary = () => {
           </motion.div>
         </Box>
       </Stack>
-      <Stack spacing={6}>
+      <Stack spacing={6} pb="32">
         <Heading size="lg">Terms studied this round</Heading>
         <Stack spacing={4}>
           {roundSummary?.termsThisRound.map((term) => (
