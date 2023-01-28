@@ -54,7 +54,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         const allChoices = Array.from(
           new Set(
             termsThisRound.concat(
-              takeNRandom(learnTerms, termsThisRound.length)
+              takeNRandom(learnTerms, Math.max(termsThisRound.length, 4))
             )
           )
         );
@@ -84,7 +84,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       answerCorrectly: (termId) => {
         set((state) => {
           const active = state.roundTimeline[state.roundCounter]!;
-          active.term.correctness++;
+          active.term.correctness = 1;
 
           return {
             answered: termId,
@@ -117,7 +117,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       acknowledgeIncorrect: () => {
         set((state) => {
           const active = state.roundTimeline[state.roundCounter]!;
-          active.term.correctness--;
+          active.term.correctness = -1;
 
           state.endQuestionCallback(false);
           return {};
@@ -132,7 +132,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
                 termsThisRound: Array.from(
                   new Set(state.roundTimeline.map((q) => q.term))
                 ),
-                progress: state.termsThisRound,
+                progress: state.terms.filter((x) => x.correctness != 0).length,
                 totalTerms: state.numTerms,
               },
               status: undefined,
@@ -159,7 +159,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           const allChoices = Array.from(
             new Set(
               termsThisRound.concat(
-                takeNRandom(state.terms, termsThisRound.length)
+                takeNRandom(state.terms, Math.max(termsThisRound.length, 4))
               )
             )
           );

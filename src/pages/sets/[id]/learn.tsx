@@ -8,20 +8,20 @@ import {
   GridItem,
   Heading,
   HStack,
-  Progress,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Term } from "@prisma/client";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { useLearnContext } from "../../../stores/use-learn-store";
-import { AnimatePresence, motion } from "framer-motion";
-import { Term } from "@prisma/client";
 import { useShortcut } from "../../../hooks/use-shortcut";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
+import { GenericTermCard } from "../../../components/generic-term-card";
 
 export default function Learn() {
   return (
@@ -226,41 +226,48 @@ const InteractionCard = () => {
 };
 
 export const RoundSummary = () => {
-  const roundSummary = useLearnContext((s) => s.roundSummary);
+  const roundSummary = useLearnContext((s) => s.roundSummary)!;
+  const progressPercent = roundSummary.progress / roundSummary.totalTerms;
 
   return (
-    <>
-      <Heading size="md">
-        {roundSummary?.progress} / {roundSummary?.totalTerms} terms
-      </Heading>
-      <Box
-        h="2"
-        w="full"
-        rounded="full"
-        bg={useColorModeValue("gray.300", "gray.700")}
-        overflow="hidden"
-      >
-        <motion.div
-          style={{
-            height: "100%",
-          }}
-          initial={{ width: 0 }}
-          animate={{ width: "20%" }}
-          transition={{
-            duration: 1,
-            stiffness: 0,
-            delay: 0.5,
-            mass: 100,
-          }}
+    <Stack spacing={12}>
+      <Stack spacing={6}>
+        <Heading size="md">
+          {roundSummary.progress} / {roundSummary.totalTerms} terms
+        </Heading>
+        <Box
+          h="2"
+          w="full"
+          rounded="full"
+          bg={useColorModeValue("gray.300", "gray.700")}
+          overflow="hidden"
         >
-          <Box
-            w="full"
-            h="full"
-            bg={useColorModeValue("blue.600", "blue.300")}
-          />
-        </motion.div>
-      </Box>
-    </>
+          <motion.div
+            style={{
+              height: "100%",
+            }}
+            initial={{ width: 0 }}
+            animate={{ width: progressPercent * 100 + "%" }}
+            transition={{
+              duration: 1,
+              stiffness: 0,
+              delay: 0.5,
+              mass: 100,
+            }}
+          >
+            <Box w="full" h="full" bg="blue.300" />
+          </motion.div>
+        </Box>
+      </Stack>
+      <Stack spacing={6}>
+        <Heading size="lg">Terms studied this round</Heading>
+        <Stack spacing={4}>
+          {roundSummary?.termsThisRound.map((x) => (
+            <GenericTermCard term={x} />
+          ))}
+        </Stack>
+      </Stack>
+    </Stack>
   );
 };
 
