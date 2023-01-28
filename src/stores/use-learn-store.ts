@@ -200,6 +200,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               )
             )
             .concat(unstudied)
+            .concat(familiarTerms) // Add the rest of the familar terms if there's nothing else left
             .slice(0, 7);
           termsThisRound.forEach((x) => (x.appearedInRound = currentRound));
 
