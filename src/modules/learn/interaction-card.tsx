@@ -70,8 +70,11 @@ export const InteractionCard = () => {
           <Box h={140}>
             <Text fontSize="xl">{active.term.word}</Text>
           </Box>
-          <WriteCard active={active} />
-          {/* {active.type == "choice" ? <ChoiceCard active={active} /> : null} */}
+          {active.type == "choice" ? (
+            <ChoiceCard active={active} />
+          ) : (
+            <WriteCard active={active} />
+          )}
         </Stack>
       </Card>
     </motion.div>

@@ -52,8 +52,12 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       ...DEFAULT_PROPS,
       ...initProps,
       loadTerms: (terms) => {
-        const learnTerms = terms.map((term) => ({ ...term, correctness: 0 }));
+        const learnTerms: LearnTerm[] = terms.map((term) => ({
+          ...term,
+          correctness: 0,
+        }));
         const termsThisRound = learnTerms.slice(0, 7);
+        learnTerms.forEach((l) => (l.appearedInRound = 0));
 
         const allChoices = Array.from(
           new Set(
@@ -108,7 +112,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         setTimeout(() => {
           set((state) => {
             const active = state.roundTimeline[state.roundCounter]!;
-            active.term.correctness = 1;
+            active.term.correctness = active.type == "choice" ? 1 : 2;
 
             state.endQuestionCallback(true);
             return {};
@@ -176,9 +180,28 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       },
       nextRound: () => {
         set((state) => {
-          const incorrectTerms = state.terms.filter((x) => x.correctness < 0);
+          const currentRound = state.currentRound + 1;
+
+          const incorrectTerms = state.terms.filter((x) => x.correctness == -1);
           const unstudied = state.terms.filter((x) => x.correctness == 0);
-          const termsThisRound = incorrectTerms.concat(unstudied).slice(0, 7);
+
+          const familiarTerms = state.terms.filter((x) => x.correctness == 1);
+          const familiarTermsWithRound = familiarTerms.map((x) => {
+            if (x.appearedInRound === undefined)
+              throw new Error("No round information for familiar term!");
+            return x;
+          });
+
+          const termsThisRound = incorrectTerms
+            .concat(
+              // Add the familiar terms that haven't been seen at least 2 rounds ago
+              familiarTermsWithRound.filter(
+                (x) => currentRound - x.appearedInRound! >= 2
+              )
+            )
+            .concat(unstudied)
+            .slice(0, 7);
+          termsThisRound.forEach((x) => (x.appearedInRound = currentRound));
 
           const allChoices = Array.from(
             new Set(
@@ -189,18 +212,28 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           );
 
           const roundTimeline: Question[] = termsThisRound.map((term) => {
-            const choices = shuffleArray(
-              takeNRandom(
-                allChoices.filter((choice) => choice.id !== term.id),
-                Math.min(3, state.terms.length)
-              ).concat(term)
-            );
+            const choice = term.correctness < 1;
 
-            return {
-              choices,
-              term,
-              type: "choice",
-            };
+            if (choice) {
+              const choices = shuffleArray(
+                takeNRandom(
+                  allChoices.filter((choice) => choice.id !== term.id),
+                  Math.min(3, state.terms.length)
+                ).concat(term)
+              );
+
+              return {
+                choices,
+                term,
+                type: "choice",
+              };
+            } else {
+              return {
+                choices: [],
+                term,
+                type: "write",
+              };
+            }
           });
 
           return {
@@ -211,7 +244,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             roundProgress: 0,
             answered: undefined,
             status: undefined,
-            currentRound: state.currentRound + 1,
+            currentRound,
           };
         });
       },
