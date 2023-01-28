@@ -1,5 +1,5 @@
 import React from "react";
-import Icon, { IconProps } from "@chakra-ui/icon";
+import Icon, { type IconProps } from "@chakra-ui/icon";
 
 export const Logo: React.FC<IconProps> = (props) => {
   return (

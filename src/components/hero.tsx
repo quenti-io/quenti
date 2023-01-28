@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import {
   Box,
   Button,
@@ -39,8 +39,8 @@ export const Hero: NextPage = () => {
                   data-aos-delay="100"
                 >
                   Tired of Quizlet showing ads and only giving you two practice
-                  rounds for free? Turns out an alternative isn't actually all
-                  that hard to make.
+                  rounds for free? Turns out an alternative isn&apos;t actually
+                  all that hard to make.
                 </Text>
                 <Stack
                   direction={["column-reverse", "row"]}
@@ -121,11 +121,11 @@ export const Hero: NextPage = () => {
               color="gray.400"
               data-aos="fade"
             >
-              90% of Quizlet's magic is in the way its 'Learn' feature works.
-              Terms you've studied and know well are gone over quickly while
-              unfamiliar terms are matched up more frequently. We've
-              reverse-engineered this algorithm to offer the same learning
-              experience.
+              90% of Quizlet&apos;s magic is in the way its &apos;Learn&apos;
+              feature works. Terms you&apos;ve studied and know well are gone
+              over quickly while unfamiliar terms are matched up more
+              frequently. We&apos;ve reverse-engineered this algorithm to offer
+              the same learning experience.
             </Text>
             <div />
           </Stack>

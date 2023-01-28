@@ -1,11 +1,11 @@
+import type { Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import { Term } from "@prisma/client";
-import { Question } from "../interfaces/question";
+import type { LearnTerm } from "../interfaces/learn-term";
+import type { Question } from "../interfaces/question";
+import type { RoundSummary } from "../interfaces/round-summary";
 import { shuffleArray, takeNRandom } from "../utils/array";
-import { RoundSummary } from "../interfaces/round-summary";
-import { LearnTerm } from "../interfaces/learn-term";
 
 export interface LearnStoreProps {
   terms: LearnTerm[];
@@ -82,12 +82,10 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         });
       },
       answerCorrectly: (termId) => {
-        set((state) => {
-          return {
-            answered: termId,
-            status: "correct",
-            prevTermWasIncorrect: false,
-          };
+        set({
+          answered: termId,
+          status: "correct",
+          prevTermWasIncorrect: false,
         });
 
         setTimeout(() => {

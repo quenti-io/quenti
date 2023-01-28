@@ -1,6 +1,6 @@
-import React from "react";
-import { AutoSaveTerm } from "@prisma/client";
+import type { AutoSaveTerm } from "@prisma/client";
 import { nanoid } from "nanoid";
+import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 

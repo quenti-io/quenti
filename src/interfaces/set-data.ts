@@ -1,4 +1,4 @@
-import { StarredTerm, Term } from "@prisma/client";
+import type { Term } from "@prisma/client";
 
 export type SetData = {
   experience: {

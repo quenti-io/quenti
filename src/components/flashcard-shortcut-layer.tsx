@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { useShortcut } from "../hooks/use-shortcut";
 
 export interface FlashcardShorcutLayerProps {
@@ -12,9 +12,9 @@ export const FlashcardShorcutLayer: React.FC<FlashcardShorcutLayerProps> = ({
   triggerPrev,
   triggerNext,
 }) => {
-  useShortcut([" "], triggerFlip, false, undefined, true);
-  useShortcut(["ArrowRight"], triggerNext, false, undefined, true);
-  useShortcut(["ArrowLeft"], triggerPrev, false, undefined, true);
+  useShortcut([" "], triggerFlip, false, true);
+  useShortcut(["ArrowRight"], triggerNext, false, true);
+  useShortcut(["ArrowLeft"], triggerPrev, false, true);
 
   return null;
 };

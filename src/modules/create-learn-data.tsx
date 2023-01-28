@@ -3,7 +3,7 @@ import { useSet } from "../hooks/use-set";
 import {
   createLearnStore,
   LearnContext,
-  LearnStore,
+  type LearnStore,
 } from "../stores/use-learn-store";
 
 export const CreateLearnData: React.FC<React.PropsWithChildren> = ({

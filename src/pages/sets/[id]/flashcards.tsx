@@ -82,7 +82,7 @@ const Flashcard = () => {
   );
 
   React.useEffect(() => {
-    setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
+    setTermOrder((o: string[]) => (shuffle ? shuffleArray(Array.from(o)) : o));
   }, [shuffle]);
 
   return (

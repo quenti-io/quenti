@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { useShortcut } from "../hooks/use-shortcut";
 
 export interface ChoiceShortcutLayerProps {
@@ -8,10 +8,10 @@ export interface ChoiceShortcutLayerProps {
 export const ChoiceShortcutLayer: React.FC<ChoiceShortcutLayerProps> = ({
   choose,
 }) => {
-  useShortcut(["1"], () => choose(0), false, undefined, true);
-  useShortcut(["2"], () => choose(1), false, undefined, true);
-  useShortcut(["3"], () => choose(2), false, undefined, true);
-  useShortcut(["4"], () => choose(3), false, undefined, true);
+  useShortcut(["1"], () => choose(0), false, true);
+  useShortcut(["2"], () => choose(1), false, true);
+  useShortcut(["3"], () => choose(2), false, true);
+  useShortcut(["4"], () => choose(3), false, true);
 
   return null;
 };

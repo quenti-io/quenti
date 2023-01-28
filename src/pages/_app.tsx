@@ -7,13 +7,12 @@ import { api } from "../utils/api";
 import { Navbar } from "../components/navbar";
 import { Chakra } from "../components/chakra";
 
-const App: AppType<{ session: Session | null }> = ({
+const App: AppType<{ session: Session | null; cookies: string }> = ({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps: { session, cookies, ...pageProps },
 }) => {
   return (
-    // @ts-ignore
-    <Chakra cookies={pageProps.cookies}>
+    <Chakra cookies={cookies}>
       <SessionProvider session={session}>
         <Navbar />
         <Component {...pageProps} />

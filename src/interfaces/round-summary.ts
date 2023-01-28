@@ -1,4 +1,4 @@
-import { Term } from "@prisma/client";
+import type { Term } from "@prisma/client";
 
 export interface RoundSummary {
   round: number;

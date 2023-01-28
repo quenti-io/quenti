@@ -1,12 +1,12 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
-import { SetData } from "../interfaces/set-data";
+import type { SetData } from "../interfaces/set-data";
 import {
   createExperienceStore,
   ExperienceContext,
-  ExperienceStore,
-  ExperienceStoreProps,
+  type ExperienceStore,
+  type ExperienceStoreProps,
 } from "../stores/use-experience-store";
 import { Loading } from "../components/loading";
 

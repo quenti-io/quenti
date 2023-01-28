@@ -1,6 +1,6 @@
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { input, z } from "zod";
 import { nanoid } from "nanoid";
+import { z } from "zod";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const autoSaveRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {

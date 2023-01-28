@@ -2,12 +2,11 @@ import React from "react";
 
 /// https://devtrium.com/posts/how-keyboard-shortcut
 export const useShortcut = (
-  keys: any[],
-  callback: any,
-  ctrlKey: boolean = true,
-  shiftKey: boolean | string | undefined = undefined,
-  allowInput: boolean = false,
-  anyKey: boolean = false,
+  keys: (string | number)[],
+  callback: (e: KeyboardEvent) => void,
+  ctrlKey = true,
+  allowInput = false,
+  anyKey = false,
   node = null
 ) => {
   // implement the callback ref pattern
@@ -19,19 +18,6 @@ export const useShortcut = (
   // handle what happens on key press
   const handleKeyPress = React.useCallback(
     (event: KeyboardEvent) => {
-      // check if one of the key is part of the ones we want
-      if (shiftKey !== undefined) {
-        if (
-          (shiftKey === true && !event.shiftKey) ||
-          (shiftKey === false && event.shiftKey) ||
-          (typeof shiftKey === "string" &&
-            keys.some((k) => k.key == shiftKey) &&
-            !event.shiftKey)
-        ) {
-          return;
-        }
-      }
-
       if (
         (ctrlKey == event.ctrlKey && keys.some((key) => event.key === key)) ||
         anyKey
@@ -42,6 +28,7 @@ export const useShortcut = (
         callbackRef.current(event);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [keys]
   );
 

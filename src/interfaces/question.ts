@@ -1,5 +1,5 @@
-import { Term } from "@prisma/client";
-import { LearnTerm } from "./learn-term";
+import type { Term } from "@prisma/client";
+import type { LearnTerm } from "./learn-term";
 
 export interface Question {
   term: LearnTerm;

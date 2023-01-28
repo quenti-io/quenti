@@ -3,9 +3,15 @@ import {
   cookieStorageManagerSSR,
   localStorageManager,
 } from "@chakra-ui/react";
+import type { GetServerSideProps } from "next";
 import { theme } from "../lib/chakra-theme";
 
-export const Chakra = ({ cookies, children }: any) => {
+type Data = { cookies: string };
+
+export const Chakra: React.FC<React.PropsWithChildren<Data>> = ({
+  cookies,
+  children,
+}) => {
   const colorModeManager =
     typeof cookies === "string"
       ? cookieStorageManagerSSR(cookies)
@@ -18,7 +24,8 @@ export const Chakra = ({ cookies, children }: any) => {
   );
 };
 
-export const getServerSideProps = ({ req }: any) => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps: GetServerSideProps<Data> = async ({ req }) => {
   return {
     props: {
       cookies: req.headers.cookie ?? "",

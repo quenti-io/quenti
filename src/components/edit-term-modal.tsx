@@ -1,9 +1,8 @@
 import React from "react";
-import { Term } from "@prisma/client";
+import type { Term } from "@prisma/client";
 import {
   Button,
   ButtonGroup,
-  HStack,
   Input,
   Modal,
   ModalBody,
@@ -45,8 +44,8 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
 
   const edit = api.terms.edit.useMutation({
     async onSuccess() {
-      utils.studySets.invalidate();
       onClose();
+      await utils.studySets.invalidate();
     },
   });
 

@@ -1,14 +1,14 @@
-export const shuffleArray = (arr: any[]) => {
+export const shuffleArray = <T>(arr: T[]) => {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
+    arr[i] = arr[j]!;
+    arr[j] = temp!;
   }
   return arr;
 };
 
-export const chunkArray = (_arr: any[], chunks: number) => {
+export const chunkArray = <T>(_arr: T[], chunks: number) => {
   const arr = Array.from(_arr);
   const res = [];
 
@@ -19,7 +19,7 @@ export const chunkArray = (_arr: any[], chunks: number) => {
   return res;
 };
 
-export const takeNRandom = (arr: any[], n: number) => {
+export const takeNRandom = <T>(arr: T[], n: number) => {
   const shuffled = shuffleArray(Array.from(arr));
   return shuffled.slice(0, n);
 };

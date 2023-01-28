@@ -14,7 +14,7 @@ import {
   useColorModeValue,
   Input,
 } from "@chakra-ui/react";
-import { Term } from "@prisma/client";
+import type { Term } from "@prisma/client";
 import {
   IconArrowLeft,
   IconArrowsMaximize,
@@ -128,7 +128,7 @@ const FlashcardPreview = () => {
     setTermOrder(
       shuffle ? shuffleArray(Array.from(data.termOrder)) : data.termOrder
     );
-  }, [shuffle]);
+  }, [shuffle, data.termOrder]);
 
   return (
     <Flex
@@ -207,7 +207,7 @@ const TermsOverview = () => {
         .sort(
           (a, b) => data.termOrder.indexOf(a.id) - data.termOrder.indexOf(b.id)
         )
-        .map((term, i) => (
+        .map((term) => (
           <DisplayableTerm term={term} key={term.id} />
         ))}
     </Stack>
@@ -248,19 +248,20 @@ const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const edit = api.terms.edit.useMutation({
     async onSuccess() {
-      utils.studySets.invalidate();
+      await utils.studySets.invalidate();
     },
   });
 
   const doEdit = () => {
     setIsEditing((e) => {
       if (e) {
-        edit.mutateAsync({
-          id: term.id,
-          studySetId: term.studySetId,
-          word: wordRef.current!,
-          definition: definitionRef.current!,
-        });
+        void (async () =>
+          await edit.mutateAsync({
+            id: term.id,
+            studySetId: term.studySetId,
+            word: wordRef.current,
+            definition: definitionRef.current,
+          }))();
       }
 
       return false;

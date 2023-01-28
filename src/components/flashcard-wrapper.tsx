@@ -1,6 +1,6 @@
 import React from "react";
-import { Term } from "@prisma/client";
-import { motion, MotionConfig, useAnimationControls } from "framer-motion";
+import type { Term } from "@prisma/client";
+import { motion, useAnimationControls } from "framer-motion";
 import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
 import { Box } from "@chakra-ui/react";
@@ -21,7 +21,7 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
 }) => {
   const controls = useAnimationControls();
 
-  const sortedTerms = termOrder.map((id) => terms.find((t) => t.id === id)!);
+  const sortedTerms = termOrder.map((id) => terms.find((t) => t.id === id));
 
   const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [editTerm, setEditTerm] = React.useState<Term | null>(null);
@@ -39,18 +39,18 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
   const term = sortedTerms[index]!;
   const starred = starredTerms.includes(term.id);
 
-  const onPrev = () => {
+  const onPrev = async () => {
     if (index === 0) return;
 
-    animateTransition(false);
     setIndex((i) => (i - 1 + terms.length) % terms.length);
+    await animateTransition(false);
   };
 
-  const onNext = () => {
+  const onNext = async () => {
     if (index === terms.length - 1) return;
 
-    animateTransition();
     setIndex((i) => (i + 1) % terms.length);
+    await animateTransition();
   };
 
   const flipCard = async () => {
@@ -74,9 +74,9 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
     });
   };
 
-  const animateTransition = (next = true) => {
+  const animateTransition = async (next = true) => {
     controls.set({ rotateY: next ? 20 : -20, translateX: next ? -50 : 50 });
-    controls.start({
+    await controls.start({
       rotateY: 0,
       translateX: 0,
       transition: {

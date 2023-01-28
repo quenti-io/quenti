@@ -1,5 +1,5 @@
 import React from "react";
-import { Term } from "@prisma/client";
+import type { Term } from "@prisma/client";
 import { Box, Card, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 
 export interface GenericTermCardProps {

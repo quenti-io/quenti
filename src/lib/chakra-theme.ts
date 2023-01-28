@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react";
+import { type ChakraProps, extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 
 const config = { initialColorMode: "dark", useSystemColorMode: false };
@@ -90,14 +90,14 @@ const components = {
 };
 
 const styles = {
-  global: (props: any) => ({
+  global: (props: ChakraProps) => ({
     body: {
       bg: mode("gray.50", "gray.1000")(props),
     },
   }),
 };
 
-export const theme: any = extendTheme({
+export const theme = extendTheme({
   fonts,
   components,
   colors,

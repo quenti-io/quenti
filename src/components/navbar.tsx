@@ -1,7 +1,6 @@
 import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import { IconMenu, IconMoon, IconSun, IconUser, IconX } from "@tabler/icons-react";
+import { IconMenu, IconMoon, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import {
   Avatar,
@@ -26,10 +25,9 @@ import { useRouter } from "next/router";
 export const Navbar: React.FC = () => {
   const router = useRouter();
   const onHomePage = router.pathname === "/";
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
 
   const { data: session, status } = useSession();
-  const { isOpen, onToggle } = useDisclosure();
   const { isOpen: isMobileMenuOpen, onToggle: onMobileMenuToggle } =
     useDisclosure();
 
@@ -53,7 +51,11 @@ export const Navbar: React.FC = () => {
         >
           <HStack as={Link} href="/" rel="home" ml="2">
             <Logo boxSize="35px" />
-            <Heading as="p" fontSize="lg" color={useColorModeValue("black", "white")}>
+            <Heading
+              as="p"
+              fontSize="lg"
+              color={useColorModeValue("black", "white")}
+            >
               Quizlet.cc
             </Heading>
           </HStack>
@@ -93,9 +95,9 @@ export const Navbar: React.FC = () => {
               colorScheme="blue"
               variant={session ? "outline" : "solid"}
               fontWeight={700}
-              onClick={() => {
-                if (session) signOut();
-                else signIn();
+              onClick={async () => {
+                if (session) await signOut();
+                else await signIn();
               }}
             >
               Sign {session ? "out" : "in"}

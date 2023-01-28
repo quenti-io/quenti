@@ -1,4 +1,3 @@
-import React, { cache } from "react";
 import {
   Box,
   Button,
@@ -13,18 +12,16 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import type { Term } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
-import { Term } from "@prisma/client";
-import { HydrateSetData } from "../../../modules/hydrate-set-data";
-import { CreateLearnData } from "../../../modules/create-learn-data";
-import { useLearnContext } from "../../../stores/use-learn-store";
-import { useShortcut } from "../../../hooks/use-shortcut";
-import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
+import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { GenericTermCard } from "../../../components/generic-term-card";
-import { Question } from "../../../interfaces/question";
-import { LearnTerm } from "../../../interfaces/learn-term";
+import { useShortcut } from "../../../hooks/use-shortcut";
+import { CreateLearnData } from "../../../modules/create-learn-data";
+import { HydrateSetData } from "../../../modules/hydrate-set-data";
+import { useLearnContext } from "../../../stores/use-learn-store";
 
 export default function Learn() {
   return (
@@ -70,6 +67,12 @@ const InteractionCard = () => {
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
 
+  const chipBg = useColorModeValue("gray.200", "gray.800");
+  const questionNumText = useColorModeValue("gray.800", "gray.200");
+  const defaultBorder = useColorModeValue("blue.600", "blue.200");
+  const correctBg = useColorModeValue("green.200", "green.600");
+  const textColor = useColorModeValue("black", "white");
+
   const active = timeline[roundCounter];
   if (!active) return null;
 
@@ -95,9 +98,6 @@ const InteractionCard = () => {
 
     return "blue";
   };
-
-  const colorModeValue = (color: string) =>
-    useColorModeValue(`${color}.600`, `${color}.200`);
 
   return (
     <motion.div
@@ -132,14 +132,14 @@ const InteractionCard = () => {
               Term
             </Text>
             <Box
-              bg={useColorModeValue("gray.200", "gray.800")}
+              bg={chipBg}
               py="1"
               px="3"
               rounded="full"
               visibility={active.term.correctness < 0 ? "visible" : "hidden"}
             >
               <Text fontSize="sm" fontWeight={600}>
-                Let's try again
+                Let&apos;s try again
               </Text>
             </Box>
           </HStack>
@@ -156,16 +156,12 @@ const InteractionCard = () => {
               }}
             />
             {active.choices.map((choice, i) => (
-              <GridItem h="auto">
+              <GridItem h="auto" key={i}>
                 <Button
                   w="full"
                   variant="outline"
                   pointerEvents={answered ? "none" : "auto"}
-                  bg={
-                    isCorrectTerm(choice.id)
-                      ? useColorModeValue("green.200", "green.600")
-                      : "transparent"
-                  }
+                  bg={isCorrectTerm(choice.id) ? correctBg : "transparent"}
                   border="2px"
                   px="8"
                   py="5"
@@ -182,7 +178,7 @@ const InteractionCard = () => {
                     {!answered || !isHighlightedTerm(choice.id) ? (
                       <Flex
                         border="solid 2px"
-                        borderColor={colorModeValue(colorForTerm("blue"))}
+                        borderColor={defaultBorder}
                         rounded="full"
                         w="6"
                         h="6"
@@ -193,7 +189,7 @@ const InteractionCard = () => {
                         <Text
                           fontSize="xs"
                           lineHeight={0}
-                          color={useColorModeValue("gray.800", "gray.200")}
+                          color={questionNumText}
                         >
                           {i + 1}
                         </Text>
@@ -209,7 +205,7 @@ const InteractionCard = () => {
                     )}
                     <Text
                       size="lg"
-                      color={useColorModeValue("black", "white")}
+                      color={textColor}
                       whiteSpace="normal"
                       textAlign="start"
                       fontWeight="normal"
@@ -249,7 +245,7 @@ export const RoundSummary = () => {
               height: "100%",
             }}
             initial={{ width: 0 }}
-            animate={{ width: progressPercent * 100 + "%" }}
+            animate={{ width: `${progressPercent * 100}%` }}
             transition={{
               duration: 1,
               stiffness: 0,
@@ -264,8 +260,8 @@ export const RoundSummary = () => {
       <Stack spacing={6}>
         <Heading size="lg">Terms studied this round</Heading>
         <Stack spacing={4}>
-          {roundSummary?.termsThisRound.map((x) => (
-            <GenericTermCard term={x} />
+          {roundSummary?.termsThisRound.map((term) => (
+            <GenericTermCard term={term} key={term.id} />
           ))}
         </Stack>
       </Stack>
@@ -282,6 +278,9 @@ const ActionBar = () => {
   const visible = status == "incorrect" || !!roundSummary;
   const action = status == "incorrect" ? acknowledgeIncorrect : nextRound;
 
+  const backgroundColor = useColorModeValue("gray.200", "gray.800");
+  const textColor = useColorModeValue("gray.600", "gray.400");
+
   return (
     <>
       {visible && <AnyKeyPressLayer onSubmit={action} />}
@@ -293,13 +292,10 @@ const ActionBar = () => {
             animate={{ translateY: 0 }}
             exit={{ translateY: 80 }}
           >
-            <Box w="full" bg={useColorModeValue("gray.200", "gray.800")}>
+            <Box w="full" bg={backgroundColor}>
               <Container maxW="4xl" py="4">
                 <Flex alignItems="center" justifyContent="space-between">
-                  <Text
-                    fontSize="lg"
-                    color={useColorModeValue("gray.600", "gray.400")}
-                  >
+                  <Text fontSize="lg" color={textColor}>
                     Press any key to continue
                   </Text>
                   <Button size="lg" onClick={action}>
@@ -317,7 +313,7 @@ const ActionBar = () => {
 };
 
 const AnyKeyPressLayer = ({ onSubmit }: { onSubmit: () => void }) => {
-  useShortcut([], onSubmit, false, false, false, true);
+  useShortcut([], onSubmit, false, false, true);
   return null;
 };
 

@@ -1,14 +1,14 @@
+import { Center, Spinner } from "@chakra-ui/react";
+import type { AutoSaveTerm, SetAutoSave } from "@prisma/client";
+import type { NextPage } from "next";
 import React from "react";
-import { NextPage } from "next";
 import { CreateSetEditor } from "../../modules/create-set-editor";
-import { api } from "../../utils/api";
 import {
   createCreateSetStore,
   CreateSetContext,
-  CreateSetStore,
+  type CreateSetStore,
 } from "../../stores/use-create-set-store";
-import { AutoSaveTerm, SetAutoSave } from "@prisma/client";
-import { Center, Spinner } from "@chakra-ui/react";
+import { api } from "../../utils/api";
 
 const Create: NextPage = () => {
   const { data } = api.autoSave.get.useQuery();

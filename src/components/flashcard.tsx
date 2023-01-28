@@ -11,7 +11,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Term } from "@prisma/client";
+import type { Term } from "@prisma/client";
 import {
   IconChevronLeft,
   IconChevronRight,

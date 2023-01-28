@@ -1,8 +1,8 @@
-import { StarredTerm, StudySetExperience } from "@prisma/client";
+import type { StarredTerm } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const studySetsRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {

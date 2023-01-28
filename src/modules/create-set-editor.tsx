@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   ButtonGroup,
@@ -17,27 +16,20 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
-  IconArrowLeft,
-  IconBooks,
-  IconCards,
-  IconEdit,
-  IconGripHorizontal,
-  IconPlus,
-  IconSwitchHorizontal,
-  IconTrash,
-} from "@tabler/icons-react";
-import { AutoResizeTextarea } from "../components/auto-resize-textarea";
-import {
   closestCenter,
   DndContext,
-  DragEndEvent,
   KeyboardSensor,
   MouseSensor,
   PointerSensor,
   TouchSensor,
   useSensor,
   useSensors,
+  type DragEndEvent,
 } from "@dnd-kit/core";
+import {
+  restrictToParentElement,
+  restrictToVerticalAxis,
+} from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
@@ -47,17 +39,25 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  restrictToParentElement,
-  restrictToVerticalAxis,
-} from "@dnd-kit/modifiers";
-import { shallow } from "zustand/shallow";
+  IconArrowLeft,
+  IconBooks,
+  IconCards,
+  IconEdit,
+  IconGripHorizontal,
+  IconPlus,
+  IconSwitchHorizontal,
+  IconTrash,
+} from "@tabler/icons-react";
 import debounce from "lodash.debounce";
-import { api } from "../utils/api";
+import { useRouter } from "next/router";
+import React from "react";
+import { shallow } from "zustand/shallow";
+import { AutoResizeTextarea } from "../components/auto-resize-textarea";
 import {
   CreateSetContext,
   useCreateSetContext,
 } from "../stores/use-create-set-store";
-import { useRouter } from "next/router";
+import { api } from "../utils/api";
 
 export const CreateSetEditor: React.FC = () => {
   const { data } = api.autoSave.get.useQuery();
@@ -69,17 +69,18 @@ export const CreateSetEditor: React.FC = () => {
   const addTerm = useCreateSetContext((state) => state.addTerm);
 
   const autoSave = api.autoSave.save.useMutation({
-    async onSuccess(data) {
+    onSuccess(data) {
       setLastSavedAt(data.savedAt);
     },
   });
+
   const autoSaveHandler = async () => {
     const state = store.getState();
     const terms = state.termOrder.map(
       (id) => state.terms.find((t) => t.id == id)!
     );
 
-    autoSave.mutateAsync({
+    await autoSave.mutateAsync({
       title: state.title,
       description: state.description,
       terms: terms.map((x) => ({
@@ -88,6 +89,8 @@ export const CreateSetEditor: React.FC = () => {
       })),
     });
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const autoSaveCallback = React.useCallback(
     debounce(autoSaveHandler, 1000),
     []
@@ -95,7 +98,7 @@ export const CreateSetEditor: React.FC = () => {
 
   store.subscribe(
     (s) => [s.title, s.description, s.termOrder, s.terms],
-    autoSaveCallback,
+    (async () => await autoSaveCallback()),
     { equalityFn: shallow }
   );
 
@@ -214,8 +217,8 @@ const CreateBar: React.FC<CreateBarProps> = ({ savedAt, isSaving }) => {
   const router = useRouter();
 
   const create = api.studySets.createFromAutosave.useMutation({
-    onSuccess: (data) => {
-      router.push(`/sets/${data.id}`);
+    onSuccess: async (data) => {
+      await router.push(`/sets/${data.id}`);
     },
   });
 
@@ -244,7 +247,7 @@ const CreateBar: React.FC<CreateBarProps> = ({ savedAt, isSaving }) => {
             <Text fontSize="sm">
               {isSaving
                 ? "Saving..."
-                : `Last saved at ${savedAt?.toTimeString()}`}
+                : `Last saved at ${savedAt?.toTimeString() || ""}`}
             </Text>
           </HStack>
         </Stack>
