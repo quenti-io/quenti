@@ -1,64 +1,27 @@
 import {
   Box,
-  Button,
   Card,
-  Flex,
-  Grid,
-  GridItem,
   HStack,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { Term } from "@prisma/client";
 import { motion } from "framer-motion";
-import { AnimatedCheckCircle } from "../../components/animated-icons/check";
-import { AnimatedXCircle } from "../../components/animated-icons/x";
-import { ChoiceShortcutLayer } from "../../components/choice-shortcut-layer";
 import { useLearnContext } from "../../stores/use-learn-store";
+import { ChoiceCard } from "./cards/choice";
+import { WriteCard } from "./cards/write";
 
 export const InteractionCard = () => {
   const timeline = useLearnContext((s) => s.roundTimeline);
   const termsThisRound = useLearnContext((s) => s.termsThisRound);
-  const answered = useLearnContext((s) => s.answered);
-  const status = useLearnContext((s) => s.status);
   const roundCounter = useLearnContext((s) => s.roundCounter);
   const roundProgress = useLearnContext((s) => s.roundProgress);
   const prevTermWasIncorrect = useLearnContext((s) => s.prevTermWasIncorrect);
-  const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
-  const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
 
   const chipBg = useColorModeValue("gray.200", "gray.800");
-  const questionNumText = useColorModeValue("gray.800", "gray.200");
-  const defaultBorder = useColorModeValue("blue.600", "blue.200");
-  const correctBg = useColorModeValue("green.200", "green.600");
-  const textColor = useColorModeValue("black", "white");
 
   const active = timeline[roundCounter];
   if (!active) return null;
-
-  const choose = (term: Term) => {
-    if (term.id === active.term.id) {
-      answerCorrectly(term.id);
-    } else {
-      answerIncorrectly(term.id);
-    }
-  };
-
-  const isCorrectTerm = (id: string) => !!answered && id === active.term.id;
-  const isIncorrectTerm = (id: string) =>
-    id === answered && status === "incorrect";
-  const isHighlightedTerm = (id: string) =>
-    isCorrectTerm(id) || isIncorrectTerm(id);
-
-  const colorForTerm = (id: string) => {
-    if (!answered) return "blue";
-
-    if (isCorrectTerm(id)) return "green";
-    else if (isIncorrectTerm(id)) return "red";
-
-    return "blue";
-  };
 
   return (
     <motion.div
@@ -107,77 +70,8 @@ export const InteractionCard = () => {
           <Box h={140}>
             <Text fontSize="xl">{active.term.word}</Text>
           </Box>
-          <Stack spacing={4}>
-            <Text fontWeight={600}>Choose matching definition</Text>
-          </Stack>
-          <Grid gridTemplateColumns="1fr 1fr" gap="6">
-            <ChoiceShortcutLayer
-              choose={(i) => {
-                if (active.choices.length > i) choose(active.choices[i]!);
-              }}
-            />
-            {active.choices.map((choice, i) => (
-              <GridItem h="auto" key={i}>
-                <Button
-                  w="full"
-                  variant="outline"
-                  pointerEvents={answered ? "none" : "auto"}
-                  bg={isCorrectTerm(choice.id) ? correctBg : "transparent"}
-                  border="2px"
-                  px="8"
-                  py="5"
-                  h="full"
-                  colorScheme={colorForTerm(choice.id)}
-                  isDisabled={
-                    !!answered &&
-                    choice.id !== active.term.id &&
-                    choice.id !== answered
-                  }
-                  onClick={() => choose(choice)}
-                >
-                  <Flex alignItems="center" w="full" gap={4}>
-                    {!answered || !isHighlightedTerm(choice.id) ? (
-                      <Flex
-                        border="solid 2px"
-                        borderColor={defaultBorder}
-                        rounded="full"
-                        w="6"
-                        h="6"
-                        minW="6"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Text
-                          fontSize="xs"
-                          lineHeight={0}
-                          color={questionNumText}
-                        >
-                          {i + 1}
-                        </Text>
-                      </Flex>
-                    ) : isCorrectTerm(choice.id) ? (
-                      <div style={{ transform: "scale(1.125)" }}>
-                        <AnimatedCheckCircle />
-                      </div>
-                    ) : (
-                      <div style={{ transform: "scale(1.125)" }}>
-                        <AnimatedXCircle />
-                      </div>
-                    )}
-                    <Text
-                      size="lg"
-                      color={textColor}
-                      whiteSpace="normal"
-                      textAlign="start"
-                      fontWeight="normal"
-                    >
-                      {choice.definition}
-                    </Text>
-                  </Flex>
-                </Button>
-              </GridItem>
-            ))}
-          </Grid>
+          <WriteCard active={active} />
+          {/* {active.type == "choice" ? <ChoiceCard active={active} /> : null} */}
         </Stack>
       </Card>
     </motion.div>

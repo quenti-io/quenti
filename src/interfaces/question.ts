@@ -3,6 +3,6 @@ import type { LearnTerm } from "./learn-term";
 
 export interface Question {
   term: LearnTerm;
-  type: "choice";
+  type: "choice" | "write";
   choices: Term[];
 }
