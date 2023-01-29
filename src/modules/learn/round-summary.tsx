@@ -2,6 +2,7 @@ import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { GenericTermCard } from "../../components/generic-term-card";
 import { useLearnContext } from "../../stores/use-learn-store";
+import { TermMastery } from "./term-mastery";
 
 export const RoundSummary = () => {
   const roundSummary = useLearnContext((s) => s.roundSummary)!;
@@ -33,6 +34,7 @@ export const RoundSummary = () => {
           </motion.div>
         </Box>
       </Stack>
+      <TermMastery />
       <Stack spacing={6} pb="32">
         <Heading size="lg">Terms studied this round</Heading>
         <Stack spacing={4}>

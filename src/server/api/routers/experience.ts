@@ -60,4 +60,25 @@ export const experienceRouter = createTRPCRouter({
         },
       });
     }),
+
+  resetLearnProgress: protectedProcedure
+    .input(z.object({ studySetId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        data: {
+          learnRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
 });

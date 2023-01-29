@@ -19,6 +19,7 @@ export interface LearnStoreProps {
   answered?: string;
   status?: "correct" | "incorrect";
   roundSummary?: RoundSummary;
+  completed: boolean;
   prevTermWasIncorrect?: boolean;
 }
 
@@ -44,6 +45,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
     roundCounter: 0,
     roundTimeline: [],
     specialCharacters: [],
+    completed: false,
   };
 
   return createStore<LearnState>()(
@@ -124,6 +126,11 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       },
       endQuestionCallback: (correct) => {
         set((state) => {
+          const masteredCount = state.terms.filter(
+            (x) => x.correctness == 2
+          ).length;
+          if (masteredCount == state.numTerms) return { completed: true };
+
           if (state.roundProgress === state.termsThisRound - 1) {
             return {
               roundSummary: {
@@ -221,6 +228,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             roundProgress: 0,
             answered: undefined,
             status: undefined,
+            completed: !termsThisRound.length,
             currentRound,
           };
         });

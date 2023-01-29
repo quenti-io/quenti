@@ -5,6 +5,7 @@ import { useLearnContext } from "../../stores/use-learn-store";
 
 export const Titlebar = () => {
   const { id } = useSet();
+  const completed = useLearnContext((s) => s.completed);
   const currentRound = useLearnContext((s) => s.currentRound);
 
   return (
@@ -17,7 +18,7 @@ export const Titlebar = () => {
         href={`/sets/${id}`}
       />
       <Heading size="lg" textAlign="center" flex="1">
-        Round {currentRound + 1}
+        {completed ? "Review" : `Round ${currentRound + 1}`}
       </Heading>
       <IconButton icon={<IconSettings />} aria-label="Back" variant="ghost" />
     </Flex>

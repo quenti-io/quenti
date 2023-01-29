@@ -38,15 +38,6 @@ export const studySetsRouter = createTRPCRouter({
       });
     }
 
-    // await ctx.prisma.studySetExperience.delete({
-    //   where: {
-    //     userId_studySetId: {
-    //       userId: ctx.session.user.id,
-    //       studySetId: input,
-    //     },
-    //   },
-    // });
-
     let experience = await ctx.prisma.studySetExperience.findUnique({
       where: {
         userId_studySetId: {

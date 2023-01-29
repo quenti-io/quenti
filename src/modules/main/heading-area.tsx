@@ -1,9 +1,18 @@
-import { Button, Heading, HStack, Link, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  HStack,
+  Link,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { useSet } from "../../hooks/use-set";
 
 export const HeadingArea = () => {
-  const data = useSet();
+  const { title, terms } = useSet();
+  const text = useColorModeValue("gray.600", "gray.400");
 
   return (
     <Stack spacing={4}>
@@ -17,8 +26,10 @@ export const HeadingArea = () => {
           All sets
         </Button>
       </HStack>
-      <Heading size="2xl">{data.title}</Heading>
-      <Text color="gray.400">{data.terms.length} terms</Text>
+      <Heading size="2xl">{title}</Heading>
+      <Text color={text}>
+        {terms.length} term{terms.length != 1 ? "s" : ""}
+      </Text>
     </Stack>
   );
 };
