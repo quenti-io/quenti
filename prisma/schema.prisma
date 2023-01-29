@@ -112,6 +112,7 @@ model StudySetExperience {
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   studySet          StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
   shuffleFlashcards Boolean  @default(false)
+  learnRound        Int      @default(0)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -120,9 +121,9 @@ model StudySetExperience {
 }
 
 model StudiableTerm {
-  userId       String
-  termId       String
-  experienceId String
+  userId          String
+  termId          String
+  experienceId    String
   correctness     Int
   appearedInRound Int?
 

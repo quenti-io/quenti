@@ -7,17 +7,38 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
+import { api } from "../../utils/api";
 import { AnyKeyPressLayer } from "./any-key-press-layer";
 
 export const ActionBar = () => {
+  const { experience } = useSet();
   const status = useLearnContext((s) => s.status);
   const roundSummary = useLearnContext((s) => s.roundSummary);
+  const roundTimeline = useLearnContext((s) => s.roundTimeline);
+  const roundCounter = useLearnContext((s) => s.roundCounter);
   const acknowledgeIncorrect = useLearnContext((s) => s.acknowledgeIncorrect);
   const nextRound = useLearnContext((s) => s.nextRound);
 
+  const put = api.studiableTerms.put.useMutation();
+
+  const handleAcknowledgeIncorrect = () => {
+    acknowledgeIncorrect();
+
+    const active = roundTimeline[roundCounter]!;
+    if (active.type == "write") {
+      void (async () =>
+        await put.mutateAsync({
+          id: active.term.id,
+          experienceId: experience.id,
+          correctness: -1,
+        }))();
+    }
+  };
+
   const visible = status == "incorrect" || !!roundSummary;
-  const action = status == "incorrect" ? acknowledgeIncorrect : nextRound;
+  const action = status == "incorrect" ? handleAcknowledgeIncorrect : nextRound;
 
   const backgroundColor = useColorModeValue("gray.200", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.400");
@@ -46,7 +67,7 @@ export const ActionBar = () => {
                   <Button
                     size="lg"
                     w={{ base: "full", md: "auto" }}
-                    onClick={action}
+                    onClick={() => action()}
                   >
                     Continue
                     {roundSummary && ` to round ${roundSummary.round + 2}`}

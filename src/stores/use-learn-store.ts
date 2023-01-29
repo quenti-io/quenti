@@ -1,4 +1,3 @@
-import type { Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -24,13 +23,13 @@ export interface LearnStoreProps {
 }
 
 interface LearnState extends LearnStoreProps {
-  loadTerms: (terms: Term[]) => void;
+  initialize: (terms: LearnTerm[], round: number) => void;
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
   acknowledgeIncorrect: () => void;
   overrideCorrect: () => void;
   endQuestionCallback: (correct: boolean) => void;
-  nextRound: () => void;
+  nextRound: (start?: boolean) => void;
 }
 
 export type LearnStore = ReturnType<typeof createLearnStore>;
@@ -51,40 +50,10 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
-      loadTerms: (terms) => {
-        const learnTerms: LearnTerm[] = terms.map((term) => ({
-          ...term,
-          correctness: 0,
-        }));
-        const termsThisRound = learnTerms.slice(0, 7);
-        learnTerms.forEach((l) => (l.appearedInRound = 0));
-
-        const allChoices = Array.from(
-          new Set(
-            termsThisRound.concat(
-              takeNRandom(learnTerms, Math.max(termsThisRound.length, 4))
-            )
-          )
-        );
-
-        const roundTimeline: Question[] = termsThisRound.map((term) => {
-          const choices = shuffleArray(
-            takeNRandom(
-              allChoices.filter((choice) => choice.id !== term.id),
-              Math.min(3, learnTerms.length)
-            ).concat(term)
-          );
-
-          return {
-            choices,
-            term,
-            type: "choice",
-          };
-        });
-
+      initialize: (terms, round) => {
         const specialCharacters = Array.from(
           new Set(
-            learnTerms
+            terms
               .map((x) => SPECIAL_CHAR_REGEXP.exec(x.definition) || [])
               .flat()
               .map((x) => x.split(""))
@@ -93,11 +62,15 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         );
 
         set({
-          terms: learnTerms,
-          numTerms: learnTerms.length,
-          termsThisRound: termsThisRound.length,
-          roundTimeline,
+          terms: terms,
+          numTerms: terms.length,
+          currentRound: round,
           specialCharacters,
+        });
+
+        set((state) => {
+          state.nextRound(true);
+          return {};
         });
       },
       answerCorrectly: (termId) => {
@@ -176,9 +149,9 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           };
         });
       },
-      nextRound: () => {
+      nextRound: (start = false) => {
         set((state) => {
-          const currentRound = state.currentRound + 1;
+          const currentRound = state.currentRound + (!start ? 1 : 0);
 
           const incorrectTerms = state.terms.filter((x) => x.correctness == -1);
           const unstudied = state.terms.filter((x) => x.correctness == 0);
@@ -234,6 +207,11 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               };
             }
           });
+
+          console.log(
+            "ROUND TIMELINE",
+            roundTimeline.map((x) => `${x.type} - ${x.term.word}`)
+          );
 
           return {
             roundSummary: undefined,

@@ -7,7 +7,7 @@ import {
   Input,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { diffChars } from "diff";
 import { motion, useAnimationControls } from "framer-motion";
@@ -15,8 +15,10 @@ import levenshtein from "js-levenshtein";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
+import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
 import { useLearnContext } from "../../../stores/use-learn-store";
+import { api } from "../../../utils/api";
 
 export interface WriteCardProps {
   active: Question;
@@ -40,17 +42,20 @@ interface ActiveProps {
 const InputState: React.FC<
   ActiveProps & { onSubmit: (guess?: string) => void }
 > = ({ active, onSubmit }) => {
+  const { experience } = useSet();
+  const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
+  const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
+  const specialCharacters = useLearnContext((s) => s.specialCharacters);
+
   const inputBg = useColorModeValue("gray.100", "gray.900");
   const placeholderColor = useColorModeValue("gray.600", "gray.200");
   const characterTextColor = useColorModeValue("black", "white");
 
   const [answer, setAnswer] = React.useState("");
 
-  const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
-  const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
-  const specialCharacters = useLearnContext((s) => s.specialCharacters);
-
   const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const put = api.studiableTerms.put.useMutation();
 
   const handleSubmit = (skip = false) => {
     if (skip) {
@@ -67,6 +72,14 @@ const InputState: React.FC<
       answer.trim().toLowerCase() == active.term.definition.trim().toLowerCase()
     ) {
       answerCorrectly(active.term.id);
+
+      void (async () =>
+        await put.mutateAsync({
+          id: active.term.id,
+          experienceId: experience.id,
+          correctness: 2,
+          appearedInRound: active.term.appearedInRound,
+        }))();
     } else {
       answerIncorrectly(active.term.id);
     }
@@ -159,9 +172,12 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
   active,
   guess,
 }) => {
-  const controls = useAnimationControls();
+  const { experience } = useSet();
   const overrideCorrect = useLearnContext((s) => s.overrideCorrect);
 
+  const put = api.studiableTerms.put.useMutation();
+
+  const controls = useAnimationControls();
   const colorScheme = useColorModeValue("red.600", "red.200");
   const grayText = useColorModeValue("gray.600", "gray.400");
 
@@ -169,6 +185,17 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
   const stackRef = React.useRef<HTMLDivElement>(null);
 
   const [checkVisible, setCheckVisible] = React.useState(false);
+
+  const handleOverrideCorrect = () => {
+    overrideCorrect();
+
+    void (async () =>
+      await put.mutateAsync({
+        id: active.term.id,
+        experienceId: experience.id,
+        correctness: 2,
+      }))();
+  };
 
   React.useEffect(() => {
     void (async () => {
@@ -206,7 +233,7 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
               {guess ? "Incorrect!" : "You skipped this term"}
             </Text>
             {guess && (
-              <Button size="sm" variant="ghost" onClick={overrideCorrect}>
+              <Button size="sm" variant="ghost" onClick={handleOverrideCorrect}>
                 Override: I was correct
               </Button>
             )}
