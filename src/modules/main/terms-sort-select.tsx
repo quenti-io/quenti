@@ -43,7 +43,7 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
       value={sortMethod}
       onChange={(e) => {
         setSortMethod(e!);
-        onChange(e!.value!);
+        onChange(e!.value);
       }}
       chakraStyles={{
         inputContainer: () => ({
