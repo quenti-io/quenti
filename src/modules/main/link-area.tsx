@@ -11,7 +11,7 @@ export const LinkArea = () => {
         leftIcon={<IconBooks />}
         fontWeight={700}
         as={Link}
-        href={`/sets/${id}/learn`}
+        href={`/${id}/learn`}
       >
         Learn
       </Button>
@@ -20,7 +20,7 @@ export const LinkArea = () => {
         fontWeight={700}
         variant="outline"
         as={Link}
-        href={`/sets/${id}/flashcards`}
+        href={`/${id}/flashcards`}
       >
         Flashcards
       </Button>

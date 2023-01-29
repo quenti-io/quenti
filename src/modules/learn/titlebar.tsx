@@ -15,7 +15,7 @@ export const Titlebar = () => {
         aria-label="Back"
         variant="ghost"
         as={Link}
-        href={`/sets/${id}`}
+        href={`/${id}`}
       />
       <Heading size="lg" textAlign="center" flex="1">
         {completed ? "Review" : `Round ${currentRound + 1}`}

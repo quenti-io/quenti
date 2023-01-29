@@ -27,7 +27,7 @@ export const TitleBar = () => {
         <IconButton
           icon={<IconX />}
           as={Link}
-          href={`/sets/${id}`}
+          href={`/${id}`}
           aria-label="Close"
           rounded="full"
           variant="ghost"

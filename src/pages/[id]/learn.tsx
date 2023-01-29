@@ -1,15 +1,15 @@
 import { Container, Stack } from "@chakra-ui/react";
 import React from "react";
-import { useSet } from "../../../hooks/use-set";
-import { CreateLearnData } from "../../../modules/create-learn-data";
-import { HydrateSetData } from "../../../modules/hydrate-set-data";
-import { ActionBar } from "../../../modules/learn/action-bar";
-import { CompletedView } from "../../../modules/learn/completed-view";
-import { InteractionCard } from "../../../modules/learn/interaction-card";
-import { RoundSummary } from "../../../modules/learn/round-summary";
-import { Titlebar } from "../../../modules/learn/titlebar";
-import { useLearnContext } from "../../../stores/use-learn-store";
-import { api } from "../../../utils/api";
+import { useSet } from "../../hooks/use-set";
+import { CreateLearnData } from "../../modules/create-learn-data";
+import { HydrateSetData } from "../../modules/hydrate-set-data";
+import { ActionBar } from "../../modules/learn/action-bar";
+import { CompletedView } from "../../modules/learn/completed-view";
+import { InteractionCard } from "../../modules/learn/interaction-card";
+import { RoundSummary } from "../../modules/learn/round-summary";
+import { Titlebar } from "../../modules/learn/titlebar";
+import { useLearnContext } from "../../stores/use-learn-store";
+import { api } from "../../utils/api";
 
 export default function Learn() {
   return (
@@ -49,4 +49,4 @@ const LearnContainer = () => {
   return <InteractionCard />;
 };
 
-export { getServerSideProps } from "../../../components/chakra";
+export { getServerSideProps } from "../../components/chakra";

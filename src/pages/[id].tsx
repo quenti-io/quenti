@@ -1,10 +1,10 @@
 import { Container, Stack, Divider } from "@chakra-ui/react";
-import { HydrateSetData } from "../../modules/hydrate-set-data";
-import { DescriptionArea } from "../../modules/main/description-area";
-import { FlashcardPreview } from "../../modules/main/flashcard-preview";
-import { HeadingArea } from "../../modules/main/heading-area";
-import { LinkArea } from "../../modules/main/link-area";
-import { TermsOverview } from "../../modules/main/terms-overview";
+import { HydrateSetData } from "../modules/hydrate-set-data";
+import { DescriptionArea } from "../modules/main/description-area";
+import { FlashcardPreview } from "../modules/main/flashcard-preview";
+import { HeadingArea } from "../modules/main/heading-area";
+import { LinkArea } from "../modules/main/link-area";
+import { TermsOverview } from "../modules/main/terms-overview";
 
 export default function Set() {
   return (
@@ -33,4 +33,4 @@ export default function Set() {
   );
 }
 
-export { getServerSideProps } from "../../components/chakra";
+export { getServerSideProps } from "../components/chakra";

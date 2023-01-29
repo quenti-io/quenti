@@ -2,13 +2,13 @@ import { Center, Spinner } from "@chakra-ui/react";
 import type { AutoSaveTerm, SetAutoSave } from "@prisma/client";
 import type { NextPage } from "next";
 import React from "react";
-import { CreateSetEditor } from "../../modules/create-set-editor";
+import { CreateSetEditor } from "../modules/create-set-editor";
 import {
   createCreateSetStore,
   CreateSetContext,
   type CreateSetStore,
-} from "../../stores/use-create-set-store";
-import { api } from "../../utils/api";
+} from "../stores/use-create-set-store";
+import { api } from "../utils/api";
 
 const Create: NextPage = () => {
   const { data } = api.autoSave.get.useQuery();
@@ -52,6 +52,6 @@ const LoadedEditor = ({
   );
 };
 
-export { getServerSideProps } from "../../components/chakra";
+export { getServerSideProps } from "../components/chakra";
 
 export default Create;

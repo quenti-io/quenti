@@ -1,8 +1,8 @@
 import { Container, Stack } from "@chakra-ui/react";
-import { HydrateSetData } from "../../../modules/hydrate-set-data";
-import { TitleBar } from "../../../modules/flashcards/titlebar";
-import { FlashcardArea } from "../../../modules/flashcards/flashcard-area";
-import { ControlsBar } from "../../../modules/flashcards/controls-bar";
+import { HydrateSetData } from "../../modules/hydrate-set-data";
+import { TitleBar } from "../../modules/flashcards/titlebar";
+import { FlashcardArea } from "../../modules/flashcards/flashcard-area";
+import { ControlsBar } from "../../modules/flashcards/controls-bar";
 
 export default function Flashcards() {
   return (
@@ -20,4 +20,4 @@ export default function Flashcards() {
   );
 }
 
-export { getServerSideProps } from "../../../components/chakra";
+export { getServerSideProps } from "../../components/chakra";

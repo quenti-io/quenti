@@ -63,7 +63,7 @@ const Home: NextPage = () => {
               >
                 <Stack>
                   <Heading size="lg">
-                    <LinkOverlay href={`/sets/${x.id}`}>{x.title}</LinkOverlay>
+                    <LinkOverlay href={`/${x.id}`}>{x.title}</LinkOverlay>
                   </Heading>
                   <Text color={termsTextColor}>{x._count.terms} terms</Text>
                 </Stack>
@@ -73,7 +73,7 @@ const Home: NextPage = () => {
           {!isLoading && (
             <Button
               as={Link}
-              href="/sets/create"
+              href="/create"
               height="full"
               variant="outline"
               gap="2"

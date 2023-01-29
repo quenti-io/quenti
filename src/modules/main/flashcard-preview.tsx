@@ -82,7 +82,7 @@ export const FlashcardPreview = () => {
             rounded="full"
             variant="ghost"
             as={Link}
-            href={`/sets/${data.id}/flashcards`}
+            href={`/${data.id}/flashcards`}
             icon={<IconArrowsMaximize />}
             aria-label="Full screen"
             colorScheme="gray"
