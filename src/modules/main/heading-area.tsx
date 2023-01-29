@@ -27,7 +27,7 @@ export const HeadingArea = () => {
         </Button>
       </HStack>
       <Heading size="2xl">{title}</Heading>
-      <Text color={text}>
+      <Text color={text} fontWeight={600}>
         {terms.length} term{terms.length != 1 ? "s" : ""}
       </Text>
     </Stack>
