@@ -7,6 +7,7 @@ import { Box } from "@chakra-ui/react";
 import { EditTermModal } from "./edit-term-modal";
 import { api } from "../utils/api";
 import { useExperienceContext } from "../stores/use-experience-store";
+import { useSet } from "../hooks/use-set";
 
 export interface FlashcardWrapperProps {
   terms: Term[];
@@ -32,6 +33,7 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
   const starMutation = api.experience.starTerm.useMutation();
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
+  const { experience } = useSet();
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);
@@ -127,13 +129,12 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
             if (!starred) {
               starMutation.mutate({
                 termId: term.id,
-                studySetId: term.studySetId,
+                experienceId: experience.id,
               });
               starTerm(sortedTerms[index]!.id);
             } else {
               unstarMutation.mutate({
                 termId: term.id,
-                studySetId: term.studySetId,
               });
               unstarTerm(sortedTerms[index]!.id);
             }

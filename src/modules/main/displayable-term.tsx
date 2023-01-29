@@ -6,12 +6,13 @@ import {
   IconButton,
   Input,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
 import React from "react";
 import { useOutsideClick } from "../../hooks/use-outside-click";
+import { useSet } from "../../hooks/use-set";
 import { useExperienceContext } from "../../stores/use-experience-store";
 import { api } from "../../utils/api";
 
@@ -25,6 +26,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const starMutation = api.experience.starTerm.useMutation();
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
+  const { experience } = useSet();
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);
@@ -137,13 +139,12 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                     starTerm(term.id);
                     starMutation.mutate({
                       termId: term.id,
-                      studySetId: term.studySetId,
+                      experienceId: experience.id,
                     });
                   } else {
                     unstarTerm(term.id);
                     unstarMutation.mutate({
                       termId: term.id,
-                      studySetId: term.studySetId,
                     });
                   }
                 }}

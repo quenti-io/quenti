@@ -123,7 +123,6 @@ model StudiableTerm {
   userId       String
   termId       String
   experienceId String
-
   correctness     Int
   appearedInRound Int?
 

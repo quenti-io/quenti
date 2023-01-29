@@ -11,24 +11,45 @@ import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
+import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
 import { useLearnContext } from "../../../stores/use-learn-store";
+import { api } from "../../../utils/api";
 
 interface ChoiceCardProps {
   active: Question;
 }
 
 export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
+  const { experience } = useSet();
   const answered = useLearnContext((s) => s.answered);
   const status = useLearnContext((s) => s.status);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
 
+  const put = api.studiableTerms.put.useMutation();
+
   const choose = (term: Term) => {
     if (term.id === active.term.id) {
       answerCorrectly(term.id);
+
+      void (async () =>
+        await put.mutateAsync({
+          id: active.term.id,
+          experienceId: experience.id,
+          correctness: 1,
+          appearedInRound: active.term.appearedInRound,
+        }))();
     } else {
       answerIncorrectly(term.id);
+
+      void (async () =>
+        await put.mutateAsync({
+          id: active.term.id,
+          experienceId: experience.id,
+          correctness: -1,
+          appearedInRound: active.term.appearedInRound,
+        }))();
     }
   };
 

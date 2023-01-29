@@ -92,8 +92,6 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           )
         );
 
-        console.log(specialCharacters);
-
         set({
           terms: learnTerms,
           numTerms: learnTerms.length,
