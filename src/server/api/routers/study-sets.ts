@@ -1,4 +1,4 @@
-import type { StarredTerm } from "@prisma/client";
+import type { StarredTerm, StudiableTerm } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -47,6 +47,7 @@ export const studySetsRouter = createTRPCRouter({
       },
       include: {
         starredTerms: true,
+        studiableTerms: true,
       },
     });
 
@@ -59,6 +60,7 @@ export const studySetsRouter = createTRPCRouter({
           },
         })),
         starredTerms: [],
+        studiableTerms: [],
       };
     }
 
@@ -71,6 +73,11 @@ export const studySetsRouter = createTRPCRouter({
       experience: {
         ...experience,
         starredTerms: experience.starredTerms.map((x: StarredTerm) => x.termId),
+        studiableTerms: experience.studiableTerms.map((x: StudiableTerm) => ({
+          id: x.termId,
+          correctness: x.correctness,
+          appearedInRound: x.appearedInRound,
+        })),
       },
     };
   }),

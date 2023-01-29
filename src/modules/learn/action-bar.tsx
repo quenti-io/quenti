@@ -36,10 +36,18 @@ export const ActionBar = () => {
             <Box w="full" bg={backgroundColor}>
               <Container maxW="4xl" py="4">
                 <Flex alignItems="center" justifyContent="space-between">
-                  <Text fontSize="lg" color={textColor} display={{base: "none", md: "flex"}}>
+                  <Text
+                    fontSize="lg"
+                    color={textColor}
+                    display={{ base: "none", md: "flex" }}
+                  >
                     Press any key to continue
                   </Text>
-                  <Button size="lg" w={{base: "full", md: "auto"}} onClick={action}>
+                  <Button
+                    size="lg"
+                    w={{ base: "full", md: "auto" }}
+                    onClick={action}
+                  >
                     Continue
                     {roundSummary && ` to round ${roundSummary.round + 2}`}
                   </Button>
