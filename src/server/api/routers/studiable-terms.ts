@@ -8,7 +8,7 @@ export const studiableTermsRouter = createTRPCRouter({
         id: z.string(),
         experienceId: z.string(),
         correctness: z.number(),
-        appearedInRound: z.number().nullish(),
+        appearedInRound: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {

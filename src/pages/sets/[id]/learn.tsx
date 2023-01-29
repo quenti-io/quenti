@@ -39,7 +39,8 @@ const LearnContainer = () => {
       await completeRound.mutateAsync({
         studySetId: id,
       }))();
-  }, [roundSummary]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roundSummary, id]);
 
   if (roundSummary) return <RoundSummary />;
   return <InteractionCard />;

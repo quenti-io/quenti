@@ -78,7 +78,7 @@ const InputState: React.FC<
           id: active.term.id,
           experienceId: experience.id,
           correctness: 2,
-          appearedInRound: active.term.appearedInRound,
+          appearedInRound: 0,
         }))();
     } else {
       answerIncorrectly(active.term.id);
@@ -194,6 +194,8 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
         id: active.term.id,
         experienceId: experience.id,
         correctness: 2,
+        // Parameter is ignored on update
+        appearedInRound: 0,
       }))();
   };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSet } from "../hooks/use-set";
-import { LearnTerm } from "../interfaces/learn-term";
+import type { LearnTerm } from "../interfaces/learn-term";
 import {
   createLearnStore,
   LearnContext,

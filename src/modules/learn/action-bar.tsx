@@ -33,6 +33,7 @@ export const ActionBar = () => {
           id: active.term.id,
           experienceId: experience.id,
           correctness: -1,
+          appearedInRound: 0,
         }))();
     }
   };
