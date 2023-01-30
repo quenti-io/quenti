@@ -1,4 +1,5 @@
-import { Avatar, HStack, Stack, Text } from "@chakra-ui/react";
+import { Avatar, Box, HStack, Stack, Text, Tooltip } from "@chakra-ui/react";
+import { IconDiscountCheck } from "@tabler/icons-react";
 import { useSet } from "../../hooks/use-set";
 
 export const DescriptionArea = () => {
@@ -10,7 +11,16 @@ export const DescriptionArea = () => {
         <Avatar src={user.image} size="md" />
         <Stack spacing={0}>
           <Text fontSize="xs">Created by</Text>
-          <Text fontWeight={700}>{user.name}</Text>
+          <HStack spacing="2">
+            <Text fontWeight={700}>{user.name}</Text>
+            {user.verified && (
+              <Box color="blue.300">
+                <Tooltip label="Verified">
+                  <IconDiscountCheck size={20} aria-label="Verified" />
+                </Tooltip>
+              </Box>
+            )}
+          </HStack>
         </Stack>
       </HStack>
       <Text>{description}</Text>

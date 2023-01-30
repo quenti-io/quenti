@@ -1,5 +1,5 @@
 import { type ChakraProps, extendTheme } from "@chakra-ui/react";
-import { mode } from "@chakra-ui/theme-tools";
+import { mode, StyleFunctionProps } from "@chakra-ui/theme-tools";
 
 const config = { initialColorMode: "dark", useSystemColorMode: false };
 
@@ -76,11 +76,11 @@ const components = {
     },
   },
   Tooltip: {
-    baseStyle: {
+    baseStyle: ({ colorMode }: StyleFunctionProps) => ({
       borderRadius: "md",
-      bg: "gray.750",
-      textColor: "white",
-    },
+      bg: colorMode == "light" ? "white" : "gray.750",
+      textColor: colorMode == "light" ? "black" : "white",
+    }),
   },
   Link: {
     baseStyle: {

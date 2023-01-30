@@ -19,6 +19,7 @@ export type SetData = {
   user: {
     name: string;
     image: string;
+    verified: boolean;
   };
   title: string;
   description: string;
