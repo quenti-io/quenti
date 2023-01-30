@@ -12,10 +12,6 @@ const allOptions = [
     value: "original",
   },
   {
-    label: "Starred",
-    value: "starred",
-  },
-  {
     label: "Alphabetical",
     value: "alphabetical",
   },

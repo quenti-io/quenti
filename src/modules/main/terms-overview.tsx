@@ -1,6 +1,9 @@
 import {
+  Button,
+  ButtonGroup,
   Flex,
   Heading,
+  HStack,
   Stack,
   Text,
   useColorModeValue,
@@ -12,13 +15,23 @@ import { useExperienceContext } from "../../stores/use-experience-store";
 import { DisplayableTerm } from "./displayable-term";
 import { TermsSortSelect } from "./terms-sort-select";
 
+interface TermsOverviewContextProps {
+  starredOnly: boolean;
+}
+
+const TermsOverviewContext = React.createContext<TermsOverviewContextProps>({
+  starredOnly: false,
+});
+
 export const TermsOverview = () => {
   const { terms, experience } = useSet();
 
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
   const studiable = !!experience.studiableTerms.length;
   const [sortType, setSortType] = React.useState(
     studiable ? "stats" : "original"
   );
+  const [starredOnly, setStarredOnly] = React.useState(false);
 
   const termsListComponent = () => {
     switch (sortType) {
@@ -26,24 +39,51 @@ export const TermsOverview = () => {
         return <TermsByStats />;
       case "original":
         return <TermsByOriginal />;
-      case "starred":
-        return <TermsByStarred />;
       case "alphabetical":
         return <TermsByAlphabetical />;
     }
   };
 
   return (
-    <Stack spacing={8}>
-      <Flex justifyContent="space-between">
-        <Heading size="lg">Terms in this set ({terms.length})</Heading>
-        <TermsSortSelect
-          studiable={!!experience.studiableTerms.length}
-          onChange={setSortType}
-        />
-      </Flex>
-      {termsListComponent()}
-    </Stack>
+    <TermsOverviewContext.Provider value={{ starredOnly }}>
+      <Stack spacing={8}>
+        <Flex
+          justifyContent="space-between"
+          flexDir={{ base: "column", md: "row" }}
+          gap="6"
+        >
+          <Heading size="lg">Terms in this set ({terms.length})</Heading>
+          <HStack spacing={4}>
+            {!!starredTerms.length && (
+              <ButtonGroup
+                size="md"
+                isAttached
+                variant="outline"
+                colorScheme="gray"
+              >
+                <Button
+                  variant={!starredOnly ? "solid" : "outline"}
+                  onClick={() => setStarredOnly(false)}
+                >
+                  All
+                </Button>
+                <Button
+                  variant={starredOnly ? "solid" : "outline"}
+                  onClick={() => setStarredOnly(true)}
+                >
+                  Starred ({starredTerms.length})
+                </Button>
+              </ButtonGroup>
+            )}
+            <TermsSortSelect
+              studiable={!!experience.studiableTerms.length}
+              onChange={setSortType}
+            />
+          </HStack>
+        </Flex>
+        {termsListComponent()}
+      </Stack>
+    </TermsOverviewContext.Provider>
   );
 };
 
@@ -98,13 +138,6 @@ const TermsByOriginal = () => {
   return <TermsList terms={terms} />;
 };
 
-const TermsByStarred = () => {
-  const { terms } = useSet();
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const filteredTerms = terms.filter((x) => starredTerms.includes(x.id));
-  return <TermsList terms={filteredTerms} />;
-};
-
 const TermsByAlphabetical = () => {
   const { terms } = useSet();
   const sortOrder = terms
@@ -128,6 +161,14 @@ const TermsCategory: React.FC<TermsCategoryProps> = ({
 }) => {
   const headingColor = useColorModeValue(`${color}.500`, `${color}.300`);
 
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starredOnly = React.useContext(TermsOverviewContext).starredOnly;
+  const internalTerms = starredOnly
+    ? terms.filter((x) => starredTerms.includes(x.id))
+    : terms;
+
+  if (!internalTerms.length) return null;
+
   return (
     <Stack spacing={6}>
       <Stack spacing={2}>
@@ -148,11 +189,17 @@ interface TermsListProps {
 
 const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder }) => {
   const { termOrder } = useSet();
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
   const internalSort = sortOrder || termOrder;
+
+  const starredOnly = React.useContext(TermsOverviewContext).starredOnly;
+  const internalTerms = starredOnly
+    ? terms.filter((x) => starredTerms.includes(x.id))
+    : terms;
 
   return (
     <Stack spacing={4}>
-      {terms
+      {internalTerms
         .sort((a, b) => internalSort.indexOf(a.id) - internalSort.indexOf(b.id))
         .map((term) => (
           <DisplayableTerm term={term} key={term.id} />

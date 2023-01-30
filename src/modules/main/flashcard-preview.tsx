@@ -1,9 +1,9 @@
 import { Button, Flex, IconButton, Link, Stack } from "@chakra-ui/react";
 import {
-  IconArrowsMaximize,
   IconArrowsShuffle,
+  IconMaximize,
   IconPlayerPlay,
-  IconSettings,
+  IconSettings
 } from "@tabler/icons-react";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
@@ -83,7 +83,7 @@ export const FlashcardPreview = () => {
             variant="ghost"
             as={Link}
             href={`/${data.id}/flashcards`}
-            icon={<IconArrowsMaximize />}
+            icon={<IconMaximize />}
             aria-label="Full screen"
             colorScheme="gray"
           />
