@@ -1,7 +1,9 @@
 import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {
+  IconBooks,
   IconChevronDown,
+  IconFolder,
   IconLogout,
   IconMenu,
   IconMoon,
@@ -49,7 +51,7 @@ export const Navbar: React.FC = () => {
   const color = useColorModeValue("black", "white");
 
   return (
-    <Flex pos="relative" zIndex={10} w="full">
+    <Flex pos="relative" zIndex={100} w="full">
       <HStack
         as="header"
         aria-label="Main navigation"
@@ -89,15 +91,36 @@ export const Navbar: React.FC = () => {
             >
               Home
             </Button>
-            <Button
-              as={Link}
-              href="/create"
-              fontWeight={700}
-              fontSize="sm"
-              rightIcon={<IconChevronDown />}
-            >
-              Create
-            </Button>
+            <Menu placement="bottom-start">
+              <MenuButton>
+                <Button
+                  fontWeight={700}
+                  fontSize="sm"
+                  rightIcon={<IconChevronDown />}
+                  as="div"
+                >
+                  Create
+                </Button>
+              </MenuButton>
+              <MenuList
+                bg={menuBg}
+                py={0}
+                overflow="hidden"
+                w="max"
+                marginTop={2}
+              >
+                <MenuOption
+                  icon={<IconBooks size={20} />}
+                  label="Study set"
+                  link="/create"
+                />
+                <MenuOption
+                  icon={<IconFolder size={20} />}
+                  label="Folder"
+                  link="/create-folder"
+                />
+              </MenuList>
+            </Menu>
           </HStack>
         </HStack>
         <Box display={["block", "block", "none"]}>
