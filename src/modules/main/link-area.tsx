@@ -1,5 +1,6 @@
 import { Button, HStack, Link } from "@chakra-ui/react";
 import { IconBooks, IconCards, IconEdit } from "@tabler/icons-react";
+import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useSet } from "../../hooks/use-set";
 
 export const LinkArea = () => {
@@ -24,9 +25,11 @@ export const LinkArea = () => {
       >
         Flashcards
       </Button>
-      <Button leftIcon={<IconEdit />} variant="ghost" colorScheme="orange">
-        Edit
-      </Button>
+      <SetCreatorOnly>
+        <Button leftIcon={<IconEdit />} variant="ghost" colorScheme="orange">
+          Edit
+        </Button>
+      </SetCreatorOnly>
     </HStack>
   );
 };

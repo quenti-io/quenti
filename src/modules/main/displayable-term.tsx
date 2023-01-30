@@ -11,6 +11,7 @@ import {
 import type { Term } from "@prisma/client";
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
 import React from "react";
+import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useExperienceContext } from "../../stores/use-experience-store";
@@ -112,23 +113,25 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
         <Box h="full">
           <Flex w="full" justifyContent="end">
             <HStack spacing={1} height="24px">
-              <IconButton
-                icon={<IconEdit />}
-                variant={isEditing ? "solid" : "ghost"}
-                aria-label="Edit"
-                rounded="full"
-                onClick={() => {
-                  if (isEditing) {
-                    edit.mutate({
-                      id: term.id,
-                      studySetId: term.studySetId,
-                      word: editWord,
-                      definition: editDefinition,
-                    });
-                  }
-                  setIsEditing(!isEditing);
-                }}
-              />
+              <SetCreatorOnly>
+                <IconButton
+                  icon={<IconEdit />}
+                  variant={isEditing ? "solid" : "ghost"}
+                  aria-label="Edit"
+                  rounded="full"
+                  onClick={() => {
+                    if (isEditing) {
+                      edit.mutate({
+                        id: term.id,
+                        studySetId: term.studySetId,
+                        word: editWord,
+                        definition: editDefinition,
+                      });
+                    }
+                    setIsEditing(!isEditing);
+                  }}
+                />
+              </SetCreatorOnly>
               <IconButton
                 icon={<Star />}
                 variant="ghost"

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Button,
@@ -19,6 +18,8 @@ import {
   IconStar,
   IconStarFilled,
 } from "@tabler/icons-react";
+import React from "react";
+import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {
   term: Term;
@@ -70,17 +71,19 @@ export const Flashcard: React.FC<FlashcardProps> = ({
           </Flex>
           <Flex justifyContent="end">
             <HStack spacing={2}>
-              <IconButton
-                icon={<IconEdit />}
-                aria-label="Edit"
-                rounded="full"
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRequestEdit();
-                }}
-              />
+              <SetCreatorOnly>
+                <IconButton
+                  icon={<IconEdit />}
+                  aria-label="Edit"
+                  rounded="full"
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRequestEdit();
+                  }}
+                />
+              </SetCreatorOnly>
               <IconButton
                 icon={<Star />}
                 aria-label="Star"
