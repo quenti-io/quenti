@@ -95,10 +95,15 @@ export const CreateSetEditor: React.FC = () => {
     debounce(autoSaveHandler, 1000),
     []
   );
+  const wrappedCallback = () => {
+    void (async () => {
+      await autoSaveCallback();
+    })();
+  };
 
   store.subscribe(
     (s) => [s.title, s.description, s.termOrder, s.terms],
-    (async () => await autoSaveCallback()),
+    wrappedCallback,
     { equalityFn: shallow }
   );
 
@@ -156,7 +161,7 @@ const TitleArea = () => {
             <Button
               leftIcon={<IconArrowLeft />}
               as={Link}
-              href="/sets"
+              href="/home"
               variant="link"
             >
               All sets
@@ -218,7 +223,7 @@ const CreateBar: React.FC<CreateBarProps> = ({ savedAt, isSaving }) => {
 
   const create = api.studySets.createFromAutosave.useMutation({
     onSuccess: async (data) => {
-      await router.push(`/sets/${data.id}`);
+      await router.push(`/${data.id}`);
     },
   });
 

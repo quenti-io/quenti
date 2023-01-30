@@ -22,6 +22,49 @@ export const studySetsRouter = createTRPCRouter({
     return studySet;
   }),
 
+  recent: protectedProcedure.query(async ({ ctx }) => {
+    const recentExperiences = (
+      await ctx.prisma.studySetExperience.findMany({
+        where: {
+          userId: ctx.session?.user?.id,
+        },
+        orderBy: {
+          viewedAt: "desc",
+        },
+        take: 16,
+      })
+    ).map((x) => x.studySetId);
+
+    return (
+      await ctx.prisma.studySet.findMany({
+        where: {
+          id: {
+            in: recentExperiences,
+          },
+        },
+        include: {
+          user: true,
+          _count: {
+            select: {
+              terms: true,
+            },
+          },
+        },
+      })
+    )
+      .sort(
+        (a, b) =>
+          recentExperiences.indexOf(a.id) - recentExperiences.indexOf(b.id)
+      )
+      .map((set) => ({
+        ...set,
+        user: {
+          name: set.user.name!,
+          image: set.user.image!,
+        },
+      }));
+  }),
+
   byId: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const studySet = await ctx.prisma.studySet.findUnique({
       where: {
@@ -39,7 +82,24 @@ export const studySetsRouter = createTRPCRouter({
       });
     }
 
-    let experience = await ctx.prisma.studySetExperience.findUnique({
+    await ctx.prisma.studySetExperience.upsert({
+      where: {
+        userId_studySetId: {
+          userId: ctx.session.user.id,
+          studySetId: input,
+        },
+      },
+      create: {
+        studySetId: input,
+        userId: ctx.session.user.id,
+        viewedAt: new Date(),
+      },
+      update: {
+        viewedAt: new Date(),
+      },
+    });
+
+    const experience = await ctx.prisma.studySetExperience.findUnique({
       where: {
         userId_studySetId: {
           userId: ctx.session.user.id,
@@ -53,16 +113,9 @@ export const studySetsRouter = createTRPCRouter({
     });
 
     if (!experience) {
-      experience = {
-        ...(await ctx.prisma.studySetExperience.create({
-          data: {
-            studySetId: input,
-            userId: ctx.session.user.id,
-          },
-        })),
-        starredTerms: [],
-        studiableTerms: [],
-      };
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
     }
 
     return {
