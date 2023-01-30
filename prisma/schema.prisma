@@ -72,9 +72,16 @@ model StudySet {
   user                User                 @relation(fields: [userId], references: [id], onDelete: NoAction)
   title               String
   description         String
+  visibility          StudySetVisibility   @default(Public)
   terms               Term[]
   termOrder           String[]
   studySetExperiences StudySetExperience[]
+}
+
+enum StudySetVisibility {
+  Private
+  Unlisted
+  Public
 }
 
 model SetAutoSave {
