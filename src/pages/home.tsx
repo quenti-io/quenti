@@ -2,17 +2,20 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 
 import {
+  Avatar,
   Button,
   Container,
+  Flex,
   Grid,
   GridItem,
   Heading,
+  HStack,
   LinkBox,
   LinkOverlay,
   Skeleton,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
@@ -35,7 +38,7 @@ const Home: NextPage = () => {
         <Heading color="gray.400" size="lg">
           My Sets
         </Heading>
-        <Grid templateColumns="repeat(auto-fit, minmax(300px, 1fr))" gap="6">
+        <Grid templateColumns="repeat(auto-fit, minmax(300px, 1fr))" gap={4}>
           {isLoading &&
             Array.from({ length: 9 }).map((_, i) => (
               <GridItem minHeight="36" key={i}>
@@ -59,14 +62,20 @@ const Home: NextPage = () => {
                 borderWidth="2px"
                 shadow="lg"
                 transition="all ease-in-out 150ms"
-                _hover={{ transform: "translateY(-2px)" }}
+                _hover={{ transform: "translateY(-2px)", borderBottomColor: "blue.300" }}
               >
-                <Stack>
-                  <Heading size="lg">
-                    <LinkOverlay href={`/${x.id}`}>{x.title}</LinkOverlay>
-                  </Heading>
-                  <Text color={termsTextColor}>{x._count.terms} terms</Text>
-                </Stack>
+                <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
+                  <Stack spacing={1}>
+                    <Heading size="md">
+                      <LinkOverlay href={`/${x.id}`}>{x.title}</LinkOverlay>
+                    </Heading>
+                    <Text color={termsTextColor} fontSize="sm">{x._count.terms} terms</Text>
+                  </Stack>
+                  <HStack gap="2px">
+                    <Avatar src={x.user.image!} size="xs" />
+                    <Text fontSize="sm" fontWeight={600}>{x.user.name}</Text>
+                  </HStack>
+                </Flex>
               </LinkBox>
             </GridItem>
           ))}

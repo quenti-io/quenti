@@ -215,11 +215,6 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             }
           });
 
-          console.log(
-            "ROUND TIMELINE",
-            roundTimeline.map((x) => `${x.type} - ${x.term.word}`)
-          );
-
           return {
             roundSummary: undefined,
             termsThisRound: termsThisRound.length,

@@ -13,8 +13,7 @@ import {
 
 export const Hero: NextPage = () => {
   return (
-    <DarkMode>
-      <GlobalStyle />
+    <>
       <Stack w="full" overflowX="hidden" bgColor="gray.900">
         <Box as="section" overflow="hidden">
           <Stack mx="auto" py="10" pos="relative" pb="32" px={[4, 0]}>
@@ -33,6 +32,7 @@ export const Hero: NextPage = () => {
                 </Heading>
                 <Text
                   fontSize={["lg", "xl"]}
+                  color="whiteAlpha.900"
                   maxW="800px"
                   textAlign="center"
                   data-aos="fade-up"
@@ -111,6 +111,7 @@ export const Hero: NextPage = () => {
             <Heading
               fontSize={{ base: "3xl", lg: "5xl", xl: "6xl" }}
               textAlign="center"
+              color="whiteAlpha.900"
               data-aos="fade"
             >
               Intelligent Repetition
@@ -131,6 +132,6 @@ export const Hero: NextPage = () => {
           </Stack>
         </Stack>
       </Flex>
-    </DarkMode>
+    </>
   );
 };

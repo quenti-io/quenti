@@ -1,6 +1,14 @@
 import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { IconMenu, IconMoon, IconX } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconLogout,
+  IconMenu,
+  IconMoon,
+  IconSettings,
+  IconSun,
+  IconX,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import {
   Avatar,
@@ -11,6 +19,11 @@ import {
   Heading,
   HStack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   Text,
   useColorMode,
   useColorModeValue as mode,
@@ -25,41 +38,66 @@ import { useRouter } from "next/router";
 export const Navbar: React.FC = () => {
   const router = useRouter();
   const onHomePage = router.pathname === "/";
-  const { toggleColorMode } = useColorMode();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const { data: session, status } = useSession();
   const { isOpen: isMobileMenuOpen, onToggle: onMobileMenuToggle } =
     useDisclosure();
+
+  const menuBg = useColorModeValue("white", "gray.800");
 
   return (
     <Flex pos="relative" zIndex={10} w="full">
       <HStack
         as="header"
         aria-label="Main navigation"
-        maxW="7xl"
+        maxW={onHomePage ? "7xl" : undefined}
         w="full"
         mx="auto"
         px={{ base: "6", md: "8" }}
         py="4"
         justify="space-between"
       >
-        <Flex
-          align="center"
-          justify="space-between"
-          className="nav-content__mobile"
-          color={mode("white", "white")}
-        >
-          <HStack as={Link} href="/" rel="home" ml="2">
-            <Logo boxSize="35px" />
-            <Heading
-              as="p"
-              fontSize="lg"
-              color={useColorModeValue("black", "white")}
+        <HStack as="nav" spacing={4} height="12">
+          <Flex
+            align="center"
+            justify="space-between"
+            className="nav-content__mobile"
+            color={mode("white", "white")}
+          >
+            <HStack as={Link} href="/" rel="home" ml="2">
+              <Logo boxSize="35px" />
+              <Heading
+                as="p"
+                fontSize="lg"
+                color={useColorModeValue("black", "white")}
+              >
+                Quizlet.cc
+              </Heading>
+            </HStack>
+          </Flex>
+          <HStack display={["none", "none", "flex"]}>
+            <Button
+              as={Link}
+              href="/home"
+              variant="ghost"
+              colorScheme="gray"
+              fontWeight={700}
+              fontSize="sm"
             >
-              Quizlet.cc
-            </Heading>
+              Home
+            </Button>
+            <Button
+              as={Link}
+              href="/create"
+              fontWeight={700}
+              fontSize="sm"
+              rightIcon={<IconChevronDown />}
+            >
+              Create
+            </Button>
           </HStack>
-        </Flex>
+        </HStack>
         <Box display={["block", "block", "none"]}>
           <IconButton
             aria-label={"Open menu"}
@@ -79,51 +117,103 @@ export const Navbar: React.FC = () => {
           height="12"
         >
           {session?.user && (
-            <Wrap spacing={3} align="center" overflow="visible">
-              <WrapItem>
-                <Avatar src={session.user.image!} size="sm">
-                  <AvatarBadge boxSize="1em" bg="green.500" />
-                </Avatar>
-              </WrapItem>
-              <WrapItem>
-                <Text fontWeight={700}>{session.user.name}</Text>
-              </WrapItem>
-            </Wrap>
+            <Menu placement="bottom-end">
+              <MenuButton>
+                <Wrap
+                  spacing={3}
+                  align="center"
+                  overflow="visible"
+                  color={useColorModeValue("black", "white")}
+                >
+                  <WrapItem>
+                    <Avatar src={session.user.image!} size="sm">
+                      <AvatarBadge boxSize="1em" bg="green.500" />
+                    </Avatar>
+                  </WrapItem>
+                  <WrapItem>
+                    <Text fontWeight={700}>{session.user.name}</Text>
+                  </WrapItem>
+                  <WrapItem>
+                    <IconChevronDown />
+                  </WrapItem>
+                </Wrap>
+              </MenuButton>
+              <MenuList
+                bg={menuBg}
+                py={0}
+                overflow="hidden"
+                w="max"
+                marginTop={2}
+              >
+                <MenuOption
+                  icon={<IconSettings size={18} />}
+                  label="Settings"
+                  onClick={() => {}}
+                />
+                {!onHomePage && (
+                  <>
+                    <MenuOption
+                      icon={
+                        colorMode == "dark" ? (
+                          <IconSun size={18} />
+                        ) : (
+                          <IconMoon size={18} />
+                        )
+                      }
+                      label={colorMode == "dark" ? "Light mode" : "Dark mode"}
+                      onClick={toggleColorMode}
+                    />
+                    <MenuDivider />
+                  </>
+                )}
+                <MenuOption
+                  icon={<IconLogout size={18} />}
+                  label="Sign out"
+                  onClick={async () => {
+                    await signOut();
+                  }}
+                />
+              </MenuList>
+            </Menu>
           )}
-          {status !== "loading" && (
+          {status !== "loading" && !session && (
             <Button
               colorScheme="blue"
-              variant={session ? "outline" : "solid"}
               fontWeight={700}
               onClick={async () => {
-                if (session) await signOut();
-                else await signIn();
+                await signIn();
               }}
             >
-              Sign {session ? "out" : "in"}
+              Sign in
             </Button>
           )}
-          {session?.user && onHomePage && (
-            <Button
-              colorScheme="orange"
-              fontWeight={700}
-              as={Link}
-              href="/sets"
-            >
-              View my sets
-            </Button>
-          )}
-          <IconButton
-            icon={<IconMoon />}
-            aria-label="Theme"
-            rounded="full"
-            variant="ghost"
-            onClick={() => {
-              toggleColorMode();
-            }}
-          />
         </HStack>
       </HStack>
     </Flex>
+  );
+};
+
+interface MenuOptionProps {
+  icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+  label: string;
+  onClick: () => void;
+}
+
+const MenuOption: React.FC<MenuOptionProps> = ({ icon, label, onClick }) => {
+  const bg = useColorModeValue("white", "gray.800");
+  const hover = useColorModeValue("gray.100", "gray.700");
+
+  return (
+    <MenuItem
+      icon={icon}
+      bg={bg}
+      _hover={{ bg: hover }}
+      onClick={onClick}
+      py="2"
+      fontWeight={600}
+      color={useColorModeValue("black", "white")}
+    >
+      <Text>{label}</Text>
+    </MenuItem>
   );
 };

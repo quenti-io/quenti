@@ -11,6 +11,7 @@ export const studySetsRouter = createTRPCRouter({
         userId: ctx.session?.user?.id,
       },
       include: {
+        user: true,
         _count: {
           select: {
             terms: true,
