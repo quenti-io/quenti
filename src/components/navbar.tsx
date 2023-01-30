@@ -8,6 +8,7 @@ import {
   IconSettings,
   IconSun,
   IconX,
+  type TablerIconsProps,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import {
@@ -45,6 +46,7 @@ export const Navbar: React.FC = () => {
     useDisclosure();
 
   const menuBg = useColorModeValue("white", "gray.800");
+  const color = useColorModeValue("black", "white");
 
   return (
     <Flex pos="relative" zIndex={10} w="full">
@@ -123,7 +125,7 @@ export const Navbar: React.FC = () => {
                   spacing={3}
                   align="center"
                   overflow="visible"
-                  color={useColorModeValue("black", "white")}
+                  color={color}
                 >
                   <WrapItem>
                     <Avatar src={session.user.image!} size="sm">
@@ -148,7 +150,7 @@ export const Navbar: React.FC = () => {
                 <MenuOption
                   icon={<IconSettings size={18} />}
                   label="Settings"
-                  onClick={() => {}}
+                  link="/settings"
                 />
                 {!onHomePage && (
                   <>
@@ -194,24 +196,33 @@ export const Navbar: React.FC = () => {
 };
 
 interface MenuOptionProps {
-  icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+  icon: React.ReactElement<TablerIconsProps, string>;
   label: string;
-  onClick: () => void;
+  link?: string;
+  onClick?: () => void;
 }
 
-const MenuOption: React.FC<MenuOptionProps> = ({ icon, label, onClick }) => {
+const MenuOption: React.FC<MenuOptionProps> = ({
+  icon,
+  label,
+  link,
+  onClick,
+}) => {
   const bg = useColorModeValue("white", "gray.800");
   const hover = useColorModeValue("gray.100", "gray.700");
+  const color = useColorModeValue("black", "white");
 
   return (
     <MenuItem
       icon={icon}
+      as={link ? Link : undefined}
+      href={link ?? ""}
       bg={bg}
       _hover={{ bg: hover }}
       onClick={onClick}
       py="2"
       fontWeight={600}
-      color={useColorModeValue("black", "white")}
+      color={color}
     >
       <Text>{label}</Text>
     </MenuItem>

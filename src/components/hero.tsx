@@ -1,15 +1,13 @@
-import type { NextPage } from "next";
 import {
   Box,
   Button,
   Flex,
-  Text,
   Heading,
   Stack,
+  Text,
   VStack,
-  DarkMode,
-  GlobalStyle,
 } from "@chakra-ui/react";
+import type { NextPage } from "next";
 
 export const Hero: NextPage = () => {
   return (
