@@ -1,2 +1,2 @@
-export const plural = (word: string, value: number): string =>
-  `${word}${value === 1 ? "" : "s"}`;
+export const plural = (value: number, word: string): string =>
+  `${value} ${word}${value === 1 ? "" : "s"}`;

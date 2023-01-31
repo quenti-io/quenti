@@ -10,24 +10,23 @@ import {
 export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms, termOrder, experience } = useSet();
+  const { terms, experience } = useSet();
 
   const storeRef = React.useRef<LearnStore>();
   if (!storeRef.current) {
     storeRef.current = createLearnStore();
 
-    const sorted = terms.sort(
-      (a, b) => termOrder.indexOf(a.id) - termOrder.indexOf(b.id)
-    );
     const studiable = experience.studiableTerms;
-    const learnTerms: LearnTerm[] = sorted.map((term) => {
-      const studiableTerm = studiable.find((s) => s.id === term.id);
-      return {
-        ...term,
-        correctness: studiableTerm?.correctness ?? 0,
-        appearedInRound: studiableTerm?.appearedInRound,
-      };
-    });
+    const learnTerms: LearnTerm[] = terms
+      .sort((a, b) => a.rank - b.rank)
+      .map((term) => {
+        const studiableTerm = studiable.find((s) => s.id === term.id);
+        return {
+          ...term,
+          correctness: studiableTerm?.correctness ?? 0,
+          appearedInRound: studiableTerm?.appearedInRound,
+        };
+      });
 
     storeRef.current.getState().initialize(learnTerms, experience.learnRound);
   }

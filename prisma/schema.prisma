@@ -75,7 +75,6 @@ model StudySet {
   tags                String[]             @default([])
   visibility          StudySetVisibility   @default(Public)
   terms               Term[]
-  termOrder           String[]
   studySetExperiences StudySetExperience[]
 }
 
@@ -86,19 +85,19 @@ enum StudySetVisibility {
 }
 
 model SetAutoSave {
-  userId            String         @id
-  savedAt           DateTime       @updatedAt
-  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title             String
-  description       String
-  autoSaveTerms     AutoSaveTerm[]
-  autoSaveTermOrder String[]
+  userId        String         @id
+  savedAt       DateTime       @updatedAt
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String
+  description   String
+  autoSaveTerms AutoSaveTerm[]
 }
 
 model Term {
   id         String   @id @default(cuid())
   word       String
   definition String
+  rank       Int
   StudySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
   studySetId String
 
@@ -110,6 +109,7 @@ model AutoSaveTerm {
   id            String      @id @default(cuid())
   word          String
   definition    String
+  rank          Int
   setAutoSaveId String
   setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
 }

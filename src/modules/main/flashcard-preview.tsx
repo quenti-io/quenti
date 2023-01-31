@@ -3,7 +3,7 @@ import {
   IconArrowsShuffle,
   IconMaximize,
   IconPlayerPlay,
-  IconSettings
+  IconSettings,
 } from "@tabler/icons-react";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
@@ -21,15 +21,16 @@ export const FlashcardPreview = () => {
     s.shuffleFlashcards,
     s.toggleShuffleFlashcards,
   ]);
-  const [termOrder, setTermOrder] = React.useState<string[]>(
-    shuffle ? shuffleArray(Array.from(data.termOrder)) : data.termOrder
-  );
 
+  const _termOrder = data.terms
+    .sort((a, b) => a.rank - b.rank)
+    .map((t) => t.id);
+  const [termOrder, setTermOrder] = React.useState<string[]>(
+    shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder
+  );
   React.useEffect(() => {
-    setTermOrder(
-      shuffle ? shuffleArray(Array.from(data.termOrder)) : data.termOrder
-    );
-  }, [shuffle, data.termOrder]);
+    setTermOrder((o: string[]) => (shuffle ? shuffleArray(Array.from(o)) : o));
+  }, [shuffle]);
 
   return (
     <Flex

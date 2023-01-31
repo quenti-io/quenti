@@ -133,14 +133,13 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
             </Flex>
             <Text fontWeight={700}>
               Preview{" "}
-              {!!previewTerms.length &&
-                `${previewTerms.length} ${plural("Term", previewTerms.length)}`}
+              {!!previewTerms.length && plural(previewTerms.length, "Term")}
             </Text>
             <Stack>
               {previewTerms.map(({ word, definition }, i) => (
                 <GenericTermCard
                   key={i}
-                  term={{ word, definition, id: "", studySetId: "" }}
+                  term={{ word, definition, id: "", studySetId: "", rank: i }}
                   variantBg
                 />
               ))}
@@ -162,8 +161,7 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
               }}
             >
               Import{" "}
-              {!!previewTerms.length &&
-                `${previewTerms.length} ${plural("term", previewTerms.length)}`}
+              {!!previewTerms.length && plural(previewTerms.length, "term")}
             </Button>
           </ButtonGroup>
         </ModalFooter>

@@ -1,54 +1,98 @@
-import { Center, Spinner } from "@chakra-ui/react";
-import type { AutoSaveTerm, SetAutoSave } from "@prisma/client";
+import { Container } from "@chakra-ui/react";
+import debounce from "lodash.debounce";
 import type { NextPage } from "next";
 import React from "react";
-import { CreateSetEditor } from "../modules/create-set-editor";
+import shallow from "zustand/shallow";
+import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
+import { SetEditor } from "../modules/set-editor";
 import {
-  createCreateSetStore,
   CreateSetContext,
-  type CreateSetStore,
+  useCreateSetContext,
 } from "../stores/use-create-set-store";
 import { api } from "../utils/api";
 
 const Create: NextPage = () => {
-  const { data } = api.autoSave.get.useQuery();
-
-  if (!data)
-    return (
-      <Center height="calc(100vh - 120px)">
-        <Spinner color="blue.200" />
-      </Center>
-    );
-
-  return <LoadedEditor data={data} />;
+  return (
+    <HydrateAutoSaveData>
+      <Container maxW="7xl" marginTop="10">
+        <EditorWrapper />
+      </Container>
+    </HydrateAutoSaveData>
+  );
 };
 
-const LoadedEditor = ({
-  data,
-}: {
-  data: SetAutoSave & { autoSaveTerms: AutoSaveTerm[] };
-}) => {
-  const storeRef = React.useRef<CreateSetStore>();
-  if (!storeRef.current) {
-    storeRef.current = createCreateSetStore({
-      ...data,
-      termOrder: data.autoSaveTermOrder,
-      terms: data.autoSaveTerms,
-    });
-  }
+const EditorWrapper = () => {
+  const { data } = api.autoSave.get.useQuery();
 
-  React.useEffect(() => {
-    storeRef.current?.setState({
-      ...data,
-      termOrder: data.autoSaveTermOrder,
-      terms: data.autoSaveTerms,
+  const store = React.useContext(CreateSetContext)!;
+  const title = useCreateSetContext((s) => s.title);
+  const description = useCreateSetContext((s) => s.description);
+  const terms = useCreateSetContext((s) => s.autoSaveTerms);
+  const setTitle = useCreateSetContext((s) => s.setTitle);
+  const setDescription = useCreateSetContext((s) => s.setDescription);
+  const addTerm = useCreateSetContext((s) => s.addTerm);
+  const bulkAddTerms = useCreateSetContext((s) => s.bulkAddTerms);
+  const deleteTerm = useCreateSetContext((s) => s.deleteTerm);
+  const editTerm = useCreateSetContext((s) => s.editTerm);
+  const reorderTerm = useCreateSetContext((s) => s.reorderTerm);
+  const flipTerms = useCreateSetContext((s) => s.flipTerms);
+
+  const [lastSavedAt, setLastSavedAt] = React.useState(data?.savedAt);
+
+  const autoSave = api.autoSave.save.useMutation({
+    onSuccess(data) {
+      setLastSavedAt(data.savedAt);
+    },
+  });
+
+  const autoSaveHandler = async () => {
+    const state = store.getState();
+
+    await autoSave.mutateAsync({
+      title: state.title,
+      description: state.description,
+      terms: state.autoSaveTerms
+        .sort((a, b) => a.rank - b.rank)
+        .map((x) => ({
+          word: x.word,
+          definition: x.definition,
+        })),
     });
-  }, [data]);
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const autoSaveCallback = React.useCallback(
+    debounce(autoSaveHandler, 1000),
+    []
+  );
+  const wrappedCallback = () => {
+    void (async () => {
+      await autoSaveCallback();
+    })();
+  };
+
+  store.subscribe(
+    (s) => [s.title, s.description, s.autoSaveTerms],
+    wrappedCallback,
+    { equalityFn: shallow }
+  );
 
   return (
-    <CreateSetContext.Provider value={storeRef.current}>
-      <CreateSetEditor />
-    </CreateSetContext.Provider>
+    <SetEditor
+      title={title}
+      description={description}
+      isSaving={autoSave.isLoading}
+      numTerms={terms.length}
+      terms={terms}
+      setTitle={setTitle}
+      setDescription={setDescription}
+      onBulkImportTerms={bulkAddTerms}
+      addTerm={addTerm}
+      deleteTerm={deleteTerm}
+      editTerm={editTerm}
+      reorderTerm={reorderTerm}
+      onFlipTerms={flipTerms}
+    />
   );
 };
 

@@ -188,9 +188,9 @@ interface TermsListProps {
 }
 
 const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder }) => {
-  const { termOrder } = useSet();
   const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const internalSort = sortOrder || termOrder;
+  const internalSort =
+    sortOrder || terms.sort((a, b) => a.rank - b.rank).map((x) => x.id);
 
   const starredOnly = React.useContext(TermsOverviewContext).starredOnly;
   const internalTerms = starredOnly

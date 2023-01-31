@@ -13,8 +13,7 @@ const initialTerms = Array.from({ length: 5 }).map(() => ({
 interface CreateSetProps {
   title: string;
   description: string;
-  terms: AutoSaveTerm[];
-  termOrder: string[];
+  autoSaveTerms: AutoSaveTerm[];
 }
 
 interface CreateSetState extends CreateSetProps {
@@ -23,8 +22,8 @@ interface CreateSetState extends CreateSetProps {
   addTerm: () => void;
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
   deleteTerm: (id: string) => void;
-  editTerm: (id: string, term: AutoSaveTerm) => void;
-  reorderTerms: (termOrder: string[]) => void;
+  editTerm: (id: string, word: string, definition: string) => void;
+  reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
 }
 
@@ -34,8 +33,7 @@ export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
   const DEFAULT_PROPS: CreateSetProps = {
     title: "",
     description: "",
-    terms: initialTerms,
-    termOrder: initialTerms.map((x) => x.id),
+    autoSaveTerms: initialTerms,
   };
 
   return createStore<CreateSetState>()(
@@ -51,48 +49,60 @@ export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
             word: "",
             definition: "",
             setAutoSaveId: "",
+            rank: state.autoSaveTerms.length,
           };
 
           return {
-            terms: [...state.terms, term],
-            termOrder: [...state.termOrder, term.id],
+            autoSaveTerms: [...state.autoSaveTerms, term],
           };
         }),
       bulkAddTerms: (terms: { word: string; definition: string }[]) => {
         set((state) => {
-          const newTerms = terms.map((term) => ({
+          const newTerms = terms.map((term, i) => ({
             id: nanoid(),
             word: term.word,
             definition: term.definition,
             setAutoSaveId: "",
+            rank: state.autoSaveTerms.length + i,
           }));
 
           return {
-            terms: [...state.terms, ...newTerms],
-            termOrder: [...state.termOrder, ...newTerms.map((term) => term.id)],
+            autoSaveTerms: [...state.autoSaveTerms, ...newTerms],
           };
         });
       },
       deleteTerm: (id: string) => {
         set((state) => {
           return {
-            terms: state.terms.filter((term) => term.id !== id),
-            termOrder: state.termOrder.filter((termId) => termId !== id),
+            autoSaveTerms: state.autoSaveTerms.filter((term) => term.id !== id),
           };
         });
       },
-      editTerm: (id: string, term: AutoSaveTerm) => {
+      editTerm: (id: string, word: string, definition: string) => {
         set((state) => {
           return {
-            terms: state.terms.map((t) => (t.id === id ? term : t)),
+            autoSaveTerms: state.autoSaveTerms.map((t) =>
+              t.id === id ? { ...t, word, definition } : t
+            ),
           };
         });
       },
-      reorderTerms: (termOrder: string[]) => set({ termOrder }),
+      reorderTerm: (id: string, rank: number) => {
+        set((state) => {
+          const term = state.autoSaveTerms.find((t) => t.id === id)!;
+
+          const newTerms = state.autoSaveTerms.filter((t) => t.id !== id);
+          newTerms.splice(rank, 0, term);
+
+          return {
+            autoSaveTerms: newTerms.map((t, i) => ({ ...t, rank: i })),
+          };
+        });
+      },
       flipTerms: () => {
         set((state) => {
           return {
-            terms: state.terms.map((term) => ({
+            autoSaveTerms: state.autoSaveTerms.map((term) => ({
               ...term,
               word: term.definition,
               definition: term.word,

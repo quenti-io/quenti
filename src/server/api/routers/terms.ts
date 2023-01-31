@@ -10,6 +10,7 @@ export const termsRouter = createTRPCRouter({
         studySetId: z.string(),
         term: z.object({
           word: z.string().max(50),
+          rank: z.number().min(0),
           definition: z.string().max(100),
         }),
       })
@@ -35,6 +36,21 @@ export const termsRouter = createTRPCRouter({
         });
       }
 
+      // Cleanup all ranks so that all values are consecutive
+      await ctx.prisma.term.updateMany({
+        where: {
+          studySetId: input.studySetId,
+          rank: {
+            gte: input.term.rank,
+          },
+        },
+        data: {
+          rank: {
+            increment: 1,
+          },
+        },
+      });
+
       const term = await ctx.prisma.term.create({
         data: {
           ...input.term,
@@ -42,6 +58,57 @@ export const termsRouter = createTRPCRouter({
         },
       });
       return term;
+    }),
+
+  reorder: protectedProcedure
+    .input(
+      z.object({
+        studySetId: z.string(),
+        term: z.object({
+          id: z.string(),
+          rank: z.number().min(0),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Cleanup all ranks so that all values are consecutive
+      const currentRank = (await ctx.prisma.term.findFirst({
+        where: {
+          id: input.term.id,
+        },
+      }))!.rank;
+
+      if (currentRank < input.term.rank) {
+        await ctx.prisma.term.updateMany({
+          where: {
+            studySetId: input.studySetId,
+            rank: {
+              gte: currentRank,
+              lte: input.term.rank,
+            },
+          },
+          data: {
+            rank: {
+              decrement: 1,
+            },
+          },
+        });
+      } else {
+        await ctx.prisma.term.updateMany({
+          where: {
+            studySetId: input.studySetId,
+            rank: {
+              lte: currentRank,
+              gte: input.term.rank,
+            },
+          },
+          data: {
+            rank: {
+              increment: 1,
+            },
+          },
+        });
+      }
     }),
 
   edit: protectedProcedure

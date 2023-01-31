@@ -23,6 +23,5 @@ export type SetData = {
   };
   title: string;
   description: string;
-  termOrder: string[];
   terms: Term[];
 };

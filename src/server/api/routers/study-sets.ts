@@ -160,14 +160,14 @@ export const studySetsRouter = createTRPCRouter({
         userId: ctx.session.user.id,
         terms: {
           createMany: {
-            data: autoSave.autoSaveTerms.map((x) => ({
-              id: x.id,
-              word: x.word,
-              definition: x.definition,
+            data: autoSave.autoSaveTerms.map((term) => ({
+              id: term.id,
+              word: term.word,
+              definition: term.definition,
+              rank: term.rank,
             })),
           },
         },
-        termOrder: autoSave.autoSaveTermOrder,
       },
     });
 

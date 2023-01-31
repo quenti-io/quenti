@@ -13,7 +13,6 @@ export const autoSaveRouter = createTRPCRouter({
         title: "",
         description: "",
         userId: ctx.session.user.id,
-        autoSaveTermOrder: [],
         autoSaveTerms: {},
       },
       include: {
@@ -46,14 +45,14 @@ export const autoSaveRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           userId: ctx.session.user.id,
-          autoSaveTermOrder: terms.map((term) => term.id),
           autoSaveTerms: {
             deleteMany: { setAutoSaveId: ctx.session.user.id },
             createMany: {
-              data: terms.map((term) => ({
+              data: terms.map((term, i) => ({
                 id: term.id,
                 definition: term.definition,
                 word: term.word,
+                rank: i,
               })),
             },
           },
@@ -62,13 +61,13 @@ export const autoSaveRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           userId: ctx.session.user.id,
-          autoSaveTermOrder: terms.map((term) => term.id),
           autoSaveTerms: {
             createMany: {
-              data: terms.map((term) => ({
+              data: terms.map((term, i) => ({
                 id: term.id,
                 definition: term.definition,
                 word: term.word,
+                rank: i,
               })),
             },
           },
