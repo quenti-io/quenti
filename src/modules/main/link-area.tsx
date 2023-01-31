@@ -1,5 +1,5 @@
-import { Button, HStack, Link } from "@chakra-ui/react";
-import { IconBooks, IconCards, IconEdit } from "@tabler/icons-react";
+import { Button, ButtonGroup, Link } from "@chakra-ui/react";
+import { IconBrain, IconCards, IconEdit } from "@tabler/icons-react";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useSet } from "../../hooks/use-set";
 
@@ -7,9 +7,15 @@ export const LinkArea = () => {
   const { id } = useSet();
 
   return (
-    <HStack spacing={4}>
+    <ButtonGroup
+      spacing={0}
+      flexDir={{ base: "column", sm: "row" }}
+      w="full"
+      gap={4}
+      size="lg"
+    >
       <Button
-        leftIcon={<IconBooks />}
+        leftIcon={<IconBrain />}
         fontWeight={700}
         as={Link}
         href={`/${id}/learn`}
@@ -30,6 +36,6 @@ export const LinkArea = () => {
           Edit
         </Button>
       </SetCreatorOnly>
-    </HStack>
+    </ButtonGroup>
   );
 };

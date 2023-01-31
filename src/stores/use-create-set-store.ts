@@ -21,6 +21,7 @@ interface CreateSetState extends CreateSetProps {
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   addTerm: () => void;
+  bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
   deleteTerm: (id: string) => void;
   editTerm: (id: string, term: AutoSaveTerm) => void;
   reorderTerms: (termOrder: string[]) => void;
@@ -57,6 +58,21 @@ export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
             termOrder: [...state.termOrder, term.id],
           };
         }),
+      bulkAddTerms: (terms: { word: string; definition: string }[]) => {
+        set((state) => {
+          const newTerms = terms.map((term) => ({
+            id: nanoid(),
+            word: term.word,
+            definition: term.definition,
+            setAutoSaveId: "",
+          }));
+
+          return {
+            terms: [...state.terms, ...newTerms],
+            termOrder: [...state.termOrder, ...newTerms.map((term) => term.id)],
+          };
+        });
+      },
       deleteTerm: (id: string) => {
         set((state) => {
           return {

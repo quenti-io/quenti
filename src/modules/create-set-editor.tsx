@@ -53,6 +53,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { shallow } from "zustand/shallow";
 import { AutoResizeTextarea } from "../components/auto-resize-textarea";
+import { ImportTermsModal } from "../components/import-terms-modal";
 import {
   CreateSetContext,
   useCreateSetContext,
@@ -145,6 +146,9 @@ const TitleArea = () => {
   const setTitle = useCreateSetContext((state) => state.setTitle);
   const description = useCreateSetContext((state) => state.description);
   const setDescription = useCreateSetContext((state) => state.setDescription);
+  const bulkAddTerms = useCreateSetContext((state) => state.bulkAddTerms);
+
+  const [importOpen, setImportOpen] = React.useState(false);
 
   const termOrder = useCreateSetContext(
     (state) => Object.keys(state.termOrder),
@@ -155,6 +159,16 @@ const TitleArea = () => {
 
   return (
     <>
+      <ImportTermsModal
+        isOpen={importOpen}
+        onClose={() => {
+          setImportOpen(false);
+        }}
+        onImport={(terms) => {
+          bulkAddTerms(terms);
+          setImportOpen(false);
+        }}
+      />
       <Stack spacing={2}>
         {!create && (
           <HStack>
@@ -193,9 +207,17 @@ const TitleArea = () => {
         minHeight={24}
         placeholder="Add a description..."
         variant="filled"
+        allowTab={false}
       />
       <Flex align={"center"} justifyContent={"space-between"}>
-        <Button leftIcon={<IconPlus />} variant="link" colorScheme="orange">
+        <Button
+          leftIcon={<IconPlus />}
+          variant="ghost"
+          colorScheme="orange"
+          onClick={() => {
+            setImportOpen(true);
+          }}
+        >
           Import terms
         </Button>
         <ButtonGroup>

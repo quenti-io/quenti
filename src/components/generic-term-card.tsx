@@ -4,11 +4,14 @@ import { Box, Card, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 
 export interface GenericTermCardProps {
   term: Term;
+  variantBg?: boolean;
 }
 
-export const GenericTermCard: React.FC<GenericTermCardProps> = ({ term }) => {
+export const GenericTermCard: React.FC<GenericTermCardProps> = ({ term, variantBg }) => {
+  const setBg = useColorModeValue("gray.100", "gray.750");
+
   return (
-    <Card px="4" py="5">
+    <Card px="4" py="5" bg={variantBg ? setBg : undefined}>
       <Flex
         flexDir={["column-reverse", "row", "row"]}
         alignItems="stretch"
