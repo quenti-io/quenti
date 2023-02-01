@@ -1,36 +1,32 @@
 import {
+  Button,
   Flex,
   HStack,
-  Stack,
-  useColorModeValue,
-  Text,
   Spinner,
-  Button,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconPencil } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { api } from "../../utils/api";
 import { plural } from "../../utils/string";
 
 export interface TopBarProps {
+  mode: "create" | "edit";
   savedAt?: Date;
   isSaving: boolean;
+  isLoading: boolean;
   numTerms: number;
+  onComplete: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
+  mode,
   savedAt,
   isSaving,
+  isLoading,
   numTerms,
+  onComplete,
 }) => {
-  const router = useRouter();
-
-  const create = api.studySets.createFromAutosave.useMutation({
-    onSuccess: async (data) => {
-      await router.push(`/${data.id}`);
-    },
-  });
-
   return (
     <HStack
       py="3"
@@ -47,7 +43,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <HStack>
             <IconPencil />
             <Text fontSize="lg" fontWeight={600}>
-              Create a new set
+              {mode == "create" ? "Create a new set" : "Edit set"}
             </Text>
           </HStack>
           <HStack color="gray.400" spacing={4}>
@@ -61,13 +57,11 @@ export const TopBar: React.FC<TopBarProps> = ({
         </Stack>
         <Button
           fontWeight={700}
-          isLoading={create.isLoading}
+          isLoading={isLoading}
           isDisabled={isSaving}
-          onClick={() => {
-            create.mutate();
-          }}
+          onClick={onComplete}
         >
-          Create
+          {mode == "edit" ? "Done" : "Create"}
         </Button>
       </Flex>
     </HStack>

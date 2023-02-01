@@ -1,22 +1,16 @@
-import type { AutoSaveTerm } from "@prisma/client";
+import type { AutoSaveTerm, Term } from "@prisma/client";
 import { nanoid } from "nanoid";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-const initialTerms = Array.from({ length: 5 }).map(() => ({
-  id: nanoid(),
-  word: "",
-  definition: "",
-})) as AutoSaveTerm[];
-
-interface CreateSetProps {
+interface SetEditorProps {
   title: string;
   description: string;
-  autoSaveTerms: AutoSaveTerm[];
+  terms: (Term | AutoSaveTerm)[];
 }
 
-interface CreateSetState extends CreateSetProps {
+interface SetEditorState extends SetEditorProps {
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   addTerm: () => void;
@@ -27,16 +21,16 @@ interface CreateSetState extends CreateSetProps {
   flipTerms: () => void;
 }
 
-export type CreateSetStore = ReturnType<typeof createCreateSetStore>;
+export type SetEditorStore = ReturnType<typeof createSetEditorStore>;
 
-export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
-  const DEFAULT_PROPS: CreateSetProps = {
+export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
+  const DEFAULT_PROPS: SetEditorProps = {
     title: "",
     description: "",
-    autoSaveTerms: initialTerms,
+    terms: [],
   };
 
-  return createStore<CreateSetState>()(
+  return createStore<SetEditorState>()(
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
@@ -49,11 +43,11 @@ export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
             word: "",
             definition: "",
             setAutoSaveId: "",
-            rank: state.autoSaveTerms.length,
+            rank: state.terms.length,
           };
 
           return {
-            autoSaveTerms: [...state.autoSaveTerms, term],
+            terms: [...state.terms, term],
           };
         }),
       bulkAddTerms: (terms: { word: string; definition: string }[]) => {
@@ -63,25 +57,25 @@ export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
             word: term.word,
             definition: term.definition,
             setAutoSaveId: "",
-            rank: state.autoSaveTerms.length + i,
+            rank: state.terms.length + i,
           }));
 
           return {
-            autoSaveTerms: [...state.autoSaveTerms, ...newTerms],
+            terms: [...state.terms, ...newTerms],
           };
         });
       },
       deleteTerm: (id: string) => {
         set((state) => {
           return {
-            autoSaveTerms: state.autoSaveTerms.filter((term) => term.id !== id),
+            terms: state.terms.filter((term) => term.id !== id),
           };
         });
       },
       editTerm: (id: string, word: string, definition: string) => {
         set((state) => {
           return {
-            autoSaveTerms: state.autoSaveTerms.map((t) =>
+            terms: state.terms.map((t) =>
               t.id === id ? { ...t, word, definition } : t
             ),
           };
@@ -89,20 +83,20 @@ export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
       },
       reorderTerm: (id: string, rank: number) => {
         set((state) => {
-          const term = state.autoSaveTerms.find((t) => t.id === id)!;
+          const term = state.terms.find((t) => t.id === id)!;
 
-          const newTerms = state.autoSaveTerms.filter((t) => t.id !== id);
+          const newTerms = state.terms.filter((t) => t.id !== id);
           newTerms.splice(rank, 0, term);
 
           return {
-            autoSaveTerms: newTerms.map((t, i) => ({ ...t, rank: i })),
+            terms: newTerms.map((t, i) => ({ ...t, rank: i })),
           };
         });
       },
       flipTerms: () => {
         set((state) => {
           return {
-            autoSaveTerms: state.autoSaveTerms.map((term) => ({
+            terms: state.terms.map((term) => ({
               ...term,
               word: term.definition,
               definition: term.word,
@@ -114,16 +108,16 @@ export const createCreateSetStore = (initProps?: Partial<CreateSetProps>) => {
   );
 };
 
-export const CreateSetContext = React.createContext<CreateSetStore | null>(
+export const SetEditorContext = React.createContext<SetEditorStore | null>(
   null
 );
 
-export const useCreateSetContext = <T>(
-  selector: (state: CreateSetState) => T,
+export const useSetEditorContext = <T>(
+  selector: (state: SetEditorState) => T,
   equalityFn?: (left: T, right: T) => boolean
 ): T => {
-  const store = React.useContext(CreateSetContext);
-  if (!store) throw new Error("Missing CreateSetContext.Provider in the tree");
+  const store = React.useContext(SetEditorContext);
+  if (!store) throw new Error("Missing SetEditorContext.Provider in the tree");
 
   return useStore(store, selector, equalityFn);
 };

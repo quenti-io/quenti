@@ -32,7 +32,13 @@ export const LinkArea = () => {
         Flashcards
       </Button>
       <SetCreatorOnly>
-        <Button leftIcon={<IconEdit />} variant="ghost" colorScheme="orange">
+        <Button
+          leftIcon={<IconEdit />}
+          variant="ghost"
+          colorScheme="orange"
+          as={Link}
+          href={`/${id}/edit`}
+        >
           Edit
         </Button>
       </SetCreatorOnly>

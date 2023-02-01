@@ -8,10 +8,12 @@ import { TitleProperties } from "./editor/title-properties";
 import { TopBar } from "./editor/top-bar";
 
 export interface SetEditorProps {
+  mode: "create" | "edit";
   title: string;
   description: string;
   numTerms: number;
   isSaving: boolean;
+  isLoading: boolean;
   terms: (Term | AutoSaveTerm)[];
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
@@ -21,13 +23,16 @@ export interface SetEditorProps {
   reorderTerm: (id: string, rank: number) => void;
   onBulkImportTerms: (terms: { word: string; definition: string }[]) => void;
   onFlipTerms: () => void;
+  onComplete: () => void;
 }
 
 export const SetEditor: React.FC<SetEditorProps> = ({
+  mode,
   title,
   description,
   numTerms,
   isSaving,
+  isLoading,
   terms,
   setTitle,
   setDescription,
@@ -37,6 +42,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
   reorderTerm,
   onBulkImportTerms,
   onFlipTerms,
+  onComplete,
 }) => {
   const [importOpen, setImportOpen] = React.useState(false);
 
@@ -52,7 +58,13 @@ export const SetEditor: React.FC<SetEditorProps> = ({
           setImportOpen(false);
         }}
       />
-      <TopBar isSaving={isSaving} numTerms={numTerms} />
+      <TopBar
+        mode={mode}
+        isSaving={isSaving}
+        isLoading={isLoading}
+        numTerms={numTerms}
+        onComplete={onComplete}
+      />
       <TitleProperties
         title={title}
         setTitle={setTitle}

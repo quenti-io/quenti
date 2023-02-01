@@ -1,20 +1,21 @@
 import { Container } from "@chakra-ui/react";
 import debounce from "lodash.debounce";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import React from "react";
 import shallow from "zustand/shallow";
 import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
 import { SetEditor } from "../modules/set-editor";
 import {
-  CreateSetContext,
-  useCreateSetContext,
-} from "../stores/use-create-set-store";
+  SetEditorContext,
+  useSetEditorContext,
+} from "../stores/use-set-editor-store";
 import { api } from "../utils/api";
 
 const Create: NextPage = () => {
   return (
     <HydrateAutoSaveData>
-      <Container maxW="7xl" marginTop="10">
+      <Container maxW="7xl" marginTop="10" marginBottom="20">
         <EditorWrapper />
       </Container>
     </HydrateAutoSaveData>
@@ -22,20 +23,21 @@ const Create: NextPage = () => {
 };
 
 const EditorWrapper = () => {
+  const router = useRouter();
   const { data } = api.autoSave.get.useQuery();
 
-  const store = React.useContext(CreateSetContext)!;
-  const title = useCreateSetContext((s) => s.title);
-  const description = useCreateSetContext((s) => s.description);
-  const terms = useCreateSetContext((s) => s.autoSaveTerms);
-  const setTitle = useCreateSetContext((s) => s.setTitle);
-  const setDescription = useCreateSetContext((s) => s.setDescription);
-  const addTerm = useCreateSetContext((s) => s.addTerm);
-  const bulkAddTerms = useCreateSetContext((s) => s.bulkAddTerms);
-  const deleteTerm = useCreateSetContext((s) => s.deleteTerm);
-  const editTerm = useCreateSetContext((s) => s.editTerm);
-  const reorderTerm = useCreateSetContext((s) => s.reorderTerm);
-  const flipTerms = useCreateSetContext((s) => s.flipTerms);
+  const store = React.useContext(SetEditorContext)!;
+  const title = useSetEditorContext((s) => s.title);
+  const description = useSetEditorContext((s) => s.description);
+  const terms = useSetEditorContext((s) => s.terms);
+  const setTitle = useSetEditorContext((s) => s.setTitle);
+  const setDescription = useSetEditorContext((s) => s.setDescription);
+  const addTerm = useSetEditorContext((s) => s.addTerm);
+  const bulkAddTerms = useSetEditorContext((s) => s.bulkAddTerms);
+  const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
+  const editTerm = useSetEditorContext((s) => s.editTerm);
+  const reorderTerm = useSetEditorContext((s) => s.reorderTerm);
+  const flipTerms = useSetEditorContext((s) => s.flipTerms);
 
   const [lastSavedAt, setLastSavedAt] = React.useState(data?.savedAt);
 
@@ -45,13 +47,19 @@ const EditorWrapper = () => {
     },
   });
 
+  const create = api.studySets.createFromAutosave.useMutation({
+    onSuccess: async (data) => {
+      await router.push(`/${data.id}`);
+    },
+  });
+
   const autoSaveHandler = async () => {
     const state = store.getState();
 
     await autoSave.mutateAsync({
       title: state.title,
       description: state.description,
-      terms: state.autoSaveTerms
+      terms: state.terms
         .sort((a, b) => a.rank - b.rank)
         .map((x) => ({
           word: x.word,
@@ -71,17 +79,17 @@ const EditorWrapper = () => {
     })();
   };
 
-  store.subscribe(
-    (s) => [s.title, s.description, s.autoSaveTerms],
-    wrappedCallback,
-    { equalityFn: shallow }
-  );
+  store.subscribe((s) => [s.title, s.description, s.terms], wrappedCallback, {
+    equalityFn: shallow,
+  });
 
   return (
     <SetEditor
+      mode="create"
       title={title}
       description={description}
       isSaving={autoSave.isLoading}
+      isLoading={create.isLoading}
       numTerms={terms.length}
       terms={terms}
       setTitle={setTitle}
@@ -92,6 +100,7 @@ const EditorWrapper = () => {
       editTerm={editTerm}
       reorderTerm={reorderTerm}
       onFlipTerms={flipTerms}
+      onComplete={create.mutateAsync}
     />
   );
 };
