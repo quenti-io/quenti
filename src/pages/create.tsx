@@ -3,7 +3,6 @@ import debounce from "lodash.debounce";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import shallow from "zustand/shallow";
 import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
 import { SetEditor } from "../modules/set-editor";
 import {
@@ -79,9 +78,7 @@ const EditorWrapper = () => {
     })();
   };
 
-  store.subscribe((s) => [s.title, s.description, s.terms], wrappedCallback, {
-    equalityFn: shallow,
-  });
+  store.subscribe((s) => [s.title, s.description, s.terms], wrappedCallback);
 
   return (
     <SetEditor

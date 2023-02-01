@@ -27,11 +27,13 @@ export const TopBar: React.FC<TopBarProps> = ({
   numTerms,
   onComplete,
 }) => {
+  const subTextColor = useColorModeValue("gray.600", "gray.400");
+
   return (
     <HStack
       py="3"
       px="5"
-      bg={useColorModeValue("gray.100", "gray.800")}
+      bg={useColorModeValue("gray.200", "gray.800")}
       rounded="lg"
       position="sticky"
       top="2"
@@ -46,7 +48,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               {mode == "create" ? "Create a new set" : "Edit set"}
             </Text>
           </HStack>
-          <HStack color="gray.400" spacing={4}>
+          <HStack color={subTextColor} spacing={4}>
             {isSaving && <Spinner size="sm" />}
             <Text fontSize="sm">
               {isSaving

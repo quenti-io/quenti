@@ -179,4 +179,29 @@ export const studySetsRouter = createTRPCRouter({
 
     return studySet;
   }),
+
+  edit: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const studySet = await ctx.prisma.studySet.update({
+        where: {
+          id_userId: {
+            id: input.id,
+            userId: ctx.session.user.id,
+          },
+        },
+        data: {
+          title: input.title,
+          description: input.description,
+        },
+      });
+
+      return studySet;
+    }),
 });

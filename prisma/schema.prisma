@@ -76,6 +76,8 @@ model StudySet {
   visibility          StudySetVisibility   @default(Public)
   terms               Term[]
   studySetExperiences StudySetExperience[]
+
+  @@unique([id, userId])
 }
 
 enum StudySetVisibility {

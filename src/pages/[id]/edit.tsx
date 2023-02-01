@@ -1,4 +1,5 @@
 import { Container } from "@chakra-ui/react";
+import debounce from "lodash.debounce";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -8,6 +9,7 @@ import {
   SetEditorContext,
   useSetEditorContext,
 } from "../../stores/use-set-editor-store";
+import { api } from "../../utils/api";
 
 const Edit: NextPage = () => {
   return (
@@ -36,12 +38,36 @@ const EditorWrapper = () => {
   const reorderTerm = useSetEditorContext((s) => s.reorderTerm);
   const flipTerms = useSetEditorContext((s) => s.flipTerms);
 
+  const editSet = api.studySets.edit.useMutation();
+
+  const propertiesSaveHandler = async () => {
+    const state = store.getState();
+
+    await editSet.mutateAsync({
+      id,
+      title: state.title,
+      description: state.description,
+    });
+  };
+
+  const propertiesSaveCallback = React.useCallback(
+    debounce(propertiesSaveHandler, 1000),
+    []
+  );
+  const wrappedCallback = () => {
+    void (async () => {
+      await propertiesSaveCallback();
+    })();
+  };
+
+  store.subscribe((s) => [s.title, s.description], wrappedCallback);
+
   return (
     <SetEditor
       mode="edit"
       title={title}
       description={description}
-      isSaving={false}
+      isSaving={editSet.isLoading}
       isLoading={false}
       numTerms={terms.length}
       terms={terms}
