@@ -24,7 +24,10 @@ const ContextLayer: React.FC<
 > = ({ data, children }) => {
   const storeRef = React.useRef<SetEditorStore>();
   if (!storeRef.current) {
-    storeRef.current = createSetEditorStore(data);
+    storeRef.current = createSetEditorStore({
+      ...data,
+      terms: data.autoSaveTerms
+    });
   }
 
   return (

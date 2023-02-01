@@ -21,7 +21,7 @@ export interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({
   mode,
-  savedAt,
+  savedAt: _savedAt,
   isSaving,
   isLoading,
   numTerms,

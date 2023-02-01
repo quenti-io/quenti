@@ -60,7 +60,7 @@ export const TermsList: React.FC<TermsListProps> = ({
 
   return (
     <Stack spacing={10}>
-      <Stack spacing={4}>
+      <Stack spacing={4} py="10">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

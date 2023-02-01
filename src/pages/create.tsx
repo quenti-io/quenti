@@ -38,7 +38,7 @@ const EditorWrapper = () => {
   const reorderTerm = useSetEditorContext((s) => s.reorderTerm);
   const flipTerms = useSetEditorContext((s) => s.flipTerms);
 
-  const [lastSavedAt, setLastSavedAt] = React.useState(data?.savedAt);
+  const [_lastSavedAt, setLastSavedAt] = React.useState(data?.savedAt);
 
   const autoSave = api.autoSave.save.useMutation({
     onSuccess(data) {
@@ -97,7 +97,7 @@ const EditorWrapper = () => {
       editTerm={editTerm}
       reorderTerm={reorderTerm}
       onFlipTerms={flipTerms}
-      onComplete={create.mutateAsync}
+      onComplete={() => create.mutate()}
     />
   );
 };

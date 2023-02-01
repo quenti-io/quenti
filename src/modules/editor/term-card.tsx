@@ -43,6 +43,9 @@ export const TermCard: React.FC<TermCardProps> = ({
   const [word, setWord] = React.useState(term.word);
   const [definition, setDefinition] = React.useState(term.definition);
 
+  const [_w, setWordFocused] = React.useState(false);
+  const [_d, setDefinitionFocused] = React.useState(false);
+
   React.useEffect(() => {
     setWord(term.word);
     setDefinition(term.definition);
@@ -89,8 +92,19 @@ export const TermCard: React.FC<TermCardProps> = ({
             variant="flushed"
             value={word}
             onChange={(e) => setWord(e.target.value)}
+            onFocus={() => setWordFocused(true)}
             onBlur={() => {
-              if (word !== term.word) editTerm(term.id, word, definition);
+              setWordFocused(false);
+              setTimeout(() => {
+                setDefinitionFocused((focused) => {
+                  if (
+                    (word !== term.word || definition !== term.definition) &&
+                    !focused
+                  )
+                    editTerm(term.id, word, definition);
+                  return focused;
+                });
+              });
             }}
           />
           <Input
@@ -98,9 +112,19 @@ export const TermCard: React.FC<TermCardProps> = ({
             variant="flushed"
             value={definition}
             onChange={(e) => setDefinition(e.target.value)}
+            onFocus={() => setDefinitionFocused(true)}
             onBlur={() => {
-              if (definition !== term.definition)
-                editTerm(term.id, word, definition);
+              setDefinitionFocused(false);
+              setTimeout(() => {
+                setWordFocused((focused) => {
+                  if (
+                    (word !== term.word || definition !== term.definition) &&
+                    !focused
+                  )
+                    editTerm(term.id, word, definition);
+                  return focused;
+                });
+              });
             }}
           />
         </HStack>

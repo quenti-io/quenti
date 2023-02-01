@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
-import { SetData } from "../interfaces/set-data";
+import type { SetData } from "../interfaces/set-data";
 import {
   createSetEditorStore,
   SetEditorContext,
-  SetEditorStore,
+  type SetEditorStore,
 } from "../stores/use-set-editor-store";
 import { api } from "../utils/api";
 

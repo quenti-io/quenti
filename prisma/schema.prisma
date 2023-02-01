@@ -100,11 +100,13 @@ model Term {
   word       String
   definition String
   rank       Int
-  StudySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
   studySetId String
+  StudySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
+
+  @@unique([id, studySetId])
 }
 
 model AutoSaveTerm {

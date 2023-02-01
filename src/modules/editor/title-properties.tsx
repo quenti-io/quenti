@@ -1,4 +1,5 @@
 import { Input, Stack, Text } from "@chakra-ui/react";
+import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { plural } from "../../utils/string";
 
@@ -11,12 +12,15 @@ export interface TitlePropertiesProps {
 }
 
 export const TitleProperties: React.FC<TitlePropertiesProps> = ({
-  title,
-  setTitle,
-  description,
-  setDescription,
+  title: _title,
+  setTitle: apiSetTitle,
+  description: _description,
+  setDescription: apiSetDescription,
   numTerms,
 }) => {
+  const [title, setTitle] = React.useState(_title);
+  const [description, setDescription] = React.useState(_description);
+
   return (
     <Stack spacing={6}>
       <Stack spacing={0}>
@@ -24,6 +28,9 @@ export const TitleProperties: React.FC<TitlePropertiesProps> = ({
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
+          }}
+          onBlur={() => {
+            apiSetTitle(title);
           }}
           placeholder="Set Title"
           variant="unstyled"
@@ -37,6 +44,9 @@ export const TitleProperties: React.FC<TitlePropertiesProps> = ({
         value={description}
         onChange={(e) => {
           setDescription(e.target.value);
+        }}
+        onBlur={() => {
+          apiSetDescription(description);
         }}
         minHeight={24}
         placeholder="Add a description..."

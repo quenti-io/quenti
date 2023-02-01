@@ -16,6 +16,7 @@ interface SetEditorState extends SetEditorProps {
   addTerm: () => void;
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
   deleteTerm: (id: string) => void;
+  changeTermId: (oldId: string, newId: string) => void;
   editTerm: (id: string, word: string, definition: string) => void;
   reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
@@ -67,8 +68,17 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
       },
       deleteTerm: (id: string) => {
         set((state) => {
+          const active = state.terms.find((t) => t.id === id);
+          if (!active) return {};
+
           return {
-            terms: state.terms.filter((term) => term.id !== id),
+            terms: state.terms
+              .map((term) =>
+                term.rank > active.rank
+                  ? { ...term, rank: term.rank - 1 }
+                  : term
+              )
+              .filter((term) => term.id !== id),
           };
         });
       },
@@ -77,6 +87,15 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
           return {
             terms: state.terms.map((t) =>
               t.id === id ? { ...t, word, definition } : t
+            ),
+          };
+        });
+      },
+      changeTermId: (oldId: string, newId: string) => {
+        set((state) => {
+          return {
+            terms: state.terms.map((t) =>
+              t.id === oldId ? { ...t, id: newId } : t
             ),
           };
         });
