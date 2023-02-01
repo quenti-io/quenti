@@ -13,7 +13,16 @@ export const autoSaveRouter = createTRPCRouter({
         title: "",
         description: "",
         userId: ctx.session.user.id,
-        autoSaveTerms: {},
+        autoSaveTerms: {
+          createMany: {
+            data: Array.from({ length: 5 }).map((_, i) => ({
+              id: nanoid(),
+              word: "",
+              definition: "",
+              rank: i,
+            })),
+          },
+        },
       },
       include: {
         autoSaveTerms: true,
@@ -26,6 +35,7 @@ export const autoSaveRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         description: z.string(),
+        visibility: z.enum(["Public", "Unlisted", "Private"]),
         terms: z.array(
           z.object({
             word: z.string(),
@@ -44,6 +54,7 @@ export const autoSaveRouter = createTRPCRouter({
         update: {
           title: input.title,
           description: input.description,
+          visibility: input.visibility,
           userId: ctx.session.user.id,
           autoSaveTerms: {
             deleteMany: { setAutoSaveId: ctx.session.user.id },
@@ -60,6 +71,7 @@ export const autoSaveRouter = createTRPCRouter({
         create: {
           title: input.title,
           description: input.description,
+          visibility: input.visibility,
           userId: ctx.session.user.id,
           autoSaveTerms: {
             createMany: {

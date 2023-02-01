@@ -1,4 +1,4 @@
-import type { AutoSaveTerm, Term } from "@prisma/client";
+import type { AutoSaveTerm, StudySetVisibility, Term } from "@prisma/client";
 import { nanoid } from "nanoid";
 import React from "react";
 import { createStore, useStore } from "zustand";
@@ -7,12 +7,14 @@ import { subscribeWithSelector } from "zustand/middleware";
 interface SetEditorProps {
   title: string;
   description: string;
+  visibility: StudySetVisibility;
   terms: (Term | AutoSaveTerm)[];
 }
 
 interface SetEditorState extends SetEditorProps {
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
+  setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: () => void;
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
   deleteTerm: (id: string) => void;
@@ -28,6 +30,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
   const DEFAULT_PROPS: SetEditorProps = {
     title: "",
     description: "",
+    visibility: "Public",
     terms: [],
   };
 
@@ -37,6 +40,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
       ...initProps,
       setTitle: (title: string) => set({ title }),
       setDescription: (description: string) => set({ description }),
+      setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
       addTerm: () =>
         set((state) => {
           const term: AutoSaveTerm = {

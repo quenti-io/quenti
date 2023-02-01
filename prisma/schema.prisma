@@ -87,11 +87,13 @@ enum StudySetVisibility {
 }
 
 model SetAutoSave {
-  userId        String         @id
-  savedAt       DateTime       @updatedAt
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String             @id
+  savedAt       DateTime           @updatedAt
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   title         String
   description   String
+  tags          String[]           @default([])
+  visibility    StudySetVisibility @default(Public)
   autoSaveTerms AutoSaveTerm[]
 }
 

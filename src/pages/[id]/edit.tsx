@@ -2,6 +2,7 @@ import { Container } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
+import { shallow } from "zustand/shallow";
 import { HydrateEditSetData } from "../../modules/hydrate-edit-set-data";
 import { SetEditor } from "../../modules/set-editor";
 import {
@@ -9,7 +10,6 @@ import {
   useSetEditorContext,
 } from "../../stores/use-set-editor-store";
 import { api } from "../../utils/api";
-import { shallow } from "zustand/shallow";
 
 const Edit: NextPage = () => {
   return (
@@ -28,9 +28,11 @@ const EditorWrapper = () => {
   const store = React.useContext(SetEditorContext)!;
   const title = useSetEditorContext((s) => s.title);
   const description = useSetEditorContext((s) => s.description);
+  const visibility = useSetEditorContext((s) => s.visibility);
   const terms = useSetEditorContext((s) => s.terms);
   const setTitle = useSetEditorContext((s) => s.setTitle);
   const setDescription = useSetEditorContext((s) => s.setDescription);
+  const setVisibility = useSetEditorContext((s) => s.setVisibility);
   const addTerm = useSetEditorContext((s) => s.addTerm);
   const bulkAddTerms = useSetEditorContext((s) => s.bulkAddTerms);
   const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
@@ -78,13 +80,18 @@ const EditorWrapper = () => {
         id,
         title: state.title,
         description: state.description,
+        visibility: state.visibility,
       });
     })();
   };
 
-  store.subscribe((s) => [s.title, s.description], propertiesSaveHandler, {
-    equalityFn: shallow,
-  });
+  store.subscribe(
+    (s) => [s.title, s.description, s.visibility],
+    propertiesSaveHandler,
+    {
+      equalityFn: shallow,
+    }
+  );
 
   const anySaving =
     apiEditSet.isLoading ||
@@ -100,12 +107,14 @@ const EditorWrapper = () => {
       mode="edit"
       title={title}
       description={description}
+      visibility={visibility}
       isSaving={anySaving}
       isLoading={false}
       numTerms={serverTerms.length}
       terms={terms.sort((a, b) => a.rank - b.rank)}
       setTitle={setTitle}
       setDescription={setDescription}
+      setVisibility={setVisibility}
       onBulkImportTerms={(terms) => {
         void (async () => {
           await apiBulkAddTerms.mutateAsync({

@@ -64,9 +64,9 @@ export const TermCard: React.FC<TermCardProps> = ({
         <Flex
           align="center"
           borderBottom="4px"
-          borderColor={useColorModeValue("gray.100", "gray.900")}
+          borderColor={useColorModeValue("gray.200", "gray.900")}
           roundedTop="md"
-          bg={useColorModeValue("gray.50", "gray.750")}
+          bg={useColorModeValue("gray.100", "gray.750")}
           px="5"
           py="3"
           justify="space-between"

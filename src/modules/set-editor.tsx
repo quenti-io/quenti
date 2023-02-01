@@ -1,5 +1,5 @@
 import { Stack } from "@chakra-ui/react";
-import type { AutoSaveTerm, Term } from "@prisma/client";
+import type { AutoSaveTerm, StudySetVisibility, Term } from "@prisma/client";
 import React from "react";
 import { ImportTermsModal } from "../components/import-terms-modal";
 import { ButtonArea } from "./editor/button-area";
@@ -11,12 +11,14 @@ export interface SetEditorProps {
   mode: "create" | "edit";
   title: string;
   description: string;
+  visibility: StudySetVisibility;
   numTerms: number;
   isSaving: boolean;
   isLoading: boolean;
   terms: (Term | AutoSaveTerm)[];
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
+  setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: () => void;
   deleteTerm: (id: string) => void;
   editTerm: (id: string, word: string, definition: string) => void;
@@ -30,12 +32,14 @@ export const SetEditor: React.FC<SetEditorProps> = ({
   mode,
   title,
   description,
+  visibility,
   numTerms,
   isSaving,
   isLoading,
   terms,
   setTitle,
   setDescription,
+  setVisibility,
   addTerm,
   deleteTerm,
   editTerm,
@@ -75,6 +79,8 @@ export const SetEditor: React.FC<SetEditorProps> = ({
       <ButtonArea
         onImportOpen={() => setImportOpen(true)}
         onFlipTerms={onFlipTerms}
+        visibility={visibility}
+        onVisibilityChange={setVisibility}
       />
       <TermsList
         terms={terms}

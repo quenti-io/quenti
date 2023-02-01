@@ -186,6 +186,7 @@ export const studySetsRouter = createTRPCRouter({
         id: z.string(),
         title: z.string(),
         description: z.string(),
+        visibility: z.enum(["Public", "Unlisted", "Private"])
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -199,6 +200,7 @@ export const studySetsRouter = createTRPCRouter({
         data: {
           title: input.title,
           description: input.description,
+          visibility: input.visibility,
         },
       });
 
