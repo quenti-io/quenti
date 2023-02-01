@@ -28,9 +28,10 @@ export const FlashcardPreview = () => {
   const [termOrder, setTermOrder] = React.useState<string[]>(
     shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder
   );
+
   React.useEffect(() => {
-    setTermOrder((o: string[]) => (shuffle ? shuffleArray(Array.from(o)) : o));
-  }, [shuffle]);
+    setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
+  }, [shuffle, data.terms.length]);
 
   return (
     <Flex

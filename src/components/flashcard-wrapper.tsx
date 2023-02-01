@@ -38,8 +38,8 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);
 
-  const term = sortedTerms[index]!;
-  const starred = starredTerms.includes(term.id);
+  const term = sortedTerms[index];
+  const starred = term ? starredTerms.includes(term.id) : false;
 
   const onPrev = async () => {
     if (index === 0) return;
@@ -112,34 +112,36 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
           triggerPrev={onPrev}
           triggerNext={onNext}
         />
-        <Flashcard
-          h={h}
-          term={term}
-          index={index}
-          isFlipped={isFlipped}
-          numTerms={terms.length}
-          onPrev={onPrev}
-          onNext={onNext}
-          starred={starred}
-          onRequestEdit={() => {
-            setEditTerm(term);
-            setEditModalOpen(true);
-          }}
-          onRequestStar={() => {
-            if (!starred) {
-              starMutation.mutate({
-                termId: term.id,
-                experienceId: experience.id,
-              });
-              starTerm(sortedTerms[index]!.id);
-            } else {
-              unstarMutation.mutate({
-                termId: term.id,
-              });
-              unstarTerm(sortedTerms[index]!.id);
-            }
-          }}
-        />
+        {term && (
+          <Flashcard
+            h={h}
+            term={term}
+            index={index}
+            isFlipped={isFlipped}
+            numTerms={terms.length}
+            onPrev={onPrev}
+            onNext={onNext}
+            starred={starred}
+            onRequestEdit={() => {
+              setEditTerm(term);
+              setEditModalOpen(true);
+            }}
+            onRequestStar={() => {
+              if (!starred) {
+                starMutation.mutate({
+                  termId: term.id,
+                  experienceId: experience.id,
+                });
+                starTerm(sortedTerms[index]!.id);
+              } else {
+                unstarMutation.mutate({
+                  termId: term.id,
+                });
+                unstarTerm(sortedTerms[index]!.id);
+              }
+            }}
+          />
+        )}
       </motion.div>
     </Box>
   );

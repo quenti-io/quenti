@@ -53,6 +53,12 @@ const EditorWrapper = () => {
       });
     },
   });
+  const apiBulkAddTerms = api.terms.bulkAdd.useMutation({
+    onSuccess: (data) => {
+      bulkAddTerms(data);
+      setServerTerms((s) => [...s, ...data.map((x) => x.id)]);
+    },
+  });
   const apiDeleteTerm = api.terms.delete.useMutation({
     onSuccess: (data) => {
       setServerTerms((serverTerms) =>
@@ -82,10 +88,12 @@ const EditorWrapper = () => {
 
   const anySaving =
     apiEditSet.isLoading ||
+    apiAddTerm.isLoading ||
+    apiBulkAddTerms.isLoading ||
     apiEditTerm.isLoading ||
+    apiBulkEdit.isLoading ||
     apiDeleteTerm.isLoading ||
-    apiReorderTerm.isLoading ||
-    apiAddTerm.isLoading;
+    apiReorderTerm.isLoading;
 
   return (
     <SetEditor
@@ -98,13 +106,21 @@ const EditorWrapper = () => {
       terms={terms.sort((a, b) => a.rank - b.rank)}
       setTitle={setTitle}
       setDescription={setDescription}
-      onBulkImportTerms={bulkAddTerms}
+      onBulkImportTerms={(terms) => {
+        void (async () => {
+          await apiBulkAddTerms.mutateAsync({
+            studySetId: id,
+            terms,
+          });
+        })();
+      }}
       addTerm={() => {
         addTerm();
       }}
       deleteTerm={(termId) => {
         deleteTerm(termId);
-        apiDeleteTerm.mutate({ termId, studySetId: id });
+        if (serverTerms.includes(termId))
+          apiDeleteTerm.mutate({ termId, studySetId: id });
       }}
       editTerm={(termId, word, definition) => {
         editTerm(termId, word, definition);

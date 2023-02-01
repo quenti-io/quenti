@@ -16,12 +16,14 @@ import React from "react";
 
 interface TermCardProps {
   term: Term | AutoSaveTerm;
+  deletable: boolean;
   editTerm: (id: string, word: string, definition: string) => void;
   deleteTerm: (id: string) => void;
 }
 
 export const TermCard: React.FC<TermCardProps> = ({
   term,
+  deletable,
   editTerm,
   deleteTerm,
 }) => {
@@ -82,6 +84,7 @@ export const TermCard: React.FC<TermCardProps> = ({
               icon={<IconTrash />}
               aria-label="Delete"
               variant="ghost"
+              isDisabled={!deletable}
               onClick={() => deleteTerm(term.id)}
             />
           </HStack>

@@ -70,6 +70,7 @@ export const TermsList: React.FC<TermsListProps> = ({
           <SortableContext items={terms} strategy={verticalListSortingStrategy}>
             {terms.map((term) => (
               <TermCard
+                deletable={terms.length > 1}
                 key={term.id}
                 term={term}
                 editTerm={editTerm}

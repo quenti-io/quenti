@@ -23,13 +23,6 @@ export const termsRouter = createTRPCRouter({
           id: input.studySetId,
           userId: ctx.session.user.id,
         },
-        include: {
-          _count: {
-            select: {
-              terms: true,
-            },
-          },
-        },
       });
 
       if (!studySet) {
@@ -60,6 +53,53 @@ export const termsRouter = createTRPCRouter({
           studySetId: input.studySetId,
         },
       });
+    }),
+
+  bulkAdd: protectedProcedure
+    .input(
+      z.object({
+        studySetId: z.string(),
+        terms: z.array(
+          z.object({
+            word: z.string(),
+            definition: z.string(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const studySet = await ctx.prisma.studySet.findFirst({
+        where: {
+          id: input.studySetId,
+          userId: ctx.session.user.id,
+        },
+        include: {
+          _count: {
+            select: {
+              terms: true,
+            },
+          },
+        },
+      });
+
+      if (!studySet) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const data = input.terms.map((term, i) => ({
+        ...term,
+        id: nanoid(),
+        studySetId: input.studySetId,
+        rank: studySet._count.terms + i,
+      }));
+
+      await ctx.prisma.term.createMany({
+        data,
+      });
+
+      return data;
     }),
 
   reorder: protectedProcedure
@@ -230,11 +270,24 @@ export const termsRouter = createTRPCRouter({
           id: input.studySetId,
           userId: ctx.session.user.id,
         },
+        include: {
+          _count: {
+            select: {
+              terms: true,
+            },
+          },
+        },
       });
 
       if (!studySet) {
         throw new TRPCError({
           code: "NOT_FOUND",
+        });
+      }
+      if (studySet._count.terms <= 1) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Set must contain at least one term",
         });
       }
 
