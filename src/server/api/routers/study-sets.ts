@@ -175,6 +175,12 @@ export const studySetsRouter = createTRPCRouter({
       });
     }
 
+    await ctx.prisma.setAutoSave.delete({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+
     const studySet = await ctx.prisma.studySet.create({
       data: {
         title: autoSave.title,
@@ -190,12 +196,6 @@ export const studySetsRouter = createTRPCRouter({
             })),
           },
         },
-      },
-    });
-
-    await ctx.prisma.setAutoSave.delete({
-      where: {
-        userId: ctx.session.user.id,
       },
     });
 

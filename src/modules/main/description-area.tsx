@@ -23,7 +23,7 @@ export const DescriptionArea = () => {
           </HStack>
         </Stack>
       </HStack>
-      <Text>{description}</Text>
+      <Text whiteSpace="pre-wrap">{description}</Text>
     </Stack>
   );
 };
