@@ -1,4 +1,4 @@
-import type { Term } from "@prisma/client";
+import type { StudySetVisibility, Term } from "@prisma/client";
 
 export type SetData = {
   experience: {
@@ -23,5 +23,6 @@ export type SetData = {
   };
   title: string;
   description: string;
+  visibility: StudySetVisibility;
   terms: Term[];
 };

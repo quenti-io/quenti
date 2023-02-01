@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
@@ -12,10 +13,25 @@ import { api } from "../utils/api";
 export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const id = useRouter().query.id as string;
-  const { data } = api.studySets.byId.useQuery(id);
+  const router = useRouter();
+  const session = useSession();
+  const id = router.query.id as string;
 
-  if (!data) return <Loading />;
+  const { data } = api.studySets.byId.useQuery(id, {
+    retry: false,
+    onError: (e) => {
+      if (e.data?.httpStatus == 403) {
+        router.push("/[id]", `/${id}`);
+      }
+    },
+    onSuccess: (data) => {
+      if (data.userId !== session.data?.user?.id) {
+        router.push("/[id]", `/${id}`);
+      }
+    },
+  });
+
+  if (!data || data.userId !== session.data?.user?.id) return <Loading />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };

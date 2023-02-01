@@ -9,13 +9,17 @@ import {
   type ExperienceStoreProps,
 } from "../stores/use-experience-store";
 import { Loading } from "../components/loading";
+import { SetPrivate } from "../components/set-private";
 
 export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const id = useRouter().query.id as string;
-  const { data } = api.studySets.byId.useQuery(id);
+  const { data, error } = api.studySets.byId.useQuery(id, {
+    retry: false,
+  });
 
+  if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (!data) return <Loading />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;

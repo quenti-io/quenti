@@ -27,6 +27,18 @@ export const studySetsRouter = createTRPCRouter({
       await ctx.prisma.studySetExperience.findMany({
         where: {
           userId: ctx.session?.user?.id,
+          studySet: {
+            OR: [
+              {
+                visibility: {
+                  not: "Private",
+                },
+              },
+              {
+                userId: ctx.session?.user?.id,
+              },
+            ],
+          },
         },
         orderBy: {
           viewedAt: "desc",
@@ -79,6 +91,16 @@ export const studySetsRouter = createTRPCRouter({
     if (!studySet) {
       throw new TRPCError({
         code: "NOT_FOUND",
+      });
+    }
+
+    if (
+      studySet.visibility === "Private" &&
+      studySet.userId !== ctx.session?.user?.id
+    ) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "This set is private.",
       });
     }
 
@@ -186,7 +208,7 @@ export const studySetsRouter = createTRPCRouter({
         id: z.string(),
         title: z.string(),
         description: z.string(),
-        visibility: z.enum(["Public", "Unlisted", "Private"])
+        visibility: z.enum(["Public", "Unlisted", "Private"]),
       })
     )
     .mutation(async ({ ctx, input }) => {
