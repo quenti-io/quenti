@@ -45,7 +45,7 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
-  username      String?   @unique @default(cuid()) @db.Citext
+  username      String    @unique @db.Citext
   email         String?   @unique
   emailVerified DateTime?
   image         String?
