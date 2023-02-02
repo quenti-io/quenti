@@ -9,6 +9,7 @@ import {
   IconMoon,
   IconSettings,
   IconSun,
+  IconUser,
   IconX,
   type TablerIconsProps,
 } from "@tabler/icons-react";
@@ -170,6 +171,11 @@ export const Navbar: React.FC = () => {
                 w="max"
                 marginTop={2}
               >
+                <MenuOption
+                  icon={<IconUser size={18} />}
+                  label="Profile"
+                  link={`/@${session.user.username}`}
+                />
                 <MenuOption
                   icon={<IconSettings size={18} />}
                   label="Settings"

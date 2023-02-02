@@ -2,7 +2,6 @@ import { useSession } from "next-auth/react";
 
 import {
   Avatar,
-  Button,
   Container,
   Flex,
   Grid,
@@ -16,8 +15,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconPlus } from "@tabler/icons-react";
-import Link from "next/link";
 import { ComponentWithAuth } from "../components/auth-component";
 import { api } from "../utils/api";
 
@@ -74,7 +71,8 @@ const Home: ComponentWithAuth = () => {
                   h="full"
                   gap={4}
                 >
-                  <Stack spacing={1}>x
+                  <Stack spacing={1}>
+                    x
                     <Heading size="md">
                       <LinkOverlay href={`/${x.id}`}>{x.title}</LinkOverlay>
                     </Heading>

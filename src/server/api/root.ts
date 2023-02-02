@@ -1,5 +1,6 @@
 import { autoSaveRouter } from "./routers/auto-save";
 import { experienceRouter } from "./routers/experience";
+import { profileRouter } from "./routers/profile";
 import { studiableTermsRouter } from "./routers/studiable-terms";
 import { studySetsRouter } from "./routers/study-sets";
 import { termsRouter } from "./routers/terms";
@@ -13,6 +14,7 @@ import { createTRPCRouter } from "./trpc";
  */
 export const appRouter = createTRPCRouter({
   user: userRouter,
+  profile: profileRouter,
   studySets: studySetsRouter,
   terms: termsRouter,
   experience: experienceRouter,
