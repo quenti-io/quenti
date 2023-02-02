@@ -10,9 +10,9 @@ import {
   IconChevronDown,
   IconPlus,
   IconSwitchHorizontal,
-  IconWorld,
 } from "@tabler/icons-react";
 import React from "react";
+import { visibilityIcon } from "../../common/visibility-icon";
 import { VisibilityModal } from "./visibility-modal";
 
 export interface ButtonAreaProps {
@@ -54,14 +54,14 @@ export const ButtonArea: React.FC<ButtonAreaProps> = ({
         </Button>
         <ButtonGroup>
           <Button
-            leftIcon={<IconWorld />}
+            leftIcon={visibilityIcon(visibility)}
             rightIcon={<IconChevronDown />}
             variant="ghost"
             onClick={() => {
               setVisibilityModalOpen(true);
             }}
           >
-            Public
+            {visibility}
           </Button>
           <Tooltip label="Flip terms and definitions">
             <IconButton

@@ -31,7 +31,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
       <ModalOverlay />
       <ModalContent>
         <ModalBody>
-          <Stack spacing={6} py="4" px="2">
+          <Stack spacing={4} py="4" px="2">
             <VisibilityOption
               name="Public"
               description="Anyone can view and study this study set and it will be displayed on your profile."
@@ -76,6 +76,8 @@ const VisibilityOption: React.FC<VisbilityOptionProps> = ({
   description,
 }) => {
   const textColor = useColorModeValue("alpha.900", "alpha.100");
+  const blueColor = useColorModeValue("blue.400", "blue.300");
+  const grayText = useColorModeValue("gray.700", "gray.300");
 
   return (
     <Button
@@ -83,18 +85,24 @@ const VisibilityOption: React.FC<VisbilityOptionProps> = ({
       onClick={onSelect}
       whiteSpace="normal"
       h="max-content"
-      py="3"
+      py="4"
       textAlign="left"
       justifyContent="start"
       textColor={!selected ? textColor : undefined}
-      borderColor="blue.300"
+      borderColor={blueColor}
+      shadow="md"
     >
       <Stack spacing={2}>
         <HStack spacing={2}>
           {icon}
           <Heading size="md">{name}</Heading>
         </HStack>
-        <Text fontSize="sm" lineHeight="normal" fontWeight="normal">
+        <Text
+          fontSize="md"
+          lineHeight="normal"
+          fontWeight="normal"
+          color={selected ? textColor : grayText}
+        >
           {description}
         </Text>
       </Stack>
