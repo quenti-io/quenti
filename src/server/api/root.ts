@@ -3,6 +3,7 @@ import { experienceRouter } from "./routers/experience";
 import { studiableTermsRouter } from "./routers/studiable-terms";
 import { studySetsRouter } from "./routers/study-sets";
 import { termsRouter } from "./routers/terms";
+import { userRouter } from "./routers/user";
 import { createTRPCRouter } from "./trpc";
 
 /**
@@ -11,6 +12,7 @@ import { createTRPCRouter } from "./trpc";
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
+  user: userRouter,
   studySets: studySetsRouter,
   terms: termsRouter,
   experience: experienceRouter,

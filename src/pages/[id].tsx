@@ -1,4 +1,5 @@
-import { Container, Stack, Divider } from "@chakra-ui/react";
+import { Container, Divider, Stack } from "@chakra-ui/react";
+import type { ComponentWithAuth } from "../components/auth-component";
 import { HydrateSetData } from "../modules/hydrate-set-data";
 import { DescriptionArea } from "../modules/main/description-area";
 import { FlashcardPreview } from "../modules/main/flashcard-preview";
@@ -6,7 +7,7 @@ import { HeadingArea } from "../modules/main/heading-area";
 import { LinkArea } from "../modules/main/link-area";
 import { TermsOverview } from "../modules/main/terms-overview";
 
-export default function Set() {
+const Set: ComponentWithAuth = () => {
   return (
     <HydrateSetData>
       <Container maxW="7xl">
@@ -31,6 +32,10 @@ export default function Set() {
       </Container>
     </HydrateSetData>
   );
-}
+};
+
+Set.authenticationEnabled = true;
+
+export default Set;
 
 export { getServerSideProps } from "../components/chakra";

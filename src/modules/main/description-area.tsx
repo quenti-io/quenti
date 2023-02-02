@@ -12,7 +12,7 @@ export const DescriptionArea = () => {
         <Stack spacing={0}>
           <Text fontSize="xs">Created by</Text>
           <HStack spacing="2">
-            <Text fontWeight={700}>{user.name}</Text>
+            <Text fontWeight={700}>{user.username}</Text>
             {user.verified && (
               <Box color="blue.300">
                 <Tooltip label="Verified">

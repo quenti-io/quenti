@@ -17,7 +17,7 @@ export type SetData = {
   id: string;
   userId: string;
   user: {
-    name: string;
+    username: string;
     image: string;
     verified: boolean;
   };

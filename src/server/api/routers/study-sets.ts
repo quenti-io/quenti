@@ -143,7 +143,7 @@ export const studySetsRouter = createTRPCRouter({
     return {
       ...studySet,
       user: {
-        name: studySet.user.name!,
+        username: studySet.user.username,
         image: studySet.user.image!,
         verified: studySet.user.verified,
       },

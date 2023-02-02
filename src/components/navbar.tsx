@@ -156,7 +156,7 @@ export const Navbar: React.FC = () => {
                     </Avatar>
                   </WrapItem>
                   <WrapItem>
-                    <Text fontWeight={700}>{session.user.name}</Text>
+                    <Text fontWeight={700}>{session.user.username}</Text>
                   </WrapItem>
                   <WrapItem>
                     <IconChevronDown />
@@ -195,7 +195,9 @@ export const Navbar: React.FC = () => {
                   icon={<IconLogout size={18} />}
                   label="Sign out"
                   onClick={async () => {
-                    await signOut();
+                    await signOut({
+                      callbackUrl: "/",
+                    });
                   }}
                 />
               </MenuList>
@@ -206,7 +208,9 @@ export const Navbar: React.FC = () => {
               colorScheme="blue"
               fontWeight={700}
               onClick={async () => {
-                await signIn();
+                await signIn("google", {
+                  callbackUrl: "/home",
+                });
               }}
             >
               Sign in

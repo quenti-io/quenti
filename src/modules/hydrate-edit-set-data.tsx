@@ -21,12 +21,16 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
     retry: false,
     onError: (e) => {
       if (e.data?.httpStatus == 403) {
-        router.push("/[id]", `/${id}`);
+        void (async () => {
+          await router.push("/[id]", `/${id}`);
+        })();
       }
     },
     onSuccess: (data) => {
       if (data.userId !== session.data?.user?.id) {
-        router.push("/[id]", `/${id}`);
+        void (async () => {
+          await router.push("/[id]", `/${id}`);
+        })();
       }
     },
   });
