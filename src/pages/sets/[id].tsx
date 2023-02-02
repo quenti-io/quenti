@@ -1,11 +1,11 @@
 import { Container, Divider, Stack } from "@chakra-ui/react";
-import type { ComponentWithAuth } from "../components/auth-component";
-import { HydrateSetData } from "../modules/hydrate-set-data";
-import { DescriptionArea } from "../modules/main/description-area";
-import { FlashcardPreview } from "../modules/main/flashcard-preview";
-import { HeadingArea } from "../modules/main/heading-area";
-import { LinkArea } from "../modules/main/link-area";
-import { TermsOverview } from "../modules/main/terms-overview";
+import type { ComponentWithAuth } from "../../components/auth-component";
+import { HydrateSetData } from "../../modules/hydrate-set-data";
+import { DescriptionArea } from "../../modules/main/description-area";
+import { FlashcardPreview } from "../../modules/main/flashcard-preview";
+import { HeadingArea } from "../../modules/main/heading-area";
+import { LinkArea } from "../../modules/main/link-area";
+import { TermsOverview } from "../../modules/main/terms-overview";
 
 const Set: ComponentWithAuth = () => {
   return (
@@ -38,4 +38,4 @@ Set.authenticationEnabled = true;
 
 export default Set;
 
-export { getServerSideProps } from "../components/chakra";
+export { getServerSideProps } from "../../components/chakra";

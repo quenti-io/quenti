@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 
 import {
@@ -19,9 +18,10 @@ import {
 } from "@chakra-ui/react";
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
+import { ComponentWithAuth } from "../components/auth-component";
 import { api } from "../utils/api";
 
-const Home: NextPage = () => {
+const Home: ComponentWithAuth = () => {
   const { data: session } = useSession();
 
   const { data, isLoading } = api.studySets.recent.useQuery(undefined, {
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
         <Heading color={headingColor} size="md">
           Recent
         </Heading>
-        <Grid templateColumns="repeat(auto-fit, minmax(300px, 1fr))" gap={4}>
+        <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
           {isLoading &&
             Array.from({ length: 9 }).map((_, i) => (
               <GridItem minHeight="36" key={i}>
@@ -74,7 +74,7 @@ const Home: NextPage = () => {
                   h="full"
                   gap={4}
                 >
-                  <Stack spacing={1}>
+                  <Stack spacing={1}>x
                     <Heading size="md">
                       <LinkOverlay href={`/${x.id}`}>{x.title}</LinkOverlay>
                     </Heading>
@@ -92,24 +92,13 @@ const Home: NextPage = () => {
               </LinkBox>
             </GridItem>
           ))}
-          {!isLoading && (
-            <Button
-              as={Link}
-              href="/create"
-              height="full"
-              variant="outline"
-              gap="2"
-              minHeight="28"
-            >
-              <IconPlus />
-              Create a Set
-            </Button>
-          )}
         </Grid>
       </Stack>
     </Container>
   );
 };
+
+Home.authenticationEnabled = true;
 
 export { getServerSideProps } from "../components/chakra";
 

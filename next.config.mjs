@@ -16,5 +16,27 @@ const config = {
   images: {
     domains: ["lh3.googleusercontent.com"],
   },
+  rewrites: async () => [
+    {
+      source: "/:username(@[a-zA-Z0-9-_]+)",
+      destination: "/user/:username",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})",
+      destination: "/sets/:id",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})/edit",
+      destination: "/sets/:id/edit",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})/flashcards",
+      destination: "/sets/:id/flashcards",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})/learn",
+      destination: "/sets/:id/learn",
+    },
+  ],
 };
 export default config;

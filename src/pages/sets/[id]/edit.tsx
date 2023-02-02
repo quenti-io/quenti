@@ -3,13 +3,13 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { shallow } from "zustand/shallow";
-import { HydrateEditSetData } from "../../modules/hydrate-edit-set-data";
-import { SetEditor } from "../../modules/set-editor";
+import { HydrateEditSetData } from "../../../modules/hydrate-edit-set-data";
+import { SetEditor } from "../../../modules/set-editor";
 import {
   SetEditorContext,
   useSetEditorContext,
-} from "../../stores/use-set-editor-store";
-import { api } from "../../utils/api";
+} from "../../../stores/use-set-editor-store";
+import { api } from "../../../utils/api";
 
 const Edit: NextPage = () => {
   return (
@@ -189,4 +189,4 @@ const EditorWrapper = () => {
 
 export default Edit;
 
-export { getServerSideProps } from "../../components/chakra";
+export { getServerSideProps } from "../../../components/chakra";
