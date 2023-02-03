@@ -54,6 +54,7 @@ model User {
   sessions      Session[]
 
   studySets           StudySet[]
+  folders             Folder[]
   setAutoSave         SetAutoSave?
   studySetExperiences StudySetExperience[]
   starredTerms        StarredTerm[]
@@ -79,6 +80,7 @@ model StudySet {
   visibility          StudySetVisibility   @default(Public)
   terms               Term[]
   studySetExperiences StudySetExperience[]
+  folders             StudySetsOnFolders[]
 
   @@unique([id, userId])
 }
@@ -87,6 +89,28 @@ enum StudySetVisibility {
   Private
   Unlisted
   Public
+}
+
+model Folder {
+  id          String               @id @default(cuid())
+  createdAt   DateTime             @default(now())
+  userId      String
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  slug        String
+  description String
+  studySets   StudySetsOnFolders[]
+
+  @@unique([userId, slug])
+}
+
+model StudySetsOnFolders {
+  studySetId String
+  folderId   String
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  folder     Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, folderId])
 }
 
 model SetAutoSave {
