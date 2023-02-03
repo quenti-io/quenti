@@ -11,6 +11,10 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+import { api } from "../utils/api";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface CreateFolderModalProps {
@@ -22,8 +26,21 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const router = useRouter();
+  const session = useSession();
   const primaryBg = useColorModeValue("gray.200", "gray.800");
   const secondaryBg = useColorModeValue("gray.100", "gray.750");
+
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+
+  const createFolder = api.folders.create.useMutation({
+    onSuccess: async (data) => {
+      await router.push(
+        `/@${session.data!.user!.username}/folders/${data.slug}`
+      );
+    },
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
@@ -42,6 +59,8 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
               rounded="md"
               px="4"
               size="lg"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <AutoResizeTextarea
               allowTab={false}
@@ -49,6 +68,8 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
               bg={secondaryBg}
               py="4"
               border="none"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </Stack>
         </ModalBody>
@@ -57,7 +78,17 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
             <Button variant="ghost" colorScheme="gray" onClick={onClose}>
               Cancel
             </Button>
-            <Button>Create</Button>
+            <Button
+              isLoading={createFolder.isLoading}
+              onClick={async () => {
+                await createFolder.mutateAsync({
+                  title,
+                  description,
+                });
+              }}
+            >
+              Create
+            </Button>
           </ButtonGroup>
         </ModalFooter>
       </ModalContent>

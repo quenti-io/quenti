@@ -22,6 +22,10 @@ const config = {
       destination: "/profile/:profile",
     },
     {
+      source: "/:profile(@[a-zA-Z0-9-_]+)/folders/:slug",
+      destination: "/profile/:profile/folders/:slug",
+    },
+    {
       source: "/:id(c[a-z0-9]{24})",
       destination: "/sets/:id",
     },
