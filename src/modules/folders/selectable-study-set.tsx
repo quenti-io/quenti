@@ -9,7 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { StudySet } from "@prisma/client";
-import type React from "react";
+import React from "react";
 import { visibilityIcon } from "../../common/visibility-icon";
 import { plural } from "../../utils/string";
 

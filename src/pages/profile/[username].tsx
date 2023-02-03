@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import type { ComponentWithAuth } from "../../components/auth-component";
 import { HydrateProfileData } from "../../modules/hydrate-profile-data";
+import { FoldersList } from "../../modules/profile/folders-list";
 import { ProfileArea } from "../../modules/profile/profile-area";
 import { StudySetsList } from "../../modules/profile/study-sets-list";
 
@@ -33,6 +34,9 @@ const UserPage: ComponentWithAuth = () => {
             <TabPanels mt="10">
               <TabPanel px="0">
                 <StudySetsList />
+              </TabPanel>
+              <TabPanel px="0">
+                <FoldersList />
               </TabPanel>
             </TabPanels>
           </Tabs>

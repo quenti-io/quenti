@@ -10,6 +10,7 @@ export const ProfileContext = React.createContext<ProfileData>({
   image: "",
   verified: false,
   studySets: [],
+  folders: [],
 });
 
 export const HydrateProfileData: React.FC<React.PropsWithChildren> = ({

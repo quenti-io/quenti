@@ -35,6 +35,63 @@ export const profileRouter = createTRPCRouter({
               },
             },
           },
+          folders: {
+            where: {
+              OR: [
+                {
+                  userId: ctx.session.user.id,
+                },
+                {
+                  studySets: {
+                    some: {
+                      studySet: {
+                        OR: [
+                          {
+                            visibility: "Public",
+                          },
+                          {
+                            userId: ctx.session.user.id,
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              createdAt: true,
+              studySets: {
+                where: {
+                  OR: [
+                    {
+                      folder: {
+                        userId: ctx.session.user.id,
+                      },
+                    },
+                    {
+                      studySet: {
+                        OR: [
+                          {
+                            visibility: "Public",
+                          },
+                          {
+                            userId: ctx.session.user.id,
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+                select: {
+                  studySetId: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -50,6 +107,7 @@ export const profileRouter = createTRPCRouter({
         image: user.image,
         verified: user.verified,
         studySets: user.studySets,
+        folders: user.folders,
       };
     }),
 });

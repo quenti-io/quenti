@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
-import { api, RouterOutputs } from "../utils/api";
+import { api, type RouterOutputs } from "../utils/api";
 
 type FolderData = RouterOutputs["folders"]["get"];
 export const FolderContext = React.createContext<FolderData>({

@@ -1,14 +1,21 @@
 import {
-  Avatar, Box, Flex,
+  Avatar,
+  Box,
+  Flex,
   Heading,
-  HStack, LinkBox,
-  LinkOverlay, Menu,
+  HStack,
+  LinkBox,
+  LinkOverlay,
+  Menu,
   MenuButton,
-  MenuList, Stack, Text, useColorModeValue
+  MenuList,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { StudySet } from "@prisma/client";
 import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
-import type React from "react";
+import React from "react";
 import { visibilityIcon } from "../common/visibility-icon";
 import { plural } from "../utils/string";
 import { MenuOption } from "./menu-option";

@@ -12,18 +12,22 @@ import type { StudySetVisibility } from "@prisma/client";
 import { visibilityIcon } from "../../common/visibility-icon";
 import { plural } from "../../utils/string";
 
-interface StudySetLinkProps {
-  id: string;
+interface ProfileLinkableProps {
   title: string;
-  numTerms: number;
-  visibility: StudySetVisibility;
+  url: string;
+  numValues: number;
+  label: string;
+  visibility?: StudySetVisibility;
+  leftIcon?: React.ReactNode;
 }
 
-export const StudySetLink: React.FC<StudySetLinkProps> = ({
-  id,
+export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
   title,
-  numTerms,
+  url,
+  numValues,
+  label,
   visibility,
+  leftIcon,
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
@@ -45,12 +49,13 @@ export const StudySetLink: React.FC<StudySetLinkProps> = ({
       }}
     >
       <Stack spacing={2}>
-        <Text fontSize="sm">{plural(numTerms, "term")}</Text>
+        <Text fontSize="sm">{plural(numValues, label)}</Text>
         <HStack>
+          {leftIcon}
           <Heading size="md">
-            <LinkOverlay href={`/${id}`}>{title}</LinkOverlay>
+            <LinkOverlay href={url}>{title}</LinkOverlay>
           </Heading>
-          {visibility !== "Public" ? (
+          {visibility && visibility !== "Public" ? (
             <Box color="gray.500">{visibilityIcon(visibility, 18)}</Box>
           ) : (
             ""

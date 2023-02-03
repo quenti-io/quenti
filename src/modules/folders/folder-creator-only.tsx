@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import type React from "react";
+import React from "react";
 import { useFolder } from "../../hooks/use-folder";
 
 export const FolderCreatorOnly: React.FC<React.PropsWithChildren> = ({

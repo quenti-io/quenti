@@ -5,13 +5,14 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { IconFolder } from "@tabler/icons-react";
 import { useProfile } from "../../hooks/use-profile";
 import { groupIntoTimeline } from "../../utils/groupings";
 import { ProfileLinkable } from "./study-set-link";
 
-export const StudySetsList = () => {
+export const FoldersList = () => {
   const profile = useProfile()!;
-  const grouped = groupIntoTimeline(profile.studySets);
+  const grouped = groupIntoTimeline(profile.folders);
 
   const dividerColor = useColorModeValue("gray.300", "gray.700");
 
@@ -28,10 +29,10 @@ export const StudySetsList = () => {
               <ProfileLinkable
                 key={x.id}
                 title={x.title}
-                url={`/${x.id}`}
-                visibility={x.visibility}
-                numValues={x._count.terms}
-                label="term"
+                url={`/@${profile.username}/folders/${x.slug}`}
+                numValues={x.studySets.length}
+                label="set"
+                leftIcon={<IconFolder size="18" />}
               />
             ))}
           </Stack>
