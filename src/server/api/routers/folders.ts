@@ -123,6 +123,40 @@ export const foldersRouter = createTRPCRouter({
       });
     }),
 
+  edit: protectedProcedure
+    .input(
+      z.object({
+        folderId: z.string(),
+        title: z.string().min(1).max(40),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const folder = await ctx.prisma.folder.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.folderId,
+        },
+      });
+
+      if (!folder) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      return await ctx.prisma.folder.update({
+        where: {
+          id: input.folderId,
+        },
+        data: {
+          title: input.title,
+          description: input.description,
+          slug: slugify(input.title, { lower: true }),
+        },
+      });
+    }),
+
   addSets: protectedProcedure
     .input(
       z.object({

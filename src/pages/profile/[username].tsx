@@ -6,7 +6,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import type { ComponentWithAuth } from "../../components/auth-component";
 import { HydrateProfileData } from "../../modules/hydrate-profile-data";
@@ -19,7 +19,7 @@ const UserPage: ComponentWithAuth = () => {
 
   return (
     <HydrateProfileData>
-      <Container maxW="4xl" marginTop="10">
+      <Container maxW="4xl" marginY="10">
         <Stack spacing={12}>
           <ProfileArea />
           <Tabs borderColor={borderColor}>

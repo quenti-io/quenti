@@ -57,7 +57,7 @@ export const FolderSets = () => {
                 setAddSetsModalOpen(true);
               }}
             >
-              Add sets
+              Add Sets
             </Button>
           </GridItem>
         </FolderCreatorOnly>
