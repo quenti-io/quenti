@@ -15,7 +15,7 @@ import { api } from "../utils/api";
 const Home: ComponentWithAuth = () => {
   const { data: session } = useSession();
 
-  const { data, isLoading } = api.studySets.recent.useQuery(undefined, {
+  const { data, isLoading } = api.studySets.recent.useQuery({}, {
     enabled: session?.user !== undefined,
   });
 

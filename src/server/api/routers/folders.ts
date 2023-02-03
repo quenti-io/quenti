@@ -84,6 +84,7 @@ export const foldersRouter = createTRPCRouter({
       }
 
       return {
+        id: folder.id,
         title: folder.title,
         description: folder.description,
         user: {
@@ -118,6 +119,65 @@ export const foldersRouter = createTRPCRouter({
           description: input.description,
           userId: ctx.session.user.id,
           slug: slugify(input.title, { lower: true }),
+        },
+      });
+    }),
+
+  addSets: protectedProcedure
+    .input(
+      z.object({
+        folderId: z.string(),
+        studySetIds: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const folder = await ctx.prisma.folder.findUnique({
+        where: {
+          id: input.folderId,
+        },
+      });
+
+      if (!folder || folder.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      await ctx.prisma.studySetsOnFolders.createMany({
+        data: input.studySetIds.map((studySetId) => ({
+          folderId: input.folderId,
+          studySetId,
+        })),
+      });
+    }),
+
+  removeSet: protectedProcedure
+    .input(
+      z.object({
+        folderId: z.string(),
+        studySetId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const folder = await ctx.prisma.folder.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          id: input.folderId,
+        },
+      });
+
+      if (!folder) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      await ctx.prisma.studySetsOnFolders.delete({
+        where: {
+          studySetId_folderId: {
+            studySetId: input.studySetId,
+            folderId: input.folderId,
+          },
         },
       });
     }),

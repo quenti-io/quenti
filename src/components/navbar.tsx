@@ -1,19 +1,3 @@
-import React from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import {
-  IconBooks,
-  IconChevronDown,
-  IconFolder,
-  IconLogout,
-  IconMenu,
-  IconMoon,
-  IconSettings,
-  IconSun,
-  IconUser,
-  IconX,
-  type TablerIconsProps,
-} from "@tabler/icons-react";
-import Link from "next/link";
 import {
   Avatar,
   AvatarBadge,
@@ -26,7 +10,6 @@ import {
   Menu,
   MenuButton,
   MenuDivider,
-  MenuItem,
   MenuList,
   Text,
   useColorMode,
@@ -36,9 +19,25 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { Logo } from "../icons/logo";
+import {
+  IconBooks,
+  IconChevronDown,
+  IconFolder,
+  IconLogout,
+  IconMenu,
+  IconMoon,
+  IconSettings,
+  IconSun,
+  IconUser,
+  IconX,
+} from "@tabler/icons-react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import React from "react";
+import { Logo } from "../icons/logo";
 import { CreateFolderModal } from "./create-folder-modal";
+import { MenuOption } from "./menu-option";
 
 export const Navbar: React.FC = () => {
   const router = useRouter();
@@ -238,39 +237,5 @@ export const Navbar: React.FC = () => {
         </HStack>
       </Flex>
     </>
-  );
-};
-
-interface MenuOptionProps {
-  icon: React.ReactElement<TablerIconsProps, string>;
-  label: string;
-  link?: string;
-  onClick?: () => void;
-}
-
-const MenuOption: React.FC<MenuOptionProps> = ({
-  icon,
-  label,
-  link,
-  onClick,
-}) => {
-  const bg = useColorModeValue("white", "gray.800");
-  const hover = useColorModeValue("gray.100", "gray.700");
-  const color = useColorModeValue("black", "white");
-
-  return (
-    <MenuItem
-      icon={icon}
-      as={link ? Link : undefined}
-      href={link ?? ""}
-      bg={bg}
-      _hover={{ bg: hover }}
-      onClick={onClick}
-      py="2"
-      fontWeight={600}
-      color={color}
-    >
-      <Text>{label}</Text>
-    </MenuItem>
   );
 };

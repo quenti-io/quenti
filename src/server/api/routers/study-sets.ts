@@ -22,60 +22,71 @@ export const studySetsRouter = createTRPCRouter({
     return studySet;
   }),
 
-  recent: protectedProcedure.query(async ({ ctx }) => {
-    const recentExperiences = (
-      await ctx.prisma.studySetExperience.findMany({
-        where: {
-          userId: ctx.session?.user?.id,
-          studySet: {
-            OR: [
-              {
-                visibility: {
-                  not: "Private",
-                },
-              },
-              {
-                userId: ctx.session?.user?.id,
-              },
-            ],
-          },
-        },
-        orderBy: {
-          viewedAt: "desc",
-        },
-        take: 16,
-      })
-    ).map((x) => x.studySetId);
-
-    return (
-      await ctx.prisma.studySet.findMany({
-        where: {
-          id: {
-            in: recentExperiences,
-          },
-        },
-        include: {
-          user: true,
-          _count: {
-            select: {
-              terms: true,
-            },
-          },
-        },
+  recent: protectedProcedure
+    .input(
+      z.object({
+        exclude: z.array(z.string()).optional(),
       })
     )
-      .sort(
-        (a, b) =>
-          recentExperiences.indexOf(a.id) - recentExperiences.indexOf(b.id)
+    .query(async ({ input, ctx }) => {
+      const recentExperiences = (
+        await ctx.prisma.studySetExperience.findMany({
+          where: {
+            userId: ctx.session?.user?.id,
+            NOT: {
+              studySetId: {
+                in: input.exclude ?? [],
+              },
+            },
+            studySet: {
+              OR: [
+                {
+                  visibility: {
+                    not: "Private",
+                  },
+                },
+                {
+                  userId: ctx.session?.user?.id,
+                },
+              ],
+            },
+          },
+          orderBy: {
+            viewedAt: "desc",
+          },
+          take: 16,
+        })
+      ).map((x) => x.studySetId);
+
+      return (
+        await ctx.prisma.studySet.findMany({
+          where: {
+            id: {
+              in: recentExperiences,
+            },
+          },
+          include: {
+            user: true,
+            _count: {
+              select: {
+                terms: true,
+              },
+            },
+          },
+        })
       )
-      .map((set) => ({
-        ...set,
-        user: {
-          username: set.user.username!,
-          image: set.user.image!,
-        },
-      }));
-  }),
+        .sort(
+          (a, b) =>
+            recentExperiences.indexOf(a.id) - recentExperiences.indexOf(b.id)
+        )
+        .map((set) => ({
+          ...set,
+          user: {
+            username: set.user.username,
+            image: set.user.image!,
+          },
+        }));
+    }),
 
   byId: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const studySet = await ctx.prisma.studySet.findUnique({

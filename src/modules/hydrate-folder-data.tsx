@@ -5,6 +5,7 @@ import { api, RouterOutputs } from "../utils/api";
 
 type FolderData = RouterOutputs["folders"]["get"];
 export const FolderContext = React.createContext<FolderData>({
+  id: "",
   title: "",
   description: "",
   sets: [],
