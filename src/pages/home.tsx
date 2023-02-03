@@ -1,21 +1,15 @@
-import { useSession } from "next-auth/react";
-
 import {
-  Avatar,
   Container,
-  Flex,
   Grid,
   GridItem,
   Heading,
-  HStack,
-  LinkBox,
-  LinkOverlay,
   Skeleton,
   Stack,
-  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 import type { ComponentWithAuth } from "../components/auth-component";
+import { StudySetCard } from "../components/study-set-card";
 import { api } from "../utils/api";
 
 const Home: ComponentWithAuth = () => {
@@ -25,9 +19,6 @@ const Home: ComponentWithAuth = () => {
     enabled: session?.user !== undefined,
   });
 
-  const linkBg = useColorModeValue("white", "gray.800");
-  const linkBorder = useColorModeValue("gray.200", "gray.700");
-  const termsTextColor = useColorModeValue("gray.600", "gray.400");
   const headingColor = useColorModeValue("gray.600", "gray.400");
 
   return (
@@ -48,46 +39,13 @@ const Home: ComponentWithAuth = () => {
                 />
               </GridItem>
             ))}
-          {(data || []).map((x) => (
-            <GridItem key={x.id}>
-              <LinkBox
-                as="article"
-                h="full"
-                rounded="md"
-                p="5"
-                bg={linkBg}
-                borderColor={linkBorder}
-                borderWidth="2px"
-                shadow="lg"
-                transition="all ease-in-out 150ms"
-                _hover={{
-                  transform: "translateY(-2px)",
-                  borderBottomColor: "blue.300",
-                }}
-              >
-                <Flex
-                  justifyContent="space-between"
-                  flexDir="column"
-                  h="full"
-                  gap={4}
-                >
-                  <Stack spacing={1}>
-                    x
-                    <Heading size="md">
-                      <LinkOverlay href={`/${x.id}`}>{x.title}</LinkOverlay>
-                    </Heading>
-                    <Text color={termsTextColor} fontSize="sm">
-                      {x._count.terms} terms
-                    </Text>
-                  </Stack>
-                  <HStack gap="2px">
-                    <Avatar src={x.user.image} size="xs" />
-                    <Text fontSize="sm" fontWeight={600}>
-                      {x.user.name}
-                    </Text>
-                  </HStack>
-                </Flex>
-              </LinkBox>
+          {(data || []).map((studySet) => (
+            <GridItem key={studySet.id}>
+              <StudySetCard
+                studySet={studySet}
+                numTerms={studySet._count.terms}
+                user={studySet.user}
+              />
             </GridItem>
           ))}
         </Grid>

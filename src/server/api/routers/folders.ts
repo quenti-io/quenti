@@ -117,7 +117,7 @@ export const foldersRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           userId: ctx.session.user.id,
-          slug: slugify(input.title),
+          slug: slugify(input.title, { lower: true }),
         },
       });
     }),

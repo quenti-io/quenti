@@ -36,6 +36,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
 
   const createFolder = api.folders.create.useMutation({
     onSuccess: async (data) => {
+      onClose();
       await router.push(
         `/@${session.data!.user!.username}/folders/${data.slug}`
       );

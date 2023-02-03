@@ -71,7 +71,7 @@ export const studySetsRouter = createTRPCRouter({
       .map((set) => ({
         ...set,
         user: {
-          name: set.user.name!,
+          username: set.user.username!,
           image: set.user.image!,
         },
       }));
