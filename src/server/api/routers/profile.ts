@@ -27,6 +27,7 @@ export const profileRouter = createTRPCRouter({
               id: true,
               title: true,
               visibility: true,
+              createdAt: true,
               _count: {
                 select: {
                   terms: true,
@@ -47,6 +48,7 @@ export const profileRouter = createTRPCRouter({
         id: user.id,
         username: user.username,
         image: user.image,
+        verified: user.verified,
         studySets: user.studySets,
       };
     }),

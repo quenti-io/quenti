@@ -1,15 +1,14 @@
-import React from "react";
 import { useRouter } from "next/router";
-import { api } from "../utils/api";
-import type { SetData } from "../interfaces/set-data";
+import React from "react";
+import { Loading } from "../components/loading";
+import { SetPrivate } from "../components/set-private";
 import {
   createExperienceStore,
   ExperienceContext,
   type ExperienceStore,
   type ExperienceStoreProps,
 } from "../stores/use-experience-store";
-import { Loading } from "../components/loading";
-import { SetPrivate } from "../components/set-private";
+import { api, type RouterOutputs } from "../utils/api";
 
 export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -24,6 +23,8 @@ export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };
+
+type SetData = RouterOutputs["studySets"]["byId"];
 
 interface ContextLayerProps {
   data: SetData;

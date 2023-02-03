@@ -15,7 +15,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { ComponentWithAuth } from "../components/auth-component";
+import type { ComponentWithAuth } from "../components/auth-component";
 import { api } from "../utils/api";
 
 const Home: ComponentWithAuth = () => {

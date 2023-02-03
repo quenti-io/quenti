@@ -2,13 +2,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
-import type { SetData } from "../interfaces/set-data";
 import {
   createSetEditorStore,
   SetEditorContext,
   type SetEditorStore,
 } from "../stores/use-set-editor-store";
-import { api } from "../utils/api";
+import { api, type RouterOutputs } from "../utils/api";
 
 export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -42,7 +41,7 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
 
 const ContextLayer: React.FC<
   React.PropsWithChildren<{
-    data: SetData;
+    data: RouterOutputs["studySets"]["byId"];
   }>
 > = ({ data, children }) => {
   const storeRef = React.useRef<SetEditorStore>();

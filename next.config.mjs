@@ -18,8 +18,8 @@ const config = {
   },
   rewrites: async () => [
     {
-      source: "/:username(@[a-zA-Z0-9-_]+)",
-      destination: "/user/:username",
+      source: "/:profile(@[a-zA-Z0-9-_]+)",
+      destination: "/profile/:profile",
     },
     {
       source: "/:id(c[a-z0-9]{24})",
