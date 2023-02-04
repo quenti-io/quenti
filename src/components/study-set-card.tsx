@@ -62,7 +62,17 @@ export const StudySetCard: React.FC<StudySetCardProps> = ({
     >
       <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
         <Stack spacing={2}>
-          <Heading size="md">
+          <Heading
+            size="md"
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              lineClamp: 2,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
             <LinkOverlay href={`/${studySet.id}`}>{studySet.title}</LinkOverlay>
           </Heading>
           <HStack gap={0} color={termsTextColor}>

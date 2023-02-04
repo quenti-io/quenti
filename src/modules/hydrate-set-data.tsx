@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { Set404 } from "../components/set-404";
 import { SetPrivate } from "../components/set-private";
 import {
   createExperienceStore,
@@ -18,6 +19,7 @@ export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
     retry: false,
   });
 
+  if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (!data) return <Loading />;
 

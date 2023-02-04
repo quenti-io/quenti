@@ -16,6 +16,7 @@ export interface ConfirmModalProps {
   body: React.ReactNode;
   isLoading?: boolean;
   heading?: string;
+  actionText?: string;
   onClose: () => void;
   onConfirm: () => void;
 }
@@ -23,6 +24,7 @@ export interface ConfirmModalProps {
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   heading,
+  actionText,
   isLoading,
   body,
   onClose,
@@ -41,7 +43,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               Cancel
             </Button>
             <Button onClick={onConfirm} isLoading={isLoading}>
-              Confirm
+              {actionText ?? "Confirm"}
             </Button>
           </ButtonGroup>
         </ModalFooter>

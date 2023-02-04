@@ -30,7 +30,7 @@ const Home: ComponentWithAuth = () => {
         <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
           {isLoading &&
             Array.from({ length: 9 }).map((_, i) => (
-              <GridItem minHeight="36" key={i}>
+              <GridItem h="156px" key={i}>
                 <Skeleton
                   rounded="md"
                   height="full"
@@ -40,7 +40,7 @@ const Home: ComponentWithAuth = () => {
               </GridItem>
             ))}
           {(data || []).map((studySet) => (
-            <GridItem key={studySet.id}>
+            <GridItem key={studySet.id} h="156px">
               <StudySetCard
                 studySet={studySet}
                 numTerms={studySet._count.terms}
