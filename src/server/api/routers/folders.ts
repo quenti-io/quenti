@@ -83,6 +83,38 @@ export const foldersRouter = createTRPCRouter({
         });
       }
 
+      await ctx.prisma.folderExperience.upsert({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: folder.id,
+          },
+        },
+        create: {
+          folderId: folder.id,
+          userId: ctx.session.user.id,
+          viewedAt: new Date(),
+        },
+        update: {
+          viewedAt: new Date(),
+        },
+      });
+
+      const experience = await ctx.prisma.folderExperience.findUnique({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: folder.id,
+          },
+        },
+      });
+
+      if (!experience) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      }
+
       return {
         id: folder.id,
         title: folder.title,
@@ -102,6 +134,7 @@ export const foldersRouter = createTRPCRouter({
             verified: s.user.verified,
           },
         })),
+        experience,
       };
     }),
 
