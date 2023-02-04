@@ -28,6 +28,9 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
   const [editTerm, setEditTerm] = React.useState<Term | null>(null);
 
   const [index, setIndex] = React.useState(0);
+  const indexRef = React.useRef(index);
+  indexRef.current = index;
+
   const [isFlipped, setIsFlipped] = React.useState(false);
   const flippedRef = React.useRef(isFlipped);
   flippedRef.current = isFlipped;
@@ -87,7 +90,13 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
       void (async () => {
         if (flippedRef.current) {
           setIsFlipped(false);
-          await onNext();
+
+          if (indexRef.current === terms.length - 1) {
+            setIndex(0);
+            await animateTransition();
+          } else {
+            await onNext();
+          }
         } else {
           await flipCard();
         }
