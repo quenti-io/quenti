@@ -101,6 +101,18 @@ export const Navbar: React.FC = () => {
               >
                 Home
               </Button>
+              {session?.user?.admin && (
+                <Button
+                  as={Link}
+                  href="/admin"
+                  variant="ghost"
+                  colorScheme="gray"
+                  fontWeight={700}
+                  fontSize="sm"
+                >
+                  Admin
+                </Button>
+              )}
               <Menu placement="bottom-start">
                 <MenuButton>
                   <Button
