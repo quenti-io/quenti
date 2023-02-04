@@ -14,7 +14,7 @@ const Set: ComponentWithAuth = () => {
         <Stack spacing={10}>
           <HeadingArea />
           <LinkArea />
-          <Divider />
+          <Divider maxW="1000px" />
         </Stack>
       </Container>
       <Container maxW="full" overflow="hidden" p="0" py="8">
