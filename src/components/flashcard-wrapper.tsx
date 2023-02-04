@@ -1,13 +1,13 @@
-import React from "react";
+import { Box } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import { motion, useAnimationControls } from "framer-motion";
+import React from "react";
+import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
+import { useExperienceContext } from "../stores/use-experience-store";
+import { api } from "../utils/api";
+import { EditTermModal } from "./edit-term-modal";
 import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
-import { Box } from "@chakra-ui/react";
-import { EditTermModal } from "./edit-term-modal";
-import { api } from "../utils/api";
-import { useExperienceContext } from "../stores/use-experience-store";
-import { useSet } from "../hooks/use-set";
 
 export interface FlashcardWrapperProps {
   terms: Term[];
@@ -33,7 +33,7 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
   const starMutation = api.experience.starTerm.useMutation();
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
-  const { experience } = useSet();
+  const { experience } = useSetFolderUnison();
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);

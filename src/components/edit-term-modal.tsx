@@ -14,6 +14,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { api } from "../utils/api";
+import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 
 export interface EditTermModalProps {
   term: Term | null;
@@ -29,6 +30,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   onDefinition,
 }) => {
   const utils = api.useContext();
+  const { type } = useSetFolderUnison();
 
   const [word, setWord] = React.useState("");
   const [definition, setDefinition] = React.useState("");
@@ -45,7 +47,11 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   const edit = api.terms.edit.useMutation({
     async onSuccess() {
       onClose();
-      await utils.studySets.invalidate();
+      if (type == "set") {
+        await utils.studySets.invalidate();
+      } else {
+        await utils.folders.invalidate();
+      }
     },
   });
 

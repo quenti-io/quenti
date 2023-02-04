@@ -1,3 +1,4 @@
+import type { Term } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
@@ -10,6 +11,7 @@ export const foldersRouter = createTRPCRouter({
       z.object({
         username: z.string().max(40).regex(USERNAME_REGEXP),
         slug: z.string(),
+        includeTerms: z.boolean().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -115,6 +117,39 @@ export const foldersRouter = createTRPCRouter({
         });
       }
 
+      let terms = new Array<Term>();
+      let starredTerms = new Array<string>();
+
+      if (input.includeTerms) {
+        const raw = await ctx.prisma.term.findMany({
+          where: {
+            studySetId: {
+              in: studySetsICanSee.map((s) => s.id),
+            },
+          },
+        });
+
+        for (const set of studySetsICanSee) {
+          terms = terms.concat(
+            raw
+              .filter((t) => t.studySetId === set.id)
+              .sort((a, b) => a.rank - b.rank)
+          );
+        }
+        terms = terms.map((x, i) => ({ ...x, rank: i }));
+
+        starredTerms = (
+          await ctx.prisma.starredTerm.findMany({
+            where: {
+              userId: ctx.session.user.id,
+              termId: {
+                in: terms.map((t) => t.id),
+              },
+            },
+          })
+        ).map((t) => t.termId);
+      }
+
       return {
         id: folder.id,
         title: folder.title,
@@ -134,7 +169,14 @@ export const foldersRouter = createTRPCRouter({
             verified: s.user.verified,
           },
         })),
-        experience,
+        experience: {
+          ...experience,
+          starredTerms,
+        },
+        terms,
+        editableSets: studySetsICanSee
+          .filter((s) => s.user.id === ctx.session.user.id)
+          .map((s) => s.id),
       };
     }),
 

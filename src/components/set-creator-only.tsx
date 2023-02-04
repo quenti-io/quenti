@@ -1,15 +1,23 @@
 import { useSession } from "next-auth/react";
 import React from "react";
-import { useSet } from "../hooks/use-set";
+import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 
-export const SetCreatorOnly: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export interface SetCreatorOnlyProps {
+  /// Include to force a specific value, otherwise inferred from context
+  studySetId?: string;
+}
+
+export const SetCreatorOnly: React.FC<
+  React.PropsWithChildren<SetCreatorOnlyProps>
+> = ({ children, studySetId }) => {
   const session = useSession();
-  const { userId } = useSet();
+  const { type, userId, editableSets } = useSetFolderUnison();
 
-  if (session.data?.user?.id !== userId) {
-    return null;
+  if (
+    (type == "set" && session.data?.user?.id === userId) ||
+    (studySetId && editableSets?.includes(studySetId))
+  ) {
+    return <>{children}</>;
   }
-  return <>{children}</>;
+  return null;
 };

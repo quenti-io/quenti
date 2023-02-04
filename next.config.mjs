@@ -26,6 +26,10 @@ const config = {
       destination: "/profile/:profile/folders/:slug",
     },
     {
+      source: "/:profile(@[a-zA-Z0-9-_]+)/folders/:slug/flashcards",
+      destination: "/profile/:profile/folders/:slug/flashcards",
+    },
+    {
       source: "/:id(c[a-z0-9]{24})",
       destination: "/sets/:id",
     },

@@ -71,7 +71,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
           </Flex>
           <Flex justifyContent="end">
             <HStack spacing={2}>
-              <SetCreatorOnly>
+              <SetCreatorOnly studySetId={term.studySetId}>
                 <IconButton
                   icon={<IconEdit />}
                   aria-label="Edit"
