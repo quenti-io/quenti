@@ -57,6 +57,7 @@ model User {
   folders             Folder[]
   setAutoSave         SetAutoSave?
   studySetExperiences StudySetExperience[]
+  folderExperiences   FolderExperience[]
   starredTerms        StarredTerm[]
   studiableTerms      StudiableTerm[]
 }
@@ -92,14 +93,15 @@ enum StudySetVisibility {
 }
 
 model Folder {
-  id          String               @id @default(cuid())
-  createdAt   DateTime             @default(now())
-  userId      String
-  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String
-  slug        String
-  description String
-  studySets   StudySetsOnFolders[]
+  id                String               @id @default(cuid())
+  createdAt         DateTime             @default(now())
+  userId            String
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  slug              String
+  description       String
+  studySets         StudySetsOnFolders[]
+  folderExperiences FolderExperience[]
 
   @@unique([userId, slug])
 }
@@ -161,6 +163,18 @@ model StudySetExperience {
   studiableTerms StudiableTerm[]
 
   @@unique([userId, studySetId])
+}
+
+model FolderExperience {
+  id                String   @id @default(cuid())
+  userId            String
+  folderId          String
+  viewedAt          DateTime
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder            Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  shuffleFlashcards Boolean  @default(false)
+
+  @@unique([userId, folderId])
 }
 
 model StudiableTerm {
