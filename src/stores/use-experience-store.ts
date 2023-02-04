@@ -4,11 +4,13 @@ import { subscribeWithSelector } from "zustand/middleware";
 
 export interface ExperienceStoreProps {
   shuffleFlashcards: boolean;
+  autoplayFlashcards: boolean;
   starredTerms: string[];
 }
 
 interface ExperienceState extends ExperienceStoreProps {
   toggleShuffleFlashcards: () => void;
+  toggleAutoplayFlashcards: () => void;
   starTerm: (termId: string) => void;
   unstarTerm: (termId: string) => void;
 }
@@ -20,6 +22,7 @@ export const createExperienceStore = (
 ) => {
   const DEFAULT_PROPS: ExperienceStoreProps = {
     shuffleFlashcards: false,
+    autoplayFlashcards: false,
     starredTerms: [],
   };
 
@@ -31,6 +34,13 @@ export const createExperienceStore = (
         set((state) => {
           return {
             shuffleFlashcards: !state.shuffleFlashcards,
+          };
+        });
+      },
+      toggleAutoplayFlashcards: () => {
+        set((state) => {
+          return {
+            autoplayFlashcards: !state.autoplayFlashcards,
           };
         });
       },

@@ -29,12 +29,15 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
 
   const [index, setIndex] = React.useState(0);
   const [isFlipped, setIsFlipped] = React.useState(false);
+  const flippedRef = React.useRef(isFlipped);
+  flippedRef.current = isFlipped;
 
   const setStarMutation = api.experience.starTerm.useMutation();
   const folderStarMutation = api.folders.starTerm.useMutation();
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
   const { type, experience } = useSetFolderUnison();
+  const autoplayFlashcards = useExperienceContext((s) => s.autoplayFlashcards);
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);
@@ -76,6 +79,24 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
       },
     });
   };
+
+  React.useEffect(() => {
+    if (!autoplayFlashcards) return;
+
+    const interval = setInterval(() => {
+      void (async () => {
+        if (flippedRef.current) {
+          setIsFlipped(false);
+          await onNext();
+        } else {
+          await flipCard();
+        }
+      })();
+    }, 3000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoplayFlashcards]);
 
   const animateTransition = async (next = true) => {
     controls.set({ rotateY: next ? 20 : -20, translateX: next ? -50 : 50 });

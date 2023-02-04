@@ -17,9 +17,13 @@ export const FlashcardPreview = () => {
 
   const setShuffle = api.experience.setShuffle.useMutation();
 
-  const [shuffle, toggle] = useExperienceContext((s) => [
+  const [shuffle, toggleShuffle] = useExperienceContext((s) => [
     s.shuffleFlashcards,
     s.toggleShuffleFlashcards,
+  ]);
+  const [autoplay, toggleAutoplay] = useExperienceContext((s) => [
+    s.autoplayFlashcards,
+    s.toggleAutoplayFlashcards,
   ]);
 
   const _termOrder = data.terms
@@ -52,13 +56,18 @@ export const FlashcardPreview = () => {
               leftIcon={<IconArrowsShuffle />}
               variant={shuffle ? "solid" : "outline"}
               onClick={() => {
-                toggle();
+                toggleShuffle();
                 setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
               }}
             >
               Shuffle
             </Button>
-            <Button leftIcon={<IconPlayerPlay />} variant="outline" w="full">
+            <Button
+              leftIcon={<IconPlayerPlay />}
+              variant={autoplay ? "solid" : "outline"}
+              w="full"
+              onClick={toggleAutoplay}
+            >
               Autoplay
             </Button>
           </Stack>
