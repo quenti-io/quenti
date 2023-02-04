@@ -29,7 +29,7 @@ const Home: ComponentWithAuth = () => {
         </Heading>
         <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
           {isLoading &&
-            Array.from({ length: 9 }).map((_, i) => (
+            Array.from({ length: 16 }).map((_, i) => (
               <GridItem h="156px" key={i}>
                 <Skeleton
                   rounded="md"

@@ -7,6 +7,7 @@ import { subscribeWithSelector } from "zustand/middleware";
 interface SetEditorProps {
   title: string;
   description: string;
+  tags: string[];
   visibility: StudySetVisibility;
   terms: (Term | AutoSaveTerm)[];
 }
@@ -14,6 +15,7 @@ interface SetEditorProps {
 interface SetEditorState extends SetEditorProps {
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
+  setTags: (tags: string[]) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: () => void;
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
@@ -30,6 +32,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
   const DEFAULT_PROPS: SetEditorProps = {
     title: "",
     description: "",
+    tags: [],
     visibility: "Public",
     terms: [],
   };
@@ -40,6 +43,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
       ...initProps,
       setTitle: (title: string) => set({ title }),
       setDescription: (description: string) => set({ description }),
+      setTags: (tags: string[]) => set({ tags }),
       setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
       addTerm: () =>
         set((state) => {

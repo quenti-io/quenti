@@ -196,6 +196,7 @@ export const studySetsRouter = createTRPCRouter({
       data: {
         title: autoSave.title,
         description: autoSave.description,
+        tags: autoSave.tags,
         userId: ctx.session.user.id,
         terms: {
           createMany: {
@@ -219,6 +220,7 @@ export const studySetsRouter = createTRPCRouter({
         id: z.string(),
         title: z.string(),
         description: z.string(),
+        tags: z.array(z.string()),
         visibility: z.enum(["Public", "Unlisted", "Private"]),
       })
     )
@@ -233,6 +235,7 @@ export const studySetsRouter = createTRPCRouter({
         data: {
           title: input.title,
           description: input.description,
+          tags: input.tags,
           visibility: input.visibility,
         },
       });

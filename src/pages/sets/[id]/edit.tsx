@@ -28,10 +28,12 @@ const EditorWrapper = () => {
   const store = React.useContext(SetEditorContext)!;
   const title = useSetEditorContext((s) => s.title);
   const description = useSetEditorContext((s) => s.description);
+  const tags = useSetEditorContext((s) => s.tags);
   const visibility = useSetEditorContext((s) => s.visibility);
   const terms = useSetEditorContext((s) => s.terms);
   const setTitle = useSetEditorContext((s) => s.setTitle);
   const setDescription = useSetEditorContext((s) => s.setDescription);
+  const setTags = useSetEditorContext((s) => s.setTags);
   const setVisibility = useSetEditorContext((s) => s.setVisibility);
   const addTerm = useSetEditorContext((s) => s.addTerm);
   const bulkAddTerms = useSetEditorContext((s) => s.bulkAddTerms);
@@ -80,13 +82,14 @@ const EditorWrapper = () => {
         id,
         title: state.title,
         description: state.description,
+        tags: state.tags,
         visibility: state.visibility,
       });
     })();
   };
 
   store.subscribe(
-    (s) => [s.title, s.description, s.visibility],
+    (s) => [s.title, s.description, s.tags, s.visibility],
     propertiesSaveHandler,
     {
       equalityFn: shallow,
@@ -107,6 +110,7 @@ const EditorWrapper = () => {
       mode="edit"
       title={title}
       description={description}
+      tags={tags}
       visibility={visibility}
       isSaving={anySaving}
       isLoading={false}
@@ -114,6 +118,7 @@ const EditorWrapper = () => {
       terms={terms.sort((a, b) => a.rank - b.rank)}
       setTitle={setTitle}
       setDescription={setDescription}
+      setTags={setTags}
       setVisibility={setVisibility}
       onBulkImportTerms={(terms) => {
         void (async () => {

@@ -11,6 +11,7 @@ export interface SetEditorProps {
   mode: "create" | "edit";
   title: string;
   description: string;
+  tags: string[];
   visibility: StudySetVisibility;
   numTerms: number;
   isSaving: boolean;
@@ -18,6 +19,7 @@ export interface SetEditorProps {
   terms: (Term | AutoSaveTerm)[];
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
+  setTags: (tags: string[]) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: () => void;
   deleteTerm: (id: string) => void;
@@ -32,6 +34,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
   mode,
   title,
   description,
+  tags,
   visibility,
   numTerms,
   isSaving,
@@ -39,6 +42,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
   terms,
   setTitle,
   setDescription,
+  setTags,
   setVisibility,
   addTerm,
   deleteTerm,
@@ -74,6 +78,8 @@ export const SetEditor: React.FC<SetEditorProps> = ({
         setTitle={setTitle}
         description={description}
         setDescription={setDescription}
+        tags={tags}
+        setTags={setTags}
         numTerms={numTerms}
       />
       <ButtonArea

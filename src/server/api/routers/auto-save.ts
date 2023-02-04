@@ -35,6 +35,7 @@ export const autoSaveRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         description: z.string(),
+        tags: z.array(z.string()),
         visibility: z.enum(["Public", "Unlisted", "Private"]),
         terms: z.array(
           z.object({
@@ -54,6 +55,7 @@ export const autoSaveRouter = createTRPCRouter({
         update: {
           title: input.title,
           description: input.description,
+          tags: input.tags,
           visibility: input.visibility,
           userId: ctx.session.user.id,
           autoSaveTerms: {
@@ -71,6 +73,7 @@ export const autoSaveRouter = createTRPCRouter({
         create: {
           title: input.title,
           description: input.description,
+          tags: input.tags,
           visibility: input.visibility,
           userId: ctx.session.user.id,
           autoSaveTerms: {

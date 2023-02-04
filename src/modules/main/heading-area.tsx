@@ -9,6 +9,7 @@ import {
   MenuButton,
   MenuList,
   Stack,
+  Tag,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -23,9 +24,10 @@ import { useSet } from "../../hooks/use-set";
 import { api } from "../../utils/api";
 
 export const HeadingArea = () => {
-  const { id, title, terms, visibility } = useSet();
+  const { id, title, tags, terms, visibility } = useSet();
   const router = useRouter();
   const text = useColorModeValue("gray.600", "gray.400");
+  const tagBg = useColorModeValue("gray.200", "gray.750");
   const menuBg = useColorModeValue("white", "gray.800");
 
   const deleteSet = api.studySets.delete.useMutation({
@@ -54,6 +56,15 @@ export const HeadingArea = () => {
         }}
       />
       <Stack spacing={4} marginTop="10" maxW="1000px">
+        {tags.length && (
+          <HStack spacing={3}>
+            {tags.map((t, i) => (
+              <Tag bg={tagBg} key={i}>
+                {t}
+              </Tag>
+            ))}
+          </HStack>
+        )}
         <Heading size="2xl">{title}</Heading>
         <Flex justifyContent="space-between" maxW="1000px" h="32px">
           <HStack color={text} fontWeight={600} spacing={2}>
