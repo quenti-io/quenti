@@ -290,4 +290,20 @@ export const foldersRouter = createTRPCRouter({
         },
       });
     }),
+
+  setShuffle: protectedProcedure
+    .input(z.object({ folderId: z.string(), shuffle: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.folderId,
+          },
+        },
+        data: {
+          shuffleFlashcards: input.shuffle,
+        },
+      });
+    }),
 });

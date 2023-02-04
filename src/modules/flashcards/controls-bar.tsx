@@ -5,8 +5,9 @@ import { useExperienceContext } from "../../stores/use-experience-store";
 import { api } from "../../utils/api";
 
 export const ControlsBar = () => {
-  const { id } = useSetFolderUnison();
-  const setShuffle = api.experience.setShuffle.useMutation();
+  const { id, type } = useSetFolderUnison();
+  const setShuffleSet = api.experience.setShuffle.useMutation();
+  const setShuffleFolder = api.folders.setShuffle.useMutation();
 
   const [shuffle, toggle] = useExperienceContext((s) => [
     s.shuffleFlashcards,
@@ -23,7 +24,12 @@ export const ControlsBar = () => {
         colorScheme="gray"
         onClick={() => {
           toggle();
-          setShuffle.mutate({ studySetId: id, shuffle: !shuffle });
+
+          if (type === "set") {
+            setShuffleSet.mutate({ studySetId: id, shuffle: !shuffle });
+          } else {
+            setShuffleFolder.mutate({ folderId: id, shuffle: !shuffle });
+          }
         }}
       />
       <IconButton
