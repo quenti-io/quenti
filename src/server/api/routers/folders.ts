@@ -306,4 +306,31 @@ export const foldersRouter = createTRPCRouter({
         },
       });
     }),
+
+  starTerm: protectedProcedure
+    .input(z.object({ studySetId: z.string(), termId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const experience = await ctx.prisma.studySetExperience.upsert({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        create: {
+          userId: ctx.session.user.id,
+          studySetId: input.studySetId,
+          viewedAt: new Date(),
+        },
+        update: {},
+      });
+
+      await ctx.prisma.starredTerm.create({
+        data: {
+          termId: input.termId,
+          experienceId: experience.id,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
 });

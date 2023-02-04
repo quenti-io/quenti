@@ -27,7 +27,6 @@ export const HeadingArea = () => {
             <Text>{visibility}</Text>
           </HStack>
           <Text>•</Text>
-
           <Text>
             {terms.length} term{terms.length != 1 ? "s" : ""}
           </Text>

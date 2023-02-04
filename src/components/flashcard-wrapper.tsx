@@ -30,10 +30,11 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
   const [index, setIndex] = React.useState(0);
   const [isFlipped, setIsFlipped] = React.useState(false);
 
-  const starMutation = api.experience.starTerm.useMutation();
+  const setStarMutation = api.experience.starTerm.useMutation();
+  const folderStarMutation = api.folders.starTerm.useMutation();
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
-  const { experience } = useSetFolderUnison();
+  const { type, experience } = useSetFolderUnison();
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);
@@ -128,10 +129,18 @@ export const FlashcardWrapper: React.FC<FlashcardWrapperProps> = ({
             }}
             onRequestStar={() => {
               if (!starred) {
-                starMutation.mutate({
-                  termId: term.id,
-                  experienceId: experience.id,
-                });
+                if (type === "set") {
+                  setStarMutation.mutate({
+                    termId: term.id,
+                    experienceId: experience.id,
+                  });
+                } else {
+                  folderStarMutation.mutate({
+                    termId: term.id,
+                    studySetId: term.studySetId,
+                  });
+                }
+
                 starTerm(sortedTerms[index]!.id);
               } else {
                 unstarMutation.mutate({
