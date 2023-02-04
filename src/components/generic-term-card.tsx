@@ -19,7 +19,7 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({ term, variantB
       >
         <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
           <Text w="full">{term.word}</Text>
-          <Box bg={useColorModeValue("black", "white")} h="full" w="3px" />
+          <Box bg={useColorModeValue("gray.200", "gray.600")} h="full" w="3px" />
           <Text w="full">{term.definition}</Text>
         </Flex>
       </Flex>

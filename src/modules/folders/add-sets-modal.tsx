@@ -51,11 +51,11 @@ export const AddSetsModal: React.FC<AddSetsModalProps> = ({
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
-      <ModalOverlay />
+    <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered scrollBehavior="inside">
+      <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent>
         <ModalHeader fontWeight={700}>Add Sets</ModalHeader>
-        <ModalBody>
+        <ModalBody pb="10">
           <Grid gridTemplateColumns="1fr 1fr" gap={4}>
             {recent.data?.map((set) => (
               <GridItem key={set.id}>

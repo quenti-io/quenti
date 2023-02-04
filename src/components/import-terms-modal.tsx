@@ -82,7 +82,7 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
       size="3xl"
       scrollBehavior="inside"
     >
-      <ModalOverlay />
+      <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent>
         <ModalHeader fontSize="2xl" fontWeight={700}>
           Import Terms

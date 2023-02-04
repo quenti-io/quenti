@@ -95,7 +95,11 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           ) : (
             <Text w="full">{editWord}</Text>
           )}
-          <Box bg={useColorModeValue("black", "white")} h="full" w="3px" />
+          <Box
+            bg={useColorModeValue("gray.200", "gray.600")}
+            h="full"
+            w="3px"
+          />
           {isEditing ? (
             <Input
               value={editDefinition}

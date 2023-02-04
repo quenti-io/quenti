@@ -17,7 +17,7 @@ export const FoldersList = () => {
   const dividerColor = useColorModeValue("gray.300", "gray.700");
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={8}>
       {grouped.map((x, i) => (
         <Stack spacing={6} key={i}>
           <Flex gap={4} alignItems="center">

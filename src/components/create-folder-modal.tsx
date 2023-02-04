@@ -45,7 +45,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay />
+      <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent p="4" rounded="xl">
         <ModalHeader fontWeight={700} fontSize="3xl">
           Create Folder

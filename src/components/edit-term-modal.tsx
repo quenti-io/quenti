@@ -63,7 +63,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
       size="xl"
       initialFocusRef={initialRef}
     >
-      <ModalOverlay />
+      <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent>
         <ModalHeader>Edit Term</ModalHeader>
         <ModalCloseButton />

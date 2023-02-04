@@ -28,7 +28,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" isCentered>
-      <ModalOverlay />
+      <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent>
         <ModalBody>
           <Stack spacing={4} py="4" px="2">

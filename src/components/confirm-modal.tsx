@@ -30,7 +30,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
+      <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent>
         <ModalHeader fontSize="2xl">{heading || "Are you sure?"}</ModalHeader>
         <ModalCloseButton />
