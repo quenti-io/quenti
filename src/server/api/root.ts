@@ -1,3 +1,4 @@
+import { adminRouter } from "./routers/admin";
 import { autoSaveRouter } from "./routers/auto-save";
 import { experienceRouter } from "./routers/experience";
 import { foldersRouter } from "./routers/folders";
@@ -16,6 +17,7 @@ import { createTRPCRouter } from "./trpc";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   profile: profileRouter,
+  admin: adminRouter,
   studySets: studySetsRouter,
   folders: foldersRouter,
   terms: termsRouter,

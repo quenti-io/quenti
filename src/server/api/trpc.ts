@@ -66,6 +66,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { env } from "../../env/server.mjs";
 
 const t = initTRPC
   .context<Awaited<ReturnType<typeof createTRPCContext>>>()
@@ -124,3 +125,13 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+
+const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
+  if (ctx.session?.user?.email !== env.ADMIN_EMAIL) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next();
+});
+
+export const adminProcedure = protectedProcedure.use(enforceUserIsAdmin);
