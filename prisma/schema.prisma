@@ -74,7 +74,7 @@ model VerificationToken {
 model StudySet {
   id                  String               @id @default(cuid())
   userId              String
-  user                User                 @relation(fields: [userId], references: [id], onDelete: NoAction)
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt           DateTime             @default(now())
   title               String
   description         String
