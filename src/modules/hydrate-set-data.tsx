@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
-import { Set404 } from "../components/set-404";
-import { SetPrivate } from "../components/set-private";
 import {
   createExperienceStore,
   ExperienceContext,
@@ -10,6 +8,8 @@ import {
   type ExperienceStoreProps,
 } from "../stores/use-experience-store";
 import { api, type RouterOutputs } from "../utils/api";
+import { Set404 } from "./main/set-404";
+import { SetPrivate } from "./main/set-private";
 
 export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
   children,

@@ -152,7 +152,7 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
             <Divider />p
             <Flex gap={8}>
               <Stack spacing={0} w="full">
-                <Text fontWeight={700}>Danger zone</Text>
+                <Text fontWeight={700}>Start over</Text>
                 <Text fontSize="sm" color={mutedColor}>
                   Reset progress for this set
                 </Text>

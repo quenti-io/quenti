@@ -20,7 +20,8 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
   pageProps: { session, cookies, ...pageProps },
 }) => {
   const Component = _Component as NextComponentWithAuth;
-  const onIndex = useRouter().pathname === "/";
+  const pathname = useRouter().pathname;
+  const staticPage = pathname === "/" || pathname === "/404";
 
   const children = (
     <>
@@ -38,7 +39,7 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
   return (
     <Chakra cookies={cookies}>
       <SessionProvider session={session}>
-        {onIndex ? (
+        {staticPage ? (
           <DarkMode>
             <GlobalStyle />
             {children}

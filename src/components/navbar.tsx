@@ -42,7 +42,7 @@ import { MenuOption } from "./menu-option";
 
 export const Navbar: React.FC = () => {
   const router = useRouter();
-  const onHomePage = router.pathname === "/";
+  const onStaticPage = router.pathname === "/" || router.pathname === "/404";
   const { colorMode, toggleColorMode } = useColorMode();
 
   const { data: session, status } = useSession();
@@ -66,7 +66,7 @@ export const Navbar: React.FC = () => {
         <HStack
           as="header"
           aria-label="Main navigation"
-          maxW={onHomePage ? "7xl" : undefined}
+          maxW={onStaticPage ? "7xl" : undefined}
           w="full"
           mx="auto"
           px={{ base: "6", md: "8" }}
@@ -211,7 +211,7 @@ export const Navbar: React.FC = () => {
                     label="Settings"
                     link="/settings"
                   />
-                  {!onHomePage && (
+                  {!onStaticPage && (
                     <>
                       <MenuOption
                         icon={

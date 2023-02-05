@@ -1,12 +1,12 @@
 import {
   Button,
   ButtonGroup,
+  Heading,
   Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Stack,
   useColorModeValue,
@@ -30,6 +30,8 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   const session = useSession();
   const primaryBg = useColorModeValue("gray.200", "gray.800");
   const secondaryBg = useColorModeValue("gray.100", "gray.750");
+  const headingColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -46,32 +48,36 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" rounded="xl">
-        <ModalHeader fontWeight={700} fontSize="3xl">
-          Create Folder
-        </ModalHeader>
+      <ModalContent p="4" pb="4" rounded="xl">
         <ModalBody>
-          <Stack spacing={4}>
-            <Input
-              placeholder="Title"
-              variant="flushed"
-              fontWeight={700}
-              bg={primaryBg}
-              rounded="md"
-              px="4"
-              size="lg"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <AutoResizeTextarea
-              allowTab={false}
-              placeholder="Description (optional)"
-              bg={secondaryBg}
-              py="4"
-              border="none"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+          <Stack spacing={8}>
+            <Heading fontSize="4xl" color={headingColor}>
+              Create Folder
+            </Heading>
+            <Stack spacing={4}>
+              <Input
+                placeholder="Title"
+                variant="flushed"
+                fontWeight={700}
+                bg={primaryBg}
+                color={inputColor}
+                rounded="md"
+                px="4"
+                size="lg"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <AutoResizeTextarea
+                allowTab={false}
+                placeholder="Description (optional)"
+                bg={secondaryBg}
+                color={inputColor}
+                py="3"
+                border="none"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Stack>
           </Stack>
         </ModalBody>
         <ModalFooter>
