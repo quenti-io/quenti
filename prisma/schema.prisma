@@ -150,15 +150,23 @@ model AutoSaveTerm {
   setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
 }
 
+enum StudySetAnswerMode {
+  Word
+  Definition
+  Both
+}
+
 model StudySetExperience {
-  id                String   @id @default(cuid())
+  id                String             @id @default(cuid())
   userId            String
   studySetId        String
   viewedAt          DateTime
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  studySet          StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
-  shuffleFlashcards Boolean  @default(false)
-  learnRound        Int      @default(0)
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studySet          StudySet           @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  shuffleFlashcards Boolean            @default(false)
+  learnRound        Int                @default(0)
+  studyStarred      Boolean            @default(false)
+  answerWith        StudySetAnswerMode @default(Definition)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
