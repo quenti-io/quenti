@@ -7,6 +7,7 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
+import { SetSettingsModal } from "../../components/set-settings-modal";
 import { useSet } from "../../hooks/use-set";
 import { useExperienceContext } from "../../stores/use-experience-store";
 import { api } from "../../utils/api";
@@ -38,69 +39,83 @@ export const FlashcardPreview = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shuffle, data.terms.length]);
 
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+
   return (
-    <Flex
-      gap={8}
-      flexDir={{ base: "column", md: "row" }}
-      alignItems="stretch"
-      w="full"
-    >
-      <Flex maxW="1000px" flex="1">
-        <FlashcardWrapper terms={data.terms} termOrder={termOrder} />
-      </Flex>
-      <Flex flexDir="column" justifyContent="space-between">
-        <Stack spacing={4}>
-          <Stack direction={{ base: "row", md: "column" }} w="full" spacing={4}>
-            <Button
+    <>
+      <SetSettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
+      <Flex
+        gap={8}
+        flexDir={{ base: "column", md: "row" }}
+        alignItems="stretch"
+        w="full"
+      >
+        <Flex maxW="1000px" flex="1">
+          <FlashcardWrapper terms={data.terms} termOrder={termOrder} />
+        </Flex>
+        <Flex flexDir="column" justifyContent="space-between">
+          <Stack spacing={4}>
+            <Stack
+              direction={{ base: "row", md: "column" }}
               w="full"
-              leftIcon={<IconArrowsShuffle />}
-              variant={shuffle ? "solid" : "outline"}
-              onClick={() => {
-                toggleShuffle();
-                setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
-              }}
+              spacing={4}
             >
-              Shuffle
-            </Button>
+              <Button
+                w="full"
+                leftIcon={<IconArrowsShuffle />}
+                variant={shuffle ? "solid" : "outline"}
+                onClick={() => {
+                  toggleShuffle();
+                  setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
+                }}
+              >
+                Shuffle
+              </Button>
+              <Button
+                leftIcon={<IconPlayerPlay />}
+                variant={autoplay ? "solid" : "outline"}
+                w="full"
+                onClick={toggleAutoplay}
+              >
+                Autoplay
+              </Button>
+            </Stack>
             <Button
-              leftIcon={<IconPlayerPlay />}
-              variant={autoplay ? "solid" : "outline"}
-              w="full"
-              onClick={toggleAutoplay}
+              leftIcon={<IconSettings />}
+              variant="ghost"
+              display={{ base: "none", md: "flex" }}
+              onClick={() => setSettingsOpen(true)}
             >
-              Autoplay
+              Settings
             </Button>
           </Stack>
-          <Button
-            leftIcon={<IconSettings />}
-            variant="ghost"
-            display={{ base: "none", md: "flex" }}
-          >
-            Settings
-          </Button>
-        </Stack>
-        <Flex justifyContent={{ base: "end", md: "start" }} marginTop="4">
-          <IconButton
-            w="max"
-            icon={<IconSettings />}
-            rounded="full"
-            variant="ghost"
-            display={{ base: "flex", md: "none" }}
-            aria-label="Settings"
-            colorScheme="gray"
-          />
-          <IconButton
-            w="max"
-            rounded="full"
-            variant="ghost"
-            as={Link}
-            href={`/${data.id}/flashcards`}
-            icon={<IconMaximize />}
-            aria-label="Full screen"
-            colorScheme="gray"
-          />
+          <Flex justifyContent={{ base: "end", md: "start" }} marginTop="4">
+            <IconButton
+              w="max"
+              icon={<IconSettings />}
+              rounded="full"
+              variant="ghost"
+              display={{ base: "flex", md: "none" }}
+              aria-label="Settings"
+              colorScheme="gray"
+              onClick={() => setSettingsOpen(true)}
+            />
+            <IconButton
+              w="max"
+              rounded="full"
+              variant="ghost"
+              as={Link}
+              href={`/${data.id}/flashcards`}
+              icon={<IconMaximize />}
+              aria-label="Full screen"
+              colorScheme="gray"
+            />
+          </Flex>
         </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
