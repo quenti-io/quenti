@@ -1,54 +1,29 @@
-import {
-  Container,
-  Grid,
-  GridItem,
-  Heading,
-  Skeleton,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import type { ComponentWithAuth } from "../components/auth-component";
-import { StudySetCard } from "../components/study-set-card";
+import { SetGrid } from "../modules/home/set-grid";
 import { api } from "../utils/api";
 
 const Home: ComponentWithAuth = () => {
-  const { data: session } = useSession();
-
-  const { data, isLoading } = api.studySets.recent.useQuery({}, {
-    enabled: session?.user !== undefined,
-  });
-
-  const headingColor = useColorModeValue("gray.600", "gray.400");
+  const { data, isLoading } = api.studySets.recent.useQuery({});
+  const official = api.studySets.getOfficial.useQuery();
 
   return (
-    <Container maxW="7xl" marginTop="10">
-      <Stack spacing={6}>
-        <Heading color={headingColor} size="md">
-          Recent
-        </Heading>
-        <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
-          {isLoading &&
-            Array.from({ length: 16 }).map((_, i) => (
-              <GridItem h="156px" key={i}>
-                <Skeleton
-                  rounded="md"
-                  height="full"
-                  border="2px"
-                  borderColor="gray.700"
-                />
-              </GridItem>
-            ))}
-          {(data || []).map((studySet) => (
-            <GridItem key={studySet.id} h="156px">
-              <StudySetCard
-                studySet={studySet}
-                numTerms={studySet._count.terms}
-                user={studySet.user}
-              />
-            </GridItem>
-          ))}
-        </Grid>
+    <Container maxW="7xl" marginTop="10" marginBottom="20">
+      <Stack spacing={12}>
+        <SetGrid
+          data={data}
+          isLoading={isLoading}
+          heading="Recent"
+          skeletonCount={16}
+        />
+        <SetGrid
+          data={official.data}
+          isLoading={official.isLoading}
+          heading="Example Sets"
+          skeletonCount={8}
+          verified
+        />
       </Stack>
     </Container>
   );

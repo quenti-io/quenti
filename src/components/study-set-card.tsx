@@ -14,9 +14,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { StudySet } from "@prisma/client";
-import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
+import {
+  IconDiscountCheck,
+  IconDotsVertical,
+  IconTrash,
+} from "@tabler/icons-react";
 import React from "react";
 import { visibilityIcon } from "../common/visibility-icon";
+import { avatarUrl } from "../utils/avatar";
 import { plural } from "../utils/string";
 import { MenuOption } from "./menu-option";
 
@@ -27,6 +32,7 @@ export interface StudySetCardProps {
     username: string;
     image: string | null;
   };
+  verified?: boolean;
   removable?: boolean;
   onRemove?: () => void;
 }
@@ -35,6 +41,7 @@ export const StudySetCard: React.FC<StudySetCardProps> = ({
   studySet,
   numTerms,
   user,
+  verified = false,
   removable = false,
   onRemove,
 }) => {
@@ -82,11 +89,18 @@ export const StudySetCard: React.FC<StudySetCardProps> = ({
           </HStack>
         </Stack>
         <Flex justifyContent="space-between">
-          <HStack gap="2px">
-            <Avatar src={user.image!} size="xs" />
-            <Text fontSize="sm" fontWeight={600}>
-              {user.username}
-            </Text>
+          <HStack spacing={2}>
+            <Avatar src={avatarUrl(user)} size="xs" />
+            <HStack spacing={1}>
+              <Text fontSize="sm" fontWeight={600}>
+                {user.username}
+              </Text>
+              {verified && (
+                <Box>
+                  <IconDiscountCheck aria-label="Verified" size={18} />
+                </Box>
+              )}
+            </HStack>
           </HStack>
           {removable && (
             <Box zIndex="20">

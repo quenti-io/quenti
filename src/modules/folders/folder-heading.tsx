@@ -4,6 +4,7 @@ import {
 } from "@chakra-ui/react";
 import { IconFolder } from "@tabler/icons-react";
 import { useFolder } from "../../hooks/use-folder";
+import { avatarUrl } from "../../utils/avatar";
 import { plural } from "../../utils/string";
 
 export const FolderHeading = () => {
@@ -17,7 +18,7 @@ export const FolderHeading = () => {
         <Text>{plural(folder.sets.length, "set")}</Text>
         <Text>created by</Text>
         <HStack gap={0} fontWeight={700}>
-          <Avatar src={folder.user.image!} size="xs" />
+          <Avatar src={avatarUrl(folder.user)} size="xs" />
           <Link
             href={`/@${folder.user.username}`}
             _hover={{ color: highlight }}

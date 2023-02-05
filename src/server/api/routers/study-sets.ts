@@ -34,9 +34,20 @@ export const studySetsRouter = createTRPCRouter({
           where: {
             userId: ctx.session?.user?.id,
             NOT: {
-              studySetId: {
-                in: input.exclude ?? [],
-              },
+              OR: [
+                {
+                  studySetId: {
+                    in: input.exclude ?? [],
+                  },
+                },
+                {
+                  studySet: {
+                    user: {
+                      username: "Quizlet",
+                    },
+                  },
+                },
+              ],
             },
             studySet: {
               OR: [
@@ -87,6 +98,29 @@ export const studySetsRouter = createTRPCRouter({
           },
         }));
     }),
+
+  getOfficial: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.studySet.findMany({
+      where: {
+        user: {
+          username: "Quizlet",
+        },
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            image: true,
+          },
+        },
+        _count: {
+          select: {
+            terms: true,
+          },
+        },
+      },
+    });
+  }),
 
   byId: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const studySet = await ctx.prisma.studySet.findUnique({

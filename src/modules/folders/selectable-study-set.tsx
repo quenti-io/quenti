@@ -11,6 +11,7 @@ import {
 import type { StudySet } from "@prisma/client";
 import React from "react";
 import { visibilityIcon } from "../../common/visibility-icon";
+import { avatarUrl } from "../../utils/avatar";
 import { plural } from "../../utils/string";
 
 export interface SelectableStudySetProps {
@@ -62,7 +63,7 @@ export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
           </HStack>
         </Stack>
         <HStack gap="2px">
-          <Avatar src={user.image!} size="xs" />
+          <Avatar src={avatarUrl(user)} size="xs" />
           <Text fontSize="sm" fontWeight={600}>
             {user.username}
           </Text>

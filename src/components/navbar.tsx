@@ -36,6 +36,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Logo } from "../icons/logo";
+import { avatarUrl } from "../utils/avatar";
 import { CreateFolderModal } from "./create-folder-modal";
 import { MenuOption } from "./menu-option";
 
@@ -175,7 +176,13 @@ export const Navbar: React.FC = () => {
                     color={color}
                   >
                     <WrapItem>
-                      <Avatar src={session.user.image!} size="sm">
+                      <Avatar
+                        src={avatarUrl({
+                          ...session.user,
+                          image: session.user.image!,
+                        })}
+                        size="sm"
+                      >
                         <AvatarBadge boxSize="1em" bg="green.500" />
                       </Avatar>
                     </WrapItem>

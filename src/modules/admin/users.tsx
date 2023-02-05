@@ -13,6 +13,7 @@ import {
 import { IconDiscountCheck } from "@tabler/icons-react";
 import { useAdmin } from "../../hooks/use-admin";
 import { api } from "../../utils/api";
+import { avatarUrl } from "../../utils/avatar";
 
 export const AdminUsers = () => {
   const utils = api.useContext();
@@ -46,7 +47,7 @@ export const AdminUsers = () => {
             >
               <Stack spacing={6}>
                 <Flex gap={4} w="full">
-                  <Avatar src={user.image!} size="sm" mt="2" />
+                  <Avatar src={avatarUrl(user)} size="sm" mt="2" />
                   <Stack w="full">
                     <Stack spacing={0}>
                       <Link

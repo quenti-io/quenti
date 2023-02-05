@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
 import { useSet } from "../../hooks/use-set";
+import { avatarUrl } from "../../utils/avatar";
 
 export const DescriptionArea = () => {
   const { description, user } = useSet();
@@ -18,7 +19,7 @@ export const DescriptionArea = () => {
   return (
     <Stack spacing={8}>
       <HStack spacing={4}>
-        <Avatar src={user.image} size="md" />
+        <Avatar src={avatarUrl(user)} size="md" />
         <Stack spacing={0}>
           <Text fontSize="xs">Created by</Text>
           <HStack spacing="2">

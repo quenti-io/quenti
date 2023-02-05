@@ -1,13 +1,14 @@
 import { Avatar, Box, Heading, HStack, Tooltip } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
 import { useProfile } from "../../hooks/use-profile";
+import { avatarUrl } from "../../utils/avatar";
 
 export const ProfileArea = () => {
   const profile = useProfile();
 
   return (
     <HStack gap={4}>
-      <Avatar src={profile.image!} />
+      <Avatar src={avatarUrl(profile)} />
       <HStack gap={0}>
         <Heading>{profile.username}</Heading>
         {profile.verified && (
