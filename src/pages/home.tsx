@@ -1,5 +1,4 @@
 import { Container, Stack } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import type { ComponentWithAuth } from "../components/auth-component";
 import { SetGrid } from "../modules/home/set-grid";
 import { api } from "../utils/api";

@@ -46,6 +46,8 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
 }) => {
   const getVal = (data: SetData): Partial<ExperienceStoreProps> => ({
     shuffleFlashcards: data.experience.shuffleFlashcards,
+    studyStarred: data.experience.studyStarred,
+    answerWith: data.experience.answerWith,
     starredTerms: data.experience.starredTerms,
   });
 

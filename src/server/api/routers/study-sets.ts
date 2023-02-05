@@ -185,6 +185,20 @@ export const studySetsRouter = createTRPCRouter({
       });
     }
 
+    if (!experience.starredTerms.length) {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input,
+          },
+        },
+        data: {
+          studyStarred: false,
+        },
+      });
+    }
+
     return {
       ...studySet,
       user: {

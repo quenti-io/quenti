@@ -21,7 +21,7 @@ export const FoldersList = () => {
       {grouped.map((x, i) => (
         <Stack spacing={6} key={i}>
           <Flex gap={4} alignItems="center">
-            <Heading fontSize="2xl">{x.label}</Heading>
+            <Heading fontSize="2xl" whiteSpace="nowrap">{x.label}</Heading>
             <Divider borderColor={dividerColor} />
           </Flex>
           <Stack spacing={4}>

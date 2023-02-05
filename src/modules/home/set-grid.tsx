@@ -6,7 +6,7 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type React from "react";
+import React from "react";
 import { StudySetCard } from "../../components/study-set-card";
 import type { RouterOutputs } from "../../utils/api";
 

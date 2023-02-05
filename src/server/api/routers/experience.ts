@@ -1,5 +1,5 @@
-import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const experienceRouter = createTRPCRouter({
   setShuffle: protectedProcedure
@@ -14,6 +14,43 @@ export const experienceRouter = createTRPCRouter({
         },
         data: {
           shuffleFlashcards: input.shuffle,
+        },
+      });
+    }),
+
+  setStudyStarred: protectedProcedure
+    .input(z.object({ studySetId: z.string(), studyStarred: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        data: {
+          studyStarred: input.studyStarred,
+        },
+      });
+    }),
+
+  setAnswerMode: protectedProcedure
+    .input(
+      z.object({
+        studySetId: z.string(),
+        answerWith: z.enum(["Word", "Definition", "Both"]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        data: {
+          answerWith: input.answerWith,
         },
       });
     }),

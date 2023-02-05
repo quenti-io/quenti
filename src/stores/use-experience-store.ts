@@ -1,3 +1,4 @@
+import type { StudySetAnswerMode } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -5,12 +6,16 @@ import { subscribeWithSelector } from "zustand/middleware";
 export interface ExperienceStoreProps {
   shuffleFlashcards: boolean;
   autoplayFlashcards: boolean;
+  studyStarred: boolean;
+  answerWith: StudySetAnswerMode;
   starredTerms: string[];
 }
 
 interface ExperienceState extends ExperienceStoreProps {
   toggleShuffleFlashcards: () => void;
   toggleAutoplayFlashcards: () => void;
+  setStudyStarred: (studyStarred: boolean) => void;
+  setAnswerWith: (answerWith: StudySetAnswerMode) => void;
   starTerm: (termId: string) => void;
   unstarTerm: (termId: string) => void;
 }
@@ -23,6 +28,8 @@ export const createExperienceStore = (
   const DEFAULT_PROPS: ExperienceStoreProps = {
     shuffleFlashcards: false,
     autoplayFlashcards: false,
+    studyStarred: false,
+    answerWith: "Definition",
     starredTerms: [],
   };
 
@@ -43,6 +50,12 @@ export const createExperienceStore = (
             autoplayFlashcards: !state.autoplayFlashcards,
           };
         });
+      },
+      setStudyStarred: (studyStarred: boolean) => {
+        set({ studyStarred });
+      },
+      setAnswerWith: (answerWith: StudySetAnswerMode) => {
+        set({ answerWith });
       },
       starTerm: (termId: string) => {
         set((state) => {

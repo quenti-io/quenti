@@ -1,5 +1,5 @@
-import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const studiableTermsRouter = createTRPCRouter({
   put: protectedProcedure

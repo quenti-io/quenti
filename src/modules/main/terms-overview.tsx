@@ -44,6 +44,10 @@ export const TermsOverview = () => {
     }
   };
 
+  React.useEffect(() => {
+    if (!starredTerms.length) setStarredOnly(false);
+  }, [starredTerms.length]);
+
   return (
     <TermsOverviewContext.Provider value={{ starredOnly }}>
       <Stack spacing={8}>

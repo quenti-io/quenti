@@ -17,7 +17,8 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
     storeRef.current = createLearnStore();
 
     const studiable = experience.studiableTerms;
-    const learnTerms: LearnTerm[] = terms
+
+    let learnTerms: LearnTerm[] = terms
       .sort((a, b) => a.rank - b.rank)
       .map((term) => {
         const studiableTerm = studiable.find((s) => s.id === term.id);
@@ -27,6 +28,12 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
           appearedInRound: studiableTerm?.appearedInRound,
         };
       });
+
+    if (experience.studyStarred) {
+      learnTerms = learnTerms.filter((x) =>
+        experience.starredTerms.includes(x.id)
+      );
+    }
 
     storeRef.current.getState().initialize(learnTerms, experience.learnRound);
   }
