@@ -42,6 +42,7 @@ export const EngineeredLearn = () => {
             gap={12}
             justifyContent="end"
             flexDir={{ base: "column", lg: "row" }}
+            data-aos="fade"
           >
             <Stack spacing={4} position="relative">
               <Heading data-aos="fade" color="whiteAlpha.900">
@@ -52,7 +53,7 @@ export const EngineeredLearn = () => {
                 rounds.
               </Text>
             </Stack>
-            <Box maxW="800px">
+            <Box maxW="800px" data-aos="fade" data-aos-delay="500">
               <Image
                 src={quizletPlusSrc}
                 alt="Builder screenshot"
@@ -61,15 +62,19 @@ export const EngineeredLearn = () => {
               />
             </Box>
           </Flex>
-          <Center>
+          <Center data-aos="fade">
             <Arrow
               boxSize="100px"
               fill="orange.200"
               transform="rotate(180deg)"
             />
           </Center>
-          <Flex gap={12} flexDir={{ base: "column-reverse", lg: "row" }}>
-            <Box maxW="800px">
+          <Flex
+            gap={12}
+            flexDir={{ base: "column-reverse", lg: "row" }}
+            data-aos="fade"
+          >
+            <Box maxW="800px" data-aos="fade" data-aos-delay="500">
               <Image
                 src={continuedLearnSrc}
                 alt="Builder screenshot"

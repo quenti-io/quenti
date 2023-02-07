@@ -1,13 +1,24 @@
 import { Box } from "@chakra-ui/react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import type { NextPage } from "next";
+import React from "react";
+import { ComparisonChart } from "../modules/landing/comparison-chart";
 import { EngineeredLearn } from "../modules/landing/engineered-learn";
 import { Hero } from "../modules/landing/hero";
 import { IntuitiveFlashcards } from "../modules/landing/intuitive-flashcards";
 import { MoreFeatures } from "../modules/landing/more-features";
 import { TrackProgress } from "../modules/landing/track-progress";
-import { ComparisonChart } from "../modules/landing/comparison-chart";
 
 const Home: NextPage = () => {
+  React.useEffect(() => {
+    AOS.init({
+      easing: "ease",
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
   return (
     <Box overflow="hidden" mb="32">
       <Hero />

@@ -44,7 +44,12 @@ export const MoreFeatures = () => {
         >
           And many more features
         </Heading>
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={8} pb="20">
+        <SimpleGrid
+          columns={{ base: 1, md: 2 }}
+          gap={8}
+          pb="20"
+          data-aos="fade"
+        >
           {features.map((feature, i) => (
             <Feature key={i} {...feature} />
           ))}

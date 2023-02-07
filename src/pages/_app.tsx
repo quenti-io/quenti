@@ -11,6 +11,8 @@ import { Loading } from "../components/loading";
 import { Navbar } from "../components/navbar";
 import { api } from "../utils/api";
 
+import "../styles/globals.css";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types
 type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
   Partial<AuthEnabledComponentConfig>;

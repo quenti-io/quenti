@@ -36,17 +36,18 @@ export const ComparisonChart = () => {
           >
             Quizlet has the advantage of being a well-established platform with
             many existing sets, users and lots of data. If you already pay for
-            Quizlet Plus, don&apos;t bother.
+            Quizlet Plus, don&apos;t bother, for now at least.
           </Text>
         </VStack>
-        <TableContainer>
+        <TableContainer data-aos="fade-up">
           <Table>
             <Thead>
               <Tr>
                 <Th fontWeight={700} color="whiteAlpha.900" w="400px">
                   Feature
                 </Th>
-                <Th>Quizlet.com</Th>
+                <Th>Quizlet</Th>
+                <Th>Quizlet Plus</Th>
                 <Th color="blue.200">Quizlet.cc</Th>
               </Tr>
             </Thead>
@@ -59,9 +60,13 @@ export const ComparisonChart = () => {
                 <Td>
                   <IconCheck />
                 </Td>
+                <Td>
+                  <IconCheck />
+                </Td>
               </Tr>
               <Tr>
                 <Td>Flashcards</Td>
+                <Td>With ads</Td>
                 <Td>
                   <IconCheck />
                 </Td>
@@ -77,9 +82,15 @@ export const ComparisonChart = () => {
                 <Td>
                   <IconCheck />
                 </Td>
+                <Td>
+                  <IconCheck />
+                </Td>
               </Tr>
               <Tr>
                 <Td>Learn</Td>
+                <Td>
+                  <IconX />
+                </Td>
                 <Td>
                   <IconCheck />
                 </Td>
@@ -93,6 +104,9 @@ export const ComparisonChart = () => {
                   <IconCheck />
                 </Td>
                 <Td>
+                  <IconCheck />
+                </Td>
+                <Td>
                   <IconX />
                 </Td>
               </Tr>
@@ -101,11 +115,17 @@ export const ComparisonChart = () => {
                 <Td>
                   <IconCheck />
                 </Td>
+                <Td>
+                  <IconCheck />
+                </Td>
                 <Td>Coming soon</Td>
               </Tr>
               <Tr>
                 <Td>Test</Td>
                 <Td>1 free</Td>
+                <Td>
+                  <IconCheck />
+                </Td>
                 <Td>Coming soon</Td>
               </Tr>
               <Tr>
@@ -113,10 +133,16 @@ export const ComparisonChart = () => {
                 <Td>
                   <IconCheck />
                 </Td>
+                <Td>
+                  <IconCheck />
+                </Td>
                 <Td>Coming soon</Td>
               </Tr>
               <Tr>
                 <Td>Quizlet Live</Td>
+                <Td>
+                  <IconCheck />
+                </Td>
                 <Td>
                   <IconCheck />
                 </Td>

@@ -35,8 +35,8 @@ export const TrackProgress = () => {
             fontSize={{ base: "lg", xl: "xl" }}
             data-aos="fade"
           >
-            When it comes to studying, Quizlet.cc makes it very easy to pick up
-            from where you left off. All progress is synced to your account.
+            Pick up from where you last left off on any device. All progress is
+            synced to your account.
           </Text>
         </Stack>
         <Box rounded="2xl" data-aos="fade" overflow="hidden">
