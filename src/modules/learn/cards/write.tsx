@@ -79,6 +79,7 @@ const InputState: React.FC<
           experienceId: experience.id,
           correctness: 2,
           appearedInRound: 0,
+          incorrectCount: active.term.incorrectCount,
         }))();
     } else {
       answerIncorrectly(active.term.id);
@@ -196,6 +197,7 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
         correctness: 2,
         // Parameter is ignored on update
         appearedInRound: 0,
+        incorrectCount: active.term.incorrectCount,
       }))();
   };
 

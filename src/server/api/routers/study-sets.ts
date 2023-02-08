@@ -213,6 +213,7 @@ export const studySetsRouter = createTRPCRouter({
           id: x.termId,
           correctness: x.correctness,
           appearedInRound: x.appearedInRound,
+          incorrectCount: x.incorrectCount,
         })),
       },
     };

@@ -110,6 +110,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         set((state) => {
           const active = state.roundTimeline[state.roundCounter]!;
           active.term.correctness = -1;
+          active.term.incorrectCount++;
 
           state.endQuestionCallback(false);
           return {};

@@ -39,6 +39,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
           experienceId: experience.id,
           correctness: 1,
           appearedInRound: active.term.appearedInRound!,
+          incorrectCount: active.term.incorrectCount,
         }))();
     } else {
       answerIncorrectly(term.id);
@@ -49,6 +50,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
           experienceId: experience.id,
           correctness: -1,
           appearedInRound: active.term.appearedInRound!,
+          incorrectCount: active.term.incorrectCount + 1,
         }))();
     }
   };

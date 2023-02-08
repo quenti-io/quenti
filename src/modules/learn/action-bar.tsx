@@ -34,6 +34,7 @@ export const ActionBar = () => {
           experienceId: experience.id,
           correctness: -1,
           appearedInRound: 0,
+          incorrectCount: active.term.incorrectCount + 1,
         }))();
     }
   };

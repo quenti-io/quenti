@@ -26,6 +26,7 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
           ...term,
           correctness: studiableTerm?.correctness ?? 0,
           appearedInRound: studiableTerm?.appearedInRound,
+          incorrectCount: studiableTerm?.incorrectCount ?? 0,
         };
       });
 
