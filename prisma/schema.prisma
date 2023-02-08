@@ -192,6 +192,7 @@ model StudiableTerm {
   experienceId    String
   correctness     Int
   appearedInRound Int
+  incorrectCount  Int    @default(0)
 
   user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   term               Term               @relation(fields: [termId], references: [id], onDelete: Cascade)
