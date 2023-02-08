@@ -150,6 +150,11 @@ model AutoSaveTerm {
   setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
 }
 
+enum LearnMode {
+  Learn
+  Review
+}
+
 enum StudySetAnswerMode {
   Word
   Definition
@@ -165,6 +170,7 @@ model StudySetExperience {
   studySet          StudySet           @relation(fields: [studySetId], references: [id], onDelete: Cascade)
   shuffleFlashcards Boolean            @default(false)
   learnRound        Int                @default(0)
+  learnMode         LearnMode          @default(Learn)
   studyStarred      Boolean            @default(false)
   answerWith        StudySetAnswerMode @default(Definition)
 
