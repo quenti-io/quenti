@@ -135,10 +135,19 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       overrideCorrect: () => {
         set((state) => {
           const active = state.roundTimeline[state.roundCounter]!;
-          active.term.correctness = 1;
+          active.term.correctness = 2;
+
+          let roundTimeline = state.roundTimeline;
+          if (state.roundProgress != state.termsThisRound - 1) {
+            // Remove the added question from the timeline
+            roundTimeline.splice(-1);
+          }
 
           state.endQuestionCallback(true);
-          return {};
+          return {
+            roundTimeline,
+            prevTermWasIncorrect: false,
+          };
         });
       },
       endQuestionCallback: (correct) => {
