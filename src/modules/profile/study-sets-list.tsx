@@ -3,6 +3,7 @@ import {
   Flex,
   Heading,
   Stack,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useProfile } from "../../hooks/use-profile";
@@ -14,13 +15,16 @@ export const StudySetsList = () => {
   const grouped = groupIntoTimeline(profile.studySets);
 
   const dividerColor = useColorModeValue("gray.300", "gray.700");
+  const grayText = useColorModeValue("gray.600", "gray.400");
 
   return (
     <Stack spacing={8}>
       {grouped.map((x, i) => (
         <Stack spacing={6} key={i}>
           <Flex gap={4} alignItems="center">
-            <Heading fontSize="2xl" whiteSpace="nowrap">{x.label}</Heading>
+            <Heading fontSize="2xl" whiteSpace="nowrap">
+              {x.label}
+            </Heading>
             <Divider borderColor={dividerColor} />
           </Flex>
           <Stack spacing={4}>
@@ -37,6 +41,14 @@ export const StudySetsList = () => {
           </Stack>
         </Stack>
       ))}
+      {!grouped.length && (
+        <Stack>
+          <Heading size="lg">Nothing Yet</Heading>
+          <Text color={grayText}>
+            This user doesn&apos;t have any public study sets.
+          </Text>
+        </Stack>
+      )}
     </Stack>
   );
 };

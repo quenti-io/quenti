@@ -3,6 +3,7 @@ import {
   Flex,
   Heading,
   Stack,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconFolder } from "@tabler/icons-react";
@@ -15,13 +16,16 @@ export const FoldersList = () => {
   const grouped = groupIntoTimeline(profile.folders);
 
   const dividerColor = useColorModeValue("gray.300", "gray.700");
+  const grayText = useColorModeValue("gray.600", "gray.400");
 
   return (
     <Stack spacing={8}>
       {grouped.map((x, i) => (
         <Stack spacing={6} key={i}>
           <Flex gap={4} alignItems="center">
-            <Heading fontSize="2xl" whiteSpace="nowrap">{x.label}</Heading>
+            <Heading fontSize="2xl" whiteSpace="nowrap">
+              {x.label}
+            </Heading>
             <Divider borderColor={dividerColor} />
           </Flex>
           <Stack spacing={4}>
@@ -38,6 +42,14 @@ export const FoldersList = () => {
           </Stack>
         </Stack>
       ))}
+      {!grouped.length && (
+        <Stack>
+          <Heading size="lg">Nothing Yet</Heading>
+          <Text color={grayText}>
+            This user hasn&apos;t created any folders.
+          </Text>
+        </Stack>
+      )}
     </Stack>
   );
 };
