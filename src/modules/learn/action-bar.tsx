@@ -33,21 +33,24 @@ export const ActionBar = () => {
           id: active.term.id,
           experienceId: experience.id,
           correctness: -1,
-          appearedInRound: 0,
+          appearedInRound: active.term.appearedInRound || 0,
           incorrectCount: active.term.incorrectCount + 1,
         }))();
     }
   };
 
   const visible = status == "incorrect" || !!roundSummary;
-  const action = status == "incorrect" ? handleAcknowledgeIncorrect : nextRound;
+
+  const handleAction = () => {
+    status == "incorrect" ? handleAcknowledgeIncorrect() : nextRound();
+  };
 
   const backgroundColor = useColorModeValue("gray.200", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.400");
 
   return (
     <>
-      {visible && <AnyKeyPressLayer onSubmit={action} />}
+      {visible && <AnyKeyPressLayer onSubmit={handleAction} />}
       <AnimatePresence>
         {visible && (
           <motion.div
@@ -69,7 +72,7 @@ export const ActionBar = () => {
                   <Button
                     size="lg"
                     w={{ base: "full", md: "auto" }}
-                    onClick={() => action()}
+                    onClick={handleAction}
                   >
                     Continue
                     {roundSummary && ` to round ${roundSummary.round + 2}`}

@@ -94,18 +94,22 @@ export const TermsOverview = () => {
 const TermsByStats = () => {
   const { terms, experience } = useSet();
 
-  const familiarTerms = experience.studiableTerms
+  let familiarTerms = experience.studiableTerms
     .filter((x) => x.correctness != 0 && x.correctness != 2)
     .map((x) => terms.find((t) => t.id === x.id)!);
 
-  const unstudiedTerms = terms.filter((x) => {
+  let unstudiedTerms = terms.filter((x) => {
     const studiableTerm = experience.studiableTerms.find((s) => s.id === x.id);
     return !studiableTerm || studiableTerm.correctness === 0;
   });
 
-  const masteredTerms = experience.studiableTerms
+  let masteredTerms = experience.studiableTerms
     .filter((x) => x.correctness === 2)
     .map((x) => terms.find((t) => t.id === x.id)!);
+
+  familiarTerms = experience.learnMode == "Learn" ? familiarTerms : [];
+  unstudiedTerms = experience.learnMode == "Learn" ? unstudiedTerms : [];
+  masteredTerms = experience.learnMode == "Learn" ? masteredTerms : terms;
 
   return (
     <>

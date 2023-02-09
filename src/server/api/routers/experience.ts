@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -109,10 +110,66 @@ export const experienceRouter = createTRPCRouter({
           },
         },
         data: {
+          learnMode: "Learn",
           learnRound: 0,
           studiableTerms: {
             deleteMany: {
               userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
+
+  beginReview: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const experience = await ctx.prisma.studySetExperience.findUnique({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input,
+          },
+        },
+        include: {
+          studiableTerms: true,
+        },
+      });
+
+      if (!experience) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (
+        !experience.studiableTerms.filter((x) => x.incorrectCount > 0).length
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No terms to review",
+        });
+      }
+
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input,
+          },
+        },
+        data: {
+          learnMode: "Review",
+          learnRound: 0,
+          studiableTerms: {
+            updateMany: {
+              where: {
+                experienceId: experience.id,
+              },
+              data: {
+                appearedInRound: null,
+                correctness: 0,
+              },
             },
           },
         },

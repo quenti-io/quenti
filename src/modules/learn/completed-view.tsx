@@ -1,4 +1,12 @@
-import { Button, Center, Heading, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Heading,
+  Link,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { IconReload } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -9,11 +17,16 @@ import { api } from "../../utils/api";
 import { TermMastery } from "./term-mastery";
 
 export const CompletedView = () => {
-  const { id } = useSet();
+  const { id, experience } = useSet();
   const router = useRouter();
-  const numTerms = useLearnContext((s) => s.numTerms);
+  const numTerms = useLearnContext((s) => s.allTerms).length;
 
   const resetProgress = api.experience.resetLearnProgress.useMutation({
+    onSuccess() {
+      router.reload();
+    },
+  });
+  const beginReview = api.experience.beginReview.useMutation({
     onSuccess() {
       router.reload();
     },
@@ -47,13 +60,29 @@ export const CompletedView = () => {
           </Center>
           <Stack textAlign="center" spacing={6}>
             <Heading>Congratulations, you&apos;ve learned everything!</Heading>
-            <Text fontSize="lg">
-              Keep reviewing your most missed terms to make sure they stick.
-            </Text>
+            {experience.learnMode == "Learn" && (
+              <Text fontSize="lg">
+                Keep reviewing your most missed terms to make sure they stick.
+              </Text>
+            )}
           </Stack>
           <Center>
             <VStack w="max" gap={1}>
-              <Button size="lg">Review Missed Terms</Button>
+              {experience.learnMode == "Learn" ? (
+                <Button
+                  size="lg"
+                  isLoading={beginReview.isLoading}
+                  onClick={async () => {
+                    await beginReview.mutateAsync(id);
+                  }}
+                >
+                  Review Missed Terms
+                </Button>
+              ) : (
+                <Button size="lg" as={Link} href={`/${id}`} w="full">
+                  Finish Learn
+                </Button>
+              )}
               <Button
                 size="lg"
                 variant="ghost"

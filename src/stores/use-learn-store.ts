@@ -1,3 +1,4 @@
+import type { LearnMode, Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -8,7 +9,9 @@ import type { RoundSummary } from "../interfaces/round-summary";
 import { shuffleArray, takeNRandom } from "../utils/array";
 
 export interface LearnStoreProps {
-  terms: LearnTerm[];
+  mode: LearnMode;
+  studiableTerms: LearnTerm[];
+  allTerms: Term[];
   numTerms: number;
   termsThisRound: number;
   currentRound: number;
@@ -24,7 +27,12 @@ export interface LearnStoreProps {
 }
 
 interface LearnState extends LearnStoreProps {
-  initialize: (terms: LearnTerm[], round: number) => void;
+  initialize: (
+    mode: LearnMode,
+    studiableTerms: LearnTerm[],
+    allTerms: Term[],
+    round: number
+  ) => void;
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
   acknowledgeIncorrect: () => void;
@@ -37,7 +45,9 @@ export type LearnStore = ReturnType<typeof createLearnStore>;
 
 export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
   const DEFAULT_PROPS: LearnStoreProps = {
-    terms: [],
+    mode: "Learn",
+    studiableTerms: [],
+    allTerms: [],
     numTerms: 0,
     termsThisRound: 0,
     currentRound: 0,
@@ -52,11 +62,15 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
-      initialize: (terms, round) => {
+      initialize: (mode, studiableTerms, allTerms, round) => {
         const specialCharacters = Array.from(
           new Set(
-            terms
-              .map((x) => SPECIAL_CHAR_REGEXP.exec(x.definition) || [])
+            studiableTerms
+              .map((x) =>
+                [...x.definition.matchAll(SPECIAL_CHAR_REGEXP)]
+                  .map((x) => Array.from(x))
+                  .flat()
+              )
               .flat()
               .map((x) => x.split(""))
               .flat()
@@ -64,8 +78,10 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         );
 
         set({
-          terms: terms,
-          numTerms: terms.length,
+          mode,
+          studiableTerms,
+          allTerms,
+          numTerms: studiableTerms.length,
           currentRound: round,
           specialCharacters,
         });
@@ -127,7 +143,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       },
       endQuestionCallback: (correct) => {
         set((state) => {
-          const masteredCount = state.terms.filter(
+          const masteredCount = state.studiableTerms.filter(
             (x) => x.correctness == 2
           ).length;
           if (masteredCount == state.numTerms) return { completed: true };
@@ -139,7 +155,8 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
                 termsThisRound: Array.from(
                   new Set(state.roundTimeline.map((q) => q.term))
                 ),
-                progress: state.terms.filter((x) => x.correctness != 0).length,
+                progress: state.studiableTerms.filter((x) => x.correctness != 0)
+                  .length,
                 totalTerms: state.numTerms,
               },
               status: undefined,
@@ -161,10 +178,16 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
         set((state) => {
           const currentRound = state.currentRound + (!start ? 1 : 0);
 
-          const incorrectTerms = state.terms.filter((x) => x.correctness == -1);
-          const unstudied = state.terms.filter((x) => x.correctness == 0);
+          const incorrectTerms = state.studiableTerms.filter(
+            (x) => x.correctness == -1
+          );
+          const unstudied = state.studiableTerms.filter(
+            (x) => x.correctness == 0
+          );
 
-          const familiarTerms = state.terms.filter((x) => x.correctness == 1);
+          const familiarTerms = state.studiableTerms.filter(
+            (x) => x.correctness == 1
+          );
           const familiarTermsWithRound = familiarTerms.map((x) => {
             if (x.appearedInRound === undefined)
               throw new Error("No round information for familiar term!");
@@ -181,13 +204,22 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             .concat(unstudied)
             .concat(familiarTerms) // Add the rest of the familar terms if there's nothing else left
             .slice(0, 7);
-          termsThisRound.forEach((x) => (x.appearedInRound = currentRound));
 
-          const allChoices = Array.from(
+          // For each term that hasn't been seen (correctness == 0), set the round it appeared in as the current round
+          termsThisRound.forEach((x) => {
+            if (x.correctness == 0) x.appearedInRound = currentRound;
+          });
+
+          const allChoices: Term[] = Array.from(
             new Set(
-              termsThisRound.concat(
-                takeNRandom(state.terms, Math.max(termsThisRound.length, 4))
-              )
+              termsThisRound
+                .map((t) => state.allTerms.find((x) => x.id === t.id)!)
+                .concat(
+                  takeNRandom(
+                    state.allTerms,
+                    Math.max(termsThisRound.length, 4)
+                  )
+                )
             )
           );
 
@@ -198,7 +230,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               const choices = shuffleArray(
                 takeNRandom(
                   allChoices.filter((choice) => choice.id !== term.id),
-                  Math.min(3, state.terms.length)
+                  Math.min(3, state.allTerms.length)
                 ).concat(term)
               );
 

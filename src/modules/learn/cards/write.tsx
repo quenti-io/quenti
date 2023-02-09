@@ -78,7 +78,7 @@ const InputState: React.FC<
           id: active.term.id,
           experienceId: experience.id,
           correctness: 2,
-          appearedInRound: 0,
+          appearedInRound: active.term.appearedInRound || 0,
           incorrectCount: active.term.incorrectCount,
         }))();
     } else {
@@ -122,6 +122,7 @@ const InputState: React.FC<
           _placeholder={{
             color: placeholderColor,
           }}
+          autoFocus
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={(e) => {
@@ -195,8 +196,7 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
         id: active.term.id,
         experienceId: experience.id,
         correctness: 2,
-        // Parameter is ignored on update
-        appearedInRound: 0,
+        appearedInRound: active.term.appearedInRound || 0,
         incorrectCount: active.term.incorrectCount,
       }))();
   };

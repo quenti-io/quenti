@@ -31,6 +31,7 @@ export const studiableTermsRouter = createTRPCRouter({
         update: {
           correctness: input.correctness,
           incorrectCount: input.incorrectCount,
+          appearedInRound: input.appearedInRound,
         },
       });
     }),

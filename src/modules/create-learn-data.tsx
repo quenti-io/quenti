@@ -25,7 +25,7 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
         return {
           ...term,
           correctness: studiableTerm?.correctness ?? 0,
-          appearedInRound: studiableTerm?.appearedInRound,
+          appearedInRound: studiableTerm?.appearedInRound ?? undefined,
           incorrectCount: studiableTerm?.incorrectCount ?? 0,
         };
       });
@@ -35,8 +35,20 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
         experience.starredTerms.includes(x.id)
       );
     }
+    if (experience.learnMode == "Review") {
+      learnTerms = learnTerms
+        .filter((x) => x.incorrectCount > 0)
+        .sort((a, b) => b.incorrectCount - a.incorrectCount);
+    }
 
-    storeRef.current.getState().initialize(learnTerms, experience.learnRound);
+    storeRef.current
+      .getState()
+      .initialize(
+        experience.learnMode,
+        learnTerms,
+        terms,
+        experience.learnRound
+      );
   }
 
   return (
