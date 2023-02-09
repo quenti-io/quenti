@@ -45,6 +45,7 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
       .getState()
       .initialize(
         experience.learnMode,
+        experience.answerWith,
         learnTerms,
         terms,
         experience.learnRound

@@ -4,15 +4,12 @@ import { useRouter } from "next/router";
 import React from "react";
 import { SetSettingsModal } from "../../components/set-settings-modal";
 import { useSet } from "../../hooks/use-set";
-import { useExperienceContext } from "../../stores/use-experience-store";
 import { useLearnContext } from "../../stores/use-learn-store";
 
 export const Titlebar = () => {
-  const { id, experience } = useSet();
+  const { id } = useSet();
   const router = useRouter();
 
-  const studyStarred = useExperienceContext((s) => s.studyStarred);
-  const answerWith = useExperienceContext((s) => s.answerWith);
   const completed = useLearnContext((s) => s.completed);
   const currentRound = useLearnContext((s) => s.currentRound);
 
@@ -22,14 +19,9 @@ export const Titlebar = () => {
     <>
       <SetSettingsModal
         isOpen={settingsOpen}
-        onClose={() => {
+        onClose={(isDirty) => {
           setSettingsOpen(false);
-          if (
-            studyStarred !== experience.studyStarred ||
-            answerWith !== experience.answerWith
-          ) {
-            router.reload();
-          }
+          if (isDirty) router.reload();
         }}
         reloadOnReset
       />

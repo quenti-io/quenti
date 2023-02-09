@@ -7,7 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { useLearnContext } from "../../stores/use-learn-store";
+import { useLearnContext, word } from "../../stores/use-learn-store";
 import { ChoiceCard } from "./cards/choice";
 import { WriteCard } from "./cards/write";
 
@@ -53,7 +53,7 @@ export const InteractionCard = () => {
         <Stack spacing={6} px="8" py="6">
           <HStack>
             <Text textColor="gray.500" fontSize="sm" fontWeight={600}>
-              Term
+              {active.answerMode == "Definition" ? "Term" : "Definition"}
             </Text>
             <Box
               bg={chipBg}
@@ -67,8 +67,10 @@ export const InteractionCard = () => {
               </Text>
             </Box>
           </HStack>
-          <Box h={{base: "60px", md: "140px"}}>
-            <Text fontSize="xl">{active.term.word}</Text>
+          <Box h={{ base: "60px", md: "140px" }}>
+            <Text fontSize="xl">
+              {word(active.answerMode, active.term, "prompt")}
+            </Text>
           </Box>
           {active.type == "choice" ? (
             <ChoiceCard active={active} />

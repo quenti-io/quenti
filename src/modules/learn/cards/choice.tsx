@@ -13,7 +13,7 @@ import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
-import { useLearnContext } from "../../../stores/use-learn-store";
+import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 
 interface ChoiceCardProps {
@@ -77,7 +77,10 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
 
   return (
     <>
-      <Text fontWeight={600}>Choose matching definition</Text>
+      <Text fontWeight={600}>
+        Choose matching{" "}
+        {active.answerMode == "Definition" ? "definition" : "term"}
+      </Text>
       <Grid gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }} gap="6">
         <ChoiceShortcutLayer
           choose={(i) => {
@@ -135,7 +138,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
                   textAlign="start"
                   fontWeight="normal"
                 >
-                  {choice.definition}
+                  {word(active.answerMode, choice, "answer")}
                 </Text>
               </Flex>
             </Button>

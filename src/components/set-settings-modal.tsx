@@ -23,7 +23,7 @@ import { api } from "../utils/api";
 
 export interface SetSettingsModal {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (isDirty?: boolean) => void;
   reloadOnReset?: boolean;
 }
 
@@ -47,7 +47,7 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
   onClose,
   reloadOnReset,
 }) => {
-  const { id } = useSet();
+  const { id, experience } = useSet();
   const utils = api.useContext();
   const router = useRouter();
 
@@ -73,7 +73,18 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        const isDirty =
+          experience.answerWith !== answerWith ||
+          experience.studyStarred !== studyStarred;
+
+        onClose(isDirty);
+      }}
+      isCentered
+      size="xl"
+    >
       <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent p="4" pb="8" rounded="xl">
         <ModalBody>

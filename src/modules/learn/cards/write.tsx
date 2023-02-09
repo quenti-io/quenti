@@ -17,7 +17,7 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
-import { useLearnContext } from "../../../stores/use-learn-store";
+import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 
 export interface WriteCardProps {
@@ -69,7 +69,8 @@ const InputState: React.FC<
     onSubmit(answer.trim());
     if (
       // TODO evaluate upper/lowercase correctness based on the language
-      answer.trim().toLowerCase() == active.term.definition.trim().toLowerCase()
+      answer.trim().toLowerCase() ==
+      word(active.answerMode, active.term, "answer").trim().toLowerCase()
     ) {
       answerCorrectly(active.term.id);
 
@@ -164,7 +165,10 @@ const CorrectState: React.FC<ActiveProps> = ({ active }) => {
         <Text fontWeight={600} color={colorScheme}>
           Excellent!
         </Text>
-        <AnswerCard text={active.term.definition} correct />
+        <AnswerCard
+          text={word(active.answerMode, active.term, "answer")}
+          correct
+        />
       </Stack>
     </motion.div>
   );
@@ -218,9 +222,11 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
     setTimeout(() => setCheckVisible(true), 1000);
   }, [controls]);
 
-  const diff = guess ? diffChars(guess, active.term.definition) : [];
+  const diff = guess
+    ? diffChars(guess, word(active.answerMode, active.term, "answer"))
+    : [];
   const showDiff = guess
-    ? levenshtein(guess, active.term.definition) <= 3
+    ? levenshtein(guess, word(active.answerMode, active.term, "answer")) <= 3
     : false;
 
   return (
@@ -269,7 +275,7 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
                           x.value
                         )
                       )
-                    : active.term.definition}
+                    : word(active.answerMode, active.term, "answer")}
                 </>
               }
               correct

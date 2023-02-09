@@ -1,4 +1,4 @@
-import type { LearnMode, Term } from "@prisma/client";
+import { StudySetAnswerMode, type LearnMode, type Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -10,6 +10,7 @@ import { shuffleArray, takeNRandom } from "../utils/array";
 
 export interface LearnStoreProps {
   mode: LearnMode;
+  answerMode: StudySetAnswerMode;
   studiableTerms: LearnTerm[];
   allTerms: Term[];
   numTerms: number;
@@ -29,6 +30,7 @@ export interface LearnStoreProps {
 interface LearnState extends LearnStoreProps {
   initialize: (
     mode: LearnMode,
+    answerMode: StudySetAnswerMode,
     studiableTerms: LearnTerm[],
     allTerms: Term[],
     round: number
@@ -43,9 +45,20 @@ interface LearnState extends LearnStoreProps {
 
 export type LearnStore = ReturnType<typeof createLearnStore>;
 
+export const word = (
+  mode: StudySetAnswerMode,
+  term: Term,
+  type: "prompt" | "answer"
+) => {
+  if (mode == "Definition")
+    return type == "prompt" ? term.word : term.definition;
+  else return type == "prompt" ? term.definition : term.word;
+};
+
 export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
   const DEFAULT_PROPS: LearnStoreProps = {
     mode: "Learn",
+    answerMode: "Definition",
     studiableTerms: [],
     allTerms: [],
     numTerms: 0,
@@ -62,12 +75,12 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
-      initialize: (mode, studiableTerms, allTerms, round) => {
+      initialize: (mode, answerMode, studiableTerms, allTerms, round) => {
         const specialCharacters = Array.from(
           new Set(
             studiableTerms
               .map((x) =>
-                [...x.definition.matchAll(SPECIAL_CHAR_REGEXP)]
+                [...word(answerMode, x, "answer").matchAll(SPECIAL_CHAR_REGEXP)]
                   .map((x) => Array.from(x))
                   .flat()
               )
@@ -79,6 +92,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
 
         set({
           mode,
+          answerMode,
           studiableTerms,
           allTerms,
           numTerms: studiableTerms.length,
@@ -137,7 +151,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           const active = state.roundTimeline[state.roundCounter]!;
           active.term.correctness = 2;
 
-          let roundTimeline = state.roundTimeline;
+          const roundTimeline = state.roundTimeline;
           if (state.roundProgress != state.termsThisRound - 1) {
             // Remove the added question from the timeline
             roundTimeline.splice(-1);
@@ -234,6 +248,12 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
 
           const roundTimeline: Question[] = termsThisRound.map((term) => {
             const choice = term.correctness < 1;
+            const answerMode =
+              state.answerMode != "Both"
+                ? state.answerMode
+                : Math.random() < 0.5
+                ? StudySetAnswerMode.Definition
+                : StudySetAnswerMode.Word;
 
             if (choice) {
               const choices = shuffleArray(
@@ -244,12 +264,14 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               );
 
               return {
+                answerMode,
                 choices,
                 term,
                 type: "choice",
               };
             } else {
               return {
+                answerMode,
                 choices: [],
                 term,
                 type: "write",
