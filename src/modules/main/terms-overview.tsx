@@ -143,7 +143,8 @@ const TermsByStats = () => {
 
 const TermsByOriginal = () => {
   const { terms } = useSet();
-  return <TermsList terms={terms} />;
+
+  return <TermsList terms={terms} slice={100} />;
 };
 
 const TermsByAlphabetical = () => {
@@ -151,7 +152,8 @@ const TermsByAlphabetical = () => {
   const sortOrder = terms
     .sort((a, b) => a.word.localeCompare(b.word))
     .map((x) => x.id);
-  return <TermsList terms={terms} sortOrder={sortOrder} />;
+
+  return <TermsList terms={terms} sortOrder={sortOrder} slice={100} />;
 };
 
 interface TermsCategoryProps {
@@ -193,9 +195,10 @@ const TermsCategory: React.FC<TermsCategoryProps> = ({
 interface TermsListProps {
   terms: Term[];
   sortOrder?: string[];
+  slice?: number;
 }
 
-const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder }) => {
+const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const internalSort =
     sortOrder || terms.sort((a, b) => a.rank - b.rank).map((x) => x.id);
@@ -205,13 +208,29 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder }) => {
     ? terms.filter((x) => starredTerms.includes(x.id))
     : terms;
 
+  const [showSlice, setShowSlice] = React.useState(slice);
+
   return (
-    <Stack spacing={4}>
-      {internalTerms
-        .sort((a, b) => internalSort.indexOf(a.id) - internalSort.indexOf(b.id))
-        .map((term) => (
-          <DisplayableTerm term={term} key={term.id} />
-        ))}
-    </Stack>
+    <>
+      <Stack spacing={4}>
+        {internalTerms
+          .sort(
+            (a, b) => internalSort.indexOf(a.id) - internalSort.indexOf(b.id)
+          )
+          .slice(0, showSlice || terms.length)
+          .map((term) => (
+            <DisplayableTerm term={term} key={term.id} />
+          ))}
+      </Stack>
+      {showSlice !== undefined && showSlice < terms.length && (
+        <Button
+          onClick={() => {
+            setShowSlice((s) => (s || 0) + 100);
+          }}
+        >
+          See more
+        </Button>
+      )}
+    </>
   );
 };
