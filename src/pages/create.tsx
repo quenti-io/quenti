@@ -3,6 +3,7 @@ import debounce from "lodash.debounce";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
+import { shallow } from "zustand/shallow";
 import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
 import { SetEditor } from "../modules/set-editor";
 import {
@@ -75,7 +76,7 @@ const EditorWrapper = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const autoSaveCallback = React.useCallback(
-    debounce(autoSaveHandler, 1000),
+    debounce(autoSaveHandler, 100),
     []
   );
   const wrappedCallback = () => {
@@ -86,7 +87,10 @@ const EditorWrapper = () => {
 
   store.subscribe(
     (s) => [s.title, s.description, s.tags, s.visibility, s.terms],
-    wrappedCallback
+    wrappedCallback,
+    {
+      equalityFn: shallow,
+    }
   );
 
   return (
