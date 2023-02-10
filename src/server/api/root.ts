@@ -2,6 +2,7 @@ import { adminRouter } from "./routers/admin";
 import { autoSaveRouter } from "./routers/auto-save";
 import { experienceRouter } from "./routers/experience";
 import { foldersRouter } from "./routers/folders";
+import { importRouter } from "./routers/import";
 import { profileRouter } from "./routers/profile";
 import { studiableTermsRouter } from "./routers/studiable-terms";
 import { studySetsRouter } from "./routers/study-sets";
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   experience: experienceRouter,
   studiableTerms: studiableTermsRouter,
   autoSave: autoSaveRouter,
+  import: importRouter,
 });
 
 // export type definition of API

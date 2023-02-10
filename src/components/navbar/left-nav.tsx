@@ -9,16 +9,17 @@ import {
   MenuList,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconBooks, IconChevronDown, IconFolder } from "@tabler/icons-react";
+import { IconBooks, IconChevronDown, IconCloudDownload, IconFolder } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { Logo } from "../../icons/logo";
 import { MenuOption } from "../menu-option";
 
 export interface LeftNavProps {
   onFolderClick: () => void;
+  onImportClick: () => void;
 }
 
-export const LeftNav: React.FC<LeftNavProps> = ({ onFolderClick }) => {
+export const LeftNav: React.FC<LeftNavProps> = ({ onFolderClick, onImportClick }) => {
   const session = useSession()!.data!;
 
   const menuBg = useColorModeValue("white", "gray.800");
@@ -88,6 +89,11 @@ export const LeftNav: React.FC<LeftNavProps> = ({ onFolderClick }) => {
                 icon={<IconBooks size={20} />}
                 label="Study set"
                 link="/create"
+              />
+              <MenuOption
+                icon={<IconCloudDownload size={20} />}
+                label="Import from Quizlet"
+                onClick={onImportClick}
               />
               <MenuOption
                 icon={<IconFolder size={20} />}

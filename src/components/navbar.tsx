@@ -11,6 +11,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { CreateFolderModal } from "./create-folder-modal";
+import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
 import { LeftNav } from "./navbar/left-nav";
 import { MobileMenu } from "./navbar/mobile-menu";
 import { UserMenu } from "./navbar/user-menu";
@@ -24,6 +25,7 @@ export const Navbar: React.FC = () => {
     useDisclosure();
 
   const [folderModalOpen, setFolderModalOpen] = React.useState(false);
+  const [importModalOpen, setImportModalOpen] = React.useState(false);
 
   return (
     <>
@@ -31,6 +33,12 @@ export const Navbar: React.FC = () => {
         isOpen={folderModalOpen}
         onClose={() => {
           setFolderModalOpen(false);
+        }}
+      />
+      <ImportFromQuizletModal
+        isOpen={importModalOpen}
+        onClose={() => {
+          setImportModalOpen(false);
         }}
       />
       <Flex pos="relative" zIndex={100} w="full">
@@ -44,7 +52,10 @@ export const Navbar: React.FC = () => {
           py="4"
           justify="space-between"
         >
-          <LeftNav onFolderClick={() => setFolderModalOpen(true)} />
+          <LeftNav
+            onFolderClick={() => setFolderModalOpen(true)}
+            onImportClick={() => setImportModalOpen(true)}
+          />
           <Box display={["block", "block", "none"]}>
             <IconButton
               aria-label={"Open menu"}

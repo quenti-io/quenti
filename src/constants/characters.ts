@@ -4,3 +4,6 @@ export const SPECIAL_CHAR_REGEXP =
 
 export const USERNAME_REGEXP = /^[a-zA-Z0-9_-]+$/;
 export const USERNAME_REPLACE_REGEXP = /[^a-zA-Z0-9_-]+/g;
+
+export const QUIZLET_IMPORT_REGEXP =
+  /https:\/\/quizlet.com\/[0-9]+(?:\/[a-zA-Z0-9_-]+)?\/?/;
