@@ -1,4 +1,6 @@
 import {
+  Avatar,
+  AvatarBadge,
   Box,
   Button,
   Flex,
@@ -10,6 +12,7 @@ import { IconMenu, IconX } from "@tabler/icons-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { avatarUrl } from "../utils/avatar";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
 import { LeftNav } from "./navbar/left-nav";
@@ -23,6 +26,7 @@ export const Navbar: React.FC = () => {
   const { data: session, status } = useSession();
   const { isOpen: isMobileMenuOpen, onToggle: onMobileMenuToggle } =
     useDisclosure();
+  const user = session?.user;
 
   const [folderModalOpen, setFolderModalOpen] = React.useState(false);
   const [importModalOpen, setImportModalOpen] = React.useState(false);
@@ -57,16 +61,37 @@ export const Navbar: React.FC = () => {
             onImportClick={() => setImportModalOpen(true)}
           />
           <Box display={["block", "block", "none"]}>
-            <IconButton
-              aria-label={"Open menu"}
-              icon={
-                isMobileMenuOpen ? <IconX size={20} /> : <IconMenu size={20} />
-              }
-              variant="ghost"
-              colorScheme="gray"
-              onClick={onMobileMenuToggle}
+            <HStack>
+              {user && (
+                <Avatar
+                  src={avatarUrl({
+                    ...user,
+                    image: user.image!,
+                  })}
+                  size="sm"
+                >
+                  <AvatarBadge boxSize="1em" bg="green.500" />
+                </Avatar>
+              )}
+              <IconButton
+                aria-label={"Open menu"}
+                icon={
+                  isMobileMenuOpen ? (
+                    <IconX size={20} />
+                  ) : (
+                    <IconMenu size={20} />
+                  )
+                }
+                variant="ghost"
+                colorScheme="gray"
+                onClick={onMobileMenuToggle}
+              />
+            </HStack>
+            <MobileMenu
+              isOpen={isMobileMenuOpen}
+              onFolderClick={() => setFolderModalOpen(true)}
+              onImportClick={() => setImportModalOpen(true)}
             />
-            <MobileMenu isOpen={isMobileMenuOpen} />
           </Box>
           <HStack
             as="nav"
