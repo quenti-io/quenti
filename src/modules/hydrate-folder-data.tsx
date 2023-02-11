@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import {
   createExperienceStore,
   ExperienceContext,
@@ -43,6 +44,7 @@ export const HydrateFolderData: React.FC<
   const router = useRouter();
   const username = router.query.username as string;
   const slug = router.query.slug as string;
+  const { loading } = useLoading();
 
   const folder = api.folders.get.useQuery({
     username: username.slice(1),
@@ -50,7 +52,7 @@ export const HydrateFolderData: React.FC<
     includeTerms: withTerms,
   });
 
-  if (!folder.data) return <Loading />;
+  if (loading || !folder.data) return <Loading />;
 
   return <ContextLayer data={folder.data}>{children}</ContextLayer>;
 };

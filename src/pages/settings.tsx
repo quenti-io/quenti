@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import type { ComponentWithAuth } from "../components/auth-component";
+import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import { DangerZone } from "../modules/settings/danger-zone";
 import { GAccountInfo } from "../modules/settings/g-account-info";
 import { ProfileInfo } from "../modules/settings/profile-info";
@@ -17,6 +19,9 @@ import { avatarUrl } from "../utils/avatar";
 const Settings: ComponentWithAuth = () => {
   const session = useSession()!.data!;
   const divider = useColorModeValue("gray.400", "gray.600");
+
+  const { loading } = useLoading();
+  if (loading) return <Loading />;
 
   return (
     <Container maxW="4xl" marginTop="10" marginBottom="20">

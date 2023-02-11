@@ -7,8 +7,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import type { AuthEnabledComponentConfig } from "../components/auth-component";
 import { Chakra } from "../components/chakra";
-import { Loading } from "../components/loading";
 import { Navbar } from "../components/navbar";
+import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { api } from "../utils/api";
 
 import "../styles/globals.css";
@@ -40,16 +40,18 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
 
   return (
     <Chakra cookies={cookies}>
-      <SessionProvider session={session}>
-        {staticPage ? (
-          <DarkMode>
-            <GlobalStyle />
-            {children}
-          </DarkMode>
-        ) : (
-          children
-        )}
-      </SessionProvider>
+      <LoadingProvider>
+        <SessionProvider session={session}>
+          {staticPage ? (
+            <DarkMode>
+              <GlobalStyle />
+              {children}
+            </DarkMode>
+          ) : (
+            children
+          )}
+        </SessionProvider>
+      </LoadingProvider>
     </Chakra>
   );
 };
@@ -58,6 +60,8 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { data, status } = useSession();
   const isUser = !!data?.user;
 
+  const { setLoading } = useLoading();
+
   React.useEffect(() => {
     void (async () => {
       if (status == "loading") return;
@@ -65,11 +69,12 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
     })();
   }, [isUser, status]);
 
-  if (isUser) {
-    return <>{children}</>;
-  }
+  React.useEffect(() => {
+    if (isUser) setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUser]);
 
-  return <Loading />;
+  return <>{children}</>;
 };
 
 export default api.withTRPC(App);

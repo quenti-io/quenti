@@ -1,8 +1,8 @@
 import { Container } from "@chakra-ui/react";
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { shallow } from "zustand/shallow";
+import type { ComponentWithAuth } from "../../../components/auth-component";
 import { HydrateEditSetData } from "../../../modules/hydrate-edit-set-data";
 import { SetEditor } from "../../../modules/set-editor";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../../../stores/use-set-editor-store";
 import { api } from "../../../utils/api";
 
-const Edit: NextPage = () => {
+const Edit: ComponentWithAuth = () => {
   return (
     <HydrateEditSetData>
       <Container maxW="7xl" marginTop="10" marginBottom="20">
@@ -191,6 +191,8 @@ const EditorWrapper = () => {
     />
   );
 };
+
+Edit.authenticationEnabled = true;
 
 export default Edit;
 

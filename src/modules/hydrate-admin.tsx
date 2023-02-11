@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import { api, type RouterOutputs } from "../utils/api";
 
 type LandingData = RouterOutputs["admin"]["landing"];
@@ -29,8 +30,9 @@ export const HydrateAdmin: React.FC<React.PropsWithChildren> = ({
       })();
     },
   });
+  const { loading } = useLoading();
 
-  if (!data) return <Loading />;
+  if (loading || !data) return <Loading />;
 
   return <AdminContext.Provider value={data}>{children}</AdminContext.Provider>;
 };

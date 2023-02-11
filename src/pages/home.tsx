@@ -1,5 +1,7 @@
 import { Container, Stack } from "@chakra-ui/react";
 import type { ComponentWithAuth } from "../components/auth-component";
+import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import { EmptyDashboard } from "../modules/home/empty-dashboard";
 import { SetGrid } from "../modules/home/set-grid";
 import { api } from "../utils/api";
@@ -7,6 +9,9 @@ import { api } from "../utils/api";
 const Home: ComponentWithAuth = () => {
   const { data, isLoading } = api.studySets.recent.useQuery({});
   const official = api.studySets.getOfficial.useQuery();
+
+  const { loading } = useLoading();
+  if (loading) return <Loading />;
 
   return (
     <Container maxW="7xl" marginTop="10" marginBottom="20">

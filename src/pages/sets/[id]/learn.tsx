@@ -1,5 +1,6 @@
 import { Container, Stack } from "@chakra-ui/react";
 import React from "react";
+import type { ComponentWithAuth } from "../../../components/auth-component";
 import { useSet } from "../../../hooks/use-set";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
@@ -11,7 +12,7 @@ import { Titlebar } from "../../../modules/learn/titlebar";
 import { useLearnContext } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 
-export default function Learn() {
+const Learn: ComponentWithAuth = () => {
   return (
     <HydrateSetData>
       <CreateLearnData>
@@ -25,7 +26,7 @@ export default function Learn() {
       </CreateLearnData>
     </HydrateSetData>
   );
-}
+};
 
 const LearnContainer = () => {
   const { id } = useSet();
@@ -48,5 +49,9 @@ const LearnContainer = () => {
   if (roundSummary) return <RoundSummary />;
   return <InteractionCard />;
 };
+
+Learn.authenticationEnabled = true;
+
+export default Learn;
 
 export { getServerSideProps } from "../../../components/chakra";

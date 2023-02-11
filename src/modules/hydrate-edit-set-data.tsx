@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import {
   createSetEditorStore,
   SetEditorContext,
@@ -15,6 +16,7 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
   const session = useSession();
   const id = router.query.id as string;
+  const { loading } = useLoading();
 
   const { data } = api.studySets.byId.useQuery(id, {
     retry: false,
@@ -34,7 +36,8 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
     },
   });
 
-  if (!data || data.userId !== session.data?.user?.id) return <Loading />;
+  if (loading || !data || data.userId !== session.data?.user?.id)
+    return <Loading />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };

@@ -2,9 +2,14 @@ import { Center, Container, Heading, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import type { ComponentWithAuth } from "../components/auth-component";
 import { ChangeUsernameInput } from "../components/change-username-input";
+import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 
 const Onboarding: ComponentWithAuth = () => {
   const router = useRouter();
+
+  const { loading } = useLoading();
+  if (loading) return <Loading />;
 
   return (
     <Center h="calc(100vh - 120px)">

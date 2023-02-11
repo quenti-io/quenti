@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import { api, type RouterOutputs } from "../utils/api";
 import { Profile404 } from "./profile/profile-404";
 
@@ -22,9 +23,10 @@ export const HydrateProfileData: React.FC<React.PropsWithChildren> = ({
   const profile = api.profile.get.useQuery(username.substring(1), {
     retry: false,
   });
+  const { loading } = useLoading();
 
   if (profile.error?.data?.httpStatus === 404) return <Profile404 />;
-  if (!profile.data) return <Loading />;
+  if (loading || !profile.data) return <Loading />;
 
   return (
     <ProfileContext.Provider value={profile.data}>

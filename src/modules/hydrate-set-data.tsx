@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import {
   createExperienceStore,
   ExperienceContext,
@@ -15,13 +16,14 @@ export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const id = useRouter().query.id as string;
+  const { loading } = useLoading();
   const { data, error } = api.studySets.byId.useQuery(id, {
     retry: false,
   });
 
   if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
-  if (!data) return <Loading />;
+  if (loading || !data) return <Loading />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };

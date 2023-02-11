@@ -1,6 +1,7 @@
 import type { AutoSaveTerm, SetAutoSave } from "@prisma/client";
 import React from "react";
 import { Loading } from "../components/loading";
+import { useLoading } from "../hooks/use-loading";
 import {
   createSetEditorStore,
   SetEditorContext,
@@ -12,7 +13,8 @@ export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { data } = api.autoSave.get.useQuery();
-  if (!data) return <Loading />;
+  const { loading } = useLoading();
+  if (loading || !data) return <Loading />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };
