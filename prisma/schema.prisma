@@ -162,17 +162,18 @@ enum StudySetAnswerMode {
 }
 
 model StudySetExperience {
-  id                String             @id @default(cuid())
-  userId            String
-  studySetId        String
-  viewedAt          DateTime
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  studySet          StudySet           @relation(fields: [studySetId], references: [id], onDelete: Cascade)
-  shuffleFlashcards Boolean            @default(false)
-  learnRound        Int                @default(0)
-  learnMode         LearnMode          @default(Learn)
-  studyStarred      Boolean            @default(false)
-  answerWith        StudySetAnswerMode @default(Definition)
+  id                   String             @id @default(cuid())
+  userId               String
+  studySetId           String
+  viewedAt             DateTime
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studySet             StudySet           @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  shuffleFlashcards    Boolean            @default(false)
+  learnRound           Int                @default(0)
+  learnMode            LearnMode          @default(Learn)
+  studyStarred         Boolean            @default(false)
+  answerWith           StudySetAnswerMode @default(Definition)
+  extendedFeedbackBank Boolean            @default(false)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]

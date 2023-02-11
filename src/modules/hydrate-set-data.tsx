@@ -51,6 +51,7 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
     studyStarred: data.experience.studyStarred,
     answerWith: data.experience.answerWith,
     starredTerms: data.experience.starredTerms,
+    extendedFeedbackBank: data.experience.extendedFeedbackBank,
   });
 
   const storeRef = React.useRef<ExperienceStore>();

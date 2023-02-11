@@ -20,6 +20,7 @@ export interface LearnStoreProps {
   roundCounter: number;
   roundTimeline: Question[];
   specialCharacters: string[];
+  feedbackBank: { correct: string[]; incorrect: string[] };
   answered?: string;
   status?: "correct" | "incorrect";
   roundSummary?: RoundSummary;
@@ -41,6 +42,7 @@ interface LearnState extends LearnStoreProps {
   overrideCorrect: () => void;
   endQuestionCallback: (correct: boolean) => void;
   nextRound: (start?: boolean) => void;
+  setFeedbackBank: (correct: string[], incorrect: string[]) => void;
 }
 
 export type LearnStore = ReturnType<typeof createLearnStore>;
@@ -68,6 +70,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
     roundCounter: 0,
     roundTimeline: [],
     specialCharacters: [],
+    feedbackBank: { correct: [], incorrect: [] },
     completed: false,
   };
 
@@ -290,6 +293,11 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             completed: !termsThisRound.length,
             currentRound,
           };
+        });
+      },
+      setFeedbackBank: (correct, incorrect) => {
+        set({
+          feedbackBank: { correct, incorrect },
         });
       },
     }))

@@ -1070,6 +1070,18 @@
   dependencies:
     "@floating-ui/core" "^1.1.0"
 
+"@growthbook/growthbook-react@^0.11.2":
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook-react/-/growthbook-react-0.11.2.tgz#6677e5416b4dad53f0602b2a02c249edb959eb80"
+  integrity sha512-C2O4F3Sf28vFDM8Bv3xj9wYAeCVm5r2ykGzWjtezrhd2MVc38gFVOz3tIMg79xJiffM50NF7G+qIm4Y664rV8Q==
+  dependencies:
+    "@growthbook/growthbook" "^0.21.2"
+
+"@growthbook/growthbook@^0.21.2":
+  version "0.21.2"
+  resolved "https://registry.yarnpkg.com/@growthbook/growthbook/-/growthbook-0.21.2.tgz#69081da36eb0cc0d037eed3c6f4c2c0eb3460e5a"
+  integrity sha512-kAu6LH02krkS+IxfQbe5mGYfPCGrmw+Cm9N3BChc151anhhVvMd8KS1m+vev6yEPnY606BouxE6a3SuDmmCF4g==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"

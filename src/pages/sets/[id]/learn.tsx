@@ -9,6 +9,7 @@ import { CompletedView } from "../../../modules/learn/completed-view";
 import { InteractionCard } from "../../../modules/learn/interaction-card";
 import { RoundSummary } from "../../../modules/learn/round-summary";
 import { Titlebar } from "../../../modules/learn/titlebar";
+import { useExperienceContext } from "../../../stores/use-experience-store";
 import { useLearnContext } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 
@@ -30,10 +31,17 @@ const Learn: ComponentWithAuth = () => {
 
 const LearnContainer = () => {
   const { id } = useSet();
+  const extendedFeedbackBank = useExperienceContext(
+    (s) => s.extendedFeedbackBank
+  );
   const completed = useLearnContext((s) => s.completed);
   const roundSummary = useLearnContext((s) => s.roundSummary);
+  const setFeedbackBank = useLearnContext((s) => s.setFeedbackBank);
 
   const completeRound = api.experience.completeRound.useMutation();
+  const discoverable = api.disoverable.fetchInsults.useQuery(undefined, {
+    enabled: extendedFeedbackBank,
+  });
 
   React.useEffect(() => {
     if (!roundSummary) return;
@@ -44,6 +52,13 @@ const LearnContainer = () => {
       }))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roundSummary, id]);
+
+  React.useEffect(() => {
+    if (!discoverable.data) return;
+
+    const { correct, incorrect } = discoverable.data;
+    setFeedbackBank(correct, incorrect);
+  }, [discoverable.data, setFeedbackBank]);
 
   if (completed) return <CompletedView />;
   if (roundSummary) return <RoundSummary />;

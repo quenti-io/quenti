@@ -8,6 +8,7 @@ export interface ExperienceStoreProps {
   autoplayFlashcards: boolean;
   studyStarred: boolean;
   answerWith: StudySetAnswerMode;
+  extendedFeedbackBank: boolean;
   starredTerms: string[];
 }
 
@@ -16,6 +17,7 @@ interface ExperienceState extends ExperienceStoreProps {
   toggleAutoplayFlashcards: () => void;
   setStudyStarred: (studyStarred: boolean) => void;
   setAnswerWith: (answerWith: StudySetAnswerMode) => void;
+  setExtendedFeedbackBank: (extendedFeedbackBank: boolean) => void;
   starTerm: (termId: string) => void;
   unstarTerm: (termId: string) => void;
 }
@@ -30,6 +32,7 @@ export const createExperienceStore = (
     autoplayFlashcards: false,
     studyStarred: false,
     answerWith: "Definition",
+    extendedFeedbackBank: false,
     starredTerms: [],
   };
 
@@ -56,6 +59,9 @@ export const createExperienceStore = (
       },
       setAnswerWith: (answerWith: StudySetAnswerMode) => {
         set({ answerWith });
+      },
+      setExtendedFeedbackBank: (extendedFeedbackBank: boolean) => {
+        set({ extendedFeedbackBank });
       },
       starTerm: (termId: string) => {
         set((state) => {

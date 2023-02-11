@@ -56,6 +56,27 @@ export const experienceRouter = createTRPCRouter({
       });
     }),
 
+  setExtendedFeedbackBank: protectedProcedure
+    .input(
+      z.object({
+        studySetId: z.string(),
+        extendedFeedbackBank: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        data: {
+          extendedFeedbackBank: input.extendedFeedbackBank,
+        },
+      });
+    }),
+
   starTerm: protectedProcedure
     .input(z.object({ experienceId: z.string(), termId: z.string() }))
     .mutation(async ({ ctx, input }) => {
