@@ -16,7 +16,7 @@ import { IconCheck, IconX } from "@tabler/icons-react";
 
 export const ComparisonChart = () => {
   return (
-    <Flex as="section" justify="center" mt={16}>
+    <Flex as="section" justify="center" mt={16} pb={20}>
       <Stack maxWidth="1200px" w="full" px="4" spacing={16}>
         <VStack spacing={6}>
           <Heading
@@ -111,9 +111,9 @@ export const ComparisonChart = () => {
                 </Td>
               </Tr>
               <Tr>
-                <Td>Embed images</Td>
+                <Td>Custom images</Td>
                 <Td>
-                  <IconCheck />
+                  <IconX />
                 </Td>
                 <Td>
                   <IconCheck />

@@ -3,7 +3,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import type { NextPage } from "next";
 import React from "react";
+import { ComingSoon } from "../modules/landing/coming-soon";
 import { ComparisonChart } from "../modules/landing/comparison-chart";
+import { EndSection } from "../modules/landing/end-section";
 import { EngineeredLearn } from "../modules/landing/engineered-learn";
 import { Hero } from "../modules/landing/hero";
 import { IntuitiveFlashcards } from "../modules/landing/intuitive-flashcards";
@@ -20,13 +22,15 @@ const Home: NextPage = () => {
   }, []);
 
   return (
-    <Box overflow="hidden" mb="32">
+    <Box overflow="hidden">
       <Hero />
       <EngineeredLearn />
       <IntuitiveFlashcards />
       <TrackProgress />
       <MoreFeatures />
       <ComparisonChart />
+      <ComingSoon />
+      <EndSection />
     </Box>
   );
 };

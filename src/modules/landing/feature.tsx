@@ -4,12 +4,14 @@ export interface FeatureProps {
   title: string;
   icon: React.ReactNode;
   description: string;
+  alt?: boolean;
 }
 
 export const Feature: React.FC<FeatureProps> = ({
   title,
   icon,
   description,
+  alt,
 }) => {
   return (
     <Box
@@ -27,7 +29,11 @@ export const Feature: React.FC<FeatureProps> = ({
       }}
     >
       <VStack spacing={2}>
-        <Text fontSize="xl" color="whiteAlpha.900" fontWeight={600}>
+        <Text
+          fontSize={!alt ? "xl" : "2xl"}
+          color="whiteAlpha.900"
+          fontWeight={!alt ? 600 : 700}
+        >
           {title}
         </Text>
         <Text color="gray.400">{description}</Text>
@@ -37,7 +43,7 @@ export const Feature: React.FC<FeatureProps> = ({
         top="-20px"
         left="50%"
         transform="translateX(-50%)"
-        color="blue.300"
+        color={!alt ? "blue.300" : "orange.200"}
         transition="transform ease-in-out 0.2s"
         _groupHover={{
           transform: "translateX(-50%) translateY(-4px)",
