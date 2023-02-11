@@ -19,6 +19,7 @@ import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
+import { getRandom } from "../../../utils/array";
 
 export interface WriteCardProps {
   active: Question;
@@ -148,7 +149,10 @@ const InputState: React.FC<
 };
 
 const CorrectState: React.FC<ActiveProps> = ({ active }) => {
+  const feedbackBank = useLearnContext((s) => s.feedbackBank);
   const colorScheme = useColorModeValue("green.600", "green.200");
+
+  const [remark] = React.useState(getRandom(feedbackBank.correct));
 
   return (
     <motion.div
@@ -163,7 +167,7 @@ const CorrectState: React.FC<ActiveProps> = ({ active }) => {
     >
       <Stack spacing={4} pb="53px">
         <Text fontWeight={600} color={colorScheme}>
-          Excellent!
+          {remark}
         </Text>
         <AnswerCard
           text={word(active.answerMode, active.term, "answer")}
@@ -180,6 +184,9 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
 }) => {
   const { experience } = useSet();
   const overrideCorrect = useLearnContext((s) => s.overrideCorrect);
+
+  const feedbackBank = useLearnContext((s) => s.feedbackBank);
+  const [remark] = React.useState(getRandom(feedbackBank.incorrect));
 
   const put = api.studiableTerms.put.useMutation();
 
@@ -240,7 +247,7 @@ const IncorrectState: React.FC<ActiveProps & { guess?: string }> = ({
         <Stack spacing={4} ref={stackRef}>
           <Flex justifyContent="space-between" alignItems="center">
             <Text fontWeight={600} color={guess ? colorScheme : grayText}>
-              {guess ? "Incorrect!" : "You skipped this term"}
+              {guess ? remark : "You skipped this term"}
             </Text>
             {guess && (
               <Button size="sm" variant="ghost" onClick={handleOverrideCorrect}>

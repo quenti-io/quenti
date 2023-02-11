@@ -3,6 +3,7 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { SPECIAL_CHAR_REGEXP } from "../constants/characters";
+import { CORRECT, INCORRECT } from "../constants/remarks";
 import type { LearnTerm } from "../interfaces/learn-term";
 import type { Question } from "../interfaces/question";
 import type { RoundSummary } from "../interfaces/round-summary";
@@ -70,7 +71,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
     roundCounter: 0,
     roundTimeline: [],
     specialCharacters: [],
-    feedbackBank: { correct: [], incorrect: [] },
+    feedbackBank: { correct: CORRECT, incorrect: INCORRECT },
     completed: false,
   };
 

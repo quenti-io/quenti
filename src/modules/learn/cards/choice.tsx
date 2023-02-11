@@ -15,6 +15,7 @@ import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
+import { getRandom } from "../../../utils/array";
 
 interface ChoiceCardProps {
   active: Question;
@@ -26,6 +27,23 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
   const status = useLearnContext((s) => s.status);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
+  const feedbackBank = useLearnContext((s) => s.feedbackBank);
+
+  const getCorrect = () => getRandom(feedbackBank.correct)!;
+  const getIncorrect = () => getRandom(feedbackBank.incorrect)!;
+
+  const [remark, setRemark] = React.useState({
+    correct: getCorrect(),
+    incorrect: getIncorrect(),
+  });
+
+  React.useEffect(() => {
+    setRemark({
+      correct: getCorrect(),
+      incorrect: getIncorrect(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active.term.id]);
 
   const put = api.studiableTerms.put.useMutation();
 
@@ -73,13 +91,32 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
   const questionNumText = useColorModeValue("gray.800", "gray.200");
   const defaultBorder = useColorModeValue("blue.600", "blue.200");
   const correctBg = useColorModeValue("green.200", "green.600");
+  const greenText = useColorModeValue("green.600", "green.200");
+  const redText = useColorModeValue("red.600", "red.200");
   const textColor = useColorModeValue("black", "white");
+
+  const text =
+    status == "correct"
+      ? remark.correct
+      : status == "incorrect"
+      ? remark.incorrect
+      : `Choose matching ${
+          active.answerMode == "Definition" ? "definition" : "term"
+        }`;
 
   return (
     <>
-      <Text fontWeight={600}>
-        Choose matching{" "}
-        {active.answerMode == "Definition" ? "definition" : "term"}
+      <Text
+        fontWeight={600}
+        color={
+          status == "correct"
+            ? greenText
+            : status == "incorrect"
+            ? redText
+            : undefined
+        }
+      >
+        {text}
       </Text>
       <Grid gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }} gap="6">
         <ChoiceShortcutLayer
