@@ -1,6 +1,7 @@
 import { Container, Stack } from "@chakra-ui/react";
 import React from "react";
 import type { ComponentWithAuth } from "../../../components/auth-component";
+import { CORRECT, INCORRECT } from "../../../constants/remarks";
 import { useSet } from "../../../hooks/use-set";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
@@ -54,11 +55,15 @@ const LearnContainer = () => {
   }, [roundSummary, id]);
 
   React.useEffect(() => {
-    if (!discoverable.data) return;
+    if (!discoverable.data || !extendedFeedbackBank) return;
 
     const { correct, incorrect } = discoverable.data;
     setFeedbackBank(correct, incorrect);
-  }, [discoverable.data, setFeedbackBank]);
+  }, [discoverable.data, extendedFeedbackBank, setFeedbackBank]);
+
+  React.useEffect(() => {
+    if (!extendedFeedbackBank) setFeedbackBank(CORRECT, INCORRECT);
+  }, [extendedFeedbackBank]);
 
   if (completed) return <CompletedView />;
   if (roundSummary) return <RoundSummary />;

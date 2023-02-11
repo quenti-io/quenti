@@ -43,7 +43,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
       incorrect: getIncorrect(),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active.term.id]);
+  }, [active.term.id, feedbackBank]);
 
   const put = api.studiableTerms.put.useMutation();
 
