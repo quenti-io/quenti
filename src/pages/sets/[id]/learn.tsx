@@ -63,7 +63,7 @@ const LearnContainer = () => {
 
   React.useEffect(() => {
     if (!extendedFeedbackBank) setFeedbackBank(CORRECT, INCORRECT);
-  }, [extendedFeedbackBank]);
+  }, [extendedFeedbackBank, setFeedbackBank]);
 
   if (completed) return <CompletedView />;
   if (roundSummary) return <RoundSummary />;
