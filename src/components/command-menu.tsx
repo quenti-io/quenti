@@ -12,14 +12,18 @@ import {
   Spinner,
   Stack,
   Text,
+  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { User } from "@prisma/client";
 import {
   IconBooks,
   IconHome,
+  IconMoon,
   IconSettings,
+  IconSun,
   IconUser,
+  IconUserCircle,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -45,6 +49,7 @@ interface Entity {
 interface MenuOption {
   icon: React.ReactNode;
   name: string;
+  label?: string;
   action: (ctrl: boolean) => void;
   entity?: Entity;
   shouldShow?: () => boolean;
@@ -56,6 +61,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 }) => {
   const router = useRouter();
   const session = useSession();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const [options, setOptions] = React.useState<MenuOption[]>([]);
 
@@ -86,12 +92,24 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         total.push({
           icon: <IconHome />,
           name: "Home",
+          label: "Navigate home",
           action: (ctrl) => openLink(`/home`, ctrl),
           shouldShow: () => window.location.pathname !== "/home",
         });
+        if (session.data?.user?.admin) {
+          total.push({
+            icon: <IconUserCircle />,
+            name: "Admin",
+            label: "Navigate to admin panel",
+            action: (ctrl) => openLink(`/admin`, ctrl),
+            shouldShow: () => window.location.pathname !== "/admin",
+          });
+        }
+
         total.push({
           icon: <IconUser />,
-          name: "My Profile",
+          name: "Profile",
+          label: "Navigate to your profile",
           action: (ctrl) =>
             openLink(`/@${session.data?.user?.username || ""}`, ctrl),
           shouldShow: () =>
@@ -101,8 +119,15 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         total.push({
           icon: <IconSettings />,
           name: "Settings",
+          label: "Navigate to settings",
           action: (ctrl) => openLink(`/settings`, ctrl),
           shouldShow: () => window.location.pathname !== "/settings",
+        });
+        total.push({
+          icon: colorMode == "dark" ? <IconSun /> : <IconMoon />,
+          name: "Toggle Theme",
+          label: `Switch to ${colorMode == "dark" ? "light" : "dark"} mode`,
+          action: toggleColorMode,
         });
 
         setOptions(total);
@@ -251,6 +276,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
                 index={i}
                 icon={o.icon}
                 name={o.name}
+                label={o.label}
                 author={o.entity?.author}
                 resultsRef={resultsRef}
                 selectionIndex={selectionIndex}
@@ -272,6 +298,7 @@ interface OptionCompProps {
   icon: React.ReactNode;
   name: string;
   author?: Pick<User, "username" | "image">;
+  label?: string;
   resultsRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
   selectionIndex: number;
   setSelectionIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -285,6 +312,7 @@ const OptionComp: React.FC<OptionCompProps> = ({
   icon,
   name,
   author,
+  label,
   resultsRef,
   selectionIndex,
   setSelectionIndex,
@@ -342,6 +370,11 @@ const OptionComp: React.FC<OptionCompProps> = ({
               {author.username}
             </Text>
           </HStack>
+        )}
+        {label && (
+          <Text fontSize="xs" color={baseText}>
+            {label}
+          </Text>
         )}
       </Stack>
     </Flex>
