@@ -30,6 +30,16 @@ export const Footer = () => {
               size="sm"
               color="gray.500"
               display={{ base: "none", md: "block" }}
+              onClick={() => {
+                document.dispatchEvent(
+                  new KeyboardEvent("keydown", {
+                    key: "k",
+                    code: "KeyK",
+                    ctrlKey: true,
+                    shiftKey: false,
+                  })
+                );
+              }}
             >
               <HStack>
                 <Text color={textColor}>Command Menu</Text>

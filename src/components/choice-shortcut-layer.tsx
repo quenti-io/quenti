@@ -8,10 +8,22 @@ export interface ChoiceShortcutLayerProps {
 export const ChoiceShortcutLayer: React.FC<ChoiceShortcutLayerProps> = ({
   choose,
 }) => {
-  useShortcut(["1"], () => choose(0), false, true);
-  useShortcut(["2"], () => choose(1), false, true);
-  useShortcut(["3"], () => choose(2), false, true);
-  useShortcut(["4"], () => choose(3), false, true);
+  useShortcut(["1"], () => choose(0), {
+    ctrlKey: false,
+    allowInput: true,
+  });
+  useShortcut(["2"], () => choose(1), {
+    ctrlKey: false,
+    allowInput: true,
+  });
+  useShortcut(["3"], () => choose(2), {
+    ctrlKey: false,
+    allowInput: true,
+  });
+  useShortcut(["4"], () => choose(3), {
+    ctrlKey: false,
+    allowInput: true,
+  });
 
   return null;
 };

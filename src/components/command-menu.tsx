@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Center,
   Flex,
   HStack,
   Input,
@@ -8,14 +9,22 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
+  Spinner,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { User } from "@prisma/client";
-import { IconBooks } from "@tabler/icons-react";
+import {
+  IconBooks,
+  IconHome,
+  IconSettings,
+  IconUser,
+} from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { useShortcut } from "../hooks/use-shortcut";
 import { api } from "../utils/api";
 import { avatarUrl } from "../utils/avatar";
 
@@ -46,16 +55,17 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   onClose,
 }) => {
   const router = useRouter();
+  const session = useSession();
 
   const [options, setOptions] = React.useState<MenuOption[]>([]);
 
-  const { data } = api.studySets.recent.useQuery(
+  const recentQuery = api.studySets.recent.useQuery(
     {},
     {
       enabled: isOpen,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        let total: MenuOption[] = [];
+        const total: MenuOption[] = [];
 
         for (const set of data) {
           total.push({
@@ -68,9 +78,32 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
               type: "set",
               author: set.user,
             },
-            shouldShow: () => !router.pathname.startsWith(`/${set.id}`),
+            shouldShow: () =>
+              !window.location.pathname.startsWith(`/${set.id}`),
           });
         }
+
+        total.push({
+          icon: <IconHome />,
+          name: "Home",
+          action: (ctrl) => openLink(`/home`, ctrl),
+          shouldShow: () => window.location.pathname !== "/home",
+        });
+        total.push({
+          icon: <IconUser />,
+          name: "My Profile",
+          action: (ctrl) =>
+            openLink(`/@${session.data?.user?.username || ""}`, ctrl),
+          shouldShow: () =>
+            window.location.pathname !==
+            `/@${session.data?.user?.username || ""}`,
+        });
+        total.push({
+          icon: <IconSettings />,
+          name: "Settings",
+          action: (ctrl) => openLink(`/settings`, ctrl),
+          shouldShow: () => window.location.pathname !== "/settings",
+        });
 
         setOptions(total);
       },
@@ -82,16 +115,36 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const [ignoreMouse, setIgnoreMouse] = React.useState(false);
 
   const filteredOptions: MenuOption[] = options
-    .filter((o) => (o.shouldShow ? o.shouldShow() : true))
+    .filter((o) => (!!o.shouldShow ? o.shouldShow() : true))
     .filter((e) => (e.name || "").toLowerCase().includes(query.toLowerCase()));
 
   const openLink = (link: string, ctrl: boolean) => {
-    if (ctrl) {
-      window.open(link, "_blank");
-    } else {
-      router.push(link);
-    }
+    void (async () => {
+      if (ctrl) {
+        window.open(link, "_blank");
+      } else {
+        await router.push(link);
+      }
+    })();
   };
+
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const resultsRef = React.useRef<(HTMLDivElement | null)[]>([]);
+
+  React.useEffect(() => {
+    resultsRef.current = resultsRef.current.slice(0, filteredOptions?.length);
+  }, [filteredOptions]);
+
+  React.useEffect(() => {
+    setSelectionIndex(0);
+  }, [filteredOptions?.length]);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setSelectionIndex(0);
+      setQuery("");
+    }
+  }, [isOpen]);
 
   const onSubmit = (i: number, ctrl: boolean) => {
     const option = filteredOptions[i]!;
@@ -100,6 +153,10 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   };
 
   const borderColor = useColorModeValue("gray.200", "gray.750");
+  const cursorBg = useColorModeValue(
+    "rgba(226, 232, 240, 50%)",
+    "rgba(45, 55, 72, 50%)"
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
@@ -122,6 +179,17 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         shadow="xl"
       >
         <ModalBody p="0">
+          {isOpen && (
+            <ShortcutsManager
+              filteredOptions={filteredOptions}
+              selectionIndex={selectionIndex}
+              setSelectionIndex={setSelectionIndex}
+              setIgnoreMouse={setIgnoreMouse}
+              resultsRef={resultsRef}
+              scrollRef={scrollRef}
+              onSubmit={(ctrl) => onSubmit(selectionIndex, ctrl)}
+            />
+          )}
           <Box
             py="5"
             px="7"
@@ -143,38 +211,40 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
             />
           </Box>
           <Box
-            overflow="auto"
-            mt="4"
+            overflow={filteredOptions.length > 6 ? "auto" : "hidden"}
             px="4"
+            my="4"
             pos="relative"
             transition="height cubic-bezier(.4,0,.2,1) 300ms"
-            pb="4"
             style={{
-              height: 72 * (filteredOptions || []).slice(0, 6).length + 16,
+              height:
+                recentQuery.isLoading && !filteredOptions.length
+                  ? 64
+                  : 72 * (filteredOptions || []).slice(0, 6).length,
             }}
+            ref={scrollRef}
           >
-            <Box
-              pos="absolute"
-              h="72px"
-              w="full"
-              top="0"
-              left="0"
-              px="4"
-              transition="transform cubic-bezier(.4,0,.2,1) 200ms"
-              style={{
-                transform: `translateY(${selectionIndex * 72}px)`,
-              }}
-            >
+            {!!filteredOptions.length && (
               <Box
-                bg={useColorModeValue(
-                  "rgba(226, 232, 240, 50%)",
-                  "rgba(45, 55, 72, 50%)"
-                )}
-                rounded="xl"
+                pos="absolute"
+                h="72px"
                 w="full"
-                h="full"
-              />
-            </Box>
+                top="0"
+                left="0"
+                px="4"
+                transition="transform cubic-bezier(.4,0,.2,1) 200ms"
+                style={{
+                  transform: `translateY(${selectionIndex * 72}px)`,
+                }}
+              >
+                <Box bg={cursorBg} rounded="xl" w="full" h="full" />
+              </Box>
+            )}
+            {recentQuery.isLoading && !filteredOptions.length && (
+              <Center w="full" h="16">
+                <Spinner color="blue.300" />
+              </Center>
+            )}
             {filteredOptions.map((o, i) => (
               <OptionComp
                 key={i}
@@ -182,11 +252,12 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
                 icon={o.icon}
                 name={o.name}
                 author={o.entity?.author}
+                resultsRef={resultsRef}
                 selectionIndex={selectionIndex}
                 setSelectionIndex={setSelectionIndex}
                 ignoreMouse={ignoreMouse}
                 setIgnoreMouse={setIgnoreMouse}
-                onAction={() => onSubmit(i, false)}
+                onClick={(e) => onSubmit(i, e.ctrlKey)}
               />
             ))}
           </Box>
@@ -201,11 +272,12 @@ interface OptionCompProps {
   icon: React.ReactNode;
   name: string;
   author?: Pick<User, "username" | "image">;
+  resultsRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
   selectionIndex: number;
   setSelectionIndex: React.Dispatch<React.SetStateAction<number>>;
   ignoreMouse: boolean;
   setIgnoreMouse: React.Dispatch<React.SetStateAction<boolean>>;
-  onAction: () => void;
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
 const OptionComp: React.FC<OptionCompProps> = ({
@@ -213,11 +285,12 @@ const OptionComp: React.FC<OptionCompProps> = ({
   icon,
   name,
   author,
+  resultsRef,
   selectionIndex,
   setSelectionIndex,
   ignoreMouse,
   setIgnoreMouse,
-  onAction,
+  onClick,
 }) => {
   const baseText = useColorModeValue("gray.600", "whiteAlpha.700");
   const highlightText = useColorModeValue("gray.900", "whiteAlpha.900");
@@ -228,9 +301,11 @@ const OptionComp: React.FC<OptionCompProps> = ({
     <Flex
       alignItems="center"
       p="4"
+      ref={(el) => (resultsRef.current[index] = el)}
       gap="4"
       h="72px"
       pos="relative"
+      cursor="pointer"
       w="full"
       onPointerEnter={() => {
         if (!ignoreMouse) setSelectionIndex(index);
@@ -239,6 +314,7 @@ const OptionComp: React.FC<OptionCompProps> = ({
         setIgnoreMouse(false);
         setSelectionIndex(index);
       }}
+      onClick={onClick}
     >
       <Box
         transition="color cubic-bezier(.4,0,.2,1) 300ms"
@@ -270,4 +346,110 @@ const OptionComp: React.FC<OptionCompProps> = ({
       </Stack>
     </Flex>
   );
+};
+
+interface ShortcutsManagerProps {
+  filteredOptions: MenuOption[];
+  selectionIndex: number;
+  setSelectionIndex: React.Dispatch<React.SetStateAction<number>>;
+  setIgnoreMouse: React.Dispatch<React.SetStateAction<boolean>>;
+  resultsRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  scrollRef: React.MutableRefObject<HTMLDivElement | null>;
+  onSubmit: (ctrl: boolean) => void;
+}
+
+const ShortcutsManager: React.FC<ShortcutsManagerProps> = ({
+  filteredOptions: filteredEvents,
+  selectionIndex,
+  setSelectionIndex,
+  setIgnoreMouse,
+  resultsRef,
+  scrollRef,
+  onSubmit,
+}) => {
+  const isScrolledIntoView = (el: HTMLDivElement) => {
+    const container = scrollRef.current!;
+
+    const rect = el.getBoundingClientRect();
+    const { bottom, top } = rect;
+    let { height } = rect;
+
+    const containerRect = container.getBoundingClientRect();
+    height = height - 72;
+
+    const visible =
+      top <= containerRect.top
+        ? containerRect.top - top <= height
+        : bottom - containerRect.bottom <= height;
+
+    return visible;
+  };
+
+  useShortcut(
+    ["ArrowDown", "Tab"],
+    () => {
+      if (!filteredEvents.length) return;
+
+      setIgnoreMouse(true);
+      setSelectionIndex((i) => {
+        const next = i < filteredEvents.length - 1 ? i + 1 : 0;
+        const scrollTo = next;
+        if (!isScrolledIntoView(resultsRef.current[scrollTo]!))
+          resultsRef.current[scrollTo]!.scrollIntoView(false);
+
+        return next;
+      });
+    },
+    {
+      ctrlKey: false,
+      shiftKey: false,
+    }
+  );
+
+  const up = () => {
+    if (!filteredEvents.length) return;
+
+    setIgnoreMouse(true);
+    setSelectionIndex((i) => {
+      const next = i > 0 ? i - 1 : filteredEvents.length - 1;
+      const scrollTo =
+        next == filteredEvents.length - 1
+          ? next
+          : Math.max(selectionIndex - 1, 0);
+
+      if (!isScrolledIntoView(resultsRef.current[scrollTo]!))
+        resultsRef.current[scrollTo]!.scrollIntoView();
+
+      return next;
+    });
+  };
+
+  useShortcut(["ArrowUp"], up, {
+    ctrlKey: false,
+  });
+  useShortcut(["Tab"], up, {
+    ctrlKey: false,
+    shiftKey: "Tab",
+  });
+
+  useShortcut(
+    ["Enter"],
+    () => {
+      if (!!filteredEvents.length) onSubmit(false);
+    },
+    {
+      ctrlKey: false,
+    }
+  );
+  useShortcut(
+    ["Enter"],
+    () => {
+      if (!!filteredEvents.length) onSubmit(true);
+    },
+    {
+      ctrlKey: true,
+    }
+  );
+
+  return <></>;
 };
