@@ -12,6 +12,7 @@ import { Navbar } from "../components/navbar";
 import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { api } from "../utils/api";
 
+import { GlobalShortcutLayer } from "../components/global-shortcut-layer";
 import "../styles/globals.css";
 
 const growthbook = new GrowthBook({
@@ -39,6 +40,7 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
   const children = (
     <>
       <Navbar />
+      <GlobalShortcutLayer />
       {Component.authenticationEnabled ? (
         <Auth>
           <Component {...pageProps} />
