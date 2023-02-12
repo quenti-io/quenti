@@ -260,6 +260,19 @@ export const foldersRouter = createTRPCRouter({
       });
     }),
 
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folder.delete({
+        where: {
+          id_userId: {
+            id: input,
+            userId: ctx.session.user.id,
+          },
+        },
+      });
+    }),
+
   removeSet: protectedProcedure
     .input(
       z.object({
