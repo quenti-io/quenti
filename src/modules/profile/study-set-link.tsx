@@ -30,6 +30,7 @@ export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
   leftIcon,
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
+  const mutedText = useColorModeValue("gray.600", "gray.400");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
 
   return (
@@ -49,7 +50,9 @@ export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
       }}
     >
       <Stack spacing={2}>
-        <Text fontSize="sm">{plural(numValues, label)}</Text>
+        <Text fontSize="sm" color={mutedText}>
+          {plural(numValues, label)}
+        </Text>
         <HStack>
           {leftIcon}
           <Heading size="md">

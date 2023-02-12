@@ -9,6 +9,7 @@ import {
   type ExperienceStoreProps,
 } from "../stores/use-experience-store";
 import { api, type RouterOutputs } from "../utils/api";
+import { Folder404 } from "./folders/folder-404";
 
 type FolderData = RouterOutputs["folders"]["get"];
 export const FolderContext = React.createContext<FolderData>({
@@ -46,12 +47,16 @@ export const HydrateFolderData: React.FC<
   const slug = router.query.slug as string;
   const { loading } = useLoading();
 
-  const folder = api.folders.get.useQuery({
-    username: username.slice(1),
-    slug,
-    includeTerms: withTerms,
-  });
+  const folder = api.folders.get.useQuery(
+    {
+      username: username.slice(1),
+      slug,
+      includeTerms: withTerms,
+    },
+    { retry: false }
+  );
 
+  if (folder.error?.data?.httpStatus === 404) return <Folder404 />;
   if (loading || !folder.data) return <Loading />;
 
   return <ContextLayer data={folder.data}>{children}</ContextLayer>;

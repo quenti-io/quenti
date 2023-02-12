@@ -1,5 +1,3 @@
-import { plural } from "./string";
-
 export const relevantLabel = (date: Date) => {
   const now = new Date();
 
@@ -10,14 +8,16 @@ export const relevantLabel = (date: Date) => {
       } else if (date.getDate() === now.getDate() - 1) {
         return "Yesterday";
       } else {
-        const dayOfWeek = date.getDay();
-        const dayOfWeekNow = now.getDay();
-        const diff = Math.floor(dayOfWeekNow / 7) - Math.floor(dayOfWeek / 7);
-
-        if (diff == 0) {
+        const diff = Math.abs(now.getTime() - date.getTime());
+        const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        if (diffDays <= 7) {
           return "This week";
         }
-        return `${plural(diff, "week")} ago`;
+        if (diffDays <= 14) {
+          return "Last week";
+        }
+
+        return "This month";
       }
     } else {
       return date.toLocaleDateString("en-US", {
