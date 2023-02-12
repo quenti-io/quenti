@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Link, VStack } from "@chakra-ui/react";
+import { Button, Flex, Heading, VStack } from "@chakra-ui/react";
 
 export const EndSection = () => {
   return (

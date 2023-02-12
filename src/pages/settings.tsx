@@ -10,6 +10,7 @@ import {
 import { useSession } from "next-auth/react";
 import type { ComponentWithAuth } from "../components/auth-component";
 import { Loading } from "../components/loading";
+import { WithFooter } from "../components/with-footer";
 import { useLoading } from "../hooks/use-loading";
 import { DangerZone } from "../modules/settings/danger-zone";
 import { GAccountInfo } from "../modules/settings/g-account-info";
@@ -24,7 +25,9 @@ const Settings: ComponentWithAuth = () => {
   if (loading) return <Loading />;
 
   return (
-    <Container maxW="4xl" marginTop="10" marginBottom="20">
+    <WithFooter>
+
+    <Container maxW="4xl">
       <Stack spacing={12}>
         <HStack spacing={4}>
           <Avatar
@@ -42,6 +45,7 @@ const Settings: ComponentWithAuth = () => {
         </Stack>
       </Stack>
     </Container>
+    </WithFooter>
   );
 };
 

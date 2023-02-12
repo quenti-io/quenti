@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { shallow } from "zustand/shallow";
 import type { ComponentWithAuth } from "../components/auth-component";
+import { WithFooter } from "../components/with-footer";
 import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
 import { SetEditor } from "../modules/set-editor";
 import {
@@ -15,9 +16,11 @@ import { api } from "../utils/api";
 const Create: ComponentWithAuth = () => {
   return (
     <HydrateAutoSaveData>
-      <Container maxW="7xl" marginTop="10" marginBottom="20">
-        <EditorWrapper />
-      </Container>
+      <WithFooter>
+        <Container maxW="7xl">
+          <EditorWrapper />
+        </Container>
+      </WithFooter>
     </HydrateAutoSaveData>
   );
 };

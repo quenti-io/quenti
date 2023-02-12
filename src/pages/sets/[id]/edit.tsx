@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { shallow } from "zustand/shallow";
 import type { ComponentWithAuth } from "../../../components/auth-component";
+import { WithFooter } from "../../../components/with-footer";
 import { HydrateEditSetData } from "../../../modules/hydrate-edit-set-data";
 import { SetEditor } from "../../../modules/set-editor";
 import {
@@ -14,9 +15,11 @@ import { api } from "../../../utils/api";
 const Edit: ComponentWithAuth = () => {
   return (
     <HydrateEditSetData>
-      <Container maxW="7xl" marginTop="10" marginBottom="20">
-        <EditorWrapper />
-      </Container>
+      <WithFooter>
+        <Container maxW="7xl">
+          <EditorWrapper />
+        </Container>
+      </WithFooter>
     </HydrateEditSetData>
   );
 };

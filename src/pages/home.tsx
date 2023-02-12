@@ -1,6 +1,7 @@
 import { Container, Stack } from "@chakra-ui/react";
 import type { ComponentWithAuth } from "../components/auth-component";
 import { Loading } from "../components/loading";
+import { WithFooter } from "../components/with-footer";
 import { useLoading } from "../hooks/use-loading";
 import { EmptyDashboard } from "../modules/home/empty-dashboard";
 import { SetGrid } from "../modules/home/set-grid";
@@ -14,26 +15,28 @@ const Home: ComponentWithAuth = () => {
   if (loading) return <Loading />;
 
   return (
-    <Container maxW="7xl" marginTop="10" marginBottom="20">
-      <Stack spacing={12}>
-        {!isLoading && !data?.length && <EmptyDashboard />}
-        {(isLoading || data?.length) && (
+    <WithFooter>
+      <Container maxW="7xl">
+        <Stack spacing={12}>
+          {!isLoading && !data?.length && <EmptyDashboard />}
+          {(isLoading || data?.length) && (
+            <SetGrid
+              data={data}
+              isLoading={isLoading}
+              heading="Recent"
+              skeletonCount={16}
+            />
+          )}
           <SetGrid
-            data={data}
-            isLoading={isLoading}
-            heading="Recent"
-            skeletonCount={16}
+            data={official.data}
+            isLoading={official.isLoading}
+            heading="Example Sets"
+            skeletonCount={8}
+            verified
           />
-        )}
-        <SetGrid
-          data={official.data}
-          isLoading={official.isLoading}
-          heading="Example Sets"
-          skeletonCount={8}
-          verified
-        />
-      </Stack>
-    </Container>
+        </Stack>
+      </Container>
+    </WithFooter>
   );
 };
 

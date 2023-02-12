@@ -1,5 +1,6 @@
 import { Container, Divider, Stack, useColorModeValue } from "@chakra-ui/react";
 import type { ComponentWithAuth } from "../../../../components/auth-component";
+import { WithFooter } from "../../../../components/with-footer";
 import { ActionArea } from "../../../../modules/folders/action-area";
 import { FolderDescription } from "../../../../modules/folders/folder-description";
 import { FolderHeading } from "../../../../modules/folders/folder-heading";
@@ -11,19 +12,21 @@ const FolderPage: ComponentWithAuth = () => {
 
   return (
     <HydrateFolderData>
-      <Container maxW="7xl" marginTop="10" marginBottom="20">
-        <Stack spacing={12}>
-          <Stack spacing={8}>
-            <FolderHeading />
-            <ActionArea />
+      <WithFooter>
+        <Container maxW="7xl">
+          <Stack spacing={12}>
+            <Stack spacing={8}>
+              <FolderHeading />
+              <ActionArea />
+            </Stack>
+            <Stack spacing={6}>
+              <FolderDescription />
+              <Divider borderColor={dividerColor} />
+              <FolderSets />
+            </Stack>
           </Stack>
-          <Stack spacing={6}>
-            <FolderDescription />
-            <Divider borderColor={dividerColor} />
-            <FolderSets />
-          </Stack>
-        </Stack>
-      </Container>
+        </Container>
+      </WithFooter>
     </HydrateFolderData>
   );
 };

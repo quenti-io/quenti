@@ -55,7 +55,7 @@ export const HeadingArea = () => {
           deleteSet.mutate(id);
         }}
       />
-      <Stack spacing={4} marginTop="10" maxW="1000px">
+      <Stack spacing={4} maxW="1000px">
         {tags.length && (
           <HStack spacing={3}>
             {tags.map((t, i) => (
