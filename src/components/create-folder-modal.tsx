@@ -40,7 +40,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
     onSuccess: async (data) => {
       onClose();
       await router.push(
-        `/@${session.data!.user!.username}/folders/${data.slug}`
+        `/@${session.data!.user!.username}/folders/${data.slug ?? data.id}`
       );
     },
   });

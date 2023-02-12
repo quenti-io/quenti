@@ -99,7 +99,7 @@ model Folder {
   userId            String
   user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   title             String
-  slug              String
+  slug              String?
   description       String
   studySets         StudySetsOnFolders[]
   folderExperiences FolderExperience[]

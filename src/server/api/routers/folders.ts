@@ -10,7 +10,7 @@ export const foldersRouter = createTRPCRouter({
     .input(
       z.object({
         username: z.string().max(40).regex(USERNAME_REGEXP),
-        slug: z.string(),
+        idOrSlug: z.string(),
         includeTerms: z.boolean().optional(),
       })
     )
@@ -27,12 +27,18 @@ export const foldersRouter = createTRPCRouter({
         });
       }
 
-      const folder = await ctx.prisma.folder.findUnique({
+      const folder = await ctx.prisma.folder.findFirst({
         where: {
-          userId_slug: {
-            userId: user.id,
-            slug: input.slug,
-          },
+          OR: [
+            {
+              userId: ctx.session.user.id,
+              id: input.idOrSlug,
+            },
+            {
+              userId: ctx.session.user.id,
+              slug: input.idOrSlug,
+            },
+          ],
         },
         include: {
           studySets: {
@@ -188,12 +194,22 @@ export const foldersRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const slug = slugify(input.title, { lower: true });
+      const existing = await ctx.prisma.folder.findUnique({
+        where: {
+          userId_slug: {
+            userId: ctx.session.user.id,
+            slug,
+          },
+        },
+      });
+
       return await ctx.prisma.folder.create({
         data: {
           title: input.title,
           description: input.description,
           userId: ctx.session.user.id,
-          slug: slugify(input.title, { lower: true }),
+          slug: !existing ? slug : null,
         },
       });
     }),
@@ -220,6 +236,16 @@ export const foldersRouter = createTRPCRouter({
         });
       }
 
+      const slug = slugify(input.title, { lower: true });
+      const existing = await ctx.prisma.folder.findUnique({
+        where: {
+          userId_slug: {
+            userId: ctx.session.user.id,
+            slug,
+          },
+        },
+      });
+
       return await ctx.prisma.folder.update({
         where: {
           id: input.folderId,
@@ -227,7 +253,7 @@ export const foldersRouter = createTRPCRouter({
         data: {
           title: input.title,
           description: input.description,
-          slug: slugify(input.title, { lower: true }),
+          slug: !existing ? slug : null,
         },
       });
     }),
