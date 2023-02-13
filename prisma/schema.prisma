@@ -80,6 +80,8 @@ model StudySet {
   description         String
   tags                String[]             @default([])
   visibility          StudySetVisibility   @default(Public)
+  wordLanguage        Language             @default(English)
+  definitionLanguage  Language             @default(English)
   terms               Term[]
   studySetExperiences StudySetExperience[]
   folders             StudySetsOnFolders[]
@@ -219,4 +221,12 @@ model StarredTerm {
   studySetExperience StudySetExperience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
 
   @@id([userId, termId])
+}
+
+enum Language {
+  English
+  Spanish
+  French
+  Chemistry
+  Other
 }
