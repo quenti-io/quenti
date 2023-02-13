@@ -1,8 +1,81 @@
-import type { StarredTerm, StudiableTerm } from "@prisma/client";
+import type { PrismaClient, StarredTerm, StudiableTerm } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+
+export const getRecentStudySets = async (
+  prisma: PrismaClient,
+  userId: string,
+  exclude?: string[]
+) => {
+  const recentExperiences = await prisma.studySetExperience.findMany({
+    where: {
+      userId: userId,
+      NOT: {
+        OR: [
+          {
+            studySetId: {
+              in: exclude ?? [],
+            },
+          },
+          {
+            studySet: {
+              user: {
+                username: "Quizlet",
+              },
+            },
+          },
+        ],
+      },
+      studySet: {
+        OR: [
+          {
+            visibility: {
+              not: "Private",
+            },
+          },
+          {
+            userId: userId,
+          },
+        ],
+      },
+    },
+    orderBy: {
+      viewedAt: "desc",
+    },
+    take: 16,
+  });
+  const experienceIds = recentExperiences.map((e) => e.studySetId);
+
+  return (
+    await prisma.studySet.findMany({
+      where: {
+        id: {
+          in: experienceIds,
+        },
+      },
+      include: {
+        user: true,
+        _count: {
+          select: {
+            terms: true,
+          },
+        },
+      },
+    })
+  )
+    .sort((a, b) => experienceIds.indexOf(a.id) - experienceIds.indexOf(b.id))
+    .map((set) => ({
+      ...set,
+      viewedAt: recentExperiences.find((e) => e.studySetId === set.id)!
+        .viewedAt,
+      user: {
+        username: set.user.username,
+        image: set.user.image!,
+      },
+    }));
+};
 
 export const studySetsRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
@@ -29,74 +102,11 @@ export const studySetsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const recentExperiences = (
-        await ctx.prisma.studySetExperience.findMany({
-          where: {
-            userId: ctx.session?.user?.id,
-            NOT: {
-              OR: [
-                {
-                  studySetId: {
-                    in: input.exclude ?? [],
-                  },
-                },
-                {
-                  studySet: {
-                    user: {
-                      username: "Quizlet",
-                    },
-                  },
-                },
-              ],
-            },
-            studySet: {
-              OR: [
-                {
-                  visibility: {
-                    not: "Private",
-                  },
-                },
-                {
-                  userId: ctx.session?.user?.id,
-                },
-              ],
-            },
-          },
-          orderBy: {
-            viewedAt: "desc",
-          },
-          take: 16,
-        })
-      ).map((x) => x.studySetId);
-
-      return (
-        await ctx.prisma.studySet.findMany({
-          where: {
-            id: {
-              in: recentExperiences,
-            },
-          },
-          include: {
-            user: true,
-            _count: {
-              select: {
-                terms: true,
-              },
-            },
-          },
-        })
-      )
-        .sort(
-          (a, b) =>
-            recentExperiences.indexOf(a.id) - recentExperiences.indexOf(b.id)
-        )
-        .map((set) => ({
-          ...set,
-          user: {
-            username: set.user.username,
-            image: set.user.image!,
-          },
-        }));
+      return await getRecentStudySets(
+        ctx.prisma,
+        ctx.session?.user?.id,
+        input.exclude
+      );
     }),
 
   getOfficial: protectedProcedure.query(async ({ ctx }) => {

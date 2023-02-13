@@ -18,6 +18,7 @@ import {
 import type { User } from "@prisma/client";
 import {
   IconBooks,
+  IconFolder,
   IconHome,
   IconMoon,
   IconSettings,
@@ -44,6 +45,7 @@ interface Entity {
   name: string;
   type: EntityType;
   author: Pick<User, "username" | "image">;
+  viewedAt: Date;
 }
 
 interface MenuOption {
@@ -65,75 +67,97 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 
   const [options, setOptions] = React.useState<MenuOption[]>([]);
 
-  const recentQuery = api.studySets.recent.useQuery(
-    {},
-    {
-      enabled: isOpen,
-      refetchOnWindowFocus: false,
-      onSuccess: (data) => {
-        const total: MenuOption[] = [];
+  const recentQuery = api.recent.get.useQuery(undefined, {
+    enabled: isOpen,
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      let total: MenuOption[] = [];
 
-        for (const set of data) {
-          total.push({
-            icon: <IconBooks />,
+      for (const set of data.sets) {
+        total.push({
+          icon: <IconBooks />,
+          name: set.title,
+          action: (ctrl) => openLink(`/${set.id}`, ctrl),
+          entity: {
+            id: set.id,
             name: set.title,
-            action: (ctrl) => openLink(`/${set.id}`, ctrl),
-            entity: {
-              id: set.id,
-              name: set.title,
-              type: "set",
-              author: set.user,
-            },
-            shouldShow: () =>
-              !window.location.pathname.startsWith(`/${set.id}`),
-          });
-        }
+            type: "set",
+            author: set.user,
+            viewedAt: set.viewedAt,
+          },
+          shouldShow: () => !window.location.pathname.startsWith(`/${set.id}`),
+        });
+      }
+      for (const folder of data.folders) {
+        const url = `/@${folder.user.username}/folders/${
+          folder.slug ?? folder.id
+        }`;
 
         total.push({
-          icon: <IconHome />,
-          name: "Home",
-          label: "Navigate home",
-          action: (ctrl) => openLink(`/home`, ctrl),
-          shouldShow: () => window.location.pathname !== "/home",
+          icon: <IconFolder />,
+          name: folder.title,
+          action: (ctrl) => openLink(url, ctrl),
+          entity: {
+            id: folder.id,
+            name: folder.title,
+            type: "folder",
+            author: folder.user,
+            viewedAt: folder.viewedAt,
+          },
+          shouldShow: () => !window.location.pathname.startsWith(url),
         });
-        if (session.data?.user?.admin) {
-          total.push({
-            icon: <IconUserCircle />,
-            name: "Admin",
-            label: "Navigate to admin panel",
-            action: (ctrl) => openLink(`/admin`, ctrl),
-            shouldShow: () => window.location.pathname !== "/admin",
-          });
-        }
+      }
 
-        total.push({
-          icon: <IconUser />,
-          name: "Profile",
-          label: "Navigate to your profile",
-          action: (ctrl) =>
-            openLink(`/@${session.data?.user?.username || ""}`, ctrl),
-          shouldShow: () =>
-            window.location.pathname !==
-            `/@${session.data?.user?.username || ""}`,
-        });
-        total.push({
-          icon: <IconSettings />,
-          name: "Settings",
-          label: "Navigate to settings",
-          action: (ctrl) => openLink(`/settings`, ctrl),
-          shouldShow: () => window.location.pathname !== "/settings",
-        });
-        total.push({
-          icon: colorMode == "dark" ? <IconSun /> : <IconMoon />,
-          name: "Toggle Theme",
-          label: `Switch to ${colorMode == "dark" ? "light" : "dark"} mode`,
-          action: toggleColorMode,
-        });
+      total = total.sort(
+        (a, b) =>
+          (b.entity?.viewedAt.getTime() || 0) -
+          (a.entity?.viewedAt.getTime() || 0)
+      );
 
-        setOptions(total);
-      },
-    }
-  );
+      total.push({
+        icon: <IconHome />,
+        name: "Home",
+        label: "Navigate home",
+        action: (ctrl) => openLink(`/home`, ctrl),
+        shouldShow: () => window.location.pathname !== "/home",
+      });
+      if (session.data?.user?.admin) {
+        total.push({
+          icon: <IconUserCircle />,
+          name: "Admin",
+          label: "Navigate to admin panel",
+          action: (ctrl) => openLink(`/admin`, ctrl),
+          shouldShow: () => window.location.pathname !== "/admin",
+        });
+      }
+
+      total.push({
+        icon: <IconUser />,
+        name: "Profile",
+        label: "Navigate to your profile",
+        action: (ctrl) =>
+          openLink(`/@${session.data?.user?.username || ""}`, ctrl),
+        shouldShow: () =>
+          window.location.pathname !==
+          `/@${session.data?.user?.username || ""}`,
+      });
+      total.push({
+        icon: <IconSettings />,
+        name: "Settings",
+        label: "Navigate to settings",
+        action: (ctrl) => openLink(`/settings`, ctrl),
+        shouldShow: () => window.location.pathname !== "/settings",
+      });
+      total.push({
+        icon: colorMode == "dark" ? <IconSun /> : <IconMoon />,
+        name: "Toggle Theme",
+        label: `Switch to ${colorMode == "dark" ? "light" : "dark"} mode`,
+        action: toggleColorMode,
+      });
+
+      setOptions(total);
+    },
+  });
 
   const [query, setQuery] = React.useState("");
   const [selectionIndex, setSelectionIndex] = React.useState(0);

@@ -1,9 +1,45 @@
-import type { Term } from "@prisma/client";
+import type { PrismaClient, Term } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
 import { USERNAME_REGEXP } from "../../../constants/characters";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+
+export const getRecentFolders = async (
+  prisma: PrismaClient,
+  userId: string
+) => {
+  const recentExperiences = await prisma.folderExperience.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      viewedAt: "desc",
+    },
+    take: 16,
+  });
+  const experienceIds = recentExperiences.map((e) => e.folderId);
+
+  return (
+    await prisma.folder.findMany({
+      where: {
+        id: {
+          in: experienceIds,
+        },
+      },
+      include: {
+        user: true,
+      },
+    })
+  ).map((x) => ({
+    ...x,
+    viewedAt: recentExperiences.find((e) => e.folderId === x.id)!.viewedAt,
+    user: {
+      username: x.user.username,
+      image: x.user.image,
+    },
+  }));
+};
 
 export const foldersRouter = createTRPCRouter({
   get: protectedProcedure
@@ -31,11 +67,11 @@ export const foldersRouter = createTRPCRouter({
         where: {
           OR: [
             {
-              userId: ctx.session.user.id,
+              userId: user.id,
               id: input.idOrSlug,
             },
             {
-              userId: ctx.session.user.id,
+              userId: user.id,
               slug: input.idOrSlug,
             },
           ],
@@ -185,6 +221,10 @@ export const foldersRouter = createTRPCRouter({
           .map((s) => s.id),
       };
     }),
+
+  recent: protectedProcedure.query(async ({ ctx }) => {
+    return await getRecentFolders(ctx.prisma, ctx.session.user.id);
+  }),
 
   create: protectedProcedure
     .input(
