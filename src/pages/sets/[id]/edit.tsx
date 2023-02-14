@@ -119,9 +119,11 @@ const EditorWrapper = () => {
       isLoading={false}
       numTerms={serverTerms.length}
       terms={terms.sort((a, b) => a.rank - b.rank)}
+      languages={["English", "English"]}
       setTitle={setTitle}
       setDescription={setDescription}
       setTags={setTags}
+      setLanguages={() => undefined}
       setVisibility={setVisibility}
       onBulkImportTerms={(terms) => {
         void (async () => {

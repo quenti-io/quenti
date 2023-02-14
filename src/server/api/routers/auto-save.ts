@@ -1,3 +1,4 @@
+import { Language } from "@prisma/client";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -36,6 +37,8 @@ export const autoSaveRouter = createTRPCRouter({
         title: z.string(),
         description: z.string(),
         tags: z.array(z.string()),
+        wordLanguage: z.nativeEnum(Language),
+        definitionLanguage: z.nativeEnum(Language),
         visibility: z.enum(["Public", "Unlisted", "Private"]),
         terms: z.array(
           z.object({
@@ -56,6 +59,8 @@ export const autoSaveRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           tags: input.tags,
+          wordLanguage: input.wordLanguage,
+          definitionLanguage: input.definitionLanguage,
           visibility: input.visibility,
           userId: ctx.session.user.id,
           autoSaveTerms: {
@@ -74,6 +79,8 @@ export const autoSaveRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           tags: input.tags,
+          wordLanguage: input.wordLanguage,
+          definitionLanguage: input.definitionLanguage,
           visibility: input.visibility,
           userId: ctx.session.user.id,
           autoSaveTerms: {

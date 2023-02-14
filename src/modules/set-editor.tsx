@@ -1,5 +1,10 @@
 import { Stack } from "@chakra-ui/react";
-import type { AutoSaveTerm, StudySetVisibility, Term } from "@prisma/client";
+import type {
+  AutoSaveTerm,
+  Language,
+  StudySetVisibility,
+  Term,
+} from "@prisma/client";
 import React from "react";
 import { ImportTermsModal } from "../components/import-terms-modal";
 import { ButtonArea } from "./editor/button-area";
@@ -12,6 +17,7 @@ export interface SetEditorProps {
   title: string;
   description: string;
   tags: string[];
+  languages: Language[];
   visibility: StudySetVisibility;
   numTerms: number;
   isSaving: boolean;
@@ -20,6 +26,7 @@ export interface SetEditorProps {
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setTags: (tags: string[]) => void;
+  setLanguages: (languages: Language[]) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: () => void;
   deleteTerm: (id: string) => void;
@@ -35,6 +42,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
   title,
   description,
   tags,
+  languages,
   visibility,
   numTerms,
   isSaving,
@@ -43,6 +51,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
   setTitle,
   setDescription,
   setTags,
+  setLanguages,
   setVisibility,
   addTerm,
   deleteTerm,
@@ -90,6 +99,14 @@ export const SetEditor: React.FC<SetEditorProps> = ({
       />
       <TermsList
         terms={terms}
+        wordLanguage={languages[0]!}
+        definitionLanguage={languages[1]!}
+        setWordLanguage={(language) => {
+          setLanguages([language, languages[1]!]);
+        }}
+        setDefinitionLanguage={(language) => {
+          setLanguages([languages[0]!, language]);
+        }}
         addTerm={addTerm}
         deleteTerm={deleteTerm}
         editTerm={editTerm}

@@ -120,14 +120,16 @@ model StudySetsOnFolders {
 }
 
 model SetAutoSave {
-  userId        String             @id
-  savedAt       DateTime           @updatedAt
-  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title         String
-  description   String
-  tags          String[]           @default([])
-  visibility    StudySetVisibility @default(Public)
-  autoSaveTerms AutoSaveTerm[]
+  userId             String             @id
+  savedAt            DateTime           @updatedAt
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title              String
+  description        String
+  tags               String[]           @default([])
+  visibility         StudySetVisibility @default(Public)
+  wordLanguage       Language           @default(English)
+  definitionLanguage Language           @default(English)
+  autoSaveTerms      AutoSaveTerm[]
 }
 
 model Term {

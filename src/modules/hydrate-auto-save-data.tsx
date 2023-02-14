@@ -28,7 +28,8 @@ const ContextLayer: React.FC<
   if (!storeRef.current) {
     storeRef.current = createSetEditorStore({
       ...data,
-      terms: data.autoSaveTerms
+      terms: data.autoSaveTerms,
+      languages: [data.wordLanguage, data.definitionLanguage],
     });
   }
 

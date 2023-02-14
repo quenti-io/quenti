@@ -33,11 +33,13 @@ const EditorWrapper = () => {
   const title = useSetEditorContext((s) => s.title);
   const description = useSetEditorContext((s) => s.description);
   const tags = useSetEditorContext((s) => s.tags);
+  const languages = useSetEditorContext((s) => s.languages);
   const visibility = useSetEditorContext((s) => s.visibility);
   const terms = useSetEditorContext((s) => s.terms);
   const setTitle = useSetEditorContext((s) => s.setTitle);
   const setDescription = useSetEditorContext((s) => s.setDescription);
   const setTags = useSetEditorContext((s) => s.setTags);
+  const setLanguages = useSetEditorContext((s) => s.setLanguages);
   const setVisibility = useSetEditorContext((s) => s.setVisibility);
   const addTerm = useSetEditorContext((s) => s.addTerm);
   const bulkAddTerms = useSetEditorContext((s) => s.bulkAddTerms);
@@ -67,6 +69,8 @@ const EditorWrapper = () => {
       title: state.title,
       description: state.description,
       tags: state.tags,
+      wordLanguage: state.languages[0]!,
+      definitionLanguage: state.languages[1]!,
       visibility: state.visibility,
       terms: state.terms
         .sort((a, b) => a.rank - b.rank)
@@ -89,7 +93,7 @@ const EditorWrapper = () => {
   };
 
   store.subscribe(
-    (s) => [s.title, s.description, s.tags, s.visibility, s.terms],
+    (s) => [s.title, s.description, s.tags, s.languages, s.visibility, s.terms],
     wrappedCallback,
     {
       equalityFn: shallow,
@@ -102,6 +106,7 @@ const EditorWrapper = () => {
       title={title}
       description={description}
       tags={tags}
+      languages={languages}
       visibility={visibility}
       isSaving={autoSave.isLoading}
       isLoading={create.isLoading}
@@ -110,6 +115,7 @@ const EditorWrapper = () => {
       setTitle={setTitle}
       setDescription={setDescription}
       setTags={setTags}
+      setLanguages={setLanguages}
       setVisibility={setVisibility}
       onBulkImportTerms={bulkAddTerms}
       addTerm={addTerm}
