@@ -1,4 +1,9 @@
-import type { PrismaClient, StarredTerm, StudiableTerm } from "@prisma/client";
+import {
+  Language,
+  PrismaClient,
+  StarredTerm,
+  StudiableTerm,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -280,6 +285,8 @@ export const studySetsRouter = createTRPCRouter({
         title: z.string(),
         description: z.string(),
         tags: z.array(z.string()),
+        wordLanguage: z.nativeEnum(Language),
+        definitionLanguage: z.nativeEnum(Language),
         visibility: z.enum(["Public", "Unlisted", "Private"]),
       })
     )
@@ -295,6 +302,8 @@ export const studySetsRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           tags: input.tags,
+          wordLanguage: input.wordLanguage,
+          definitionLanguage: input.definitionLanguage,
           visibility: input.visibility,
         },
       });
