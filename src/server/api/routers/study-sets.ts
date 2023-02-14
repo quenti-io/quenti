@@ -1,8 +1,8 @@
 import {
   Language,
-  PrismaClient,
-  StarredTerm,
-  StudiableTerm,
+  type PrismaClient,
+  type StarredTerm,
+  type StudiableTerm,
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";

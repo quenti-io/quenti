@@ -17,6 +17,8 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
+import { evaluate } from "../../../lib/evaluator";
+import { placeholderLanguage } from "../../../lib/language";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 import { getRandom } from "../../../utils/array";
@@ -43,7 +45,7 @@ interface ActiveProps {
 const InputState: React.FC<
   ActiveProps & { onSubmit: (guess?: string) => void }
 > = ({ active, onSubmit }) => {
-  const { experience } = useSet();
+  const { experience, wordLanguage, definitionLanguage } = useSet();
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
   const specialCharacters = useLearnContext((s) => s.specialCharacters);
@@ -69,9 +71,11 @@ const InputState: React.FC<
 
     onSubmit(answer.trim());
     if (
-      // TODO evaluate upper/lowercase correctness based on the language
-      answer.trim().toLowerCase() ==
-      word(active.answerMode, active.term, "answer").trim().toLowerCase()
+      evaluate(
+        active.answerMode == "Definition" ? definitionLanguage : wordLanguage,
+        answer,
+        word(active.answerMode, active.term, "answer")
+      )
     ) {
       answerCorrectly(active.term.id);
 
@@ -114,7 +118,11 @@ const InputState: React.FC<
         )}
         <Input
           ref={inputRef}
-          placeholder="Type the answer"
+          placeholder={`Type the ${placeholderLanguage(
+            wordLanguage,
+            definitionLanguage,
+            active.answerMode
+          )}`}
           py="6"
           px="4"
           rounded="lg"
