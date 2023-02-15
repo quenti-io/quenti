@@ -1,4 +1,4 @@
-import type { StudySetAnswerMode } from "@prisma/client";
+import type { MultipleAnswerMode, StudySetAnswerMode } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -8,6 +8,7 @@ export interface ExperienceStoreProps {
   autoplayFlashcards: boolean;
   studyStarred: boolean;
   answerWith: StudySetAnswerMode;
+  multipleAnswerMode: MultipleAnswerMode;
   extendedFeedbackBank: boolean;
   starredTerms: string[];
 }
@@ -17,6 +18,7 @@ interface ExperienceState extends ExperienceStoreProps {
   toggleAutoplayFlashcards: () => void;
   setStudyStarred: (studyStarred: boolean) => void;
   setAnswerWith: (answerWith: StudySetAnswerMode) => void;
+  setMultipleAnswerMode: (multipleAnswerMode: MultipleAnswerMode) => void;
   setExtendedFeedbackBank: (extendedFeedbackBank: boolean) => void;
   starTerm: (termId: string) => void;
   unstarTerm: (termId: string) => void;
@@ -33,6 +35,7 @@ export const createExperienceStore = (
     studyStarred: false,
     answerWith: "Definition",
     extendedFeedbackBank: false,
+    multipleAnswerMode: "Unknown",
     starredTerms: [],
   };
 
@@ -59,6 +62,9 @@ export const createExperienceStore = (
       },
       setAnswerWith: (answerWith: StudySetAnswerMode) => {
         set({ answerWith });
+      },
+      setMultipleAnswerMode: (multipleAnswerMode: MultipleAnswerMode) => {
+        set({ multipleAnswerMode });
       },
       setExtendedFeedbackBank: (extendedFeedbackBank: boolean) => {
         set({ extendedFeedbackBank });

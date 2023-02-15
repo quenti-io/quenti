@@ -1,3 +1,4 @@
+import { MultipleAnswerMode } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -52,6 +53,27 @@ export const experienceRouter = createTRPCRouter({
         },
         data: {
           answerWith: input.answerWith,
+        },
+      });
+    }),
+
+  setMutlipleAnswerMode: protectedProcedure
+    .input(
+      z.object({
+        studySetId: z.string(),
+        multipleAnswerMode: z.nativeEnum(MultipleAnswerMode),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        data: {
+          multipleAnswerMode: input.multipleAnswerMode,
         },
       });
     }),
@@ -133,6 +155,7 @@ export const experienceRouter = createTRPCRouter({
         data: {
           learnMode: "Learn",
           learnRound: 0,
+          multipleAnswerMode: "Unknown",
           studiableTerms: {
             deleteMany: {
               userId: ctx.session.user.id,

@@ -17,8 +17,13 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
-import { cleanSpaces, evaluate } from "../../../lib/evaluator";
+import {
+  cleanSpaces,
+  evaluate,
+  EvaluationResult,
+} from "../../../lib/evaluator";
 import { placeholderLanguage } from "../../../lib/language";
+import { useExperienceContext } from "../../../stores/use-experience-store";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 import { getRandom } from "../../../utils/array";
@@ -46,6 +51,7 @@ const InputState: React.FC<
   ActiveProps & { onSubmit: (guess?: string) => void }
 > = ({ active, onSubmit }) => {
   const { experience, wordLanguage, definitionLanguage } = useSet();
+  const mutlipleAnswerMode = useExperienceContext((s) => s.multipleAnswerMode);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
   const specialCharacters = useLearnContext((s) => s.specialCharacters);
@@ -73,9 +79,10 @@ const InputState: React.FC<
     if (
       evaluate(
         active.answerMode == "Definition" ? definitionLanguage : wordLanguage,
+        mutlipleAnswerMode,
         answer,
         word(active.answerMode, active.term, "answer")
-      )
+      ) == EvaluationResult.Correct
     ) {
       answerCorrectly(active.term.id);
 

@@ -51,6 +51,7 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
     studyStarred: data.experience.studyStarred,
     answerWith: data.experience.answerWith,
     starredTerms: data.experience.starredTerms,
+    multipleAnswerMode: data.experience.multipleAnswerMode,
     extendedFeedbackBank: data.experience.extendedFeedbackBank,
   });
 
