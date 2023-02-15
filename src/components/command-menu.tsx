@@ -190,9 +190,9 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 
   React.useEffect(() => {
     if (isOpen) {
-      setSelectionIndex(0);
       setQuery("");
     }
+    setSelectionIndex(0);
   }, [isOpen]);
 
   const onSubmit = (i: number, ctrl: boolean) => {
