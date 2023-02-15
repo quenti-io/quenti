@@ -17,7 +17,7 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
-import { evaluate } from "../../../lib/evaluator";
+import { cleanSpaces, evaluate } from "../../../lib/evaluator";
 import { placeholderLanguage } from "../../../lib/language";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
@@ -31,7 +31,7 @@ export const WriteCard: React.FC<WriteCardProps> = ({ active }) => {
   const status = useLearnContext((s) => s.status);
   const [guess, setGuess] = React.useState<string | undefined>();
 
-  if (status === "correct") return <CorrectState active={active} />;
+  if (status === "correct") return <CorrectState guess={guess || ""} />;
   if (status === "incorrect")
     return <IncorrectState active={active} guess={guess} />;
 
@@ -156,7 +156,7 @@ const InputState: React.FC<
   );
 };
 
-const CorrectState: React.FC<ActiveProps> = ({ active }) => {
+const CorrectState: React.FC<{ guess: string }> = ({ guess }) => {
   const feedbackBank = useLearnContext((s) => s.feedbackBank);
   const colorScheme = useColorModeValue("green.600", "green.200");
 
@@ -177,10 +177,7 @@ const CorrectState: React.FC<ActiveProps> = ({ active }) => {
         <Text fontWeight={600} color={colorScheme}>
           {remark}
         </Text>
-        <AnswerCard
-          text={word(active.answerMode, active.term, "answer")}
-          correct
-        />
+        <AnswerCard text={cleanSpaces(guess)} correct />
       </Stack>
     </motion.div>
   );

@@ -36,7 +36,7 @@ export const AnswerModeSection = () => {
   return (
     <Flex gap={8}>
       <Stack spacing={0} w="full">
-        <Text fontWeight={700}>Study mode</Text>
+        <Text fontWeight={700}>Answer with</Text>
         <Text fontSize="sm" color={mutedColor}>
           Choose how to answer when studying
         </Text>

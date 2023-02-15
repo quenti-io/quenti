@@ -57,6 +57,7 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
           onClose(isDirty);
         }}
         isCentered
+        autoFocus={false}
         size="xl"
       >
         <ModalOverlay backdropFilter="blur(6px)" />

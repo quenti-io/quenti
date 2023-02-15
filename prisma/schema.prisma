@@ -166,6 +166,12 @@ enum StudySetAnswerMode {
   Both
 }
 
+enum MultipleAnswerMode {
+  One
+  All
+  Unknown
+}
+
 model StudySetExperience {
   id                   String             @id @default(cuid())
   userId               String
@@ -177,7 +183,8 @@ model StudySetExperience {
   learnRound           Int                @default(0)
   learnMode            LearnMode          @default(Learn)
   studyStarred         Boolean            @default(false)
-  answerWith           StudySetAnswerMode @default(Definition)
+  answerWith           StudySetAnswerMode @default(Word)
+  multipleAnswerMode   MultipleAnswerMode @default(Unknown)
   extendedFeedbackBank Boolean            @default(false)
 
   starredTerms   StarredTerm[]

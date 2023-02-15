@@ -5,13 +5,21 @@ export const evaluate = (
   input: string,
   answer: string
 ): boolean => {
-  const caseSensitive = language == Language.Chemistry;
+  const strictEquality = language == Language.Chemistry;
 
-  input = input.trim();
-  answer = answer.trim();
-  if (caseSensitive) {
+  input = cleanSpaces(input.trim());
+  answer = cleanSpaces(answer.trim());
+  if (strictEquality) {
     return input == answer;
   }
 
+  // Ignore text in parentheses
+  input = input.replace(/\(.*?\)/g, "").trim();
+  answer = answer.replace(/\(.*?\)/g, "").trim();
+
   return input.toLowerCase() == answer.toLowerCase();
+};
+
+export const cleanSpaces = (text: string): string => {
+  return text.replace(/\s+/g, " ").trim();
 };

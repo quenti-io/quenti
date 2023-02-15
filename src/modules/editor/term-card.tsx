@@ -130,7 +130,7 @@ export const TermCard: React.FC<TermCardProps> = ({
                 });
               }}
             />
-            <Flex justifyContent="space-between">
+            <Flex justifyContent="space-between" h="6">
               <Text fontSize="sm" color={mutedText}>
                 Term
               </Text>
@@ -164,7 +164,7 @@ export const TermCard: React.FC<TermCardProps> = ({
               }}
             />
             <Flex justifyContent="space-between">
-              <Text fontSize="sm" color={mutedText}>
+              <Text fontSize="sm" color={mutedText} h="6">
                 Definition
               </Text>
               {isCurrent && (

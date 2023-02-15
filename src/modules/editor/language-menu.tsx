@@ -21,7 +21,7 @@ export const LanguageMenu: React.FC<LanguageMenuProps> = ({
   return (
     <Menu>
       <MenuButton>
-        <Button size="sm" variant="ghost" as="div">
+        <Button size="sm" variant="ghost" as="div" h="max">
           {selected.toString()}
         </Button>
       </MenuButton>

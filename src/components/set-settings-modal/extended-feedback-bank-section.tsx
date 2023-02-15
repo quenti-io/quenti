@@ -21,7 +21,7 @@ export const ExtendedFeedbackSection = () => {
   return (
     <Flex gap={8}>
       <Stack spacing={0} w="full">
-        <Text fontWeight={700}>Insult Mode</Text>
+        <Text fontWeight={700}>Insult mode</Text>
         <Text fontSize="sm" color={mutedColor}>
           Switch all feedback to insults
         </Text>
