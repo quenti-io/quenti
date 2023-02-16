@@ -1,0 +1,133 @@
+import { Button, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { diffChars } from "diff";
+import { motion, useAnimationControls } from "framer-motion";
+import levenshtein from "js-levenshtein";
+import React from "react";
+import { useSet } from "../../../../hooks/use-set";
+import type { Question } from "../../../../interfaces/question";
+import { useLearnContext, word } from "../../../../stores/use-learn-store";
+import { api } from "../../../../utils/api";
+import { getRandom } from "../../../../utils/array";
+import { AnswerCard } from "./answer-card";
+
+export interface IncorrectStateProps {
+  active: Question;
+  guess?: string;
+}
+
+export const IncorrectState: React.FC<IncorrectStateProps> = ({
+  active,
+  guess,
+}) => {
+  const { experience } = useSet();
+  const overrideCorrect = useLearnContext((s) => s.overrideCorrect);
+
+  const feedbackBank = useLearnContext((s) => s.feedbackBank);
+  const [remark] = React.useState(getRandom(feedbackBank.incorrect));
+
+  const put = api.studiableTerms.put.useMutation();
+
+  const controls = useAnimationControls();
+  const colorScheme = useColorModeValue("red.600", "red.200");
+  const grayText = useColorModeValue("gray.600", "gray.400");
+
+  const fullStackRef = React.useRef<HTMLDivElement>(null);
+  const stackRef = React.useRef<HTMLDivElement>(null);
+
+  const [checkVisible, setCheckVisible] = React.useState(false);
+
+  const handleOverrideCorrect = () => {
+    overrideCorrect();
+
+    void (async () =>
+      await put.mutateAsync({
+        id: active.term.id,
+        experienceId: experience.id,
+        correctness: 2,
+        appearedInRound: active.term.appearedInRound || 0,
+        incorrectCount: active.term.incorrectCount,
+      }))();
+  };
+
+  React.useEffect(() => {
+    void (async () => {
+      controls.set({
+        height: `${stackRef.current!.clientHeight + 12}px`,
+      });
+      await controls.start({
+        height: `${fullStackRef.current!.clientHeight + 12}px`,
+        transition: {
+          duration: 0.5,
+          delay: 0.5,
+        },
+      });
+    })();
+
+    setTimeout(() => setCheckVisible(true), 1000);
+  }, [controls]);
+
+  const diff = guess
+    ? diffChars(guess, word(active.answerMode, active.term, "answer"))
+    : [];
+  const showDiff = guess
+    ? levenshtein(guess, word(active.answerMode, active.term, "answer")) <= 3
+    : false;
+
+  return (
+    <motion.div
+      style={{
+        overflow: "hidden",
+      }}
+      animate={controls}
+    >
+      <Stack spacing={6} marginTop="0" ref={fullStackRef}>
+        <Stack spacing={4} ref={stackRef}>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Text fontWeight={600} color={guess ? colorScheme : grayText}>
+              {guess ? remark : "You skipped this term"}
+            </Text>
+            {guess && (
+              <Button size="sm" variant="ghost" onClick={handleOverrideCorrect}>
+                Override: I was correct
+              </Button>
+            )}
+          </Flex>
+          <AnswerCard
+            text={guess || "Skipped"}
+            correct={false}
+            skipped={!guess}
+          />
+        </Stack>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { delay: 1 } }}
+        >
+          <Stack spacing={4}>
+            <Text fontWeight={600} color={grayText}>
+              Correct answer
+            </Text>
+            <AnswerCard
+              text={
+                <>
+                  {showDiff
+                    ? diff.map((x, i) =>
+                        x.added && x.value.length <= 3 ? (
+                          <b key={i}>{x.value}</b>
+                        ) : x.removed ? (
+                          ""
+                        ) : (
+                          x.value
+                        )
+                      )
+                    : word(active.answerMode, active.term, "answer")}
+                </>
+              }
+              correct
+              showIcon={checkVisible}
+            />
+          </Stack>
+        </motion.div>
+      </Stack>
+    </motion.div>
+  );
+};

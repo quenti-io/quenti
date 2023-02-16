@@ -23,7 +23,7 @@ export interface LearnStoreProps {
   specialCharacters: string[];
   feedbackBank: { correct: string[]; incorrect: string[] };
   answered?: string;
-  status?: "correct" | "incorrect";
+  status?: "correct" | "incorrect" | "unknownPartial";
   roundSummary?: RoundSummary;
   completed: boolean;
   prevTermWasIncorrect?: boolean;
@@ -40,8 +40,11 @@ interface LearnState extends LearnStoreProps {
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
   acknowledgeIncorrect: () => void;
+  answerUnknownPartial: () => void;
   overrideCorrect: () => void;
   endQuestionCallback: (correct: boolean) => void;
+  correctFromUnknown: (termId: string) => void;
+  incorrectFromUnknown: (termId: string) => void;
   nextRound: (start?: boolean) => void;
   setFeedbackBank: (correct: string[], incorrect: string[]) => void;
 }
@@ -150,6 +153,9 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           return {};
         });
       },
+      answerUnknownPartial: () => {
+        set({ status: "unknownPartial" });
+      },
       overrideCorrect: () => {
         set((state) => {
           const active = state.roundTimeline[state.roundCounter]!;
@@ -199,6 +205,42 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             answered: undefined,
             status: undefined,
           };
+        });
+      },
+      correctFromUnknown: (termId) => {
+        set({
+          answered: termId,
+          prevTermWasIncorrect: false,
+        });
+
+        set((state) => {
+          const active = state.roundTimeline[state.roundCounter]!;
+          active.term.correctness = active.type == "choice" ? 1 : 2;
+
+          state.endQuestionCallback(true);
+          return {};
+        });
+      },
+      incorrectFromUnknown: (termId) => {
+        set((state) => ({
+          answered: termId,
+          roundTimeline:
+            state.roundProgress != state.termsThisRound - 1
+              ? [
+                  ...state.roundTimeline,
+                  state.roundTimeline[state.roundCounter]!,
+                ]
+              : state.roundTimeline,
+          prevTermWasIncorrect: true,
+        }));
+
+        set((state) => {
+          const active = state.roundTimeline[state.roundCounter]!;
+          active.term.correctness = -1;
+          active.term.incorrectCount++;
+
+          state.endQuestionCallback(false);
+          return {};
         });
       },
       nextRound: (start = false) => {

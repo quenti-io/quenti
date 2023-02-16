@@ -21,20 +21,21 @@ export const evaluate = (
     const inputAnswers = input.split(/[,;\/]/).map((a) => a.trim());
     const answerAnswers = answer.split(/[,;\/]/).map((a) => a.trim());
 
-    if (multipleAnswerMode == "All") {
-      return input == answer
-        ? EvaluationResult.Correct
-        : EvaluationResult.Incorrect;
-    } else if (multipleAnswerMode == "One") {
-      // Get if answer array contains any of the input answers
-      return inputAnswers.some((inputAnswer) =>
-        answerAnswers.some((answerAnswer) => inputAnswer == answerAnswer)
-      )
-        ? EvaluationResult.Correct
-        : EvaluationResult.Incorrect;
-    }
+    const fullEquality = answerAnswers.every((i) => inputAnswers.includes(i));
+    const partialEquality = answerAnswers.some((i) => input.includes(i));
 
-    return EvaluationResult.UnknownPartial;
+    console.log("inputAnswers", inputAnswers);
+    console.log("answerAnswers", answerAnswers);
+    console.log("fullEquality", fullEquality);
+    console.log("partialEquality", partialEquality);
+
+    if (fullEquality) return EvaluationResult.Correct;
+    if (multipleAnswerMode == "Unknown" && partialEquality)
+      return EvaluationResult.UnknownPartial;
+    if (multipleAnswerMode == "One" && partialEquality)
+      return EvaluationResult.Correct;
+
+    return EvaluationResult.Incorrect;
   };
 
   if (strictEquality) {
@@ -42,8 +43,14 @@ export const evaluate = (
   }
 
   // Ignore text in parentheses
-  input = input.replace(/\(.*?\)/g, "").trim();
-  answer = answer.replace(/\(.*?\)/g, "").trim();
+  input = input
+    .replace(/\(.*?\)/g, "")
+    .trim()
+    .toLowerCase();
+  answer = answer
+    .replace(/\(.*?\)/g, "")
+    .trim()
+    .toLowerCase();
 
   return evaluateInner();
 };
