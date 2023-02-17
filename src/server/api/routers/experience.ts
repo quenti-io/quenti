@@ -155,7 +155,6 @@ export const experienceRouter = createTRPCRouter({
         data: {
           learnMode: "Learn",
           learnRound: 0,
-          multipleAnswerMode: "Unknown",
           studiableTerms: {
             deleteMany: {
               userId: ctx.session.user.id,

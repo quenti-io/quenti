@@ -13,6 +13,7 @@ import { useSet } from "../hooks/use-set";
 import { useExperienceContext } from "../stores/use-experience-store";
 import { AnswerModeSection } from "./set-settings-modal/answer-mode-section";
 import { ExtendedFeedbackSection } from "./set-settings-modal/extended-feedback-bank-section";
+import { MultipleAnswerModeSection } from "./set-settings-modal/multiple-answer-mode-section";
 import { ResetProgressSection } from "./set-settings-modal/reset-progress-section";
 import { StudyStarredSection } from "./set-settings-modal/study-starred-section";
 
@@ -44,6 +45,7 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
 
   const studyStarred = useExperienceContext((s) => s.studyStarred);
   const answerWith = useExperienceContext((s) => s.answerWith);
+  const multipleAnswerMode = useExperienceContext((s) => s.multipleAnswerMode);
 
   return (
     <SetSettingsModalContext.Provider value={{ onClose, reloadOnReset }}>
@@ -53,7 +55,6 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
           const isDirty =
             experience.answerWith !== answerWith ||
             experience.studyStarred !== studyStarred;
-
           onClose(isDirty);
         }}
         isCentered
@@ -68,6 +69,12 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
               <StudyStarredSection />
               <Divider />
               <AnswerModeSection />
+              {multipleAnswerMode !== "Unknown" && (
+                <>
+                  <Divider />
+                  <MultipleAnswerModeSection />
+                </>
+              )}
               <Divider />
               <ResetProgressSection />
               {useExtendedFeedbackBank && (
