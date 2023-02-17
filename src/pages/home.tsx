@@ -11,7 +11,7 @@ const Home: ComponentWithAuth = () => {
   const { data, isLoading } = api.recent.get.useQuery();
   const official = api.studySets.getOfficial.useQuery();
 
-  const isEmpty = !data?.sets.length || !data?.folders.length;
+  const isEmpty = !data?.sets.length && !data?.folders.length;
 
   const { loading } = useLoading();
   if (loading) return <Loading />;
