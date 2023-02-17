@@ -9,9 +9,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { MultipleAnswerMode } from "@prisma/client";
 import { useSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
 import type { Question } from "../../../../interfaces/question";
+import { useExperienceContext } from "../../../../stores/use-experience-store";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
 import { api } from "../../../../utils/api";
 
@@ -24,36 +26,55 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
   active,
   guess,
 }) => {
-  const { experience } = useSet();
+  const { id, experience } = useSet();
+  const setMutlipleAnswerMode = useExperienceContext(
+    (s) => s.setMultipleAnswerMode
+  );
   const correctFromUnknown = useLearnContext((s) => s.correctFromUnknown);
   const incorrectFromUnknown = useLearnContext((s) => s.incorrectFromUnknown);
 
   const put = api.studiableTerms.put.useMutation();
+  const apiSetMultipleAnswerMode =
+    api.experience.setMutlipleAnswerMode.useMutation();
 
   const onRequireOne = () => {
+    setMutlipleAnswerMode(MultipleAnswerMode.One);
     correctFromUnknown(active.term.id);
 
-    void (async () =>
+    void (async () => {
+      await apiSetMultipleAnswerMode.mutateAsync({
+        studySetId: id,
+        multipleAnswerMode: MultipleAnswerMode.One,
+      });
+
       await put.mutateAsync({
         id: active.term.id,
         experienceId: experience.id,
         correctness: 2,
         appearedInRound: active.term.appearedInRound || 0,
         incorrectCount: active.term.incorrectCount,
-      }))();
+      });
+    })();
   };
 
   const onRequireAll = () => {
+    setMutlipleAnswerMode(MultipleAnswerMode.All);
     incorrectFromUnknown(active.term.id);
 
-    void (async () =>
+    void (async () => {
+      await apiSetMultipleAnswerMode.mutateAsync({
+        studySetId: id,
+        multipleAnswerMode: MultipleAnswerMode.All,
+      });
+
       await put.mutateAsync({
         id: active.term.id,
         experienceId: experience.id,
         correctness: -1,
         appearedInRound: active.term.appearedInRound || 0,
         incorrectCount: active.term.incorrectCount + 1,
-      }))();
+      });
+    })();
   };
 
   const grayColor = useColorModeValue("gray.600", "gray.400");

@@ -72,7 +72,6 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
     } else if (evaluation === EvaluationResult.Incorrect) {
       answerIncorrectly(active.term.id);
     } else {
-      // Partially correct
       answerUnknownPartial();
     }
   };
