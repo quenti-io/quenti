@@ -8,8 +8,10 @@ import { SetGrid } from "../modules/home/set-grid";
 import { api } from "../utils/api";
 
 const Home: ComponentWithAuth = () => {
-  const { data, isLoading } = api.studySets.recent.useQuery({});
+  const { data, isLoading } = api.recent.get.useQuery();
   const official = api.studySets.getOfficial.useQuery();
+
+  const isEmpty = !data?.sets.length || !data?.folders.length;
 
   const { loading } = useLoading();
   if (loading) return <Loading />;
@@ -18,8 +20,8 @@ const Home: ComponentWithAuth = () => {
     <WithFooter>
       <Container maxW="7xl">
         <Stack spacing={12}>
-          {!isLoading && !data?.length && <EmptyDashboard />}
-          {(isLoading || data?.length) && (
+          {!isLoading && isEmpty && <EmptyDashboard />}
+          {(isLoading || !isEmpty) && (
             <SetGrid
               data={data}
               isLoading={isLoading}
@@ -28,7 +30,7 @@ const Home: ComponentWithAuth = () => {
             />
           )}
           <SetGrid
-            data={official.data}
+            data={{ sets: official.data || [], folders: [] }}
             isLoading={official.isLoading}
             heading="Example Sets"
             skeletonCount={8}

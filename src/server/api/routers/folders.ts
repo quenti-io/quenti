@@ -29,6 +29,11 @@ export const getRecentFolders = async (
       },
       include: {
         user: true,
+        _count: {
+          select: {
+            studySets: true,
+          },
+        },
       },
     })
   ).map((x) => ({
