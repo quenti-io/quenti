@@ -21,7 +21,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
     <GenericCard
       title={folder.title}
       numItems={numSets}
-      url={`/@${user.username}/${folder.slug ?? folder.id}`}
+      url={`/@${user.username}/folders/${folder.slug ?? folder.id}`}
       itemsLabel={"set"}
       user={user}
       leftIcon={<IconFolder size={16} />}
