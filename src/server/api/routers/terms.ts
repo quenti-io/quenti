@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { MAX_TERM } from "../common/constants";
-import { filter } from "../common/filter";
+import { profanity } from "../common/profanity";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -23,8 +23,8 @@ export const termsRouter = createTRPCRouter({
           ...z,
           term: {
             ...z.term,
-            word: filter.clean(z.term.word.slice(0, MAX_TERM)),
-            definition: filter.clean(z.term.definition.slice(0, MAX_TERM)),
+            word: profanity.censor(z.term.word.slice(0, MAX_TERM)),
+            definition: profanity.censor(z.term.definition.slice(0, MAX_TERM)),
           },
         }))
     )
@@ -42,7 +42,7 @@ export const termsRouter = createTRPCRouter({
         });
       }
 
-      // Cleanup all ranks so that all values are consecutive
+      // censorup all ranks so that all values are consecutive
       await ctx.prisma.term.updateMany({
         where: {
           studySetId: input.studySetId,
@@ -82,8 +82,8 @@ export const termsRouter = createTRPCRouter({
           ...z,
           terms: z.terms.map((term) => ({
             ...term,
-            word: filter.clean(term.word.slice(0, MAX_TERM)),
-            definition: filter.clean(term.definition.slice(0, MAX_TERM)),
+            word: profanity.censor(term.word.slice(0, MAX_TERM)),
+            definition: profanity.censor(term.definition.slice(0, MAX_TERM)),
           })),
         }))
     )
@@ -133,7 +133,7 @@ export const termsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Cleanup all ranks so that all values are consecutive
+      // censorup all ranks so that all values are consecutive
       const studySet = await ctx.prisma.studySet.findFirst({
         where: {
           id: input.studySetId,
@@ -205,8 +205,8 @@ export const termsRouter = createTRPCRouter({
         })
         .transform((z) => ({
           ...z,
-          word: filter.clean(z.word.slice(0, MAX_TERM)),
-          definition: filter.clean(z.definition.slice(0, MAX_TERM)),
+          word: profanity.censor(z.word.slice(0, MAX_TERM)),
+          definition: profanity.censor(z.definition.slice(0, MAX_TERM)),
         }))
     )
     .mutation(async ({ ctx, input }) => {
@@ -255,8 +255,8 @@ export const termsRouter = createTRPCRouter({
           ...z,
           terms: z.terms.map((term) => ({
             ...term,
-            word: filter.clean(term.word.slice(0, MAX_TERM)),
-            definition: filter.clean(term.definition.slice(0, MAX_TERM)),
+            word: profanity.censor(term.word.slice(0, MAX_TERM)),
+            definition: profanity.censor(term.definition.slice(0, MAX_TERM)),
           })),
         }))
     )
@@ -341,7 +341,7 @@ export const termsRouter = createTRPCRouter({
         });
       }
 
-      // Cleanup all ranks so that all values are consecutive
+      // censorup all ranks so that all values are consecutive
       await ctx.prisma.term.updateMany({
         where: {
           studySetId: input.studySetId,

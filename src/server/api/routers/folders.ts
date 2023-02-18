@@ -4,7 +4,7 @@ import slugify from "slugify";
 import { z } from "zod";
 import { USERNAME_REGEXP } from "../../../constants/characters";
 import { MAX_DESC, MAX_TITLE } from "../common/constants";
-import { filter } from "../common/filter";
+import { profanity } from "../common/profanity";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const getRecentFolders = async (
@@ -241,8 +241,8 @@ export const foldersRouter = createTRPCRouter({
           description: z.string(),
         })
         .transform((z) => ({
-          title: filter.clean(z.title.slice(0, MAX_TITLE)),
-          description: filter.clean(z.description.slice(MAX_DESC)),
+          title: profanity.censor(z.title.slice(0, MAX_TITLE)),
+          description: profanity.censor(z.description.slice(MAX_DESC)),
         }))
     )
     .mutation(async ({ ctx, input }) => {
@@ -276,8 +276,8 @@ export const foldersRouter = createTRPCRouter({
         })
         .transform((z) => ({
           ...z,
-          title: filter.clean(z.title.slice(0, MAX_TITLE)),
-          description: filter.clean(z.description.slice(0, MAX_DESC)),
+          title: profanity.censor(z.title.slice(0, MAX_TITLE)),
+          description: profanity.censor(z.description.slice(0, MAX_DESC)),
         }))
     )
     .mutation(async ({ ctx, input }) => {

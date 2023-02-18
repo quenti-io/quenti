@@ -13,7 +13,7 @@ import {
   MAX_TERM,
   MAX_TITLE,
 } from "../common/constants";
-import { filter } from "../common/filter";
+import { profanity } from "../common/profanity";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -273,18 +273,18 @@ export const studySetsRouter = createTRPCRouter({
 
     const studySet = await ctx.prisma.studySet.create({
       data: {
-        title: filter.clean(autoSave.title.slice(0, MAX_TITLE)),
-        description: filter.clean(autoSave.description.slice(0, MAX_DESC)),
+        title: profanity.censor(autoSave.title.slice(0, MAX_TITLE)),
+        description: profanity.censor(autoSave.description.slice(0, MAX_DESC)),
         tags: autoSave.tags
           .slice(0, MAX_NUM_TAGS)
-          .map((x) => filter.clean(x.slice(0, MAX_CHARS_TAGS))),
+          .map((x) => profanity.censor(x.slice(0, MAX_CHARS_TAGS))),
         userId: ctx.session.user.id,
         terms: {
           createMany: {
             data: autoSave.autoSaveTerms.map((term) => ({
               id: term.id,
-              word: filter.clean(term.word.slice(0, MAX_TERM)),
-              definition: filter.clean(term.definition.slice(0, MAX_TERM)),
+              word: profanity.censor(term.word.slice(0, MAX_TERM)),
+              definition: profanity.censor(term.definition.slice(0, MAX_TERM)),
               rank: term.rank,
             })),
           },
@@ -309,11 +309,11 @@ export const studySetsRouter = createTRPCRouter({
         })
         .transform((z) => ({
           ...z,
-          title: filter.clean(z.title.slice(0, MAX_TITLE)),
-          description: filter.clean(z.description.slice(0, MAX_DESC)),
+          title: profanity.censor(z.title),
+          description: profanity.censor(z.description.slice(0, MAX_DESC)),
           tags: z.tags
             .slice(0, MAX_NUM_TAGS)
-            .map((x) => filter.clean(x.slice(0, MAX_CHARS_TAGS))),
+            .map((x) => profanity.censor(x.slice(0, MAX_CHARS_TAGS))),
         }))
     )
     .mutation(async ({ ctx, input }) => {
