@@ -20,3 +20,36 @@
     transform: tranlate(0px, 0px) scale(1);
   }
 }
+
+@media all {
+  .page-break {
+    display: none;
+  }
+}
+
+@media print {
+  html,
+  body {
+    height: initial !important;
+    overflow: initial !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@media print {
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+
+  .no-break {
+    page-break-inside: avoid;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 20mm;
+}

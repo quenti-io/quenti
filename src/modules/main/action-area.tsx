@@ -7,6 +7,8 @@ import {
   type TablerIconsProps,
 } from "@tabler/icons-react";
 import React from "react";
+import { useReactToPrint } from "react-to-print";
+import { SetPrintComponent } from "../../components/set-print-component";
 import { useSet } from "../../hooks/use-set";
 import { api } from "../../utils/api";
 import { AddToFolderModal } from "./add-to-folder-modal";
@@ -18,6 +20,16 @@ export const ActionArea: React.FC = () => {
 
   const [addToFolder, setAddToFolder] = React.useState(false);
   const [share, setShare] = React.useState(false);
+  const [shouldPrint, setShouldPrint] = React.useState(false);
+
+  const printRef = React.useRef(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    onAfterPrint: () => {
+      setShouldPrint(false);
+    },
+  });
 
   return (
     <>
@@ -42,9 +54,24 @@ export const ActionArea: React.FC = () => {
           icon={IconShare}
           onClick={() => setShare(true)}
         />
-        <ActionButton label="Print" icon={IconPrinter} />
+        <ActionButton
+          label="Print"
+          icon={IconPrinter}
+          isLoading={shouldPrint}
+          onClick={() => {
+            setShouldPrint(true);
+            requestAnimationFrame(() => {
+              handlePrint();
+            });
+          }}
+        />
         <ActionButton label="Export" icon={IconTableExport} />
       </ButtonGroup>
+      {shouldPrint && (
+        <div style={{ display: "none" }}>
+          <SetPrintComponent ref={printRef} />
+        </div>
+      )}
     </>
   );
 };
@@ -53,12 +80,14 @@ interface ActionButtonProps {
   label: string;
   icon: React.FC<TablerIconsProps>;
   onClick?: () => void;
+  isLoading?: boolean;
 }
 
 export const ActionButton: React.FC<ActionButtonProps> = ({
   label,
   icon,
   onClick,
+  isLoading,
 }) => {
   const Icon = icon;
 
@@ -72,6 +101,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         aria-label={label}
         outline="solid 1px"
         onClick={onClick}
+        isLoading={isLoading}
       />
     </Tooltip>
   );
