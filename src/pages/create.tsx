@@ -92,13 +92,23 @@ const EditorWrapper = () => {
     })();
   };
 
-  store.subscribe(
-    (s) => [s.title, s.description, s.tags, s.languages, s.visibility, s.terms],
-    wrappedCallback,
-    {
-      equalityFn: shallow,
-    }
-  );
+  React.useEffect(() => {
+    store.subscribe(
+      (s) => [
+        s.title,
+        s.description,
+        s.tags,
+        s.languages,
+        s.visibility,
+        s.terms,
+      ],
+      wrappedCallback,
+      {
+        equalityFn: shallow,
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <SetEditor

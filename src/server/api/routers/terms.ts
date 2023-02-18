@@ -2,20 +2,31 @@ import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
 import { z } from "zod";
+import { MAX_TERM } from "../common/constants";
+import { filter } from "../common/filter";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const termsRouter = createTRPCRouter({
   add: protectedProcedure
     .input(
-      z.object({
-        studySetId: z.string(),
-        term: z.object({
-          word: z.string(),
-          rank: z.number().min(0),
-          definition: z.string(),
-        }),
-      })
+      z
+        .object({
+          studySetId: z.string(),
+          term: z.object({
+            word: z.string(),
+            rank: z.number().min(0),
+            definition: z.string(),
+          }),
+        })
+        .transform((z) => ({
+          ...z,
+          term: {
+            ...z.term,
+            word: filter.clean(z.term.word.slice(0, MAX_TERM)),
+            definition: filter.clean(z.term.definition.slice(0, MAX_TERM)),
+          },
+        }))
     )
     .mutation(async ({ ctx, input }) => {
       const studySet = await ctx.prisma.studySet.findFirst({
@@ -57,15 +68,24 @@ export const termsRouter = createTRPCRouter({
 
   bulkAdd: protectedProcedure
     .input(
-      z.object({
-        studySetId: z.string(),
-        terms: z.array(
-          z.object({
-            word: z.string(),
-            definition: z.string(),
-          })
-        ),
-      })
+      z
+        .object({
+          studySetId: z.string(),
+          terms: z.array(
+            z.object({
+              word: z.string(),
+              definition: z.string(),
+            })
+          ),
+        })
+        .transform((z) => ({
+          ...z,
+          terms: z.terms.map((term) => ({
+            ...term,
+            word: filter.clean(term.word.slice(0, MAX_TERM)),
+            definition: filter.clean(term.definition.slice(0, MAX_TERM)),
+          })),
+        }))
     )
     .mutation(async ({ ctx, input }) => {
       const studySet = await ctx.prisma.studySet.findFirst({
@@ -176,12 +196,18 @@ export const termsRouter = createTRPCRouter({
 
   edit: protectedProcedure
     .input(
-      z.object({
-        studySetId: z.string(),
-        id: z.string(),
-        word: z.string(),
-        definition: z.string(),
-      })
+      z
+        .object({
+          studySetId: z.string(),
+          id: z.string(),
+          word: z.string(),
+          definition: z.string(),
+        })
+        .transform((z) => ({
+          ...z,
+          word: filter.clean(z.word.slice(0, MAX_TERM)),
+          definition: filter.clean(z.definition.slice(0, MAX_TERM)),
+        }))
     )
     .mutation(async ({ ctx, input }) => {
       const studySet = await ctx.prisma.studySet.findFirst({
@@ -214,16 +240,25 @@ export const termsRouter = createTRPCRouter({
 
   bulkEdit: protectedProcedure
     .input(
-      z.object({
-        studySetId: z.string(),
-        terms: z.array(
-          z.object({
-            id: z.string(),
-            word: z.string(),
-            definition: z.string(),
-          })
-        ),
-      })
+      z
+        .object({
+          studySetId: z.string(),
+          terms: z.array(
+            z.object({
+              id: z.string(),
+              word: z.string(),
+              definition: z.string(),
+            })
+          ),
+        })
+        .transform((z) => ({
+          ...z,
+          terms: z.terms.map((term) => ({
+            ...term,
+            word: filter.clean(term.word.slice(0, MAX_TERM)),
+            definition: filter.clean(term.definition.slice(0, MAX_TERM)),
+          })),
+        }))
     )
     .mutation(async ({ ctx, input }) => {
       const studySet = await ctx.prisma.studySet.findFirst({

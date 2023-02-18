@@ -6,6 +6,14 @@ import {
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import {
+  MAX_CHARS_TAGS,
+  MAX_DESC,
+  MAX_NUM_TAGS,
+  MAX_TERM,
+  MAX_TITLE,
+} from "../common/constants";
+import { filter } from "../common/filter";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -250,6 +258,13 @@ export const studySetsRouter = createTRPCRouter({
       });
     }
 
+    if (!autoSave.title.trim().length) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Title cannot be empty",
+      });
+    }
+
     await ctx.prisma.setAutoSave.delete({
       where: {
         userId: ctx.session.user.id,
@@ -258,16 +273,18 @@ export const studySetsRouter = createTRPCRouter({
 
     const studySet = await ctx.prisma.studySet.create({
       data: {
-        title: autoSave.title,
-        description: autoSave.description,
-        tags: autoSave.tags,
+        title: filter.clean(autoSave.title.slice(0, MAX_TITLE)),
+        description: filter.clean(autoSave.description.slice(0, MAX_DESC)),
+        tags: autoSave.tags
+          .slice(0, MAX_NUM_TAGS)
+          .map((x) => filter.clean(x.slice(0, MAX_CHARS_TAGS))),
         userId: ctx.session.user.id,
         terms: {
           createMany: {
             data: autoSave.autoSaveTerms.map((term) => ({
               id: term.id,
-              word: term.word,
-              definition: term.definition,
+              word: filter.clean(term.word.slice(0, MAX_TERM)),
+              definition: filter.clean(term.definition.slice(0, MAX_TERM)),
               rank: term.rank,
             })),
           },
@@ -280,15 +297,24 @@ export const studySetsRouter = createTRPCRouter({
 
   edit: protectedProcedure
     .input(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        description: z.string(),
-        tags: z.array(z.string()),
-        wordLanguage: z.nativeEnum(Language),
-        definitionLanguage: z.nativeEnum(Language),
-        visibility: z.enum(["Public", "Unlisted", "Private"]),
-      })
+      z
+        .object({
+          id: z.string(),
+          title: z.string().trim().min(1),
+          description: z.string(),
+          tags: z.array(z.string()),
+          wordLanguage: z.nativeEnum(Language),
+          definitionLanguage: z.nativeEnum(Language),
+          visibility: z.enum(["Public", "Unlisted", "Private"]),
+        })
+        .transform((z) => ({
+          ...z,
+          title: filter.clean(z.title.slice(0, MAX_TITLE)),
+          description: filter.clean(z.description.slice(0, MAX_DESC)),
+          tags: z.tags
+            .slice(0, MAX_NUM_TAGS)
+            .map((x) => filter.clean(x.slice(0, MAX_CHARS_TAGS))),
+        }))
     )
     .mutation(async ({ ctx, input }) => {
       const studySet = await ctx.prisma.studySet.update({

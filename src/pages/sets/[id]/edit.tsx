@@ -79,7 +79,7 @@ const EditorWrapper = () => {
   const apiBulkEdit = api.terms.bulkEdit.useMutation();
   const apiReorderTerm = api.terms.reorder.useMutation();
 
-  const propertiesSaveHandler = () => {
+  const propertiesSaveHandler = React.useCallback(() => {
     void (async () => {
       const state = store.getState();
 
@@ -93,15 +93,19 @@ const EditorWrapper = () => {
         visibility: state.visibility,
       });
     })();
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  store.subscribe(
-    (s) => [s.title, s.description, s.tags, s.languages, s.visibility],
-    propertiesSaveHandler,
-    {
-      equalityFn: shallow,
-    }
-  );
+  React.useEffect(() => {
+    store.subscribe(
+      (s) => [s.title, s.description, s.tags, s.languages, s.visibility],
+      propertiesSaveHandler,
+      {
+        equalityFn: shallow,
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const anySaving =
     apiEditSet.isLoading ||

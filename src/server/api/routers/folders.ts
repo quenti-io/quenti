@@ -3,6 +3,8 @@ import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
 import { USERNAME_REGEXP } from "../../../constants/characters";
+import { MAX_DESC, MAX_TITLE } from "../common/constants";
+import { filter } from "../common/filter";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const getRecentFolders = async (
@@ -233,10 +235,15 @@ export const foldersRouter = createTRPCRouter({
 
   create: protectedProcedure
     .input(
-      z.object({
-        title: z.string().min(1).max(40),
-        description: z.string(),
-      })
+      z
+        .object({
+          title: z.string().trim().min(1),
+          description: z.string(),
+        })
+        .transform((z) => ({
+          title: filter.clean(z.title.slice(0, MAX_TITLE)),
+          description: filter.clean(z.description.slice(MAX_DESC)),
+        }))
     )
     .mutation(async ({ ctx, input }) => {
       const slug = slugify(input.title, { lower: true });
@@ -261,11 +268,17 @@ export const foldersRouter = createTRPCRouter({
 
   edit: protectedProcedure
     .input(
-      z.object({
-        folderId: z.string(),
-        title: z.string().min(1).max(40),
-        description: z.string(),
-      })
+      z
+        .object({
+          folderId: z.string(),
+          title: z.string().trim().min(1),
+          description: z.string(),
+        })
+        .transform((z) => ({
+          ...z,
+          title: filter.clean(z.title.slice(0, MAX_TITLE)),
+          description: filter.clean(z.description.slice(0, MAX_DESC)),
+        }))
     )
     .mutation(async ({ ctx, input }) => {
       const folder = await ctx.prisma.folder.findFirst({

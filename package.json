@@ -28,6 +28,7 @@
     "@trpc/react-query": "^10.7.0",
     "@trpc/server": "^10.7.0",
     "aos": "^2.3.4",
+    "bad-words": "^3.0.4",
     "chakra-react-select": "^4.4.3",
     "diff": "^5.1.0",
     "framer-motion": "^8.5.2",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@chakra-ui/cli": "^2.3.0",
     "@types/aos": "^3.0.4",
+    "@types/bad-words": "^3.0.1",
     "@types/diff": "^5.0.2",
     "@types/js-levenshtein": "^1.1.1",
     "@types/lodash.debounce": "^4.0.7",
