@@ -22,12 +22,7 @@ export const evaluate = (
     const answerAnswers = answer.split(/[,;\/]/).map((a) => a.trim());
 
     const fullEquality = answerAnswers.every((i) => inputAnswers.includes(i));
-    const partialEquality = answerAnswers.some((i) => input.includes(i));
-
-    console.log("inputAnswers", inputAnswers);
-    console.log("answerAnswers", answerAnswers);
-    console.log("fullEquality", fullEquality);
-    console.log("partialEquality", partialEquality);
+    const partialEquality = answerAnswers.some((i) => inputAnswers.includes(i));
 
     if (fullEquality) return EvaluationResult.Correct;
     if (multipleAnswerMode == "Unknown" && partialEquality)

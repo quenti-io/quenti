@@ -28,6 +28,9 @@ export const InteractionCard = () => {
       key={active.term.id}
       initial={{ translateY: -20, opacity: 0.5 }}
       animate={{ translateY: 0, opacity: 1 }}
+      style={{
+        marginBottom: 100,
+      }}
     >
       <Card overflow="hidden" shadow="2xl">
         <motion.div
@@ -67,8 +70,8 @@ export const InteractionCard = () => {
               </Text>
             </Box>
           </HStack>
-          <Box h={{ base: "60px", md: "140px" }}>
-            <Text fontSize="xl">
+          <Box minH={{ base: "60px", md: "140px" }}>
+            <Text fontSize="xl" whiteSpace="pre-wrap">
               {word(active.answerMode, active.term, "prompt")}
             </Text>
           </Box>

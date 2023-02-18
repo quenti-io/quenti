@@ -7,7 +7,10 @@ export interface GenericTermCardProps {
   variantBg?: boolean;
 }
 
-export const GenericTermCard: React.FC<GenericTermCardProps> = ({ term, variantBg }) => {
+export const GenericTermCard: React.FC<GenericTermCardProps> = ({
+  term,
+  variantBg,
+}) => {
   const setBg = useColorModeValue("gray.100", "gray.750");
 
   return (
@@ -18,9 +21,17 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({ term, variantB
         gap={[0, 6, 6]}
       >
         <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
-          <Text w="full">{term.word}</Text>
-          <Box bg={useColorModeValue("gray.200", "gray.600")} h="full" w="3px" />
-          <Text w="full">{term.definition}</Text>
+          <Text w="full" whiteSpace="pre-wrap">
+            {term.word}
+          </Text>
+          <Box
+            bg={useColorModeValue("gray.200", "gray.600")}
+            h="full"
+            w="3px"
+          />
+          <Text w="full" whiteSpace="pre-wrap">
+            {term.definition}
+          </Text>
         </Flex>
       </Flex>
     </Card>

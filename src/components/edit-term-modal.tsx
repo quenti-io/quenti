@@ -1,9 +1,6 @@
-import React from "react";
-import type { Term } from "@prisma/client";
 import {
   Button,
   ButtonGroup,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,8 +10,11 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
-import { api } from "../utils/api";
+import type { Term } from "@prisma/client";
+import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
+import { api } from "../utils/api";
+import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface EditTermModalProps {
   term: Term | null;
@@ -69,14 +69,16 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
         <ModalCloseButton />
         <ModalBody>
           <Stack spacing={6}>
-            <Input
+            <AutoResizeTextarea
+              allowTab={false}
               value={word}
               w="full"
               onChange={(e) => setWord(e.target.value)}
               variant="flushed"
               ref={!onDefinition ? initialRef : null}
             />
-            <Input
+            <AutoResizeTextarea
+              allowTab={false}
               value={definition}
               w="full"
               onChange={(e) => setDefinition(e.target.value)}

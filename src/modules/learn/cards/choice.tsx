@@ -171,7 +171,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
                 <Text
                   size="lg"
                   color={textColor}
-                  whiteSpace="normal"
+                  whiteSpace="pre-wrap"
                   textAlign="start"
                   fontWeight="normal"
                 >

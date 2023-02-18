@@ -50,18 +50,20 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
   };
 
   React.useEffect(() => {
-    void (async () => {
-      controls.set({
-        height: `${stackRef.current!.clientHeight + 12}px`,
-      });
-      await controls.start({
-        height: `${fullStackRef.current!.clientHeight + 12}px`,
-        transition: {
-          duration: 0.5,
-          delay: 0.5,
-        },
-      });
-    })();
+    setTimeout(() => {
+      void (async () => {
+        controls.set({
+          height: `${stackRef.current!.offsetHeight}px`,
+        });
+        await controls.start({
+          height: `${fullStackRef.current!.offsetHeight}px`,
+          transition: {
+            duration: 0.5,
+            delay: 0.5,
+          },
+        });
+      })();
+    });
 
     setTimeout(() => setCheckVisible(true), 1000);
   }, [controls]);
@@ -81,7 +83,7 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
       animate={controls}
     >
       <Stack spacing={6} marginTop="0" ref={fullStackRef}>
-        <Stack spacing={4} ref={stackRef}>
+        <Stack spacing={4} ref={stackRef} marginTop="0">
           <Flex justifyContent="space-between" alignItems="center">
             <Text fontWeight={600} color={guess ? colorScheme : grayText}>
               {guess ? remark : "You skipped this term"}
