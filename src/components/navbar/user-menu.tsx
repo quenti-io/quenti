@@ -22,12 +22,13 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { BASE_PAGES } from "../../pages/_app";
 import { avatarUrl } from "../../utils/avatar";
 import { MenuOption } from "../menu-option";
 
 export const UserMenu = () => {
   const router = useRouter();
-  const onStaticPage = router.pathname === "/" || router.pathname === "/404";
+  const onStaticPage = BASE_PAGES.includes(router.pathname);
 
   const session = useSession()!.data!;
   const user = session.user!;

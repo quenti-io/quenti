@@ -25,13 +25,15 @@ const growthbook = new GrowthBook({
 type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
   Partial<AuthEnabledComponentConfig>;
 
+export const BASE_PAGES = ["/", "/404", "/unauthorized"];
+
 const App: AppType<{ session: Session | null; cookies: string }> = ({
   Component: _Component,
   pageProps: { session, cookies, ...pageProps },
 }) => {
   const Component = _Component as NextComponentWithAuth;
   const pathname = useRouter().pathname;
-  const staticPage = pathname === "/" || pathname === "/404";
+  const staticPage = BASE_PAGES.includes(pathname);
 
   React.useEffect(() => {
     void (async () => growthbook.loadFeatures())();
