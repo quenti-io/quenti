@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  Center,
   Flex,
   Heading,
   HStack,
@@ -11,6 +12,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
+  Spinner,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -31,7 +33,7 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
 }) => {
   const { id } = useSet();
 
-  const { data } = api.folders.recentForSetAdd.useQuery(id, {
+  const { data, isLoading } = api.folders.recentForSetAdd.useQuery(id, {
     enabled: isOpen,
   });
 
@@ -58,6 +60,11 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
                   includes={folder.includes}
                 />
               ))}
+              {isLoading ? (
+                <Center w="full" py="8">
+                  <Spinner color="blue.200" />
+                </Center>
+              ) : undefined}
             </Stack>
           </Stack>
         </ModalBody>
