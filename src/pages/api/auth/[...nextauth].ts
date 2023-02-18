@@ -18,6 +18,18 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async signIn({ user }) {
+      const whitelisted = await prisma.whitelistedEmail.findUnique({
+        where: {
+          email: user.email || "",
+        },
+      });
+
+      if (!whitelisted) {
+        return "/unauthorized";
+      }
+      return true;
+    },
   },
   pages: {
     signOut: "/",
