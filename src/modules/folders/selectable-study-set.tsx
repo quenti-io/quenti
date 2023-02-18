@@ -55,7 +55,19 @@ export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
     >
       <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
         <Stack spacing={2}>
-          <Heading size="md">{studySet.title}</Heading>
+          <Heading
+            size="md"
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              lineClamp: 2,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {studySet.title}
+          </Heading>
           <HStack gap={0} color={termsTextColor}>
             <Text fontSize="sm">{plural(numTerms, "term")}</Text>
             {studySet.visibility !== "Public" &&

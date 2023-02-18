@@ -67,7 +67,11 @@ export const ActionArea = () => {
             leftIcon={<IconCards />}
             isDisabled={!folder.sets.length}
             as={Link}
-            href={`/@${folder.user.username}/folders/${slug}/flashcards`}
+            href={
+              folder.sets.length
+                ? `/@${folder.user.username}/folders/${slug}/flashcards`
+                : undefined
+            }
           >
             Study
           </Button>
