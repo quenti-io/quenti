@@ -53,5 +53,3 @@ export const DescriptionArea = () => {
     </Stack>
   );
 };
-
-const OptionButton = () => {};

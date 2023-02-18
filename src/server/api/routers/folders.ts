@@ -233,6 +233,44 @@ export const foldersRouter = createTRPCRouter({
     return await getRecentFolders(ctx.prisma, ctx.session.user.id);
   }),
 
+  recentForSetAdd: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const recent = await ctx.prisma.folderExperience.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          folder: {
+            userId: ctx.session.user.id,
+          },
+        },
+        orderBy: {
+          viewedAt: "desc",
+        },
+        take: 16,
+        include: {
+          folder: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              studySets: {
+                where: {
+                  studySetId: input,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return recent.map((r) => ({
+        id: r.folder.id,
+        title: r.folder.title,
+        slug: r.folder.slug,
+        includes: r.folder.studySets.length > 0,
+      }));
+    }),
+
   create: protectedProcedure
     .input(
       z

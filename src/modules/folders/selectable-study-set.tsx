@@ -33,8 +33,8 @@ export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
   onSelect,
 }) => {
   const termsTextColor = useColorModeValue("gray.600", "gray.400");
-  const linkBg = useColorModeValue("white", "gray.800");
-  const linkBorder = useColorModeValue("gray.200", "gray.700");
+  const linkBg = useColorModeValue("gray.50", "gray.750");
+  const linkBorder = useColorModeValue("gray.200", "gray.800");
 
   return (
     <Box
