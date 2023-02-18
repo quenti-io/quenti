@@ -49,7 +49,10 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
   const green = useColorModeValue("green.400", "green.300");
   const red = useColorModeValue("red.400", "red.300");
 
-  const isInvalid = !USERNAME_REGEXP.test(usernameValue);
+  const isProfane = checkUsername.data?.isProfane;
+  const isTooLong = usernameValue.length > 40;
+  const isInvalid =
+    !USERNAME_REGEXP.test(usernameValue) || isProfane || isTooLong;
 
   return (
     <Stack gap={2}>
@@ -77,12 +80,16 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
             bg={addonBg}
             px="3"
             color={
-              checkUsername.isLoading ? gray : checkUsername.data ? green : red
+              checkUsername.isLoading
+                ? gray
+                : checkUsername.data?.available
+                ? green
+                : red
             }
           >
             {checkUsername.isLoading && !isInvalid ? (
               <Box w="24px" />
-            ) : checkUsername.data ? (
+            ) : checkUsername.data?.available ? (
               <AnimatedCheckCircle />
             ) : (
               <AnimatedXCircle />
@@ -95,7 +102,7 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
             isInvalid ||
             checkUsername.isLoading ||
             debouncedUsername !== usernameValue ||
-            !checkUsername.data ||
+            !checkUsername.data?.available ||
             (disabledIfUnchanged &&
               usernameValue === session.data!.user!.username)
           }
@@ -111,7 +118,11 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
         color={gray}
         visibility={isInvalid ? "visible" : "hidden"}
       >
-        Only letters, numbers, underscores and dashes allowed.
+        {isTooLong
+          ? "Username must be 40 characters or less."
+          : isProfane
+          ? "Profane usernames are not allowed."
+          : "Only letters, numbers, underscores and dashes allowed."}
       </Text>
     </Stack>
   );

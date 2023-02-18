@@ -2,19 +2,30 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { USERNAME_REGEXP } from "../../../constants/characters";
 import { env } from "../../../env/server.mjs";
+import { usernameProfanity } from "../common/profanity";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
   checkUsername: protectedProcedure
     .input(z.string().max(40).regex(USERNAME_REGEXP))
     .query(async ({ ctx, input }) => {
+      if (usernameProfanity.exists(input)) {
+        return {
+          available: false,
+          isProfane: true,
+        };
+      }
+
       const user = await ctx.prisma.user.findUnique({
         where: {
           username: input,
         },
       });
 
-      return user === null || user.id === ctx.session.user.id;
+      return {
+        available: user === null || user.id === ctx.session.user.id,
+        isProfane: false,
+      };
     }),
 
   changeUsername: protectedProcedure
@@ -24,6 +35,12 @@ export const userRouter = createTRPCRouter({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Unable to change official account username.",
+        });
+      }
+      if (usernameProfanity.exists(input)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Username contains profanity.",
         });
       }
 
