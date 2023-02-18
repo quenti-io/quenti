@@ -26,7 +26,7 @@ export const EmptyDashboard = () => {
         </Box>
         <Heading>This is your dashboard</Heading>
         <Text fontSize="lg">
-          Sets you&apos;ve viewed recently will show up here.
+          Sets and folders you&apos;ve viewed recently will show up here.
         </Text>
       </VStack>
     </Center>
