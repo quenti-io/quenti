@@ -45,7 +45,12 @@ export const useShortcut = (
           keys.some((key) => event.key === key)) ||
         (opts.anyKey && !(event.ctrlKey || event.altKey || event.metaKey))
       ) {
-        if (opts.allowInput && event.target instanceof HTMLInputElement) return;
+        if (
+          opts.allowInput &&
+          (event.target instanceof HTMLInputElement ||
+            event.target instanceof HTMLTextAreaElement)
+        )
+          return;
 
         event.preventDefault();
         callbackRef.current(event);

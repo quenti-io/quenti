@@ -42,6 +42,7 @@
     "sharp": "^0.31.3",
     "slugify": "^1.6.5",
     "superjson": "1.9.1",
+    "use-fit-text": "^2.4.0",
     "zod": "^3.20.2",
     "zustand": "^4.3.2"
   },

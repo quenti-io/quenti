@@ -4,13 +4,13 @@ import {
   Flex,
   HStack,
   IconButton,
-  Input,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
 import React from "react";
+import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
@@ -83,7 +83,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
       >
         <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
           {isEditing ? (
-            <Input
+            <AutoResizeTextarea
+              allowTab={false}
               value={editWord}
               onChange={(e) => setEditWord(e.target.value)}
               w="full"
@@ -93,7 +94,9 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               }}
             />
           ) : (
-            <Text w="full">{editWord}</Text>
+            <Text w="full" whiteSpace="pre-wrap">
+              {editWord}
+            </Text>
           )}
           <Box
             bg={useColorModeValue("gray.200", "gray.600")}
@@ -101,7 +104,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
             w="3px"
           />
           {isEditing ? (
-            <Input
+            <AutoResizeTextarea
+              allowTab={false}
               value={editDefinition}
               onChange={(e) => setEditDefinition(e.target.value)}
               w="full"
@@ -111,7 +115,9 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               }}
             />
           ) : (
-            <Text w="full">{editDefinition}</Text>
+            <Text w="full" whiteSpace="pre-wrap">
+              {editDefinition}
+            </Text>
           )}
         </Flex>
         <Box h="full">

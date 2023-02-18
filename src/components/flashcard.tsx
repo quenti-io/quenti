@@ -19,6 +19,7 @@ import {
   IconStarFilled,
 } from "@tabler/icons-react";
 import React from "react";
+import useFitText from "use-fit-text";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {
@@ -46,6 +47,8 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   onRequestEdit,
   onRequestStar,
 }) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
   const Star = starred ? IconStarFilled : IconStar;
 
   return (
@@ -98,15 +101,11 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             </HStack>
           </Flex>
         </Grid>
-        <Center flex="1">
-          <Text
-            fontSize="4xl"
-            fontWeight={400}
-            textAlign="center"
-            fontFamily="Outfit"
-          >
-            {isFlipped ? term.definition : term.word}
-          </Text>
+        <Center flex={1} my="4" ref={containerRef} overflowY="auto">
+          <PureShrinkableText
+            text={isFlipped ? term.definition : term.word}
+            container={containerRef}
+          />
         </Center>
         <HStack spacing={4}>
           <Button
@@ -153,3 +152,34 @@ export const Flashcard: React.FC<FlashcardProps> = ({
     </Card>
   );
 };
+
+const ShrinkableText: React.FC<{
+  text: string;
+  container: React.RefObject<HTMLDivElement>;
+}> = ({ text, container }) => {
+  const { fontSize, ref } = useFitText({
+    minFontSize: 50,
+  });
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        maxHeight: container.current
+          ? `calc(${container.current.clientHeight}px)`
+          : undefined,
+        fontSize: (36 * parseFloat(fontSize.replace("%", ""))) / 100,
+        fontWeight: 400,
+        fontFamily: "Outfit",
+        whiteSpace: "pre-wrap",
+        display: "table-cell",
+        verticalAlign: "middle",
+        textAlign: "center",
+      }}
+    >
+      {text}
+    </div>
+  );
+};
+
+const PureShrinkableText = React.memo(ShrinkableText);

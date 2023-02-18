@@ -3,7 +3,6 @@ import {
   Flex,
   HStack,
   IconButton,
-  Input,
   Stack,
   Text,
   useColorModeValue,
@@ -13,6 +12,7 @@ import { CSS } from "@dnd-kit/utilities";
 import type { AutoSaveTerm, Language, Term } from "@prisma/client";
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 import React from "react";
+import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { LanguageMenu } from "./language-menu";
 
 interface TermCardProps {
@@ -108,9 +108,10 @@ export const TermCard: React.FC<TermCardProps> = ({
             />
           </HStack>
         </Flex>
-        <HStack px="5" pt="2" pb="6" spacing={6}>
+        <HStack px="5" pt="2" pb="6" spacing={6} alignItems="start">
           <Stack w="full" spacing={2}>
-            <Input
+            <AutoResizeTextarea
+              allowTab={false}
               placeholder="Enter term"
               variant="flushed"
               value={word}
@@ -143,7 +144,8 @@ export const TermCard: React.FC<TermCardProps> = ({
             </Flex>
           </Stack>
           <Stack w="full" spacing={2}>
-            <Input
+            <AutoResizeTextarea
+              allowTab={false}
               placeholder="Enter definition"
               variant="flushed"
               value={definition}
