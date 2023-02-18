@@ -11,6 +11,7 @@ export const ProfileContext = React.createContext<ProfileData>({
   username: "",
   image: "",
   verified: false,
+  name: "",
   studySets: [],
   folders: [],
 });

@@ -37,6 +37,19 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
+  setDisplayName: protectedProcedure
+    .input(z.boolean())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          displayName: input,
+        },
+      });
+    }),
+
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
     if (ctx.session.user.email == env.ADMIN_EMAIL) {
       throw new TRPCError({

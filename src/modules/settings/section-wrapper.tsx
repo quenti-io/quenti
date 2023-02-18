@@ -10,11 +10,12 @@ import React from "react";
 export interface SectionWrapperProps {
   heading: string;
   description: string;
+  additional?: React.ReactNode;
 }
 
 export const SectionWrapper: React.FC<
   React.PropsWithChildren<SectionWrapperProps>
-> = ({ heading, description, children }) => {
+> = ({ heading, description, additional, children }) => {
   const grayText = useColorModeValue("gray.600", "gray.400");
 
   return (
@@ -22,11 +23,14 @@ export const SectionWrapper: React.FC<
       gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }}
       gap={{ base: 4, md: 16 }}
     >
-      <Stack spacing={2}>
-        <Heading size="md">{heading}</Heading>
-        <Text color={grayText} fontSize="sm">
-          {description}
-        </Text>
+      <Stack spacing={4}>
+        <Stack spacing={2}>
+          <Heading size="md">{heading}</Heading>
+          <Text color={grayText} fontSize="sm">
+            {description}
+          </Text>
+        </Stack>
+        {additional}
       </Stack>
       {children}
     </Grid>

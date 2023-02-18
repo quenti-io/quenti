@@ -105,6 +105,7 @@ export const profileRouter = createTRPCRouter({
         id: user.id,
         username: user.username,
         image: user.image,
+        name: user.displayName ? user.name : null,
         verified: user.verified,
         studySets: user.studySets,
         folders: user.folders,
