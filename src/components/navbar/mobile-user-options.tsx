@@ -83,7 +83,6 @@ export const MobileUserOptions: React.FC = () => {
         )}
         <Button
           variant="outline"
-          // colorScheme="gray"
           leftIcon={<IconLogout size={18} />}
           onClick={async () => {
             await signOut({

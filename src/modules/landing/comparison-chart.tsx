@@ -138,16 +138,6 @@ export const ComparisonChart = () => {
                 </Td>
                 <Td>Coming soon</Td>
               </Tr>
-              <Tr>
-                <Td>Quizlet Live</Td>
-                <Td>
-                  <IconCheck />
-                </Td>
-                <Td>
-                  <IconCheck />
-                </Td>
-                <Td>Possibly</Td>
-              </Tr>
             </Tbody>
           </Table>
         </TableContainer>
