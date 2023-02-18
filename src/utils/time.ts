@@ -31,3 +31,8 @@ export const relevantLabel = (date: Date) => {
     });
   }
 };
+
+export const dtFormatter = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "medium",
+  timeStyle: "short",
+});

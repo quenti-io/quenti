@@ -1,9 +1,13 @@
 import {
   Container,
-  Divider,
   Heading,
   HStack,
   Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -11,12 +15,14 @@ import { IconUserCircle } from "@tabler/icons-react";
 import type { ComponentWithAuth } from "../components/auth-component";
 import { WithFooter } from "../components/with-footer";
 import { AdminDashboard } from "../modules/admin/dashboard";
+import { AdminEmails } from "../modules/admin/emails";
 import { AdminUsers } from "../modules/admin/users";
 import { HydrateAdmin } from "../modules/hydrate-admin";
 
 const Admin: ComponentWithAuth = () => {
   const secondary = useColorModeValue("blue.300", "blue.200");
   const accent = useColorModeValue("orange.500", "orange.300");
+  const borderColor = useColorModeValue("gray.300", "gray.750");
 
   return (
     <HydrateAdmin>
@@ -38,8 +44,24 @@ const Admin: ComponentWithAuth = () => {
             </Stack>
             <Stack spacing={8}>
               <AdminDashboard />
-              <Divider />
-              <AdminUsers />
+              <Tabs borderColor={borderColor}>
+                <TabList gap="6">
+                  <Tab px="0" bg="none" fontWeight={600}>
+                    Manage Users
+                  </Tab>
+                  <Tab px="0" bg="none" fontWeight={600}>
+                    Emails
+                  </Tab>
+                </TabList>
+                <TabPanels mt="6">
+                  <TabPanel px="0">
+                    <AdminUsers />
+                  </TabPanel>
+                  <TabPanel px="0">
+                    <AdminEmails />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </Stack>
           </Stack>
         </Container>

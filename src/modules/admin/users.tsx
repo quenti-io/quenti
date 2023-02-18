@@ -4,7 +4,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
   Link,
   Stack,
   Text,
@@ -30,7 +29,6 @@ export const AdminUsers = () => {
 
   return (
     <Stack spacing={6}>
-      <Heading size="md">Manage Users</Heading>
       <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
         {users
           .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
