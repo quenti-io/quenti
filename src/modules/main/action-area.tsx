@@ -8,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { useReactToPrint } from "react-to-print";
+import { ExportTermsModal } from "../../components/export-terms-modal";
 import { SetPrintComponent } from "../../components/set-print-component";
 import { useSet } from "../../hooks/use-set";
 import { api } from "../../utils/api";
@@ -21,6 +22,7 @@ export const ActionArea: React.FC = () => {
   const [addToFolder, setAddToFolder] = React.useState(false);
   const [share, setShare] = React.useState(false);
   const [shouldPrint, setShouldPrint] = React.useState(false);
+  const [exportOpen, setExportOpen] = React.useState(false);
 
   const printRef = React.useRef(null);
 
@@ -43,6 +45,10 @@ export const ActionArea: React.FC = () => {
         }}
       />
       <ShareSetModal isOpen={share} onClose={() => setShare(false)} />
+      <ExportTermsModal
+        isOpen={exportOpen}
+        onClose={() => setExportOpen(false)}
+      />
       <ButtonGroup spacing={4}>
         <ActionButton
           label="Add to folder"
@@ -65,7 +71,11 @@ export const ActionArea: React.FC = () => {
             });
           }}
         />
-        <ActionButton label="Export" icon={IconTableExport} />
+        <ActionButton
+          label="Export"
+          icon={IconTableExport}
+          onClick={() => setExportOpen(true)}
+        />
       </ButtonGroup>
       {shouldPrint && (
         <div style={{ display: "none" }}>
