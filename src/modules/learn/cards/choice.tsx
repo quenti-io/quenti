@@ -11,6 +11,7 @@ import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
+import { ScriptFormatter } from "../../../components/script-formatter";
 import { useSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
@@ -175,7 +176,9 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
                   textAlign="start"
                   fontWeight="normal"
                 >
-                  {word(active.answerMode, choice, "answer")}
+                  <ScriptFormatter>
+                    {word(active.answerMode, choice, "answer")}
+                  </ScriptFormatter>
                 </Text>
               </Flex>
             </Button>

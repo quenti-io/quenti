@@ -1,6 +1,7 @@
 import React from "react";
 import type { Term } from "@prisma/client";
 import { Box, Card, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { ScriptFormatter } from "./script-formatter";
 
 export interface GenericTermCardProps {
   term: Term;
@@ -22,7 +23,7 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({
       >
         <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
           <Text w="full" whiteSpace="pre-wrap">
-            {term.word}
+            <ScriptFormatter>{term.word}</ScriptFormatter>
           </Text>
           <Box
             bg={useColorModeValue("gray.200", "gray.600")}
@@ -30,7 +31,7 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({
             w="3px"
           />
           <Text w="full" whiteSpace="pre-wrap">
-            {term.definition}
+            <ScriptFormatter>{term.definition}</ScriptFormatter>
           </Text>
         </Flex>
       </Flex>

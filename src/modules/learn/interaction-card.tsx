@@ -7,6 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { ScriptFormatter } from "../../components/script-formatter";
 import { useLearnContext, word } from "../../stores/use-learn-store";
 import { ChoiceCard } from "./cards/choice";
 import { WriteCard } from "./cards/write";
@@ -72,7 +73,9 @@ export const InteractionCard = () => {
           </HStack>
           <Box minH={{ base: "60px", md: "140px" }}>
             <Text fontSize="xl" whiteSpace="pre-wrap">
-              {word(active.answerMode, active.term, "prompt")}
+              <ScriptFormatter>
+                {word(active.answerMode, active.term, "prompt")}
+              </ScriptFormatter>
             </Text>
           </Box>
           {active.type == "choice" ? (

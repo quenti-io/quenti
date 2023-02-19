@@ -3,6 +3,7 @@ import { diffChars } from "diff";
 import { motion, useAnimationControls } from "framer-motion";
 import levenshtein from "js-levenshtein";
 import React from "react";
+import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useSet } from "../../../../hooks/use-set";
 import type { Question } from "../../../../interfaces/question";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
@@ -111,17 +112,23 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
             <AnswerCard
               text={
                 <>
-                  {showDiff
-                    ? diff.map((x, i) =>
-                        x.added && x.value.length <= 3 ? (
-                          <b key={i}>{x.value}</b>
-                        ) : x.removed ? (
-                          ""
-                        ) : (
-                          x.value
-                        )
+                  {showDiff ? (
+                    diff.map((x, i) =>
+                      x.added && x.value.length <= 3 ? (
+                        <b key={i}>
+                          <ScriptFormatter>{x.value}</ScriptFormatter>
+                        </b>
+                      ) : x.removed ? (
+                        ""
+                      ) : (
+                        <ScriptFormatter>{x.value}</ScriptFormatter>
                       )
-                    : word(active.answerMode, active.term, "answer")}
+                    )
+                  ) : (
+                    <ScriptFormatter>
+                      {word(active.answerMode, active.term, "answer")}
+                    </ScriptFormatter>
+                  )}
                 </>
               }
               correct

@@ -20,6 +20,7 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import useFitText from "use-fit-text";
+import { ScriptFormatter } from "./script-formatter";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {
@@ -162,7 +163,7 @@ const ShrinkableText: React.FC<{
   });
 
   return (
-    <div
+    <span
       ref={ref}
       style={{
         maxHeight: container.current
@@ -177,8 +178,8 @@ const ShrinkableText: React.FC<{
         textAlign: "center",
       }}
     >
-      {text}
-    </div>
+      <ScriptFormatter>{text}</ScriptFormatter>
+    </span>
   );
 };
 

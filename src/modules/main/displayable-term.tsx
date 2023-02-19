@@ -11,6 +11,7 @@ import type { Term } from "@prisma/client";
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
 import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
+import { ScriptFormatter } from "../../components/script-formatter";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
@@ -95,7 +96,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
             />
           ) : (
             <Text w="full" whiteSpace="pre-wrap">
-              {editWord}
+              <ScriptFormatter>{editWord}</ScriptFormatter>
             </Text>
           )}
           <Box
@@ -116,7 +117,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
             />
           ) : (
             <Text w="full" whiteSpace="pre-wrap">
-              {editDefinition}
+              <ScriptFormatter>{editDefinition}</ScriptFormatter>
             </Text>
           )}
         </Flex>

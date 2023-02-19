@@ -9,6 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useSet } from "../../../../hooks/use-set";
 import type { Question } from "../../../../interfaces/question";
 import { evaluate, EvaluationResult } from "../../../../lib/evaluator";
@@ -95,7 +96,9 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
                   inputRef.current?.focus();
                 }}
               >
-                <Text color={characterTextColor}>{c}</Text>
+                <Text color={characterTextColor}>
+                  <ScriptFormatter>{c}</ScriptFormatter>
+                </Text>
               </Button>
             ))}
           </HStack>

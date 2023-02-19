@@ -2,6 +2,7 @@ import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../../components/animated-icons/x";
+import { ScriptFormatter } from "../../../../components/script-formatter";
 
 export interface AnswerCardProps {
   text: string | React.ReactNode;
@@ -50,7 +51,11 @@ export const AnswerCard: React.FC<AnswerCardProps> = ({
           textAlign="start"
           fontWeight="normal"
         >
-          {text}
+          {typeof text === "string" ? (
+            <ScriptFormatter>{text}</ScriptFormatter>
+          ) : (
+            text
+          )}
         </Text>
       </Flex>
     </Box>
