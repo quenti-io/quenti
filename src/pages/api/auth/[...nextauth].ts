@@ -25,7 +25,11 @@ export const authOptions: NextAuthOptions = {
         },
       });
 
-      if (!whitelisted) {
+      const bypass =
+        user.email == env.ADMIN_EMAIL ||
+        user.username.toLowerCase() == "quizlet";
+
+      if (!whitelisted && !bypass) {
         return "/unauthorized";
       }
       return true;
