@@ -14,6 +14,7 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
       const existing = await p.user.findMany({
         where: {
           username: {
+            mode: "insensitive",
             startsWith: sanitized,
           },
         },
