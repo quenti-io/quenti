@@ -32,7 +32,7 @@ export const importRouter = createTRPCRouter({
         throw new Error("Malformed URL");
       }
       const id = pathname;
-      const PER_PAGE = 100;
+      const PER_PAGE = 500;
 
       const client = new ZenRows(env.ZENROWS_API_KEY);
 
