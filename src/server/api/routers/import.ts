@@ -36,11 +36,18 @@ export const importRouter = createTRPCRouter({
 
       const client = new ZenRows(env.ZENROWS_API_KEY);
 
-      const { data } = await client.get(
+      const response = await client.get(
         `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=1`,
         {}
       );
-      const res = data as ApiResponse;
+      if (!response.data) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong while importing.",
+        });
+      }
+
+      const res = response.data as ApiResponse;
 
       if (!res.responses || !res.responses.length || !res.responses[0]) {
         throw new TRPCError({
@@ -55,11 +62,18 @@ export const importRouter = createTRPCRouter({
       let page = 2;
 
       while (currentLength >= PER_PAGE) {
-        const { data } = await client.get(
+        const response = await client.get(
           `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=${page++}&pagingToken=${token}`,
           {}
         );
-        const res = data as ApiResponse;
+        if (!response.data) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Something went wrong while importing.",
+          });
+        }
+
+        const res = response.data as ApiResponse;
 
         if (res.error && res.error.code == 410) break;
         if (!res.responses || !res.responses.length || !res.responses[0]) break;
