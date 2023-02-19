@@ -1,6 +1,7 @@
 import { StudySetVisibility } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
+import fetch from "node-fetch";
 import { z } from "zod";
 import { QUIZLET_IMPORT_REGEXP } from "../../../constants/characters";
 import type { ApiStudiableItem } from "../../../interfaces/api-studiable-item";
