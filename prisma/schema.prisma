@@ -77,6 +77,14 @@ model WhitelistedEmail {
   createdAt DateTime @default(now())
 }
 
+model RecentFailedLogin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  createdAt DateTime @default(now())
+}
+
 model StudySet {
   id                  String               @id @default(cuid())
   userId              String

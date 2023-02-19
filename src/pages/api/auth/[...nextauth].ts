@@ -30,6 +30,32 @@ export const authOptions: NextAuthOptions = {
         user.username.toLowerCase() == "quizlet";
 
       if (!whitelisted && !bypass) {
+        const tenRecent = await prisma.recentFailedLogin.findMany({
+          take: 10,
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        await prisma.recentFailedLogin.deleteMany({
+          where: {
+            NOT: {
+              id: {
+                in: tenRecent.map((r) => r.id),
+              },
+            },
+          },
+        });
+
+        if (!tenRecent.find((r) => r.email == user.email)) {
+          await prisma.recentFailedLogin.create({
+            data: {
+              email: user.email || "",
+              name: user.name,
+              image: user.image,
+            },
+          });
+        }
+
         return "/unauthorized";
       }
       return true;

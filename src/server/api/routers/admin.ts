@@ -38,12 +38,45 @@ export const adminRouter = createTRPCRouter({
     }),
 
   getWhitelist: adminProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.whitelistedEmail.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    return {
+      whitelist: await ctx.prisma.whitelistedEmail.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+      attemtps: await ctx.prisma.recentFailedLogin.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+    };
   }),
+
+  removeFailedLogin: adminProcedure
+    .input(z.string().email())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.recentFailedLogin.delete({
+        where: {
+          email: input,
+        },
+      });
+    }),
+
+  allowFailedLogin: adminProcedure
+    .input(z.string().email())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.recentFailedLogin.delete({
+        where: {
+          email: input,
+        },
+      });
+
+      await ctx.prisma.whitelistedEmail.create({
+        data: {
+          email: input,
+        },
+      });
+    }),
 
   whitelistEmail: adminProcedure
     .input(z.string().email())
@@ -63,5 +96,5 @@ export const adminRouter = createTRPCRouter({
           email: input,
         },
       });
-    })
+    }),
 });
