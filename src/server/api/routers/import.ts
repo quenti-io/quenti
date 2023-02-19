@@ -1,9 +1,10 @@
 import { StudySetVisibility } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
-import fetch from "node-fetch";
+import { ZenRows } from "zenrows";
 import { z } from "zod";
 import { QUIZLET_IMPORT_REGEXP } from "../../../constants/characters";
+import { env } from "../../../env/server.mjs";
 import type { ApiStudiableItem } from "../../../interfaces/api-studiable-item";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -31,12 +32,15 @@ export const importRouter = createTRPCRouter({
         throw new Error("Malformed URL");
       }
       const id = pathname;
-
       const PER_PAGE = 100;
 
-      const res = (await fetch(
-        `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=1`
-      ).then((res) => res.json())) as ApiResponse;
+      const client = new ZenRows(env.ZENROWS_API_KEY);
+
+      const { data } = await client.get(
+        `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=1`,
+        {}
+      );
+      const res = data as ApiResponse;
 
       if (!res.responses || !res.responses.length || !res.responses[0]) {
         throw new TRPCError({
@@ -51,9 +55,11 @@ export const importRouter = createTRPCRouter({
       let page = 2;
 
       while (currentLength >= PER_PAGE) {
-        const res = (await fetch(
-          `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=${page++}&pagingToken=${token}`
-        ).then((res) => res.json())) as ApiResponse;
+        const { data } = await client.get(
+          `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=${page++}&pagingToken=${token}`,
+          {}
+        );
+        const res = data as ApiResponse;
 
         if (res.error && res.error.code == 410) break;
         if (!res.responses || !res.responses.length || !res.responses[0]) break;
