@@ -12,9 +12,10 @@ import { Navbar } from "../components/navbar";
 import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { api } from "../utils/api";
 
-import { GlobalShortcutLayer } from "../components/global-shortcut-layer";
-import "../styles/globals.css";
 import Head from "next/head";
+import { GlobalShortcutLayer } from "../components/global-shortcut-layer";
+import { env } from "../env/client.mjs";
+import "../styles/globals.css";
 
 const growthbook = new GrowthBook({
   apiHost: "https://cdn.growthbook.io",
@@ -33,7 +34,9 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
   pageProps: { session, cookies, ...pageProps },
 }) => {
   const Component = _Component as NextComponentWithAuth;
-  const pathname = useRouter().pathname;
+  const router = useRouter();
+  const base = env.NEXT_PUBLIC_BASE_URL;
+  const pathname = router.pathname;
   const staticPage = BASE_PAGES.includes(pathname);
 
   React.useEffect(() => {
@@ -63,6 +66,10 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
     </>
   );
 
+  const title = "Quizlet.cc - A batteries included Quizlet alternative";
+  const desc =
+    "Tired of Quizlet showing ads and only giving you a few practice rounds for free? Turns out an alternative isn't actually all that hard to make.";
+
   return (
     <>
       <Head>
@@ -87,6 +94,19 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1a5fff" />
         <meta name="msapplication-TileColor" content="#1a5fff" />
         <meta name="theme-color" content="#171923" />
+        <meta name="title" content={title} />
+        <meta name="description" content={desc} />
+        <meta property="og:site_name" content="Quizlet.cc" />
+        <meta property="og:url" content={base} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={desc} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={`${base}/og-image.png`} />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={base} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={desc} />
+        <meta property="twitter:image" content={`${base}/og-image.png`} />
       </Head>
       <Chakra cookies={cookies}>
         <GrowthBookProvider growthbook={growthbook}>
