@@ -54,7 +54,7 @@ export const AutoResizeTextarea = React.forwardRef(function AutoResizeInternal(
       minRows={1}
       as={ResizeTextArea}
       {...props}
-      onKeyDown={props.allowTab ? handleTab : undefined}
+      onKeyDown={props.allowTab ? handleTab : props.onKeyDown}
       onChange={props.allowTab ? handleText : props.onChange}
       value={props.allowTab ? text.value : props.value}
     />

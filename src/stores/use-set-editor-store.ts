@@ -10,6 +10,9 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
 interface SetEditorProps {
+  mode: "create" | "edit";
+  isSaving: boolean;
+  isLoading: boolean;
   title: string;
   description: string;
   tags: string[];
@@ -19,6 +22,8 @@ interface SetEditorProps {
 }
 
 interface SetEditorState extends SetEditorProps {
+  setIsSaving: (isSaving: boolean) => void;
+  setIsLoading: (isLoading: boolean) => void;
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setTags: (tags: string[]) => void;
@@ -31,12 +36,20 @@ interface SetEditorState extends SetEditorProps {
   editTerm: (id: string, word: string, definition: string) => void;
   reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
+  onSubscribeDelegate: () => void;
+  onComplete: () => void;
 }
 
 export type SetEditorStore = ReturnType<typeof createSetEditorStore>;
 
-export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
+export const createSetEditorStore = (
+  initProps?: Partial<SetEditorProps>,
+  behaviors?: Partial<SetEditorState>
+) => {
   const DEFAULT_PROPS: SetEditorProps = {
+    mode: "create",
+    isSaving: false,
+    isLoading: false,
     title: "",
     description: "",
     languages: ["English", "English"],
@@ -49,12 +62,14 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
+      setIsSaving: (isSaving: boolean) => set({ isSaving }),
+      setIsLoading: (isLoading: boolean) => set({ isLoading }),
       setTitle: (title: string) => set({ title }),
       setDescription: (description: string) => set({ description }),
       setTags: (tags: string[]) => set({ tags }),
       setLanguages: (languages: Language[]) => set({ languages }),
       setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
-      addTerm: () =>
+      addTerm: () => {
         set((state) => {
           const term: AutoSaveTerm = {
             id: nanoid(),
@@ -67,7 +82,9 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
           return {
             terms: [...state.terms, term],
           };
-        }),
+        });
+        behaviors?.addTerm?.();
+      },
       bulkAddTerms: (terms: { word: string; definition: string }[]) => {
         set((state) => {
           const newTerms = terms.map((term, i) => ({
@@ -82,6 +99,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
             terms: [...state.terms, ...newTerms],
           };
         });
+        behaviors?.bulkAddTerms?.(terms);
       },
       deleteTerm: (id: string) => {
         set((state) => {
@@ -98,6 +116,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
               .filter((term) => term.id !== id),
           };
         });
+        behaviors?.deleteTerm?.(id);
       },
       editTerm: (id: string, word: string, definition: string) => {
         set((state) => {
@@ -107,6 +126,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
             ),
           };
         });
+        behaviors?.editTerm?.(id, word, definition);
       },
       changeTermId: (oldId: string, newId: string) => {
         set((state) => {
@@ -116,6 +136,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
             ),
           };
         });
+        behaviors?.changeTermId?.(oldId, newId);
       },
       reorderTerm: (id: string, rank: number) => {
         set((state) => {
@@ -128,6 +149,7 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
             terms: newTerms.map((t, i) => ({ ...t, rank: i })),
           };
         });
+        behaviors?.reorderTerm?.(id, rank);
       },
       flipTerms: () => {
         set((state) => {
@@ -139,12 +161,19 @@ export const createSetEditorStore = (initProps?: Partial<SetEditorProps>) => {
             })),
           };
         });
+        behaviors?.flipTerms?.();
+      },
+      onSubscribeDelegate: () => {
+        behaviors?.onSubscribeDelegate?.();
+      },
+      onComplete: () => {
+        behaviors?.onComplete?.();
       },
     }))
   );
 };
 
-export const SetEditorContext = React.createContext<SetEditorStore | null>(
+export const SetEditorStoreContext = React.createContext<SetEditorStore | null>(
   null
 );
 
@@ -152,7 +181,7 @@ export const useSetEditorContext = <T>(
   selector: (state: SetEditorState) => T,
   equalityFn?: (left: T, right: T) => boolean
 ): T => {
-  const store = React.useContext(SetEditorContext);
+  const store = React.useContext(SetEditorStoreContext);
   if (!store) throw new Error("Missing SetEditorContext.Provider in the tree");
 
   return useStore(store, selector, equalityFn);

@@ -5,7 +5,6 @@ import {
   IconButton,
   Tooltip,
 } from "@chakra-ui/react";
-import type { StudySetVisibility } from "@prisma/client";
 import {
   IconChevronDown,
   IconPlus,
@@ -13,30 +12,27 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { visibilityIcon } from "../../common/visibility-icon";
+import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { VisibilityModal } from "./visibility-modal";
 
 export interface ButtonAreaProps {
   onImportOpen: () => void;
-  onFlipTerms: () => void;
-  visibility: StudySetVisibility;
-  onVisibilityChange: (visibility: StudySetVisibility) => void;
 }
 
-export const ButtonArea: React.FC<ButtonAreaProps> = ({
-  onImportOpen,
-  onFlipTerms,
-  visibility,
-  onVisibilityChange,
-}) => {
-  const [VisibilityModalOpen, setVisibilityModalOpen] = React.useState(false);
+export const ButtonArea: React.FC<ButtonAreaProps> = ({ onImportOpen }) => {
+  const visibility = useSetEditorContext((s) => s.visibility);
+  const setVisibility = useSetEditorContext((s) => s.setVisibility);
+  const flipTerms = useSetEditorContext((s) => s.flipTerms);
+
+  const [visibilityModalOpen, setVisibilityModalOpen] = React.useState(false);
 
   return (
     <>
       <VisibilityModal
-        isOpen={VisibilityModalOpen}
+        isOpen={visibilityModalOpen}
         visibility={visibility}
         onChangeVisibility={(v) => {
-          onVisibilityChange(v);
+          setVisibility(v);
           setVisibilityModalOpen(false);
         }}
         onClose={() => {
@@ -68,7 +64,7 @@ export const ButtonArea: React.FC<ButtonAreaProps> = ({
               icon={<IconSwitchHorizontal />}
               rounded="full"
               aria-label="Flip terms and definitions"
-              onClick={onFlipTerms}
+              onClick={flipTerms}
             />
           </Tooltip>
         </ButtonGroup>
