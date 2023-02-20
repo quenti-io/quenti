@@ -5,6 +5,7 @@ import React from "react";
 import { useShortcut } from "../../hooks/use-shortcut";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { TermCardPure } from "./term-card";
+import { TermCardGap } from "./term-card-gap";
 
 export const TermsList = () => {
   const terms = useSetEditorContext((s) => s.terms);
@@ -50,26 +51,29 @@ export const TermsList = () => {
 
   return (
     <Stack spacing={10}>
-      <Stack spacing={4} py="10">
+      <Stack spacing={0} gap={0} py="10">
         {terms
           .sort((a, b) => a.rank - b.rank)
           .map((term, i) => (
-            <TermCardPure
-              isCurrent={current === term.id}
-              deletable={terms.length > 1}
-              key={term.id}
-              term={term}
-              wordLanguage={wordLanguage}
-              definitionLanguage={definitionLanguage}
-              setWordLanguage={setWordLanguage}
-              setDefinitionLanguage={setDefinitionLanguage}
-              editTerm={editTerm}
-              deleteTerm={deleteTerm}
-              onTabOff={() => {
-                if (i === terms.length - 1) addTerm();
-              }}
-              anyFocus={() => setCurrent(term.id)}
-            />
+            <>
+              <TermCardPure
+                isCurrent={current === term.id}
+                deletable={terms.length > 1}
+                key={term.id}
+                term={term}
+                wordLanguage={wordLanguage}
+                definitionLanguage={definitionLanguage}
+                setWordLanguage={setWordLanguage}
+                setDefinitionLanguage={setDefinitionLanguage}
+                editTerm={editTerm}
+                deleteTerm={deleteTerm}
+                onTabOff={() => {
+                  if (i === terms.length - 1) addTerm(terms.length);
+                }}
+                anyFocus={() => setCurrent(term.id)}
+              />
+              <TermCardGap index={i} />
+            </>
           ))}
       </Stack>
       <Button
@@ -77,7 +81,7 @@ export const TermsList = () => {
         size="lg"
         height="24"
         variant="outline"
-        onClick={addTerm}
+        onClick={() => addTerm(terms.length)}
       >
         Add Card
       </Button>

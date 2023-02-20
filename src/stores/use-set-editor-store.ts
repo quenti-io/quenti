@@ -29,7 +29,7 @@ interface SetEditorState extends SetEditorProps {
   setTags: (tags: string[]) => void;
   setLanguages: (languages: Language[]) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
-  addTerm: () => void;
+  addTerm: (rank: number) => void;
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
   deleteTerm: (id: string) => void;
   changeTermId: (oldId: string, newId: string) => void;
@@ -69,21 +69,26 @@ export const createSetEditorStore = (
       setTags: (tags: string[]) => set({ tags }),
       setLanguages: (languages: Language[]) => set({ languages }),
       setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
-      addTerm: () => {
+      addTerm: (rank: number) => {
         set((state) => {
           const term: AutoSaveTerm = {
             id: nanoid(),
             word: "",
             definition: "",
             setAutoSaveId: "",
-            rank: state.terms.length,
+            rank,
           };
 
           return {
-            terms: [...state.terms, term],
+            terms: [
+              ...state.terms.map((t) =>
+                t.rank >= rank ? { ...t, rank: t.rank + 1 } : t
+              ),
+              term,
+            ],
           };
         });
-        behaviors?.addTerm?.();
+        behaviors?.addTerm?.(rank);
       },
       bulkAddTerms: (terms: { word: string; definition: string }[]) => {
         set((state) => {
