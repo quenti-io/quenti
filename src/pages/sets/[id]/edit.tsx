@@ -1,4 +1,5 @@
 import { Container } from "@chakra-ui/react";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { shallow } from "zustand/shallow";
@@ -117,91 +118,96 @@ const EditorWrapper = () => {
     apiReorderTerm.isLoading;
 
   return (
-    <SetEditor
-      mode="edit"
-      title={title}
-      description={description}
-      tags={tags}
-      visibility={visibility}
-      isSaving={anySaving}
-      isLoading={false}
-      numTerms={serverTerms.length}
-      terms={terms.sort((a, b) => a.rank - b.rank)}
-      languages={languages}
-      setTitle={setTitle}
-      setDescription={setDescription}
-      setTags={setTags}
-      setLanguages={setLanguages}
-      setVisibility={setVisibility}
-      onBulkImportTerms={(terms) => {
-        void (async () => {
-          await apiBulkAddTerms.mutateAsync({
-            studySetId: id,
-            terms,
-          });
-        })();
-      }}
-      addTerm={() => {
-        addTerm();
-      }}
-      deleteTerm={(termId) => {
-        deleteTerm(termId);
-        if (serverTerms.includes(termId))
-          apiDeleteTerm.mutate({ termId, studySetId: id });
-      }}
-      editTerm={(termId, word, definition) => {
-        editTerm(termId, word, definition);
+    <>
+      <Head>
+        <title>Edit {title} | Quizlet.cc</title>
+      </Head>
+      <SetEditor
+        mode="edit"
+        title={title}
+        description={description}
+        tags={tags}
+        visibility={visibility}
+        isSaving={anySaving}
+        isLoading={false}
+        numTerms={serverTerms.length}
+        terms={terms.sort((a, b) => a.rank - b.rank)}
+        languages={languages}
+        setTitle={setTitle}
+        setDescription={setDescription}
+        setTags={setTags}
+        setLanguages={setLanguages}
+        setVisibility={setVisibility}
+        onBulkImportTerms={(terms) => {
+          void (async () => {
+            await apiBulkAddTerms.mutateAsync({
+              studySetId: id,
+              terms,
+            });
+          })();
+        }}
+        addTerm={() => {
+          addTerm();
+        }}
+        deleteTerm={(termId) => {
+          deleteTerm(termId);
+          if (serverTerms.includes(termId))
+            apiDeleteTerm.mutate({ termId, studySetId: id });
+        }}
+        editTerm={(termId, word, definition) => {
+          editTerm(termId, word, definition);
 
-        if (serverTerms.includes(termId)) {
-          apiEditTerm.mutate({
-            id: termId,
-            studySetId: id,
-            word,
-            definition,
-          });
-        } else {
-          apiAddTerm.mutate({
-            studySetId: id,
-            term: {
+          if (serverTerms.includes(termId)) {
+            apiEditTerm.mutate({
+              id: termId,
+              studySetId: id,
               word,
               definition,
-              rank: terms.find((x) => x.id === termId)!.rank,
-            },
-          });
-        }
-      }}
-      reorderTerm={(termId, rank) => {
-        reorderTerm(termId, rank);
+            });
+          } else {
+            apiAddTerm.mutate({
+              studySetId: id,
+              term: {
+                word,
+                definition,
+                rank: terms.find((x) => x.id === termId)!.rank,
+              },
+            });
+          }
+        }}
+        reorderTerm={(termId, rank) => {
+          reorderTerm(termId, rank);
 
-        void (async () =>
-          apiReorderTerm.mutateAsync({
-            studySetId: id,
-            term: {
-              id: termId,
-              rank,
-            },
-          }))();
-      }}
-      onFlipTerms={() => {
-        flipTerms();
+          void (async () =>
+            apiReorderTerm.mutateAsync({
+              studySetId: id,
+              term: {
+                id: termId,
+                rank,
+              },
+            }))();
+        }}
+        onFlipTerms={() => {
+          flipTerms();
 
-        void (async () => {
-          const state = store.getState();
+          void (async () => {
+            const state = store.getState();
 
-          await apiBulkEdit.mutateAsync({
-            studySetId: id,
-            terms: state.terms.map((x) => ({
-              id: x.id,
-              word: x.word,
-              definition: x.definition,
-            })),
-          });
-        })();
-      }}
-      onComplete={async () => {
-        await router.push(`/${id}`);
-      }}
-    />
+            await apiBulkEdit.mutateAsync({
+              studySetId: id,
+              terms: state.terms.map((x) => ({
+                id: x.id,
+                word: x.word,
+                definition: x.definition,
+              })),
+            });
+          })();
+        }}
+        onComplete={async () => {
+          await router.push(`/${id}`);
+        }}
+      />
+    </>
   );
 };
 

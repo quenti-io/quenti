@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
@@ -25,7 +26,14 @@ export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (loading || !data) return <Loading />;
 
-  return <ContextLayer data={data}>{children}</ContextLayer>;
+  return (
+    <ContextLayer data={data}>
+      <Head>
+        <title>{data.title} | Quizlet.cc</title>
+      </Head>
+      {children}
+    </ContextLayer>
+  );
 };
 
 type SetData = RouterOutputs["studySets"]["byId"];

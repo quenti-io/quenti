@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
@@ -31,6 +32,9 @@ export const HydrateProfileData: React.FC<React.PropsWithChildren> = ({
 
   return (
     <ProfileContext.Provider value={profile.data}>
+      <Head>
+        <title>{profile.data.username} | Quizlet.cc</title>
+      </Head>
       {children}
     </ProfileContext.Provider>
   );
