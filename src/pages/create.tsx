@@ -138,6 +138,7 @@ const EditorWrapper = () => {
   );
 };
 
+Create.title = "Create a new set";
 Create.authenticationEnabled = true;
 
 export { getServerSideProps } from "../components/chakra";

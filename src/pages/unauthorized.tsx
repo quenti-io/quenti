@@ -1,5 +1,6 @@
 import { Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import Head from "next/head";
 
 export default function Unauthorized() {
   const stack = {
@@ -36,35 +37,40 @@ export default function Unauthorized() {
   };
 
   return (
-    <Center height="calc(100vh - 120px)" px="8" textAlign="center">
-      <VStack color="whiteAlpha.900">
-        <motion.div
-          variants={stack}
-          initial="hidden"
-          animate="visible"
-          style={{ display: "flex", flexDirection: "column", gap: 24 }}
-        >
-          <motion.div variants={header}>
-            <Heading
-              fontSize={{ base: "4xl", sm: "6xl", md: "7xl", lg: "8xl" }}
-              bgGradient="linear(to-r, blue.300, purple.300)"
-              bgClip="text"
-            >
-              Missing Access
-            </Heading>
+    <>
+      <Head>
+        <title>Missing Acccess | Quizlet.cc</title>
+      </Head>
+      <Center height="calc(100vh - 120px)" px="8" textAlign="center">
+        <VStack color="whiteAlpha.900">
+          <motion.div
+            variants={stack}
+            initial="hidden"
+            animate="visible"
+            style={{ display: "flex", flexDirection: "column", gap: 24 }}
+          >
+            <motion.div variants={header}>
+              <Heading
+                fontSize={{ base: "4xl", sm: "6xl", md: "7xl", lg: "8xl" }}
+                bgGradient="linear(to-r, blue.300, purple.300)"
+                bgClip="text"
+              >
+                Missing Access
+              </Heading>
+            </motion.div>
+            <motion.div variants={text}>
+              <Text
+                fontSize={{ base: "md", sm: "lg" }}
+                color="gray.500"
+                fontWeight={600}
+              >
+                Sorry, you don&apos;t have access to Quizlet.cc without a
+                verified email.
+              </Text>
+            </motion.div>
           </motion.div>
-          <motion.div variants={text}>
-            <Text
-              fontSize={{ base: "md", sm: "lg" }}
-              color="gray.500"
-              fontWeight={600}
-            >
-              Sorry, you don&apos;t have access to Quizlet.cc without a verified
-              email.
-            </Text>
-          </motion.div>
-        </motion.div>
-      </VStack>
-    </Center>
+        </VStack>
+      </Center>
+    </>
   );
 }

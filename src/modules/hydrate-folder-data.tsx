@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
@@ -59,7 +60,14 @@ export const HydrateFolderData: React.FC<
   if (folder.error?.data?.httpStatus === 404) return <Folder404 />;
   if (loading || !folder.data) return <Loading />;
 
-  return <ContextLayer data={folder.data}>{children}</ContextLayer>;
+  return (
+    <ContextLayer data={folder.data}>
+      <Head>
+        <title>{folder.data.title} | Quizlet.cc</title>
+      </Head>
+      {children}
+    </ContextLayer>
+  );
 };
 
 const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({

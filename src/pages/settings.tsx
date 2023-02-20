@@ -26,29 +26,29 @@ const Settings: ComponentWithAuth = () => {
 
   return (
     <WithFooter>
-
-    <Container maxW="4xl">
-      <Stack spacing={12}>
-        <HStack spacing={4}>
-          <Avatar
-            src={avatarUrl({ ...session.user!, image: session.user!.image! })}
-            size="sm"
-          />
-          <Heading>Settings</Heading>
-        </HStack>
-        <Stack spacing={8}>
-          <GAccountInfo />
-          <Divider borderColor={divider} />
-          <ProfileInfo />
-          <Divider borderColor={divider} />
-          <DangerZone />
+      <Container maxW="4xl">
+        <Stack spacing={12}>
+          <HStack spacing={4}>
+            <Avatar
+              src={avatarUrl({ ...session.user!, image: session.user!.image! })}
+              size="sm"
+            />
+            <Heading>Settings</Heading>
+          </HStack>
+          <Stack spacing={8}>
+            <GAccountInfo />
+            <Divider borderColor={divider} />
+            <ProfileInfo />
+            <Divider borderColor={divider} />
+            <DangerZone />
+          </Stack>
         </Stack>
-      </Stack>
-    </Container>
+      </Container>
     </WithFooter>
   );
 };
 
+Settings.title = "Settings";
 Settings.authenticationEnabled = true;
 
 export { getServerSideProps } from "../components/chakra";

@@ -70,6 +70,7 @@ const Admin: ComponentWithAuth = () => {
   );
 };
 
+Admin.title = "Admin Dashboard";
 Admin.authenticationEnabled = true;
 
 export { getServerSideProps } from "../components/chakra";

@@ -14,6 +14,7 @@ import { api } from "../utils/api";
 
 import { GlobalShortcutLayer } from "../components/global-shortcut-layer";
 import "../styles/globals.css";
+import Head from "next/head";
 
 const growthbook = new GrowthBook({
   apiHost: "https://cdn.growthbook.io",
@@ -44,9 +45,18 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
       <Navbar />
       <GlobalShortcutLayer />
       {Component.authenticationEnabled ? (
-        <Auth>
-          <Component {...pageProps} />
-        </Auth>
+        <>
+          <Head>
+            <title>
+              {Component.title
+                ? `${Component.title} | Quizlet.cc`
+                : `Quizlet.cc`}
+            </title>
+          </Head>
+          <Auth>
+            <Component {...pageProps} />
+          </Auth>
+        </>
       ) : (
         <Component {...pageProps} />
       )}
@@ -54,22 +64,47 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
   );
 
   return (
-    <Chakra cookies={cookies}>
-      <GrowthBookProvider growthbook={growthbook}>
-        <LoadingProvider>
-          <SessionProvider session={session}>
-            {staticPage ? (
-              <DarkMode>
-                <GlobalStyle />
-                {children}
-              </DarkMode>
-            ) : (
-              children
-            )}
-          </SessionProvider>
-        </LoadingProvider>
-      </GrowthBookProvider>
-    </Chakra>
+    <>
+      <Head>
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1a5fff" />
+        <meta name="msapplication-TileColor" content="#1a5fff" />
+        <meta name="theme-color" content="#171923" />
+      </Head>
+      <Chakra cookies={cookies}>
+        <GrowthBookProvider growthbook={growthbook}>
+          <LoadingProvider>
+            <SessionProvider session={session}>
+              {staticPage ? (
+                <DarkMode>
+                  <GlobalStyle />
+                  {children}
+                </DarkMode>
+              ) : (
+                children
+              )}
+            </SessionProvider>
+          </LoadingProvider>
+        </GrowthBookProvider>
+      </Chakra>
+    </>
   );
 };
 
