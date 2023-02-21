@@ -6,11 +6,18 @@ import {
   Link,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuList,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconBooks, IconChevronDown, IconCloudDownload, IconFolder } from "@tabler/icons-react";
+import {
+  IconBooks,
+  IconChevronDown,
+  IconCloudDownload,
+  IconFolder,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
+import React from "react";
 import { Logo } from "../../icons/logo";
 import { MenuOption } from "../menu-option";
 
@@ -19,8 +26,13 @@ export interface LeftNavProps {
   onImportClick: () => void;
 }
 
-export const LeftNav: React.FC<LeftNavProps> = ({ onFolderClick, onImportClick }) => {
+export const LeftNav: React.FC<LeftNavProps> = ({
+  onFolderClick,
+  onImportClick,
+}) => {
   const session = useSession()!.data!;
+
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   const menuBg = useColorModeValue("white", "gray.800");
 
@@ -67,12 +79,24 @@ export const LeftNav: React.FC<LeftNavProps> = ({ onFolderClick, onImportClick }
               Admin
             </Button>
           )}
-          <Menu placement="bottom-start">
+          <Menu
+            placement="bottom-start"
+            isOpen={menuOpen}
+            onOpen={() => setMenuOpen(true)}
+            onClose={() => setMenuOpen(false)}
+          >
             <MenuButton>
               <Button
                 fontWeight={700}
                 fontSize="sm"
-                rightIcon={<IconChevronDown />}
+                rightIcon={
+                  <IconChevronDown
+                    style={{
+                      transition: "rotate ease-in-out 200ms",
+                      rotate: menuOpen ? "180deg" : "0deg",
+                    }}
+                  />
+                }
                 as="div"
               >
                 Create
@@ -95,6 +119,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({ onFolderClick, onImportClick }
                 label="Import from Quizlet"
                 onClick={onImportClick}
               />
+              <MenuDivider />
               <MenuOption
                 icon={<IconFolder size={20} />}
                 label="Folder"

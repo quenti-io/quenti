@@ -27,10 +27,17 @@ const ContextLayer: React.FC<
 > = ({ data, children }) => {
   const router = useRouter();
   const create = api.studySets.createFromAutosave.useMutation({
+    onError: (data) => {
+      storeRef.current!.getState().setSaveError(data.message);
+    },
     onSuccess: async (data) => {
       await router.push(`/${data.id}`);
     },
   });
+
+  React.useEffect(() => {
+    storeRef.current!.getState().setIsLoading(create.isLoading);
+  }, [create.isLoading]);
 
   const storeRef = React.useRef<SetEditorStore>();
   if (!storeRef.current) {

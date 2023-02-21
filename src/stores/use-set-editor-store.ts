@@ -13,6 +13,7 @@ interface SetEditorProps {
   mode: "create" | "edit";
   isSaving: boolean;
   isLoading: boolean;
+  saveError?: string;
   title: string;
   description: string;
   tags: string[];
@@ -26,6 +27,7 @@ interface SetEditorProps {
 interface SetEditorState extends SetEditorProps {
   setIsSaving: (isSaving: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
+  setSaveError: (error?: string) => void;
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setTags: (tags: string[]) => void;
@@ -70,6 +72,7 @@ export const createSetEditorStore = (
       ...initProps,
       setIsSaving: (isSaving: boolean) => set({ isSaving }),
       setIsLoading: (isLoading: boolean) => set({ isLoading }),
+      setSaveError: (error?: string) => set({ saveError: error }),
       setTitle: (title: string) => set({ title }),
       setDescription: (description: string) => set({ description }),
       setTags: (tags: string[]) => set({ tags }),
