@@ -6,6 +6,7 @@ import { TermCard } from "./term-card";
 export interface SortableTermCardProps {
   isCurrent: boolean;
   isDragging: boolean;
+  justCreated: boolean;
   term: Term | AutoSaveTerm;
   deletable: boolean;
   wordLanguage: Language;

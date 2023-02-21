@@ -1,6 +1,7 @@
+import { Textarea, type TextareaProps } from "@chakra-ui/react";
+import omit from "lodash.omit";
 import React from "react";
 import ResizeTextArea from "react-textarea-autosize";
-import { Textarea, type TextareaProps } from "@chakra-ui/react";
 
 export const AutoResizeTextarea = React.forwardRef(function AutoResizeInternal(
   props: TextareaProps & { allowTab: boolean },
@@ -53,7 +54,7 @@ export const AutoResizeTextarea = React.forwardRef(function AutoResizeInternal(
       ref={ref as React.LegacyRef<HTMLTextAreaElement> | undefined}
       minRows={1}
       as={ResizeTextArea}
-      {...props}
+      {...omit(props, "allowTab")}
       onKeyDown={props.allowTab ? handleTab : props.onKeyDown}
       onChange={props.allowTab ? handleText : props.onChange}
       value={props.allowTab ? text.value : props.value}

@@ -20,6 +20,7 @@ interface SetEditorProps {
   visibility: StudySetVisibility;
   terms: (Term | AutoSaveTerm)[];
   serverTerms: string[];
+  lastCreated?: string;
 }
 
 interface SetEditorState extends SetEditorProps {
@@ -39,6 +40,7 @@ interface SetEditorState extends SetEditorProps {
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
   removeServerTerm: (term: string) => void;
+  setLastCreated: (id: string) => void;
   onSubscribeDelegate: () => void;
   onComplete: () => void;
 }
@@ -90,6 +92,7 @@ export const createSetEditorStore = (
               ),
               term,
             ],
+            lastCreated: term.id,
           };
         });
         behaviors?.addTerm?.(rank);
@@ -187,6 +190,10 @@ export const createSetEditorStore = (
           };
         });
         behaviors?.removeServerTerm?.(term);
+      },
+      setLastCreated: (id: string) => {
+        set({ lastCreated: id });
+        behaviors?.setLastCreated?.(id);
       },
       onSubscribeDelegate: () => {
         behaviors?.onSubscribeDelegate?.();

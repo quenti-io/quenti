@@ -32,6 +32,7 @@ export const TermsList = () => {
   const addTerm = useSetEditorContext((s) => s.addTerm);
   const editTerm = useSetEditorContext((s) => s.editTerm);
   const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
+  const lastCreated = useSetEditorContext((s) => s.lastCreated);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -69,6 +70,19 @@ export const TermsList = () => {
     }
   );
 
+  useShortcut(
+    ["R"],
+    () => {
+      if (!current) return;
+      const currentRank = terms.find((x) => x.id === current)!.rank;
+      addTerm(currentRank + 1);
+    },
+    {
+      ctrlKey: true,
+      shiftKey: "R",
+    }
+  );
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     setCurrentDrag(active.id.toString());
@@ -101,8 +115,9 @@ export const TermsList = () => {
             {items
               .sort((a, b) => a.rank - b.rank)
               .map((term, i) => (
-                <>
+                <React.Fragment key={i}>
                   <SortableTermCard
+                    justCreated={lastCreated === term.id}
                     isDragging={currentDrag === term.id}
                     isCurrent={current === term.id}
                     deletable={terms.length > 1}
@@ -120,7 +135,7 @@ export const TermsList = () => {
                     anyFocus={() => setCurrent(term.id)}
                   />
                   <TermCardGap index={i} />
-                </>
+                </React.Fragment>
               ))}
           </SortableContext>
         </DndContext>

@@ -31,6 +31,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
       isCurrent,
       term,
       deletable,
+      justCreated,
       wordLanguage: _wordLanguage,
       definitionLanguage: _definitionLanguage,
       editTerm,
@@ -48,6 +49,14 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     const { colorMode } = useColorMode();
     const wordRef = React.useRef<HTMLTextAreaElement>(null);
     const definitionRef = React.useRef<HTMLTextAreaElement>(null);
+
+    React.useEffect(() => {
+      if (justCreated) {
+        requestAnimationFrame(() => {
+          wordRef.current?.focus();
+        });
+      }
+    }, [justCreated]);
 
     const [word, setWord] = React.useState(term.word);
     const [definition, setDefinition] = React.useState(term.definition);
