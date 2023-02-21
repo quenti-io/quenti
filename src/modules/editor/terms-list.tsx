@@ -1,10 +1,27 @@
 import { Button, Stack } from "@chakra-ui/react";
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  restrictToParentElement,
+  restrictToVerticalAxis,
+} from "@dnd-kit/modifiers";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import type { Language } from "@prisma/client";
 import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { useShortcut } from "../../hooks/use-shortcut";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
-import { TermCardPure } from "./term-card";
+import { SortableTermCard } from "./sortable-term-card";
 import { TermCardGap } from "./term-card-gap";
 
 export const TermsList = () => {
@@ -16,6 +33,8 @@ export const TermsList = () => {
   const editTerm = useSetEditorContext((s) => s.editTerm);
   const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
 
+  const sensors = useSensors(useSensor(PointerSensor));
+
   const wordLanguage = languages[0]!;
   const definitionLanguage = languages[1]!;
   const setWordLanguage = (language: Language) =>
@@ -24,6 +43,7 @@ export const TermsList = () => {
     setLanguages([languages[0]!, language]);
 
   const [current, setCurrent] = React.useState<string | null>(null);
+  const [currentDrag, setCurrentDrag] = React.useState<string | null>(null);
 
   useShortcut(
     ["ArrowDown"],
@@ -49,32 +69,61 @@ export const TermsList = () => {
     }
   );
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setCurrentDrag(active.id.toString());
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over?.id && active.id !== over.id) {
+      const rank = terms.find((x) => x.id == over.id)!.rank;
+      reorderTerm(active.id as string, rank);
+    }
+
+    setCurrentDrag(null);
+  };
+
+  const items = terms.sort((a, b) => a.rank - b.rank);
+
   return (
     <Stack spacing={10}>
-      <Stack spacing={0} gap={0} py="10">
-        {terms
-          .sort((a, b) => a.rank - b.rank)
-          .map((term, i) => (
-            <>
-              <TermCardPure
-                isCurrent={current === term.id}
-                deletable={terms.length > 1}
-                key={term.id}
-                term={term}
-                wordLanguage={wordLanguage}
-                definitionLanguage={definitionLanguage}
-                setWordLanguage={setWordLanguage}
-                setDefinitionLanguage={setDefinitionLanguage}
-                editTerm={editTerm}
-                deleteTerm={deleteTerm}
-                onTabOff={() => {
-                  if (i === terms.length - 1) addTerm(terms.length);
-                }}
-                anyFocus={() => setCurrent(term.id)}
-              />
-              <TermCardGap index={i} />
-            </>
-          ))}
+      <Stack spacing={0}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        >
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            {items
+              .sort((a, b) => a.rank - b.rank)
+              .map((term, i) => (
+                <>
+                  <SortableTermCard
+                    isDragging={currentDrag === term.id}
+                    isCurrent={current === term.id}
+                    deletable={terms.length > 1}
+                    key={term.id}
+                    term={term}
+                    wordLanguage={wordLanguage}
+                    definitionLanguage={definitionLanguage}
+                    setWordLanguage={setWordLanguage}
+                    setDefinitionLanguage={setDefinitionLanguage}
+                    editTerm={editTerm}
+                    deleteTerm={deleteTerm}
+                    onTabOff={() => {
+                      if (i === terms.length - 1) addTerm(terms.length);
+                    }}
+                    anyFocus={() => setCurrent(term.id)}
+                  />
+                  <TermCardGap index={i} />
+                </>
+              ))}
+          </SortableContext>
+        </DndContext>
       </Stack>
       <Button
         leftIcon={<IconPlus />}
