@@ -12,7 +12,7 @@ import type { Term } from "@prisma/client";
 import React from "react";
 import { useSet } from "../../hooks/use-set";
 import { useExperienceContext } from "../../stores/use-experience-store";
-import { DisplayableTerm } from "./displayable-term";
+import { DisplayableTermPure } from "./displayable-term";
 import { TermsSortSelect } from "./terms-sort-select";
 
 interface TermsOverviewContextProps {
@@ -219,7 +219,7 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
           )
           .slice(0, showSlice || terms.length)
           .map((term) => (
-            <DisplayableTerm term={term} key={term.id} />
+            <DisplayableTermPure term={term} key={term.id} />
           ))}
       </Stack>
       {showSlice !== undefined && showSlice < terms.length && (
