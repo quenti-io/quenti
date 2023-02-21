@@ -107,6 +107,9 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+  if (ctx.session.user.banned) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "You are banned." });
+  }
   return next({
     ctx: {
       // infers the `session` as non-nullable

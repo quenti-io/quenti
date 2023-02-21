@@ -129,6 +129,7 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
 };
 
 const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const router = useRouter();
   const { data, status } = useSession();
   const isUser = !!data?.user;
 
@@ -143,13 +144,17 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   React.useEffect(() => {
     if (isUser) {
-      growthbook.setAttributes({
-        id: data.user!.id,
-        email: data.user!.email,
-        loggedIn: true,
-      });
+      void (async () => {
+        growthbook.setAttributes({
+          id: data.user!.id,
+          email: data.user!.email,
+          loggedIn: true,
+        });
 
-      setLoading(false);
+        if (!data.user?.banned || router.pathname == "/banned")
+          setLoading(false);
+        else if (data.user?.banned) await router.push("/banned");
+      })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUser]);

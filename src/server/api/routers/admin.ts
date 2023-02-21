@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { env } from "../../../env/server.mjs";
 import { adminProcedure, createTRPCRouter } from "../trpc";
 
 export const adminRouter = createTRPCRouter({
@@ -13,6 +15,7 @@ export const adminRouter = createTRPCRouter({
           image: true,
           email: true,
           name: true,
+          bannedAt: true,
         },
       }),
       studySets: await ctx.prisma.studySet.count(),
@@ -33,6 +36,38 @@ export const adminRouter = createTRPCRouter({
         },
         data: {
           verified: input.verified,
+        },
+      });
+    }),
+
+  banUser: adminProcedure
+    .input(z.object({ userId: z.string(), banned: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: input.userId,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User not found",
+        });
+      }
+      if (user.email == env.ADMIN_EMAIL || user.id == ctx.session?.user?.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Admin account cannot be banned",
+        });
+      }
+
+      await ctx.prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          bannedAt: input.banned ? new Date() : null,
         },
       });
     }),
