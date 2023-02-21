@@ -1,10 +1,11 @@
 import type { AutoSaveTerm, SetAutoSave } from "@prisma/client";
+import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
 import {
   createSetEditorStore,
-  SetEditorContext,
+  SetEditorStoreContext,
   type SetEditorStore,
 } from "../stores/use-set-editor-store";
 import { api } from "../utils/api";
@@ -24,18 +25,34 @@ const ContextLayer: React.FC<
     data: SetAutoSave & { autoSaveTerms: AutoSaveTerm[] };
   }>
 > = ({ data, children }) => {
+  const router = useRouter();
+  const create = api.studySets.createFromAutosave.useMutation({
+    onSuccess: async (data) => {
+      await router.push(`/${data.id}`);
+    },
+  });
+
   const storeRef = React.useRef<SetEditorStore>();
   if (!storeRef.current) {
-    storeRef.current = createSetEditorStore({
-      ...data,
-      terms: data.autoSaveTerms,
-      languages: [data.wordLanguage, data.definitionLanguage],
-    });
+    storeRef.current = createSetEditorStore(
+      {
+        ...data,
+        terms: data.autoSaveTerms,
+        languages: [data.wordLanguage, data.definitionLanguage],
+      },
+      {
+        onComplete: () => {
+          void (async () => {
+            await create.mutateAsync();
+          })();
+        },
+      }
+    );
   }
 
   return (
-    <SetEditorContext.Provider value={storeRef.current}>
+    <SetEditorStoreContext.Provider value={storeRef.current}>
       {children}
-    </SetEditorContext.Provider>
+    </SetEditorStoreContext.Provider>
   );
 };

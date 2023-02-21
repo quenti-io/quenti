@@ -6,31 +6,22 @@ import {
   Stack,
   Tag,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
+import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 
-export interface TitlePropertiesProps {
-  title: string;
-  setTitle: (title: string) => void;
-  description: string;
-  setDescription: (description: string) => void;
-  tags: string[];
-  setTags: (tags: string[]) => void;
-  numTerms: number;
-}
+export const TitleProperties = () => {
+  const _title = useSetEditorContext((s) => s.title);
+  const _description = useSetEditorContext((s) => s.description);
+  const tags = useSetEditorContext((s) => s.tags);
+  const numTerms = useSetEditorContext((s) => s.terms.length);
+  const apiSetTitle = useSetEditorContext((s) => s.setTitle);
+  const apiSetDescription = useSetEditorContext((s) => s.setDescription);
+  const setTags = useSetEditorContext((s) => s.setTags);
 
-export const TitleProperties: React.FC<TitlePropertiesProps> = ({
-  title: _title,
-  setTitle: apiSetTitle,
-  description: _description,
-  setDescription: apiSetDescription,
-  tags,
-  setTags,
-  numTerms,
-}) => {
   const [title, setTitle] = React.useState(_title);
   const [description, setDescription] = React.useState(_description);
   const [tagsInput, setTagsInput] = React.useState(tags.join(", "));
@@ -60,7 +51,7 @@ export const TitleProperties: React.FC<TitlePropertiesProps> = ({
         />
         <Text color="gray.400">{plural(numTerms, "term")}</Text>
       </Stack>
-      <Flex gap={8} flexDir={{base: "column", md: "row"}}>
+      <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
         <AutoResizeTextarea
           value={description}
           onChange={(e) => {
@@ -75,7 +66,7 @@ export const TitleProperties: React.FC<TitlePropertiesProps> = ({
           allowTab={false}
           w="full"
         />
-        <Stack w="full" maxW={{base: "100%", md: "50%"}} spacing={4}>
+        <Stack w="full" maxW={{ base: "100%", md: "50%" }} spacing={4}>
           <Stack>
             <Heading size="lg">Tags</Heading>
             <Input

@@ -8,32 +8,28 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconPencil } from "@tabler/icons-react";
+import React from "react";
+import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 
-export interface TopBarProps {
-  mode: "create" | "edit";
-  savedAt?: Date;
-  isSaving: boolean;
-  isLoading: boolean;
-  numTerms: number;
-  onComplete: () => void;
-}
+export const TopBar = () => {
+  const mode = useSetEditorContext((s) => s.mode);
+  const isLoading = useSetEditorContext((s) => s.isLoading);
+  const numTerms = useSetEditorContext((s) => s.terms.length);
+  const onComplete = useSetEditorContext((s) => s.onComplete);
 
-export const TopBar: React.FC<TopBarProps> = ({
-  mode,
-  savedAt: _savedAt,
-  isSaving,
-  isLoading,
-  numTerms,
-  onComplete,
-}) => {
+  const isSaving = useSetEditorContext((s) => s.isSaving);
+  const isSavingRef = React.useRef(isSaving);
+  isSavingRef.current = isSaving;
+
   const subTextColor = useColorModeValue("gray.600", "gray.400");
+  const bg = useColorModeValue("gray.200", "gray.800");
 
   return (
     <HStack
       py="3"
       px="5"
-      bg={useColorModeValue("gray.200", "gray.800")}
+      bg={bg}
       rounded="lg"
       position="sticky"
       top="2"
@@ -60,8 +56,15 @@ export const TopBar: React.FC<TopBarProps> = ({
         <Button
           fontWeight={700}
           isLoading={isLoading}
-          isDisabled={isSaving}
-          onClick={onComplete}
+          onClick={() => {
+            const complete = () => {
+              setTimeout(() => {
+                if (!isSavingRef.current) onComplete();
+                else complete();
+              }, 100);
+            };
+            complete();
+          }}
         >
           {mode == "edit" ? "Done" : "Create"}
         </Button>

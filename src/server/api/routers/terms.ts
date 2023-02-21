@@ -181,7 +181,7 @@ export const termsRouter = createTRPCRouter({
       });
 
       // Update the rank of the current term
-      return await ctx.prisma.term.update({
+      await ctx.prisma.term.update({
         where: {
           id_studySetId: {
             id: input.term.id,
@@ -192,6 +192,28 @@ export const termsRouter = createTRPCRouter({
           rank: input.term.rank,
         },
       });
+
+      // Sort all of the terms by rank, and update the ranks to be consecutive
+      const terms = await ctx.prisma.term.findMany({
+        where: {
+          studySetId: input.studySetId,
+        },
+        orderBy: {
+          rank: "asc",
+        },
+      });
+
+      const vals = terms.map((term, i) => [term.id, i]);
+      const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
+
+      const query = Prisma.sql`
+        UPDATE "Term" SET "rank" = t.rank
+        FROM (VALUES ${Prisma.join(formatted)}) AS t(id, rank)
+        WHERE "Term"."id" = t.id
+        ${Prisma.sql`AND "Term"."studySetId" = ${input.studySetId}`}
+        `;
+
+      await ctx.prisma.$executeRaw(query);
     }),
 
   edit: protectedProcedure

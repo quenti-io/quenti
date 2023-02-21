@@ -5,7 +5,7 @@ import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
 import {
   createSetEditorStore,
-  SetEditorContext,
+  SetEditorStoreContext,
   type SetEditorStore,
 } from "../stores/use-set-editor-store";
 import { api, type RouterOutputs } from "../utils/api";
@@ -47,17 +47,167 @@ const ContextLayer: React.FC<
     data: RouterOutputs["studySets"]["byId"];
   }>
 > = ({ data, children }) => {
+  const router = useRouter();
   const storeRef = React.useRef<SetEditorStore>();
+
+  const apiEditSet = api.studySets.edit.useMutation();
+  const apiAddTerm = api.terms.add.useMutation({
+    onSuccess: (data) => {
+      const state = storeRef.current!.getState();
+
+      state.changeTermId(
+        state.terms.find((x) => !state.serverTerms.includes(x.id))!.id,
+        data.id
+      );
+      state.addServerTerms([data.id]);
+    },
+  });
+  const apiBulkAddTerms = api.terms.bulkAdd.useMutation({
+    onSuccess: (data) => {
+      const state = storeRef.current!.getState();
+      state.addServerTerms(data.map((x) => x.id));
+    },
+  });
+  const apiDeleteTerm = api.terms.delete.useMutation({
+    onSuccess: (data) => {
+      const state = storeRef.current!.getState();
+      state.removeServerTerm(data.deleted);
+    },
+  });
+  const apiEditTerm = api.terms.edit.useMutation();
+  const apiBulkEdit = api.terms.bulkEdit.useMutation();
+  const apiReorderTerm = api.terms.reorder.useMutation();
+
+  const isSaving =
+    apiEditSet.isLoading ||
+    apiAddTerm.isLoading ||
+    apiBulkAddTerms.isLoading ||
+    apiDeleteTerm.isLoading ||
+    apiEditTerm.isLoading ||
+    apiBulkEdit.isLoading ||
+    apiReorderTerm.isLoading;
+
+  React.useEffect(() => {
+    const state = storeRef.current!.getState();
+    state.setIsSaving(isSaving);
+  }, [isSaving]);
+
   if (!storeRef.current) {
-    storeRef.current = createSetEditorStore({
-      ...data,
-      languages: [data.wordLanguage, data.definitionLanguage],
-    });
+    storeRef.current = createSetEditorStore(
+      {
+        ...data,
+        mode: "edit",
+        languages: [data.wordLanguage, data.definitionLanguage],
+        serverTerms: data.terms.map((x) => x.id),
+      },
+      {
+        bulkAddTerms: (terms) => {
+          void (async () => {
+            await apiBulkAddTerms.mutateAsync({
+              studySetId: data.id,
+              terms,
+            });
+          })();
+        },
+        deleteTerm: (termId) => {
+          const state = storeRef.current!.getState();
+
+          if (state.serverTerms.includes(termId))
+            apiDeleteTerm.mutate({ termId, studySetId: data.id });
+        },
+        editTerm: (termId, word, definition) => {
+          const state = storeRef.current!.getState();
+
+          if (state.serverTerms.includes(termId)) {
+            apiEditTerm.mutate({
+              id: termId,
+              studySetId: data.id,
+              word,
+              definition,
+            });
+          } else {
+            apiAddTerm.mutate({
+              studySetId: data.id,
+              term: {
+                word,
+                definition,
+                rank: state.terms
+                  .filter(
+                    (x) => state.serverTerms.includes(x.id) || x.id === termId
+                  )
+                  .sort((a, b) => a.rank - b.rank)
+                  .findIndex((x) => x.id === termId),
+              },
+            });
+          }
+        },
+        reorderTerm: (termId, rank) => {
+          void (async () => {
+            const state = storeRef.current!.getState();
+
+            if (state.serverTerms.includes(termId)) {
+              await apiReorderTerm.mutateAsync({
+                studySetId: data.id,
+                term: {
+                  id: termId,
+                  rank,
+                },
+              });
+            } else {
+              const term = state.terms.find((x) => x.id === termId)!;
+
+              await apiAddTerm.mutateAsync({
+                studySetId: data.id,
+                term: {
+                  word: term.word,
+                  definition: term.definition,
+                  rank,
+                },
+              });
+            }
+          })();
+        },
+        flipTerms: () => {
+          void (async () => {
+            const state = storeRef.current!.getState();
+
+            await apiBulkEdit.mutateAsync({
+              studySetId: data.id,
+              terms: state.terms.map((x) => ({
+                id: x.id,
+                word: x.word,
+                definition: x.definition,
+              })),
+            });
+          })();
+        },
+        onSubscribeDelegate: () => {
+          void (async () => {
+            const state = storeRef.current!.getState();
+
+            await apiEditSet.mutateAsync({
+              id: data.id,
+              title: state.title,
+              description: state.description,
+              tags: state.tags,
+              wordLanguage: state.languages[0]!,
+              definitionLanguage: state.languages[1]!,
+              visibility: state.visibility,
+            });
+          })();
+        },
+        onComplete: () => {
+          void (async () => {
+            await router.push(`/${data.id}`);
+          })();
+        },
+      }
+    );
   }
 
   return (
-    <SetEditorContext.Provider value={storeRef.current}>
+    <SetEditorStoreContext.Provider value={storeRef.current}>
       {children}
-    </SetEditorContext.Provider>
+    </SetEditorStoreContext.Provider>
   );
 };

@@ -3,6 +3,7 @@ import React from "react";
 interface UseShortcutOptions {
   ctrlKey?: boolean;
   shiftKey?: boolean | string;
+  altKey?: boolean;
   allowInput?: boolean;
   anyKey?: boolean;
   node?: null;
@@ -42,6 +43,8 @@ export const useShortcut = (
 
       if (
         (opts.ctrlKey == event.ctrlKey &&
+          keys.some((key) => event.key === key)) ||
+        (opts.altKey == event.altKey &&
           keys.some((key) => event.key === key)) ||
         (opts.anyKey && !(event.ctrlKey || event.altKey || event.metaKey))
       ) {

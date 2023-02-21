@@ -1,6 +1,5 @@
 import { Container } from "@chakra-ui/react";
 import debounce from "lodash.debounce";
-import { useRouter } from "next/router";
 import React from "react";
 import { shallow } from "zustand/shallow";
 import type { ComponentWithAuth } from "../components/auth-component";
@@ -8,7 +7,7 @@ import { WithFooter } from "../components/with-footer";
 import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
 import { SetEditor } from "../modules/set-editor";
 import {
-  SetEditorContext,
+  SetEditorStoreContext,
   useSetEditorContext,
 } from "../stores/use-set-editor-store";
 import { api } from "../utils/api";
@@ -26,39 +25,25 @@ const Create: ComponentWithAuth = () => {
 };
 
 const EditorWrapper = () => {
-  const router = useRouter();
+  return (
+    <>
+      <PropertiesListener />
+      <SetEditor />
+    </>
+  );
+};
+
+const PropertiesListener = () => {
   const { data } = api.autoSave.get.useQuery();
 
-  const store = React.useContext(SetEditorContext)!;
-  const title = useSetEditorContext((s) => s.title);
-  const description = useSetEditorContext((s) => s.description);
-  const tags = useSetEditorContext((s) => s.tags);
-  const languages = useSetEditorContext((s) => s.languages);
-  const visibility = useSetEditorContext((s) => s.visibility);
-  const terms = useSetEditorContext((s) => s.terms);
-  const setTitle = useSetEditorContext((s) => s.setTitle);
-  const setDescription = useSetEditorContext((s) => s.setDescription);
-  const setTags = useSetEditorContext((s) => s.setTags);
-  const setLanguages = useSetEditorContext((s) => s.setLanguages);
-  const setVisibility = useSetEditorContext((s) => s.setVisibility);
-  const addTerm = useSetEditorContext((s) => s.addTerm);
-  const bulkAddTerms = useSetEditorContext((s) => s.bulkAddTerms);
-  const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
-  const editTerm = useSetEditorContext((s) => s.editTerm);
-  const reorderTerm = useSetEditorContext((s) => s.reorderTerm);
-  const flipTerms = useSetEditorContext((s) => s.flipTerms);
+  const store = React.useContext(SetEditorStoreContext)!;
+  const setIsSaving = useSetEditorContext((s) => s.setIsSaving);
 
   const [_lastSavedAt, setLastSavedAt] = React.useState(data?.savedAt);
 
   const autoSave = api.autoSave.save.useMutation({
     onSuccess(data) {
       setLastSavedAt(data.savedAt);
-    },
-  });
-
-  const create = api.studySets.createFromAutosave.useMutation({
-    onSuccess: async (data) => {
-      await router.push(`/${data.id}`);
     },
   });
 
@@ -110,32 +95,11 @@ const EditorWrapper = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <SetEditor
-      mode="create"
-      title={title}
-      description={description}
-      tags={tags}
-      languages={languages}
-      visibility={visibility}
-      isSaving={autoSave.isLoading}
-      isLoading={create.isLoading}
-      numTerms={terms.length}
-      terms={terms}
-      setTitle={setTitle}
-      setDescription={setDescription}
-      setTags={setTags}
-      setLanguages={setLanguages}
-      setVisibility={setVisibility}
-      onBulkImportTerms={bulkAddTerms}
-      addTerm={addTerm}
-      deleteTerm={deleteTerm}
-      editTerm={editTerm}
-      reorderTerm={reorderTerm}
-      onFlipTerms={flipTerms}
-      onComplete={() => create.mutate()}
-    />
-  );
+  React.useEffect(() => {
+    setIsSaving(autoSave.isLoading);
+  }, [setIsSaving, autoSave.isLoading]);
+
+  return <></>;
 };
 
 Create.title = "Create a new set";
