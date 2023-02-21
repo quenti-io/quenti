@@ -8,15 +8,19 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconPencil } from "@tabler/icons-react";
+import React from "react";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 
 export const TopBar = () => {
   const mode = useSetEditorContext((s) => s.mode);
-  const isSaving = useSetEditorContext((s) => s.isSaving);
   const isLoading = useSetEditorContext((s) => s.isLoading);
   const numTerms = useSetEditorContext((s) => s.terms.length);
   const onComplete = useSetEditorContext((s) => s.onComplete);
+
+  const isSaving = useSetEditorContext((s) => s.isSaving);
+  const isSavingRef = React.useRef(isSaving);
+  isSavingRef.current = isSaving;
 
   const subTextColor = useColorModeValue("gray.600", "gray.400");
   const bg = useColorModeValue("gray.200", "gray.800");
@@ -52,8 +56,15 @@ export const TopBar = () => {
         <Button
           fontWeight={700}
           isLoading={isLoading}
-          isDisabled={isSaving}
-          onClick={onComplete}
+          onClick={() => {
+            const complete = () => {
+              setTimeout(() => {
+                if (!isSavingRef.current) onComplete();
+                else complete();
+              }, 100);
+            };
+            complete();
+          }}
         >
           {mode == "edit" ? "Done" : "Create"}
         </Button>
