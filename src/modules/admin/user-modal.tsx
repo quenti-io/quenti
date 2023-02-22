@@ -17,11 +17,13 @@ import {
 } from "@chakra-ui/react";
 import {
   IconCalendar,
+  IconCheck,
   IconCode,
   IconCopy,
   IconDiscountCheck,
   IconGavel,
 } from "@tabler/icons-react";
+import React from "react";
 import { useAdmin } from "../../hooks/use-admin";
 import { api } from "../../utils/api";
 import { avatarUrl } from "../../utils/avatar";
@@ -53,6 +55,15 @@ export const UserModal: React.FC<UserModalProps> = ({
     },
   });
 
+  const [copied, setCopied] = React.useState(false);
+  const copy = () => {
+    void (async () => {
+      await navigator.clipboard.writeText(user?.id ?? "");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1000);
+    })();
+  };
+
   const topBg = useColorModeValue("gray.200", "gray.750");
   const muted = useColorModeValue("gray.600", "gray.400");
 
@@ -80,9 +91,10 @@ export const UserModal: React.FC<UserModalProps> = ({
                       </Text>
                       <IconButton
                         aria-label="Copy ID"
-                        icon={<IconCopy />}
+                        icon={copied ? <IconCheck /> : <IconCopy />}
                         size="xs"
                         variant="ghost"
+                        onClick={copy}
                       />
                     </HStack>
                     <HStack spacing={4}>
