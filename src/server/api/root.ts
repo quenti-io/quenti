@@ -11,6 +11,12 @@ import { studySetsRouter } from "./routers/study-sets";
 import { termsRouter } from "./routers/terms";
 import { userRouter } from "./routers/user";
 import { createTRPCRouter } from "./trpc";
+import { register } from "../prometheus";
+
+// Call register.metrics() to ensure the context is properly initialized on startup
+void (async () => {
+  await register.metrics();
+})();
 
 /**
  * This is the primary router for your server.
