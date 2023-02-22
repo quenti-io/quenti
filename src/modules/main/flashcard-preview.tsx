@@ -3,7 +3,7 @@ import {
   IconArrowsShuffle,
   IconMaximize,
   IconPlayerPlay,
-  IconSettings
+  IconSettings,
 } from "@tabler/icons-react";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
