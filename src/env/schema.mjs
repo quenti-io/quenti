@@ -23,6 +23,8 @@ export const serverSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   ADMIN_EMAIL: z.string().email(),
   ZENROWS_API_KEY: z.string(),
+  METRICS_API_USER: z.string(),
+  METRICS_API_PASSWORD: z.string(),
 });
 
 /**
