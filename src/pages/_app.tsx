@@ -16,6 +16,8 @@ import { env } from "../env/client.mjs";
 import "../styles/globals.css";
 import dynamic from "next/dynamic";
 
+export { reportWebVitals } from "next-axiom";
+
 const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
   { ssr: false }

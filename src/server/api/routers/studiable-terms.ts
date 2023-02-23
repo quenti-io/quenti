@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { register } from "../../prometheus";
+import type { Counter } from "prom-client";
 
 export const studiableTermsRouter = createTRPCRouter({
   put: protectedProcedure
@@ -13,6 +15,8 @@ export const studiableTermsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      (register.getSingleMetric("studiable_requests_total") as Counter).inc();
+
       await ctx.prisma.studiableTerm.upsert({
         where: {
           userId_termId: {

@@ -18,12 +18,14 @@
  */
 import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
 import type { Session } from "next-auth";
+import type { AxiomAPIRequest } from "next-axiom";
 
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db";
 import { register } from "../prometheus";
 
 type CreateContextOptions = {
+  req: AxiomAPIRequest;
   session: Session | null;
 };
 
@@ -38,6 +40,7 @@ type CreateContextOptions = {
  */
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
+    req: opts.req,
     session: opts.session,
     prisma,
   };
@@ -55,6 +58,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const session = await getServerAuthSession({ req, res });
 
   return createInnerTRPCContext({
+    req: req as AxiomAPIRequest,
     session,
   });
 };
@@ -113,6 +117,11 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (ctx.session.user.banned) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "You are banned." });
   }
+
+  const userLogger = ctx.req.log.with({
+    user: ctx.session.user,
+  });
+  ctx.req.log = userLogger;
 
   (register.getSingleMetric("authed_api_requests_total") as Counter).inc();
 

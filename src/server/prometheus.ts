@@ -105,6 +105,10 @@ export const register =
       name: "fetch_import_requests_total",
       help: "The number of requests to import directly from Quizlet.com",
     });
+    new client.Counter({
+      name: "studiable_requests_total",
+      help: 'The number of term "put" requests made to the studiable router',
+    });
 
     new client.Gauge({
       name: "version_info",
