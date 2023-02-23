@@ -1,3 +1,4 @@
+import { EnabledFeature } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
@@ -5,6 +6,18 @@ import { adminProcedure, createTRPCRouter } from "../trpc";
 
 export const adminRouter = createTRPCRouter({
   landing: adminProcedure.query(async ({ ctx }) => {
+    return {
+      studySets: await ctx.prisma.studySet.count(),
+      terms: await ctx.prisma.term.count(),
+      studiableTerms: await ctx.prisma.studiableTerm.count(),
+      starredTerms: await ctx.prisma.starredTerm.count(),
+      folders: await ctx.prisma.folder.count(),
+      experiences: await ctx.prisma.studySetExperience.count(),
+      grafanaUrl: env.GRAFANA_DASHBOARD_URL,
+    };
+  }),
+
+  getUsers: adminProcedure.query(async ({ ctx }) => {
     return {
       users: await ctx.prisma.user.findMany({
         select: {
@@ -16,15 +29,9 @@ export const adminRouter = createTRPCRouter({
           email: true,
           name: true,
           bannedAt: true,
+          features: true,
         },
       }),
-      studySets: await ctx.prisma.studySet.count(),
-      terms: await ctx.prisma.term.count(),
-      studiableTerms: await ctx.prisma.studiableTerm.count(),
-      starredTerms: await ctx.prisma.starredTerm.count(),
-      folders: await ctx.prisma.folder.count(),
-      experiences: await ctx.prisma.studySetExperience.count(),
-      grafanaUrl: env.GRAFANA_DASHBOARD_URL,
     };
   }),
 
@@ -69,6 +76,26 @@ export const adminRouter = createTRPCRouter({
         },
         data: {
           bannedAt: input.banned ? new Date() : null,
+        },
+      });
+    }),
+
+  setEnabledFeatures: adminProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        features: z.array(z.nativeEnum(EnabledFeature)),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.user.update({
+        where: {
+          id: input.userId,
+        },
+        data: {
+          features: {
+            set: input.features,
+          },
         },
       });
     }),

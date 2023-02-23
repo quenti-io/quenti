@@ -1080,18 +1080,6 @@
   resolved "https://registry.yarnpkg.com/@fontsource/outfit/-/outfit-4.5.11.tgz#1831945715231ad83ef75d49fb0b7bbdb9d972dd"
   integrity sha512-msPqJLLmSyWj/YtJknO75RjoTHIep6mDjnDO5IrZUJea31bO4s1QCuepG54LsmMXLKs+gp603nPM8/SUv5ZgSg==
 
-"@growthbook/growthbook-react@^0.11.2":
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/@growthbook/growthbook-react/-/growthbook-react-0.11.2.tgz#6677e5416b4dad53f0602b2a02c249edb959eb80"
-  integrity sha512-C2O4F3Sf28vFDM8Bv3xj9wYAeCVm5r2ykGzWjtezrhd2MVc38gFVOz3tIMg79xJiffM50NF7G+qIm4Y664rV8Q==
-  dependencies:
-    "@growthbook/growthbook" "^0.21.2"
-
-"@growthbook/growthbook@^0.21.2":
-  version "0.21.2"
-  resolved "https://registry.yarnpkg.com/@growthbook/growthbook/-/growthbook-0.21.2.tgz#69081da36eb0cc0d037eed3c6f4c2c0eb3460e5a"
-  integrity sha512-kAu6LH02krkS+IxfQbe5mGYfPCGrmw+Cm9N3BChc151anhhVvMd8KS1m+vev6yEPnY606BouxE6a3SuDmmCF4g==
-
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
@@ -1470,9 +1458,9 @@
   integrity sha512-PSpdfPFKM/UlD9VVtXVtfA8ZmqQZUtsP6ER/+QvXjHN6kTZ92PGJGjcL2HWhWZamLKnZSgudiB6sDsl7gPcOgA==
 
 "@trpc/server@^10.7.0":
-  version "10.8.1"
-  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.8.1.tgz#7997c675c30e140076c4a7d421e8c23c01645e5d"
-  integrity sha512-oSNYgFNJbjki4jBByJ/SKHasB/X7kTsEbVGaONNH1DHMz638xlYXPQucV+2bWbhCm5HlXhQTaVN7Or0lsCuUUQ==
+  version "10.12.0"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.12.0.tgz#0293100080478ec724ab3c27a352ac5cc16285f4"
+  integrity sha512-gD5FCNCIDgx1fuYbCfFQgIYT1HVUzsXtQUrvG+nTLBL19eWJctwHetWYB2b71NmfLvq/b+QSH1OzPq1WvsHeag==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"

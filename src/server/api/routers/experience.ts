@@ -1,7 +1,7 @@
 import { MultipleAnswerMode } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, lockedProcedure, protectedProcedure } from "../trpc";
 
 export const experienceRouter = createTRPCRouter({
   setShuffle: protectedProcedure
@@ -78,7 +78,7 @@ export const experienceRouter = createTRPCRouter({
       });
     }),
 
-  setExtendedFeedbackBank: protectedProcedure
+  setExtendedFeedbackBank: lockedProcedure(["ExtendedFeedbackBank"])
     .input(
       z.object({
         studySetId: z.string(),

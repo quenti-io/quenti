@@ -42,18 +42,23 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum EnabledFeature {
+  ExtendedFeedbackBank
+}
+
 model User {
-  id            String    @id @default(cuid())
+  id            String           @id @default(cuid())
   name          String?
-  username      String    @unique @db.Citext
-  email         String?   @unique
+  username      String           @unique @db.Citext
+  email         String?          @unique
   emailVerified DateTime?
   image         String?
-  verified      Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  lastSeenAt    DateTime  @default(now())
+  verified      Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  lastSeenAt    DateTime         @default(now())
   bannedAt      DateTime?
-  displayName   Boolean   @default(true)
+  displayName   Boolean          @default(true)
+  features      EnabledFeature[] @default([])
   accounts      Account[]
   sessions      Session[]
 

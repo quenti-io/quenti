@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { useFeature } from "../hooks/use-feature";
 import { useLoading } from "../hooks/use-loading";
 import {
   createExperienceStore,
@@ -54,13 +55,16 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   data,
   children,
 }) => {
+  const extendedFeedbackBank = useFeature("ExtendedFeedbackBank");
+
   const getVal = (data: SetData): Partial<ExperienceStoreProps> => ({
     shuffleFlashcards: data.experience.shuffleFlashcards,
     studyStarred: data.experience.studyStarred,
     answerWith: data.experience.answerWith,
     starredTerms: data.experience.starredTerms,
     multipleAnswerMode: data.experience.multipleAnswerMode,
-    extendedFeedbackBank: data.experience.extendedFeedbackBank,
+    extendedFeedbackBank:
+      data.experience.extendedFeedbackBank && extendedFeedbackBank,
   });
 
   const storeRef = React.useRef<ExperienceStore>();

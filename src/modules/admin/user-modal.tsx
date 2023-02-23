@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Divider,
   Flex,
   Heading,
   HStack,
@@ -28,6 +29,7 @@ import { useAdmin } from "../../hooks/use-admin";
 import { api } from "../../utils/api";
 import { avatarUrl } from "../../utils/avatar";
 import { dtFormatter } from "../../utils/time";
+import { UserEnabledFeatures } from "./user-enabled-features";
 
 interface UserModalProps {
   userId?: string;
@@ -46,12 +48,12 @@ export const UserModal: React.FC<UserModalProps> = ({
 
   const verify = api.admin.verifyUser.useMutation({
     onSuccess: async () => {
-      await utils.admin.invalidate();
+      await utils.admin.getUsers.invalidate();
     },
   });
   const ban = api.admin.banUser.useMutation({
     onSuccess: async () => {
-      await utils.admin.invalidate();
+      await utils.admin.getUsers.invalidate();
     },
   });
 
@@ -115,7 +117,9 @@ export const UserModal: React.FC<UserModalProps> = ({
                 </Stack>
               </Flex>
             </Box>
-            <Box p="6">
+            <Stack p="6" spacing={6}>
+              <UserEnabledFeatures user={user} />
+              <Divider />
               <ButtonGroup w="full" spacing={4}>
                 <Button
                   leftIcon={<IconDiscountCheck />}
@@ -149,7 +153,7 @@ export const UserModal: React.FC<UserModalProps> = ({
                   {user.bannedAt ? "Unban" : "Ban"}
                 </Button>
               </ButtonGroup>
-            </Box>
+            </Stack>
           </ModalBody>
         )}
       </ModalContent>

@@ -16,8 +16,8 @@
  * processing a request
  *
  */
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { type Session } from "next-auth";
+import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
+import type { Session } from "next-auth";
 
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db";
@@ -65,6 +65,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
+import type { EnabledFeature } from "@prisma/client";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { Counter } from "prom-client";
 import superjson from "superjson";
@@ -131,6 +132,15 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   });
 });
 
+const enforceEnabledFeatures = (features: EnabledFeature[]) =>
+  enforceUserIsAuthed.unstable_pipe(({ ctx, next }) => {
+    if (!ctx.session.user.features.find((x) => features.includes(x))) {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
+
+    return next();
+  });
+
 /**
  * Protected (authed) procedure
  *
@@ -142,12 +152,17 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
-const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
-  if (ctx.session?.user?.email !== env.ADMIN_EMAIL) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
+const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(
+  ({ ctx, next }) => {
+    if (ctx.session?.user?.email !== env.ADMIN_EMAIL) {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
 
-  return next();
-});
+    return next();
+  }
+);
 
 export const adminProcedure = protectedProcedure.use(enforceUserIsAdmin);
+
+export const lockedProcedure = (features: EnabledFeature[]) =>
+  protectedProcedure.use(enforceEnabledFeatures(features));
