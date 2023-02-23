@@ -33,8 +33,14 @@ export const evaluate = (
    */
   const answerEvaluator = (i: string, a: string): boolean => {
     // Break both into words and compare each word individually
-    const inputWords = i.split(" ").map((w) => w.trim());
-    const answerWords = a.split(" ").map((w) => w.trim());
+    const inputWords = i
+      .split(" ")
+      .map((w) => w.trim())
+      .filter((w) => w.length);
+    const answerWords = a
+      .split(" ")
+      .map((w) => w.trim())
+      .filter((w) => w.length);
 
     if (inputWords.length != answerWords.length) return false;
     for (let i = 0; i < inputWords.length; i++) {
