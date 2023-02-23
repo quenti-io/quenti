@@ -1,11 +1,13 @@
 import { StudySetVisibility } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { nanoid } from "nanoid";
+import type { Counter } from "prom-client";
 import { ZenRows } from "zenrows";
 import { z } from "zod";
 import { QUIZLET_IMPORT_REGEXP } from "../../../constants/characters";
 import { env } from "../../../env/server.mjs";
 import type { ApiStudiableItem } from "../../../interfaces/api-studiable-item";
+import { register } from "../../prometheus";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 type ApiResponse = {
@@ -35,6 +37,10 @@ export const importRouter = createTRPCRouter({
       const PER_PAGE = 500;
 
       const client = new ZenRows(env.ZENROWS_API_KEY);
+
+      (
+        register.getSingleMetric("fetch_import_requests_total") as Counter
+      ).inc();
 
       const response = await client.get(
         `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=1`,
