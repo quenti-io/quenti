@@ -2,7 +2,8 @@ import client from "prom-client";
 import { env } from "../env/server.mjs";
 import { prisma } from "./db";
 
-import { version } from "../../package.json";
+import pjson from "../../package.json";
+const version = pjson.version;
 const versionSegments = version.split(".");
 
 declare global {

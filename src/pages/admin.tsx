@@ -1,7 +1,10 @@
 import {
+  Button,
   Container,
+  Flex,
   Heading,
   HStack,
+  Link,
   Stack,
   Tab,
   TabList,
@@ -11,9 +14,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconUserCircle } from "@tabler/icons-react";
+import { IconAdjustments, IconUserCircle } from "@tabler/icons-react";
 import type { ComponentWithAuth } from "../components/auth-component";
 import { WithFooter } from "../components/with-footer";
+import { useAdmin } from "../hooks/use-admin";
 import { AdminDashboard } from "../modules/admin/dashboard";
 import { AdminEmails } from "../modules/admin/emails";
 import { AdminUsers } from "../modules/admin/users";
@@ -29,19 +33,26 @@ const Admin: ComponentWithAuth = () => {
       <WithFooter>
         <Container maxW="7xl">
           <Stack spacing={8}>
-            <Stack spacing={4}>
-              <HStack color={secondary}>
-                <IconUserCircle size={20} />
-                <Heading size="sm">Admin Dashboard</Heading>
-              </HStack>
-              <Heading size="2xl">
-                Welcome,{" "}
-                <Heading size="2xl" display="inline" color={accent}>
-                  Ethan
+            <Flex
+              justifyContent="space-between"
+              flexDir={{ base: "column", sm: "row" }}
+              gap={{ base: 6, sm: 0 }}
+            >
+              <Stack spacing={4}>
+                <HStack color={secondary}>
+                  <IconUserCircle size={20} />
+                  <Heading size="sm">Admin Dashboard</Heading>
+                </HStack>
+                <Heading size="2xl">
+                  Welcome,{" "}
+                  <Heading size="2xl" display="inline" color={accent}>
+                    Ethan
+                  </Heading>
                 </Heading>
-              </Heading>
-              <Text>You look great today!</Text>
-            </Stack>
+                <Text>You look great today!</Text>
+              </Stack>
+              <DashboardButton />
+            </Flex>
             <Stack spacing={8}>
               <AdminDashboard />
               <Tabs borderColor={borderColor}>
@@ -67,6 +78,21 @@ const Admin: ComponentWithAuth = () => {
         </Container>
       </WithFooter>
     </HydrateAdmin>
+  );
+};
+
+const DashboardButton = () => {
+  const { grafanaUrl } = useAdmin();
+
+  return (
+    <Button
+      leftIcon={<IconAdjustments />}
+      as={Link}
+      href={grafanaUrl}
+      isDisabled={!grafanaUrl}
+    >
+      Dashboard
+    </Button>
   );
 };
 

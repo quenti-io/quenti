@@ -25,6 +25,7 @@ export const serverSchema = z.object({
   ZENROWS_API_KEY: z.string(),
   METRICS_API_USER: z.string(),
   METRICS_API_PASSWORD: z.string(),
+  GRAFANA_DASHBOARD_URL: z.string().url().optional(),
 });
 
 /**

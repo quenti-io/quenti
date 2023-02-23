@@ -24,6 +24,7 @@ export const adminRouter = createTRPCRouter({
       starredTerms: await ctx.prisma.starredTerm.count(),
       folders: await ctx.prisma.folder.count(),
       experiences: await ctx.prisma.studySetExperience.count(),
+      grafanaUrl: env.GRAFANA_DASHBOARD_URL,
     };
   }),
 

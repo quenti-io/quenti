@@ -13,6 +13,7 @@ export const AdminContext = React.createContext<LandingData>({
   terms: 0,
   studiableTerms: 0,
   starredTerms: 0,
+  grafanaUrl: undefined,
 });
 
 export const HydrateAdmin: React.FC<React.PropsWithChildren> = ({
