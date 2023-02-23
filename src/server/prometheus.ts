@@ -2,6 +2,9 @@ import client from "prom-client";
 import { env } from "../env/server.mjs";
 import { prisma } from "./db";
 
+import { version } from "../../package.json";
+const versionSegments = version.split(".");
+
 declare global {
   // eslint-disable-next-line no-var
   var register: client.Registry | undefined;
@@ -96,6 +99,21 @@ export const register =
       name: "authed_api_requests_total",
       help: "The number of requests to the API that were authenticated",
       labelNames: ["method", "path"] as const,
+    });
+
+    new client.Gauge({
+      name: "version_info",
+      help: "Quizlet version info.",
+      labelNames: ["version", "major", "minor", "patch"],
+      aggregator: "first",
+      collect() {
+        this.labels(
+          `v${version}`,
+          versionSegments[0] || "0",
+          versionSegments[1] || "0",
+          versionSegments[2] || "0"
+        ).set(1);
+      },
     });
 
     return r;
