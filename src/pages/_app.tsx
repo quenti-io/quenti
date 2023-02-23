@@ -12,9 +12,14 @@ import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { api } from "../utils/api";
 
 import Head from "next/head";
-import { GlobalShortcutLayer } from "../components/global-shortcut-layer";
 import { env } from "../env/client.mjs";
 import "../styles/globals.css";
+import dynamic from "next/dynamic";
+
+const GlobalShortcutLayer = dynamic(
+  () => import("../components/global-shortcut-layer"),
+  { ssr: false }
+);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types
 type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
