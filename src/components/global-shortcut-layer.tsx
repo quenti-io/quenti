@@ -3,7 +3,7 @@ import React from "react";
 import { useShortcut } from "../hooks/use-shortcut";
 import { CommandMenu } from "./command-menu";
 
-export const GlobalShortcutLayer = () => {
+export default function GlobalShortcutLayer() {
   const [open, setOpen] = React.useState(false);
   const session = useSession();
 
@@ -12,4 +12,4 @@ export const GlobalShortcutLayer = () => {
   });
 
   return <CommandMenu isOpen={open} onClose={() => setOpen(false)} />;
-};
+}

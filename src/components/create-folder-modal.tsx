@@ -65,6 +65,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
                 px="4"
                 size="lg"
                 value={title}
+                isInvalid={createFolder.isError}
                 onChange={(e) => setTitle(e.target.value)}
               />
               <AutoResizeTextarea

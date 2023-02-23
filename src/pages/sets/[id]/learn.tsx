@@ -41,6 +41,7 @@ const LearnContainer = () => {
 
   const completeRound = api.experience.completeRound.useMutation();
   const discoverable = api.disoverable.fetchInsults.useQuery(undefined, {
+    retry: false,
     enabled: extendedFeedbackBank,
   });
 

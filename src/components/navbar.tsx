@@ -46,7 +46,12 @@ export const Navbar: React.FC = () => {
           setImportModalOpen(false);
         }}
       />
-      <Flex pos="relative" zIndex={1000} w="full">
+      <Flex
+        pos="relative"
+        zIndex={1000}
+        w="full"
+        bg={onStaticPage ? "gray.900" : undefined}
+      >
         <HStack
           as="header"
           aria-label="Main navigation"

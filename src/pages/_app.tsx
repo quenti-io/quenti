@@ -1,5 +1,4 @@
 import { DarkMode, GlobalStyle } from "@chakra-ui/react";
-import { GrowthBook, GrowthBookProvider } from "@growthbook/growthbook-react";
 import type { NextComponentType, NextPageContext } from "next";
 import { type Session } from "next-auth";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
@@ -13,15 +12,16 @@ import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { api } from "../utils/api";
 
 import Head from "next/head";
-import { GlobalShortcutLayer } from "../components/global-shortcut-layer";
 import { env } from "../env/client.mjs";
 import "../styles/globals.css";
+import dynamic from "next/dynamic";
 
-const growthbook = new GrowthBook({
-  apiHost: "https://cdn.growthbook.io",
-  clientKey: "sdk-gD5ZDoRwawG4G7L",
-  enableDevMode: true,
-});
+export { reportWebVitals } from "next-axiom";
+
+const GlobalShortcutLayer = dynamic(
+  () => import("../components/global-shortcut-layer"),
+  { ssr: false }
+);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types
 type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
@@ -38,10 +38,6 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
   const base = env.NEXT_PUBLIC_BASE_URL;
   const pathname = router.pathname;
   const staticPage = BASE_PAGES.includes(pathname);
-
-  React.useEffect(() => {
-    void (async () => growthbook.loadFeatures())();
-  }, []);
 
   const children = (
     <>
@@ -109,20 +105,18 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
         <meta property="twitter:image" content={`${base}/og-image.png`} />
       </Head>
       <Chakra cookies={cookies}>
-        <GrowthBookProvider growthbook={growthbook}>
-          <LoadingProvider>
-            <SessionProvider session={session}>
-              {staticPage ? (
-                <DarkMode>
-                  <GlobalStyle />
-                  {children}
-                </DarkMode>
-              ) : (
-                children
-              )}
-            </SessionProvider>
-          </LoadingProvider>
-        </GrowthBookProvider>
+        <LoadingProvider>
+          <SessionProvider session={session}>
+            {staticPage ? (
+              <DarkMode>
+                <GlobalStyle />
+                {children}
+              </DarkMode>
+            ) : (
+              children
+            )}
+          </SessionProvider>
+        </LoadingProvider>
       </Chakra>
     </>
   );
@@ -145,11 +139,7 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
   React.useEffect(() => {
     if (isUser) {
       void (async () => {
-        growthbook.setAttributes({
-          id: data.user!.id,
-          email: data.user!.email,
-          loggedIn: true,
-        });
+        // TODO: Initialize axiom config here
 
         if (!data.user?.banned || router.pathname == "/banned")
           setLoading(false);

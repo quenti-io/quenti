@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, lockedProcedure } from "../trpc";
 
 const staticDir = path.join(process.cwd(), "src/server/static");
 
@@ -16,7 +16,7 @@ const incorrect: string[] = fs
   .filter((i) => !!i.length);
 
 export const discoverableRouter = createTRPCRouter({
-  fetchInsults: protectedProcedure.query(() => {
+  fetchInsults: lockedProcedure(["ExtendedFeedbackBank"]).query(() => {
     return { correct, incorrect };
   }),
 });

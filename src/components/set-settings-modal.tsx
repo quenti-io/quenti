@@ -7,8 +7,8 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
-import { useFeatureIsOn } from "@growthbook/growthbook-react";
 import React from "react";
+import { useFeature } from "../hooks/use-feature";
 import { useSet } from "../hooks/use-set";
 import { useExperienceContext } from "../stores/use-experience-store";
 import { AnswerModeSection } from "./set-settings-modal/answer-mode-section";
@@ -39,7 +39,7 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
   onClose,
   reloadOnReset,
 }) => {
-  const useExtendedFeedbackBank = useFeatureIsOn("extended-feedback-bank");
+  const useExtendedFeedbackBank = useFeature("ExtendedFeedbackBank");
 
   const { experience } = useSet();
 

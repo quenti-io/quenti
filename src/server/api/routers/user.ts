@@ -31,6 +31,8 @@ export const userRouter = createTRPCRouter({
   changeUsername: protectedProcedure
     .input(z.string().max(40).regex(USERNAME_REGEXP))
     .mutation(async ({ ctx, input }) => {
+      ctx.req.log.debug("user.changeUsername");
+
       if (ctx.session.user.username.toLowerCase() == "quizlet") {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -68,6 +70,8 @@ export const userRouter = createTRPCRouter({
     }),
 
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
+    ctx.req.log.debug("user.deleteAccount");
+
     if (ctx.session.user.email == env.ADMIN_EMAIL) {
       throw new TRPCError({
         code: "BAD_REQUEST",

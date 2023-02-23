@@ -1,3 +1,5 @@
+import { withAxiom } from "next-axiom";
+
 // @ts-check
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
@@ -6,7 +8,7 @@
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
 /** @type {import("next").NextConfig} */
-const config = {
+const config = withAxiom({
   reactStrictMode: true,
   swcMinify: true,
   i18n: {
@@ -46,5 +48,5 @@ const config = {
       destination: "/sets/:id/learn",
     },
   ],
-};
+});
 export default config;
