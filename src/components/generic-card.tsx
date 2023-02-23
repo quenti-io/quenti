@@ -58,6 +58,8 @@ export const GenericCard: React.FC<GenericCardProps> = ({
   const linkBorder = useColorModeValue("gray.200", "gray.700");
   const menuBg = useColorModeValue("white", "gray.800");
 
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   return (
     <LinkBox
       as="article"
@@ -69,7 +71,7 @@ export const GenericCard: React.FC<GenericCardProps> = ({
       borderWidth="2px"
       shadow="lg"
       transition="all ease-in-out 150ms"
-      zIndex="10"
+      zIndex={menuOpen ? 30 : 25}
       _hover={{
         transform: "translateY(-2px)",
         borderBottomColor: "blue.300",
@@ -114,8 +116,13 @@ export const GenericCard: React.FC<GenericCardProps> = ({
             </HStack>
           </HStack>
           {removable && (
-            <Box zIndex="20">
-              <Menu placement="bottom-end">
+            <Box zIndex="20" position="relative">
+              <Menu
+                placement="bottom-end"
+                isOpen={menuOpen}
+                onOpen={() => setMenuOpen(true)}
+                onClose={() => setMenuOpen(false)}
+              >
                 <MenuButton>
                   <Box w="24px">
                     <IconDotsVertical size="20" />
