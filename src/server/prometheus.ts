@@ -100,7 +100,6 @@ export const register =
     new client.Counter({
       name: "authed_api_requests_total",
       help: "The number of requests to the API that were authenticated",
-      labelNames: ["method", "path"] as const,
     });
 
     new client.Gauge({
