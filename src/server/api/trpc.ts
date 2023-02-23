@@ -21,6 +21,7 @@ import { type Session } from "next-auth";
 
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db";
+import { register } from "../prometheus";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -112,7 +113,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "You are banned." });
   }
 
-  (register!.getSingleMetric("authed_api_requests_total") as Counter).inc();
+  (register.getSingleMetric("authed_api_requests_total") as Counter).inc();
 
   const userId = ctx.session.user.id;
   void (async () => {
