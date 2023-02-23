@@ -21,11 +21,15 @@ const DEFAULT_WHITELIST = [
   "ass", // I'll allow all 'ass' variations
   "asses",
   "a_s_s",
-  "4r5e",
   "a$$",
   "as$",
   "a$s",
   "a55",
+  "4r5e",
+  "arse",
+  "arrse",
+  "arses",
+  "anus",
   "balls", // Too many instances where this could be used normally
   "homo", // Important prefix
   "damn", // Come one
@@ -33,6 +37,8 @@ const DEFAULT_WHITELIST = [
   "fanny", // _
   "sex", // Biology
   "breasts", // Eh
+  "prick", // Allowable
+  "pricks", // _
   "muff", // Too much of a stretch from mf
   "nob", // It's 3 letters
   "pawn", // Literally chess terminology

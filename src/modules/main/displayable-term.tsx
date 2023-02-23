@@ -75,98 +75,102 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const ref = useOutsideClick(doEdit);
 
-  return (
-    <Card px="4" py="5" ref={ref}>
-      <Flex
-        flexDir={["column-reverse", "row", "row"]}
-        alignItems="stretch"
-        gap={[0, 6, 6]}
-      >
-        <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
-          {isEditing ? (
-            <AutoResizeTextarea
-              allowTab={false}
-              value={editWord}
-              onChange={(e) => setEditWord(e.target.value)}
-              w="full"
-              variant="flushed"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") doEdit();
-              }}
-            />
-          ) : (
-            <Text w="full" whiteSpace="pre-wrap">
-              <ScriptFormatter>{editWord}</ScriptFormatter>
-            </Text>
-          )}
-          <Box
-            bg={useColorModeValue("gray.200", "gray.600")}
-            h="full"
-            w="3px"
-          />
-          {isEditing ? (
-            <AutoResizeTextarea
-              allowTab={false}
-              value={editDefinition}
-              onChange={(e) => setEditDefinition(e.target.value)}
-              w="full"
-              variant="flushed"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") doEdit();
-              }}
-            />
-          ) : (
-            <Text w="full" whiteSpace="pre-wrap">
-              <ScriptFormatter>{editDefinition}</ScriptFormatter>
-            </Text>
-          )}
-        </Flex>
-        <Box h="full">
-          <Flex w="full" justifyContent="end">
-            <HStack spacing={1} height="24px">
-              <SetCreatorOnly>
+  const divider = useColorModeValue("gray.200", "gray.600");
+
+  return React.useMemo(
+    () => (
+      <Card px="4" py="5" ref={ref}>
+        <Flex
+          flexDir={["column-reverse", "row", "row"]}
+          alignItems="stretch"
+          gap={[0, 6, 6]}
+        >
+          <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
+            {isEditing ? (
+              <AutoResizeTextarea
+                allowTab={false}
+                value={editWord}
+                onChange={(e) => setEditWord(e.target.value)}
+                w="full"
+                variant="flushed"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") doEdit();
+                }}
+              />
+            ) : (
+              <Text w="full" whiteSpace="pre-wrap">
+                <ScriptFormatter>{editWord}</ScriptFormatter>
+              </Text>
+            )}
+            <Box bg={divider} h="full" w="3px" />
+            {isEditing ? (
+              <AutoResizeTextarea
+                allowTab={false}
+                value={editDefinition}
+                onChange={(e) => setEditDefinition(e.target.value)}
+                w="full"
+                variant="flushed"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") doEdit();
+                }}
+              />
+            ) : (
+              <Text w="full" whiteSpace="pre-wrap">
+                <ScriptFormatter>{editDefinition}</ScriptFormatter>
+              </Text>
+            )}
+          </Flex>
+          <Box h="full">
+            <Flex w="full" justifyContent="end">
+              <HStack spacing={1} height="24px">
+                <SetCreatorOnly>
+                  <IconButton
+                    icon={<IconEdit />}
+                    variant={isEditing ? "solid" : "ghost"}
+                    aria-label="Edit"
+                    rounded="full"
+                    onClick={() => {
+                      if (isEditing) {
+                        edit.mutate({
+                          id: term.id,
+                          studySetId: term.studySetId,
+                          word: editWord,
+                          definition: editDefinition,
+                        });
+                      }
+                      setIsEditing(!isEditing);
+                    }}
+                  />
+                </SetCreatorOnly>
                 <IconButton
-                  icon={<IconEdit />}
-                  variant={isEditing ? "solid" : "ghost"}
+                  icon={<Star />}
+                  variant="ghost"
                   aria-label="Edit"
                   rounded="full"
                   onClick={() => {
-                    if (isEditing) {
-                      edit.mutate({
-                        id: term.id,
-                        studySetId: term.studySetId,
-                        word: editWord,
-                        definition: editDefinition,
+                    if (!starred) {
+                      starTerm(term.id);
+                      starMutation.mutate({
+                        termId: term.id,
+                        experienceId: experience.id,
+                      });
+                    } else {
+                      unstarTerm(term.id);
+                      unstarMutation.mutate({
+                        termId: term.id,
                       });
                     }
-                    setIsEditing(!isEditing);
                   }}
                 />
-              </SetCreatorOnly>
-              <IconButton
-                icon={<Star />}
-                variant="ghost"
-                aria-label="Edit"
-                rounded="full"
-                onClick={() => {
-                  if (!starred) {
-                    starTerm(term.id);
-                    starMutation.mutate({
-                      termId: term.id,
-                      experienceId: experience.id,
-                    });
-                  } else {
-                    unstarTerm(term.id);
-                    unstarMutation.mutate({
-                      termId: term.id,
-                    });
-                  }
-                }}
-              />
-            </HStack>
-          </Flex>
-        </Box>
-      </Flex>
-    </Card>
+              </HStack>
+            </Flex>
+          </Box>
+        </Flex>
+      </Card>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [term, starred, isEditing, editWord, editDefinition]
   );
 };
+
+export const DisplayableTermPure = React.memo(DisplayableTerm);

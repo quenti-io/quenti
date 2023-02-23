@@ -1,7 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { CustomPrismaAdapter } from "../../../adapters/prisma-username";
-// Prisma adapter for NextAuth, optional and can be removed
 
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
@@ -15,6 +14,7 @@ export const authOptions: NextAuthOptions = {
         session.user.username = user.username;
         session.user.displayName = user.displayName;
         session.user.admin = user.email == env.ADMIN_EMAIL;
+        session.user.banned = !!user.bannedAt;
       }
       return session;
     },

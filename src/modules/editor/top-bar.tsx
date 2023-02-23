@@ -15,6 +15,8 @@ import { plural } from "../../utils/string";
 export const TopBar = () => {
   const mode = useSetEditorContext((s) => s.mode);
   const isLoading = useSetEditorContext((s) => s.isLoading);
+  const saveError = useSetEditorContext((s) => s.saveError);
+  const setSaveError = useSetEditorContext((s) => s.setSaveError);
   const numTerms = useSetEditorContext((s) => s.terms.length);
   const onComplete = useSetEditorContext((s) => s.onComplete);
 
@@ -24,6 +26,17 @@ export const TopBar = () => {
 
   const subTextColor = useColorModeValue("gray.600", "gray.400");
   const bg = useColorModeValue("gray.200", "gray.800");
+
+  const text = isSaving
+    ? "Saving..."
+    : saveError ?? `${plural(numTerms, "term")} saved just now`;
+
+  React.useEffect(() => {
+    setSaveError(undefined);
+  }, [setSaveError, isSaving]);
+
+  const errorColor = useColorModeValue("red.500", "red.300");
+  const errorState = saveError && !isSaving;
 
   return (
     <HStack
@@ -46,10 +59,12 @@ export const TopBar = () => {
           </HStack>
           <HStack color={subTextColor} spacing={4}>
             {isSaving && <Spinner size="sm" />}
-            <Text fontSize="sm">
-              {isSaving
-                ? "Saving..."
-                : `${plural(numTerms, "term")} saved just now`}
+            <Text
+              fontSize="sm"
+              color={errorState ? errorColor : undefined}
+              fontWeight={errorState ? 600 : undefined}
+            >
+              {text}
             </Text>
           </HStack>
         </Stack>

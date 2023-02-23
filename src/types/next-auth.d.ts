@@ -11,6 +11,7 @@ declare module "next-auth" {
       username: string;
       displayName: boolean;
       admin: boolean;
+      banned: boolean;
     } & DefaultSession["user"];
   }
 
@@ -20,5 +21,6 @@ declare module "next-auth" {
     username: string;
     image: string;
     displayName: boolean;
+    bannedAt?: Date;
   }
 }

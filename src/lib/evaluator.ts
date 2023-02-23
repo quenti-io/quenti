@@ -6,6 +6,14 @@ export enum EvaluationResult {
   UnknownPartial,
 }
 
+/**
+ * Evaluates whether the input is correct, incorrect, or in a partially correct unknown state, based on the term language and multiple answer mode.
+ * @param language The language of the term/definition, determines the use of strict equality
+ * @param multipleAnswerMode How to handle multiple answers
+ * @param input The user input
+ * @param answer The expected answer
+ * @returns The result of the evaluation
+ */
 export const evaluate = (
   language: Language,
   multipleAnswerMode: MultipleAnswerMode,
@@ -17,12 +25,40 @@ export const evaluate = (
   input = cleanSpaces(input.trim());
   answer = cleanSpaces(answer.trim());
 
-  const evaluateInner = () => {
+  /**
+   * Evaluates whether the input is equal to the answer, ignoring differences in whitespace between words.
+   * @param i The user input
+   * @param a The expected answer
+   * @returns Whether the input is equal to the answer
+   */
+  const answerEvaluator = (i: string, a: string): boolean => {
+    // Break both into words and compare each word individually
+    const inputWords = i.split(" ").map((w) => w.trim());
+    const answerWords = a.split(" ").map((w) => w.trim());
+
+    if (inputWords.length != answerWords.length) return false;
+    for (let i = 0; i < inputWords.length; i++) {
+      if (inputWords[i] != answerWords[i]) return false;
+    }
+
+    return true;
+  };
+
+  /**
+   * Evaluates whether the input is correct, incorrect, or partially correct based on
+   * the separation of the term/definition based on commas, semicolons, and slashes.
+   * @returns The result of the evaluation
+   */
+  const evaluateInner = (): EvaluationResult => {
     const inputAnswers = input.split(/[,;\/]/).map((a) => a.trim());
     const answerAnswers = answer.split(/[,;\/]/).map((a) => a.trim());
 
-    const fullEquality = answerAnswers.every((i) => inputAnswers.includes(i));
-    const partialEquality = answerAnswers.some((i) => inputAnswers.includes(i));
+    const fullEquality = answerAnswers.every(
+      (a) => !!inputAnswers.find((i) => answerEvaluator(i, a))
+    );
+    const partialEquality = answerAnswers.some(
+      (a) => !!inputAnswers.find((i) => answerEvaluator(i, a))
+    );
 
     if (fullEquality) return EvaluationResult.Correct;
     if (multipleAnswerMode == "Unknown" && partialEquality)

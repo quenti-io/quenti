@@ -261,7 +261,7 @@ export const studySetsRouter = createTRPCRouter({
     if (!autoSave.title.trim().length) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Title cannot be empty",
+        message: "Set title is required.",
       });
     }
 

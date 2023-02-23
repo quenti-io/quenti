@@ -4,6 +4,7 @@ import {
   Link,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuList,
   Stack,
   useColorModeValue,
@@ -15,6 +16,7 @@ import {
   IconFolder,
 } from "@tabler/icons-react";
 import { signIn, useSession } from "next-auth/react";
+import React from "react";
 import { MenuOption } from "../menu-option";
 import { MobileUserOptions } from "./mobile-user-options";
 
@@ -35,6 +37,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     "linear(to-b, gray.900, gray.800)"
   );
   const menuBg = useColorModeValue("white", "gray.800");
+
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
     <Collapse in={isOpen}>
@@ -72,13 +76,26 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             </Button>
           )}
           {session?.user && (
-            <Menu boundary="scrollParent" placement="bottom">
+            <Menu
+              boundary="scrollParent"
+              placement="bottom"
+              isOpen={menuOpen}
+              onOpen={() => setMenuOpen(true)}
+              onClose={() => setMenuOpen(false)}
+            >
               <MenuButton>
                 <Button
                   w="full"
                   fontWeight={700}
                   fontSize="sm"
-                  rightIcon={<IconChevronDown />}
+                  rightIcon={
+                    <IconChevronDown
+                      style={{
+                        transition: "rotate ease-in-out 200ms",
+                        rotate: menuOpen ? "180deg" : "0deg",
+                      }}
+                    />
+                  }
                   as="div"
                 >
                   Create
@@ -100,6 +117,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                   label="Import from Quizlet"
                   onClick={onImportClick}
                 />
+                <MenuDivider />
                 <MenuOption
                   icon={<IconFolder size={20} />}
                   label="Folder"

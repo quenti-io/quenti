@@ -21,6 +21,7 @@ import { type Session } from "next-auth";
 
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db";
+import { register } from "../prometheus";
 
 type CreateContextOptions = {
   session: Session | null;
@@ -65,6 +66,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * transformer
  */
 import { initTRPC, TRPCError } from "@trpc/server";
+import type { Counter } from "prom-client";
 import superjson from "superjson";
 import { env } from "../../env/server.mjs";
 
@@ -107,6 +109,20 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+  if (ctx.session.user.banned) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "You are banned." });
+  }
+
+  (register.getSingleMetric("authed_api_requests_total") as Counter).inc();
+
+  const userId = ctx.session.user.id;
+  void (async () => {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { lastSeenAt: new Date() },
+    });
+  })();
+
   return next({
     ctx: {
       // infers the `session` as non-nullable

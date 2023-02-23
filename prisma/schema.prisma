@@ -51,6 +51,8 @@ model User {
   image         String?
   verified      Boolean   @default(false)
   createdAt     DateTime  @default(now())
+  lastSeenAt    DateTime  @default(now())
+  bannedAt      DateTime?
   displayName   Boolean   @default(true)
   accounts      Account[]
   sessions      Session[]

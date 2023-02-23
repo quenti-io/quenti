@@ -1,6 +1,6 @@
 {
   "name": "quizlet.cc",
-  "version": "0.1.0",
+  "version": "0.9.13",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -41,6 +41,7 @@
     "nanoid": "^4.0.0",
     "next": "13.1.1",
     "next-auth": "^4.18.7",
+    "prom-client": "^14.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-to-print": "^2.14.11",

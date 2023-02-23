@@ -92,8 +92,19 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
                 variant="outline"
                 fontWeight={600}
                 onClick={() => {
-                  setAnswer(answer + c);
+                  const cursorPosition =
+                    inputRef.current!.selectionStart || answer.length;
+                  const textBeforeCursor = answer.substring(0, cursorPosition);
+                  const textAfterCursor = answer.substring(cursorPosition);
+                  setAnswer(textBeforeCursor + c + textAfterCursor);
+
                   inputRef.current?.focus();
+                  requestAnimationFrame(() => {
+                    inputRef.current?.setSelectionRange(
+                      cursorPosition + 1,
+                      cursorPosition + 1
+                    );
+                  });
                 }}
               >
                 <Text color={characterTextColor}>
