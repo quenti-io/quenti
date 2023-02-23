@@ -15,6 +15,7 @@ export const register =
   global.register ||
   (() => {
     const r = client.register;
+    r.setDefaultLabels({ server: env.SERVER_NAME });
     client.collectDefaultMetrics({ register: r });
 
     new client.Gauge({

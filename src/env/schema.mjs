@@ -26,6 +26,7 @@ export const serverSchema = z.object({
   METRICS_API_USER: z.string(),
   METRICS_API_PASSWORD: z.string(),
   GRAFANA_DASHBOARD_URL: z.string().url().optional(),
+  SERVER_NAME: z.enum(["production", "staging"]).optional(),
 });
 
 /**
