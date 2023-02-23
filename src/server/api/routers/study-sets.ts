@@ -278,6 +278,9 @@ export const studySetsRouter = createTRPCRouter({
         tags: autoSave.tags
           .slice(0, MAX_NUM_TAGS)
           .map((x) => profanity.censor(x.slice(0, MAX_CHARS_TAGS))),
+        wordLanguage: autoSave.wordLanguage,
+        definitionLanguage: autoSave.definitionLanguage,
+        visibility: autoSave.visibility,
         userId: ctx.session.user.id,
         terms: {
           createMany: {
