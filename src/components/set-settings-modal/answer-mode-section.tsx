@@ -1,22 +1,22 @@
 import { Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import { StudySetAnswerMode } from "@prisma/client";
+import type { StudySetAnswerMode } from "@prisma/client";
 import { Select } from "chakra-react-select";
 import { useSet } from "../../hooks/use-set";
 import { useExperienceContext } from "../../stores/use-experience-store";
 import { api } from "../../utils/api";
 
-const options = [
+const options: { label: string; value: StudySetAnswerMode }[] = [
   {
     label: "Term",
-    value: StudySetAnswerMode.Word,
+    value: "Word",
   },
   {
     label: "Definition",
-    value: StudySetAnswerMode.Definition,
+    value: "Definition",
   },
   {
     label: "Both",
-    value: StudySetAnswerMode.Both,
+    value: "Both",
   },
 ];
 

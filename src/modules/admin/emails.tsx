@@ -19,7 +19,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { type RecentFailedLogin } from "@prisma/client";
+import type { RecentFailedLogin } from "@prisma/client";
 import { IconPlus, IconTrash, IconUserPlus } from "@tabler/icons-react";
 import React from "react";
 import { useAdmin } from "../../hooks/use-admin";

@@ -7,9 +7,8 @@ import {
   GridItem,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
-import { MultipleAnswerMode } from "@prisma/client";
 import { useSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
 import type { Question } from "../../../../interfaces/question";
@@ -38,13 +37,13 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
     api.experience.setMutlipleAnswerMode.useMutation();
 
   const onRequireOne = () => {
-    setMutlipleAnswerMode(MultipleAnswerMode.One);
+    setMutlipleAnswerMode("One");
     correctFromUnknown(active.term.id);
 
     void (async () => {
       await apiSetMultipleAnswerMode.mutateAsync({
         studySetId: id,
-        multipleAnswerMode: MultipleAnswerMode.One,
+        multipleAnswerMode: "One",
       });
 
       await put.mutateAsync({
@@ -58,13 +57,13 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
   };
 
   const onRequireAll = () => {
-    setMutlipleAnswerMode(MultipleAnswerMode.All);
+    setMutlipleAnswerMode("All");
     incorrectFromUnknown(active.term.id);
 
     void (async () => {
       await apiSetMultipleAnswerMode.mutateAsync({
         studySetId: id,
-        multipleAnswerMode: MultipleAnswerMode.All,
+        multipleAnswerMode: "All",
       });
 
       await put.mutateAsync({

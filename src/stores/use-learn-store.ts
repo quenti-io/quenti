@@ -1,4 +1,4 @@
-import { StudySetAnswerMode, type LearnMode, type Term } from "@prisma/client";
+import type { StudySetAnswerMode, LearnMode, Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -294,12 +294,12 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
 
           const roundTimeline: Question[] = termsThisRound.map((term) => {
             const choice = term.correctness < 1;
-            const answerMode =
+            const answerMode: StudySetAnswerMode =
               state.answerMode != "Both"
                 ? state.answerMode
                 : Math.random() < 0.5
-                ? StudySetAnswerMode.Definition
-                : StudySetAnswerMode.Word;
+                ? "Definition"
+                : "Word";
 
             if (choice) {
               const choices = shuffleArray(

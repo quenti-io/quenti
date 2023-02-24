@@ -1,4 +1,4 @@
-import { type StudySet, StudySetVisibility } from "@prisma/client";
+import type { StudySet } from "@prisma/client";
 import React from "react";
 import { visibilityIcon } from "../common/visibility-icon";
 import { GenericCard } from "./generic-card";
@@ -30,7 +30,7 @@ export const StudySetCard: React.FC<StudySetCardProps> = ({
       url={`/${studySet.id}`}
       itemsLabel={"term"}
       rightIcon={
-        studySet.visibility !== StudySetVisibility.Public
+        studySet.visibility !== "Public"
           ? visibilityIcon(studySet.visibility, 16)
           : undefined
       }
