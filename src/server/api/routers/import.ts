@@ -126,6 +126,8 @@ export const importRouter = createTRPCRouter({
           tags: [],
           visibility: StudySetVisibility.Public,
           userId: ctx.session.user.id,
+          wordLanguage: "en",
+          definitionLanguage: "en",
           autoSaveTerms: {
             deleteMany: { setAutoSaveId: ctx.session.user.id },
             createMany: {
@@ -144,6 +146,8 @@ export const importRouter = createTRPCRouter({
           tags: [],
           visibility: StudySetVisibility.Public,
           userId: ctx.session.user.id,
+          wordLanguage: "en",
+          definitionLanguage: "en",
           autoSaveTerms: {
             createMany: {
               data: parsed.map((term, i) => ({
