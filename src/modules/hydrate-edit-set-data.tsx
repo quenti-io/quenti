@@ -97,7 +97,6 @@ const ContextLayer: React.FC<
       {
         ...data,
         mode: "edit",
-        languages: [data.wordLanguage, data.definitionLanguage],
         serverTerms: data.terms.map((x) => x.id),
       },
       {
@@ -190,8 +189,8 @@ const ContextLayer: React.FC<
               title: state.title,
               description: state.description,
               tags: state.tags,
-              wordLanguage: state.languages[0]!,
-              definitionLanguage: state.languages[1]!,
+              wordLanguage: state.wordLanguage,
+              definitionLanguage: state.definitionLanguage,
               visibility: state.visibility,
             });
           })();

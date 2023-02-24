@@ -15,6 +15,7 @@ import { plural } from "../../utils/string";
 export const TopBar = () => {
   const mode = useSetEditorContext((s) => s.mode);
   const isLoading = useSetEditorContext((s) => s.isLoading);
+  const setIsLoading = useSetEditorContext((s) => s.setIsLoading);
   const saveError = useSetEditorContext((s) => s.saveError);
   const setSaveError = useSetEditorContext((s) => s.setSaveError);
   const numTerms = useSetEditorContext((s) => s.terms.length);
@@ -72,6 +73,8 @@ export const TopBar = () => {
           fontWeight={700}
           isLoading={isLoading}
           onClick={() => {
+            if (mode == "edit") setIsLoading(true);
+
             const complete = () => {
               setTimeout(() => {
                 if (!isSavingRef.current) onComplete();

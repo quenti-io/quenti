@@ -19,17 +19,20 @@ import {
 import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { useShortcut } from "../../hooks/use-shortcut";
-import type { Language } from "../../lib/language";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
+import { LanguageMenuWrapper } from "./language-menu";
 import { SortableTermCard } from "./sortable-term-card";
 import { TermCardGap } from "./term-card-gap";
 
 export const TermsList = () => {
   const terms = useSetEditorContext((s) => s.terms);
   const reorderTerm = useSetEditorContext((s) => s.reorderTerm);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  const languages = useSetEditorContext((s) => s.languages);
-  const setLanguages = useSetEditorContext((s) => s.setLanguages);
+  const wordLanguage = useSetEditorContext((s) => s.wordLanguage);
+  const definitionLanguage = useSetEditorContext((s) => s.definitionLanguage);
+  const setWordLanguage = useSetEditorContext((s) => s.setWordLanguage);
+  const setDefinitionLanguage = useSetEditorContext(
+    (s) => s.setDefinitionLanguage
+  );
   const addTerm = useSetEditorContext((s) => s.addTerm);
   const editTerm = useSetEditorContext((s) => s.editTerm);
   const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
@@ -37,15 +40,12 @@ export const TermsList = () => {
 
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const wordLanguage = languages[0]!;
-  const definitionLanguage = languages[1]!;
-  const setWordLanguage = (language: Language) =>
-    setLanguages([language, languages[1]!]);
-  const setDefinitionLanguage = (language: Language) =>
-    setLanguages([languages[0]!, language]);
-
   const [current, setCurrent] = React.useState<string | null>(null);
   const [currentDrag, setCurrentDrag] = React.useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [active, setActive] = React.useState<"word" | "definition">("word");
+  const activeRef = React.useRef(active);
+  activeRef.current = active;
 
   useShortcut(
     ["ArrowDown"],
@@ -105,41 +105,62 @@ export const TermsList = () => {
   return (
     <Stack spacing={10}>
       <Stack spacing={0}>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        <LanguageMenuWrapper
+          isOpen={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          selected={
+            activeRef.current == "word" ? wordLanguage : definitionLanguage
+          }
+          onChange={(e) => {
+            if (activeRef.current == "word") {
+              setWordLanguage(e);
+            } else {
+              setDefinitionLanguage(e);
+            }
+          }}
         >
-          <SortableContext items={items} strategy={verticalListSortingStrategy}>
-            {items
-              .sort((a, b) => a.rank - b.rank)
-              .map((term, i) => (
-                <React.Fragment key={i}>
-                  <SortableTermCard
-                    justCreated={lastCreated === term.id}
-                    isDragging={currentDrag === term.id}
-                    isCurrent={current === term.id}
-                    deletable={terms.length > 1}
-                    key={term.id}
-                    term={term}
-                    wordLanguage={wordLanguage}
-                    definitionLanguage={definitionLanguage}
-                    setWordLanguage={setWordLanguage}
-                    setDefinitionLanguage={setDefinitionLanguage}
-                    editTerm={editTerm}
-                    deleteTerm={deleteTerm}
-                    onTabOff={() => {
-                      if (i === terms.length - 1) addTerm(terms.length);
-                    }}
-                    anyFocus={() => setCurrent(term.id)}
-                  />
-                  <TermCardGap index={i} />
-                </React.Fragment>
-              ))}
-          </SortableContext>
-        </DndContext>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+          >
+            <SortableContext
+              items={items}
+              strategy={verticalListSortingStrategy}
+            >
+              {items
+                .sort((a, b) => a.rank - b.rank)
+                .map((term, i) => (
+                  <React.Fragment key={i}>
+                    <SortableTermCard
+                      justCreated={lastCreated === term.id}
+                      isDragging={currentDrag === term.id}
+                      isCurrent={current === term.id}
+                      deletable={terms.length > 1}
+                      key={term.id}
+                      term={term}
+                      wordLanguage={wordLanguage}
+                      definitionLanguage={definitionLanguage}
+                      openMenu={(type) => {
+                        console.log("TYPE", type);
+                        setActive(type);
+                        setMenuOpen(true);
+                      }}
+                      editTerm={editTerm}
+                      deleteTerm={deleteTerm}
+                      onTabOff={() => {
+                        if (i === terms.length - 1) addTerm(terms.length);
+                      }}
+                      anyFocus={() => setCurrent(term.id)}
+                    />
+                    <TermCardGap index={i} />
+                  </React.Fragment>
+                ))}
+            </SortableContext>
+          </DndContext>
+        </LanguageMenuWrapper>
       </Stack>
       <Button
         leftIcon={<IconPlus />}

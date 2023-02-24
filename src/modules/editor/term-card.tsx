@@ -1,8 +1,11 @@
 import {
+  Box,
+  Button,
   Card,
   Flex,
   HStack,
   IconButton,
+  PopoverAnchor,
   Stack,
   Text,
   useColorMode,
@@ -13,8 +16,8 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import type { Language } from "../../lib/language";
-import { LanguageMenu } from "./language-menu";
+import { languageName } from "../../lib/language";
+import { CharacterSuggestionsPure } from "./character-suggestions";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
 export interface TermCardProps extends SortableTermCardProps {
@@ -32,12 +35,11 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
       term,
       deletable,
       justCreated,
-      wordLanguage: _wordLanguage,
-      definitionLanguage: _definitionLanguage,
+      wordLanguage,
+      definitionLanguage,
+      openMenu,
       editTerm,
       deleteTerm,
-      setWordLanguage,
-      setDefinitionLanguage,
       anyFocus,
       onTabOff,
       style,
@@ -63,9 +65,15 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
 
     const [wordFocused, setWordFocused] = React.useState(false);
     const [definitionFocused, setDefinitionFocused] = React.useState(false);
+    const [lastFocused, setLastFocused] = React.useState<
+      "word" | "definition" | null
+    >(null);
 
     React.useEffect(() => {
-      if (wordFocused || definitionFocused) anyFocus();
+      if (wordFocused || definitionFocused) {
+        anyFocus();
+        setLastFocused(wordFocused ? "word" : "definition");
+      }
     }, [wordFocused, definitionFocused, anyFocus]);
 
     React.useEffect(() => {
@@ -73,16 +81,67 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
       setDefinition(term.definition);
     }, [term.word, term.definition]);
 
+    const placeholderTerm =
+      wordLanguage != definitionLanguage ? languageName(wordLanguage) : "term";
+    const placeholderDefinition =
+      wordLanguage != definitionLanguage
+        ? languageName(definitionLanguage)
+        : "definition";
+
+    const LanguageButton = ({ type }: { type: "word" | "definition" }) => {
+      if (!isCurrent || lastFocused !== type) return null;
+
+      return (
+        <PopoverAnchor>
+          <Button
+            size="sm"
+            variant="ghost"
+            h="max"
+            onPointerDown={() => {
+              openMenu(type);
+            }}
+          >
+            {languageName(type == "word" ? wordLanguage : definitionLanguage)}
+          </Button>
+        </PopoverAnchor>
+      );
+    };
+    const LanguageButtonPure = React.memo(LanguageButton);
+
     const mutedText = useColorModeValue("gray.500", "gray.400");
     const borderColor = useColorModeValue("gray.200", "gray.900");
     const bg = useColorModeValue("gray.100", "gray.750");
 
-    const wordLanguage: Language = isCurrent
-      ? _wordLanguage
-      : ("en" as Language);
-    const definitionLanguage: Language = isCurrent
-      ? _definitionLanguage
-      : ("en" as Language);
+    const handleInsert = (
+      c: string,
+      ref: React.RefObject<HTMLTextAreaElement>
+    ) => {
+      const el = ref.current;
+      if (!el) return;
+
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const value = el.value;
+
+      const before = value.substring(0, start);
+      const after = value.substring(end, value.length);
+
+      el.value = before + c + after;
+      el.selectionStart = el.selectionEnd = start + c.length;
+      el.focus();
+
+      if (ref === wordRef) setWord(el.value);
+      else setDefinition(el.value);
+    };
+
+    const insertWord = React.useCallback(
+      (c: string) => handleInsert(c, wordRef),
+      []
+    );
+    const insertDefinition = React.useCallback(
+      (c: string) => handleInsert(c, definitionRef),
+      []
+    );
 
     return (
       <Card position="relative" ref={ref} style={style}>
@@ -119,80 +178,90 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
               </Flex>
               <HStack px="5" pt="2" pb="6" spacing={6} alignItems="start">
                 <Stack w="full" spacing={2}>
-                  <AutoResizeTextarea
-                    allowTab={false}
-                    placeholder="Enter term"
-                    variant="flushed"
-                    value={word}
-                    ref={wordRef}
-                    tabIndex={term.rank + 1}
-                    onChange={(e) => setWord(e.target.value)}
-                    onFocus={() => setWordFocused(true)}
-                    onBlur={() => {
-                      setWordFocused(false);
-                      setTimeout(() => {
-                        setDefinitionFocused((focused) => {
-                          if (
-                            (word !== term.word ||
-                              definition !== term.definition) &&
-                            !focused
-                          )
-                            editTerm(term.id, word, definition);
-                          return focused;
+                  <Box pos="relative">
+                    <AutoResizeTextarea
+                      allowTab={false}
+                      placeholder={`Enter ${placeholderTerm}`}
+                      variant="flushed"
+                      value={word}
+                      ref={wordRef}
+                      tabIndex={term.rank + 1}
+                      onChange={(e) => setWord(e.target.value)}
+                      onFocus={() => setWordFocused(true)}
+                      onBlur={() => {
+                        setWordFocused(false);
+                        setTimeout(() => {
+                          setDefinitionFocused((focused) => {
+                            if (
+                              (word !== term.word ||
+                                definition !== term.definition) &&
+                              !focused
+                            )
+                              editTerm(term.id, word, definition);
+                            return focused;
+                          });
                         });
-                      });
-                    }}
-                  />
+                      }}
+                    />
+                    {isCurrent && (
+                      <CharacterSuggestionsPure
+                        language={wordLanguage}
+                        focused={wordFocused}
+                        onSelect={insertWord}
+                        onLanguageClick={() => openMenu("word")}
+                      />
+                    )}
+                  </Box>
                   <Flex justifyContent="space-between" h="6">
                     <Text fontSize="sm" color={mutedText}>
                       Term
                     </Text>
-                    {isCurrent && !!wordLanguage.length && (
-                      <LanguageMenu
-                        selected={wordLanguage}
-                        onChange={setWordLanguage}
-                      />
-                    )}
+                    <LanguageButtonPure type="word" />
                   </Flex>
                 </Stack>
                 <Stack w="full" spacing={2}>
-                  <AutoResizeTextarea
-                    allowTab={false}
-                    placeholder="Enter definition"
-                    variant="flushed"
-                    value={definition}
-                    ref={definitionRef}
-                    tabIndex={term.rank + 2}
-                    onChange={(e) => setDefinition(e.target.value)}
-                    onFocus={() => setDefinitionFocused(true)}
-                    onBlur={() => {
-                      setDefinitionFocused(false);
-                      setTimeout(() => {
-                        setWordFocused((focused) => {
-                          if (
-                            (word !== term.word ||
-                              definition !== term.definition) &&
-                            !focused
-                          )
-                            editTerm(term.id, word, definition);
-                          return focused;
+                  <Box pos="relative">
+                    <AutoResizeTextarea
+                      allowTab={false}
+                      placeholder={`Enter ${placeholderDefinition}`}
+                      variant="flushed"
+                      value={definition}
+                      ref={definitionRef}
+                      tabIndex={term.rank + 2}
+                      onChange={(e) => setDefinition(e.target.value)}
+                      onFocus={() => setDefinitionFocused(true)}
+                      onBlur={() => {
+                        setDefinitionFocused(false);
+                        setTimeout(() => {
+                          setWordFocused((focused) => {
+                            if (
+                              (word !== term.word ||
+                                definition !== term.definition) &&
+                              !focused
+                            )
+                              editTerm(term.id, word, definition);
+                            return focused;
+                          });
                         });
-                      });
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key == "Tab" && !e.shiftKey) onTabOff();
-                    }}
-                  />
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key == "Tab" && !e.shiftKey) onTabOff();
+                      }}
+                    />
+                    {isCurrent && (
+                      <CharacterSuggestionsPure
+                        language={definitionLanguage}
+                        focused={definitionFocused}
+                        onSelect={insertDefinition}
+                        onLanguageClick={() => openMenu("definition")}
+                      />
+                    )}
+                  </Box>
                   <Flex justifyContent="space-between">
                     <Text fontSize="sm" color={mutedText} h="6">
                       Definition
                     </Text>
-                    {isCurrent && !!definitionLanguage.length && (
-                      <LanguageMenu
-                        selected={definitionLanguage}
-                        onChange={setDefinitionLanguage}
-                      />
-                    )}
+                    <LanguageButtonPure type="definition" />
                   </Flex>
                 </Stack>
               </HStack>
@@ -203,6 +272,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
             word,
             term.rank,
             definition,
+            lastFocused,
             wordFocused,
             definitionFocused,
             isCurrent,

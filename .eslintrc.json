@@ -8,6 +8,12 @@
       "parserOptions": {
         "project": "tsconfig.json"
       }
+    },
+    {
+      "files": ["src/server/**/*"],
+      "rules": {
+        "no-restricted-syntax": "off"
+      }
     }
   ],
   "parser": "@typescript-eslint/parser",
@@ -25,6 +31,13 @@
         "checksVoidReturn": {
           "attributes": false
         }
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ImportDeclaration[importKind!='type'][source.value=/@prisma\\u002Fclient/]",
+        "message": "Must use 'import type' when importing from @prisma/client. Database schemas are exposed to the client!"
       }
     ]
   }

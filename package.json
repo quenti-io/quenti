@@ -1,6 +1,6 @@
 {
   "name": "quizlet.cc",
-  "version": "0.9.15",
+  "version": "0.9.17",
   "private": true,
   "scripts": {
     "build": "next build",

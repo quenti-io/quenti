@@ -1,15 +1,14 @@
 import {
   Box,
-  Button,
   Center,
   Divider,
   HStack,
   Input,
   InputGroup,
   InputLeftElement,
-  Menu,
-  MenuButton,
-  MenuList,
+  Popover,
+  PopoverBody,
+  PopoverContent,
   Stack,
   Text,
   useColorMode,
@@ -44,20 +43,15 @@ const topLanguages: Language[] = [
 const specialLanguages: Language[] = ["chem", "math", "unknown"];
 
 export interface LanguageMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
   selected: Language;
   onChange: (l: Language) => void;
 }
 
-const LanguageMenuContext = React.createContext({
-  selected: "en",
-} as { selected: Language });
-
-export const LanguageMenu: React.FC<LanguageMenuProps> = ({
-  selected,
-  onChange,
-}) => {
-  const [menuOpen, setMenuOpen] = React.useState(false);
-
+export const LanguageMenuWrapper: React.FC<
+  React.PropsWithChildren<LanguageMenuProps>
+> = ({ isOpen, onClose, selected, onChange, children }) => {
   const allLanguages = Object.entries(languages) as [Language, string][];
   const [query, setQuery] = React.useState("");
 
@@ -113,49 +107,42 @@ export const LanguageMenu: React.FC<LanguageMenuProps> = ({
 
   const onSelect = (l: Language) => {
     onChange(l);
-    setMenuOpen(false);
+    onClose();
   };
 
   const menuColor = useColorModeValue("white", "gray.750");
   const headerColor = useColorModeValue("gray.100", "gray.800");
 
   return (
-    <LanguageMenuContext.Provider value={{ selected }}>
-      <Menu
-        isOpen={menuOpen}
-        onOpen={() => {
-          setMenuOpen(true);
-
+    <Popover
+      isOpen={isOpen}
+      onOpen={() => {
+        requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              inputRef.current!.focus();
-            });
-
-            const elem = document.getElementById(
-              `language-menu-opt-${selected}`
-            );
-
-            if (!elem) return;
-            containerRef.current!.scrollTop = elem.offsetTop - 100;
+            inputRef.current!.focus();
           });
-        }}
-        onClose={() => setMenuOpen(false)}
+
+          const elem = document.getElementById(`language-menu-opt-${selected}`);
+
+          if (!elem) return;
+          containerRef.current!.scrollTop = elem.offsetTop - 100;
+        });
+      }}
+      onClose={onClose}
+      initialFocusRef={inputRef}
+    >
+      {children}
+      <PopoverContent
+        bg={menuColor}
+        rounded="lg"
+        p="0"
+        border="none"
+        overflow="hidden"
+        zIndex="30"
+        shadow="xl"
+        w="80"
       >
-        <MenuButton>
-          <Button size="sm" variant="ghost" as="div" h="max">
-            {languages[selected]}
-          </Button>
-        </MenuButton>
-        <MenuList
-          bg={menuColor}
-          rounded="lg"
-          p="0"
-          border="none"
-          overflow="hidden"
-          zIndex={30}
-          shadow="xl"
-          w="80"
-        >
+        <PopoverBody p="0">
           <Stack spacing={0}>
             <Box pt="2" bg={headerColor} shadow="lg">
               <InputGroup>
@@ -205,9 +192,9 @@ export const LanguageMenu: React.FC<LanguageMenuProps> = ({
               )}
             </Box>
           </Stack>
-        </MenuList>
-      </Menu>
-    </LanguageMenuContext.Provider>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   );
 };
 

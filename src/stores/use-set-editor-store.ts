@@ -13,7 +13,8 @@ interface SetEditorProps {
   title: string;
   description: string;
   tags: string[];
-  languages: Language[];
+  wordLanguage: Language;
+  definitionLanguage: Language;
   visibility: StudySetVisibility;
   terms: (Term | AutoSaveTerm)[];
   serverTerms: string[];
@@ -27,7 +28,8 @@ interface SetEditorState extends SetEditorProps {
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setTags: (tags: string[]) => void;
-  setLanguages: (languages: Language[]) => void;
+  setWordLanguage: (wordLanguage: Language) => void;
+  setDefinitionLanguage: (definitionLanguage: Language) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: (rank: number) => void;
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
@@ -55,7 +57,8 @@ export const createSetEditorStore = (
     isLoading: false,
     title: "",
     description: "",
-    languages: ["en", "en"],
+    wordLanguage: "en",
+    definitionLanguage: "en",
     tags: [],
     visibility: "Public",
     terms: [],
@@ -72,7 +75,9 @@ export const createSetEditorStore = (
       setTitle: (title: string) => set({ title }),
       setDescription: (description: string) => set({ description }),
       setTags: (tags: string[]) => set({ tags }),
-      setLanguages: (languages: Language[]) => set({ languages }),
+      setWordLanguage: (wordLanguage: Language) => set({ wordLanguage }),
+      setDefinitionLanguage: (definitionLanguage: Language) =>
+        set({ definitionLanguage }),
       setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
       addTerm: (rank: number) => {
         set((state) => {
