@@ -28,7 +28,7 @@ export const TermsList = () => {
   const terms = useSetEditorContext((s) => s.terms);
   const reorderTerm = useSetEditorContext((s) => s.reorderTerm);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  const languages = useSetEditorContext((s) => s.languages) as Language[];
+  const languages = useSetEditorContext((s) => s.languages);
   const setLanguages = useSetEditorContext((s) => s.setLanguages);
   const addTerm = useSetEditorContext((s) => s.addTerm);
   const editTerm = useSetEditorContext((s) => s.editTerm);
