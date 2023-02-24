@@ -1,4 +1,5 @@
-import { Language, type MultipleAnswerMode } from "@prisma/client";
+import type { MultipleAnswerMode } from "@prisma/client";
+import type { Language } from "./language";
 
 export enum EvaluationResult {
   Correct,
@@ -20,7 +21,7 @@ export const evaluate = (
   input: string,
   answer: string
 ): EvaluationResult => {
-  const strictEquality = language == Language.Chemistry;
+  const strictEquality = language == "chem" || language == "math";
 
   input = cleanSpaces(input.trim());
   answer = cleanSpaces(answer.trim());

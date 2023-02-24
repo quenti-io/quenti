@@ -1,5 +1,4 @@
 import {
-  Language,
   type PrismaClient,
   type StarredTerm,
   type StudiableTerm,
@@ -7,11 +6,13 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
+  LANGUAGE_VALUES,
   MAX_CHARS_TAGS,
   MAX_DESC,
   MAX_NUM_TAGS,
   MAX_TERM,
   MAX_TITLE,
+  type Language,
 } from "../common/constants";
 import { profanity } from "../common/profanity";
 
@@ -224,6 +225,8 @@ export const studySetsRouter = createTRPCRouter({
 
     return {
       ...studySet,
+      wordLanguage: studySet.wordLanguage as Language,
+      definitionLanguage: studySet.definitionLanguage as Language,
       user: {
         username: studySet.user.username,
         image: studySet.user.image!,
@@ -306,8 +309,8 @@ export const studySetsRouter = createTRPCRouter({
           title: z.string().trim().min(1),
           description: z.string(),
           tags: z.array(z.string()),
-          wordLanguage: z.nativeEnum(Language),
-          definitionLanguage: z.nativeEnum(Language),
+          wordLanguage: z.enum(LANGUAGE_VALUES),
+          definitionLanguage: z.enum(LANGUAGE_VALUES),
           visibility: z.enum(["Public", "Unlisted", "Private"]),
         })
         .transform((z) => ({

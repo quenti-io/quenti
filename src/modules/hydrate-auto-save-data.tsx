@@ -1,4 +1,3 @@
-import type { AutoSaveTerm, SetAutoSave } from "@prisma/client";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
@@ -8,7 +7,7 @@ import {
   SetEditorStoreContext,
   type SetEditorStore,
 } from "../stores/use-set-editor-store";
-import { api } from "../utils/api";
+import { api, type RouterOutputs } from "../utils/api";
 
 export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -22,7 +21,7 @@ export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
 
 const ContextLayer: React.FC<
   React.PropsWithChildren<{
-    data: SetAutoSave & { autoSaveTerms: AutoSaveTerm[] };
+    data: RouterOutputs["autoSave"]["get"];
   }>
 > = ({ data, children }) => {
   const router = useRouter();

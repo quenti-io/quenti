@@ -101,8 +101,8 @@ model StudySet {
   description         String
   tags                String[]             @default([])
   visibility          StudySetVisibility   @default(Public)
-  wordLanguage        Language             @default(English)
-  definitionLanguage  Language             @default(English)
+  wordLanguage        String               @default("en")
+  definitionLanguage  String               @default("en")
   terms               Term[]
   studySetExperiences StudySetExperience[]
   folders             StudySetsOnFolders[]
@@ -148,8 +148,8 @@ model SetAutoSave {
   description        String
   tags               String[]           @default([])
   visibility         StudySetVisibility @default(Public)
-  wordLanguage       Language           @default(English)
-  definitionLanguage Language           @default(English)
+  wordLanguage       String             @default("en")
+  definitionLanguage String             @default("en")
   autoSaveTerms      AutoSaveTerm[]
 }
 
@@ -251,12 +251,4 @@ model StarredTerm {
   studySetExperience StudySetExperience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
 
   @@id([userId, termId])
-}
-
-enum Language {
-  English
-  Spanish
-  French
-  Chemistry
-  Other
 }

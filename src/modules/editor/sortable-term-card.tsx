@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { AutoSaveTerm, Language, Term } from "@prisma/client";
+import type { AutoSaveTerm, Term } from "@prisma/client";
+import type { Language } from "../../lib/language";
 import { TermCard } from "./term-card";
 
 export interface SortableTermCardProps {
