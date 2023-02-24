@@ -96,7 +96,7 @@ export const importRouter = createTRPCRouter({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message:
-            "This set either doesn't exist or is private. Check the URL and your permissions and try again.",
+            "This set either doesn't exist or is private/protected. Check the URL and your permissions and try again.",
         });
       }
 
