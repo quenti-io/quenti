@@ -31,7 +31,7 @@ export const UserEnabledFeatures = ({
       {Object.values(EnabledFeature)
         .sort()
         .map((f, i) => (
-          <HStack key={i}>
+          <HStack key={i} spacing={4}>
             <Text color={featureColor}>{f}</Text>
             <Switch
               isChecked={features.includes(f)}
