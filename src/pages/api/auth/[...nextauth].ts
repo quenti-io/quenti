@@ -1,9 +1,11 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { CustomPrismaAdapter } from "../../../adapters/prisma-username";
-
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
+
+import pjson from "../../../../package.json";
+const version = pjson.version;
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -16,6 +18,8 @@ export const authOptions: NextAuthOptions = {
         session.user.admin = user.email == env.ADMIN_EMAIL;
         session.user.banned = !!user.bannedAt;
         session.user.features = user.features;
+
+        session.version = version;
       }
       return session;
     },

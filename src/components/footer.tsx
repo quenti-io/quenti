@@ -9,8 +9,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconCircleFilled } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 
 export const Footer = () => {
+  const session = useSession();
   const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
 
   return (
@@ -54,7 +56,7 @@ export const Footer = () => {
               color="blue.300"
               leftIcon={<IconCircleFilled size={16} />}
             >
-              <Text color={textColor}>All systems normal</Text>
+              <Text color={textColor}>Version {session.data?.version}</Text>
             </Button>
           </HStack>
         </Flex>

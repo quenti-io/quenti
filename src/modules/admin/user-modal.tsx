@@ -86,7 +86,7 @@ export const UserModal: React.FC<UserModalProps> = ({
                     </Text>
                   </Flex>
                   <Stack color={muted}>
-                    <HStack spacing={4}>
+                    <HStack spacing={3}>
                       <IconCode size={18} />
                       <Text fontSize="sm" fontFamily="monospace">
                         {user.id}
@@ -99,14 +99,14 @@ export const UserModal: React.FC<UserModalProps> = ({
                         onClick={copy}
                       />
                     </HStack>
-                    <HStack spacing={4}>
+                    <HStack spacing={3}>
                       <IconCalendar size={18} />
                       <Text fontSize="sm">
                         {dtFormatter.format(user.createdAt)}
                       </Text>
                     </HStack>
                     {user.bannedAt && (
-                      <HStack spacing={4}>
+                      <HStack spacing={3}>
                         <IconGavel size={18} />
                         <Text fontSize="sm">
                           {dtFormatter.format(user.bannedAt)}

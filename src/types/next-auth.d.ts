@@ -15,6 +15,7 @@ declare module "next-auth" {
       banned: boolean;
       features: EnabledFeature[];
     } & DefaultSession["user"];
+    version: string;
   }
 
   interface User {
