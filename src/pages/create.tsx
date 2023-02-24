@@ -54,8 +54,8 @@ const PropertiesListener = () => {
       title: state.title,
       description: state.description,
       tags: state.tags,
-      wordLanguage: state.languages[0]!,
-      definitionLanguage: state.languages[1]!,
+      wordLanguage: state.wordLanguage,
+      definitionLanguage: state.definitionLanguage,
       visibility: state.visibility,
       terms: state.terms
         .sort((a, b) => a.rank - b.rank)
@@ -83,7 +83,8 @@ const PropertiesListener = () => {
         s.title,
         s.description,
         s.tags,
-        s.languages,
+        s.wordLanguage,
+        s.definitionLanguage,
         s.visibility,
         s.terms,
       ],

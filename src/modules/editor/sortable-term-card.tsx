@@ -12,10 +12,9 @@ export interface SortableTermCardProps {
   deletable: boolean;
   wordLanguage: Language;
   definitionLanguage: Language;
+  openMenu: (type: "word" | "definition") => void;
   editTerm: (id: string, word: string, definition: string) => void;
   deleteTerm: (id: string) => void;
-  setWordLanguage: (l: Language) => void;
-  setDefinitionLanguage: (l: Language) => void;
   anyFocus: () => void;
   onTabOff: () => void;
 }

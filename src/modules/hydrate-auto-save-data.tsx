@@ -44,7 +44,6 @@ const ContextLayer: React.FC<
       {
         ...data,
         terms: data.autoSaveTerms,
-        languages: [data.wordLanguage, data.definitionLanguage],
       },
       {
         onComplete: () => {

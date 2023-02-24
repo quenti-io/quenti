@@ -53,7 +53,14 @@ const PropertiesListener = () => {
 
   React.useEffect(() => {
     store.subscribe(
-      (s) => [s.title, s.description, s.tags, s.languages, s.visibility],
+      (s) => [
+        s.title,
+        s.description,
+        s.tags,
+        s.wordLanguage,
+        s.definitionLanguage,
+        s.visibility,
+      ],
       propertiesSaveHandler,
       {
         equalityFn: shallow,
