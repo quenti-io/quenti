@@ -10,10 +10,10 @@ import {
 } from "@chakra-ui/react";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import type { Language } from "@prisma/client";
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
+import type { Language } from "../../lib/language";
 import { LanguageMenu } from "./language-menu";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
@@ -77,8 +77,12 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     const borderColor = useColorModeValue("gray.200", "gray.900");
     const bg = useColorModeValue("gray.100", "gray.750");
 
-    const wordLanguage = isCurrent ? _wordLanguage : "";
-    const definitionLanguage = isCurrent ? _definitionLanguage : "";
+    const wordLanguage: Language = isCurrent
+      ? _wordLanguage
+      : ("en" as Language);
+    const definitionLanguage: Language = isCurrent
+      ? _definitionLanguage
+      : ("en" as Language);
 
     return (
       <Card position="relative" ref={ref} style={style}>
@@ -145,7 +149,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
                     </Text>
                     {isCurrent && !!wordLanguage.length && (
                       <LanguageMenu
-                        selected={wordLanguage as Language}
+                        selected={wordLanguage}
                         onChange={setWordLanguage}
                       />
                     )}
@@ -185,7 +189,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
                     </Text>
                     {isCurrent && !!definitionLanguage.length && (
                       <LanguageMenu
-                        selected={definitionLanguage as Language}
+                        selected={definitionLanguage}
                         onChange={setDefinitionLanguage}
                       />
                     )}

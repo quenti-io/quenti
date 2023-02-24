@@ -1,13 +1,9 @@
-import type {
-  AutoSaveTerm,
-  Language,
-  StudySetVisibility,
-  Term,
-} from "@prisma/client";
+import type { AutoSaveTerm, StudySetVisibility, Term } from "@prisma/client";
 import { nanoid } from "nanoid";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import type { Language } from "../lib/language";
 
 interface SetEditorProps {
   mode: "create" | "edit";
@@ -59,7 +55,7 @@ export const createSetEditorStore = (
     isLoading: false,
     title: "",
     description: "",
-    languages: ["English", "English"],
+    languages: ["en", "en"],
     tags: [],
     visibility: "Public",
     terms: [],

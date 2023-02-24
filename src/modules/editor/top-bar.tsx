@@ -46,7 +46,7 @@ export const TopBar = () => {
       rounded="lg"
       position="sticky"
       top="2"
-      zIndex="10"
+      zIndex="50"
       shadow="xl"
     >
       <Flex align="center" justify="space-between" w="full">

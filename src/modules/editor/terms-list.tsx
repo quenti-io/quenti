@@ -16,10 +16,10 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import type { Language } from "@prisma/client";
 import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { useShortcut } from "../../hooks/use-shortcut";
+import type { Language } from "../../lib/language";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { SortableTermCard } from "./sortable-term-card";
 import { TermCardGap } from "./term-card-gap";
@@ -27,6 +27,7 @@ import { TermCardGap } from "./term-card-gap";
 export const TermsList = () => {
   const terms = useSetEditorContext((s) => s.terms);
   const reorderTerm = useSetEditorContext((s) => s.reorderTerm);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const languages = useSetEditorContext((s) => s.languages);
   const setLanguages = useSetEditorContext((s) => s.setLanguages);
   const addTerm = useSetEditorContext((s) => s.addTerm);
