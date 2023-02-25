@@ -44,7 +44,7 @@ export default function Signup() {
                     </Heading>
                   </Stack>
                   <Text color="whiteAlpha.700" fontSize="lg">
-                    Only users with verfified email addresses can sign in and
+                    Only users with verified email addresses can sign in and
                     access Quizlet.cc right now.
                   </Text>
                 </Stack>
