@@ -1,9 +1,10 @@
 import { Center, Heading, Text, VStack } from "@chakra-ui/react";
 import Head from "next/head";
+import { StaticWrapper } from "../components/static-wrapper";
 
 export default function NotFound() {
   return (
-    <>
+    <StaticWrapper>
       <Head>
         <title>404 | Quizlet.cc</title>
       </Head>
@@ -25,6 +26,6 @@ export default function NotFound() {
           </Text>
         </VStack>
       </Center>
-    </>
+    </StaticWrapper>
   );
 }

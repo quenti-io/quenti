@@ -27,7 +27,7 @@ const GlobalShortcutLayer = dynamic(
 type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
   Partial<AuthEnabledComponentConfig>;
 
-export const BASE_PAGES = ["/", "/404", "/unauthorized"];
+export const BASE_PAGES = ["/", "/signup", "/404", "/unauthorized"];
 
 const App: AppType<{ session: Session | null; cookies: string }> = ({
   Component: _Component,

@@ -1,13 +1,6 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react";
 import Image from "next/image";
+import { MainButton } from "./main-button";
 
 import setScreenshotSrc from "public/assets/landing/set-screenshot.png";
 
@@ -46,9 +39,7 @@ export const Hero = () => {
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
-                <Button colorScheme="orange" size="lg" height="4rem" px="2rem">
-                  Sign up for early access
-                </Button>
+                <MainButton />
               </Stack>
             </VStack>
             <Box maxW="1200px" pos="relative">

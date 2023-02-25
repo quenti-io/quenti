@@ -21,7 +21,13 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { avatarUrl } from "../../utils/avatar";
 
-export const MobileUserOptions: React.FC = () => {
+interface MobileUserOptionsProps {
+  closeMenu: () => void;
+}
+
+export const MobileUserOptions: React.FC<MobileUserOptionsProps> = ({
+  closeMenu,
+}) => {
   const router = useRouter();
   const onStaticPage = router.pathname === "/" || router.pathname === "/404";
 
@@ -75,7 +81,10 @@ export const MobileUserOptions: React.FC = () => {
                 <IconMoon size={18} />
               )
             }
-            onClick={toggleColorMode}
+            onClick={() => {
+              toggleColorMode();
+              closeMenu();
+            }}
             variant="outline"
           >
             {colorMode == "dark" ? "Light mode" : "Dark mode"}

@@ -28,9 +28,23 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
 }) => {
   const router = useRouter();
 
-  const [url, setUrl] = React.useState("");
+  const [_url, setUrl] = React.useState("");
   const [error, setError] = React.useState("");
 
+  const attemptFormat = (u: string) => {
+    // Remove the scheme if it exists
+    const parsed = u.replace(/^(https?:\/\/)?/, "");
+
+    const segments = parsed.split("/");
+    // Find the segment that is most probably the ID
+    const id = segments.find((segment) => /^\d+$/.test(segment));
+    if (id) {
+      return `https://quizlet.com/${id}`;
+    }
+    return u;
+  };
+
+  const url = attemptFormat(_url);
   const invalid = !!url && !QUIZLET_IMPORT_REGEXP.test(url);
 
   const primaryBg = useColorModeValue("gray.200", "gray.800");
@@ -75,7 +89,7 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
               rounded="md"
               px="4"
               size="lg"
-              value={url}
+              value={_url}
               onChange={(e) => setUrl(e.target.value)}
               _focus={{
                 borderColor: invalid ? "red.300" : "blue.300",

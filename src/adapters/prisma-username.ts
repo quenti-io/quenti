@@ -11,19 +11,21 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
       const name = data.name!;
       const sanitized = name.replace(USERNAME_REPLACE_REGEXP, "");
 
-      const existing = await p.user.findMany({
-        where: {
-          username: {
-            mode: "insensitive",
-            startsWith: sanitized,
+      const existing = (
+        await p.user.findMany({
+          where: {
+            username: {
+              mode: "insensitive",
+              startsWith: sanitized,
+            },
           },
-        },
-      });
+        })
+      ).map((user) => user.username.toLowerCase());
 
       let uniqueUsername = sanitized;
       if (existing.length) {
         let suffix = "1";
-        while (existing.some((user) => user.username === sanitized + suffix)) {
+        while (existing.some((u) => u === (sanitized + suffix).toLowerCase())) {
           suffix = (Number(suffix) + 1).toString();
         }
         uniqueUsername = sanitized + suffix;

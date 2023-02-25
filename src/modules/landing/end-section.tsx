@@ -1,4 +1,5 @@
-import { Button, Flex, Heading, VStack } from "@chakra-ui/react";
+import { Flex, Heading, VStack } from "@chakra-ui/react";
+import { MainButton } from "./main-button";
 
 export const EndSection = () => {
   return (
@@ -27,9 +28,7 @@ export const EndSection = () => {
           Study effectively once again, for free!
         </Heading>
         <Flex data-aos="fade-up" data-aos-delay="300">
-          <Button size="lg" colorScheme="orange" height="4rem">
-            Sign up for early access
-          </Button>
+          <MainButton />
         </Flex>
       </VStack>
     </VStack>
