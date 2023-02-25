@@ -50,6 +50,8 @@ const ContextLayer: React.FC<
   const router = useRouter();
   const storeRef = React.useRef<SetEditorStore>();
 
+  const [savedLocally, setSavedLocally] = React.useState(false);
+
   const apiEditSet = api.studySets.edit.useMutation();
   const apiAddTerm = api.terms.add.useMutation({
     onSuccess: (data) => {
@@ -90,6 +92,12 @@ const ContextLayer: React.FC<
   React.useEffect(() => {
     const state = storeRef.current!.getState();
     state.setIsSaving(isSaving);
+    if (isSaving) setSavedLocally(true);
+
+    if (!isSaving && savedLocally) {
+      state.setSavedAt(new Date());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSaving]);
 
   if (!storeRef.current) {

@@ -11,6 +11,7 @@ import { IconPencil } from "@tabler/icons-react";
 import React from "react";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
+import { getRelativeTime } from "../../utils/time";
 
 export const TopBar = () => {
   const mode = useSetEditorContext((s) => s.mode);
@@ -18,6 +19,7 @@ export const TopBar = () => {
   const setIsLoading = useSetEditorContext((s) => s.setIsLoading);
   const saveError = useSetEditorContext((s) => s.saveError);
   const setSaveError = useSetEditorContext((s) => s.setSaveError);
+  const savedAt = useSetEditorContext((s) => s.savedAt);
   const numTerms = useSetEditorContext((s) => s.terms.length);
   const onComplete = useSetEditorContext((s) => s.onComplete);
 
@@ -30,7 +32,10 @@ export const TopBar = () => {
 
   const text = isSaving
     ? "Saving..."
-    : saveError ?? `${plural(numTerms, "term")} saved just now`;
+    : saveError ??
+      `${plural(numTerms, "term")} saved ${
+        getRelativeTime(savedAt) || "just now"
+      }`;
 
   React.useEffect(() => {
     setSaveError(undefined);

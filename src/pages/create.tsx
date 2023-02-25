@@ -34,16 +34,13 @@ const EditorWrapper = () => {
 };
 
 const PropertiesListener = () => {
-  const { data } = api.autoSave.get.useQuery();
-
   const store = React.useContext(SetEditorStoreContext)!;
   const setIsSaving = useSetEditorContext((s) => s.setIsSaving);
-
-  const [_lastSavedAt, setLastSavedAt] = React.useState(data?.savedAt);
+  const setSavedAt = useSetEditorContext((s) => s.setSavedAt);
 
   const autoSave = api.autoSave.save.useMutation({
     onSuccess(data) {
-      setLastSavedAt(data.savedAt);
+      setSavedAt(data.savedAt);
     },
   });
 
