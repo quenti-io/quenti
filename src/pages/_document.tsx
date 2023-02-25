@@ -1,5 +1,5 @@
 import { ColorModeScript, theme } from "@chakra-ui/react";
-import { Html, Head, Main, NextScript } from "next/document";
+import { Head, Html, Main, NextScript } from "next/document";
 
 const Document = () => {
   return (
@@ -10,7 +10,11 @@ const Document = () => {
           rel="stylesheet"
         />
       </Head>
-      <body style={{ overflowX: "hidden" }}>
+      <body
+        style={{
+          overflowX: "hidden",
+        }}
+      >
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Main />
         <NextScript />

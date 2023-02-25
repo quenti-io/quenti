@@ -1,6 +1,8 @@
-import { Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { Button, Center, Heading, Link, Text, VStack } from "@chakra-ui/react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import Head from "next/head";
+import { StaticWrapper } from "../components/static-wrapper";
 
 export default function Unauthorized() {
   const stack = {
@@ -37,7 +39,7 @@ export default function Unauthorized() {
   };
 
   return (
-    <>
+    <StaticWrapper>
       <Head>
         <title>Missing Acccess | Quizlet.cc</title>
       </Head>
@@ -61,16 +63,26 @@ export default function Unauthorized() {
             <motion.div variants={text}>
               <Text
                 fontSize={{ base: "md", sm: "lg" }}
-                color="gray.500"
+                color="whiteAlpha.900"
                 fontWeight={600}
               >
                 Sorry, you don&apos;t have access to Quizlet.cc without a
                 verified email.
               </Text>
             </motion.div>
+            <motion.div variants={text}>
+              <Button
+                as={Link}
+                variant="ghost"
+                href="/"
+                leftIcon={<IconArrowLeft size={18} />}
+              >
+                Go Back
+              </Button>
+            </motion.div>
           </motion.div>
         </VStack>
       </Center>
-    </>
+    </StaticWrapper>
   );
 }
