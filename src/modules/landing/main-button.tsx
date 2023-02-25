@@ -1,5 +1,6 @@
-import { Button, Link } from "@chakra-ui/react";
+import { Box, Button, Link } from "@chakra-ui/react";
 import { IconArrowRight } from "@tabler/icons-react";
+import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 
 export const MainButton = () => {
@@ -15,7 +16,23 @@ export const MainButton = () => {
       href={session.data?.user ? "/home" : "/signup"}
       leftIcon={
         session.data?.user ? (
-          <IconArrowRight size={32} style={{ marginRight: 18 }} />
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: -12,
+            }}
+            animate={{
+              opacity: 1,
+              x: 0,
+            }}
+            style={{
+              marginRight: 16,
+            }}
+          >
+            <Box w="8">
+              <IconArrowRight size={32} />
+            </Box>
+          </motion.div>
         ) : undefined
       }
     >
