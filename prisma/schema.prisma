@@ -97,6 +97,7 @@ model StudySet {
   userId              String
   user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt           DateTime             @default(now())
+  savedAt             DateTime             @default(now()) @updatedAt
   title               String
   description         String
   tags                String[]             @default([])

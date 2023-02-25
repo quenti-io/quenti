@@ -10,6 +10,7 @@ interface SetEditorProps {
   isSaving: boolean;
   isLoading: boolean;
   saveError?: string;
+  savedAt: Date;
   title: string;
   description: string;
   tags: string[];
@@ -25,6 +26,7 @@ interface SetEditorState extends SetEditorProps {
   setIsSaving: (isSaving: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   setSaveError: (error?: string) => void;
+  setSavedAt: (date: Date) => void;
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setTags: (tags: string[]) => void;
@@ -55,6 +57,7 @@ export const createSetEditorStore = (
     mode: "create",
     isSaving: false,
     isLoading: false,
+    savedAt: new Date(),
     title: "",
     description: "",
     wordLanguage: "en",
@@ -72,6 +75,7 @@ export const createSetEditorStore = (
       setIsSaving: (isSaving: boolean) => set({ isSaving }),
       setIsLoading: (isLoading: boolean) => set({ isLoading }),
       setSaveError: (error?: string) => set({ saveError: error }),
+      setSavedAt: (date: Date) => set({ savedAt: date }),
       setTitle: (title: string) => set({ title }),
       setDescription: (description: string) => set({ description }),
       setTags: (tags: string[]) => set({ tags }),
@@ -170,6 +174,8 @@ export const createSetEditorStore = (
       flipTerms: () => {
         set((state) => {
           return {
+            wordLanguage: state.definitionLanguage,
+            definitionLanguage: state.wordLanguage,
             terms: state.terms.map((term) => ({
               ...term,
               word: term.definition,
