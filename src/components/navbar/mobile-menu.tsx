@@ -22,12 +22,14 @@ import { MobileUserOptions } from "./mobile-user-options";
 
 export interface MobileMenuProps {
   isOpen: boolean;
+  onClose: () => void;
   onFolderClick: () => void;
   onImportClick: () => void;
 }
 
 export const MobileMenu: React.FC<MobileMenuProps> = ({
   isOpen,
+  onClose,
   onFolderClick,
   onImportClick,
 }) => {
@@ -140,7 +142,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             </Button>
           )}
         </Stack>
-        {session?.user && <MobileUserOptions />}
+        {session?.user && <MobileUserOptions closeMenu={onClose} />}
       </Stack>
     </Collapse>
   );

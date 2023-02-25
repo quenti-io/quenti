@@ -95,6 +95,7 @@ export const Navbar: React.FC = () => {
             </HStack>
             <MobileMenu
               isOpen={isMobileMenuOpen}
+              onClose={onMobileMenuToggle}
               onFolderClick={() => setFolderModalOpen(true)}
               onImportClick={() => setImportModalOpen(true)}
             />

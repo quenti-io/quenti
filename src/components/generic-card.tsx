@@ -128,7 +128,12 @@ export const GenericCard: React.FC<GenericCardProps> = ({
                     <IconDotsVertical size="20" />
                   </Box>
                 </MenuButton>
-                <MenuList bg={menuBg} py={0} overflow="hidden">
+                <MenuList
+                  bg={menuBg}
+                  py={0}
+                  overflow="hidden"
+                  display={menuOpen ? "block" : "none"}
+                >
                   <MenuOption
                     icon={<IconTrash size={20} />}
                     label="Remove"
