@@ -10,7 +10,7 @@ export const EngineeredLearn = () => {
     <Flex as="section" justify="center">
       <Stack
         style={{ maxWidth: "1200px" }}
-        pt={32}
+        pt={{ base: 16, lg: 32 }}
         w="full"
         px="4"
         spacing={16}

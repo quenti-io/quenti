@@ -87,7 +87,7 @@ export const Hero = () => {
         <Flex
           justify="center"
           bgGradient="linear(to-b, gray.900, gray.800)"
-          h={200}
+          h={{ base: 10, lg: 200 }}
         ></Flex>
       </Box>
     </Stack>
