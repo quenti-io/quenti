@@ -5,6 +5,7 @@ import {
   HStack,
   IconButton,
   Text,
+  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
@@ -75,6 +76,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const ref = useOutsideClick(doEdit);
 
+  const { colorMode } = useColorMode();
   const divider = useColorModeValue("gray.200", "gray.600");
 
   return React.useMemo(
@@ -169,7 +171,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
       </Card>
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [term, starred, isEditing, editWord, editDefinition]
+    [term, starred, isEditing, editWord, editDefinition, colorMode]
   );
 };
 

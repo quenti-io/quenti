@@ -1,4 +1,4 @@
-import { useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import React from "react";
 
@@ -34,29 +34,32 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
   const chevronColor = useColorModeValue("blue.400", "blue.200");
 
   return (
-    <Select
-      selectedOptionStyle="check"
-      value={sortMethod}
-      onChange={(e) => {
-        setSortMethod(e!);
-        onChange(e!.value);
-      }}
-      chakraStyles={{
-        inputContainer: () => ({
-          width: 100,
-        }),
-        valueContainer: (provided) => ({
-          ...provided,
-          backgroundColor: baseBg,
-        }),
-        dropdownIndicator: (provided) => ({
-          ...provided,
-          paddingX: 2,
-          backgroundColor: dropdownBg,
-          color: chevronColor,
-        }),
-      }}
-      options={options}
-    />
+    <Box w="48">
+      <Select
+        selectedOptionStyle="check"
+        isSearchable={false}
+        value={sortMethod}
+        onChange={(e) => {
+          setSortMethod(e!);
+          onChange(e!.value);
+        }}
+        chakraStyles={{
+          inputContainer: () => ({
+            width: 100,
+          }),
+          valueContainer: (provided) => ({
+            ...provided,
+            backgroundColor: baseBg,
+          }),
+          dropdownIndicator: (provided) => ({
+            ...provided,
+            paddingX: 2,
+            backgroundColor: dropdownBg,
+            color: chevronColor,
+          }),
+        }}
+        options={options}
+      />
+    </Box>
   );
 };
