@@ -1,9 +1,9 @@
-import { Box } from "@chakra-ui/react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
+import { StaticWrapper } from "../components/static-wrapper";
 import { ComingSoon } from "../modules/landing/coming-soon";
 import { ComparisonChart } from "../modules/landing/comparison-chart";
 import { EndSection } from "../modules/landing/end-section";
@@ -23,7 +23,7 @@ const Home: NextPage = () => {
   }, []);
 
   return (
-    <Box overflow="hidden">
+    <StaticWrapper>
       <Head>
         <title>Quizlet.cc - A batteries included Quizlet alternative</title>
       </Head>
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
       <ComparisonChart />
       <ComingSoon />
       <EndSection />
-    </Box>
+    </StaticWrapper>
   );
 };
 
