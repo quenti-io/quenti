@@ -1,4 +1,4 @@
-import { Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import type { StudySetAnswerMode } from "@prisma/client";
 import { Select } from "chakra-react-select";
 import { useSet } from "../../hooks/use-set";
@@ -41,33 +41,36 @@ export const AnswerModeSection = () => {
           Choose how to answer when studying
         </Text>
       </Stack>
-      <Select
-        selectedOptionStyle="check"
-        value={options.find((o) => o.value === answerWith)}
-        onChange={(e) => {
-          setAnswerWith(e!.value);
-          apiAnswerWith.mutate({
-            studySetId: id,
-            answerWith: e!.value,
-          });
-        }}
-        chakraStyles={{
-          inputContainer: () => ({
-            width: 100,
-          }),
-          valueContainer: (provided) => ({
-            ...provided,
-            backgroundColor: baseBg,
-          }),
-          dropdownIndicator: (provided) => ({
-            ...provided,
-            paddingX: 2,
-            backgroundColor: dropdownBg,
-            color: chevronColor,
-          }),
-        }}
-        options={options}
-      />
+      <Box w="60">
+        <Select
+          selectedOptionStyle="check"
+          value={options.find((o) => o.value === answerWith)}
+          isSearchable={false}
+          onChange={(e) => {
+            setAnswerWith(e!.value);
+            apiAnswerWith.mutate({
+              studySetId: id,
+              answerWith: e!.value,
+            });
+          }}
+          chakraStyles={{
+            inputContainer: () => ({
+              width: 100,
+            }),
+            valueContainer: (provided) => ({
+              ...provided,
+              backgroundColor: baseBg,
+            }),
+            dropdownIndicator: (provided) => ({
+              ...provided,
+              paddingX: 2,
+              backgroundColor: dropdownBg,
+              color: chevronColor,
+            }),
+          }}
+          options={options}
+        />
+      </Box>
     </Flex>
   );
 };
