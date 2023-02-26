@@ -51,6 +51,7 @@ interface Entity {
 interface MenuOption {
   icon: React.ReactNode;
   name: string;
+  searchableName?: string;
   label?: string;
   action: (ctrl: boolean) => void;
   entity?: Entity;
@@ -77,6 +78,9 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         total.push({
           icon: <IconBooks />,
           name: set.title,
+          searchableName: set.title
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""),
           action: (ctrl) => openLink(`/${set.id}`, ctrl),
           entity: {
             id: set.id,
@@ -96,6 +100,9 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         total.push({
           icon: <IconFolder />,
           name: folder.title,
+          searchableName: folder.title
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""),
           action: (ctrl) => openLink(url, ctrl),
           entity: {
             id: folder.id,
@@ -165,7 +172,9 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 
   const filteredOptions: MenuOption[] = options
     .filter((o) => (!!o.shouldShow ? o.shouldShow() : true))
-    .filter((e) => (e.name || "").toLowerCase().includes(query.toLowerCase()));
+    .filter((e) =>
+      (e.searchableName ?? e.name).toLowerCase().includes(query.toLowerCase())
+    );
 
   const openLink = (link: string, ctrl: boolean) => {
     void (async () => {
