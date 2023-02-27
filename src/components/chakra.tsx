@@ -24,6 +24,8 @@ export const Chakra: React.FC<React.PropsWithChildren<Data>> = ({
   );
 };
 
+export const runtime = "experimental-edge";
+
 // eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps: GetServerSideProps<Data> = async ({ req }) => {
   return {
