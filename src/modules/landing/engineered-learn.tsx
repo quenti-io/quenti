@@ -33,7 +33,7 @@ export const EngineeredLearn = () => {
               color="gray.400"
               data-aos="fade"
             >
-              Arguably one of Quizlet&apos;s most useful features, Learn, helps
+              Arguably Quizlet&apos;s most useful feature, Learn, helps
               you memorize a set by answering each term correctly twice.
               We&apos;ve reverse-engineered it to offer the same experience.
             </Text>
