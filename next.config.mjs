@@ -1,4 +1,9 @@
+const shouldAnalyzeBundles = process.env.ANALYZE === "true";
+
 import { withAxiom } from "next-axiom";
+const withBundleAnalyzer = shouldAnalyzeBundles
+  ? (await import("@next/bundle-analyzer")).default
+  : () => undefined;
 
 // @ts-check
 /**
@@ -8,7 +13,7 @@ import { withAxiom } from "next-axiom";
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
 /** @type {import("next").NextConfig} */
-const config = withAxiom({
+let config = withAxiom({
   reactStrictMode: true,
   swcMinify: true,
   i18n: {
@@ -49,4 +54,9 @@ const config = withAxiom({
     },
   ],
 });
+
+if (shouldAnalyzeBundles) {
+  config = withBundleAnalyzer(config);
+}
+
 export default config;
