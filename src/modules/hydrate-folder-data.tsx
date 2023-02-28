@@ -54,7 +54,7 @@ export const HydrateFolderData: React.FC<
       idOrSlug: slug,
       includeTerms: withTerms,
     },
-    { retry: false }
+    { retry: false, enabled: !!username }
   );
 
   if (folder.error?.data?.httpStatus === 404) return <Folder404 />;

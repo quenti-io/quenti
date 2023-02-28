@@ -16,8 +16,8 @@ import {
 } from "@tabler/icons-react";
 import { signIn, useSession } from "next-auth/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
-import { Link } from "../link";
 import { MenuOption } from "../menu-option";
 import { MobileUserOptions } from "./mobile-user-options";
 
@@ -34,6 +34,12 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onFolderClick,
   onImportClick,
 }) => {
+  const router = useRouter();
+  React.useEffect(() => {
+    if (isOpen) onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.pathname]);
+
   const { data: session, status } = useSession()!;
   const bgGradient = useColorModeValue(
     "linear(to-b, gray.50, white)",
@@ -56,24 +62,28 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
         <Stack spacing={4}>
           {session?.user && (
             <Button
-              as={Link}
-              href="/home"
               variant="outline"
               colorScheme="gray"
               fontWeight={700}
               fontSize="sm"
+              onClick={async () => {
+                onClose();
+                await router.push("/home");
+              }}
             >
               Home
             </Button>
           )}
           {session?.user?.admin && (
             <Button
-              as={Link}
-              href="/admin"
               variant="outline"
               colorScheme="gray"
               fontWeight={700}
               fontSize="sm"
+              onClick={async () => {
+                onClose();
+                await router.push("/admin");
+              }}
             >
               Admin
             </Button>
@@ -114,6 +124,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                   <MenuOption
                     icon={<IconBooks size={20} />}
                     label="Study set"
+                    onClick={() => {
+                      onClose();
+                    }}
                   />
                 </NextLink>
                 <MenuOption

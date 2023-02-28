@@ -21,6 +21,7 @@ export const HydrateSetData: React.FC<React.PropsWithChildren> = ({
   const { loading } = useLoading();
   const { data, error } = api.studySets.byId.useQuery(id, {
     retry: false,
+    enabled: !!id,
   });
 
   if (error?.data?.httpStatus == 404) return <Set404 />;
