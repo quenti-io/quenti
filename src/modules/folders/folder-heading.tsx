@@ -26,6 +26,7 @@ export const FolderHeading = () => {
           <Avatar src={avatarUrl(folder.user)} size="xs" />
           <Link
             href={`/@${folder.user.username}`}
+            transition="color 200ms ease-in-out"
             _hover={{ color: highlight }}
           >
             {folder.user.username}

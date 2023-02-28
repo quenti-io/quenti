@@ -70,7 +70,7 @@ export const ActionArea = () => {
             href={
               folder.sets.length
                 ? `/@${folder.user.username}/folders/${slug}/flashcards`
-                : undefined
+                : ""
             }
           >
             Study
