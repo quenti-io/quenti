@@ -47,6 +47,4 @@ const Banned: ComponentWithAuth = () => {
 Banned.title = "Banned";
 Banned.authenticationEnabled = true;
 
-export { getServerSideProps } from "../components/chakra";
-
 export default Banned;

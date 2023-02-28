@@ -75,5 +75,3 @@ const PropertiesListener = () => {
 Edit.authenticationEnabled = true;
 
 export default Edit;
-
-export { getServerSideProps } from "../../../components/chakra";

@@ -1,7 +1,8 @@
-import { Box, Button, Link } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { IconArrowRight } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { Link } from "../../components/link";
 
 export const MainButton = () => {
   const session = useSession();

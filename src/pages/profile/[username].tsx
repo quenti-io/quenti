@@ -52,5 +52,3 @@ const UserPage: ComponentWithAuth = () => {
 UserPage.authenticationEnabled = true;
 
 export default UserPage;
-
-export { getServerSideProps } from "../../components/chakra";

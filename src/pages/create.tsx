@@ -103,6 +103,4 @@ const PropertiesListener = () => {
 Create.title = "Create a new set";
 Create.authenticationEnabled = true;
 
-export { getServerSideProps } from "../components/chakra";
-
 export default Create;

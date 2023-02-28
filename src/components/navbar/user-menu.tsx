@@ -20,6 +20,7 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { BASE_PAGES } from "../../pages/_app";
@@ -73,16 +74,18 @@ export const UserMenu = () => {
         </Wrap>
       </MenuButton>
       <MenuList bg={menuBg} py={0} overflow="hidden" w="max" marginTop={2}>
-        <MenuOption
-          icon={<IconUser size={18} />}
-          label="Profile"
-          link={`/@${user.username}`}
-        />
-        <MenuOption
-          icon={<IconSettings size={18} />}
-          label="Settings"
-          link="/settings"
-        />
+        <Link href={`/@${user.username}`} passHref>
+          <MenuOption
+            icon={<IconUser size={18} />}
+            label="Profile"
+            onClick={() => {
+              console.log("Clicked profile");
+            }}
+          />
+        </Link>
+        <Link href="/settings" passHref>
+          <MenuOption icon={<IconSettings size={18} />} label="Settings" />
+        </Link>
         {!onStaticPage && (
           <>
             <MenuOption

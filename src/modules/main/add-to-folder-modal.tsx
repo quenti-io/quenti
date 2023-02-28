@@ -6,7 +6,6 @@ import {
   Heading,
   HStack,
   IconButton,
-  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -14,11 +13,12 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconFolder, IconFolderPlus, IconMinus } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
+import { Link } from "../../components/link";
 import { useSet } from "../../hooks/use-set";
 import { api } from "../../utils/api";
 

@@ -45,6 +45,4 @@ const Home: ComponentWithAuth = () => {
 Home.title = "Your Sets";
 Home.authenticationEnabled = true;
 
-export { getServerSideProps } from "../components/chakra";
-
 export default Home;

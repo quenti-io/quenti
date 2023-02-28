@@ -1,17 +1,18 @@
-import { Link, MenuItem, Text, useColorModeValue } from "@chakra-ui/react";
+// eslint-disable-next-line no-restricted-imports
+import { MenuItem, Text, useColorModeValue, Link } from "@chakra-ui/react";
 import type { TablerIconsProps } from "@tabler/icons-react";
 
 export interface MenuOptionProps {
   icon: React.ReactElement<TablerIconsProps, string>;
   label: string;
-  link?: string;
+  href?: string;
   onClick?: () => void;
 }
 
 export const MenuOption: React.FC<MenuOptionProps> = ({
   icon,
   label,
-  link,
+  href,
   onClick,
 }) => {
   const bg = useColorModeValue("white", "gray.800");
@@ -21,8 +22,8 @@ export const MenuOption: React.FC<MenuOptionProps> = ({
   return (
     <MenuItem
       icon={icon}
-      as={link ? Link : undefined}
-      href={link ?? ""}
+      as={href ? Link : undefined}
+      href={href}
       bg={bg}
       _hover={{ bg: hover }}
       onClick={onClick}

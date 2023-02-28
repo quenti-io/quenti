@@ -3,13 +3,13 @@ import {
   Box,
   Flex,
   HStack,
-  Link,
   Stack,
   Text,
   Tooltip,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
+import { Link } from "../../components/link";
 import { useSet } from "../../hooks/use-set";
 import { avatarUrl } from "../../utils/avatar";
 import { ActionArea } from "./action-area";

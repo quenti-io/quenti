@@ -24,5 +24,3 @@ const Flashcards: ComponentWithAuth = () => {
 Flashcards.authenticationEnabled = true;
 
 export default Flashcards;
-
-export { getServerSideProps } from "../../../components/chakra";

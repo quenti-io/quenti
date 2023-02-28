@@ -6,10 +6,11 @@ import {
   LinkOverlay,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import type { StudySetVisibility } from "@prisma/client";
 import { visibilityIcon } from "../../common/visibility-icon";
+import { Link } from "../../components/link";
 import { plural } from "../../utils/string";
 
 interface ProfileLinkableProps {
@@ -56,7 +57,9 @@ export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
         <HStack>
           {leftIcon}
           <Heading size="md">
-            <LinkOverlay href={url}>{title}</LinkOverlay>
+            <LinkOverlay as={Link} href={url}>
+              {title}
+            </LinkOverlay>
           </Heading>
           {visibility && visibility !== "Public" ? (
             <Box color="gray.500">{visibilityIcon(visibility, 18)}</Box>

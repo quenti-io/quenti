@@ -24,5 +24,3 @@ const FolderStudyFlashcards: ComponentWithAuth = () => {
 FolderStudyFlashcards.authenticationEnabled = true;
 
 export default FolderStudyFlashcards;
-
-export { getServerSideProps } from "../../../../../components/chakra";

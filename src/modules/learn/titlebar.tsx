@@ -1,7 +1,8 @@
-import { Flex, Heading, IconButton, Link } from "@chakra-ui/react";
+import { Flex, Heading, IconButton } from "@chakra-ui/react";
 import { IconArrowLeft, IconSettings } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
+import { Link } from "../../components/link";
 import { SetSettingsModal } from "../../components/set-settings-modal";
 import { useSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";

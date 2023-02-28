@@ -1,16 +1,16 @@
 import {
   Button,
   HStack,
-  Link,
   Stack,
   Switch,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconUser } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { ChangeUsernameInput } from "../../components/change-username-input";
+import { Link } from "../../components/link";
 import { api } from "../../utils/api";
 import { SectionWrapper } from "./section-wrapper";
 

@@ -1,5 +1,6 @@
-import { Button, Center, Heading, Link, Text, VStack } from "@chakra-ui/react";
+import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { IconFolder } from "@tabler/icons-react";
+import { Link } from "../../components/link";
 
 export const Folder404 = () => {
   return (

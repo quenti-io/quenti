@@ -82,6 +82,4 @@ const Onboarding: ComponentWithAuth = () => {
 Onboarding.title = "Welcome";
 Onboarding.authenticationEnabled = true;
 
-export { getServerSideProps } from "../components/chakra";
-
 export default Onboarding;

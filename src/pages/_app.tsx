@@ -1,4 +1,4 @@
-import { DarkMode, GlobalStyle } from "@chakra-ui/react";
+import { ChakraProvider, DarkMode, GlobalStyle } from "@chakra-ui/react";
 import type { NextComponentType, NextPageContext } from "next";
 import { type Session } from "next-auth";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
@@ -6,15 +6,15 @@ import { type AppType } from "next/app";
 import { useRouter } from "next/router";
 import React from "react";
 import type { AuthEnabledComponentConfig } from "../components/auth-component";
-import { Chakra } from "../components/chakra";
 import { Navbar } from "../components/navbar";
 import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { api } from "../utils/api";
 
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import { env } from "../env/client.mjs";
+import { theme } from "../lib/chakra-theme";
 import "../styles/globals.css";
-import dynamic from "next/dynamic";
 
 export { reportWebVitals } from "next-axiom";
 
@@ -29,9 +29,9 @@ type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
 
 export const BASE_PAGES = ["/", "/signup", "/404", "/unauthorized"];
 
-const App: AppType<{ session: Session | null; cookies: string }> = ({
+const App: AppType<{ session: Session | null }> = ({
   Component: _Component,
-  pageProps: { session, cookies, ...pageProps },
+  pageProps: { session, ...pageProps },
 }) => {
   const Component = _Component as NextComponentWithAuth;
   const router = useRouter();
@@ -104,7 +104,7 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
         <meta property="twitter:description" content={desc} />
         <meta property="twitter:image" content={`${base}/og-image.png`} />
       </Head>
-      <Chakra cookies={cookies}>
+      <ChakraProvider theme={theme}>
         <LoadingProvider>
           <SessionProvider session={session}>
             {staticPage ? (
@@ -117,7 +117,7 @@ const App: AppType<{ session: Session | null; cookies: string }> = ({
             )}
           </SessionProvider>
         </LoadingProvider>
-      </Chakra>
+      </ChakraProvider>
     </>
   );
 };

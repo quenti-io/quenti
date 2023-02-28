@@ -40,5 +40,3 @@ const Set: ComponentWithAuth = () => {
 Set.authenticationEnabled = true;
 
 export default Set;
-
-export { getServerSideProps } from "../../components/chakra";

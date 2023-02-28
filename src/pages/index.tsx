@@ -15,11 +15,13 @@ import { TrackProgress } from "../modules/landing/track-progress";
 
 const Home: NextPage = () => {
   React.useEffect(() => {
-    AOS.init({
-      easing: "ease",
-      duration: 1000,
-      once: true,
-    });
+    setTimeout(() => {
+      AOS.init({
+        easing: "ease",
+        duration: 1000,
+        once: true,
+      });
+    }, 100);
   }, []);
 
   return (
@@ -38,7 +40,5 @@ const Home: NextPage = () => {
     </StaticWrapper>
   );
 };
-
-export { getServerSideProps } from "../components/chakra";
 
 export default Home;

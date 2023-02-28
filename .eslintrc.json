@@ -39,6 +39,18 @@
         "selector": "ImportDeclaration[importKind!='type'][source.value=/@prisma\\u002Fclient/]",
         "message": "Must use 'import type' when importing from @prisma/client. Database schemas are exposed to the client!"
       }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "paths": [
+          {
+            "name": "@chakra-ui/react",
+            "importNames": ["Link"],
+            "message": "Use Link from ~/components/Link instead."
+          }
+        ]
+      }
     ]
   }
 }

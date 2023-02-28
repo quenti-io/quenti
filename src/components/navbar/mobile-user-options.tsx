@@ -2,7 +2,6 @@ import {
   Avatar,
   AvatarBadge,
   Button,
-  Link,
   Stack,
   Text,
   useColorMode,
@@ -20,6 +19,7 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { avatarUrl } from "../../utils/avatar";
+import { Link } from "../link";
 
 interface MobileUserOptionsProps {
   closeMenu: () => void;
