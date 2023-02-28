@@ -50,7 +50,7 @@ export const HydrateFolderData: React.FC<
 
   const folder = api.folders.get.useQuery(
     {
-      username: username.slice(1),
+      username: (username || "").slice(1),
       idOrSlug: slug,
       includeTerms: withTerms,
     },

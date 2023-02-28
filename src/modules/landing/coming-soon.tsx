@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   Heading,
+  // eslint-disable-next-line no-restricted-imports
   Link,
   SimpleGrid,
   Stack,

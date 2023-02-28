@@ -1,12 +1,13 @@
-import { Button, Flex, IconButton, Link, Stack } from "@chakra-ui/react";
+import { Button, Flex, IconButton, Stack } from "@chakra-ui/react";
 import {
   IconArrowsShuffle,
   IconMaximize,
   IconPlayerPlay,
-  IconSettings,
+  IconSettings
 } from "@tabler/icons-react";
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
+import { Link } from "../../components/link";
 import { SetSettingsModal } from "../../components/set-settings-modal";
 import { useSet } from "../../hooks/use-set";
 import { useExperienceContext } from "../../stores/use-experience-store";

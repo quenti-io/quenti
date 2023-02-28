@@ -5,7 +5,6 @@ import {
   Container,
   Flex,
   Heading,
-  Link,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -13,6 +12,7 @@ import { IconArrowLeft, IconBrandGoogle } from "@tabler/icons-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import deviceframesSrc from "public/assets/signup/deviceframes.png";
+import { Link } from "../components/link";
 import { StaticWrapper } from "../components/static-wrapper";
 
 export default function Signup() {

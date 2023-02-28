@@ -4,7 +4,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Link,
   Stack,
   Tab,
   TabList,
@@ -16,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { IconAdjustments, IconUserCircle } from "@tabler/icons-react";
 import type { ComponentWithAuth } from "../components/auth-component";
+import { Link } from "../components/link";
 import { WithFooter } from "../components/with-footer";
 import { useAdmin } from "../hooks/use-admin";
 import { AdminDashboard } from "../modules/admin/dashboard";
@@ -84,13 +84,16 @@ const Admin: ComponentWithAuth = () => {
 const DashboardButton = () => {
   const { grafanaUrl } = useAdmin();
 
+  if (!grafanaUrl) {
+    return (
+      <Button leftIcon={<IconAdjustments />} isDisabled>
+        Dashboard
+      </Button>
+    );
+  }
+
   return (
-    <Button
-      leftIcon={<IconAdjustments />}
-      as={Link}
-      href={grafanaUrl}
-      isDisabled={!grafanaUrl}
-    >
+    <Button leftIcon={<IconAdjustments />} as={Link} href={grafanaUrl}>
       Dashboard
     </Button>
   );
@@ -98,7 +101,5 @@ const DashboardButton = () => {
 
 Admin.title = "Admin Dashboard";
 Admin.authenticationEnabled = true;
-
-export { getServerSideProps } from "../components/chakra";
 
 export default Admin;

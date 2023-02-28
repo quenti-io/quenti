@@ -1,8 +1,13 @@
 import {
   Avatar,
-  Heading, HStack, Link, Stack, Text, useColorModeValue
+  Heading,
+  HStack,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconFolder } from "@tabler/icons-react";
+import { Link } from "../../components/link";
 import { useFolder } from "../../hooks/use-folder";
 import { avatarUrl } from "../../utils/avatar";
 import { plural } from "../../utils/string";

@@ -3,22 +3,23 @@ import {
   Flex,
   Heading,
   HStack,
-  Link,
   Menu,
   MenuButton,
   MenuDivider,
   MenuList,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import {
   IconBooks,
   IconChevronDown,
   IconCloudDownload,
-  IconFolder,
+  IconFolder
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
+import NextLink from "next/link";
 import React from "react";
 import { Logo } from "../../icons/logo";
+import { Link } from "../link";
 import { MenuOption } from "../menu-option";
 
 export interface LeftNavProps {
@@ -109,11 +110,9 @@ export const LeftNav: React.FC<LeftNavProps> = ({
               w="max"
               marginTop={2}
             >
-              <MenuOption
-                icon={<IconBooks size={20} />}
-                label="Study set"
-                link="/create"
-              />
+              <NextLink href="/create" passHref>
+                <MenuOption icon={<IconBooks size={20} />} label="Study set" />
+              </NextLink>
               <MenuOption
                 icon={<IconCloudDownload size={20} />}
                 label="Import from Quizlet"

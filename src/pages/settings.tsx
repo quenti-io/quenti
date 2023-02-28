@@ -51,6 +51,4 @@ const Settings: ComponentWithAuth = () => {
 Settings.title = "Settings";
 Settings.authenticationEnabled = true;
 
-export { getServerSideProps } from "../components/chakra";
-
 export default Settings;

@@ -34,5 +34,3 @@ const FolderPage: ComponentWithAuth = () => {
 FolderPage.authenticationEnabled = true;
 
 export default FolderPage;
-
-export { getServerSideProps } from "../../../../components/chakra";

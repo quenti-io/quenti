@@ -3,22 +3,22 @@ import {
   ButtonGroup,
   Flex,
   IconButton,
-  Link,
   Menu,
   MenuButton,
   MenuList,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import {
   IconCards,
   IconDotsVertical,
   IconEdit,
-  IconTrash,
+  IconTrash
 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { ConfirmModal } from "../../components/confirm-modal";
+import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
 import { useFolder } from "../../hooks/use-folder";
 import { api } from "../../utils/api";

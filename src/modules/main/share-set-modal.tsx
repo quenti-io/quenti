@@ -5,16 +5,16 @@ import {
   Heading,
   HStack,
   Input,
-  Link,
   Modal,
   ModalContent,
   ModalOverlay,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconCheck, IconCopy, IconEdit, IconLock } from "@tabler/icons-react";
 import React from "react";
+import { Link } from "../../components/link";
 import { useSet } from "../../hooks/use-set";
 
 export interface ShareSetModalProps {

@@ -2,15 +2,15 @@ import {
   Button,
   Center,
   Heading,
-  Link,
   Stack,
   Text,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { IconReload } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { ConfirmModal } from "../../components/confirm-modal";
+import { Link } from "../../components/link";
 import { useSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
 import { api } from "../../utils/api";

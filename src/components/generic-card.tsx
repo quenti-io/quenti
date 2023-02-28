@@ -11,16 +11,17 @@ import {
   MenuList,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import {
   IconDiscountCheck,
   IconDotsVertical,
-  IconTrash,
+  IconTrash
 } from "@tabler/icons-react";
 import React from "react";
 import { avatarUrl } from "../utils/avatar";
 import { plural } from "../utils/string";
+import { Link } from "./link";
 import { MenuOption } from "./menu-option";
 
 export interface GenericCardProps {
@@ -93,7 +94,9 @@ export const GenericCard: React.FC<GenericCardProps> = ({
               WebkitBoxOrient: "vertical",
             }}
           >
-            <LinkOverlay href={url}>{title}</LinkOverlay>
+            <LinkOverlay as={Link} href={url}>
+              {title}
+            </LinkOverlay>
           </Heading>
           <HStack gap={0} color={termsTextColor}>
             {leftIcon}

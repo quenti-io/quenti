@@ -1,7 +1,6 @@
 import {
   Button,
   Collapse,
-  Link,
   Menu,
   MenuButton,
   MenuDivider,
@@ -16,7 +15,9 @@ import {
   IconFolder,
 } from "@tabler/icons-react";
 import { signIn, useSession } from "next-auth/react";
+import NextLink from "next/link";
 import React from "react";
+import { Link } from "../link";
 import { MenuOption } from "../menu-option";
 import { MobileUserOptions } from "./mobile-user-options";
 
@@ -109,11 +110,12 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                 overflow="hidden"
                 w="calc(100vw - 48px)"
               >
-                <MenuOption
-                  icon={<IconBooks size={20} />}
-                  label="Study set"
-                  link="/create"
-                />
+                <NextLink href="/create" passHref>
+                  <MenuOption
+                    icon={<IconBooks size={20} />}
+                    label="Study set"
+                  />
+                </NextLink>
                 <MenuOption
                   icon={<IconCloudDownload size={20} />}
                   label="Import from Quizlet"

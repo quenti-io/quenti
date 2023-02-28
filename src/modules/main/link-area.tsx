@@ -15,6 +15,7 @@ import {
   IconReport
 } from "@tabler/icons-react";
 import React from "react";
+import { Link } from "../../components/link";
 import { useSet } from "../../hooks/use-set";
 
 export const LinkArea = () => {
@@ -102,7 +103,9 @@ const Linkable: React.FC<LinkableProps> = ({
       <Flex gap={4}>
         <Box color="blue.300">{icon}</Box>
         <Heading size="md" color={disabled ? disabledHeading : undefined}>
-          <LinkOverlay href={href}>{name}</LinkOverlay>
+          <LinkOverlay as={Link} href={href}>
+            {name}
+          </LinkOverlay>
         </Heading>
       </Flex>
     </LinkBox>

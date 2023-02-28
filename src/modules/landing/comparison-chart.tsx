@@ -39,7 +39,7 @@ export const ComparisonChart = () => {
             Quizlet Plus, don&apos;t bother, for now at least.
           </Text>
         </VStack>
-        <TableContainer data-aos="fade-up">
+        <TableContainer data-aos="fade">
           <Table>
             <Thead>
               <Tr>

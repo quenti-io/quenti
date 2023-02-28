@@ -74,5 +74,3 @@ const LearnContainer = () => {
 Learn.authenticationEnabled = true;
 
 export default Learn;
-
-export { getServerSideProps } from "../../../components/chakra";

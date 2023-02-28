@@ -4,20 +4,20 @@ import {
   Heading,
   HStack,
   IconButton,
-  Link,
   Menu,
   MenuButton,
   MenuList,
   Stack,
   Tag,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { visibilityIcon } from "../../common/visibility-icon";
 import { ConfirmModal } from "../../components/confirm-modal";
+import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useSet } from "../../hooks/use-set";
