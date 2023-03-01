@@ -16,7 +16,7 @@ export const FlashcardArea = () => {
   );
 
   React.useEffect(() => {
-    setTermOrder((o: string[]) => (shuffle ? shuffleArray(Array.from(o)) : o));
+    setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
   }, [shuffle]);
 
   return (
