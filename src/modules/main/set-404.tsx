@@ -5,7 +5,7 @@ import { Link } from "../../components/link";
 export const Set404 = () => {
   return (
     <Center h="calc(100vh - 120px)">
-      <VStack spacing={12}>
+      <VStack spacing={12} textAlign="center" px="8">
         <VStack spacing={4}>
           <IconQuestionCircle />
           <Heading>We couldn&apos;t find this set</Heading>

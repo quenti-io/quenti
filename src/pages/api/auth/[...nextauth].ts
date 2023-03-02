@@ -24,17 +24,30 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async signIn({ user }) {
-      const whitelisted = await prisma.whitelistedEmail.findUnique({
-        where: {
-          email: user.email || "",
-        },
+      const regexes = await prisma.allowedEmailRegex.findMany();
+
+      const matchedRegex = regexes.some((r) => {
+        try {
+          const regex = new RegExp(r.regex, "g");
+          return regex.test(user.email || "");
+        } catch {
+          return false;
+        }
       });
+
+      const emailAllowed =
+        matchedRegex ||
+        !!(await prisma.whitelistedEmail.findUnique({
+          where: {
+            email: user.email || "",
+          },
+        }));
 
       const bypass =
         user.email == env.ADMIN_EMAIL ||
         (user.username && user.username.toLowerCase() == "quizlet");
 
-      if (!whitelisted && !bypass) {
+      if (!emailAllowed && !bypass) {
         const tenRecent = await prisma.recentFailedLogin.findMany({
           take: 10,
           orderBy: {
