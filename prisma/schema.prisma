@@ -79,6 +79,12 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model AllowedEmailRegex {
+  regex     String   @id @unique
+  label     String
+  createdAt DateTime @default(now())
+}
+
 model WhitelistedEmail {
   email     String   @id @unique
   createdAt DateTime @default(now())

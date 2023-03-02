@@ -2,17 +2,34 @@ import { EnabledFeature } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
+import { refineRegex } from "../common/validation";
 import { adminProcedure, createTRPCRouter } from "../trpc";
 
 export const adminRouter = createTRPCRouter({
   landing: adminProcedure.query(async ({ ctx }) => {
+    const [
+      studySets,
+      terms,
+      studiableTerms,
+      starredTerms,
+      folders,
+      experiences,
+    ] = await ctx.prisma.$transaction([
+      ctx.prisma.studySet.count(),
+      ctx.prisma.term.count(),
+      ctx.prisma.studiableTerm.count(),
+      ctx.prisma.starredTerm.count(),
+      ctx.prisma.folder.count(),
+      ctx.prisma.studySetExperience.count(),
+    ]);
+
     return {
-      studySets: await ctx.prisma.studySet.count(),
-      terms: await ctx.prisma.term.count(),
-      studiableTerms: await ctx.prisma.studiableTerm.count(),
-      starredTerms: await ctx.prisma.starredTerm.count(),
-      folders: await ctx.prisma.folder.count(),
-      experiences: await ctx.prisma.studySetExperience.count(),
+      studySets,
+      terms,
+      studiableTerms,
+      starredTerms,
+      folders,
+      experiences,
       grafanaUrl: env.GRAFANA_DASHBOARD_URL,
     };
   }),
@@ -107,6 +124,11 @@ export const adminRouter = createTRPCRouter({
           createdAt: "desc",
         },
       }),
+      regexes: await ctx.prisma.allowedEmailRegex.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
       attemtps: await ctx.prisma.recentFailedLogin.findMany({
         orderBy: {
           createdAt: "desc",
@@ -157,6 +179,52 @@ export const adminRouter = createTRPCRouter({
       await ctx.prisma.whitelistedEmail.delete({
         where: {
           email: input,
+        },
+      });
+    }),
+
+  addRegex: adminProcedure
+    .input(
+      z.object({
+        regex: z.string().refine(...refineRegex),
+        label: z.string().trim().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.allowedEmailRegex.create({
+        data: {
+          regex: input.regex,
+          label: input.label,
+        },
+      });
+    }),
+
+  editRegex: adminProcedure
+    .input(
+      z.object({
+        oldRegex: z.string(),
+        newRegex: z.string().refine(...refineRegex),
+        label: z.string().trim().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.allowedEmailRegex.update({
+        where: {
+          regex: input.oldRegex,
+        },
+        data: {
+          regex: input.newRegex,
+          label: input.label,
+        },
+      });
+    }),
+
+  removeRegex: adminProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.allowedEmailRegex.delete({
+        where: {
+          regex: input,
         },
       });
     }),

@@ -17,7 +17,7 @@ import {
   Text,
   Th,
   Thead,
-  Tr,
+  Tr
 } from "@chakra-ui/react";
 import type { RecentFailedLogin } from "@prisma/client";
 import { IconPlus, IconTrash, IconUserPlus } from "@tabler/icons-react";
@@ -26,6 +26,7 @@ import { useAdmin } from "../../hooks/use-admin";
 import { api } from "../../utils/api";
 import { avatarUrl } from "../../utils/avatar";
 import { dtFormatter } from "../../utils/time";
+import { AllowedRegexes } from "./allowed-regexes";
 
 export const AdminEmails = () => {
   const [email, setEmail] = React.useState("");
@@ -88,6 +89,7 @@ export const AdminEmails = () => {
           </Table>
         </TableContainer>
       </Stack>
+      <AllowedRegexes />
       <Stack spacing={6}>
         <Heading size="md">Recent Failed Logins</Heading>
         <TableContainer>
