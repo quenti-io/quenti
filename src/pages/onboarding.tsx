@@ -65,6 +65,9 @@ const Onboarding: ComponentWithAuth = () => {
                 <ChangeUsernameInput
                   disabledIfUnchanged={false}
                   onChange={() => {
+                    const event = new Event("visibilitychange");
+                    document.dispatchEvent(event);
+
                     void (async () => {
                       await router.push(`/home`);
                     })();
