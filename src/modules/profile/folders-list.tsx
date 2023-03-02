@@ -18,6 +18,10 @@ export const FoldersList = () => {
   const dividerColor = useColorModeValue("gray.300", "gray.700");
   const grayText = useColorModeValue("gray.600", "gray.400");
 
+  const placeholder = !profile.isMe
+    ? "This user hasn't created any folders."
+    : "You haven't created any folders yet.";
+
   return (
     <Stack spacing={8}>
       {grouped.map((x, i) => (
@@ -45,9 +49,7 @@ export const FoldersList = () => {
       {!grouped.length && (
         <Stack>
           <Heading size="lg">Nothing Yet</Heading>
-          <Text color={grayText}>
-            This user hasn&apos;t created any folders.
-          </Text>
+          <Text color={grayText}>{placeholder}</Text>
         </Stack>
       )}
     </Stack>

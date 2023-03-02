@@ -17,6 +17,10 @@ export const StudySetsList = () => {
   const dividerColor = useColorModeValue("gray.300", "gray.700");
   const grayText = useColorModeValue("gray.600", "gray.400");
 
+  const placeholder = !profile.isMe
+    ? "This user doesn't have any public study sets."
+    : "You haven't created any study sets yet.";
+
   return (
     <Stack spacing={8}>
       {grouped.map((x, i) => (
@@ -44,9 +48,7 @@ export const StudySetsList = () => {
       {!grouped.length && (
         <Stack>
           <Heading size="lg">Nothing Yet</Heading>
-          <Text color={grayText}>
-            This user doesn&apos;t have any public study sets.
-          </Text>
+          <Text color={grayText}>{placeholder}</Text>
         </Stack>
       )}
     </Stack>
