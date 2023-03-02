@@ -52,7 +52,7 @@ export const AllowedRegexes = () => {
           if (currentRegex !== undefined) removeRegex.mutate(currentRegex);
         }}
       />
-      {!!regexes.length && (
+      {!!emails?.data && (
         <RegexModal
           isOpen={modalOpen}
           onClose={() => {
