@@ -44,7 +44,10 @@ export const importRouter = createTRPCRouter({
 
       const response = await client.get(
         `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=1`,
-        {}
+        {
+          premium_proxy: true,
+          proxy_country: "us",
+        }
       );
       if (!response.data) {
         throw new TRPCError({
