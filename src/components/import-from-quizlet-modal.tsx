@@ -61,8 +61,9 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
       } else await router.push("/create");
     },
     onError: (err) => {
-      console.log("Import error", err);
-      if (err.data?.httpStatus == 504) {
+      if (
+        err.message == `Unexpected token 'A', "An error o"... is not valid JSON`
+      ) {
         setError(
           "Our web cralwer seems to be currently down. Please try again later."
         );
