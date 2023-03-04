@@ -1,5 +1,6 @@
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { log } from "next-axiom";
+import { ErrorBoundary as HighlightBoundary } from "@highlight-run/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
@@ -25,15 +26,11 @@ export class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error): void {
-    log.error("Client error", error);
-  }
-
   render() {
     if (!this.state.hasError) return this.props.children;
 
     return (
-      <>
+      <HighlightBoundary>
         <RouteListener onChange={() => this.setState({ hasError: false })} />
         <Head>
           <title>Error | Quizlet.cc</title>
@@ -69,7 +66,7 @@ export class ErrorBoundary extends React.Component<
             </VStack>
           </VStack>
         </Center>
-      </>
+      </HighlightBoundary>
     );
   }
 }

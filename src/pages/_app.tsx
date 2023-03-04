@@ -1,4 +1,5 @@
 import { ChakraProvider, DarkMode, GlobalStyle } from "@chakra-ui/react";
+import { H } from "highlight.run";
 import type { NextComponentType, NextPageContext } from "next";
 import { type Session } from "next-auth";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
@@ -16,12 +17,30 @@ import { theme } from "../lib/chakra-theme";
 import "../styles/globals.css";
 import { api } from "../utils/api";
 
+import pjson from "../../package.json";
+const version = pjson.version;
+
 export { reportWebVitals } from "next-axiom";
 
 const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
   { ssr: false }
 );
+
+const formatVercelEnv = () =>
+  process.env.VERCEL_ENV == "preview" ? "staging" : process.env.VERCEL_ENV;
+
+if (process.env.VERCEL_ENV) {
+  H.init("6gl47ld9", {
+    tracingOrigins: true,
+    networkRecording: {
+      enabled: true,
+      recordHeadersAndBody: true,
+    },
+    version,
+    environment: formatVercelEnv(),
+  });
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types
 type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
@@ -139,7 +158,16 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
   React.useEffect(() => {
     if (isUser) {
       void (async () => {
-        // TODO: Initialize axiom config here
+        if (data.user && process.env.VERCEL_ENV) {
+          H.identify(data.user.name || "", {
+            id: data.user.id,
+            username: data.user.username,
+            avatar: data.user.image || "",
+            email: data.user.email || "",
+            features: data.user.features.join(", "),
+            banned: data.user.banned,
+          });
+        }
 
         if (!data.user?.banned || router.pathname == "/banned")
           setLoading(false);
