@@ -7,7 +7,8 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "migrate-vercel": "node ./migrate-vercel.js",
-    "upload-sourcemaps": "npx --yes @highlight-run/sourcemap-uploader upload --apiKey ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY} --path ./build --appVersion $(node -p \"require('./package').version\")",
+    "upload-sourcemaps": "npx --yes @highlight-run/sourcemap-uploader upload --apiKey ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY} --path ./.next --appVersion $(node -p \"require('./package').version\")",
+    "purge-sourcemaps": "find .next -name '*.js.map' -type f -delete",
     "lint": "next lint",
     "start": "next start",
     "theme": "chakra-cli tokens src/lib/chakraTheme.ts"
