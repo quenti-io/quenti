@@ -27,18 +27,15 @@ const GlobalShortcutLayer = dynamic(
   { ssr: false }
 );
 
-const formatVercelEnv = () =>
-  process.env.VERCEL_ENV == "preview" ? "staging" : process.env.VERCEL_ENV;
-
-if (process.env.VERCEL_ENV) {
-  H.init(process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
+if (env.NEXT_PUBLIC_DEPLOYMENT) {
+  H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
     tracingOrigins: true,
     networkRecording: {
       enabled: true,
       recordHeadersAndBody: true,
     },
     version,
-    environment: formatVercelEnv(),
+    environment: env.NEXT_PUBLIC_DEPLOYMENT,
   });
 }
 
@@ -158,7 +155,7 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
   React.useEffect(() => {
     if (isUser) {
       void (async () => {
-        if (data.user && process.env.VERCEL_ENV) {
+        if (data.user && env.NEXT_PUBLIC_DEPLOYMENT) {
           H.identify(data.user.name || "", {
             id: data.user.id,
             username: data.user.username,
