@@ -84,7 +84,7 @@ const RouteListener: React.FC<{ onChange: () => void }> = ({ onChange }) => {
     return () => {
       router.events.off("routeChangeComplete", onChange);
     };
-  }, [router]);
+  }, [router, onChange]);
 
   return <></>;
 };
