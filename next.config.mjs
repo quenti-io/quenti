@@ -25,6 +25,10 @@ let config = withAxiom({
   },
   rewrites: async () => [
     {
+      source: "/:id(_[a-zA-Z0-9]{10})",
+      destination: "/share-resolver/:id",
+    },
+    {
       source: "/:profile(@[a-zA-Z0-9-_]+)",
       destination: "/profile/:profile",
     },

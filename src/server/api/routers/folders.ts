@@ -4,6 +4,7 @@ import slugify from "slugify";
 import { z } from "zod";
 import { USERNAME_REGEXP } from "../../../constants/characters";
 import { MAX_DESC, MAX_TITLE } from "../common/constants";
+import { shortId } from "../common/generator";
 import { profanity } from "../common/profanity";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -269,6 +270,36 @@ export const foldersRouter = createTRPCRouter({
         slug: r.folder.slug,
         includes: r.folder.studySets.length > 0,
       }));
+    }),
+
+  getShareId: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const folder = await ctx.prisma.folder.findUnique({
+        where: {
+          id: input,
+        },
+      });
+
+      if (!folder) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      return (
+        await ctx.prisma.entityShare.upsert({
+          where: {
+            entityId: input,
+          },
+          create: {
+            entityId: input,
+            id: shortId() as string,
+            type: "Folder",
+          },
+          update: {},
+        })
+      ).id;
     }),
 
   create: protectedProcedure
