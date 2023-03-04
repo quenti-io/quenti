@@ -183,6 +183,19 @@ model AutoSaveTerm {
   setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
 }
 
+model EntityShare {
+  id       String
+  entityId String     @unique
+  type     EntityType
+
+  @@id([id, entityId])
+}
+
+enum EntityType {
+  StudySet
+  Folder
+}
+
 enum LearnMode {
   Learn
   Review

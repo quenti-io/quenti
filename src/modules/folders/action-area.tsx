@@ -2,18 +2,20 @@ import {
   Button,
   ButtonGroup,
   Flex,
+  HStack,
   IconButton,
   Menu,
   MenuButton,
   MenuList,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   IconCards,
   IconDotsVertical,
   IconEdit,
-  IconTrash
+  IconShare,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -24,6 +26,7 @@ import { useFolder } from "../../hooks/use-folder";
 import { api } from "../../utils/api";
 import { EditFolderModal } from "./edit-folder-modal";
 import { FolderCreatorOnly } from "./folder-creator-only";
+import { ShareFolderModal } from "./share-folder-modal";
 
 export const ActionArea = () => {
   const router = useRouter();
@@ -33,6 +36,7 @@ export const ActionArea = () => {
 
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [shareOpen, setShareOpen] = React.useState(false);
 
   const deleteFolder = api.folders.delete.useMutation({
     onSuccess: async () => {
@@ -61,19 +65,30 @@ export const ActionArea = () => {
         }}
       />
       <EditFolderModal isOpen={editOpen} onClose={() => setEditOpen(false)} />
+      <ShareFolderModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+      />
       <Flex justifyContent="space-between">
         <ButtonGroup size="lg" gap={2}>
           <Button
             leftIcon={<IconCards />}
             isDisabled={!folder.sets.length}
-            as={Link}
+            as={!folder.sets.length ? undefined : Link}
             href={
               folder.sets.length
                 ? `/@${folder.user.username}/folders/${slug}/flashcards`
-                : ""
+                : undefined
             }
           >
             Study
+          </Button>
+          <Button
+            leftIcon={<IconShare />}
+            variant="outline"
+            onClick={() => setShareOpen(true)}
+          >
+            Share
           </Button>
           <FolderCreatorOnly>
             <Button
@@ -86,26 +101,28 @@ export const ActionArea = () => {
             </Button>
           </FolderCreatorOnly>
         </ButtonGroup>
-        <FolderCreatorOnly>
-          <Menu placement="bottom-end">
-            <MenuButton>
-              <IconButton
-                icon={<IconDotsVertical />}
-                aria-label="Options"
-                size="xs"
-                variant="ghost"
-                as="div"
-              />
-            </MenuButton>
-            <MenuList bg={menuBg} py={0} overflow="hidden">
-              <MenuOption
-                icon={<IconTrash size={20} />}
-                label="Delete"
-                onClick={() => setDeleteOpen(true)}
-              />
-            </MenuList>
-          </Menu>
-        </FolderCreatorOnly>
+        <HStack>
+          <FolderCreatorOnly>
+            <Menu placement="bottom-end">
+              <MenuButton>
+                <IconButton
+                  icon={<IconDotsVertical />}
+                  aria-label="Options"
+                  size="xs"
+                  variant="ghost"
+                  as="div"
+                />
+              </MenuButton>
+              <MenuList bg={menuBg} py={0} overflow="hidden">
+                <MenuOption
+                  icon={<IconTrash size={20} />}
+                  label="Delete"
+                  onClick={() => setDeleteOpen(true)}
+                />
+              </MenuList>
+            </Menu>
+          </FolderCreatorOnly>
+        </HStack>
       </Flex>
     </>
   );

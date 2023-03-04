@@ -1,6 +1,6 @@
 {
   "name": "quizlet.cc",
-  "version": "0.9.28",
+  "version": "0.9.29",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -46,6 +46,7 @@
     "react-dom": "18.2.0",
     "react-to-print": "^2.14.11",
     "sharp": "^0.31.3",
+    "short-unique-id": "^4.4.4",
     "slugify": "^1.6.5",
     "superjson": "1.9.1",
     "use-fit-text": "^2.4.0",

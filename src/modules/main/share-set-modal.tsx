@@ -10,12 +10,14 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconCheck, IconCopy, IconEdit, IconLock } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
+import { env } from "../../env/client.mjs";
 import { useSet } from "../../hooks/use-set";
+import { api } from "../../utils/api";
 
 export interface ShareSetModalProps {
   isOpen: boolean;
@@ -30,9 +32,14 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
   const primaryBg = useColorModeValue("gray.200", "gray.800");
   const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
+  const getShareId = api.studySets.getShareId.useQuery(id, {
+    enabled: isOpen && visibility !== "Private",
+  });
+  const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
+
   const [copied, setCopied] = React.useState(false);
   const copy = async () => {
-    await navigator.clipboard.writeText(window.location.toString());
+    await navigator.clipboard.writeText(url);
 
     setCopied(true);
     setTimeout(() => setCopied(false), 1000);
@@ -72,12 +79,13 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
                 rounded="md"
                 px="4"
                 size="lg"
-                value={window.location.toString()}
+                value={getShareId.isLoading ? "Loading..." : url}
               />
               <Button
                 size="lg"
                 leftIcon={copied ? <IconCheck /> : <IconCopy />}
                 onClick={copy}
+                isLoading={getShareId.isLoading}
               >
                 Copy
               </Button>

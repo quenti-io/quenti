@@ -14,6 +14,7 @@ import {
   MAX_TITLE,
   type Language,
 } from "../common/constants";
+import { shortId } from "../common/generator";
 import { profanity } from "../common/profanity";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -244,6 +245,46 @@ export const studySetsRouter = createTRPCRouter({
       },
     };
   }),
+
+  getShareId: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const studySet = await ctx.prisma.studySet.findUnique({
+        where: {
+          id: input,
+        },
+      });
+
+      if (!studySet) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      if (
+        studySet.visibility === "Private" &&
+        studySet.userId !== ctx.session?.user?.id
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "This set is private.",
+        });
+      }
+
+      return (
+        await ctx.prisma.entityShare.upsert({
+          where: {
+            entityId: input,
+          },
+          create: {
+            entityId: input,
+            id: shortId() as string,
+            type: "StudySet",
+          },
+          update: {},
+        })
+      ).id;
+    }),
 
   createFromAutosave: protectedProcedure.mutation(async ({ ctx }) => {
     const autoSave = await ctx.prisma.setAutoSave.findFirst({

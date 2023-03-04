@@ -18,8 +18,8 @@ export const ProfileArea = () => {
   const grayText = useColorModeValue("gray.700", "gray.300");
 
   React.useEffect(() => {
-    throw new Error("Intentional error");
-  }, []);
+    if (profile.username == "ethanlerner") throw new Error("Intentional error");
+  }, [profile.username]);
 
   return (
     <HStack gap={4}>
