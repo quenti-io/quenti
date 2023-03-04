@@ -144,7 +144,6 @@ export const TermsList = () => {
                       wordLanguage={wordLanguage}
                       definitionLanguage={definitionLanguage}
                       openMenu={(type) => {
-                        console.log("TYPE", type);
                         setActive(type);
                         setMenuOpen(true);
                       }}

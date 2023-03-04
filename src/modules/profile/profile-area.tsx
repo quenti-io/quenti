@@ -6,15 +6,20 @@ import {
   HStack,
   Text,
   Tooltip,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
+import React from "react";
 import { useProfile } from "../../hooks/use-profile";
 import { avatarUrl } from "../../utils/avatar";
 
 export const ProfileArea = () => {
   const profile = useProfile();
   const grayText = useColorModeValue("gray.700", "gray.300");
+
+  React.useEffect(() => {
+    throw new Error("Intentional error");
+  }, []);
 
   return (
     <HStack gap={4}>
