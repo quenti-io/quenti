@@ -3,18 +3,18 @@ import type { NextComponentType, NextPageContext } from "next";
 import { type Session } from "next-auth";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { type AppType } from "next/app";
+import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import type { AuthEnabledComponentConfig } from "../components/auth-component";
+import { ErrorBoundary } from "../components/error-bounary";
 import { Navbar } from "../components/navbar";
-import { LoadingProvider, useLoading } from "../hooks/use-loading";
-import { api } from "../utils/api";
-
-import dynamic from "next/dynamic";
-import Head from "next/head";
 import { env } from "../env/client.mjs";
+import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { theme } from "../lib/chakra-theme";
 import "../styles/globals.css";
+import { api } from "../utils/api";
 
 export { reportWebVitals } from "next-axiom";
 
@@ -44,7 +44,7 @@ const App: AppType<{ session: Session | null }> = ({
       <Navbar />
       <GlobalShortcutLayer />
       {Component.authenticationEnabled ? (
-        <>
+        <ErrorBoundary>
           <Head>
             <title>
               {Component.title
@@ -55,7 +55,7 @@ const App: AppType<{ session: Session | null }> = ({
           <Auth>
             <Component {...pageProps} />
           </Auth>
-        </>
+        </ErrorBoundary>
       ) : (
         <Component {...pageProps} />
       )}
