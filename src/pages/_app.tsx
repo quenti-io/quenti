@@ -31,7 +31,7 @@ const formatVercelEnv = () =>
   process.env.VERCEL_ENV == "preview" ? "staging" : process.env.VERCEL_ENV;
 
 if (process.env.VERCEL_ENV) {
-  H.init("6gl47ld9", {
+  H.init(process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
     tracingOrigins: true,
     networkRecording: {
       enabled: true,
