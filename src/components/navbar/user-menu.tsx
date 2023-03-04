@@ -75,13 +75,7 @@ export const UserMenu = () => {
       </MenuButton>
       <MenuList bg={menuBg} py={0} overflow="hidden" w="max" marginTop={2}>
         <Link href={`/@${user.username}`} passHref>
-          <MenuOption
-            icon={<IconUser size={18} />}
-            label="Profile"
-            onClick={() => {
-              console.log("Clicked profile");
-            }}
-          />
+          <MenuOption icon={<IconUser size={18} />} label="Profile" />
         </Link>
         <Link href="/settings" passHref>
           <MenuOption icon={<IconSettings size={18} />} label="Settings" />
