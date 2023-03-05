@@ -70,7 +70,7 @@ export const ActionArea = () => {
         onClose={() => setShareOpen(false)}
       />
       <Flex justifyContent="space-between">
-        <ButtonGroup size="lg" gap={2}>
+        <ButtonGroup size={{ base: "md", sm: "lg" }} gap={2}>
           <Button
             leftIcon={<IconCards />}
             isDisabled={!folder.sets.length}
@@ -87,21 +87,22 @@ export const ActionArea = () => {
             leftIcon={<IconShare />}
             variant="outline"
             onClick={() => setShareOpen(true)}
+            colorScheme="orange"
           >
             Share
           </Button>
-          <FolderCreatorOnly>
-            <Button
-              leftIcon={<IconEdit />}
-              variant="ghost"
-              colorScheme="orange"
-              onClick={() => setEditOpen(true)}
-            >
-              Edit
-            </Button>
-          </FolderCreatorOnly>
         </ButtonGroup>
         <HStack>
+          <FolderCreatorOnly>
+            <IconButton
+              icon={<IconEdit />}
+              variant="ghost"
+              onClick={() => setEditOpen(true)}
+              aria-label="Edit"
+              rounded="full"
+              size="sm"
+            />
+          </FolderCreatorOnly>
           <FolderCreatorOnly>
             <Menu placement="bottom-end">
               <MenuButton>

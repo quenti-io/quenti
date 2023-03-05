@@ -1,10 +1,11 @@
 import {
   Avatar,
+  Box,
   Heading,
   HStack,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { IconFolder } from "@tabler/icons-react";
 import { Link } from "../../components/link";
@@ -33,10 +34,14 @@ export const FolderHeading = () => {
           </Link>
         </HStack>
       </HStack>
-      <HStack gap={2}>
-        <IconFolder size={40} />
-        <Heading size="2xl">{folder.title}</Heading>
-      </HStack>
+      <Heading size="2xl" lineHeight="40px">
+        <Box as="span" verticalAlign="middle" mr="4">
+          <IconFolder style={{ display: "inline" }} size={40} />
+        </Box>
+        <Box as="span" verticalAlign="middle">
+          {folder.title}
+        </Box>
+      </Heading>
     </Stack>
   );
 };
