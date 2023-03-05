@@ -1,4 +1,5 @@
 import { ChakraProvider, DarkMode, GlobalStyle } from "@chakra-ui/react";
+import { Analytics } from "@vercel/analytics/react";
 import { H } from "highlight.run";
 import type { NextComponentType, NextPageContext } from "next";
 import { type Session } from "next-auth";
@@ -134,6 +135,7 @@ const App: AppType<{ session: Session | null }> = ({
           </SessionProvider>
         </LoadingProvider>
       </ChakraProvider>
+      <Analytics />
     </>
   );
 };

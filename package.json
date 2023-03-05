@@ -33,6 +33,7 @@
     "@trpc/next": "^10.7.0",
     "@trpc/react-query": "^10.7.0",
     "@trpc/server": "^10.7.0",
+    "@vercel/analytics": "^0.1.11",
     "aos": "^2.3.4",
     "chakra-react-select": "^4.4.3",
     "diff": "^5.1.0",
