@@ -65,7 +65,7 @@ let config = withHighlightConfig(
   }),
   {
     appVersion,
-    configureHighlightProxy,
+    configureHighlightProxy: true,
   }
 );
 
