@@ -1080,6 +1080,11 @@
   resolved "https://registry.yarnpkg.com/@fontsource/outfit/-/outfit-4.5.11.tgz#1831945715231ad83ef75d49fb0b7bbdb9d972dd"
   integrity sha512-msPqJLLmSyWj/YtJknO75RjoTHIep6mDjnDO5IrZUJea31bO4s1QCuepG54LsmMXLKs+gp603nPM8/SUv5ZgSg==
 
+"@highlight-run/react@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@highlight-run/react/-/react-2.0.0.tgz#4731622350a95ab17407d884ad9658254c36170b"
+  integrity sha512-s6T3H2Cu/kQRek5wM5Edcaoxc5rSMwHxxzU8JdGwQGGoeZ6XFkFOXRTl3tbCbfAjWOILD3T45o0gGR3JL5ABOw==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
@@ -1680,6 +1685,11 @@
   dependencies:
     "@typescript-eslint/types" "5.48.1"
     eslint-visitor-keys "^3.3.0"
+
+"@vercel/analytics@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@vercel/analytics/-/analytics-0.1.11.tgz#727a0ac655a4a89104cdea3e6925476470299428"
+  integrity sha512-mj5CPR02y0BRs1tN3oZcBNAX9a8NxsIUl9vElDPcqxnMfP0RbRc9fI9Ud7+QDg/1Izvt5uMumsr+6YsmVHcyuw==
 
 "@zag-js/element-size@0.3.0":
   version "0.3.0"
@@ -3252,6 +3262,11 @@ hey-listen@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
   integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
+
+highlight.run@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/highlight.run/-/highlight.run-5.3.1.tgz#dbde5b3227feed74b974a75fd226b191c750beb7"
+  integrity sha512-44fQ7qPcRYimDFLVVuTf8PYWxiO+5kUTTgRGhMo/NdNvtjKP9KEf4kFNReuMpUiIAK/EzEEDRR0d5HYtDDCw/Q==
 
 hoist-non-react-statics@^3.3.1:
   version "3.3.2"

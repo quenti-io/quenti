@@ -29,6 +29,8 @@ export const serverSchema = z.object({
   SERVER_NAME: z.enum(["production", "staging"]).optional(),
 });
 
+const deployment = z.enum(["production", "staging"]).optional();
+
 /**
  * Specify your client-side environment variables schema here.
  * This way you can ensure the app isn't built with invalid env vars.
@@ -36,6 +38,8 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_BASE_URL: z.string().url(),
+  NEXT_PUBLIC_DEPLOYMENT: deployment,
+  NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string().optional(),
 });
 
 /**
@@ -46,4 +50,7 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+  NEXT_PUBLIC_DEPLOYMENT: deployment.parse(process.env.NEXT_PUBLIC_DEPLOYMENT),
+  NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID:
+    process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID,
 };
