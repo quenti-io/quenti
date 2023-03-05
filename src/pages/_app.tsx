@@ -1,4 +1,5 @@
 import { ChakraProvider, DarkMode, GlobalStyle } from "@chakra-ui/react";
+import { ErrorBoundary as HighlightBoundary } from "@highlight-run/react";
 import { Analytics } from "@vercel/analytics/react";
 import { H } from "highlight.run";
 import type { NextComponentType, NextPageContext } from "next";
@@ -10,7 +11,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import type { AuthEnabledComponentConfig } from "../components/auth-component";
-import { ErrorBoundary } from "../components/error-bounary";
 import { Navbar } from "../components/navbar";
 import { env } from "../env/client.mjs";
 import { LoadingProvider, useLoading } from "../hooks/use-loading";
@@ -19,6 +19,7 @@ import "../styles/globals.css";
 import { api } from "../utils/api";
 
 import pjson from "../../package.json";
+import { ErrorBoundary } from "../components/error-bounary";
 const version = pjson.version;
 
 export { reportWebVitals } from "next-axiom";
@@ -62,7 +63,7 @@ const App: AppType<{ session: Session | null }> = ({
       <Navbar />
       <GlobalShortcutLayer />
       {Component.authenticationEnabled ? (
-        <ErrorBoundary>
+        <HighlightBoundary customDialog={<ErrorBoundary />} showDialog>
           <Head>
             <title>
               {Component.title
@@ -73,7 +74,7 @@ const App: AppType<{ session: Session | null }> = ({
           <Auth>
             <Component {...pageProps} />
           </Auth>
-        </ErrorBoundary>
+        </HighlightBoundary>
       ) : (
         <Component {...pageProps} />
       )}
