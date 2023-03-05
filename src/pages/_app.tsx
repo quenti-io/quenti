@@ -39,7 +39,7 @@ if (env.NEXT_PUBLIC_DEPLOYMENT) {
     version,
     environment: env.NEXT_PUBLIC_DEPLOYMENT,
     manualStart: true,
-    backendUrl: `https://${env.NEXT_PUBLIC_BASE_URL}/highlight-events`,
+    backendUrl: `${env.NEXT_PUBLIC_BASE_URL}/highlight-events`,
   });
 }
 
