@@ -37,6 +37,7 @@ if (env.NEXT_PUBLIC_DEPLOYMENT) {
     },
     version,
     environment: env.NEXT_PUBLIC_DEPLOYMENT,
+    manualStart: true,
   });
 }
 
@@ -158,6 +159,8 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
     if (isUser) {
       void (async () => {
         if (data.user && env.NEXT_PUBLIC_DEPLOYMENT) {
+          H.start();
+
           H.identify(data.user.name || "", {
             id: data.user.id,
             username: data.user.username,
