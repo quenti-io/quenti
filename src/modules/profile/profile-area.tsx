@@ -17,10 +17,6 @@ export const ProfileArea = () => {
   const profile = useProfile();
   const grayText = useColorModeValue("gray.700", "gray.300");
 
-  React.useEffect(() => {
-    if (profile.username == "ethanlerner") throw new Error("Intentional error");
-  }, [profile.username]);
-
   return (
     <HStack gap={4}>
       <Avatar src={avatarUrl(profile)} size="lg" />
