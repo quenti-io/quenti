@@ -7,8 +7,6 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "migrate-vercel": "node ./migrate-vercel.js",
-    "upload-sourcemaps": "npx --yes @highlight-run/sourcemap-uploader upload --apiKey ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY} --path ./.next --appVersion $(node -p \"require('./package').version\")",
-    "purge-sourcemaps": "find .next -name '*.js.map' -type f -delete",
     "lint": "next lint",
     "start": "next start",
     "theme": "chakra-cli tokens src/lib/chakraTheme.ts"
@@ -23,6 +21,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/outfit": "^4.5.11",
+    "@highlight-run/next": "^2.2.1",
     "@highlight-run/react": "^2.0.0",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.8.0",

@@ -1,5 +1,4 @@
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
-import { log } from "next-axiom";
 import { ErrorBoundary as HighlightBoundary } from "@highlight-run/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
