@@ -6,7 +6,7 @@ const withBundleAnalyzer = shouldAnalyzeBundles
   ? (await import("@next/bundle-analyzer")).default
   : () => undefined;
 
-import pjson from "./package.json";
+import pjson from "./package.json" assert { type: "json" };
 const appVersion = pjson.version;
 
 // @ts-check
