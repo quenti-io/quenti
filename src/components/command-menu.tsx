@@ -20,6 +20,7 @@ import {
   IconBooks,
   IconFolder,
   IconHome,
+  IconLink,
   IconMoon,
   IconSettings,
   IconSun,
@@ -29,6 +30,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { env } from "../env/client.mjs";
 import { useShortcut } from "../hooks/use-shortcut";
 import { api } from "../utils/api";
 import { avatarUrl } from "../utils/avatar";
@@ -53,9 +55,11 @@ interface MenuOption {
   name: string;
   searchableName?: string;
   label?: string;
-  action: (ctrl: boolean) => void;
+  action: (ctrl: boolean) => void | Promise<void>;
   entity?: Entity;
   shouldShow?: () => boolean;
+  loadable?: boolean;
+  isLoading?: boolean;
 }
 
 export const CommandMenu: React.FC<CommandMenuProps> = ({
@@ -65,6 +69,38 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const router = useRouter();
   const session = useSession();
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const onSet = router.pathname == "/sets/[id]";
+  const onFolder = router.pathname == "/profile/[username]/folders/[slug]";
+
+  const url = (id: string) => `${env.NEXT_PUBLIC_BASE_URL}/_${id}`;
+  const onSuccess = (id: string) => {
+    void (async () => {
+      await navigator.clipboard.writeText(url(id));
+    })();
+    onClose();
+  };
+
+  const getSetShareId = api.studySets.getShareId.useQuery(
+    router.query.id as string,
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      onSuccess,
+    }
+  );
+
+  const getFolderShareId = api.folders.getShareIdByUsername.useQuery(
+    {
+      idOrSlug: router.query.slug as string,
+      username: ((router.query.username as string) || "").slice(1),
+    },
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+      onSuccess,
+    }
+  );
 
   const [options, setOptions] = React.useState<MenuOption[]>([]);
 
@@ -120,6 +156,19 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           (b.entity?.viewedAt.getTime() || 0) -
           (a.entity?.viewedAt.getTime() || 0)
       );
+
+      if (onSet || onFolder) {
+        total.push({
+          icon: <IconLink />,
+          name: "Copy Link",
+          label: `Copy the URL for this ${onSet ? "set" : "folder"}`,
+          action: async () => {
+            if (onSet) await getSetShareId.refetch();
+            if (onFolder) await getFolderShareId.refetch();
+          },
+          loadable: true,
+        });
+      }
 
       total.push({
         icon: <IconHome />,
@@ -206,7 +255,16 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 
   const onSubmit = (i: number, ctrl: boolean) => {
     const option = filteredOptions[i]!;
-    option.action(ctrl);
+
+    void (async () => {
+      await option.action(ctrl);
+    })();
+
+    if (option.loadable) {
+      option.isLoading = true;
+      setOptions([...options]);
+      return;
+    }
     onClose();
   };
 
@@ -314,6 +372,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
                 resultsRef={resultsRef}
                 selectionIndex={selectionIndex}
                 setSelectionIndex={setSelectionIndex}
+                isLoading={o.isLoading}
                 ignoreMouse={ignoreMouse}
                 setIgnoreMouse={setIgnoreMouse}
                 onClick={(e) => onSubmit(i, e.ctrlKey)}
@@ -335,6 +394,7 @@ interface OptionCompProps {
   resultsRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
   selectionIndex: number;
   setSelectionIndex: React.Dispatch<React.SetStateAction<number>>;
+  isLoading?: boolean;
   ignoreMouse: boolean;
   setIgnoreMouse: React.Dispatch<React.SetStateAction<boolean>>;
   onClick: React.MouseEventHandler<HTMLDivElement>;
@@ -350,6 +410,7 @@ const OptionComp: React.FC<OptionCompProps> = ({
   selectionIndex,
   setSelectionIndex,
   ignoreMouse,
+  isLoading,
   setIgnoreMouse,
   onClick,
 }) => {
@@ -381,7 +442,13 @@ const OptionComp: React.FC<OptionCompProps> = ({
         transition="color cubic-bezier(.4,0,.2,1) 300ms"
         color={selectionIndex == index ? highlightColor : baseColor}
       >
-        {icon}
+        {!isLoading ? (
+          icon
+        ) : (
+          <Center boxSize="6">
+            <Spinner boxSize="4" />
+          </Center>
+        )}
       </Box>
       <Stack spacing={1} w="full" overflow="hidden">
         <Text

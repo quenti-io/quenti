@@ -302,6 +302,62 @@ export const foldersRouter = createTRPCRouter({
       ).id;
     }),
 
+  getShareIdByUsername: protectedProcedure
+    .input(
+      z.object({
+        username: z.string(),
+        idOrSlug: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          username: input.username,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const folder = await ctx.prisma.folder.findFirst({
+        where: {
+          OR: [
+            {
+              userId: user.id,
+              slug: input.idOrSlug,
+            },
+            {
+              userId: user.id,
+              id: input.idOrSlug,
+            },
+          ],
+        },
+      });
+
+      if (!folder) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      return (
+        await ctx.prisma.entityShare.upsert({
+          where: {
+            entityId: folder.id,
+          },
+          create: {
+            entityId: folder.id,
+            id: shortId() as string,
+            type: "Folder",
+          },
+          update: {},
+        })
+      ).id;
+    }),
+
   create: protectedProcedure
     .input(
       z
