@@ -1,8 +1,8 @@
 import {
+  Box,
   Button,
   ButtonGroup,
   Flex,
-  HStack,
   Input,
   Stack,
   Text,
@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { ScriptFormatter } from "../../../../components/script-formatter";
+import { useEventCallback } from "../../../../hooks/use-event-callback";
 import { useSet } from "../../../../hooks/use-set";
 import type { Question } from "../../../../interfaces/question";
 import { evaluate, EvaluationResult } from "../../../../lib/evaluator";
@@ -33,7 +34,6 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
 
   const inputBg = useColorModeValue("gray.100", "gray.900");
   const placeholderColor = useColorModeValue("gray.600", "gray.200");
-  const characterTextColor = useColorModeValue("black", "white");
 
   const [answer, setAnswer] = React.useState("");
 
@@ -77,6 +77,21 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
     }
   };
 
+  const handleClick = (c: string) => {
+    const cursorPosition = inputRef.current!.selectionStart || answer.length;
+    const textBeforeCursor = answer.substring(0, cursorPosition);
+    const textAfterCursor = answer.substring(cursorPosition);
+    setAnswer(textBeforeCursor + c + textAfterCursor);
+
+    inputRef.current?.focus();
+    requestAnimationFrame(() => {
+      inputRef.current?.setSelectionRange(
+        cursorPosition + 1,
+        cursorPosition + 1
+      );
+    });
+  };
+
   return (
     <Stack spacing={6}>
       <Stack spacing={4}>
@@ -84,35 +99,17 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
           Your answer
         </Text>
         {!!specialCharacters.length && (
-          <HStack>
-            {specialCharacters.sort().map((c, i) => (
-              <Button
-                key={i}
-                size="sm"
-                variant="outline"
-                fontWeight={600}
-                onClick={() => {
-                  const cursorPosition =
-                    inputRef.current!.selectionStart || answer.length;
-                  const textBeforeCursor = answer.substring(0, cursorPosition);
-                  const textAfterCursor = answer.substring(cursorPosition);
-                  setAnswer(textBeforeCursor + c + textAfterCursor);
-
-                  inputRef.current?.focus();
-                  requestAnimationFrame(() => {
-                    inputRef.current?.setSelectionRange(
-                      cursorPosition + 1,
-                      cursorPosition + 1
-                    );
-                  });
-                }}
-              >
-                <Text color={characterTextColor}>
-                  <ScriptFormatter>{c}</ScriptFormatter>
-                </Text>
-              </Button>
-            ))}
-          </HStack>
+          <Box>
+            <div style={{ margin: -4 }}>
+              {specialCharacters.sort().map((c, i) => (
+                <CharacterButtonWrapper
+                  key={i}
+                  character={c}
+                  handler={handleClick}
+                />
+              ))}
+            </div>
+          </Box>
         )}
         <Input
           ref={inputRef}
@@ -153,3 +150,37 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
     </Stack>
   );
 };
+
+const CharacterButtonWrapper: React.FC<{
+  character: string;
+  handler: (c: string) => void;
+}> = ({ character, handler }) => {
+  const callback = useEventCallback(() => handler(character));
+
+  return <CharacterButtonPure character={character} onClick={callback} />;
+};
+
+const CharacterButton: React.FC<{ character: string; onClick: () => void }> = ({
+  character,
+  onClick,
+}) => {
+  const characterTextColor = useColorModeValue("gray.900", "whiteAlpha.900");
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      display="inline-block"
+      m="1"
+      fontWeight={600}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+    >
+      <Text color={characterTextColor}>
+        <ScriptFormatter>{character}</ScriptFormatter>
+      </Text>
+    </Button>
+  );
+};
+
+const CharacterButtonPure = React.memo(CharacterButton);

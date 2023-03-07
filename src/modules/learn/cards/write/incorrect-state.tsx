@@ -85,12 +85,24 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
     >
       <Stack spacing={6} marginTop="0" ref={fullStackRef}>
         <Stack spacing={4} ref={stackRef} marginTop="0">
-          <Flex justifyContent="space-between" alignItems="center">
+          <Flex
+            justifyContent="space-between"
+            alignItems={{ base: "flex-start", md: "center" }}
+            flexDir={{ base: "column", md: "row" }}
+            w="full"
+            gap={{ base: 2, md: 4 }}
+          >
             <Text fontWeight={600} color={guess ? colorScheme : grayText}>
               {guess ? remark : "You skipped this term"}
             </Text>
             {guess && (
-              <Button size="sm" variant="ghost" onClick={handleOverrideCorrect}>
+              <Button
+                size="sm"
+                flexShrink="0"
+                variant="ghost"
+                onClick={handleOverrideCorrect}
+                px={{ base: 0, md: 3 }}
+              >
                 Override: I was correct
               </Button>
             )}
