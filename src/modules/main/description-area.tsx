@@ -26,7 +26,7 @@ export const DescriptionArea = () => {
         gap={{ base: 8, sm: 0 }}
       >
         <HStack spacing={4}>
-          <Avatar src={avatarUrl(user)} size="md" className="highlight-mask" />
+          <Avatar src={avatarUrl(user)} size="md" className="highlight-block" />
           <Stack spacing={0}>
             <Text fontSize="xs">Created by</Text>
             <HStack spacing="2">
@@ -34,7 +34,7 @@ export const DescriptionArea = () => {
                 fontWeight={700}
                 href={`/@${user.username}`}
                 _hover={{ color: highlight }}
-                className="highlight-mask"
+                className="highlight-block"
               >
                 {user.username}
               </Link>

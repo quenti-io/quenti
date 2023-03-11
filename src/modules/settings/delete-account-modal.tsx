@@ -62,7 +62,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
         <ModalFooter>
           <Stack gap={2} direction={{ base: "column", md: "row" }} w="full">
             <Input
-              className="highlight-mask"
+              className="highlight-block"
               fontWeight={700}
               variant="flushed"
               placeholder="Username"

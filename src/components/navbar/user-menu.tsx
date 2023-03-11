@@ -62,7 +62,7 @@ export const UserMenu = () => {
             </Avatar>
           </WrapItem>
           <WrapItem>
-            <Text fontWeight={700} className="highlight-mask">
+            <Text fontWeight={700} className="highlight-block">
               {user.username}
             </Text>
           </WrapItem>

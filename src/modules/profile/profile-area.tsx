@@ -26,7 +26,7 @@ export const ProfileArea = () => {
         h="16"
       >
         <HStack gap={0}>
-          <Heading className="highlight-mask" w="max-content">
+          <Heading className="highlight-block" w="max-content">
             {profile.username}
           </Heading>
           {profile.verified && (
@@ -42,7 +42,7 @@ export const ProfileArea = () => {
             lineHeight="none"
             fontSize="sm"
             color={grayText}
-            className="highlight-mask"
+            className="highlight-block"
             w="max-content"
           >
             {profile.name}

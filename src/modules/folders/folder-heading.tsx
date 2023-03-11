@@ -33,7 +33,7 @@ export const FolderHeading = () => {
             href={`/@${folder.user.username}`}
             transition="color 200ms ease-in-out"
             _hover={{ color: highlight }}
-            className="highlight-mask"
+            className="highlight-block"
             w="max-content"
           >
             {folder.user.username}

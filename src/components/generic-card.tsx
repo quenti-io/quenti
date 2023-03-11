@@ -115,7 +115,7 @@ export const GenericCard: React.FC<GenericCardProps> = ({
               <Text
                 fontSize="sm"
                 fontWeight={600}
-                className="highlight-mask"
+                className="highlight-block"
                 w="max-content"
               >
                 {user.username}
