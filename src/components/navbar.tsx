@@ -75,6 +75,7 @@ export const Navbar: React.FC = () => {
                     image: user.image!,
                   })}
                   size="sm"
+                  className="highlight-block"
                 >
                   <AvatarBadge boxSize="1em" bg="green.500" />
                 </Avatar>

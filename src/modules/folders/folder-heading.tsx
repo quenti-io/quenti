@@ -5,7 +5,7 @@ import {
   HStack,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconFolder } from "@tabler/icons-react";
 import { Link } from "../../components/link";
@@ -24,11 +24,16 @@ export const FolderHeading = () => {
         <Text>{plural(folder.sets.length, "set")}</Text>
         <Text>created by</Text>
         <HStack gap={0} fontWeight={700}>
-          <Avatar src={avatarUrl(folder.user)} size="xs" />
+          <Avatar
+            src={avatarUrl(folder.user)}
+            size="xs"
+            className="highlight-block"
+          />
           <Link
             href={`/@${folder.user.username}`}
             transition="color 200ms ease-in-out"
             _hover={{ color: highlight }}
+            className="highlight-mask"
           >
             {folder.user.username}
           </Link>

@@ -109,7 +109,7 @@ export const GenericCard: React.FC<GenericCardProps> = ({
             <Avatar
               src={avatarUrl(user)}
               size="xs"
-              className="highlight-mask"
+              className="highlight-block"
             />
             <HStack spacing={1}>
               <Text fontSize="sm" fontWeight={600} className="highlight-mask">

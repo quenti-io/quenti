@@ -56,7 +56,7 @@ export const UserMenu = () => {
                 image: user.image!,
               })}
               size="sm"
-              className="highlight-mask"
+              className="highlight-block"
             >
               <AvatarBadge boxSize="1em" bg="green.500" />
             </Avatar>

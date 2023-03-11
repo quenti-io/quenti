@@ -59,7 +59,6 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
       <HStack gap={2}>
         <InputGroup size="lg">
           <Input
-            className="highlight-ignore"
             fontWeight={700}
             variant="flushed"
             placeholder="Enter a username"
@@ -72,6 +71,7 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
               if (!changeUsername.isLoading) setUsernameValue(e.target.value);
             }}
             isInvalid={isInvalid}
+            className="highlight-ignore"
             _focus={{
               borderColor: isInvalid ? "red.300" : "orange.300",
               boxShadow: `0px 1px 0px 0px ${isInvalid ? "#fc8181" : "#ffa54c"}`,
