@@ -19,14 +19,16 @@ export const ProfileArea = () => {
 
   return (
     <HStack gap={4}>
-      <Avatar src={avatarUrl(profile)} size="lg" />
+      <Avatar src={avatarUrl(profile)} size="lg" className="highlight-block" />
       <Flex
         flexDir="column"
         justifyContent={profile.name ? "space-between" : "center"}
         h="16"
       >
         <HStack gap={0}>
-          <Heading>{profile.username}</Heading>
+          <Heading className="highlight-block" w="max-content">
+            {profile.username}
+          </Heading>
           {profile.verified && (
             <Box color="blue.300">
               <Tooltip label="Verified">
@@ -36,7 +38,13 @@ export const ProfileArea = () => {
           )}
         </HStack>
         {profile.name && (
-          <Text lineHeight="none" fontSize="sm" color={grayText}>
+          <Text
+            lineHeight="none"
+            fontSize="sm"
+            color={grayText}
+            className="highlight-block"
+            w="max-content"
+          >
             {profile.name}
           </Text>
         )}

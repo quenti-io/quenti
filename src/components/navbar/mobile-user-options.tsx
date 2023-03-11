@@ -47,12 +47,15 @@ export const MobileUserOptions: React.FC<MobileUserOptionsProps> = ({
               image: user.image!,
             })}
             size="sm"
+            className="highlight-block"
           >
             <AvatarBadge boxSize="1em" bg="green.500" />
           </Avatar>
         </WrapItem>
         <WrapItem>
-          <Text fontWeight={700}>{user.username}</Text>
+          <Text fontWeight={700} className="highlight-block">
+            {user.username}
+          </Text>
         </WrapItem>
       </Wrap>
       <Stack spacing={4}>

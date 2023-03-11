@@ -14,6 +14,7 @@ declare module "next-auth" {
       admin: boolean;
       banned: boolean;
       features: EnabledFeature[];
+      enableUsageData: boolean;
     } & DefaultSession["user"];
     version: string;
   }
@@ -26,5 +27,6 @@ declare module "next-auth" {
     displayName: boolean;
     bannedAt?: Date;
     features: EnabledFeature[];
+    enableUsageData: boolean;
   }
 }

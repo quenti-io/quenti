@@ -19,12 +19,16 @@ export const GAccountInfo = () => {
   return (
     <SectionWrapper
       heading="Google Account"
-      description="Readonly information about your Google account. Only you can see this."
+      description="Read-only information about your Google account. Only you can see this."
     >
       <Stack spacing={0}>
-        <Text fontSize="xl">{session.user.name}</Text>
+        <Text fontSize="xl" className="highlight-block">
+          {session.user.name}
+        </Text>
         <HStack color={grayText}>
-          <Text fontSize="sm">{session.user.email}</Text>
+          <Text fontSize="sm" className="highlight-block">
+            {session.user.email}
+          </Text>
           <Tooltip label="Your email is not shared with anyone">
             <IconInfoCircle size={18} />
           </Tooltip>

@@ -12,7 +12,9 @@ import type { ComponentWithAuth } from "../components/auth-component";
 import { Loading } from "../components/loading";
 import { WithFooter } from "../components/with-footer";
 import { useLoading } from "../hooks/use-loading";
+import { AppPreferences } from "../modules/settings/app-preferences";
 import { DangerZone } from "../modules/settings/danger-zone";
+import { DataUsage } from "../modules/settings/data-usage";
 import { GAccountInfo } from "../modules/settings/g-account-info";
 import { ProfileInfo } from "../modules/settings/profile-info";
 import { avatarUrl } from "../utils/avatar";
@@ -32,6 +34,7 @@ const Settings: ComponentWithAuth = () => {
             <Avatar
               src={avatarUrl({ ...session.user!, image: session.user!.image! })}
               size="sm"
+              className="highlight-block"
             />
             <Heading>Settings</Heading>
           </HStack>
@@ -39,6 +42,10 @@ const Settings: ComponentWithAuth = () => {
             <GAccountInfo />
             <Divider borderColor={divider} />
             <ProfileInfo />
+            <Divider borderColor={divider} />
+            <AppPreferences />
+            <Divider borderColor={divider} />
+            <DataUsage />
             <Divider borderColor={divider} />
             <DangerZone />
           </Stack>

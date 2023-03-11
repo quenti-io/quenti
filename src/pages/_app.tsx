@@ -160,18 +160,7 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
   React.useEffect(() => {
     if (isUser) {
       void (async () => {
-        if (data.user && env.NEXT_PUBLIC_DEPLOYMENT) {
-          H.start();
-
-          H.identify(data.user.name || "", {
-            id: data.user.id,
-            username: data.user.username,
-            avatar: data.user.image || "",
-            email: data.user.email || "",
-            features: data.user.features.join(", "),
-            banned: data.user.banned,
-          });
-        }
+        if (env.NEXT_PUBLIC_DEPLOYMENT && data.user?.enableUsageData) H.start();
 
         if (!data.user?.banned || router.pathname == "/banned")
           setLoading(false);

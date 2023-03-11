@@ -71,6 +71,7 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
               if (!changeUsername.isLoading) setUsernameValue(e.target.value);
             }}
             isInvalid={isInvalid}
+            className="highlight-block"
             _focus={{
               borderColor: isInvalid ? "red.300" : "orange.300",
               boxShadow: `0px 1px 0px 0px ${isInvalid ? "#fc8181" : "#ffa54c"}`,

@@ -465,8 +465,12 @@ const OptionComp: React.FC<OptionCompProps> = ({
         </Text>
         {author && (
           <HStack>
-            <Avatar src={avatarUrl(author)} size="2xs" />
-            <Text fontSize="xs" color={baseText}>
+            <Avatar
+              src={avatarUrl(author)}
+              size="2xs"
+              className="highlight-block"
+            />
+            <Text fontSize="xs" color={baseText} className="highlight-block">
               {author.username}
             </Text>
           </HStack>
