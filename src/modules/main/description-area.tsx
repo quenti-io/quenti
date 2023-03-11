@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
   Tooltip,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
 import { Link } from "../../components/link";
@@ -26,7 +26,7 @@ export const DescriptionArea = () => {
         gap={{ base: 8, sm: 0 }}
       >
         <HStack spacing={4}>
-          <Avatar src={avatarUrl(user)} size="md" />
+          <Avatar src={avatarUrl(user)} size="md" className="highlight-mask" />
           <Stack spacing={0}>
             <Text fontSize="xs">Created by</Text>
             <HStack spacing="2">
@@ -34,6 +34,7 @@ export const DescriptionArea = () => {
                 fontWeight={700}
                 href={`/@${user.username}`}
                 _hover={{ color: highlight }}
+                className="highlight-mask"
               >
                 {user.username}
               </Link>

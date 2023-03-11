@@ -9,7 +9,7 @@ import React from "react";
 
 export interface SectionWrapperProps {
   heading: string;
-  description: string;
+  description: string | React.ReactNode;
   additional?: React.ReactNode;
 }
 

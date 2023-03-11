@@ -59,6 +59,7 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
       <HStack gap={2}>
         <InputGroup size="lg">
           <Input
+            className="highlight-ignore"
             fontWeight={700}
             variant="flushed"
             placeholder="Enter a username"

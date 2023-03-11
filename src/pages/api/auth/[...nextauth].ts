@@ -1,5 +1,7 @@
+import type { NextApiHandler } from "next";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { withHighlight } from "../../../../highlight.config";
 import { CustomPrismaAdapter } from "../../../adapters/prisma-username";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
@@ -18,6 +20,7 @@ export const authOptions: NextAuthOptions = {
         session.user.admin = user.email == env.ADMIN_EMAIL;
         session.user.banned = !!user.bannedAt;
         session.user.features = user.features;
+        session.user.enableUsageData = user.enableUsageData;
 
         session.version = version;
       }
@@ -102,4 +105,4 @@ export const authOptions: NextAuthOptions = {
   ],
 };
 
-export default NextAuth(authOptions);
+export default withHighlight(NextAuth(authOptions) as NextApiHandler);

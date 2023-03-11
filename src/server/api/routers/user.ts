@@ -69,6 +69,19 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
+  setEnableUsageData: protectedProcedure
+    .input(z.boolean())
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          enableUsageData: input,
+        },
+      });
+    }),
+
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
     ctx.req.log.debug("user.deleteAccount");
 

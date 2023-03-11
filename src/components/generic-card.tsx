@@ -11,12 +11,12 @@ import {
   MenuList,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   IconDiscountCheck,
   IconDotsVertical,
-  IconTrash
+  IconTrash,
 } from "@tabler/icons-react";
 import React from "react";
 import { avatarUrl } from "../utils/avatar";
@@ -106,9 +106,13 @@ export const GenericCard: React.FC<GenericCardProps> = ({
         </Stack>
         <Flex justifyContent="space-between">
           <HStack spacing={2}>
-            <Avatar src={avatarUrl(user)} size="xs" />
+            <Avatar
+              src={avatarUrl(user)}
+              size="xs"
+              className="highlight-mask"
+            />
             <HStack spacing={1}>
-              <Text fontSize="sm" fontWeight={600}>
+              <Text fontSize="sm" fontWeight={600} className="highlight-mask">
                 {user.username}
               </Text>
               {verified && (

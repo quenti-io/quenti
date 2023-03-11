@@ -56,12 +56,15 @@ export const UserMenu = () => {
                 image: user.image!,
               })}
               size="sm"
+              className="highlight-mask"
             >
               <AvatarBadge boxSize="1em" bg="green.500" />
             </Avatar>
           </WrapItem>
           <WrapItem>
-            <Text fontWeight={700}>{user.username}</Text>
+            <Text fontWeight={700} className="highlight-mask">
+              {user.username}
+            </Text>
           </WrapItem>
           <WrapItem>
             <IconChevronDown
