@@ -76,7 +76,12 @@ export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
         </Stack>
         <HStack gap="2px">
           <Avatar src={avatarUrl(user)} size="xs" className="highlight-block" />
-          <Text fontSize="sm" fontWeight={600} className="highlight-mask">
+          <Text
+            fontSize="sm"
+            fontWeight={600}
+            className="highlight-mask"
+            w="max-content"
+          >
             {user.username}
           </Text>
         </HStack>

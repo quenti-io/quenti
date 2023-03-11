@@ -112,7 +112,12 @@ export const GenericCard: React.FC<GenericCardProps> = ({
               className="highlight-block"
             />
             <HStack spacing={1}>
-              <Text fontSize="sm" fontWeight={600} className="highlight-mask">
+              <Text
+                fontSize="sm"
+                fontWeight={600}
+                className="highlight-mask"
+                w="max-content"
+              >
                 {user.username}
               </Text>
               {verified && (

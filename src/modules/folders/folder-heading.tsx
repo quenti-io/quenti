@@ -34,6 +34,7 @@ export const FolderHeading = () => {
             transition="color 200ms ease-in-out"
             _hover={{ color: highlight }}
             className="highlight-mask"
+            w="max-content"
           >
             {folder.user.username}
           </Link>

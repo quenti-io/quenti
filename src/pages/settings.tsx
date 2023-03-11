@@ -34,7 +34,7 @@ const Settings: ComponentWithAuth = () => {
             <Avatar
               src={avatarUrl({ ...session.user!, image: session.user!.image! })}
               size="sm"
-              className="highlight-mask"
+              className="highlight-block"
             />
             <Heading>Settings</Heading>
           </HStack>
