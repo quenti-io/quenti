@@ -4,6 +4,8 @@ import {
   Center,
   Grid,
   GridItem,
+  Heading,
+  HStack,
   Modal,
   ModalBody,
   ModalContent,
@@ -11,7 +13,11 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Text,
+  useColorModeValue,
+  VStack,
 } from "@chakra-ui/react";
+import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { useFolder } from "../../hooks/use-folder";
 import { api } from "../../utils/api";
@@ -50,12 +56,28 @@ export const AddSetsModal: React.FC<AddSetsModalProps> = ({
     },
   });
 
+  const mainBg = useColorModeValue("gray.100", "gray.750");
+  const mainBorder = useColorModeValue("gray.200", "gray.800");
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered scrollBehavior="inside">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="xl"
+      isCentered
+      scrollBehavior="inside"
+    >
       <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent>
         <ModalHeader fontWeight={700}>Add Sets</ModalHeader>
-        <ModalBody pb="10">
+        <ModalBody
+          py="10"
+          bg={mainBg}
+          borderTopColor={mainBorder}
+          borderBottomColor={mainBorder}
+          borderTopWidth={2}
+          borderBottomWidth={2}
+        >
           <Grid gridTemplateColumns="1fr 1fr" gap={4}>
             {recent.data?.map((set) => (
               <GridItem key={set.id}>
@@ -77,6 +99,19 @@ export const AddSetsModal: React.FC<AddSetsModalProps> = ({
               </GridItem>
             ))}
           </Grid>
+          {!recent.data?.length && !recent.isLoading && (
+            <Center>
+              <VStack>
+                <HStack>
+                  <IconPlus />
+                  <Heading size="lg" fontWeight={600}>
+                    Nothing to add
+                  </Heading>
+                </HStack>
+                <Text color="gray.500">That&apos;s kinda sad.</Text>
+              </VStack>
+            </Center>
+          )}
           {recent.isLoading && (
             <Center>
               <Spinner color="blue.300" />

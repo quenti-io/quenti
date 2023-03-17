@@ -11,6 +11,7 @@ import {
 } from "../stores/use-experience-store";
 import { api, type RouterOutputs } from "../utils/api";
 import { Folder404 } from "./folders/folder-404";
+import { NoPublicSets } from "./folders/no-public-sets";
 
 type FolderData = RouterOutputs["folders"]["get"];
 export const FolderContext = React.createContext<FolderData>({
@@ -58,6 +59,7 @@ export const HydrateFolderData: React.FC<
   );
 
   if (folder.error?.data?.httpStatus === 404) return <Folder404 />;
+  if (folder.error?.data?.httpStatus === 403) return <NoPublicSets />;
   if (loading || !folder.data) return <Loading />;
 
   return (
