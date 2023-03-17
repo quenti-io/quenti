@@ -128,7 +128,10 @@ export const foldersRouter = createTRPCRouter({
         return false;
       });
 
-      if (!!studySets.length && !studySetsICanSee.length) {
+      if (
+        (!!studySets.length && !studySetsICanSee.length) ||
+        (!studySets.length && !isMyFolder)
+      ) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "No study sets in this folder are visible to you",
