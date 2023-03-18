@@ -78,7 +78,7 @@ export const AddSetsModal: React.FC<AddSetsModalProps> = ({
           borderTopWidth={2}
           borderBottomWidth={2}
         >
-          <Grid gridTemplateColumns="1fr 1fr" gap={4}>
+          <Grid gridTemplateColumns={{ base: "1fr", sm: "1fr 1fr" }} gap={4}>
             {recent.data?.map((set) => (
               <GridItem key={set.id}>
                 <SelectableStudySet
