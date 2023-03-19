@@ -367,8 +367,10 @@ export const foldersRouter = createTRPCRouter({
         .object({
           title: z.string().trim().min(1),
           description: z.string(),
+          setId: z.string().optional(),
         })
         .transform((z) => ({
+          ...z,
           title: profanity.censor(z.title.slice(0, MAX_TITLE)),
           description: profanity.censor(z.description.slice(MAX_DESC)),
         }))
@@ -384,12 +386,52 @@ export const foldersRouter = createTRPCRouter({
         },
       });
 
+      if (input.setId) {
+        const set = await ctx.prisma.studySet.findUnique({
+          where: {
+            id: input.setId,
+          },
+        });
+
+        if (!set) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+          });
+        }
+        if (
+          set.visibility === "Private" &&
+          set.userId !== ctx.session.user.id
+        ) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add another user's private set to a folder",
+          });
+        }
+      }
+
       return await ctx.prisma.folder.create({
         data: {
           title: input.title,
           description: input.description,
           userId: ctx.session.user.id,
           slug: !existing ? slug : null,
+          studySets: input.setId
+            ? {
+                create: {
+                  studySet: {
+                    connect: {
+                      id: input.setId,
+                    },
+                  },
+                },
+              }
+            : {},
+          folderExperiences: {
+            create: {
+              userId: ctx.session.user.id,
+              viewedAt: new Date(),
+            },
+          },
         },
       });
     }),
@@ -448,7 +490,7 @@ export const foldersRouter = createTRPCRouter({
     .input(
       z.object({
         folderId: z.string(),
-        studySetIds: z.array(z.string()),
+        studySetIds: z.array(z.string()).max(16),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -461,6 +503,25 @@ export const foldersRouter = createTRPCRouter({
       if (!folder || folder.userId !== ctx.session.user.id) {
         throw new TRPCError({
           code: "NOT_FOUND",
+        });
+      }
+
+      const studySets = await ctx.prisma.studySet.findMany({
+        where: {
+          id: {
+            in: input.studySetIds,
+          },
+        },
+      });
+
+      if (
+        studySets.find(
+          (x) => x.visibility == "Private" && x.userId !== ctx.session.user.id
+        )
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot add other users' private study sets to a folder",
         });
       }
 
