@@ -12,6 +12,7 @@ import { IconMenu, IconX } from "@tabler/icons-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { menuEventChannel } from "../events/menu";
 import { BASE_PAGES } from "../pages/_app";
 import { avatarUrl } from "../utils/avatar";
 import { CreateFolderModal } from "./create-folder-modal";
@@ -30,7 +31,25 @@ export const Navbar: React.FC = () => {
   const user = session?.user;
 
   const [folderModalOpen, setFolderModalOpen] = React.useState(false);
+  const [folderChildSetId, setFolderChildSetId] = React.useState<string>();
   const [importModalOpen, setImportModalOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const createFolder = (setId?: string) => {
+      setFolderChildSetId(setId);
+      setFolderModalOpen(true);
+    };
+    const openImportDialog = () => {
+      setImportModalOpen(true);
+    };
+
+    menuEventChannel.on("createFolder", createFolder);
+    menuEventChannel.on("openImportDialog", openImportDialog);
+    return () => {
+      menuEventChannel.off("createFolder", createFolder);
+      menuEventChannel.off("openImportDialog", openImportDialog);
+    };
+  }, []);
 
   return (
     <>
@@ -38,7 +57,9 @@ export const Navbar: React.FC = () => {
         isOpen={folderModalOpen}
         onClose={() => {
           setFolderModalOpen(false);
+          setFolderChildSetId(undefined);
         }}
+        childSetId={folderChildSetId}
       />
       <ImportFromQuizletModal
         isOpen={importModalOpen}

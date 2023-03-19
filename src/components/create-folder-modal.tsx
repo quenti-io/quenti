@@ -14,17 +14,20 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { menuEventChannel } from "../events/menu";
 import { api } from "../utils/api";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface CreateFolderModalProps {
   isOpen: boolean;
   onClose: () => void;
+  childSetId?: string;
 }
 
 export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   isOpen,
   onClose,
+  childSetId,
 }) => {
   const router = useRouter();
   const session = useSession();
@@ -38,10 +41,15 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
 
   const createFolder = api.folders.create.useMutation({
     onSuccess: async (data) => {
-      onClose();
-      await router.push(
-        `/@${session.data!.user!.username}/folders/${data.slug ?? data.id}`
-      );
+      if (!childSetId) {
+        onClose();
+        await router.push(
+          `/@${session.data!.user!.username}/folders/${data.slug ?? data.id}`
+        );
+      } else {
+        menuEventChannel.emit("folderWithSetCreated", childSetId);
+        onClose();
+      }
     },
   });
 
@@ -92,6 +100,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
                 await createFolder.mutateAsync({
                   title,
                   description,
+                  setId: childSetId,
                 });
               }}
             >

@@ -18,10 +18,13 @@ import {
 import type { User } from "@prisma/client";
 import {
   IconBooks,
+  IconCloudDownload,
   IconFolder,
+  IconFolderPlus,
   IconHome,
   IconLink,
   IconMoon,
+  IconPlus,
   IconSettings,
   IconSun,
   IconUser,
@@ -31,6 +34,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { env } from "../env/client.mjs";
+import { menuEventChannel } from "../events/menu";
 import { useShortcut } from "../hooks/use-shortcut";
 import { api } from "../utils/api";
 import { avatarUrl } from "../utils/avatar";
@@ -204,6 +208,27 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         action: (ctrl) => openLink(`/settings`, ctrl),
         shouldShow: () => window.location.pathname !== "/settings",
       });
+
+      total.push({
+        icon: <IconPlus />,
+        name: "Create Study Set",
+        label: "Create a new study set",
+        action: (ctrl) => openLink(`/create`, ctrl),
+        shouldShow: () => window.location.pathname !== "/create",
+      });
+      total.push({
+        icon: <IconCloudDownload />,
+        name: "Import From Quizlet",
+        label: "Import a study set from Quizlet.com",
+        action: () => menuEventChannel.emit("openImportDialog"),
+      });
+      total.push({
+        icon: <IconFolderPlus />,
+        name: "Create Folder",
+        label: "Create a new folder",
+        action: () => menuEventChannel.emit("createFolder"),
+      });
+
       total.push({
         icon: colorMode == "dark" ? <IconSun /> : <IconMoon />,
         name: "Toggle Theme",
@@ -439,8 +464,13 @@ const OptionComp: React.FC<OptionCompProps> = ({
       onClick={onClick}
     >
       <Box
-        transition="color cubic-bezier(.4,0,.2,1) 300ms"
+        transition="all cubic-bezier(.4,0,.2,1) 300ms"
         color={selectionIndex == index ? highlightColor : baseColor}
+        transform={
+          selectionIndex == index
+            ? "rotate(-10deg) scale(1.1)"
+            : "rotate(0deg) scale(1)"
+        }
       >
         {!isLoading ? (
           icon

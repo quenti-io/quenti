@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   Center,
@@ -13,12 +14,18 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { IconFolder, IconFolderPlus, IconMinus } from "@tabler/icons-react";
+import {
+  IconFolder,
+  IconFolderPlus,
+  IconMinus,
+  IconPlus,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { Link } from "../../components/link";
+import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 import { api } from "../../utils/api";
 
@@ -33,9 +40,30 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
 }) => {
   const { id } = useSet();
 
-  const { data, isLoading } = api.folders.recentForSetAdd.useQuery(id, {
-    enabled: isOpen,
-  });
+  const { data, isLoading, refetch } = api.folders.recentForSetAdd.useQuery(
+    id,
+    {
+      enabled: isOpen,
+    }
+  );
+
+  React.useEffect(() => {
+    const onFolderCreated = (setId: string) => {
+      if (setId !== id) return;
+      void (async () => {
+        await refetch();
+      })();
+    };
+
+    menuEventChannel.on("folderWithSetCreated", onFolderCreated);
+    return () => {
+      menuEventChannel.off("folderWithSetCreated", onFolderCreated);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const borderColor = useColorModeValue("gray.200", "gray.800");
+  const secondaryBg = useColorModeValue("gray.50", "gray.750");
 
   return (
     <Modal
@@ -46,11 +74,28 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
       scrollBehavior="inside"
     >
       <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" pb="4" rounded="xl">
-        <ModalBody>
+      <ModalContent rounded="xl" overflow="hidden">
+        <ModalBody p="6" px="8">
           <Stack spacing={8}>
             <Heading fontSize="4xl">Add to Folder</Heading>
             <Stack spacing={3}>
+              {isLoading ? (
+                <Center w="full" py="3">
+                  <Spinner color="blue.200" />
+                </Center>
+              ) : (
+                <Button
+                  w="full"
+                  variant="outline"
+                  leftIcon={<IconPlus />}
+                  size="lg"
+                  onClick={() => {
+                    menuEventChannel.emit("createFolder", id);
+                  }}
+                >
+                  Add to new Folder
+                </Button>
+              )}
               {data?.map((folder) => (
                 <FolderCard
                   id={folder.id}
@@ -60,15 +105,14 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
                   includes={folder.includes}
                 />
               ))}
-              {isLoading ? (
-                <Center w="full" py="8">
-                  <Spinner color="blue.200" />
-                </Center>
-              ) : undefined}
             </Stack>
           </Stack>
         </ModalBody>
-        <ModalFooter>
+        <ModalFooter
+          bg={secondaryBg}
+          borderTopColor={borderColor}
+          borderTopWidth="2px"
+        >
           <Button onClick={onClose}>Done</Button>
         </ModalFooter>
       </ModalContent>
@@ -93,31 +137,56 @@ const FolderCard: React.FC<FolderCardProps> = ({
   const { id } = useSet();
 
   const [includes, setIncludes] = React.useState(_includes);
-  React.useEffect(() => setIncludes(includes), [includes]);
+  React.useEffect(() => setIncludes(_includes), [_includes]);
 
   const addSets = api.folders.addSets.useMutation();
   const removeSet = api.folders.removeSet.useMutation();
 
-  const cardBg = useColorModeValue("gray.50", "gray.750");
-  const border = useColorModeValue("gray.200", "gray.800");
+  const cardBg = useColorModeValue("gray.100", "gray.750");
+  const highlight = useColorModeValue("blue.400", "blue.200");
+
+  const adding =
+    addSets.isLoading && addSets.variables?.studySetIds.includes(id);
+  const removing =
+    removeSet.isLoading && removeSet.variables?.studySetId === id;
 
   return (
     <Card
       bg={cardBg}
       px="4"
       py="3"
-      borderWidth="2px"
-      borderColor={border}
+      borderBottomWidth="2px"
+      borderBottomColor={cardBg}
       transition="border-bottom-color ease-in-out 150ms"
       _hover={{
         borderBottomColor: "blue.300",
       }}
+      role="group"
     >
-      <Flex justifyContent="space-between">
-        <HStack spacing={4}>
-          <IconFolder size={18} />
-          <Link href={`/@${user.username}/folders/${slug ?? id}`}>
-            <Heading size="md">{title}</Heading>
+      <Flex justifyContent="space-between" gap={4}>
+        <HStack spacing={4} overflow="hidden">
+          <Box
+            _groupHover={{ transform: "translateX(2px)" }}
+            transition="transform ease-in-out 150ms"
+          >
+            <IconFolder size={18} />
+          </Box>
+          <Link
+            href={`/@${user.username}/folders/${slug ?? id}`}
+            transition="color ease-in-out 150ms"
+            _hover={{
+              color: highlight,
+            }}
+            minWidth={0}
+          >
+            <Heading
+              size="md"
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              overflow="hidden"
+            >
+              {title}
+            </Heading>
           </Link>
         </HStack>
         <IconButton
@@ -137,6 +206,7 @@ const FolderCard: React.FC<FolderCardProps> = ({
               });
             }
           }}
+          isLoading={adding || removing}
           aria-label="add"
           variant="ghost"
           size="sm"
