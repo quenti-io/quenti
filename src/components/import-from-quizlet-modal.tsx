@@ -65,7 +65,7 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
         err.message == `Unexpected token 'A', "An error o"... is not valid JSON`
       ) {
         setError(
-          "Our web cralwer seems to be currently down. Please try again later."
+          "Our web crawler seems to be currently down. Please try again later."
         );
         return;
       }
