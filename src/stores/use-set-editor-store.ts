@@ -107,16 +107,20 @@ export const createSetEditorStore = (
       },
       bulkAddTerms: (terms: { word: string; definition: string }[]) => {
         set((state) => {
+          const filtered = state.terms
+            .filter((x) => !!x.word.length || !!x.definition.length)
+            .map((x, i) => ({ ...x, rank: i }));
+
           const newTerms = terms.map((term, i) => ({
             id: nanoid(),
             word: term.word,
             definition: term.definition,
             setAutoSaveId: "",
-            rank: state.terms.length + i,
+            rank: filtered.length + i,
           }));
 
           return {
-            terms: [...state.terms, ...newTerms],
+            terms: [...filtered, ...newTerms],
           };
         });
         behaviors?.bulkAddTerms?.(terms);

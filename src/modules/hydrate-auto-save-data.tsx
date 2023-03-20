@@ -5,14 +5,18 @@ import { useLoading } from "../hooks/use-loading";
 import {
   createSetEditorStore,
   SetEditorStoreContext,
-  type SetEditorStore,
+  type SetEditorStore
 } from "../stores/use-set-editor-store";
 import { api, type RouterOutputs } from "../utils/api";
 
 export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { data } = api.autoSave.get.useQuery();
+  const { data } = api.autoSave.get.useQuery(undefined, {
+    retry: false,
+    cacheTime: 0,
+    refetchOnWindowFocus: false,
+  });
   const { loading } = useLoading();
   if (loading || !data) return <Loading />;
 
