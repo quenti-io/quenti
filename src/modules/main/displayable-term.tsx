@@ -78,16 +78,29 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const { colorMode } = useColorMode();
   const divider = useColorModeValue("gray.200", "gray.600");
+  const verticalDivider = useColorModeValue("gray.200", "gray.800");
+  const secondary = useColorModeValue("gray.100", "gray.750");
 
   return React.useMemo(
     () => (
-      <Card px="4" py="5" ref={ref}>
+      <Card
+        ref={ref}
+        px={{ base: 0, sm: 4 }}
+        py={{ base: 0, sm: 5 }}
+        overflow="hidden"
+      >
         <Flex
           flexDir={["column-reverse", "row", "row"]}
           alignItems="stretch"
           gap={[0, 6, 6]}
         >
-          <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
+          <Flex
+            w="full"
+            flexDir={["column", "row", "row"]}
+            gap={[2, 6, 6]}
+            px={{ base: 4, sm: 0 }}
+            py={{ base: 5, sm: 0 }}
+          >
             {isEditing ? (
               <AutoResizeTextarea
                 allowTab={false}
@@ -122,7 +135,14 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               </Text>
             )}
           </Flex>
-          <Box h="full">
+          <Box
+            h="full"
+            bg={{ base: secondary, sm: "none" }}
+            px={{ base: 2, sm: 0 }}
+            py={{ base: 4, sm: 0 }}
+            borderBottomWidth={{ base: 3, sm: 0 }}
+            borderBottomColor={{ base: verticalDivider, sm: "none" }}
+          >
             <Flex w="full" justifyContent="end">
               <HStack spacing={1} height="24px">
                 <SetCreatorOnly>
