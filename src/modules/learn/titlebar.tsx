@@ -1,6 +1,5 @@
 import { Flex, Heading, IconButton } from "@chakra-ui/react";
 import { IconArrowLeft, IconSettings } from "@tabler/icons-react";
-import { useRouter } from "next/router";
 import React from "react";
 import { Link } from "../../components/link";
 import { SetSettingsModal } from "../../components/set-settings-modal";
@@ -9,7 +8,6 @@ import { useLearnContext } from "../../stores/use-learn-store";
 
 export const Titlebar = () => {
   const { id } = useSet();
-  const router = useRouter();
 
   const completed = useLearnContext((s) => s.completed);
   const currentRound = useLearnContext((s) => s.currentRound);
@@ -20,11 +18,8 @@ export const Titlebar = () => {
     <>
       <SetSettingsModal
         isOpen={settingsOpen}
-        onClose={(isDirty) => {
-          setSettingsOpen(false);
-          if (isDirty) router.reload();
-        }}
-        reloadOnReset
+        onClose={() => setSettingsOpen(false)}
+        dirtyOnReset
       />
       <Flex alignItems="center">
         <IconButton

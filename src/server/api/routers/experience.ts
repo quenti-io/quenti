@@ -1,6 +1,7 @@
-import { MultipleAnswerMode } from "@prisma/client";
+import { MultipleAnswerMode, Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { shuffleArray } from "../../../utils/array";
 import { createTRPCRouter, lockedProcedure, protectedProcedure } from "../trpc";
 
 export const experienceRouter = createTRPCRouter({
@@ -76,6 +77,67 @@ export const experienceRouter = createTRPCRouter({
           multipleAnswerMode: input.multipleAnswerMode,
         },
       });
+    }),
+
+  setShuffleLearn: protectedProcedure
+    .input(
+      z.object({
+        studySetId: z.string(),
+        shuffleLearn: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const experience = await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.studySetId,
+          },
+        },
+        data: {
+          shuffleLearn: input.shuffleLearn,
+        },
+      });
+
+      if (!experience) throw new TRPCError({ code: "NOT_FOUND" });
+
+      if (input.shuffleLearn) {
+        const termIds = (
+          await ctx.prisma.term.findMany({
+            where: { studySetId: input.studySetId },
+            select: { id: true },
+          })
+        ).map((x) => x.id);
+
+        const shuffledIds = shuffleArray(termIds);
+        const vals = shuffledIds.map((id, i) => [
+          ctx.session.user.id,
+          id,
+          experience.id,
+          0,
+          i,
+        ]);
+        const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
+
+        const query = Prisma.sql`
+      INSERT INTO "StudiableTerm" ("userId", "termId", "experienceId", "correctness", "studiableRank")
+      VALUES ${Prisma.join(formatted)}
+      ON CONFLICT ON CONSTRAINT "StudiableTerm_pkey"
+      DO UPDATE SET "studiableRank" = EXCLUDED."studiableRank";
+      `;
+
+        await ctx.prisma.$executeRaw(query);
+      } else {
+        await ctx.prisma.studiableTerm.updateMany({
+          where: {
+            userId: ctx.session.user.id,
+            experienceId: experience.id,
+          },
+          data: {
+            studiableRank: null,
+          },
+        });
+      }
     }),
 
   setExtendedFeedbackBank: lockedProcedure(["ExtendedFeedbackBank"])
@@ -156,8 +218,15 @@ export const experienceRouter = createTRPCRouter({
           learnMode: "Learn",
           learnRound: 0,
           studiableTerms: {
-            deleteMany: {
-              userId: ctx.session.user.id,
+            updateMany: {
+              where: {
+                userId: ctx.session.user.id,
+              },
+              data: {
+                correctness: 0,
+                incorrectCount: 0,
+                appearedInRound: null,
+              },
             },
           },
         },

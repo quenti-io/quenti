@@ -224,6 +224,7 @@ model StudySetExperience {
   shuffleFlashcards    Boolean            @default(false)
   learnRound           Int                @default(0)
   learnMode            LearnMode          @default(Learn)
+  shuffleLearn         Boolean            @default(false)
   studyStarred         Boolean            @default(false)
   answerWith           StudySetAnswerMode @default(Word)
   multipleAnswerMode   MultipleAnswerMode @default(Unknown)
