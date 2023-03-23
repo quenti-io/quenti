@@ -224,6 +224,7 @@ model StudySetExperience {
   shuffleFlashcards    Boolean            @default(false)
   learnRound           Int                @default(0)
   learnMode            LearnMode          @default(Learn)
+  shuffleLearn         Boolean            @default(false)
   studyStarred         Boolean            @default(false)
   answerWith           StudySetAnswerMode @default(Word)
   multipleAnswerMode   MultipleAnswerMode @default(Unknown)
@@ -254,6 +255,7 @@ model StudiableTerm {
   correctness     Int
   appearedInRound Int?
   incorrectCount  Int    @default(0)
+  studiableRank   Int?
 
   user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   term               Term               @relation(fields: [termId], references: [id], onDelete: Cascade)

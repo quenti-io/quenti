@@ -16,7 +16,7 @@ import { api } from "../../../utils/api";
 
 const Learn: ComponentWithAuth = () => {
   return (
-    <HydrateSetData>
+    <HydrateSetData disallowDirty>
       <CreateLearnData>
         <Container maxW="4xl">
           <Stack spacing={8}>
