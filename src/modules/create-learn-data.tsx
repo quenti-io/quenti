@@ -19,7 +19,6 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
     const studiable = experience.studiableTerms;
 
     let learnTerms: LearnTerm[] = terms
-      .sort((a, b) => a.rank - b.rank)
       .map((term) => {
         const studiableTerm = studiable.find((s) => s.id === term.id);
         return {
@@ -27,8 +26,14 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
           correctness: studiableTerm?.correctness ?? 0,
           appearedInRound: studiableTerm?.appearedInRound ?? undefined,
           incorrectCount: studiableTerm?.incorrectCount ?? 0,
+          studiableRank: studiableTerm?.studiableRank,
         };
-      });
+      })
+      .sort((a, b) =>
+        a.studiableRank && b.studiableRank
+          ? a.studiableRank - b.studiableRank
+          : a.rank - b.rank
+      );
 
     if (experience.studyStarred) {
       learnTerms = learnTerms.filter((x) =>

@@ -31,33 +31,32 @@ export const MultipleAnswerModeSection: React.FC = () => {
         </Text>
       </Stack>
       <Flex justifyContent="end">
-
-      <ButtonGroup isAttached>
-        <Button
-          variant={multipleAnswerMode == "One" ? "solid" : "outline"}
-          onClick={() => {
-            setMultipleAnswerMode("One");
-            apiSetMultipleAnswerMode.mutate({
-              studySetId: id,
-              multipleAnswerMode: "One",
-            });
-          }}
-        >
-          Require one answer
-        </Button>
-        <Button
-          variant={multipleAnswerMode == "All" ? "solid" : "outline"}
-          onClick={() => {
-            setMultipleAnswerMode("All");
-            apiSetMultipleAnswerMode.mutate({
-              studySetId: id,
-              multipleAnswerMode: "All",
-            });
-          }}
-        >
-          Require all answers
-        </Button>
-      </ButtonGroup>
+        <ButtonGroup isAttached>
+          <Button
+            variant={multipleAnswerMode == "One" ? "solid" : "outline"}
+            onClick={() => {
+              setMultipleAnswerMode("One");
+              apiSetMultipleAnswerMode.mutate({
+                studySetId: id,
+                multipleAnswerMode: "One",
+              });
+            }}
+          >
+            One answer
+          </Button>
+          <Button
+            variant={multipleAnswerMode == "All" ? "solid" : "outline"}
+            onClick={() => {
+              setMultipleAnswerMode("All");
+              apiSetMultipleAnswerMode.mutate({
+                studySetId: id,
+                multipleAnswerMode: "All",
+              });
+            }}
+          >
+            Exact answer
+          </Button>
+        </ButtonGroup>
       </Flex>
     </Flex>
   );

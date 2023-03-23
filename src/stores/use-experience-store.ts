@@ -6,6 +6,7 @@ import { subscribeWithSelector } from "zustand/middleware";
 export interface ExperienceStoreProps {
   shuffleFlashcards: boolean;
   autoplayFlashcards: boolean;
+  shuffleLearn: boolean;
   studyStarred: boolean;
   answerWith: StudySetAnswerMode;
   multipleAnswerMode: MultipleAnswerMode;
@@ -16,6 +17,7 @@ export interface ExperienceStoreProps {
 interface ExperienceState extends ExperienceStoreProps {
   toggleShuffleFlashcards: () => void;
   toggleAutoplayFlashcards: () => void;
+  setShuffleLearn: (shuffleLearn: boolean) => void;
   setStudyStarred: (studyStarred: boolean) => void;
   setAnswerWith: (answerWith: StudySetAnswerMode) => void;
   setMultipleAnswerMode: (multipleAnswerMode: MultipleAnswerMode) => void;
@@ -32,6 +34,7 @@ export const createExperienceStore = (
   const DEFAULT_PROPS: ExperienceStoreProps = {
     shuffleFlashcards: false,
     autoplayFlashcards: false,
+    shuffleLearn: false,
     studyStarred: false,
     answerWith: "Definition",
     extendedFeedbackBank: false,
@@ -56,6 +59,9 @@ export const createExperienceStore = (
             autoplayFlashcards: !state.autoplayFlashcards,
           };
         });
+      },
+      setShuffleLearn: (shuffleLearn: boolean) => {
+        set({ shuffleLearn });
       },
       setStudyStarred: (studyStarred: boolean) => {
         set({ studyStarred });
