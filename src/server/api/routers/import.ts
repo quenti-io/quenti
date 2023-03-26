@@ -1,8 +1,8 @@
 import { StudySetVisibility } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import axios from "axios";
 import { nanoid } from "nanoid";
 import type { Counter } from "prom-client";
-import { ZenRows } from "zenrows";
 import { z } from "zod";
 import { QUIZLET_IMPORT_REGEXP } from "../../../constants/characters";
 import { env } from "../../../env/server.mjs";
@@ -20,6 +20,14 @@ type ApiResponse = {
   };
 };
 
+const withProxy = (url: string) => {
+  return axios.get(
+    `http://api.scraperapi.com?api_key=${
+      env.SCRAPER_API_KEY
+    }&url=${encodeURIComponent(url)}`
+  );
+};
+
 export const importRouter = createTRPCRouter({
   fromUrl: protectedProcedure
     .input(
@@ -34,16 +42,14 @@ export const importRouter = createTRPCRouter({
         throw new Error("Malformed URL");
       }
       const id = pathname;
-      const PER_PAGE = 500;
-
-      const client = new ZenRows(env.ZENROWS_API_KEY);
+      const LIMIT = 1000;
 
       (
         register.getSingleMetric("fetch_import_requests_total") as Counter
       ).inc();
 
-      const response = await client.get(
-        `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=1`
+      const response = await withProxy(
+        `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${LIMIT}&page=1`
       );
       if (!response.data) {
         throw new TRPCError({
@@ -62,32 +68,6 @@ export const importRouter = createTRPCRouter({
       }
 
       const terms: ApiStudiableItem[] = res.responses[0].models.studiableItem;
-      let currentLength = res.responses[0].models.studiableItem.length;
-      let token = res.responses[0].paging.token;
-      let page = 2;
-
-      while (currentLength >= PER_PAGE) {
-        const response = await client.get(
-          `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${PER_PAGE}&page=${page++}&pagingToken=${token}`,
-          {}
-        );
-        if (!response.data) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong while importing.",
-          });
-        }
-
-        const res = response.data as ApiResponse;
-
-        if (res.error && res.error.code == 410) break;
-        if (!res.responses || !res.responses.length || !res.responses[0]) break;
-
-        terms.push(...res.responses[0].models.studiableItem);
-        currentLength = res.responses[0].models.studiableItem.length;
-        token = res.responses[0].paging.token;
-      }
-
       const skippedRanks = new Array<number>();
       const parsed: { word: string; definition: string }[] = [];
 
