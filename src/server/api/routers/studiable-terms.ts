@@ -1,7 +1,8 @@
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { register } from "../../prometheus";
+import { StudiableMode } from "@prisma/client";
 import type { Counter } from "prom-client";
+import { z } from "zod";
+import { register } from "../../prometheus";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const studiableTermsRouter = createTRPCRouter({
   put: protectedProcedure
@@ -9,6 +10,7 @@ export const studiableTermsRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         experienceId: z.string(),
+        mode: z.nativeEnum(StudiableMode),
         correctness: z.number(),
         appearedInRound: z.number(),
         incorrectCount: z.number(),
@@ -27,6 +29,7 @@ export const studiableTermsRouter = createTRPCRouter({
         create: {
           userId: ctx.session.user.id,
           termId: input.id,
+          mode: input.mode,
           experienceId: input.experienceId,
           correctness: input.correctness,
           appearedInRound: input.appearedInRound,

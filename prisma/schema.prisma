@@ -197,6 +197,11 @@ enum EntityType {
   Folder
 }
 
+enum StudiableMode {
+  Flashcards
+  Learn
+}
+
 enum LearnMode {
   Learn
   Review
@@ -208,6 +213,11 @@ enum StudySetAnswerMode {
   Both
 }
 
+enum LimitedStudySetAnswerMode {
+  Word
+  Definition
+}
+
 enum MultipleAnswerMode {
   One
   All
@@ -215,20 +225,23 @@ enum MultipleAnswerMode {
 }
 
 model StudySetExperience {
-  id                   String             @id @default(cuid())
+  id                   String                    @id @default(cuid())
   userId               String
   studySetId           String
   viewedAt             DateTime
-  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  studySet             StudySet           @relation(fields: [studySetId], references: [id], onDelete: Cascade)
-  shuffleFlashcards    Boolean            @default(false)
-  learnRound           Int                @default(0)
-  learnMode            LearnMode          @default(Learn)
-  shuffleLearn         Boolean            @default(false)
-  studyStarred         Boolean            @default(false)
-  answerWith           StudySetAnswerMode @default(Word)
-  multipleAnswerMode   MultipleAnswerMode @default(Unknown)
-  extendedFeedbackBank Boolean            @default(false)
+  user                 User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studySet             StudySet                  @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  shuffleFlashcards    Boolean                   @default(false)
+  learnRound           Int                       @default(0)
+  learnMode            LearnMode                 @default(Learn)
+  shuffleLearn         Boolean                   @default(false)
+  studyStarred         Boolean                   @default(false)
+  answerWith           StudySetAnswerMode        @default(Word)
+  multipleAnswerMode   MultipleAnswerMode        @default(Unknown)
+  extendedFeedbackBank Boolean                   @default(false)
+  enableCardsSorting   Boolean                   @default(false)
+  cardsStudyStarred    Boolean                   @default(false)
+  cardsAnswerWith      LimitedStudySetAnswerMode @default(Word)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -252,9 +265,10 @@ model StudiableTerm {
   userId          String
   termId          String
   experienceId    String
+  mode            StudiableMode @default(Learn)
   correctness     Int
   appearedInRound Int?
-  incorrectCount  Int    @default(0)
+  incorrectCount  Int           @default(0)
   studiableRank   Int?
 
   user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)

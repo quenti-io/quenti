@@ -7,7 +7,7 @@ import {
   GridItem,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
@@ -49,6 +49,7 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
       await put.mutateAsync({
         id: active.term.id,
         experienceId: experience.id,
+        mode: "Learn",
         correctness: 2,
         appearedInRound: active.term.appearedInRound || 0,
         incorrectCount: active.term.incorrectCount,
@@ -69,6 +70,7 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
       await put.mutateAsync({
         id: active.term.id,
         experienceId: experience.id,
+        mode: "Learn",
         correctness: -1,
         appearedInRound: active.term.appearedInRound || 0,
         incorrectCount: active.term.incorrectCount + 1,
