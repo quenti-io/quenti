@@ -1,7 +1,7 @@
 import { Flex, Stack, Switch, Text, useColorModeValue } from "@chakra-ui/react";
-import { useSet } from "../../hooks/use-set";
-import { useExperienceContext } from "../../stores/use-experience-store";
-import { api } from "../../utils/api";
+import { useSet } from "../../../hooks/use-set";
+import { useExperienceContext } from "../../../stores/use-experience-store";
+import { api } from "../../../utils/api";
 
 export const ExtendedFeedbackSection = () => {
   const { id } = useSet();

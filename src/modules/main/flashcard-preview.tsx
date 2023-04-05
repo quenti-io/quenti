@@ -8,8 +8,8 @@ import {
 import React from "react";
 import { FlashcardWrapper } from "../../components/flashcard-wrapper";
 import { Link } from "../../components/link";
-import { SetSettingsModal } from "../../components/set-settings-modal";
 import { useSet } from "../../hooks/use-set";
+import { FlashcardsSettingsModal } from "../../modules/flashcards/flashcards-settings-modal";
 import { useExperienceContext } from "../../stores/use-experience-store";
 import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
@@ -44,7 +44,7 @@ export const FlashcardPreview = () => {
 
   return (
     <>
-      <SetSettingsModal
+      <FlashcardsSettingsModal
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
       />

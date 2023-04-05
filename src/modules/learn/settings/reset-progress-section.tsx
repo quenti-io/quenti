@@ -1,17 +1,17 @@
 import { Button, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { IconReload } from "@tabler/icons-react";
 import React from "react";
-import { useSet } from "../../hooks/use-set";
-import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
-import { api } from "../../utils/api";
-import { SetSettingsModalContext } from "../set-settings-modal";
+import { useSet } from "../../../hooks/use-set";
+import { useSetPropertiesStore } from "../../../stores/use-set-properties-store";
+import { api } from "../../../utils/api";
+import { LearnSettingsModalContext } from "../learn-settings-modal";
 
 export const ResetProgressSection = () => {
   const { id } = useSet();
   const utils = api.useContext();
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
-  const { onClose, dirtyOnReset } = React.useContext(SetSettingsModalContext);
+  const { onClose, dirtyOnReset } = React.useContext(LearnSettingsModalContext);
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
   const apiResetLearnProgress = api.experience.resetLearnProgress.useMutation({
