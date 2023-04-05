@@ -67,11 +67,10 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
         setError(
           "Our web crawler seems to be currently down. Please try again later."
         );
-        return;
-      }
-
-      setError(err.message);
+      } else setError(err.message);
     },
+    retry: (failureCount, error) =>
+      failureCount < 1 && error.data?.httpStatus == 504,
   });
 
   React.useEffect(() => {
