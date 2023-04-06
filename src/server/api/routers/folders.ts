@@ -593,6 +593,22 @@ export const foldersRouter = createTRPCRouter({
       });
     }),
 
+  setEnableCardsSorting: protectedProcedure
+    .input(z.object({ genericId: z.string(), enableCardsSorting: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          enableCardsSorting: input.enableCardsSorting,
+        },
+      });
+    }),
+
   starTerm: protectedProcedure
     .input(z.object({ studySetId: z.string(), termId: z.string() }))
     .mutation(async ({ ctx, input }) => {

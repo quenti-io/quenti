@@ -82,6 +82,9 @@ const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({
   const getVal = (data: FolderData): Partial<ExperienceStoreProps> => ({
     shuffleFlashcards: data.experience.shuffleFlashcards,
     starredTerms: data.experience.starredTerms,
+    enableCardsSorting: data.experience.enableCardsSorting,
+    cardsStudyStarred: data.experience.cardsStudyStarred,
+    cardsAnswerWith: data.experience.cardsAnswerWith,
   });
 
   const storeRef = React.useRef<ExperienceStore>();

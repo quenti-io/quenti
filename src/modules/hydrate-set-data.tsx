@@ -87,6 +87,9 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
     multipleAnswerMode: data.experience.multipleAnswerMode,
     extendedFeedbackBank:
       data.experience.extendedFeedbackBank && extendedFeedbackBank,
+    enableCardsSorting: data.experience.enableCardsSorting,
+    cardsStudyStarred: data.experience.cardsStudyStarred,
+    cardsAnswerWith: data.experience.cardsAnswerWith,
   });
 
   const storeRef = React.useRef<ExperienceStore>();

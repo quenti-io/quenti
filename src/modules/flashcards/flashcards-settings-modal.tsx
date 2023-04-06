@@ -8,6 +8,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
+import { CardsSortingSection } from "./settings/cards-sorting-section";
 
 export interface FlashcardsSettingsModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export const FlashcardsSettingsModal: React.FC<
               <Heading>Settings</Heading>
               <ModalCloseButton mr="4" mt="4" />
             </Flex>
+            <CardsSortingSection />
           </Stack>
         </ModalBody>
       </ModalContent>
