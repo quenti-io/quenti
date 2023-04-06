@@ -6,8 +6,8 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import React from "react";
-import { FlashcardWrapper } from "../../components/flashcard-wrapper";
 import { Link } from "../../components/link";
+import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSet } from "../../hooks/use-set";
 import { FlashcardsSettingsModal } from "../../modules/flashcards/flashcards-settings-modal";
 import { useExperienceContext } from "../../stores/use-experience-store";
@@ -55,7 +55,7 @@ export const FlashcardPreview = () => {
         w="full"
       >
         <Flex maxW="1000px" flex="1">
-          <FlashcardWrapper terms={data.terms} termOrder={termOrder} />
+          <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
         </Flex>
         <Flex flexDir="column" justifyContent="space-between">
           <Stack spacing={4}>

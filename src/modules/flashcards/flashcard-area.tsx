@@ -1,5 +1,5 @@
 import React from "react";
-import { FlashcardWrapper } from "../../components/flashcard-wrapper";
+import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useExperienceContext } from "../../stores/use-experience-store";
 import { shuffleArray } from "../../utils/array";
@@ -21,7 +21,7 @@ export const FlashcardArea = () => {
   }, [shuffle]);
 
   return (
-    <FlashcardWrapper
+    <RootFlashcardWrapper
       h="calc(100vh - 240px)"
       terms={terms}
       termOrder={termOrder}
