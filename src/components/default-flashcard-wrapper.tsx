@@ -118,8 +118,8 @@ export const DefaultFlashcardWrapper = () => {
           index={index}
           isFlipped={isFlipped}
           numTerms={terms.length}
-          onPrev={onPrev}
-          onNext={onNext}
+          onLeftAction={onPrev}
+          onRightAction={onNext}
           starred={starred}
           onRequestEdit={() => editTerm(term, isFlipped)}
           onRequestStar={() => starTerm(term)}

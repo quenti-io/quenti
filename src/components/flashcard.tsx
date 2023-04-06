@@ -12,11 +12,13 @@ import {
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import {
+  IconCheck,
   IconChevronLeft,
   IconChevronRight,
   IconEdit,
   IconStar,
   IconStarFilled,
+  IconX,
 } from "@tabler/icons-react";
 import React from "react";
 import useFitText from "use-fit-text";
@@ -30,8 +32,9 @@ export interface FlashcardProps {
   numTerms: number;
   starred: boolean;
   h?: string;
-  onPrev: () => void;
-  onNext: () => void;
+  variant?: "default" | "sortable";
+  onLeftAction: () => void;
+  onRightAction: () => void;
   onRequestEdit: () => void;
   onRequestStar: () => void;
 }
@@ -43,14 +46,21 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   numTerms,
   starred,
   h = "500px",
-  onPrev,
-  onNext,
+  variant = "default",
+  onLeftAction,
+  onRightAction,
   onRequestEdit,
   onRequestStar,
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const Star = starred ? IconStarFilled : IconStar;
+  const LeftIcon = variant == "sortable" ? IconX : IconChevronLeft;
+  const RightIcon = variant == "sortable" ? IconCheck : IconChevronRight;
+
+  const genericColor = useColorModeValue("gray.900", "whiteAlpha.900");
+  const leftColor = useColorModeValue("red.500", "red.200");
+  const rightColor = useColorModeValue("green.500", "green.200");
 
   return (
     <Card w="full" h={h} rounded="xl" shadow="xl" overflow="hidden">
@@ -113,31 +123,31 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             w="full"
             size="lg"
             variant="outline"
+            colorScheme={variant == "sortable" ? "red" : "blue"}
             isDisabled={index === 0}
             onClick={(e) => {
               e.stopPropagation();
-              onPrev();
+              onLeftAction();
             }}
           >
-            <IconChevronLeft
-              size="24"
-              color={useColorModeValue("black", "white")}
-            />
+            <Box color={variant == "sortable" ? leftColor : genericColor}>
+              <LeftIcon size="24" />
+            </Box>
           </Button>
           <Button
             w="full"
             size="lg"
             variant="outline"
+            colorScheme={variant == "sortable" ? "green" : "blue"}
             isDisabled={index === numTerms - 1}
             onClick={(e) => {
               e.stopPropagation();
-              onNext();
+              onRightAction();
             }}
           >
-            <IconChevronRight
-              size="24"
-              color={useColorModeValue("black", "white")}
-            />
+            <Box color={variant == "sortable" ? rightColor : genericColor}>
+              <RightIcon size="24" />
+            </Box>
           </Button>
         </HStack>
       </Flex>
