@@ -8,6 +8,7 @@ import { api } from "../utils/api";
 import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
 import { RootFlashcardContext } from "./root-flashcard-wrapper";
+import { SortFlashcardProgress } from "./sort-flashcard-progress";
 
 export const SortFlashcardWrapper = () => {
   return (
@@ -32,7 +33,7 @@ const SortFlashcardWrapperInner = () => {
   const termsThisRound = useSortFlashcardsContext((s) => s.termsThisRound);
   const index = useSortFlashcardsContext((s) => s.index);
   const currentRound = useSortFlashcardsContext((s) => s.currentRound);
-  // const progressView = useSortFlashcardsContext((s) => s.progressView);
+  const progressView = useSortFlashcardsContext((s) => s.progressView);
   const stateMarkStillLearning = useSortFlashcardsContext(
     (s) => s.markStillLearning
   );
@@ -95,6 +96,8 @@ const SortFlashcardWrapperInner = () => {
       });
     })();
   };
+
+  if (progressView) return <SortFlashcardProgress h={h} />;
 
   return (
     <motion.div

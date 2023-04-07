@@ -88,7 +88,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
         },
       }}
     >
-      <Box w="full" h={h} zIndex="100">
+      <Box w="full" minH={h} zIndex="100">
         <EditTermModal
           term={editTerm}
           isOpen={editModalOpen}

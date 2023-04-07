@@ -110,7 +110,7 @@ export const createSortFlashcardsStore = (
             currentRound,
             index,
             termsThisRound,
-            progressView: false,
+            progressView: index == termsThisRound.length,
           };
         });
       },
