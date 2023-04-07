@@ -16,7 +16,7 @@ const Flashcards: ComponentWithAuth = () => {
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
       />
-      <Container maxW="full" h="calc(100vh - 80px)" px="0">
+      <Container maxW="full" h="calc(100vh - 80px)" px="0" overflow="hidden">
         <Container maxW="7xl" h="calc(100vh - 180px)">
           <Stack spacing={6}>
             <TitleBar />

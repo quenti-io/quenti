@@ -45,13 +45,13 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   return (
     <Card
       w="full"
-      minH={h}
+      h={h}
       rounded="xl"
       shadow="none"
       border="2px"
       bg="transparent"
       borderColor={borderColor}
-      overflow="hidden"
+      overflowY="auto"
       p="8"
     >
       <Flex flexDir="column" justifyContent="space-between" flex="1">
