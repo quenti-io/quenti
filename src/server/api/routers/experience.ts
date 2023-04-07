@@ -22,9 +22,7 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   setEnableCardsSorting: protectedProcedure
-    .input(
-      z.object({ genericId: z.string(), enableCardsSorting: z.boolean() })
-    )
+    .input(z.object({ genericId: z.string(), enableCardsSorting: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.studySetExperience.update({
         where: {
@@ -204,7 +202,7 @@ export const experienceRouter = createTRPCRouter({
       });
     }),
 
-  completeRound: protectedProcedure
+  completeLearnRound: protectedProcedure
     .input(z.object({ studySetId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.studySetExperience.update({
@@ -216,6 +214,24 @@ export const experienceRouter = createTRPCRouter({
         },
         data: {
           learnRound: {
+            increment: 1,
+          },
+        },
+      });
+    }),
+
+  completeCardsRound: protectedProcedure
+    .input(z.object({ genericId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          cardsRound: {
             increment: 1,
           },
         },
