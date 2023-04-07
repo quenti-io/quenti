@@ -4,7 +4,7 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { SPECIAL_CHAR_REGEXP } from "../constants/characters";
 import { CORRECT, INCORRECT } from "../constants/remarks";
-import type { LearnTerm } from "../interfaces/learn-term";
+import type { StudiableTerm } from "../interfaces/studiable-term";
 import type { Question } from "../interfaces/question";
 import type { RoundSummary } from "../interfaces/round-summary";
 import { shuffleArray, takeNRandom } from "../utils/array";
@@ -12,7 +12,7 @@ import { shuffleArray, takeNRandom } from "../utils/array";
 export interface LearnStoreProps {
   mode: LearnMode;
   answerMode: StudySetAnswerMode;
-  studiableTerms: LearnTerm[];
+  studiableTerms: StudiableTerm[];
   allTerms: Term[];
   numTerms: number;
   termsThisRound: number;
@@ -33,7 +33,7 @@ interface LearnState extends LearnStoreProps {
   initialize: (
     mode: LearnMode,
     answerMode: StudySetAnswerMode,
-    studiableTerms: LearnTerm[],
+    studiableTerms: StudiableTerm[],
     allTerms: Term[],
     round: number
   ) => void;

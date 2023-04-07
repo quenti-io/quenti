@@ -33,6 +33,7 @@ export const FolderContext = React.createContext<FolderData>({
     viewedAt: new Date(),
     starredTerms: [],
     enableCardsSorting: false,
+    cardsRound: 0,
     cardsStudyStarred: false,
     cardsAnswerWith: "Definition",
   },

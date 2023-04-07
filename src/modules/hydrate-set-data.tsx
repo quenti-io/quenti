@@ -15,6 +15,15 @@ import { api, type RouterOutputs } from "../utils/api";
 import { Set404 } from "./main/set-404";
 import { SetPrivate } from "./main/set-private";
 
+type BaseReturn = RouterOutputs["studySets"]["byId"];
+type StudiableType = BaseReturn["experience"]["studiableTerms"][number];
+type SetData = BaseReturn & {
+  injected: {
+    studiableLearnTerms: StudiableType[];
+    studiableFlashcardTerms: StudiableType[];
+  };
+};
+
 export interface HydrateSetDataProps {
   disallowDirty?: boolean;
 }
@@ -44,12 +53,28 @@ export const HydrateSetData: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDirty]);
 
+  const createInjectedData = (data: BaseReturn): SetData => {
+    const studiableLearnTerms = data.experience.studiableTerms.filter(
+      (t) => t.mode == "Learn"
+    );
+    const studiableFlashcardTerms = data.experience.studiableTerms.filter(
+      (t) => t.mode == "Flashcards"
+    );
+    return {
+      ...data,
+      injected: {
+        studiableLearnTerms,
+        studiableFlashcardTerms,
+      },
+    };
+  };
+
   if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (loading || !data || (disallowDirty && isDirty)) return <Loading />;
 
   return (
-    <ContextLayer data={data}>
+    <ContextLayer data={createInjectedData(data)}>
       <Head>
         <title>{data.title} | Quizlet.cc</title>
       </Head>
@@ -57,8 +82,6 @@ export const HydrateSetData: React.FC<
     </ContextLayer>
   );
 };
-
-type SetData = RouterOutputs["studySets"]["byId"];
 
 interface ContextLayerProps {
   data: SetData;

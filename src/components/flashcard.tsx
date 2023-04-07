@@ -124,7 +124,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             size="lg"
             variant="outline"
             colorScheme={variant == "sortable" ? "red" : "blue"}
-            isDisabled={index === 0}
+            isDisabled={variant == "default" && index === 0}
             onClick={(e) => {
               e.stopPropagation();
               onLeftAction();
@@ -139,7 +139,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             size="lg"
             variant="outline"
             colorScheme={variant == "sortable" ? "green" : "blue"}
-            isDisabled={index === numTerms - 1}
+            isDisabled={variant == "default" && index === numTerms - 1}
             onClick={(e) => {
               e.stopPropagation();
               onRightAction();

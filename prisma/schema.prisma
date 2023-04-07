@@ -240,6 +240,7 @@ model StudySetExperience {
   multipleAnswerMode   MultipleAnswerMode        @default(Unknown)
   extendedFeedbackBank Boolean                   @default(false)
   enableCardsSorting   Boolean                   @default(false)
+  cardsRound           Int                       @default(0)
   cardsStudyStarred    Boolean                   @default(false)
   cardsAnswerWith      LimitedStudySetAnswerMode @default(Word)
 
@@ -258,6 +259,7 @@ model FolderExperience {
   folder             Folder                    @relation(fields: [folderId], references: [id], onDelete: Cascade)
   shuffleFlashcards  Boolean                   @default(false)
   enableCardsSorting Boolean                   @default(false)
+  cardsRound         Int                       @default(0)
   cardsStudyStarred  Boolean                   @default(false)
   cardsAnswerWith    LimitedStudySetAnswerMode @default(Word)
 
@@ -282,7 +284,7 @@ model StudiableTerm {
   studySetExperience StudySetExperience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   folderExperience   FolderExperience?   @relation(fields: [folderExperienceId], references: [id], onDelete: Cascade)
 
-  @@id([userId, termId])
+  @@id([userId, termId, mode])
 }
 
 model StarredTerm {

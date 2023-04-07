@@ -24,10 +24,10 @@ const TermsOverviewContext = React.createContext<TermsOverviewContextProps>({
 });
 
 export const TermsOverview = () => {
-  const { terms, experience } = useSet();
+  const { terms, injected } = useSet();
 
   const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const studiable = !!experience.studiableTerms.length;
+  const studiable = !!injected.studiableLearnTerms.length;
   const [sortType, setSortType] = React.useState(
     studiable ? "stats" : "original"
   );
@@ -80,7 +80,7 @@ export const TermsOverview = () => {
               </ButtonGroup>
             )}
             <TermsSortSelect
-              studiable={!!experience.studiableTerms.length}
+              studiable={!!injected.studiableLearnTerms.length}
               onChange={setSortType}
             />
           </HStack>
@@ -92,18 +92,20 @@ export const TermsOverview = () => {
 };
 
 const TermsByStats = () => {
-  const { terms, experience } = useSet();
+  const { terms, experience, injected } = useSet();
 
-  let familiarTerms = experience.studiableTerms
+  let familiarTerms = injected.studiableLearnTerms
     .filter((x) => x.correctness != 0 && x.correctness != 2)
     .map((x) => terms.find((t) => t.id === x.id)!);
 
   let unstudiedTerms = terms.filter((x) => {
-    const studiableTerm = experience.studiableTerms.find((s) => s.id === x.id);
+    const studiableTerm = injected.studiableLearnTerms.find(
+      (s) => s.id === x.id
+    );
     return !studiableTerm || studiableTerm.correctness === 0;
   });
 
-  let masteredTerms = experience.studiableTerms
+  let masteredTerms = injected.studiableLearnTerms
     .filter((x) => x.correctness === 2)
     .map((x) => terms.find((t) => t.id === x.id)!);
 

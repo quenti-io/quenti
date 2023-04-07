@@ -30,9 +30,10 @@ export const studiableTermsRouter = createTRPCRouter({
 
       await ctx.prisma.studiableTerm.upsert({
         where: {
-          userId_termId: {
+          userId_termId_mode: {
             userId: ctx.session.user.id,
             termId: input.id,
+            mode: input.mode,
           },
         },
         create: {

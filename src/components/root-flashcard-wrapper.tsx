@@ -6,6 +6,7 @@ import { useExperienceContext } from "../stores/use-experience-store";
 import { api } from "../utils/api";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
 import { EditTermModal } from "./edit-term-modal";
+import { SortFlashcardWrapper } from "./sort-flashcard-wrapper";
 
 export interface RootFlashcardWrapperProps {
   terms: Term[];
@@ -43,9 +44,14 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
   const { type, experience } = useSetFolderUnison();
+  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);
+
+  const FlashcardWrapper = enableCardsSorting
+    ? SortFlashcardWrapper
+    : DefaultFlashcardWrapper;
 
   return (
     <RootFlashcardContext.Provider
@@ -91,7 +97,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
           }}
           onDefinition={focusDefinition}
         />
-        <DefaultFlashcardWrapper />
+        <FlashcardWrapper />
       </Box>
     </RootFlashcardContext.Provider>
   );
