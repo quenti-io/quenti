@@ -20,6 +20,7 @@ import {
   IconRotateClockwise,
   type TablerIconsProps,
 } from "@tabler/icons-react";
+import { AnyKeyPressLayer } from "../modules/learn/any-key-press-layer";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
 import { plural } from "../utils/string";
 import { CircularTermMastery } from "./circular-term-mastery";
@@ -54,6 +55,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
       overflowY="auto"
       p="8"
     >
+      <AnyKeyPressLayer onSubmit={onNextRound} />
       <Flex flexDir="column" justifyContent="space-between" flex="1">
         <Grid gridTemplateColumns={{ base: "1fr", xl: "1fr 1fr" }} gap="8">
           <GridItem>
@@ -113,6 +115,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
           size="sm"
           rightIcon={<IconArrowRight size={18} />}
           variant="ghost"
+          onClick={onNextRound}
         >
           Press any key to continue
         </Button>
