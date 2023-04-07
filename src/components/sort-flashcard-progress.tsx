@@ -24,8 +24,16 @@ import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
 import { plural } from "../utils/string";
 import { CircularTermMastery } from "./circular-term-mastery";
 
-export const SortFlashcardProgress: React.FC<{ h?: string }> = ({
+export interface SortFlashcardProgressProps {
+  h?: string;
+  onNextRound: () => void;
+  onResetProgress: () => void;
+}
+
+export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   h = "500px",
+  onNextRound,
+  onResetProgress,
 }) => {
   const cardBg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.750");
@@ -72,6 +80,7 @@ export const SortFlashcardProgress: React.FC<{ h?: string }> = ({
                     "term"
                   )} you're still learning.`}
                   icon={IconCards}
+                  onClick={onNextRound}
                 />
                 <Actionable
                   name="Restart Flashcards"
@@ -80,6 +89,7 @@ export const SortFlashcardProgress: React.FC<{ h?: string }> = ({
                     "term"
                   )} from the beginning.`}
                   icon={IconRotateClockwise}
+                  onClick={onResetProgress}
                 />
               </Stack>
             </Stack>
@@ -115,12 +125,14 @@ interface ActionableProps {
   name: string;
   description: string;
   icon: React.FC<TablerIconsProps>;
+  onClick: () => void;
 }
 
 const Actionable: React.FC<ActionableProps> = ({
   name,
   description,
   icon: Icon,
+  onClick,
 }) => {
   const bg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -142,6 +154,7 @@ const Actionable: React.FC<ActionableProps> = ({
         borderBottomColor: "blue.300",
       }}
       cursor="pointer"
+      onClick={onClick}
     >
       <Flex justifyContent="space-between" alignItems="center" gap={4}>
         <HStack>

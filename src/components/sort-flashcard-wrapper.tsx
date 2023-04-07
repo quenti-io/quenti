@@ -19,9 +19,8 @@ export const SortFlashcardWrapper = () => {
 };
 
 const SortFlashcardWrapperInner = () => {
-  const { experience, type } = useSetFolderUnison();
-  const { terms, h, editTerm, starTerm } =
-    React.useContext(RootFlashcardContext);
+  const { id, experience, type } = useSetFolderUnison();
+  const { h, editTerm, starTerm } = React.useContext(RootFlashcardContext);
   const controls = useAnimationControls();
 
   const [isFlipped, setIsFlipped] = React.useState(false);
@@ -38,6 +37,7 @@ const SortFlashcardWrapperInner = () => {
     (s) => s.markStillLearning
   );
   const stateMarkKnown = useSortFlashcardsContext((s) => s.markKnown);
+  const stateNextRound = useSortFlashcardsContext((s) => s.nextRound);
 
   const term = termsThisRound[index];
   const starred = term ? starredTerms.includes(term.id) : false;
@@ -45,6 +45,11 @@ const SortFlashcardWrapperInner = () => {
   const genericExperienceKey =
     type == "folder" ? "folderExperienceId" : "experienceId";
   const put = api.studiableTerms.put.useMutation();
+
+  const apiCompleteCardsRound =
+    type == "set"
+      ? api.experience.completeCardsRound.useMutation()
+      : api.folders.completeCardsRound.useMutation();
 
   const flipCard = async () => {
     await controls.start({
@@ -97,7 +102,24 @@ const SortFlashcardWrapperInner = () => {
     })();
   };
 
-  if (progressView) return <SortFlashcardProgress h={h} />;
+  const onNextRound = () => {
+    stateNextRound();
+
+    void (async () => {
+      await apiCompleteCardsRound.mutateAsync({
+        genericId: id,
+      });
+    })();
+  };
+
+  if (progressView)
+    return (
+      <SortFlashcardProgress
+        h={h}
+        onNextRound={onNextRound}
+        onResetProgress={() => undefined}
+      />
+    );
 
   return (
     <motion.div
@@ -120,7 +142,7 @@ const SortFlashcardWrapperInner = () => {
           term={term}
           index={index}
           isFlipped={isFlipped}
-          numTerms={terms.length}
+          numTerms={termsThisRound.length}
           onLeftAction={markStillLearning}
           onRightAction={markKnown}
           starred={starred}

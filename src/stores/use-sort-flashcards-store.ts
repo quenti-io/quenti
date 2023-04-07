@@ -98,9 +98,7 @@ export const createSortFlashcardsStore = (
           );
           // The rest are terms that are unknown, or incorrect but haven't been shown yet (appearedInRound is one less than currentRound)
           const headTerms = state.studiableTerms.filter(
-            (t) =>
-              t.correctness == 0 ||
-              (t.correctness == -1 && t.appearedInRound == currentRound - 1)
+            (t) => t.correctness == 0 || t.correctness == -1
           );
           const termsThisRound = [...tailTerms, ...headTerms];
           // Start the index at the first head term
