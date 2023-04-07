@@ -61,6 +61,7 @@ export const createSortFlashcardsStore = (
           if (active.id != termId) throw new Error("Mismatched term id");
           active.correctness = -1;
           active.incorrectCount++;
+          active.appearedInRound = state.currentRound;
 
           state.endSortCallback();
           return {};
@@ -71,6 +72,7 @@ export const createSortFlashcardsStore = (
           const active = state.termsThisRound[state.index]!;
           if (active.id != termId) throw new Error("Mismatched term id");
           active.correctness = 1;
+          active.appearedInRound = state.currentRound;
 
           state.endSortCallback();
           return {};
@@ -98,7 +100,9 @@ export const createSortFlashcardsStore = (
           );
           // The rest are terms that are unknown, or incorrect but haven't been shown yet (appearedInRound is one less than currentRound)
           const headTerms = state.studiableTerms.filter(
-            (t) => t.correctness == 0 || t.correctness == -1
+            (t) =>
+              t.correctness == 0 ||
+              (t.correctness == -1 && t.appearedInRound == currentRound - 1)
           );
           const termsThisRound = [...tailTerms, ...headTerms];
           // Start the index at the first head term

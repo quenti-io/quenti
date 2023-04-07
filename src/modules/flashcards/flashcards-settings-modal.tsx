@@ -1,4 +1,5 @@
 import {
+  Divider,
   Flex,
   Heading,
   Modal,
@@ -9,6 +10,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { CardsSortingSection } from "./settings/cards-sorting-section";
+import { RestartFlashcardsSection } from "./settings/restart-flashcards-section";
 
 export interface FlashcardsSettingsModalProps {
   isOpen: boolean;
@@ -29,6 +31,8 @@ export const FlashcardsSettingsModal: React.FC<
               <ModalCloseButton mr="4" mt="4" />
             </Flex>
             <CardsSortingSection />
+            <Divider />
+            <RestartFlashcardsSection requestClose={onClose} />
           </Stack>
         </ModalBody>
       </ModalContent>

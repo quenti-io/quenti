@@ -40,15 +40,15 @@ export const HydrateSetData: React.FC<
 
   const { data, error, refetch } = api.studySets.byId.useQuery(id, {
     retry: false,
-    enabled: !!id && !(disallowDirty && isDirty),
+    enabled: !!id && !isDirty,
     onSuccess: () => {
-      if (disallowDirty && isDirty) setIsDirty(false);
+      if (isDirty) setIsDirty(false);
     },
   });
 
   React.useEffect(() => {
     void (async () => {
-      if (disallowDirty && isDirty) await refetch();
+      if (isDirty) await refetch();
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDirty]);

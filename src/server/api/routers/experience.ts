@@ -238,6 +238,27 @@ export const experienceRouter = createTRPCRouter({
       });
     }),
 
+  resetCardsProgress: protectedProcedure
+    .input(z.object({ genericId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          cardsRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              mode: "Flashcards",
+            },
+          },
+        },
+      });
+    }),
+
   resetLearnProgress: protectedProcedure
     .input(z.object({ studySetId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -254,7 +275,7 @@ export const experienceRouter = createTRPCRouter({
           studiableTerms: {
             updateMany: {
               where: {
-                userId: ctx.session.user.id,
+                mode: "Learn",
               },
               data: {
                 correctness: 0,

@@ -74,7 +74,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
               <Heading size="md">Next Steps</Heading>
               <Stack spacing={4}>
                 <Actionable
-                  name="Keep Reviewing"
+                  name="Keep reviewing"
                   description={`Continue reviewing flashcards with the ${plural(
                     stillLearning,
                     "term"
@@ -83,7 +83,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
                   onClick={onNextRound}
                 />
                 <Actionable
-                  name="Restart Flashcards"
+                  name="Restart flashcards"
                   description={`Reset your progress and study all ${plural(
                     studiableTerms.length,
                     "term"

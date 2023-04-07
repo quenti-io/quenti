@@ -1,8 +1,8 @@
 import { motion, useAnimationControls } from "framer-motion";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
 import { useExperienceContext } from "../stores/use-experience-store";
+import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
 import { api } from "../utils/api";
 import { Flashcard } from "./flashcard";
@@ -11,15 +11,8 @@ import { RootFlashcardContext } from "./root-flashcard-wrapper";
 import { SortFlashcardProgress } from "./sort-flashcard-progress";
 
 export const SortFlashcardWrapper = () => {
-  return (
-    <CreateSortFlashcardsData>
-      <SortFlashcardWrapperInner />
-    </CreateSortFlashcardsData>
-  );
-};
-
-const SortFlashcardWrapperInner = () => {
   const { id, experience, type } = useSetFolderUnison();
+  const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const { h, editTerm, starTerm } = React.useContext(RootFlashcardContext);
   const controls = useAnimationControls();
 
@@ -46,10 +39,20 @@ const SortFlashcardWrapperInner = () => {
     type == "folder" ? "folderExperienceId" : "experienceId";
   const put = api.studiableTerms.put.useMutation();
 
+  const setDirtyProps = {
+    onSuccess: () => {
+      setIsDirty(true);
+    },
+  };
+
   const apiCompleteCardsRound =
     type == "set"
       ? api.experience.completeCardsRound.useMutation()
       : api.folders.completeCardsRound.useMutation();
+  const apiResetCardsProgress =
+    type == "set"
+      ? api.experience.resetCardsProgress.useMutation(setDirtyProps)
+      : api.folders.resetCardsProgress.useMutation(setDirtyProps);
 
   const flipCard = async () => {
     await controls.start({
@@ -112,12 +115,20 @@ const SortFlashcardWrapperInner = () => {
     })();
   };
 
+  const onResetProgress = () => {
+    void (async () => {
+      await apiResetCardsProgress.mutateAsync({
+        genericId: id,
+      });
+    })();
+  };
+
   if (progressView)
     return (
       <SortFlashcardProgress
         h={h}
         onNextRound={onNextRound}
-        onResetProgress={() => undefined}
+        onResetProgress={onResetProgress}
       />
     );
 
