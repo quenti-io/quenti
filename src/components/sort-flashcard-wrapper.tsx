@@ -16,11 +16,13 @@ export const SortFlashcardWrapper = () => {
   const { h, editTerm, starTerm } = React.useContext(RootFlashcardContext);
   const controls = useAnimationControls();
 
-  const [isFlipped, setIsFlipped] = React.useState(false);
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
+  const shouldFlip = cardsAnswerWith == "Definition";
+
+  const [isFlipped, setIsFlipped] = React.useState(shouldFlip);
   const flippedRef = React.useRef(isFlipped);
   flippedRef.current = isFlipped;
-
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
 
   const termsThisRound = useSortFlashcardsContext((s) => s.termsThisRound);
   const index = useSortFlashcardsContext((s) => s.index);
@@ -77,6 +79,7 @@ export const SortFlashcardWrapper = () => {
 
   const markStillLearning = () => {
     stateMarkStillLearning(term!.id);
+    setIsFlipped(shouldFlip);
 
     void (async () => {
       await put.mutateAsync({
@@ -92,6 +95,7 @@ export const SortFlashcardWrapper = () => {
 
   const markKnown = () => {
     stateMarkKnown(term!.id);
+    setIsFlipped(shouldFlip);
 
     void (async () => {
       await put.mutateAsync({

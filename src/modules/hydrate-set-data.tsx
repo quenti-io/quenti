@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
+import { queryEventChannel } from "../events/query";
 import { useFeature } from "../hooks/use-feature";
 import { useLoading } from "../hooks/use-loading";
 import {
@@ -17,7 +18,7 @@ import { SetPrivate } from "./main/set-private";
 
 type BaseReturn = RouterOutputs["studySets"]["byId"];
 type StudiableType = BaseReturn["experience"]["studiableTerms"][number];
-type SetData = BaseReturn & {
+export type SetData = BaseReturn & {
   injected: {
     studiableLearnTerms: StudiableType[];
     studiableFlashcardTerms: StudiableType[];
@@ -41,8 +42,9 @@ export const HydrateSetData: React.FC<
   const { data, error, refetch } = api.studySets.byId.useQuery(id, {
     retry: false,
     enabled: !!id && !isDirty,
-    onSuccess: () => {
+    onSuccess: (data) => {
       if (isDirty) setIsDirty(false);
+      queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
     },
   });
 
@@ -119,6 +121,18 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   if (!storeRef.current) {
     storeRef.current = createExperienceStore(getVal(data));
   }
+
+  React.useEffect(() => {
+    const trigger = (data: SetData) => {
+      storeRef.current?.setState(getVal(data));
+    };
+
+    queryEventChannel.on("setQueryRefetched", trigger);
+    return () => {
+      queryEventChannel.off("setQueryRefetched", trigger);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <SetContext.Provider value={{ data }}>
