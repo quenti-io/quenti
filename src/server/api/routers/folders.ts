@@ -1,4 +1,9 @@
-import type { PrismaClient, StudiableTerm, Term } from "@prisma/client";
+import {
+  LimitedStudySetAnswerMode,
+  PrismaClient,
+  StudiableTerm,
+  Term,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
@@ -652,6 +657,27 @@ export const foldersRouter = createTRPCRouter({
               mode: "Flashcards",
             },
           },
+        },
+      });
+    }),
+
+  setCardsAnswerWith: protectedProcedure
+    .input(
+      z.object({
+        genericId: z.string(),
+        cardsAnswerWith: z.nativeEnum(LimitedStudySetAnswerMode),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          cardsAnswerWith: input.cardsAnswerWith,
         },
       });
     }),

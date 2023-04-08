@@ -1,4 +1,8 @@
-import { MultipleAnswerMode, Prisma } from "@prisma/client";
+import {
+  LimitedStudySetAnswerMode,
+  MultipleAnswerMode,
+  Prisma,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { shuffleArray } from "../../../utils/array";
@@ -55,6 +59,27 @@ export const experienceRouter = createTRPCRouter({
               mode: "Flashcards",
             },
           },
+        },
+      });
+    }),
+
+  setCardsAnswerWith: protectedProcedure
+    .input(
+      z.object({
+        genericId: z.string(),
+        cardsAnswerWith: z.nativeEnum(LimitedStudySetAnswerMode),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          cardsAnswerWith: input.cardsAnswerWith,
         },
       });
     }),

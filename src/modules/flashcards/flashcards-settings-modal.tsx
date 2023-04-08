@@ -12,6 +12,7 @@ import {
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useExperienceContext } from "../../stores/use-experience-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
+import { CardsAnswerModeSection } from "./settings/cards-answer-mode-section";
 import { CardsSortingSection } from "./settings/cards-sorting-section";
 import { RestartFlashcardsSection } from "./settings/restart-flashcards-section";
 import { StudyStarredSection } from "./settings/study-starred-section";
@@ -50,6 +51,7 @@ export const FlashcardsSettingsModal: React.FC<
             </Flex>
             <CardsSortingSection />
             <Divider />
+            <CardsAnswerModeSection />
             <StudyStarredSection />
             <Divider />
             <RestartFlashcardsSection requestClose={onClose} />
