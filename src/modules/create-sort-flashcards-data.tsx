@@ -2,6 +2,7 @@ import React from "react";
 import { queryEventChannel } from "../events/query";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import type { StudiableTerm } from "../interfaces/studiable-term";
+import { useExperienceContext } from "../stores/use-experience-store";
 import {
   createSortFlashcardsStore,
   SortFlashcardsContext,
@@ -17,6 +18,8 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
 }) => {
   const { terms, experience } = useSetFolderUnison();
   const storeRef = React.useRef<SortFlashcardsStore>();
+
+  const cardsStudyStarred = useExperienceContext((s) => s.cardsStudyStarred);
 
   const initState = (
     experience: Widen<
@@ -42,7 +45,7 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
       })
       .sort((a, b) => a.rank - b.rank);
 
-    if (experience.cardsStudyStarred) {
+    if (cardsStudyStarred) {
       flashcardTerms = flashcardTerms.filter((x) =>
         experience.starredTerms.includes(x.id)
       );
@@ -68,6 +71,7 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
       queryEventChannel.off("setQueryRefetched", trigger);
       queryEventChannel.off("folderQueryRefetched", trigger);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

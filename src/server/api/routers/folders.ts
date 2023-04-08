@@ -619,6 +619,22 @@ export const foldersRouter = createTRPCRouter({
       });
     }),
 
+  setCardsStudyStarred: protectedProcedure
+    .input(z.object({ genericId: z.string(), cardsStudyStarred: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          cardsStudyStarred: input.cardsStudyStarred,
+        },
+      });
+    }),
+
   completeCardsRound: protectedProcedure
     .input(z.object({ genericId: z.string() }))
     .mutation(async ({ ctx, input }) => {

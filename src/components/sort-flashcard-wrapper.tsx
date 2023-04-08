@@ -61,7 +61,9 @@ export const SortFlashcardWrapper = () => {
   const [hasUserEngaged, setHasUserEngaged] = React.useState(false);
   const [state, setState] = React.useState<"stillLearning" | "known">();
 
-  const flipCard = async () => {
+  const flipCard = async (id: string) => {
+    if (!visibleFlashcards.find((f) => f.id == id)) return;
+
     await controls.start({
       rotateX: 90,
       transition: {
@@ -161,7 +163,10 @@ export const SortFlashcardWrapper = () => {
           />
         ) : (
           <FlashcardShorcutLayer
-            triggerFlip={flipCard}
+            triggerFlip={async () => {
+              if (visibleFlashcards.length)
+                await flipCard(visibleFlashcards[0]!.id);
+            }}
             triggerPrev={() => undefined}
             triggerNext={() => undefined}
           />
@@ -169,7 +174,8 @@ export const SortFlashcardWrapper = () => {
         <AnimatePresence>
           {visibleFlashcards.map((t, i) => (
             <motion.div
-              key={`flashcard-${i}-${t.id}`}
+              id="sortable-flashcard"
+              key={`flashcard-${t.id}-${i}`}
               animate={controls}
               style={{
                 position: "absolute",
@@ -188,7 +194,7 @@ export const SortFlashcardWrapper = () => {
                 transformOrigin: "center",
                 scale: 1,
               }}
-              onClick={flipCard}
+              onClick={() => flipCard(t.id)}
               exit={
                 hasUserEngaged
                   ? {
