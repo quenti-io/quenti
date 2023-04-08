@@ -8,6 +8,8 @@ import {
   GridItem,
   Heading,
   HStack,
+  LinkBox,
+  LinkOverlay,
   Stack,
   Text,
   useColorModeValue,
@@ -15,15 +17,20 @@ import {
 import {
   IconArrowLeft,
   IconArrowRight,
+  IconBrain,
   IconCards,
   IconChevronRight,
+  IconFolder,
   IconRotateClockwise,
   type TablerIconsProps,
 } from "@tabler/icons-react";
+import { useRouter } from "next/router";
+import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { AnyKeyPressLayer } from "../modules/learn/any-key-press-layer";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
 import { plural } from "../utils/string";
 import { CircularTermMastery } from "./circular-term-mastery";
+import { Link } from "./link";
 
 export interface SortFlashcardProgressProps {
   h?: string;
@@ -36,6 +43,8 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   onNextRound,
   onResetProgress,
 }) => {
+  const { type, id } = useSetFolderUnison();
+  const router = useRouter();
   const cardBg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.750");
 
@@ -55,7 +64,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
       overflowY="auto"
       p="8"
     >
-      <AnyKeyPressLayer onSubmit={onNextRound} />
+      {!!stillLearning && <AnyKeyPressLayer onSubmit={onNextRound} />}
       <Flex flexDir="column" justifyContent="space-between" flex="1">
         <Grid gridTemplateColumns={{ base: "1fr", xl: "1fr 1fr" }} gap="8">
           <GridItem>
@@ -73,17 +82,30 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
           </GridItem>
           <GridItem>
             <Stack spacing={6}>
-              <Heading size="md">Next Steps</Heading>
+              {!stillLearning ? (
+                <Heading>You&apos;ve reviewed all cards!</Heading>
+              ) : (
+                <Heading size="md">Next Steps</Heading>
+              )}
               <Stack spacing={4}>
-                <Actionable
-                  name="Keep reviewing"
-                  description={`Continue reviewing flashcards with the ${plural(
-                    stillLearning,
-                    "term"
-                  )} you're still learning.`}
-                  icon={IconCards}
-                  onClick={onNextRound}
-                />
+                {!!stillLearning ? (
+                  <Actionable
+                    name="Keep reviewing"
+                    description={`Continue reviewing flashcards with the ${plural(
+                      stillLearning,
+                      "term"
+                    )} you're still learning.`}
+                    icon={IconCards}
+                    onClick={onNextRound}
+                  />
+                ) : type == "set" ? (
+                  <Actionable
+                    name="Continue to Learn"
+                    description="Keep studying with multiple choice and written questions."
+                    icon={IconBrain}
+                    href={`/${id}/learn`}
+                  />
+                ) : undefined}
                 <Actionable
                   name="Restart flashcards"
                   description={`Reset your progress and study all ${plural(
@@ -93,6 +115,14 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
                   icon={IconRotateClockwise}
                   onClick={onResetProgress}
                 />
+                {!stillLearning && type == "folder" && (
+                  <Actionable
+                    name="Back to folder overview"
+                    description=""
+                    icon={IconFolder}
+                    href={`${router.asPath}/../`}
+                  />
+                )}
               </Stack>
             </Stack>
           </GridItem>
@@ -110,15 +140,17 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
         >
           Back to last card
         </Button>
-        <Button
-          display={{ base: "none", sm: "inherit" }}
-          size="sm"
-          rightIcon={<IconArrowRight size={18} />}
-          variant="ghost"
-          onClick={onNextRound}
-        >
-          Press any key to continue
-        </Button>
+        {!!stillLearning && (
+          <Button
+            display={{ base: "none", sm: "inherit" }}
+            size="sm"
+            rightIcon={<IconArrowRight size={18} />}
+            variant="ghost"
+            onClick={onNextRound}
+          >
+            Press any key to continue
+          </Button>
+        )}
       </Flex>
     </Card>
   );
@@ -126,9 +158,10 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
 
 interface ActionableProps {
   name: string;
-  description: string;
+  description?: string;
   icon: React.FC<TablerIconsProps>;
-  onClick: () => void;
+  onClick?: () => void;
+  href?: string;
 }
 
 const Actionable: React.FC<ActionableProps> = ({
@@ -136,13 +169,14 @@ const Actionable: React.FC<ActionableProps> = ({
   description,
   icon: Icon,
   onClick,
+  href,
 }) => {
   const bg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const grayText = useColorModeValue("gray.600", "gray.400");
 
   return (
-    <Box
+    <LinkBox
       bg={bg}
       rounded="lg"
       py="4"
@@ -173,17 +207,27 @@ const Actionable: React.FC<ActionableProps> = ({
               <Box display={{ base: "inherit", sm: "none" }} color="blue.300">
                 <Icon />
               </Box>
-              <Heading size="md">{name}</Heading>
+              <Heading size="md">
+                {href ? (
+                  <LinkOverlay as={Link} href={href}>
+                    {name}
+                  </LinkOverlay>
+                ) : (
+                  name
+                )}
+              </Heading>
             </Flex>
-            <Text fontSize="sm" color={grayText}>
-              {description}
-            </Text>
+            {description && (
+              <Text fontSize="sm" color={grayText}>
+                {description}
+              </Text>
+            )}
           </Stack>
         </HStack>
         <Box display={{ base: "none", sm: "inherit" }}>
           <IconChevronRight />
         </Box>
       </Flex>
-    </Box>
+    </LinkBox>
   );
 };
