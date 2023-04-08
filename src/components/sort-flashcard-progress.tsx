@@ -49,6 +49,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   const borderColor = useColorModeValue("gray.200", "gray.750");
 
   const studiableTerms = useSortFlashcardsContext((s) => s.studiableTerms);
+  const goBack = useSortFlashcardsContext((s) => s.goBack);
   const known = studiableTerms.filter((t) => t.correctness === 1).length;
   const stillLearning = studiableTerms.length - known;
 
@@ -137,6 +138,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
           size={{ base: "md", sm: "sm" }}
           leftIcon={<IconArrowLeft size={18} />}
           variant="ghost"
+          onClick={() => goBack(true)}
         >
           Back to last card
         </Button>

@@ -21,6 +21,7 @@ interface SortFlashcardsState extends SortFlashcardsStoreProps {
   ) => void;
   markStillLearning: (termId: string) => void;
   markKnown: (termId: string) => void;
+  goBack: (fromProgress?: boolean) => void;
   endSortCallback: () => void;
   nextRound: (start?: boolean) => void;
 }
@@ -76,6 +77,18 @@ export const createSortFlashcardsStore = (
 
           state.endSortCallback();
           return {};
+        });
+      },
+      goBack: (fromProgress = false) => {
+        set((state) => {
+          if (state.index == 0 && !fromProgress) return {};
+          return {
+            progressView: false,
+            index: Math.min(
+              state.index - (!fromProgress ? 1 : 0),
+              state.termsThisRound.length - 1
+            ),
+          };
         });
       },
       endSortCallback: () => {

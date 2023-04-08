@@ -31,6 +31,7 @@ export const SortFlashcardWrapper = () => {
   );
   const stateMarkKnown = useSortFlashcardsContext((s) => s.markKnown);
   const stateNextRound = useSortFlashcardsContext((s) => s.nextRound);
+  const stateGoBack = useSortFlashcardsContext((s) => s.goBack);
 
   const term = !progressView ? termsThisRound[index] : undefined;
 
@@ -126,6 +127,16 @@ export const SortFlashcardWrapper = () => {
         incorrectCount: term?.incorrectCount || 0,
       });
     })();
+  };
+
+  const goBack = () => {
+    const newIndex = index - 1;
+    const studiableTerm = termsThisRound[newIndex];
+    if (!studiableTerm) return;
+    setState(studiableTerm.correctness == 1 ? "known" : "stillLearning");
+
+    allowAnimation();
+    stateGoBack();
   };
 
   React.useEffect(() => {
@@ -231,6 +242,7 @@ export const SortFlashcardWrapper = () => {
                 numTerms={termsThisRound.length}
                 onLeftAction={markStillLearning}
                 onRightAction={markKnown}
+                onBackAction={goBack}
                 starred={starredTerms.includes(t.id)}
                 onRequestEdit={() => editTerm(t, t.isFlipped)}
                 onRequestStar={() => starTerm(t)}

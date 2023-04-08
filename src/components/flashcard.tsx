@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import {
+  IconArrowBackUp,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -35,6 +36,7 @@ export interface FlashcardProps {
   variant?: "default" | "sortable";
   onLeftAction: () => void;
   onRightAction: () => void;
+  onBackAction?: () => void;
   onRequestEdit: () => void;
   onRequestStar: () => void;
 }
@@ -49,6 +51,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   variant = "default",
   onLeftAction,
   onRightAction,
+  onBackAction,
   onRequestEdit,
   onRequestStar,
 }) => {
@@ -75,9 +78,27 @@ export const Flashcard: React.FC<FlashcardProps> = ({
       />
       <Flex flexDir="column" h="full" p="8">
         <Grid templateColumns="1fr 1fr 1fr">
-          <Text fontWeight={700} color="gray.500">
-            {isFlipped ? "Definition" : "Term"}
-          </Text>
+          <HStack h="max" alignItems="start">
+            {variant == "sortable" && (
+              <IconButton
+                transform="translateY(-4px)"
+                ml="-2"
+                icon={<IconArrowBackUp size={24} />}
+                aria-label="Back"
+                size="sm"
+                variant="ghost"
+                rounded="full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onBackAction?.();
+                }}
+                isDisabled={index == 0}
+              />
+            )}
+            <Text fontWeight={700} color="gray.500">
+              {isFlipped ? "Definition" : "Term"}
+            </Text>
+          </HStack>
           <Flex justifyContent="center">
             <Text fontWeight={700} fontSize="lg">
               {index + 1} / {numTerms}
