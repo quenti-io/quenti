@@ -8,9 +8,9 @@ import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
 import { api } from "../utils/api";
 import { Flashcard } from "./flashcard";
-import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
 import { RootFlashcardContext } from "./root-flashcard-wrapper";
 import { SortFlashcardProgress } from "./sort-flashcard-progress";
+import { SortableShortcutLayer } from "./sortable-shortcut-layer";
 
 export const SortFlashcardWrapper = () => {
   const { id, experience, type } = useSetFolderUnison();
@@ -180,13 +180,13 @@ export const SortFlashcardWrapper = () => {
             onResetProgress={onResetProgress}
           />
         ) : (
-          <FlashcardShorcutLayer
+          <SortableShortcutLayer
             triggerFlip={async () => {
               if (visibleFlashcards.length)
                 await flipCard(visibleFlashcards[0]!.id);
             }}
-            triggerPrev={() => undefined}
-            triggerNext={() => undefined}
+            triggerStillLearning={markStillLearning}
+            triggerKnow={markKnown}
           />
         )}
         <AnimatePresence>
