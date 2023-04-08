@@ -1,4 +1,4 @@
-import type { PrismaClient, Term } from "@prisma/client";
+import type { PrismaClient, StudiableTerm, Term } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
@@ -162,6 +162,9 @@ export const foldersRouter = createTRPCRouter({
             folderId: folder.id,
           },
         },
+        include: {
+          studiableTerms: true,
+        },
       });
 
       if (!experience) {
@@ -225,6 +228,13 @@ export const foldersRouter = createTRPCRouter({
         experience: {
           ...experience,
           starredTerms,
+          studiableTerms: experience.studiableTerms.map((x: StudiableTerm) => ({
+            id: x.termId,
+            mode: x.mode,
+            correctness: x.correctness,
+            appearedInRound: x.appearedInRound,
+            incorrectCount: x.incorrectCount,
+          })),
         },
         terms,
         editableSets: studySetsICanSee

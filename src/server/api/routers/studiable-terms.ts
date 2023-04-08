@@ -19,7 +19,10 @@ export const studiableTermsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if (!input.experienceId && !input.folderExperienceId) {
+      if (
+        (!input.experienceId && !input.folderExperienceId) ||
+        (input.experienceId && input.folderExperienceId)
+      ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Must provide either experienceId or folderExperienceId",
@@ -28,11 +31,14 @@ export const studiableTermsRouter = createTRPCRouter({
 
       (register.getSingleMetric("studiable_requests_total") as Counter).inc();
 
+      const containerId = (input.experienceId || input.folderExperienceId)!;
+
       await ctx.prisma.studiableTerm.upsert({
         where: {
-          userId_termId_mode: {
+          userId_termId_containerId_mode: {
             userId: ctx.session.user.id,
             termId: input.id,
+            containerId: containerId,
             mode: input.mode,
           },
         },
@@ -40,6 +46,7 @@ export const studiableTermsRouter = createTRPCRouter({
           userId: ctx.session.user.id,
           termId: input.id,
           mode: input.mode,
+          containerId,
           experienceId: input.experienceId,
           folderExperienceId: input.folderExperienceId,
           correctness: input.correctness,

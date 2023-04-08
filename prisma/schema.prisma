@@ -273,6 +273,7 @@ model StudiableTerm {
   termId             String
   experienceId       String?
   folderExperienceId String?
+  containerId        String
   mode               StudiableMode @default(Learn)
   correctness        Int
   appearedInRound    Int?
@@ -284,7 +285,7 @@ model StudiableTerm {
   studySetExperience StudySetExperience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   folderExperience   FolderExperience?   @relation(fields: [folderExperienceId], references: [id], onDelete: Cascade)
 
-  @@id([userId, termId, mode])
+  @@id([userId, termId, containerId, mode])
 }
 
 model StarredTerm {
