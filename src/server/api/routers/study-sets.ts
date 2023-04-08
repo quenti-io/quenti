@@ -220,8 +220,11 @@ export const studySetsRouter = createTRPCRouter({
         },
         data: {
           studyStarred: false,
+          cardsStudyStarred: false,
         },
       });
+      experience.studyStarred = false;
+      experience.cardsStudyStarred = false;
     }
 
     return {

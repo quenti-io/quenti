@@ -49,6 +49,12 @@ export const experienceRouter = createTRPCRouter({
         },
         data: {
           cardsStudyStarred: input.cardsStudyStarred,
+          cardsRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              mode: "Flashcards",
+            },
+          },
         },
       });
     }),

@@ -32,7 +32,7 @@ export const SortFlashcardWrapper = () => {
   const stateMarkKnown = useSortFlashcardsContext((s) => s.markKnown);
   const stateNextRound = useSortFlashcardsContext((s) => s.nextRound);
 
-  const term = termsThisRound[index];
+  const term = !progressView ? termsThisRound[index] : undefined;
 
   const genericExperienceKey =
     type == "folder" ? "folderExperienceId" : "experienceId";
@@ -61,6 +61,13 @@ export const SortFlashcardWrapper = () => {
   const [hasUserEngaged, setHasUserEngaged] = React.useState(false);
   const [state, setState] = React.useState<"stillLearning" | "known">();
 
+  const allowAnimation = () => {
+    setHasUserEngaged(true);
+    requestAnimationFrame(() => {
+      setHasUserEngaged(false);
+    });
+  };
+
   const flipCard = async (id: string) => {
     if (!visibleFlashcards.find((f) => f.id == id)) return;
 
@@ -86,7 +93,7 @@ export const SortFlashcardWrapper = () => {
   };
 
   const markStillLearning = () => {
-    setHasUserEngaged(true);
+    allowAnimation();
     setState("stillLearning");
     controls.set({ zIndex: 105 });
     stateMarkStillLearning(term!.id);
@@ -104,7 +111,7 @@ export const SortFlashcardWrapper = () => {
   };
 
   const markKnown = () => {
-    setHasUserEngaged(true);
+    allowAnimation();
     setState("known");
     controls.set({ zIndex: 105 });
     stateMarkKnown(term!.id);

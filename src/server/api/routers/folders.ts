@@ -206,6 +206,21 @@ export const foldersRouter = createTRPCRouter({
         ).map((t) => t.termId);
       }
 
+      if (!starredTerms.length) {
+        await ctx.prisma.folderExperience.update({
+          where: {
+            userId_folderId: {
+              userId: ctx.session.user.id,
+              folderId: folder.id,
+            },
+          },
+          data: {
+            cardsStudyStarred: false,
+          },
+        });
+        experience.cardsStudyStarred = false;
+      }
+
       return {
         id: folder.id,
         title: folder.title,
@@ -631,6 +646,12 @@ export const foldersRouter = createTRPCRouter({
         },
         data: {
           cardsStudyStarred: input.cardsStudyStarred,
+          cardsRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              mode: "Flashcards",
+            },
+          },
         },
       });
     }),

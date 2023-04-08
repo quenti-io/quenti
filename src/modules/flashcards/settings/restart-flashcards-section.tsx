@@ -26,7 +26,6 @@ export const RestartFlashcardsSection: React.FC<{
     <Flex justifyContent="end">
       <Button
         variant="ghost"
-        colorScheme="red"
         leftIcon={<IconReload />}
         isLoading={apiResetCardsProgress.isLoading}
         onClick={() => {
