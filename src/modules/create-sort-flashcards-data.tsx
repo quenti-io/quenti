@@ -9,6 +9,7 @@ import {
 } from "../stores/use-sort-flashcards-store";
 import type { RouterOutputs } from "../utils/api";
 import type { Widen } from "../utils/widen";
+import type { FolderData } from "./hydrate-folder-data";
 import type { SetData } from "./hydrate-set-data";
 
 export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
@@ -58,11 +59,14 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
   }
 
   React.useEffect(() => {
-    const trigger = (data: SetData) => initState(data.experience, data.terms);
+    const trigger = (data: SetData | FolderData) =>
+      initState(data.experience, data.terms);
 
     queryEventChannel.on("setQueryRefetched", trigger);
+    queryEventChannel.on("folderQueryRefetched", trigger);
     return () => {
       queryEventChannel.off("setQueryRefetched", trigger);
+      queryEventChannel.off("folderQueryRefetched", trigger);
     };
   }, []);
 
