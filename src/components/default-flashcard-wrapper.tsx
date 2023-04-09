@@ -1,5 +1,6 @@
 import { motion, useAnimationControls } from "framer-motion";
 import React from "react";
+import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { useExperienceContext } from "../stores/use-experience-store";
 import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
@@ -8,9 +9,20 @@ import { RootFlashcardContext } from "./root-flashcard-wrapper";
 export const DefaultFlashcardWrapper = () => {
   const { terms, termOrder, h, editTerm, starTerm } =
     React.useContext(RootFlashcardContext);
+
   const controls = useAnimationControls();
 
-  const sortedTerms = termOrder.map((id) => terms.find((t) => t.id === id));
+  const { experience } = useSetFolderUnison();
+  const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
+  const autoplayFlashcards = useExperienceContext((s) => s.autoplayFlashcards);
+  const shouldFlip = cardsAnswerWith == "Definition";
+
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
+
+  let sortedTerms = termOrder.map((id) => terms.find((t) => t.id === id));
+  sortedTerms = experience.cardsStudyStarred
+    ? sortedTerms.filter((t) => t && starredTerms.includes(t.id))
+    : terms;
 
   const [index, setIndex] = React.useState(0);
   const indexRef = React.useRef(index);
@@ -20,23 +32,22 @@ export const DefaultFlashcardWrapper = () => {
   const flippedRef = React.useRef(isFlipped);
   flippedRef.current = isFlipped;
 
-  const autoplayFlashcards = useExperienceContext((s) => s.autoplayFlashcards);
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-
   const term = sortedTerms[index];
   const starred = term ? starredTerms.includes(term.id) : false;
 
   const onPrev = async () => {
     if (index === 0) return;
 
-    setIndex((i) => (i - 1 + terms.length) % terms.length);
+    setIsFlipped(shouldFlip);
+    setIndex((i) => (i - 1 + sortedTerms.length) % sortedTerms.length);
     await animateTransition(false);
   };
 
   const onNext = async () => {
-    if (index === terms.length - 1) return;
+    if (index === sortedTerms.length - 1) return;
 
-    setIndex((i) => (i + 1) % terms.length);
+    setIsFlipped(shouldFlip);
+    setIndex((i) => (i + 1) % sortedTerms.length);
     await animateTransition();
   };
 
@@ -69,7 +80,7 @@ export const DefaultFlashcardWrapper = () => {
         if (flippedRef.current) {
           setIsFlipped(false);
 
-          if (indexRef.current === terms.length - 1) {
+          if (indexRef.current === sortedTerms.length - 1) {
             setIndex(0);
             await animateTransition();
           } else {
@@ -117,7 +128,7 @@ export const DefaultFlashcardWrapper = () => {
           term={term}
           index={index}
           isFlipped={isFlipped}
-          numTerms={terms.length}
+          numTerms={sortedTerms.length}
           onLeftAction={onPrev}
           onRightAction={onNext}
           starred={starred}
