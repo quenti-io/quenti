@@ -28,6 +28,10 @@ const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
   { ssr: false }
 );
+const ChangelogContainer = dynamic(
+  () => import("../modules/changelog/changelog-container"),
+  { ssr: false }
+);
 
 if (env.NEXT_PUBLIC_DEPLOYMENT) {
   H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
@@ -73,6 +77,7 @@ const App: AppType<{ session: Session | null }> = ({
             </title>
           </Head>
           <Auth>
+            <ChangelogContainer />
             <Component {...pageProps} />
           </Auth>
         </HighlightBoundary>

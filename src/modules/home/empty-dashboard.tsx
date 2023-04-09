@@ -52,7 +52,7 @@ export const EmptyDashboard = () => {
       borderWidth="2px"
       borderColor={borderColor}
       p="12"
-      shadow="2xl"
+      shadow="md"
     >
       <VStack spacing={8} textAlign="center">
         <VStack>
