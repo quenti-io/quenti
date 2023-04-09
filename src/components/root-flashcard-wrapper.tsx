@@ -61,41 +61,41 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   if (isDirty) return <LoadingFlashcard h={h} />;
 
   return (
-    <CreateSortFlashcardsData>
-      <RootFlashcardContext.Provider
-        value={{
-          terms,
-          termOrder,
-          h,
-          editTerm: (term, focusDefinition) => {
-            setEditTerm(term);
-            setFocusDefinition(focusDefinition);
-            setEditModalOpen(true);
-          },
-          starTerm: (term) => {
-            if (!starredTerms.includes(term.id)) {
-              if (type === "set") {
-                setStarMutation.mutate({
-                  termId: term.id,
-                  experienceId: experience.id,
-                });
-              } else {
-                folderStarMutation.mutate({
-                  termId: term.id,
-                  studySetId: term.studySetId,
-                });
-              }
-
-              starTerm(term.id);
-            } else {
-              unstarMutation.mutate({
+    <RootFlashcardContext.Provider
+      value={{
+        terms,
+        termOrder,
+        h,
+        editTerm: (term, focusDefinition) => {
+          setEditTerm(term);
+          setFocusDefinition(focusDefinition);
+          setEditModalOpen(true);
+        },
+        starTerm: (term) => {
+          if (!starredTerms.includes(term.id)) {
+            if (type === "set") {
+              setStarMutation.mutate({
                 termId: term.id,
+                experienceId: experience.id,
               });
-              unstarTerm(term.id);
+            } else {
+              folderStarMutation.mutate({
+                termId: term.id,
+                studySetId: term.studySetId,
+              });
             }
-          },
-        }}
-      >
+
+            starTerm(term.id);
+          } else {
+            unstarMutation.mutate({
+              termId: term.id,
+            });
+            unstarTerm(term.id);
+          }
+        },
+      }}
+    >
+      <CreateSortFlashcardsData>
         <Box w="full" minH={h} zIndex="100">
           <EditTermModal
             term={editTerm}
@@ -107,7 +107,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
           />
           <FlashcardWrapper />
         </Box>
-      </RootFlashcardContext.Provider>
-    </CreateSortFlashcardsData>
+      </CreateSortFlashcardsData>
+    </RootFlashcardContext.Provider>
   );
 };

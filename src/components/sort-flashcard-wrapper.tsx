@@ -237,7 +237,7 @@ export const SortFlashcardWrapper = () => {
               <Flashcard
                 h={h}
                 term={t}
-                index={termsThisRound.findIndex((x) => x.id == t.id)}
+                index={index}
                 isFlipped={t.isFlipped}
                 numTerms={termsThisRound.length}
                 onLeftAction={markStillLearning}

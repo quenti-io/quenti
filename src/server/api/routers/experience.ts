@@ -177,13 +177,14 @@ export const experienceRouter = createTRPCRouter({
           ctx.session.user.id,
           id,
           experience.id,
+          experience.id,
           0,
           i,
         ]);
         const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
 
         const query = Prisma.sql`
-      INSERT INTO "StudiableTerm" ("userId", "termId", "experienceId", "correctness", "studiableRank")
+      INSERT INTO "StudiableTerm" ("userId", "termId", "experienceId", "containerId", "correctness", "studiableRank")
       VALUES ${Prisma.join(formatted)}
       ON CONFLICT ON CONSTRAINT "StudiableTerm_pkey"
       DO UPDATE SET "studiableRank" = EXCLUDED."studiableRank";

@@ -1,7 +1,11 @@
 import React from "react";
+import { RootFlashcardContext } from "../components/root-flashcard-wrapper";
 import { queryEventChannel } from "../events/query";
+import { useDidUpdate } from "../hooks/use-did-update";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import type { StudiableTerm } from "../interfaces/studiable-term";
+import { ExperienceContext } from "../stores/use-experience-store";
+import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import {
   createSortFlashcardsStore,
   SortFlashcardsContext,
@@ -16,6 +20,9 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { terms, experience } = useSetFolderUnison();
+  const { termOrder } = React.useContext(RootFlashcardContext);
+  const experienceStore = React.useContext(ExperienceContext);
+  const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const storeRef = React.useRef<SortFlashcardsStore>();
 
   const initState = (
@@ -30,17 +37,16 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
       (s) => s.mode == "Flashcards"
     );
 
-    let flashcardTerms: StudiableTerm[] = terms
-      .map((term) => {
-        const studiableTerm = studiable.find((s) => s.id === term.id);
-        return {
-          ...term,
-          correctness: studiableTerm?.correctness ?? 0,
-          appearedInRound: studiableTerm?.appearedInRound ?? undefined,
-          incorrectCount: studiableTerm?.incorrectCount ?? 0,
-        };
-      })
-      .sort((a, b) => a.rank - b.rank);
+    let flashcardTerms: StudiableTerm[] = termOrder.map((id) => {
+      const term = terms.find((t) => t.id === id)!;
+      const studiableTerm = studiable.find((s) => s.id === term.id);
+      return {
+        ...term,
+        correctness: studiableTerm?.correctness ?? 0,
+        appearedInRound: studiableTerm?.appearedInRound ?? undefined,
+        incorrectCount: studiableTerm?.incorrectCount ?? 0,
+      };
+    });
 
     if (experience.cardsStudyStarred) {
       flashcardTerms = flashcardTerms.filter((x) =>
@@ -57,6 +63,17 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
     storeRef.current = createSortFlashcardsStore();
     initState(experience, terms);
   }
+
+  useDidUpdate(() => {
+    experienceStore?.subscribe(
+      (s) => s.shuffleFlashcards,
+      () => {
+        requestAnimationFrame(() => {
+          setIsDirty(true);
+        });
+      }
+    );
+  }, []);
 
   React.useEffect(() => {
     const trigger = (data: SetData | FolderData) =>

@@ -1,8 +1,8 @@
 import {
   LimitedStudySetAnswerMode,
-  PrismaClient,
-  StudiableTerm,
-  Term,
+  type PrismaClient,
+  type StudiableTerm,
+  type Term,
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";

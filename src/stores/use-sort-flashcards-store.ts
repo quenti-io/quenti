@@ -24,6 +24,7 @@ interface SortFlashcardsState extends SortFlashcardsStoreProps {
   goBack: (fromProgress?: boolean) => void;
   endSortCallback: () => void;
   nextRound: (start?: boolean) => void;
+  evaluateTerms: (newStudiable: StudiableTerm[]) => void;
 }
 
 export type SortFlashcardsStore = ReturnType<typeof createSortFlashcardsStore>;
@@ -126,6 +127,27 @@ export const createSortFlashcardsStore = (
             index,
             termsThisRound,
             progressView: index == termsThisRound.length,
+          };
+        });
+      },
+      evaluateTerms: (newStudiable) => {
+        set((state) => {
+          const tailTerms = newStudiable.filter(
+            (t) => t.correctness != 0 && t.appearedInRound == state.currentRound
+          );
+          const headTerms = newStudiable.filter(
+            (t) =>
+              t.correctness == 0 ||
+              (t.correctness == -1 &&
+                t.appearedInRound == state.currentRound - 1)
+          );
+          const termsThisRound = [...tailTerms, ...headTerms];
+          const index = tailTerms.length;
+
+          return {
+            studiableTerms: newStudiable,
+            termsThisRound,
+            index,
           };
         });
       },
