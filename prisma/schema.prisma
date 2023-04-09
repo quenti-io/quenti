@@ -47,21 +47,22 @@ enum EnabledFeature {
 }
 
 model User {
-  id              String           @id @default(cuid())
-  name            String?
-  username        String           @unique @db.Citext
-  email           String?          @unique
-  emailVerified   DateTime?
-  image           String?
-  verified        Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  lastSeenAt      DateTime         @default(now())
-  bannedAt        DateTime?
-  displayName     Boolean          @default(true)
-  features        EnabledFeature[] @default([])
-  enableUsageData Boolean          @default(true)
-  accounts        Account[]
-  sessions        Session[]
+  id               String           @id @default(cuid())
+  name             String?
+  username         String           @unique @db.Citext
+  email            String?          @unique
+  emailVerified    DateTime?
+  image            String?
+  verified         Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  lastSeenAt       DateTime         @default(now())
+  bannedAt         DateTime?
+  displayName      Boolean          @default(true)
+  features         EnabledFeature[] @default([])
+  enableUsageData  Boolean          @default(true)
+  changelogVersion String
+  accounts         Account[]
+  sessions         Session[]
 
   studySets           StudySet[]
   folders             Folder[]

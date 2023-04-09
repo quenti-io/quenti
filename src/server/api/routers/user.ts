@@ -5,6 +5,9 @@ import { env } from "../../../env/server.mjs";
 import { usernameProfanity } from "../common/profanity";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
+import pjson from "../../../../package.json";
+const version = pjson.version;
+
 export const userRouter = createTRPCRouter({
   checkUsername: protectedProcedure
     .input(z.string().max(40).regex(USERNAME_REGEXP))
@@ -68,6 +71,17 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  viewChangelog: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        changelogVersion: version,
+      },
+    });
+  }),
 
   setEnableUsageData: protectedProcedure
     .input(z.boolean())

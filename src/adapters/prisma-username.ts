@@ -3,6 +3,9 @@ import type { PrismaClient } from "@prisma/client";
 import type { Adapter } from "next-auth/adapters";
 import { USERNAME_REPLACE_REGEXP } from "../constants/characters";
 
+import pjson from "../../package.json";
+const version = pjson.version;
+
 export function CustomPrismaAdapter(p: PrismaClient): Adapter {
   return {
     ...PrismaAdapter(p),
@@ -35,6 +38,7 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
         data: {
           ...data,
           username: uniqueUsername,
+          changelogVersion: version,
         },
       });
     },

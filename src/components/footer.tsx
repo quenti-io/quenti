@@ -8,11 +8,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconCircleFilled } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
+import { IconSpeakerphone } from "@tabler/icons-react";
+import { menuEventChannel } from "../events/menu";
 
 export const Footer = () => {
-  const session = useSession();
   const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
 
   return (
@@ -54,9 +53,12 @@ export const Footer = () => {
               variant="outline"
               size="sm"
               color="blue.300"
-              leftIcon={<IconCircleFilled size={16} />}
+              leftIcon={<IconSpeakerphone size={18} />}
+              onClick={() => {
+                menuEventChannel.emit("openChangelog");
+              }}
             >
-              <Text color={textColor}>Version {session.data?.version}</Text>
+              <Text color={textColor}>What&apos;s New</Text>
             </Button>
           </HStack>
         </Flex>
