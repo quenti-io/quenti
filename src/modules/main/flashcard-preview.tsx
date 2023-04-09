@@ -27,6 +27,7 @@ export const FlashcardPreview = () => {
     s.autoplayFlashcards,
     s.toggleAutoplayFlashcards,
   ]);
+  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
 
   const _termOrder = data.terms
     .sort((a, b) => a.rank - b.rank)
@@ -80,6 +81,7 @@ export const FlashcardPreview = () => {
                 variant={autoplay ? "solid" : "outline"}
                 w="full"
                 onClick={toggleAutoplay}
+                isDisabled={enableCardsSorting}
               >
                 Autoplay
               </Button>

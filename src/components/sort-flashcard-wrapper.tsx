@@ -20,7 +20,7 @@ export const SortFlashcardWrapper = () => {
 
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
-  const shouldFlip = cardsAnswerWith == "Definition";
+  const shouldFlip = cardsAnswerWith == "Word";
 
   const termsThisRound = useSortFlashcardsContext((s) => s.termsThisRound);
   const index = useSortFlashcardsContext((s) => s.index);

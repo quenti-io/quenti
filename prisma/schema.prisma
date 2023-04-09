@@ -242,7 +242,7 @@ model StudySetExperience {
   enableCardsSorting   Boolean                   @default(false)
   cardsRound           Int                       @default(0)
   cardsStudyStarred    Boolean                   @default(false)
-  cardsAnswerWith      LimitedStudySetAnswerMode @default(Word)
+  cardsAnswerWith      LimitedStudySetAnswerMode @default(Definition)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -261,7 +261,7 @@ model FolderExperience {
   enableCardsSorting Boolean                   @default(false)
   cardsRound         Int                       @default(0)
   cardsStudyStarred  Boolean                   @default(false)
-  cardsAnswerWith    LimitedStudySetAnswerMode @default(Word)
+  cardsAnswerWith    LimitedStudySetAnswerMode @default(Definition)
 
   studiableTerms StudiableTerm[]
 

@@ -63,7 +63,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
     experienceStore.subscribe(
       (s) => s.shuffleFlashcards,
       () => {
-        if (!enableCardsSorting) return;
+        if (!experienceStore.getState().enableCardsSorting) return;
 
         setShuffleDirty(true);
         setTimeout(() => {

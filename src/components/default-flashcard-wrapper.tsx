@@ -15,20 +15,20 @@ export const DefaultFlashcardWrapper = () => {
   const { experience } = useSetFolderUnison();
   const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
   const autoplayFlashcards = useExperienceContext((s) => s.autoplayFlashcards);
-  const shouldFlip = cardsAnswerWith == "Definition";
+  const shouldFlip = cardsAnswerWith == "Word";
 
   const starredTerms = useExperienceContext((s) => s.starredTerms);
 
   let sortedTerms = termOrder.map((id) => terms.find((t) => t.id === id));
   sortedTerms = experience.cardsStudyStarred
     ? sortedTerms.filter((t) => t && starredTerms.includes(t.id))
-    : terms;
+    : sortedTerms;
 
   const [index, setIndex] = React.useState(0);
   const indexRef = React.useRef(index);
   indexRef.current = index;
 
-  const [isFlipped, setIsFlipped] = React.useState(false);
+  const [isFlipped, setIsFlipped] = React.useState(shouldFlip);
   const flippedRef = React.useRef(isFlipped);
   flippedRef.current = isFlipped;
 
@@ -77,8 +77,8 @@ export const DefaultFlashcardWrapper = () => {
 
     const interval = setInterval(() => {
       void (async () => {
-        if (flippedRef.current) {
-          setIsFlipped(false);
+        if (flippedRef.current !== shouldFlip) {
+          setIsFlipped(shouldFlip);
 
           if (indexRef.current === sortedTerms.length - 1) {
             setIndex(0);
