@@ -6,6 +6,7 @@ import {
 } from "@tabler/icons-react";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useExperienceContext } from "../../stores/use-experience-store";
+import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { api } from "../../utils/api";
 
 interface ControlsBarProps {
@@ -15,9 +16,20 @@ interface ControlsBarProps {
 export const ControlsBar: React.FC<ControlsBarProps> = ({
   onSettingsClick,
 }) => {
+  const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
+  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
+
   const { id, type } = useSetFolderUnison();
-  const setShuffleSet = api.experience.setShuffle.useMutation();
-  const setShuffleFolder = api.folders.setShuffle.useMutation();
+  const setShuffleSet = api.experience.setShuffle.useMutation({
+    onSuccess: () => {
+      if (enableCardsSorting) setIsDirty(true);
+    },
+  });
+  const setShuffleFolder = api.folders.setShuffle.useMutation({
+    onSuccess: () => {
+      if (enableCardsSorting) setIsDirty(true);
+    },
+  });
 
   const [shuffle, toggleShuffle] = useExperienceContext((s) => [
     s.shuffleFlashcards,
@@ -38,6 +50,10 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
             rounded="full"
             variant={shuffle ? "solid" : "ghost"}
             colorScheme="gray"
+            isLoading={
+              enableCardsSorting &&
+              (setShuffleSet.isLoading || setShuffleFolder.isLoading)
+            }
             onClick={() => {
               toggleShuffle();
 

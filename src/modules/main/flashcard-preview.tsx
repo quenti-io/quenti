@@ -11,13 +11,22 @@ import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSet } from "../../hooks/use-set";
 import { FlashcardsSettingsModal } from "../../modules/flashcards/flashcards-settings-modal";
 import { useExperienceContext } from "../../stores/use-experience-store";
+import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
 
 export const FlashcardPreview = () => {
   const data = useSet();
+  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
+  const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
-  const setShuffle = api.experience.setShuffle.useMutation();
+  const setShuffle = api.experience.setShuffle.useMutation({
+    onSuccess: () => {
+      if (enableCardsSorting) {
+        setIsDirty(true);
+      }
+    },
+  });
 
   const [shuffle, toggleShuffle] = useExperienceContext((s) => [
     s.shuffleFlashcards,
@@ -27,7 +36,6 @@ export const FlashcardPreview = () => {
     s.autoplayFlashcards,
     s.toggleAutoplayFlashcards,
   ]);
-  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
 
   const _termOrder = data.terms
     .sort((a, b) => a.rank - b.rank)
@@ -73,6 +81,7 @@ export const FlashcardPreview = () => {
                   toggleShuffle();
                   setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
                 }}
+                isLoading={enableCardsSorting && setShuffle.isLoading}
               >
                 Shuffle
               </Button>
