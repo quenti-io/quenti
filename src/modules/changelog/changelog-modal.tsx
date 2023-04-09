@@ -78,7 +78,6 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({
                   width="1200"
                   height="800"
                   src={imageSrc}
-                  placeholder="blur"
                   alt="Flashcards upgrade screenshot"
                 />
               </Box>
