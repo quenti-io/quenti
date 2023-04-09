@@ -220,8 +220,11 @@ export const studySetsRouter = createTRPCRouter({
         },
         data: {
           studyStarred: false,
+          cardsStudyStarred: false,
         },
       });
+      experience.studyStarred = false;
+      experience.cardsStudyStarred = false;
     }
 
     return {
@@ -238,6 +241,7 @@ export const studySetsRouter = createTRPCRouter({
         starredTerms: experience.starredTerms.map((x: StarredTerm) => x.termId),
         studiableTerms: experience.studiableTerms.map((x: StudiableTerm) => ({
           id: x.termId,
+          mode: x.mode,
           correctness: x.correctness,
           appearedInRound: x.appearedInRound,
           incorrectCount: x.incorrectCount,

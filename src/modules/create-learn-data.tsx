@@ -1,6 +1,6 @@
 import React from "react";
 import { useSet } from "../hooks/use-set";
-import type { LearnTerm } from "../interfaces/learn-term";
+import type { StudiableTerm } from "../interfaces/studiable-term";
 import {
   createLearnStore,
   LearnContext,
@@ -16,9 +16,11 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
   if (!storeRef.current) {
     storeRef.current = createLearnStore();
 
-    const studiable = experience.studiableTerms;
+    const studiable = experience.studiableTerms.filter(
+      (s) => s.mode == "Learn"
+    );
 
-    let learnTerms: LearnTerm[] = terms
+    let learnTerms: StudiableTerm[] = terms
       .map((term) => {
         const studiableTerm = studiable.find((s) => s.id === term.id);
         return {

@@ -1,4 +1,8 @@
-import type { MultipleAnswerMode, StudySetAnswerMode } from "@prisma/client";
+import type {
+  LimitedStudySetAnswerMode,
+  MultipleAnswerMode,
+  StudySetAnswerMode,
+} from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -11,6 +15,9 @@ export interface ExperienceStoreProps {
   answerWith: StudySetAnswerMode;
   multipleAnswerMode: MultipleAnswerMode;
   extendedFeedbackBank: boolean;
+  enableCardsSorting: boolean;
+  cardsStudyStarred: boolean;
+  cardsAnswerWith: LimitedStudySetAnswerMode;
   starredTerms: string[];
 }
 
@@ -22,6 +29,9 @@ interface ExperienceState extends ExperienceStoreProps {
   setAnswerWith: (answerWith: StudySetAnswerMode) => void;
   setMultipleAnswerMode: (multipleAnswerMode: MultipleAnswerMode) => void;
   setExtendedFeedbackBank: (extendedFeedbackBank: boolean) => void;
+  setEnableCardsSorting: (enableCardsSorting: boolean) => void;
+  setCardsStudyStarred: (cardsStudyStarred: boolean) => void;
+  setCardsAnswerWith: (cardsAnswerWith: LimitedStudySetAnswerMode) => void;
   starTerm: (termId: string) => void;
   unstarTerm: (termId: string) => void;
 }
@@ -39,6 +49,9 @@ export const createExperienceStore = (
     answerWith: "Definition",
     extendedFeedbackBank: false,
     multipleAnswerMode: "Unknown",
+    cardsAnswerWith: "Definition",
+    cardsStudyStarred: false,
+    enableCardsSorting: false,
     starredTerms: [],
   };
 
@@ -60,21 +73,19 @@ export const createExperienceStore = (
           };
         });
       },
-      setShuffleLearn: (shuffleLearn: boolean) => {
-        set({ shuffleLearn });
-      },
-      setStudyStarred: (studyStarred: boolean) => {
-        set({ studyStarred });
-      },
-      setAnswerWith: (answerWith: StudySetAnswerMode) => {
-        set({ answerWith });
-      },
-      setMultipleAnswerMode: (multipleAnswerMode: MultipleAnswerMode) => {
-        set({ multipleAnswerMode });
-      },
-      setExtendedFeedbackBank: (extendedFeedbackBank: boolean) => {
-        set({ extendedFeedbackBank });
-      },
+      setShuffleLearn: (shuffleLearn: boolean) => set({ shuffleLearn }),
+      setStudyStarred: (studyStarred: boolean) => set({ studyStarred }),
+      setAnswerWith: (answerWith: StudySetAnswerMode) => set({ answerWith }),
+      setMultipleAnswerMode: (multipleAnswerMode: MultipleAnswerMode) =>
+        set({ multipleAnswerMode }),
+      setExtendedFeedbackBank: (extendedFeedbackBank: boolean) =>
+        set({ extendedFeedbackBank }),
+      setEnableCardsSorting: (enableCardsSorting: boolean) =>
+        set({ enableCardsSorting }),
+      setCardsStudyStarred: (cardsStudyStarred: boolean) =>
+        set({ cardsStudyStarred }),
+      setCardsAnswerWith: (cardsAnswerWith: LimitedStudySetAnswerMode) =>
+        set({ cardsAnswerWith }),
       starTerm: (termId: string) => {
         set((state) => {
           return {

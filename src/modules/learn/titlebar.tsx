@@ -2,9 +2,9 @@ import { Flex, Heading, IconButton } from "@chakra-ui/react";
 import { IconArrowLeft, IconSettings } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
-import { SetSettingsModal } from "../../components/set-settings-modal";
 import { useSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
+import { LearnSettingsModal } from "./learn-settings-modal";
 
 export const Titlebar = () => {
   const { id } = useSet();
@@ -16,7 +16,7 @@ export const Titlebar = () => {
 
   return (
     <>
-      <SetSettingsModal
+      <LearnSettingsModal
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
         dirtyOnReset

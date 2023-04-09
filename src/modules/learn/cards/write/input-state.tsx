@@ -66,6 +66,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
         await put.mutateAsync({
           id: active.term.id,
           experienceId: experience.id,
+          mode: "Learn",
           correctness: 2,
           appearedInRound: active.term.appearedInRound || 0,
           incorrectCount: active.term.incorrectCount,

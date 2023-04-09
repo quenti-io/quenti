@@ -10,35 +10,35 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import React from "react";
-import { useFeature } from "../hooks/use-feature";
-import { useSet } from "../hooks/use-set";
-import { useExperienceContext } from "../stores/use-experience-store";
-import { useSetPropertiesStore } from "../stores/use-set-properties-store";
-import { AnswerModeSection } from "./set-settings-modal/answer-mode-section";
-import { ExtendedFeedbackSection } from "./set-settings-modal/extended-feedback-bank-section";
-import { MultipleAnswerModeSection } from "./set-settings-modal/multiple-answer-mode-section";
-import { ResetProgressSection } from "./set-settings-modal/reset-progress-section";
-import { ShuffleLearnSection } from "./set-settings-modal/shuffle-learn-section";
-import { StudyStarredSection } from "./set-settings-modal/study-starred-section";
+import { useFeature } from "../../hooks/use-feature";
+import { useSet } from "../../hooks/use-set";
+import { useExperienceContext } from "../../stores/use-experience-store";
+import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
+import { AnswerModeSection } from "./settings/answer-mode-section";
+import { ExtendedFeedbackSection } from "./settings/extended-feedback-bank-section";
+import { MultipleAnswerModeSection } from "./settings/multiple-answer-mode-section";
+import { ResetProgressSection } from "./settings/reset-progress-section";
+import { ShuffleLearnSection } from "./settings/shuffle-learn-section";
+import { StudyStarredSection } from "./settings/study-starred-section";
 
-export interface SetSettingsModal {
+export interface LearnSettingsModal {
   isOpen: boolean;
   onClose: () => void;
   dirtyOnReset?: boolean;
 }
 
-interface SetSettingsModalContextProps {
+interface LearnSettingsModalContextProps {
   onClose: () => void;
   dirtyOnReset?: boolean;
 }
 
-export const SetSettingsModalContext =
-  React.createContext<SetSettingsModalContextProps>({
+export const LearnSettingsModalContext =
+  React.createContext<LearnSettingsModalContextProps>({
     onClose: () => undefined,
     dirtyOnReset: false,
   });
 
-export const SetSettingsModal: React.FC<SetSettingsModal> = ({
+export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
   isOpen,
   onClose,
   dirtyOnReset,
@@ -54,7 +54,7 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
   return (
-    <SetSettingsModalContext.Provider value={{ onClose, dirtyOnReset }}>
+    <LearnSettingsModalContext.Provider value={{ onClose, dirtyOnReset }}>
       <Modal
         isOpen={isOpen}
         onClose={() => {
@@ -100,6 +100,6 @@ export const SetSettingsModal: React.FC<SetSettingsModal> = ({
           </ModalBody>
         </ModalContent>
       </Modal>
-    </SetSettingsModalContext.Provider>
+    </LearnSettingsModalContext.Provider>
   );
 };

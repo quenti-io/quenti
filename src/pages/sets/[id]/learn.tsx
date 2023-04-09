@@ -39,7 +39,7 @@ const LearnContainer = () => {
   const roundSummary = useLearnContext((s) => s.roundSummary);
   const setFeedbackBank = useLearnContext((s) => s.setFeedbackBank);
 
-  const completeRound = api.experience.completeRound.useMutation();
+  const completeLearnRound = api.experience.completeLearnRound.useMutation();
   const discoverable = api.disoverable.fetchInsults.useQuery(undefined, {
     retry: false,
     enabled: extendedFeedbackBank,
@@ -49,7 +49,7 @@ const LearnContainer = () => {
     if (!roundSummary) return;
 
     void (async () =>
-      await completeRound.mutateAsync({
+      await completeLearnRound.mutateAsync({
         studySetId: id,
       }))();
     // eslint-disable-next-line react-hooks/exhaustive-deps

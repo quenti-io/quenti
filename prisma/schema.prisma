@@ -47,21 +47,22 @@ enum EnabledFeature {
 }
 
 model User {
-  id              String           @id @default(cuid())
-  name            String?
-  username        String           @unique @db.Citext
-  email           String?          @unique
-  emailVerified   DateTime?
-  image           String?
-  verified        Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  lastSeenAt      DateTime         @default(now())
-  bannedAt        DateTime?
-  displayName     Boolean          @default(true)
-  features        EnabledFeature[] @default([])
-  enableUsageData Boolean          @default(true)
-  accounts        Account[]
-  sessions        Session[]
+  id               String           @id @default(cuid())
+  name             String?
+  username         String           @unique @db.Citext
+  email            String?          @unique
+  emailVerified    DateTime?
+  image            String?
+  verified         Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  lastSeenAt       DateTime         @default(now())
+  bannedAt         DateTime?
+  displayName      Boolean          @default(true)
+  features         EnabledFeature[] @default([])
+  enableUsageData  Boolean          @default(true)
+  changelogVersion String
+  accounts         Account[]
+  sessions         Session[]
 
   studySets           StudySet[]
   folders             Folder[]
@@ -197,6 +198,11 @@ enum EntityType {
   Folder
 }
 
+enum StudiableMode {
+  Flashcards
+  Learn
+}
+
 enum LearnMode {
   Learn
   Review
@@ -208,6 +214,11 @@ enum StudySetAnswerMode {
   Both
 }
 
+enum LimitedStudySetAnswerMode {
+  Word
+  Definition
+}
+
 enum MultipleAnswerMode {
   One
   All
@@ -215,20 +226,24 @@ enum MultipleAnswerMode {
 }
 
 model StudySetExperience {
-  id                   String             @id @default(cuid())
+  id                   String                    @id @default(cuid())
   userId               String
   studySetId           String
   viewedAt             DateTime
-  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  studySet             StudySet           @relation(fields: [studySetId], references: [id], onDelete: Cascade)
-  shuffleFlashcards    Boolean            @default(false)
-  learnRound           Int                @default(0)
-  learnMode            LearnMode          @default(Learn)
-  shuffleLearn         Boolean            @default(false)
-  studyStarred         Boolean            @default(false)
-  answerWith           StudySetAnswerMode @default(Word)
-  multipleAnswerMode   MultipleAnswerMode @default(Unknown)
-  extendedFeedbackBank Boolean            @default(false)
+  user                 User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studySet             StudySet                  @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  shuffleFlashcards    Boolean                   @default(false)
+  learnRound           Int                       @default(0)
+  learnMode            LearnMode                 @default(Learn)
+  shuffleLearn         Boolean                   @default(false)
+  studyStarred         Boolean                   @default(false)
+  answerWith           StudySetAnswerMode        @default(Word)
+  multipleAnswerMode   MultipleAnswerMode        @default(Unknown)
+  extendedFeedbackBank Boolean                   @default(false)
+  enableCardsSorting   Boolean                   @default(false)
+  cardsRound           Int                       @default(0)
+  cardsStudyStarred    Boolean                   @default(false)
+  cardsAnswerWith      LimitedStudySetAnswerMode @default(Definition)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -237,31 +252,41 @@ model StudySetExperience {
 }
 
 model FolderExperience {
-  id                String   @id @default(cuid())
-  userId            String
-  folderId          String
-  viewedAt          DateTime
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  folder            Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  shuffleFlashcards Boolean  @default(false)
+  id                 String                    @id @default(cuid())
+  userId             String
+  folderId           String
+  viewedAt           DateTime
+  user               User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder             Folder                    @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  shuffleFlashcards  Boolean                   @default(false)
+  enableCardsSorting Boolean                   @default(false)
+  cardsRound         Int                       @default(0)
+  cardsStudyStarred  Boolean                   @default(false)
+  cardsAnswerWith    LimitedStudySetAnswerMode @default(Definition)
+
+  studiableTerms StudiableTerm[]
 
   @@unique([userId, folderId])
 }
 
 model StudiableTerm {
-  userId          String
-  termId          String
-  experienceId    String
-  correctness     Int
-  appearedInRound Int?
-  incorrectCount  Int    @default(0)
-  studiableRank   Int?
+  userId             String
+  termId             String
+  experienceId       String?
+  folderExperienceId String?
+  containerId        String
+  mode               StudiableMode @default(Learn)
+  correctness        Int
+  appearedInRound    Int?
+  incorrectCount     Int           @default(0)
+  studiableRank      Int?
 
-  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  term               Term               @relation(fields: [termId], references: [id], onDelete: Cascade)
-  studySetExperience StudySetExperience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  term               Term                @relation(fields: [termId], references: [id], onDelete: Cascade)
+  studySetExperience StudySetExperience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  folderExperience   FolderExperience?   @relation(fields: [folderExperienceId], references: [id], onDelete: Cascade)
 
-  @@id([userId, termId])
+  @@id([userId, termId, containerId, mode])
 }
 
 model StarredTerm {

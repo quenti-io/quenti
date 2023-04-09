@@ -21,6 +21,7 @@ export const authOptions: NextAuthOptions = {
         session.user.banned = !!user.bannedAt;
         session.user.features = user.features;
         session.user.enableUsageData = user.enableUsageData;
+        session.user.changelogVersion = user.changelogVersion;
 
         session.version = version;
       }
