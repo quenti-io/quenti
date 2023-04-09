@@ -3,7 +3,10 @@ import type { Term } from "@prisma/client";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
-import { useExperienceContext } from "../stores/use-experience-store";
+import {
+  ExperienceContext,
+  useExperienceContext,
+} from "../stores/use-experience-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { api } from "../utils/api";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
@@ -43,22 +46,38 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   const [focusDefinition, setFocusDefinition] = React.useState(false);
 
   const isDirty = useSetPropertiesStore((s) => s.isDirty);
+  const [shuffleDirty, setShuffleDirty] = React.useState(false);
 
   const setStarMutation = api.experience.starTerm.useMutation();
   const folderStarMutation = api.folders.starTerm.useMutation();
   const unstarMutation = api.experience.unstarTerm.useMutation();
 
   const { type, experience } = useSetFolderUnison();
+  const experienceStore = React.useContext(ExperienceContext)!;
   const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
   const starredTerms = useExperienceContext((s) => s.starredTerms);
   const starTerm = useExperienceContext((s) => s.starTerm);
   const unstarTerm = useExperienceContext((s) => s.unstarTerm);
 
+  React.useEffect(() => {
+    experienceStore.subscribe(
+      (s) => s.shuffleFlashcards,
+      () => {
+        if (!enableCardsSorting) return;
+
+        setShuffleDirty(true);
+        setTimeout(() => {
+          setShuffleDirty(false);
+        }, 300);
+      }
+    );
+  }, []);
+
   const FlashcardWrapper = enableCardsSorting
     ? SortFlashcardWrapper
     : DefaultFlashcardWrapper;
 
-  if (isDirty) return <LoadingFlashcard h={h} />;
+  if (isDirty || shuffleDirty) return <LoadingFlashcard h={h} />;
 
   return (
     <RootFlashcardContext.Provider
