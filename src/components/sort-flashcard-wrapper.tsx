@@ -121,7 +121,7 @@ export const SortFlashcardWrapper = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const markCardCallback = React.useCallback(
     throttle(markCard, 200, { trailing: false }),
-    []
+    [currentRound]
   );
 
   const goBack = () => {
