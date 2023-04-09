@@ -1,4 +1,9 @@
-import type { PrismaClient, Term } from "@prisma/client";
+import {
+  LimitedStudySetAnswerMode,
+  type PrismaClient,
+  type StudiableTerm,
+  type Term,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
@@ -162,6 +167,9 @@ export const foldersRouter = createTRPCRouter({
             folderId: folder.id,
           },
         },
+        include: {
+          studiableTerms: true,
+        },
       });
 
       if (!experience) {
@@ -203,6 +211,21 @@ export const foldersRouter = createTRPCRouter({
         ).map((t) => t.termId);
       }
 
+      if (!starredTerms.length) {
+        await ctx.prisma.folderExperience.update({
+          where: {
+            userId_folderId: {
+              userId: ctx.session.user.id,
+              folderId: folder.id,
+            },
+          },
+          data: {
+            cardsStudyStarred: false,
+          },
+        });
+        experience.cardsStudyStarred = false;
+      }
+
       return {
         id: folder.id,
         title: folder.title,
@@ -225,6 +248,13 @@ export const foldersRouter = createTRPCRouter({
         experience: {
           ...experience,
           starredTerms,
+          studiableTerms: experience.studiableTerms.map((x: StudiableTerm) => ({
+            id: x.termId,
+            mode: x.mode,
+            correctness: x.correctness,
+            appearedInRound: x.appearedInRound,
+            incorrectCount: x.incorrectCount,
+          })),
         },
         terms,
         editableSets: studySetsICanSee
@@ -589,6 +619,104 @@ export const foldersRouter = createTRPCRouter({
         },
         data: {
           shuffleFlashcards: input.shuffle,
+        },
+      });
+    }),
+
+  setEnableCardsSorting: protectedProcedure
+    .input(z.object({ genericId: z.string(), enableCardsSorting: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          enableCardsSorting: input.enableCardsSorting,
+        },
+      });
+    }),
+
+  setCardsStudyStarred: protectedProcedure
+    .input(z.object({ genericId: z.string(), cardsStudyStarred: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          cardsStudyStarred: input.cardsStudyStarred,
+          cardsRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              mode: "Flashcards",
+            },
+          },
+        },
+      });
+    }),
+
+  setCardsAnswerWith: protectedProcedure
+    .input(
+      z.object({
+        genericId: z.string(),
+        cardsAnswerWith: z.nativeEnum(LimitedStudySetAnswerMode),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          cardsAnswerWith: input.cardsAnswerWith,
+        },
+      });
+    }),
+
+  completeCardsRound: protectedProcedure
+    .input(z.object({ genericId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          cardsRound: {
+            increment: 1,
+          },
+        },
+      });
+    }),
+
+  resetCardsProgress: protectedProcedure
+    .input(z.object({ genericId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.folderExperience.update({
+        where: {
+          userId_folderId: {
+            userId: ctx.session.user.id,
+            folderId: input.genericId,
+          },
+        },
+        data: {
+          cardsRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              mode: "Flashcards",
+            },
+          },
         },
       });
     }),

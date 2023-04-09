@@ -44,6 +44,7 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
       await put.mutateAsync({
         id: active.term.id,
         experienceId: experience.id,
+        mode: "Learn",
         correctness: 2,
         appearedInRound: active.term.appearedInRound || 0,
         incorrectCount: active.term.incorrectCount,

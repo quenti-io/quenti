@@ -1,11 +1,11 @@
 import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import type { StudySetAnswerMode } from "@prisma/client";
+import type { LimitedStudySetAnswerMode } from "@prisma/client";
 import { Select } from "chakra-react-select";
-import { useSet } from "../../hooks/use-set";
-import { useExperienceContext } from "../../stores/use-experience-store";
-import { api } from "../../utils/api";
+import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
+import { useExperienceContext } from "../../../stores/use-experience-store";
+import { api } from "../../../utils/api";
 
-const options: { label: string; value: StudySetAnswerMode }[] = [
+const options: { label: string; value: LimitedStudySetAnswerMode }[] = [
   {
     label: "Term",
     value: "Word",
@@ -14,43 +14,42 @@ const options: { label: string; value: StudySetAnswerMode }[] = [
     label: "Definition",
     value: "Definition",
   },
-  {
-    label: "Both",
-    value: "Both",
-  },
 ];
 
-export const AnswerModeSection = () => {
-  const { id } = useSet();
+export const CardsAnswerModeSection = () => {
+  const { id, type } = useSetFolderUnison();
 
-  const answerWith = useExperienceContext((s) => s.answerWith);
-  const setAnswerWith = useExperienceContext((s) => s.setAnswerWith);
+  const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
+  const setCardsAnswerWith = useExperienceContext((s) => s.setCardsAnswerWith);
 
   const baseBg = useColorModeValue("gray.100", "gray.750");
   const dropdownBg = useColorModeValue("gray.200", "gray.700");
   const chevronColor = useColorModeValue("blue.400", "blue.200");
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
-  const apiAnswerWith = api.experience.setAnswerMode.useMutation();
+  const apiCardsAnswerWith =
+    type == "set"
+      ? api.experience.setCardsAnswerWith.useMutation()
+      : api.folders.setCardsAnswerWith.useMutation();
 
   return (
     <Flex gap={8}>
       <Stack spacing={0} w="full">
         <Text fontWeight={700}>Answer with</Text>
         <Text fontSize="sm" color={mutedColor}>
-          Choose how to answer when studying
+          Choose how to answer with flashcards
         </Text>
       </Stack>
       <Box w="60">
         <Select
           selectedOptionStyle="check"
-          value={options.find((o) => o.value === answerWith)}
+          value={options.find((o) => o.value === cardsAnswerWith)}
           isSearchable={false}
           onChange={(e) => {
-            setAnswerWith(e!.value);
-            apiAnswerWith.mutate({
-              studySetId: id,
-              answerWith: e!.value,
+            setCardsAnswerWith(e!.value);
+            apiCardsAnswerWith.mutate({
+              genericId: id,
+              cardsAnswerWith: e!.value,
             });
           }}
           chakraStyles={{

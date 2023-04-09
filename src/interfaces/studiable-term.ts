@@ -1,7 +1,7 @@
 import type { Term } from "@prisma/client";
 
-export type LearnTerm = Term & {
+export type StudiableTerm = Term & {
   correctness: number;
-  appearedInRound?: number;
+  appearedInRound?: number | null;
   incorrectCount: number;
 };

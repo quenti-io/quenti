@@ -6,18 +6,27 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import React from "react";
-import { FlashcardWrapper } from "../../components/flashcard-wrapper";
 import { Link } from "../../components/link";
-import { SetSettingsModal } from "../../components/set-settings-modal";
+import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSet } from "../../hooks/use-set";
+import { FlashcardsSettingsModal } from "../../modules/flashcards/flashcards-settings-modal";
 import { useExperienceContext } from "../../stores/use-experience-store";
+import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
 
 export const FlashcardPreview = () => {
   const data = useSet();
+  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
+  const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
-  const setShuffle = api.experience.setShuffle.useMutation();
+  const setShuffle = api.experience.setShuffle.useMutation({
+    onSuccess: () => {
+      if (enableCardsSorting) {
+        setIsDirty(true);
+      }
+    },
+  });
 
   const [shuffle, toggleShuffle] = useExperienceContext((s) => [
     s.shuffleFlashcards,
@@ -44,7 +53,7 @@ export const FlashcardPreview = () => {
 
   return (
     <>
-      <SetSettingsModal
+      <FlashcardsSettingsModal
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
       />
@@ -55,7 +64,7 @@ export const FlashcardPreview = () => {
         w="full"
       >
         <Flex maxW="1000px" flex="1">
-          <FlashcardWrapper terms={data.terms} termOrder={termOrder} />
+          <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
         </Flex>
         <Flex flexDir="column" justifyContent="space-between">
           <Stack spacing={4}>
@@ -72,6 +81,7 @@ export const FlashcardPreview = () => {
                   toggleShuffle();
                   setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
                 }}
+                isLoading={enableCardsSorting && setShuffle.isLoading}
               >
                 Shuffle
               </Button>
@@ -80,6 +90,7 @@ export const FlashcardPreview = () => {
                 variant={autoplay ? "solid" : "outline"}
                 w="full"
                 onClick={toggleAutoplay}
+                isDisabled={enableCardsSorting}
               >
                 Autoplay
               </Button>

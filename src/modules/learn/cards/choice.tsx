@@ -56,6 +56,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
         await put.mutateAsync({
           id: active.term.id,
           experienceId: experience.id,
+          mode: "Learn",
           correctness: 1,
           appearedInRound: active.term.appearedInRound || 0,
           incorrectCount: active.term.incorrectCount,
@@ -67,6 +68,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
         await put.mutateAsync({
           id: active.term.id,
           experienceId: experience.id,
+          mode: "Learn",
           correctness: -1,
           appearedInRound: active.term.appearedInRound || 0,
           incorrectCount: active.term.incorrectCount + 1,

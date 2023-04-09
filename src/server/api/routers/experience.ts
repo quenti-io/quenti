@@ -1,4 +1,8 @@
-import { MultipleAnswerMode, Prisma } from "@prisma/client";
+import {
+  LimitedStudySetAnswerMode,
+  MultipleAnswerMode,
+  Prisma,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { shuffleArray } from "../../../utils/array";
@@ -17,6 +21,65 @@ export const experienceRouter = createTRPCRouter({
         },
         data: {
           shuffleFlashcards: input.shuffle,
+        },
+      });
+    }),
+
+  setEnableCardsSorting: protectedProcedure
+    .input(z.object({ genericId: z.string(), enableCardsSorting: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          enableCardsSorting: input.enableCardsSorting,
+        },
+      });
+    }),
+
+  setCardsStudyStarred: protectedProcedure
+    .input(z.object({ genericId: z.string(), cardsStudyStarred: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          cardsStudyStarred: input.cardsStudyStarred,
+          cardsRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              mode: "Flashcards",
+            },
+          },
+        },
+      });
+    }),
+
+  setCardsAnswerWith: protectedProcedure
+    .input(
+      z.object({
+        genericId: z.string(),
+        cardsAnswerWith: z.nativeEnum(LimitedStudySetAnswerMode),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          cardsAnswerWith: input.cardsAnswerWith,
         },
       });
     }),
@@ -114,13 +177,14 @@ export const experienceRouter = createTRPCRouter({
           ctx.session.user.id,
           id,
           experience.id,
+          experience.id,
           0,
           i,
         ]);
         const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
 
         const query = Prisma.sql`
-      INSERT INTO "StudiableTerm" ("userId", "termId", "experienceId", "correctness", "studiableRank")
+      INSERT INTO "StudiableTerm" ("userId", "termId", "experienceId", "containerId", "correctness", "studiableRank")
       VALUES ${Prisma.join(formatted)}
       ON CONFLICT ON CONSTRAINT "StudiableTerm_pkey"
       DO UPDATE SET "studiableRank" = EXCLUDED."studiableRank";
@@ -186,7 +250,7 @@ export const experienceRouter = createTRPCRouter({
       });
     }),
 
-  completeRound: protectedProcedure
+  completeLearnRound: protectedProcedure
     .input(z.object({ studySetId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.studySetExperience.update({
@@ -199,6 +263,45 @@ export const experienceRouter = createTRPCRouter({
         data: {
           learnRound: {
             increment: 1,
+          },
+        },
+      });
+    }),
+
+  completeCardsRound: protectedProcedure
+    .input(z.object({ genericId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          cardsRound: {
+            increment: 1,
+          },
+        },
+      });
+    }),
+
+  resetCardsProgress: protectedProcedure
+    .input(z.object({ genericId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          cardsRound: 0,
+          studiableTerms: {
+            deleteMany: {
+              mode: "Flashcards",
+            },
           },
         },
       });
@@ -220,7 +323,7 @@ export const experienceRouter = createTRPCRouter({
           studiableTerms: {
             updateMany: {
               where: {
-                userId: ctx.session.user.id,
+                mode: "Learn",
               },
               data: {
                 correctness: 0,

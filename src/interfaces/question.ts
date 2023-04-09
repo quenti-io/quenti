@@ -1,9 +1,9 @@
 import type { StudySetAnswerMode, Term } from "@prisma/client";
-import type { LearnTerm } from "./learn-term";
+import type { StudiableTerm } from "./studiable-term";
 
 export interface Question {
   answerMode: StudySetAnswerMode;
-  term: LearnTerm;
+  term: StudiableTerm;
   type: "choice" | "write";
   choices: Term[];
 }
