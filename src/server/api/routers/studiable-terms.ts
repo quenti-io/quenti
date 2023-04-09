@@ -60,4 +60,27 @@ export const studiableTermsRouter = createTRPCRouter({
         },
       });
     }),
+
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        containerId: z.string(),
+        mode: z.nativeEnum(StudiableMode),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.studiableTerm.delete({
+          where: {
+            userId_termId_containerId_mode: {
+              userId: ctx.session.user.id,
+              termId: input.id,
+              containerId: input.containerId,
+              mode: input.mode,
+            },
+          },
+        });
+      } catch {}
+    }),
 });

@@ -37,7 +37,9 @@ export const SortFlashcardWrapper = () => {
 
   const genericExperienceKey =
     type == "folder" ? "folderExperienceId" : "experienceId";
+
   const put = api.studiableTerms.put.useMutation();
+  const apiDelete = api.studiableTerms.delete.useMutation();
 
   const setDirtyProps = {
     onSuccess: () => {
@@ -134,6 +136,14 @@ export const SortFlashcardWrapper = () => {
     const studiableTerm = termsThisRound[newIndex];
     if (!studiableTerm) return;
     setState(studiableTerm.correctness == 1 ? "known" : "stillLearning");
+
+    void (async () => {
+      await apiDelete.mutateAsync({
+        id: studiableTerm.id,
+        containerId: experience.id,
+        mode: "Flashcards",
+      });
+    })();
 
     allowAnimation();
     stateGoBack();

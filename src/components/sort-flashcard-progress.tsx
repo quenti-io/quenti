@@ -28,6 +28,7 @@ import { useRouter } from "next/router";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { AnyKeyPressLayer } from "../modules/learn/any-key-press-layer";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
+import { api } from "../utils/api";
 import { plural } from "../utils/string";
 import { CircularTermMastery } from "./circular-term-mastery";
 import { Link } from "./link";
@@ -43,15 +44,34 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   onNextRound,
   onResetProgress,
 }) => {
-  const { type, id } = useSetFolderUnison();
+  const { id, experience, type } = useSetFolderUnison();
   const router = useRouter();
   const cardBg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.750");
 
-  const studiableTerms = useSortFlashcardsContext((s) => s.studiableTerms);
-  const goBack = useSortFlashcardsContext((s) => s.goBack);
+  const apiDelete = api.studiableTerms.delete.useMutation();
+
+  const [termsThisRound, index, studiableTerms] = useSortFlashcardsContext(
+    (s) => [s.termsThisRound, s.index, s.studiableTerms]
+  );
+  const stateGoBack = useSortFlashcardsContext((s) => s.goBack);
   const known = studiableTerms.filter((t) => t.correctness === 1).length;
   const stillLearning = studiableTerms.length - known;
+
+  const goBack = () => {
+    stateGoBack(true);
+
+    void (async () => {
+      const current = termsThisRound[index];
+      if (!current) return;
+
+      await apiDelete.mutateAsync({
+        id: current.id,
+        containerId: experience.id,
+        mode: "Flashcards",
+      });
+    })();
+  };
 
   return (
     <Card
@@ -138,7 +158,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
           size={{ base: "md", sm: "sm" }}
           leftIcon={<IconArrowLeft size={18} />}
           variant="ghost"
-          onClick={() => goBack(true)}
+          onClick={goBack}
         >
           Back to last card
         </Button>
