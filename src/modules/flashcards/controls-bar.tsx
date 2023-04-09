@@ -73,6 +73,7 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
             variant={autoplay ? "solid" : "ghost"}
             colorScheme="gray"
             onClick={toggleAutoplay}
+            isDisabled={enableCardsSorting}
           />
         </Tooltip>
       </HStack>
