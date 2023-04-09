@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
+import throttle from "lodash.throttle";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import type { StudiableTerm } from "../interfaces/studiable-term";
@@ -56,20 +57,20 @@ export const SortFlashcardWrapper = () => {
       ? api.experience.resetCardsProgress.useMutation(setDirtyProps)
       : api.folders.resetCardsProgress.useMutation(setDirtyProps);
 
-  type Flashcard = StudiableTerm & { isFlipped: boolean };
+  type Flashcard = StudiableTerm & { isFlipped: boolean; index: number };
   const [visibleFlashcards, setVisibleFlashcards] = React.useState<Flashcard[]>(
-    !progressView ? [{ ...term!, isFlipped: shouldFlip }] : []
+    !progressView ? [{ ...term!, isFlipped: shouldFlip, index }] : []
   );
 
   const [hasUserEngaged, setHasUserEngaged] = React.useState(false);
   const [state, setState] = React.useState<"stillLearning" | "known">();
 
-  const allowAnimation = () => {
+  const allowAnimation = React.useCallback(() => {
     setHasUserEngaged(true);
     requestAnimationFrame(() => {
       setHasUserEngaged(false);
     });
-  };
+  }, []);
 
   const flipCard = async (id: string) => {
     if (!visibleFlashcards.find((f) => f.id == id)) return;
@@ -95,41 +96,33 @@ export const SortFlashcardWrapper = () => {
     });
   };
 
-  const markStillLearning = () => {
+  const markCard = (term: StudiableTerm, know: boolean) => {
     allowAnimation();
-    setState("stillLearning");
+    setState(know ? "known" : "stillLearning");
     controls.set({ zIndex: 105 });
-    stateMarkStillLearning(term!.id);
+
+    if (know) stateMarkKnown(term.id);
+    else stateMarkStillLearning(term.id);
 
     void (async () => {
       await put.mutateAsync({
-        id: term!.id,
+        id: term.id,
         [genericExperienceKey]: experience.id,
         mode: "Flashcards",
-        correctness: -1,
+        correctness: know ? 1 : -1,
         appearedInRound: currentRound,
-        incorrectCount: term!.incorrectCount + 1,
+        incorrectCount: know
+          ? term.incorrectCount || 0
+          : term.incorrectCount + 1,
       });
     })();
   };
 
-  const markKnown = () => {
-    allowAnimation();
-    setState("known");
-    controls.set({ zIndex: 105 });
-    stateMarkKnown(term!.id);
-
-    void (async () => {
-      await put.mutateAsync({
-        id: term!.id,
-        [genericExperienceKey]: experience.id,
-        mode: "Flashcards",
-        correctness: 1,
-        appearedInRound: currentRound,
-        incorrectCount: term?.incorrectCount || 0,
-      });
-    })();
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const markCardCallback = React.useCallback(
+    throttle(markCard, 200, { trailing: false }),
+    []
+  );
 
   const goBack = () => {
     const newIndex = index - 1;
@@ -151,7 +144,7 @@ export const SortFlashcardWrapper = () => {
 
   React.useEffect(() => {
     if (!progressView)
-      setVisibleFlashcards([{ ...term!, isFlipped: shouldFlip }]);
+      setVisibleFlashcards([{ ...term!, isFlipped: shouldFlip, index }]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term]);
 
@@ -195,8 +188,8 @@ export const SortFlashcardWrapper = () => {
               if (visibleFlashcards.length)
                 await flipCard(visibleFlashcards[0]!.id);
             }}
-            triggerStillLearning={markStillLearning}
-            triggerKnow={markKnown}
+            triggerStillLearning={() => markCardCallback(term!, false)}
+            triggerKnow={() => markCardCallback(term!, true)}
           />
         )}
         <AnimatePresence>
@@ -247,11 +240,11 @@ export const SortFlashcardWrapper = () => {
               <Flashcard
                 h={h}
                 term={t}
-                index={index}
+                index={t.index}
                 isFlipped={t.isFlipped}
                 numTerms={termsThisRound.length}
-                onLeftAction={markStillLearning}
-                onRightAction={markKnown}
+                onLeftAction={() => markCardCallback(term!, false)}
+                onRightAction={() => markCardCallback(term!, true)}
                 onBackAction={goBack}
                 starred={starredTerms.includes(t.id)}
                 onRequestEdit={() => editTerm(t, t.isFlipped)}
