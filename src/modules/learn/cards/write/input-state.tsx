@@ -101,7 +101,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
         </Text>
         {!!specialCharacters.length && (
           <Box>
-            <div style={{ margin: -4 }}>
+            <div style={{ margin: -4, maxHeight: 128, overflowY: "auto" }}>
               {specialCharacters.sort().map((c, i) => (
                 <CharacterButtonWrapper
                   key={i}
