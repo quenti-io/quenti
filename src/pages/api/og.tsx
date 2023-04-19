@@ -9,7 +9,7 @@ import prisma from "../../server/db-edge";
 import { avatarUrl } from "../../utils/avatar";
 
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
 };
 
 const defaultOg = fetch(
@@ -197,8 +197,7 @@ const getEntityGeneric = async (
 export default async function handler(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
-  const inputUsername = searchParams.get("username");
-  const idOrSlug = searchParams.get("idOrSlug");
+  const folderData = searchParams.get("folderData");
 
   const defaultReturn = async () => {
     const ogData = await defaultOg;
@@ -208,6 +207,15 @@ export default async function handler(request: NextRequest) {
       height: 628,
     });
   };
+
+  let inputUsername, idOrSlug;
+  if (folderData) {
+    const [username, ...rawIdOrSlug] = folderData.split("+");
+    const idOrSlugString = rawIdOrSlug.join("+");
+
+    inputUsername = username;
+    idOrSlug = idOrSlugString;
+  }
 
   const entity = await getEntityGeneric(
     id,
