@@ -53,10 +53,13 @@ type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
 
 export const BASE_PAGES = ["/", "/signup", "/404", "/unauthorized"];
 
-const App: AppType<{ session: Session | null }> = ({
-  Component: _Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const App: AppType<
+  {
+    session: Session | null;
+    id?: string;
+    folderData?: { username: string; idOrSlug: string };
+  } & JSX.IntrinsicAttributes
+> = ({ Component: _Component, pageProps: { session, ...pageProps } }) => {
   const Component = _Component as NextComponentWithAuth;
   const router = useRouter();
   const base = env.NEXT_PUBLIC_BASE_URL;
@@ -91,6 +94,15 @@ const App: AppType<{ session: Session | null }> = ({
   const desc =
     "Tired of Quizlet showing ads and only giving you a few practice rounds for free? Turns out an alternative isn't actually all that hard to make.";
 
+  const ogImageUrl = (): string => {
+    if (pageProps.id) {
+      return `${base}/api/og?id=${pageProps.id}`;
+    } else if (pageProps.folderData) {
+      return `${base}/api/og?folderData=${pageProps.folderData.username}+${pageProps.folderData.idOrSlug}`;
+    }
+    return `${base}/api/og-image.png`;
+  };
+
   return (
     <>
       <Head>
@@ -122,12 +134,12 @@ const App: AppType<{ session: Session | null }> = ({
         <meta property="og:title" content={title} />
         <meta property="og:description" content={desc} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={`${base}/og-image.png`} />
+        <meta property="og:image" content={ogImageUrl()} />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content={base} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={desc} />
-        <meta property="twitter:image" content={`${base}/og-image.png`} />
+        <meta property="twitter:image" content={ogImageUrl()} />
       </Head>
       <ChakraProvider theme={theme}>
         <LoadingProvider>

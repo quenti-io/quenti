@@ -2,6 +2,7 @@ import { Container } from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
 import { shallow } from "zustand/shallow";
+import { singleIdServerSideProps as getServerSideProps } from "../../../common/server-side-props";
 import type { ComponentWithAuth } from "../../../components/auth-component";
 import { WithFooter } from "../../../components/with-footer";
 import { HydrateEditSetData } from "../../../modules/hydrate-edit-set-data";
@@ -75,3 +76,4 @@ const PropertiesListener = () => {
 Edit.authenticationEnabled = true;
 
 export default Edit;
+export { getServerSideProps };

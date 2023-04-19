@@ -1,4 +1,5 @@
 import { Container, Divider, Stack } from "@chakra-ui/react";
+import { singleIdServerSideProps as getServerSideProps } from "../../common/server-side-props";
 import type { ComponentWithAuth } from "../../components/auth-component";
 import { WithFooter } from "../../components/with-footer";
 import { HydrateSetData } from "../../modules/hydrate-set-data";
@@ -40,3 +41,4 @@ const Set: ComponentWithAuth = () => {
 Set.authenticationEnabled = true;
 
 export default Set;
+export { getServerSideProps };

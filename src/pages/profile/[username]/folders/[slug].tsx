@@ -1,4 +1,5 @@
 import { Container, Divider, Stack, useColorModeValue } from "@chakra-ui/react";
+import { folderServerSideProps as getServerSideProps } from "../../../../common/server-side-props";
 import type { ComponentWithAuth } from "../../../../components/auth-component";
 import { WithFooter } from "../../../../components/with-footer";
 import { ActionArea } from "../../../../modules/folders/action-area";
@@ -34,3 +35,4 @@ const FolderPage: ComponentWithAuth = () => {
 FolderPage.authenticationEnabled = true;
 
 export default FolderPage;
+export { getServerSideProps };
