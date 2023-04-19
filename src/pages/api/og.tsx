@@ -33,9 +33,6 @@ const outfit = fetch(
 const openSansRegular = fetch(
   new URL("../../../public/assets/fonts/OpenSans-Regular.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
-const openSansBold = fetch(
-  new URL("../../../public/assets/fonts/OpenSans-Bold.ttf", import.meta.url)
-).then((res) => res.arrayBuffer());
 
 interface ReturnedEntity {
   title: string;
@@ -235,7 +232,6 @@ export default async function handler(request: NextRequest) {
   const lineBuf = await ogLine;
 
   const openSansRegularData = await openSansRegular;
-  const openSansBoldData = await openSansBold;
   const outfitData = await outfit;
 
   const entityLabel = entity.type == "Folder" ? "set" : "term";
@@ -353,12 +349,6 @@ export default async function handler(request: NextRequest) {
           data: openSansRegularData,
           style: "normal",
           weight: 400,
-        },
-        {
-          name: "Open Sans",
-          data: openSansBoldData,
-          style: "normal",
-          weight: 700,
         },
         {
           name: "Outfit",
