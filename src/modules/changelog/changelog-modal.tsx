@@ -39,13 +39,13 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({
       scrollBehavior="inside"
     >
       <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" py="6" rounded="xl">
+      <ModalContent rounded="xl">
         <ModalBody>
-          <Stack spacing={8}>
+          <Stack spacing={8} p="4" py="6">
             <Stack spacing={1}>
               <Flex justifyContent="space-between">
                 <Heading size="2xl">What&apos;s New</Heading>
-                <ModalCloseButton mr="4" mt="4" />
+                <ModalCloseButton position="relative" mr="-3" mt="-3" />
               </Flex>
               <Text fontSize="md" color={mutedColor} fontWeight={600}>
                 Version {session.data?.version}
