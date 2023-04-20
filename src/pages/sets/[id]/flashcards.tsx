@@ -1,6 +1,5 @@
 import { Container, Stack } from "@chakra-ui/react";
 import React from "react";
-import { singleIdServerSideProps as getServerSideProps } from "../../../common/server-side-props";
 import type { ComponentWithAuth } from "../../../components/auth-component";
 import { ControlsBar } from "../../../modules/flashcards/controls-bar";
 import { FlashcardArea } from "../../../modules/flashcards/flashcard-area";
@@ -33,4 +32,3 @@ const Flashcards: ComponentWithAuth = () => {
 Flashcards.authenticationEnabled = true;
 
 export default Flashcards;
-export { getServerSideProps };
