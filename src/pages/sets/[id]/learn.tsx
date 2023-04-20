@@ -15,10 +15,6 @@ import { useExperienceContext } from "../../../stores/use-experience-store";
 import { useLearnContext } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 
-export const config = {
-  runtime: "experimental-edge",
-};
-
 const Learn: ComponentWithAuth = () => {
   return (
     <HydrateSetData disallowDirty>

@@ -9,10 +9,6 @@ import { HeadingArea } from "../../modules/main/heading-area";
 import { LinkArea } from "../../modules/main/link-area";
 import { TermsOverview } from "../../modules/main/terms-overview";
 
-export const config = {
-  runtime: "experimental-edge",
-};
-
 const Set: ComponentWithAuth = () => {
   return (
     <HydrateSetData>

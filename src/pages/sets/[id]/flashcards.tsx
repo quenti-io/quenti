@@ -8,10 +8,6 @@ import { FlashcardsSettingsModal } from "../../../modules/flashcards/flashcards-
 import { TitleBar } from "../../../modules/flashcards/titlebar";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
 
-export const config = {
-  runtime: "experimental-edge",
-};
-
 const Flashcards: ComponentWithAuth = () => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
