@@ -4,6 +4,7 @@
 
 import type { EntityType } from "@prisma/client/edge";
 import { ImageResponse } from "@vercel/og";
+import type { NextApiResponse } from "next";
 import type { NextRequest } from "next/server";
 import prisma from "../../server/db-edge";
 import { avatarUrl } from "../../utils/avatar";
@@ -12,9 +13,6 @@ export const config = {
   runtime: "edge",
 };
 
-const defaultOg = fetch(
-  new URL("../../../public/og-image.png", import.meta.url)
-).then((res) => res.arrayBuffer());
 const ogBackground = fetch(
   new URL("../../../public/og-background.png", import.meta.url)
 ).then((res) => res.arrayBuffer());
@@ -191,18 +189,16 @@ const getEntityGeneric = async (
   return null;
 };
 
-export default async function handler(request: NextRequest) {
+export default async function handler(
+  request: NextRequest,
+  res: NextApiResponse
+) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const folderData = searchParams.get("folderData");
 
   const defaultReturn = async () => {
-    const ogData = await defaultOg;
-    // @ts-ignore
-    return new ImageResponse(<img src={ogData} width="1200" height="628" />, {
-      width: 1200,
-      height: 628,
-    });
+    return res.redirect(404, "/og-image.png");
   };
 
   let inputUsername, idOrSlug;
