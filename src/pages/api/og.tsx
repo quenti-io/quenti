@@ -125,13 +125,9 @@ export default async function handler(request: NextRequest) {
               whiteSpace: "pre-wrap",
             }}
           >
-            {entity.description.length ? (
-              entity.description
-            ) : (
-              <>
-                Created by <b style={{ marginLeft: 8 }}>{entity.username}</b>
-              </>
-            )}
+            {entity.description.length
+              ? entity.description
+              : `Created by ${entity.username}`}
           </p>
         </div>
         <div tw="flex w-full justify-between items-end">
