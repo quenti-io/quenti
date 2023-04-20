@@ -41,7 +41,7 @@ export const getSharedEntity = async (
         },
       },
     });
-    if (!set) return null;
+    if (!set || set.visibility == "Private") return null;
 
     title = set.title;
     description = set.description;
@@ -103,7 +103,7 @@ export const getEntityGeneric = async (
           },
         },
       });
-      if (!set) return null;
+      if (!set || set.visibility == "Private") return null;
 
       return {
         title: set.title,

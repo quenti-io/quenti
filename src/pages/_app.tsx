@@ -140,6 +140,7 @@ const App: AppType<
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={desc} />
         <meta property="twitter:image" content={ogImageUrl()} />
+        <meta name="robots" content="noindex" />
       </Head>
       <ChakraProvider theme={theme}>
         <LoadingProvider>
