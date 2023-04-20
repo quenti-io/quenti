@@ -58,6 +58,7 @@ const App: AppType<
     session: Session | null;
     id?: string;
     folderData?: { username: string; idOrSlug: string };
+    entity?: { title: string; description: string };
   } & JSX.IntrinsicAttributes
 > = ({ Component: _Component, pageProps: { session, ...pageProps } }) => {
   const Component = _Component as NextComponentWithAuth;
@@ -90,9 +91,12 @@ const App: AppType<
     </>
   );
 
-  const title = "Quizlet.cc - A batteries included Quizlet alternative";
-  const desc =
+  const _title = "Quizlet.cc - A batteries included Quizlet alternative";
+  const _desc =
     "Tired of Quizlet showing ads and only giving you a few practice rounds for free? Turns out an alternative isn't actually all that hard to make.";
+
+  const title = pageProps.entity?.title || _title;
+  const desc = pageProps.entity?.description || _desc;
 
   const ogImageUrl = (): string => {
     if (pageProps.id) {

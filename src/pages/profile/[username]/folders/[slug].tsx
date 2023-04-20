@@ -8,6 +8,10 @@ import { FolderHeading } from "../../../../modules/folders/folder-heading";
 import { FolderSets } from "../../../../modules/folders/folder-sets";
 import { HydrateFolderData } from "../../../../modules/hydrate-folder-data";
 
+export const config = {
+  runtime: "experimental-edge",
+};
+
 const FolderPage: ComponentWithAuth = () => {
   const dividerColor = useColorModeValue("gray.400", "gray.600");
 
