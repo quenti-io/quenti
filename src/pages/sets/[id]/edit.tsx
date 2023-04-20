@@ -12,6 +12,10 @@ import {
   useSetEditorContext,
 } from "../../../stores/use-set-editor-store";
 
+export const config = {
+  runtime: "experimental-edge",
+};
+
 const Edit: ComponentWithAuth = () => {
   return (
     <HydrateEditSetData>
