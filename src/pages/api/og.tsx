@@ -197,10 +197,6 @@ export default async function handler(
   const id = searchParams.get("id");
   const folderData = searchParams.get("folderData");
 
-  const defaultReturn = async () => {
-    return res.redirect(404, "/og-image.png");
-  };
-
   let inputUsername, idOrSlug;
   if (folderData) {
     const [username, ...rawIdOrSlug] = folderData.split("+");
@@ -216,7 +212,7 @@ export default async function handler(
       ? { username: inputUsername, idOrSlug }
       : undefined
   );
-  if (!entity) return await defaultReturn();
+  if (!entity) return res.redirect(404, "/og-image.png");
 
   const avatarBuf = await fetch(ogAvatarUrl(entity.image)).then((res) =>
     res.arrayBuffer()
