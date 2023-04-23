@@ -7,7 +7,7 @@ import continuedLearnSrc from "public/assets/landing/continued-learn.png";
 
 export const EngineeredLearn = () => {
   return (
-    <Flex as="section" justify="center">
+    <Flex as="section" justify="center" id="heading-features-start">
       <Stack
         style={{ maxWidth: "1200px" }}
         pt={{ base: 16, lg: 32 }}
@@ -33,9 +33,9 @@ export const EngineeredLearn = () => {
               color="gray.400"
               data-aos="fade"
             >
-              Arguably Quizlet&apos;s most useful feature, Learn, helps
-              you memorize a set by answering each term correctly twice.
-              We&apos;ve reverse-engineered it to offer the same experience.
+              Arguably Quizlet&apos;s most useful feature, Learn, helps you
+              memorize a set by answering each term correctly twice. We&apos;ve
+              reverse-engineered it to offer the same experience.
             </Text>
           </Stack>
           <Flex

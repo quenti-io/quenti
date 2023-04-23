@@ -17,6 +17,7 @@ import { BASE_PAGES } from "../pages/_app";
 import { avatarUrl } from "../utils/avatar";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
+import { Link } from "./link";
 import { LeftNav } from "./navbar/left-nav";
 import { MobileMenu } from "./navbar/mobile-menu";
 import { UserMenu } from "./navbar/user-menu";
@@ -130,17 +131,22 @@ export const Navbar: React.FC = () => {
           >
             {session?.user && <UserMenu />}
             {status !== "loading" && !session && (
-              <Button
-                colorScheme="blue"
-                fontWeight={700}
-                onClick={async () => {
-                  await signIn("google", {
-                    callbackUrl: "/home",
-                  });
-                }}
-              >
-                Sign in
-              </Button>
+              <>
+                <Button
+                  colorScheme="blue"
+                  variant="outline"
+                  onClick={async () => {
+                    await signIn("google", {
+                      callbackUrl: "/home",
+                    });
+                  }}
+                >
+                  Log in
+                </Button>
+                <Button as={Link} href={"/signup"}>
+                  Sign up for free
+                </Button>
+              </>
             )}
           </HStack>
         </HStack>

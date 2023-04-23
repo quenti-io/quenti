@@ -7,18 +7,20 @@ import {
   MenuButton,
   MenuDivider,
   MenuList,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   IconBooks,
   IconChevronDown,
   IconCloudDownload,
-  IconFolder
+  IconFolder,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { Logo } from "../../icons/logo";
+import { BASE_PAGES } from "../../pages/_app";
 import { Link } from "../link";
 import { MenuOption } from "../menu-option";
 
@@ -31,7 +33,9 @@ export const LeftNav: React.FC<LeftNavProps> = ({
   onFolderClick,
   onImportClick,
 }) => {
+  const router = useRouter();
   const session = useSession()!.data!;
+  const onStaticPage = BASE_PAGES.includes(router.pathname);
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -45,7 +49,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         className="nav-content__mobile"
         color="white"
       >
-        <HStack as={Link} href="/" rel="home" ml="2">
+        <HStack as={Link} href={onStaticPage ? "/" : "/home"} rel="home" ml="2">
           <Logo boxSize="35px" />
           <Heading
             as="p"
