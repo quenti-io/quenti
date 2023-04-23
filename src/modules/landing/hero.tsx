@@ -42,7 +42,7 @@ export const Hero = () => {
                 >
                   Tired of Quizlet showing ads and only giving you a few
                   practice rounds for free? Stop wasting your time getting
-                  bombarded by premium offers and resume studying today.
+                  bombarded by premium offers, and resume studying today.
                 </Text>
               </VStack>
               <Stack
