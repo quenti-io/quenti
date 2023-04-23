@@ -18,6 +18,7 @@ import { signIn, useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { Link } from "../link";
 import { MenuOption } from "../menu-option";
 import { MobileUserOptions } from "./mobile-user-options";
 
@@ -144,17 +145,22 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             </Menu>
           )}
           {status !== "loading" && !session && (
-            <Button
-              colorScheme="blue"
-              fontWeight={700}
-              onClick={async () => {
-                await signIn("google", {
-                  callbackUrl: "/home",
-                });
-              }}
-            >
-              Sign in
-            </Button>
+            <>
+              <Button
+                colorScheme="blue"
+                variant="outline"
+                onClick={async () => {
+                  await signIn("google", {
+                    callbackUrl: "/home",
+                  });
+                }}
+              >
+                Log in
+              </Button>{" "}
+              <Button as={Link} href={"/signup"}>
+                Sign up for free
+              </Button>
+            </>
           )}
         </Stack>
         {session?.user && <MobileUserOptions closeMenu={onClose} />}
