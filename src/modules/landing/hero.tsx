@@ -65,7 +65,7 @@ export const Hero = () => {
                       });
                   }}
                 >
-                  Learn More
+                  Learn more
                 </Button>
               </Stack>
             </VStack>
