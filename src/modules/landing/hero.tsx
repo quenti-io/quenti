@@ -1,7 +1,16 @@
-import { Box, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import { MainButton } from "./main-button";
 
+import { IconChevronDown } from "@tabler/icons-react";
 import setScreenshotSrc from "public/assets/landing/set-screenshot.png";
 
 export const Hero = () => {
@@ -10,36 +19,54 @@ export const Hero = () => {
       <Box as="section" overflow="hidden">
         <Stack mx="auto" py="10" pos="relative" pb="0" px="4">
           <VStack spacing={20} alignItems="center">
-            <VStack pt={["10", "20"]} spacing="6" w="full">
-              <Heading
-                as="h1"
-                fontSize={["4xl", "4xl", "5xl", "7xl"]}
-                textAlign="center"
-                maxW="1000px"
-                bgGradient="linear(to-r, blue.300, purple.300)"
-                bgClip="text"
-                data-aos="fade-up"
-              >
-                A batteries included Quizlet alternative
-              </Heading>
-              <Text
-                fontSize={["lg", "xl"]}
-                color="whiteAlpha.900"
-                maxW="800px"
-                textAlign="center"
-                data-aos="fade-up"
-                data-aos-delay="100"
-              >
-                Tired of Quizlet showing ads and only giving you a few practice
-                rounds for free? Turns out an alternative isn&apos;t actually
-                all that hard to make.
-              </Text>
+            <VStack pt={["10", "20"]} spacing="8" w="full" zIndex={20}>
+              <VStack spacing="6">
+                <Heading
+                  as="h1"
+                  fontSize={["4xl", "4xl", "5xl", "7xl"]}
+                  textAlign="center"
+                  maxW="1000px"
+                  bgGradient="linear(to-r, blue.300, purple.300)"
+                  bgClip="text"
+                  data-aos="fade-up"
+                >
+                  A batteries included Quizlet alternative
+                </Heading>
+                <Text
+                  fontSize={["lg", "xl"]}
+                  color="whiteAlpha.900"
+                  maxW="800px"
+                  textAlign="center"
+                  data-aos="fade-up"
+                  data-aos-delay="100"
+                >
+                  Tired of Quizlet showing ads and only giving you a few
+                  practice rounds for free? Stop wasting your time getting
+                  bombarded by premium offers and resume studying today.
+                </Text>
+              </VStack>
               <Stack
-                direction={["column-reverse", "row"]}
+                direction={{ base: "column", sm: "row" }}
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
                 <MainButton />
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  height="4rem"
+                  px="2rem"
+                  rightIcon={<IconChevronDown />}
+                  onClick={() => {
+                    document
+                      .getElementById("heading-features-start")
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                  }}
+                >
+                  Learn More
+                </Button>
               </Stack>
             </VStack>
             <Box maxW="1200px" pos="relative">

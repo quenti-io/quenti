@@ -92,7 +92,7 @@ const App: AppType<
 
   const title = "Quizlet.cc - A batteries included Quizlet alternative";
   const desc =
-    "Tired of Quizlet showing ads and only giving you a few practice rounds for free? Turns out an alternative isn't actually all that hard to make.";
+    "Tired of Quizlet showing ads and only giving you a few practice rounds for free? Stop wasting your time getting bombarded by premium offers and resume studying today.";
 
   const ogImageUrl = (): string => {
     if (pageProps.id) {
