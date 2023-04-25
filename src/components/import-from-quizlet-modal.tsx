@@ -45,6 +45,7 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
   };
 
   const url = attemptFormat(_url);
+  const urlIsShare = url.startsWith("https://quizlet.com/_");
   const invalid = !!url && !QUIZLET_IMPORT_REGEXP.test(url);
 
   const primaryBg = useColorModeValue("gray.200", "gray.800");
@@ -87,23 +88,34 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
             <Heading fontSize="4xl" color={headingColor}>
               Import from Quizlet
             </Heading>
-            <Input
-              placeholder="https://quizlet.com/123456789"
-              variant="flushed"
-              fontWeight={700}
-              isInvalid={invalid}
-              bg={primaryBg}
-              color={inputColor}
-              rounded="md"
-              px="4"
-              size="lg"
-              value={_url}
-              onChange={(e) => setUrl(e.target.value)}
-              _focus={{
-                borderColor: invalid ? "red.300" : "blue.300",
-                boxShadow: `0px 1px 0px 0px ${invalid ? "#fc8181" : "#4b83ff"}`,
-              }}
-            />
+            <Stack spacing={4}>
+              <Input
+                placeholder="https://quizlet.com/123456789"
+                variant="flushed"
+                fontWeight={700}
+                isInvalid={invalid}
+                bg={primaryBg}
+                color={inputColor}
+                rounded="md"
+                px="4"
+                size="lg"
+                value={_url}
+                onChange={(e) => setUrl(e.target.value)}
+                _focus={{
+                  borderColor: invalid ? "red.300" : "blue.300",
+                  boxShadow: `0px 1px 0px 0px ${
+                    invalid ? "#fc8181" : "#4b83ff"
+                  }`,
+                }}
+              />
+            </Stack>
+            {urlIsShare && (
+              <Text>
+                Copy the link from the URL bar in your browser.
+                <br />
+                <b>Using the link copied from the share menu will not work.</b>
+              </Text>
+            )}
             {error && (
               <Text color={errorText} fontWeight={600}>
                 {error}
