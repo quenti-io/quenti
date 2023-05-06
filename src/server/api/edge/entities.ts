@@ -34,7 +34,6 @@ export const getSharedEntity = async (
       .selectFrom("StudySet")
       .where("StudySet.id", "=", entityShare.entityId)
       .innerJoin("User", "StudySet.userId", "User.id")
-      .innerJoin("Term", "StudySet.id", "Term.studySetId")
       .select([
         "StudySet.title",
         "StudySet.description",
@@ -42,7 +41,13 @@ export const getSharedEntity = async (
         "User.username",
         "User.image",
       ])
-      .select((e) => e.fn.countAll<number>("Term").as("entities"))
+      .select((eb) =>
+        eb
+          .selectFrom("Term")
+          .where("Term.studySetId", "=", entityShare.entityId)
+          .select((e) => e.fn.countAll<number>().as("entities"))
+          .as("entities")
+      )
       .executeTakeFirst();
 
     if (!set || set.visibility == "Private") return null;
@@ -57,20 +62,26 @@ export const getSharedEntity = async (
       .selectFrom("Folder")
       .where("Folder.id", "=", entityShare.entityId)
       .innerJoin("User", "Folder.userId", "User.id")
-      .innerJoin(
-        "StudySetsOnFolders",
-        "Folder.id",
-        "StudySetsOnFolders.folderId"
-      )
-      .innerJoin("StudySet", "StudySetsOnFolders.studySetId", "StudySet.id")
-      .where("StudySet.visibility", "=", "Public")
       .select([
         "Folder.title",
         "Folder.description",
         "User.username",
         "User.image",
       ])
-      .select((e) => e.fn.countAll<number>("StudySet").as("entities"))
+      .select((eb) =>
+        eb
+          .selectFrom("Folder")
+          .where("Folder.id", "=", entityShare.entityId)
+          .innerJoin(
+            "StudySetsOnFolders",
+            "Folder.id",
+            "StudySetsOnFolders.folderId"
+          )
+          .innerJoin("StudySet", "StudySetsOnFolders.studySetId", "StudySet.id")
+          .where("StudySet.visibility", "=", "Public")
+          .select((e) => e.fn.countAll<number>("StudySet").as("entities"))
+          .as("entities")
+      )
       .executeTakeFirst();
 
     if (!folder || !folder.entities) return null;
@@ -104,7 +115,6 @@ export const getEntityGeneric = async (
         .selectFrom("StudySet")
         .where("StudySet.id", "=", id)
         .innerJoin("User", "StudySet.userId", "User.id")
-        .innerJoin("Term", "StudySet.id", "Term.studySetId")
         .select([
           "StudySet.title",
           "StudySet.description",
@@ -112,7 +122,13 @@ export const getEntityGeneric = async (
           "User.username",
           "User.image",
         ])
-        .select((e) => e.fn.countAll<number>("Term").as("entities"))
+        .select((eb) =>
+          eb
+            .selectFrom("Term")
+            .where("Term.studySetId", "=", id)
+            .select((e) => e.fn.countAll<number>().as("entities"))
+            .as("entities")
+        )
         .executeTakeFirst();
 
       if (!set || set.visibility == "Private") return null;
@@ -149,15 +165,32 @@ export const getEntityGeneric = async (
           ]),
         ])
       )
-      .innerJoin(
-        "StudySetsOnFolders",
-        "Folder.id",
-        "StudySetsOnFolders.folderId"
-      )
-      .innerJoin("StudySet", "StudySetsOnFolders.studySetId", "StudySet.id")
-      .where("StudySet.visibility", "=", "Public")
       .select(["Folder.title", "Folder.description"])
-      .select((e) => e.fn.countAll<number>("StudySet").as("entities"))
+      .select((eb) =>
+        eb
+          .selectFrom("Folder")
+          .where(({ or, and, cmpr }) =>
+            or([
+              and([
+                cmpr("Folder.userId", "=", user.id),
+                cmpr("Folder.id", "=", folderArgs.idOrSlug),
+              ]),
+              and([
+                cmpr("Folder.userId", "=", user.id),
+                cmpr("Folder.slug", "=", folderArgs.idOrSlug),
+              ]),
+            ])
+          )
+          .innerJoin(
+            "StudySetsOnFolders",
+            "Folder.id",
+            "StudySetsOnFolders.folderId"
+          )
+          .innerJoin("StudySet", "StudySetsOnFolders.studySetId", "StudySet.id")
+          .where("StudySet.visibility", "=", "Public")
+          .select((e) => e.fn.countAll<number>("StudySet").as("entities"))
+          .as("entities")
+      )
       .executeTakeFirst();
 
     if (!folder || !folder.entities) return null;
