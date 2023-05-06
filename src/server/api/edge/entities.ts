@@ -17,7 +17,7 @@ export const getSharedEntity = async (
 ): Promise<ReturnedEntity | null> => {
   const entityShare = await db
     .selectFrom("EntityShare")
-    .where("id", "=", id)
+    .where("EntityShare.id", "=", id)
     .selectAll()
     .executeTakeFirst();
 
@@ -32,7 +32,7 @@ export const getSharedEntity = async (
   if (entityShare.type == "StudySet") {
     const set = await db
       .selectFrom("StudySet")
-      .where("id", "=", entityShare.entityId)
+      .where("StudySet.id", "=", entityShare.entityId)
       .innerJoin("User", "StudySet.userId", "User.id")
       .innerJoin("Term", "StudySet.id", "Term.studySetId")
       .select([
@@ -55,7 +55,7 @@ export const getSharedEntity = async (
   } else {
     const folder = await db
       .selectFrom("Folder")
-      .where("id", "=", entityShare.entityId)
+      .where("Folder.id", "=", entityShare.entityId)
       .innerJoin("User", "Folder.userId", "User.id")
       .innerJoin(
         "StudySetsOnFolders",
@@ -102,7 +102,7 @@ export const getEntityGeneric = async (
     else if (id.startsWith("c")) {
       const set = await db
         .selectFrom("StudySet")
-        .where("id", "=", id)
+        .where("StudySet.id", "=", id)
         .innerJoin("User", "StudySet.userId", "User.id")
         .innerJoin("Term", "StudySet.id", "Term.studySetId")
         .select([
@@ -129,7 +129,7 @@ export const getEntityGeneric = async (
   } else if (folderArgs) {
     const user = await db
       .selectFrom("User")
-      .where("username", "=", folderArgs.username)
+      .where("User.username", "=", folderArgs.username)
       .selectAll()
       .executeTakeFirst();
 
@@ -140,12 +140,12 @@ export const getEntityGeneric = async (
       .where(({ or, and, cmpr }) =>
         or([
           and([
-            cmpr("userId", "=", user.id),
-            cmpr("id", "=", folderArgs.idOrSlug),
+            cmpr("Folder.userId", "=", user.id),
+            cmpr("Folder.id", "=", folderArgs.idOrSlug),
           ]),
           and([
-            cmpr("userId", "=", user.id),
-            cmpr("slug", "=", folderArgs.idOrSlug),
+            cmpr("Folder.userId", "=", user.id),
+            cmpr("Folder.slug", "=", folderArgs.idOrSlug),
           ]),
         ])
       )
