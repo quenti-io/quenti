@@ -52,7 +52,7 @@
     "lodash.throttle": "^4.1.1",
     "nanoid": "^4.0.0",
     "next": "^13.3.0",
-    "next-auth": "^4.18.7",
+    "next-auth": "^4.20.1",
     "next-axiom": "^0.17.0",
     "prisma-kysely": "^1.2.1",
     "prom-client": "^14.1.1",
