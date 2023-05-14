@@ -7,9 +7,13 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "migrate-vercel": "node ./migrate-vercel.js",
+    "db-setup": "yarn prisma migrate deploy && yarn prisma db seed",
     "lint": "next lint",
     "start": "next start",
     "theme": "chakra-cli tokens src/lib/chakraTheme.ts"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma-seed.ts"
   },
   "dependencies": {
     "@2toad/profanity": "^2.2.0",
