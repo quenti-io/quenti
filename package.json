@@ -11,6 +11,9 @@
     "start": "next start",
     "theme": "chakra-cli tokens src/lib/chakraTheme.ts"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma-seed.ts"
+  },
   "dependencies": {
     "@2toad/profanity": "^2.2.0",
     "@chakra-ui/react": "^2.4.9",
