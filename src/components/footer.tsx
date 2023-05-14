@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IconSpeakerphone } from "@tabler/icons-react";
 import { menuEventChannel } from "../events/menu";
+import { MOD } from "../lib/tinykeys";
 
 export const Footer = () => {
   const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
@@ -32,11 +33,12 @@ export const Footer = () => {
               color="gray.500"
               display={{ base: "none", md: "block" }}
               onClick={() => {
-                document.dispatchEvent(
+                window.dispatchEvent(
                   new KeyboardEvent("keydown", {
                     key: "k",
                     code: "KeyK",
-                    ctrlKey: true,
+                    ctrlKey: MOD == "Control",
+                    metaKey: MOD == "Meta",
                     shiftKey: false,
                   })
                 );
@@ -45,7 +47,7 @@ export const Footer = () => {
               <HStack>
                 <Text color={textColor}>Command Menu</Text>
                 <Text color={textColor}>
-                  <Kbd>⌘</Kbd> + <Kbd>K</Kbd>
+                  <Kbd>{MOD == "Control" ? "Ctrl" : "⌘"}</Kbd> + <Kbd>K</Kbd>
                 </Text>
               </HStack>
             </Button>
