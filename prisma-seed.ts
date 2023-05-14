@@ -10,6 +10,7 @@ async function main() {
     update: {},
     create: {
       username: "Quizlet",
+      name: "Quizlet",
       email: "quizlet@quizlet.cc",
       changelogVersion: version,
       verified: true,
