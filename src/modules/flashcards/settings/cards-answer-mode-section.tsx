@@ -33,7 +33,7 @@ export const CardsAnswerModeSection = () => {
       : api.folders.setCardsAnswerWith.useMutation();
 
   return (
-    <Flex gap={8}>
+    <Flex gap={{ base: 4, sm: 8 }} flexDir={{ base: "column", sm: "row" }}>
       <Stack spacing={0} w="full">
         <Text fontWeight={700}>Answer with</Text>
         <Text fontSize="sm" color={mutedColor}>
