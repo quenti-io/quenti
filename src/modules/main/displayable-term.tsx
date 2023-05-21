@@ -6,7 +6,7 @@ import {
   IconButton,
   Text,
   useColorMode,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
@@ -98,8 +98,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
             w="full"
             flexDir={["column", "row", "row"]}
             gap={[2, 6, 6]}
-            px={{ base: 4, sm: 0 }}
-            py={{ base: 5, sm: 0 }}
+            px={{ base: 3, sm: 0 }}
+            py={{ base: 3, sm: 0 }}
           >
             {isEditing ? (
               <AutoResizeTextarea
@@ -138,15 +138,22 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           <Box
             h="full"
             bg={{ base: secondary, sm: "none" }}
-            px={{ base: 2, sm: 0 }}
-            py={{ base: 4, sm: 0 }}
+            px={{ base: 1, sm: 0 }}
+            py={{ base: 2, sm: 0 }}
             borderBottomWidth={{ base: 3, sm: 0 }}
             borderBottomColor={{ base: verticalDivider, sm: "none" }}
           >
             <Flex w="full" justifyContent="end">
-              <HStack spacing={1} height="24px">
-                <SetCreatorOnly>
+              <HStack
+                spacing={1}
+                height="24px"
+                justifyContent={{ base: "space-between", sm: "end" }}
+                w="full"
+              >
+                <SetCreatorOnly fallback={<Box />}>
                   <IconButton
+                    size={{ base: "sm", sm: undefined }}
+                    transform={{ base: "scale(0.8)", sm: "scale(1)" }}
                     icon={<IconEdit />}
                     variant={isEditing ? "solid" : "ghost"}
                     aria-label="Edit"
@@ -165,6 +172,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                   />
                 </SetCreatorOnly>
                 <IconButton
+                  size={{ base: "sm", sm: undefined }}
+                  transform={{ base: "scale(0.8)", sm: "scale(1)" }}
                   icon={<Star />}
                   variant="ghost"
                   aria-label="Edit"
