@@ -16,7 +16,13 @@ export const TitleBar = () => {
         }`;
 
   return (
-    <Flex w="full" alignItems="center" mt="2" justifyContent="space-between">
+    <Flex
+      w="full"
+      gap={4}
+      alignItems="center"
+      mt="2"
+      justifyContent="space-between"
+    >
       <Tag size="lg" fontWeight={700} colorScheme="blue" w="110px">
         Flashcards
       </Tag>
@@ -25,6 +31,9 @@ export const TitleBar = () => {
         flex="1"
         textAlign="center"
         display={{ base: "none", md: "block" }}
+        whiteSpace="nowrap"
+        overflow="hidden"
+        textOverflow="ellipsis"
       >
         {title}
       </Heading>

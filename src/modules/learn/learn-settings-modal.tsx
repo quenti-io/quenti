@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalOverlay,
   Stack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import React from "react";
 import { useFeature } from "../../hooks/use-feature";
@@ -53,6 +54,8 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
   const multipleAnswerMode = useExperienceContext((s) => s.multipleAnswerMode);
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
+  const sm = useMediaQuery("(min-width: 768px)")[0];
+
   return (
     <LearnSettingsModalContext.Provider value={{ onClose, dirtyOnReset }}>
       <Modal
@@ -66,8 +69,9 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
           setIsDirty(isDirty);
           onClose();
         }}
-        isCentered
+        isCentered={sm}
         size="xl"
+        scrollBehavior="outside"
       >
         <ModalOverlay backdropFilter="blur(6px)" />
         <ModalContent p="4" pb="8" rounded="xl">

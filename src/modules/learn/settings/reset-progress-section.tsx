@@ -23,7 +23,7 @@ export const ResetProgressSection = () => {
   });
 
   return (
-    <Flex gap={8}>
+    <Flex gap={{ base: 4, sm: 8 }} flexDir={{ base: "column", sm: "row" }}>
       <Stack spacing={0} w="full">
         <Text fontWeight={700}>Start over</Text>
         <Text fontSize="sm" color={mutedColor}>
@@ -31,7 +31,8 @@ export const ResetProgressSection = () => {
         </Text>
       </Stack>
       <Button
-        px="12"
+        px={{ base: undefined, sm: "12" }}
+        w={{ base: "max", sm: "auto" }}
         variant="ghost"
         leftIcon={<IconReload />}
         isLoading={apiResetLearnProgress.isLoading}

@@ -22,7 +22,7 @@ export const StudyStarredSection = () => {
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
   return (
-    <Flex gap={8}>
+    <Flex gap={{base: 4, sm: 8}} flexDir={{ base: "column", sm: "row"}}>
       <Stack spacing={0} w="full">
         <Text fontWeight={700}>Terms</Text>
         <Text fontSize="sm" color={mutedColor}>

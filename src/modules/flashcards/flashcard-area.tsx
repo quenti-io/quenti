@@ -22,7 +22,7 @@ export const FlashcardArea = () => {
 
   return (
     <RootFlashcardWrapper
-      h="calc(100vh - 240px)"
+      h="max(calc(100vh - 240px), 560px)"
       terms={terms}
       termOrder={termOrder}
     />

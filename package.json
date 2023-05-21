@@ -10,7 +10,7 @@
     "db-setup": "yarn prisma migrate deploy && yarn prisma db seed",
     "lint": "next lint",
     "start": "next start",
-    "theme": "chakra-cli tokens src/lib/chakraTheme.ts"
+    "theme": "chakra-cli tokens src/lib/chakra-theme.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma-seed.ts"

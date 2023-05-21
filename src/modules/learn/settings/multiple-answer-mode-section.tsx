@@ -23,14 +23,14 @@ export const MultipleAnswerModeSection: React.FC = () => {
     api.experience.setMutlipleAnswerMode.useMutation();
 
   return (
-    <Flex gap={8} direction="column">
+    <Flex gap={4} direction="column">
       <Stack spacing={0} w="full">
         <Text fontWeight={700}>Grading</Text>
         <Text fontSize="sm" color={mutedColor}>
           Choose how written questions with multiple answers are graded
         </Text>
       </Stack>
-      <Flex justifyContent="end">
+      <Flex justifyContent={{ base: "start", sm: "end" }}>
         <ButtonGroup isAttached>
           <Button
             variant={multipleAnswerMode == "One" ? "solid" : "outline"}
