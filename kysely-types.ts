@@ -28,6 +28,10 @@ export const LearnMode = {
   Learn: "Learn",
   Review: "Review",
 };
+export type LeaderboardType = "Match";
+export const LeaderboardType = {
+  Match: "Match",
+};
 export type StudySetAnswerMode = "Word" | "Definition" | "Both";
 export const StudySetAnswerMode = {
   Word: "Word",
@@ -94,6 +98,18 @@ export type FolderExperience = {
   cardsRound: Generated<number>;
   cardsStudyStarred: Generated<boolean>;
   cardsAnswerWith: Generated<LimitedStudySetAnswerMode>;
+};
+export type Highscore = {
+  leaderboardId: string;
+  userId: string;
+  time: number;
+};
+export type Leaderboard = {
+  id: string;
+  containerId: string;
+  studySetId: string | null;
+  folderId: string | null;
+  type: LeaderboardType;
 };
 export type RecentFailedLogin = {
   id: string;
@@ -208,6 +224,8 @@ export type DB = {
   EntityShare: EntityShare;
   Folder: Folder;
   FolderExperience: FolderExperience;
+  Highscore: Highscore;
+  Leaderboard: Leaderboard;
   RecentFailedLogin: RecentFailedLogin;
   Session: Session;
   SetAutoSave: SetAutoSave;
