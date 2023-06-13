@@ -41,6 +41,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_BASE_URL: z.string().url(),
   NEXT_PUBLIC_DEPLOYMENT: deployment,
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string().optional(),
+  NEXT_PUBLIC_BETTERUPTIME_ID: z.string().optional(),
 });
 
 /**
@@ -54,4 +55,5 @@ export const clientEnv = {
   NEXT_PUBLIC_DEPLOYMENT: deployment.parse(process.env.NEXT_PUBLIC_DEPLOYMENT),
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID:
     process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID,
+  NEXT_PUBLIC_BETTERUPTIME_ID: process.env.NEXT_PUBLIC_BETTERUPTIME_ID,
 };

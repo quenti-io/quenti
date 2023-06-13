@@ -78,6 +78,7 @@ model User {
   folderExperiences   FolderExperience[]
   starredTerms        StarredTerm[]
   studiableTerms      StudiableTerm[]
+  highscores          Highscore[]
 }
 
 model VerificationToken {
@@ -122,6 +123,7 @@ model StudySet {
   terms               Term[]
   studySetExperiences StudySetExperience[]
   folders             StudySetsOnFolders[]
+  leaderboards        Leaderboard[]
 
   @@unique([id, userId])
 }
@@ -142,6 +144,7 @@ model Folder {
   description       String
   studySets         StudySetsOnFolders[]
   folderExperiences FolderExperience[]
+  leaderboards      Leaderboard[]
 
   @@unique([id, userId])
   @@unique([userId, slug])
@@ -192,6 +195,30 @@ model AutoSaveTerm {
   setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
 }
 
+model Leaderboard {
+  id          String          @id @default(cuid())
+  containerId String
+  studySetId  String?
+  folderId    String?
+  type        LeaderboardType
+
+  studySet   StudySet?   @relation(fields: [studySetId], references: [id])
+  folder     Folder?     @relation(fields: [folderId], references: [id])
+  highscores Highscore[]
+
+  @@unique([id, containerId, type])
+}
+
+model Highscore {
+  leaderboardId String
+  leaderboard   Leaderboard @relation(fields: [leaderboardId], references: [id])
+  userId        String
+  User          User        @relation(fields: [userId], references: [id])
+  time          Int
+
+  @@id([leaderboardId, userId])
+}
+
 model EntityShare {
   id       String
   entityId String     @unique
@@ -213,6 +240,10 @@ enum StudiableMode {
 enum LearnMode {
   Learn
   Review
+}
+
+enum LeaderboardType {
+  Match
 }
 
 enum StudySetAnswerMode {
