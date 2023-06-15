@@ -54,8 +54,7 @@ export const LinkArea = () => {
         <Linkable
           name="Match"
           icon={<IconLayersSubtract />}
-          href="/#coming-soon"
-          disabled
+          href={`/${id}/match`}
         />
       </GridItem>
     </Grid>
