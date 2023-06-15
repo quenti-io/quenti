@@ -4,7 +4,7 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { takeNRandom } from "../utils/array";
 
-const TERMS_IN_ROUND = 10
+const TERMS_IN_ROUND = 6
 
 interface RoundSummary {
     endTime: number;
