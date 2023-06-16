@@ -40,7 +40,8 @@ interface MatchState extends MatchStoreProps {
     answerIncorrectly: (termId: string) => void;
     //checkAnswer: (termId: string) => void;
     answerCallback: (correct: boolean) => void;
-    nextRound: () => void
+    nextRound: () => void,
+    requestZIndex: () => number
 }
 
 export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
@@ -57,7 +58,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
     }
 
     return createStore<MatchState>()(
-        subscribeWithSelector((set) => ({
+        subscribeWithSelector((set,get) => ({
             ...DEFAULT_PROPS,
             ...initProps,
             initialize(studiableTerms, isEligableForLeaderboard) {
@@ -122,6 +123,10 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
                         roundSummary: undefined
                     }
                 })
+            },
+            requestZIndex() {
+                set((state) => ({zIndex: state.zIndex+1}))
+                return get().zIndex
             }
         }))
     )

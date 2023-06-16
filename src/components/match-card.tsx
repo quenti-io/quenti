@@ -5,30 +5,33 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { motion } from "framer-motion";
+import { StoreApi, UseBoundStore } from "zustand";
+import { MatchStore } from "../pages/sets/[id]/match";
+import { useMatchContext } from "../stores/use-match-store";
 
 export interface MatchCardProps {
-  title: string;
-  zIndex: number;
-  x: number;
-  y: number;
+  index: number,
+  subscribe: UseBoundStore<StoreApi<MatchStore>>
 }
 
 export const MatchCard: React.FC<MatchCardProps> = ({
-  title,
-  zIndex,
-  x,
-  y
+  index,
+  subscribe
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
+  let self = subscribe(e => e.terms[index]!)
+  let zic = useMatchContext(e => e.requestZIndex)
+  let [zI,setZi] = React.useState(zic())
+
 
   return (
     <motion.div drag dragMomentum={false} animate={{
       position: "absolute",
-      top: y,
-      left: x,
-      zIndex: zIndex
-    }}>
+      top: self.y,
+      left: self.x,
+      zIndex: zI
+    }} onDragStart={() => setZi(zic())}>
       <Card
         rounded="md"
         p="5"
@@ -47,7 +50,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         <Heading
           size="sm"
         >
-          {title}
+          {self.word}
         </Heading>
       </Card>
     </motion.div>
