@@ -6,6 +6,7 @@ import { MatchCard } from "../../../components/match-card";
 import { CreateMatchData } from "../../../modules/create-match-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
 import { useMatchContext } from "../../../stores/use-match-store";
+import { areRectanglesOverlapping } from "../../../utils/match";
 
 const Match: ComponentWithAuth = () => {
 
@@ -32,28 +33,25 @@ interface MatchItem {
 export interface MatchStore {
     terms: MatchItem[],
     setCard(index: number, newt: MatchItem): void
+    getIndexesUnder: (index: number) => number[]
 }
 
 const MatchContainer = () => {
     const terms = useMatchContext((state) => state.roundQuestions);
 
-    let r = create<MatchStore>((set) => {
+    let r = create<MatchStore>((set, get) => {
         let ter: MatchItem[] = terms.flatMap(term => {
-            let base = { id: term.id, completed: false, width: 200, height: 0 }
+            let base = { id: term.id, completed: false, width: 200, height: 100, x: 0, y: 0 }
             return [
                 {
                     ...base,
                     type: "word",
                     word: term.word,
-                    x: Math.random() * 1000,
-                    y: Math.random() * 500
                 },
                 {
                     ...base,
                     type: "definition",
                     word: term.definition,
-                    x: Math.random() * 1000,
-                    y: Math.random() * 500
                 }
             ]
         })
@@ -67,11 +65,24 @@ const MatchContainer = () => {
                     }
                 })
             },
+            getIndexesUnder(index: number) {
+                let cur = get().terms[index]!
+                console.log(cur)
+                return get().terms.flatMap((term, i) => {
+                    if (
+                        areRectanglesOverlapping(cur,term)
+                    ) {
+                        console.log(term.word)
+                        return [i]
+                    }
+                    return []
+                })
+            }
         }
     })
 
-    return (<Box w="100%" h="calc(100vh - 112px)">
-        {Array.from({length: r.getState().terms.length}, (_, index) =>
+    return (<Box w="100%" h="calc(100vh - 112px)" position="relative">
+        {Array.from({ length: r.getState().terms.length }, (_, index) =>
             <MatchCard index={index} subscribe={r} />)
         }
     </Box>)

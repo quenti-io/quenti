@@ -21,6 +21,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
   let self = subscribe(e => e.terms[index]!)
+  const setCard = subscribe(e => e.setCard)
+  const getBelow = subscribe(e => e.getIndexesUnder)
   let zic = useMatchContext(e => e.requestZIndex)
   let [zI,setZi] = React.useState(zic())
 
@@ -28,10 +30,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   return (
     <motion.div drag dragMomentum={false} animate={{
       position: "absolute",
-      top: self.y,
-      left: self.x,
       zIndex: zI
-    }} onDragStart={() => setZi(zic())}>
+    }} onDragStart={() => setZi(zic())} onDragEnd={(_,info) => {
+      setCard(index, {
+        ...self,
+        x: self.x+info.offset.x,
+        y: self.y+info.offset.y
+      })
+      console.log(getBelow(index))
+    }}>
       <Card
         rounded="md"
         p="5"
