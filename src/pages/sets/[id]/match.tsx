@@ -28,12 +28,14 @@ interface MatchItem {
     word: string
     y: number,
     x: number
+    color?: 'green.400' | 'red.400'
 }
 
 export interface MatchStore {
     terms: MatchItem[],
     setCard(index: number, newt: MatchItem): void
     getIndexesUnder: (index: number) => number[]
+    validateUnderIndexes(index: number): void
 }
 
 const MatchContainer = () => {
@@ -41,7 +43,7 @@ const MatchContainer = () => {
 
     let r = create<MatchStore>((set, get) => {
         let ter: MatchItem[] = terms.flatMap(term => {
-            let base = { id: term.id, completed: false, width: 200, height: 100, x: 0, y: 0 }
+            let base = { id: term.id, completed: false, width: 200, height: 60, x: 0, y: 0 }
             return [
                 {
                     ...base,
@@ -65,18 +67,57 @@ const MatchContainer = () => {
                     }
                 })
             },
+            // This is it's own thing because eventually there might be indication of the drop target
             getIndexesUnder(index: number) {
                 let cur = get().terms[index]!
-                console.log(cur)
                 return get().terms.flatMap((term, i) => {
-                    if (
-                        areRectanglesOverlapping(cur,term)
-                    ) {
-                        console.log(term.word)
+                    if (i == index) return []
+                    if (areRectanglesOverlapping(cur, term)) {
                         return [i]
                     }
                     return []
                 })
+            },
+            validateUnderIndexes(index: number) {
+                let target = get().terms[index]!.id
+                let targetType = get().terms[index]!.type == "word" ? "definition" : "word"
+
+                let indexes = get().getIndexesUnder(index)
+                let correctIndex: number | undefined
+                let incorrects: number[] = []
+                indexes.forEach(index => {
+                    if(get().terms[index]!.id == target && get().terms[index]!.type == targetType) correctIndex = index
+                    else incorrects.push(index)
+                })
+
+                if (correctIndex) {
+                    get().setCard(index,{
+                        ...get().terms[index]!,
+                        color: "green.400"
+                    })
+                    get().setCard(correctIndex,{
+                        ...get().terms[correctIndex]!,
+                        color: "green.400"
+                    })
+                } else if (incorrects.length > 0) {
+                    incorrects.push(index)
+                    incorrects.forEach(idx => {
+                        get().setCard(idx,{
+                            ...get().terms[idx]!,
+                            color: "red.400"
+                        })
+                    })
+                }
+
+                indexes.push(index)
+                setTimeout(() => {
+                    indexes.forEach(index => {
+                        get().setCard(index,{
+                            ...get().terms[index]!,
+                            color: false
+                        })
+                    })
+                }, 500)
             }
         }
     })

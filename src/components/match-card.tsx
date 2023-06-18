@@ -19,10 +19,10 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   subscribe
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
-  const linkBorder = useColorModeValue("gray.200", "gray.700");
   let self = subscribe(e => e.terms[index]!)
+  let linkBorder = self.color || useColorModeValue("gray.200", "gray.700");
   const setCard = subscribe(e => e.setCard)
-  const getBelow = subscribe(e => e.getIndexesUnder)
+  const getBelow = subscribe(e => e.validateUnderIndexes)
   let zic = useMatchContext(e => e.requestZIndex)
   let [zI,setZi] = React.useState(zic())
 
