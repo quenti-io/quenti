@@ -52,9 +52,8 @@ interface MatchState extends MatchStoreProps {
   // Maybe this shouldn't use ids because it's pretty easy to cheat this way
   // But the code is open source and the easiest method of cheating
   answerCorrectly: (termId: string) => void;
-  answerIncorrectly: (termId: string) => void;
-  //checkAnswer: (termId: string) => void;
-  answerCallback: (correct: boolean) => void;
+  answerIncorrectly: () => void;
+  answerCallback: () => void;
   nextRound: () => void;
   setTerms: (terms: MatchItem[]) => void;
   requestZIndex: () => number;
@@ -95,7 +94,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       },
       answerCorrectly(termId) {
         set((state) => {
-          state.answerCallback(true);
+          state.answerCallback();
           state.roundQuestions.find(
             (question) => question.id == termId
           )!.completed = true;
@@ -105,16 +104,16 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           };
         });
       },
-      answerIncorrectly(termId) {
+      answerIncorrectly() {
         set((state) => {
-          state.answerCallback(false);
+          state.answerCallback();
           return {
             incorrectGuesses: state.incorrectGuesses + 1,
             roundQuestions: state.roundQuestions,
           };
         });
       },
-      answerCallback(correct) {
+      answerCallback() {
         set((state) => {
           if (state.roundProgress === state.termsThisRound - 1) {
             return {
@@ -220,7 +219,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
             });
           });
 
-          get().answerIncorrectly(get().terms[index]!.id);
+          get().answerIncorrectly();
         }
 
         setTimeout(() => {
