@@ -22,16 +22,18 @@ export const TermMastery = () => {
 };
 
 export interface GridStatProps {
-  value: number;
+  value: number | string;
   label: string;
+  bg?: string
 }
 
-export const GridStat: React.FC<GridStatProps> = ({ value, label }) => {
+export const GridStat: React.FC<GridStatProps> = ({ value, label, bg }) => {
   const text = useColorModeValue("gray.600", "gray.400");
 
   return (
     <GridItem>
       <Card
+        bg={bg}
         pb="4"
         shadow="lg"
         rounded="lg"
