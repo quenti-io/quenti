@@ -116,8 +116,10 @@ const MatchContainer = () => {
                 indexes.push(index)
                 setTimeout(() => {
                     indexes.forEach(index => {
+                        let cur = get().terms[index]!;
                         get().setCard(index,{
-                            ...get().terms[index]!,
+                            ...cur,
+                            completed: cur.color == 'green.400' ? true : cur.completed,
                             color: false
                         })
                     })

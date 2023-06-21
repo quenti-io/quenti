@@ -49,6 +49,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
     <motion.div drag dragMomentum={false} animate={{
       position: "absolute",
       zIndex: zI,
+      opacity: self.completed ? 0 : 1,
+      pointerEvents: self.completed || self.color == 'green.400' ? 'none' : 'initial'
     }} onDragStart={() => setZi(zic())} onDragEnd={(_, info) => {
       setCard(index, {
         ...self,
