@@ -5,6 +5,7 @@ import type { ComponentWithAuth } from "../../../components/auth-component";
 import { MatchCard } from "../../../components/match-card";
 import { CreateMatchData } from "../../../modules/create-match-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
+import { MatchEndModal } from "../../../modules/match/match-end-modal";
 import MatchInfo from "../../../modules/match/match-info";
 import { useMatchContext } from "../../../stores/use-match-store";
 import { areRectanglesOverlapping } from "../../../utils/match";
@@ -43,6 +44,7 @@ const MatchContainer = () => {
     const terms = useMatchContext((state) => state.roundQuestions);
     const answerCorrectly = useMatchContext(s => s.answerCorrectly)
     const answerIncorrectly = useMatchContext(s => s.answerIncorrectly)
+    const completed = useMatchContext(s => s.completed)
 
     const cur = React.useRef<HTMLDivElement>(null);
 
@@ -146,10 +148,11 @@ const MatchContainer = () => {
 
 
     return (<Box ref={cur} w="100%" h="calc(100vh - 112px)" position="relative">
+        <MatchEndModal isOpen={completed} />
         {Array.from({ length: r.getState().terms.length }, (_, index) =>
             <MatchCard index={index} subscribe={r} />)
         }
-        <MatchInfo/>
+        <MatchInfo />
     </Box>)
 }
 
