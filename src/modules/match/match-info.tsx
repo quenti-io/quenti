@@ -67,7 +67,6 @@ const MatchInfo = () => {
       w="300px"
       ml="7"
       overflow="hidden"
-      shadow="xl"
     >
       <Box
         bg="orange.300"
@@ -78,7 +77,7 @@ const MatchInfo = () => {
         }}
       />
       <Container py="5" px="6">
-        <MatchStat label="Seconds" value={seconds} />
+        <MatchStat label="Time" value={seconds} />
       </Container>
     </Card>
   );
