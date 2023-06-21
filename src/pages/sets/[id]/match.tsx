@@ -5,6 +5,7 @@ import type { ComponentWithAuth } from "../../../components/auth-component";
 import { MatchCard } from "../../../components/match-card";
 import { CreateMatchData } from "../../../modules/create-match-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
+import MatchInfo from "../../../modules/match/match-info";
 import { useMatchContext } from "../../../stores/use-match-store";
 import { areRectanglesOverlapping } from "../../../utils/match";
 
@@ -40,6 +41,8 @@ export interface MatchStore {
 
 const MatchContainer = () => {
     const terms = useMatchContext((state) => state.roundQuestions);
+    const answerCorrectly = useMatchContext(s => s.answerCorrectly)
+    const answerIncorrectly = useMatchContext(s => s.answerIncorrectly)
 
     const cur = React.useRef<HTMLDivElement>(null);
 
@@ -88,36 +91,38 @@ const MatchContainer = () => {
                 let correctIndex: number | undefined
                 let incorrects: number[] = []
                 indexes.forEach(index => {
-                    if(get().terms[index]!.id == target && get().terms[index]!.type == targetType) correctIndex = index
+                    if (get().terms[index]!.id == target && get().terms[index]!.type == targetType) correctIndex = index
                     else incorrects.push(index)
                 })
 
                 if (correctIndex) {
-                    get().setCard(index,{
+                    get().setCard(index, {
                         ...get().terms[index]!,
                         color: "green.400"
                     })
-                    get().setCard(correctIndex,{
+                    get().setCard(correctIndex, {
                         ...get().terms[correctIndex]!,
                         color: "green.400"
                     })
+                    answerCorrectly(get().terms[index]!.id)
                 } else if (incorrects.length > 0) {
                     incorrects.push(index)
                     incorrects.forEach(idx => {
-                        get().setCard(idx,{
+                        get().setCard(idx, {
                             ...get().terms[idx]!,
                             color: "red.400",
                             x: (Math.random() * (cur.current!.clientWidth - 450)) + 225,
                             y: (Math.random() * (cur.current!.clientHeight - 200)) + 100
                         })
                     })
+                    answerIncorrectly(get().terms[index]!.id)
                 }
 
                 indexes.push(index)
                 setTimeout(() => {
                     indexes.forEach(index => {
                         let cur = get().terms[index]!;
-                        get().setCard(index,{
+                        get().setCard(index, {
                             ...cur,
                             completed: cur.color == 'green.400' ? true : cur.completed,
                             color: false
@@ -128,10 +133,10 @@ const MatchContainer = () => {
         }
     })
 
-    const setCard = r(e =>  e.setCard)
+    const setCard = r(e => e.setCard)
     React.useEffect(() => {
         r.getState().terms.forEach((term, index) => {
-            setCard(index,{
+            setCard(index, {
                 ...term,
                 x: (Math.random() * (cur.current!.clientWidth - 450)) + 225,
                 y: (Math.random() * (cur.current!.clientHeight - 200)) + 100
@@ -144,6 +149,7 @@ const MatchContainer = () => {
         {Array.from({ length: r.getState().terms.length }, (_, index) =>
             <MatchCard index={index} subscribe={r} />)
         }
+        <MatchInfo/>
     </Box>)
 }
 
