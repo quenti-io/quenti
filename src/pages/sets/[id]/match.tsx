@@ -144,7 +144,7 @@ const MatchContainer = () => {
                 y: (Math.random() * (cur.current!.clientHeight - 200)) + 100
             })
         })
-    }, [cur.current])
+    }, [cur.current, r])
 
 
     return (<Box ref={cur} w="100%" h="calc(100vh - 112px)" position="relative">
