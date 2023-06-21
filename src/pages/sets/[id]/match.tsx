@@ -29,14 +29,14 @@ interface MatchItem {
   word: string;
   y: number;
   x: number;
-  color?: "green.400" | "red.400" | false;
+  color?: "green.400" | "red.400";
 }
 
 export interface MatchStore {
   terms: MatchItem[];
-  setCard(index: number, newt: MatchItem): void;
-  getIndexesUnder: (index: number) => number[];
-  validateUnderIndexes(index: number): void;
+  setCard: (index: number, newTerm: MatchItem) => void;
+  getIndicesUnder: (index: number) => number[];
+  validateUnderIndices: (index: number) => void;
 }
 
 const MatchContainer = () => {
@@ -47,9 +47,9 @@ const MatchContainer = () => {
 
   const cur = React.useRef<HTMLDivElement>(null);
 
-  let r = create<MatchStore>((set, get) => {
-    let ter: MatchItem[] = terms.flatMap((term) => {
-      let base = {
+  const store = create<MatchStore>((set, get) => {
+    const ter: MatchItem[] = terms.flatMap((term) => {
+      const base = {
         id: term.id,
         completed: false,
         width: 200,
@@ -73,20 +73,16 @@ const MatchContainer = () => {
 
     return {
       terms: ter,
-      setCard(index: number, newt: MatchItem) {
+      setCard(index: number, newTerm: MatchItem) {
         set((state) => {
-          return {
-            terms: [
-              ...state.terms.slice(0, index),
-              newt,
-              ...state.terms.slice(index + 1),
-            ],
-          };
+          const terms = [...state.terms];
+          terms[index] = newTerm;
+          return { terms };
         });
       },
       // This is it's own thing because eventually there might be indication of the drop target
-      getIndexesUnder(index: number) {
-        let cur = get().terms[index]!;
+      getIndicesUnder(index: number) {
+        const cur = get().terms[index]!;
         return get().terms.flatMap((term, i) => {
           if (i == index) return [];
           if (areRectanglesOverlapping(cur, term)) {
@@ -95,14 +91,14 @@ const MatchContainer = () => {
           return [];
         });
       },
-      validateUnderIndexes(index: number) {
-        let target = get().terms[index]!.id;
-        let targetType =
+      validateUnderIndices(index: number) {
+        const target = get().terms[index]!.id;
+        const targetType =
           get().terms[index]!.type == "word" ? "definition" : "word";
 
-        let indexes = get().getIndexesUnder(index);
+        const indexes = get().getIndicesUnder(index);
         let correctIndex: number | undefined;
-        let incorrects: number[] = [];
+        const incorrects: number[] = [];
         indexes.forEach((index) => {
           if (
             get().terms[index]!.id == target &&
@@ -138,11 +134,11 @@ const MatchContainer = () => {
         indexes.push(index);
         setTimeout(() => {
           indexes.forEach((index) => {
-            let cur = get().terms[index]!;
+            const cur = get().terms[index]!;
             get().setCard(index, {
               ...cur,
               completed: cur.color == "green.400" ? true : cur.completed,
-              color: false,
+              color: undefined,
             });
           });
         }, 500);
@@ -150,22 +146,24 @@ const MatchContainer = () => {
     };
   });
 
-  const setCard = r((e) => e.setCard);
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const setCard = store((e) => e.setCard);
+
   React.useEffect(() => {
-    r.getState().terms.forEach((term, index) => {
+    store.getState().terms.forEach((term, index) => {
       setCard(index, {
         ...term,
         x: Math.random() * (cur.current!.clientWidth - 450) + 225,
         y: Math.random() * (cur.current!.clientHeight - 200) + 100,
       });
     });
-  }, [cur.current, r]);
+  }, [cur, store, setCard]);
 
   return (
     <Box ref={cur} w="100%" h="calc(100vh - 112px)" position="relative">
       <MatchEndModal isOpen={completed} />
-      {Array.from({ length: r.getState().terms.length }, (_, index) => (
-        <MatchCard index={index} subscribe={r} />
+      {Array.from({ length: store.getState().terms.length }, (_, index) => (
+        <MatchCard index={index} subscribe={store} key={index} />
       ))}
       <MatchInfo />
     </Box>

@@ -1,12 +1,13 @@
-import type { StudySetAnswerMode, LearnMode, Term } from "@prisma/client";
+import type { LearnMode, StudySetAnswerMode, Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { SPECIAL_CHAR_REGEXP } from "../constants/characters";
 import { CORRECT, INCORRECT } from "../constants/remarks";
-import type { StudiableTerm } from "../interfaces/studiable-term";
 import type { Question } from "../interfaces/question";
 import type { RoundSummary } from "../interfaces/round-summary";
+import type { StudiableTerm } from "../interfaces/studiable-term";
+import { LEARN_TERMS_IN_ROUND } from "../server/api/common/constants";
 import { shuffleArray, takeNRandom } from "../utils/array";
 
 export interface LearnStoreProps {
@@ -272,7 +273,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             )
             .concat(unstudied)
             .concat(familiarTerms) // Add the rest of the familar terms if there's nothing else left
-            .slice(0, 7);
+            .slice(0, LEARN_TERMS_IN_ROUND);
 
           // For each term that hasn't been seen (correctness == 0), set the round it appeared in as the current round
           termsThisRound.forEach((x) => {

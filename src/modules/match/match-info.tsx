@@ -38,12 +38,12 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
 };
 
 const MatchInfo = () => {
-  let startTime = useMatchContext((s) => s.roundStartTime);
-  let progress = useMatchContext((s) => s.roundProgress);
-  let numTerms = useMatchContext((s) => s.termsThisRound);
-  let completed = useMatchContext((s) => s.completed);
+  const startTime = useMatchContext((s) => s.roundStartTime);
+  const progress = useMatchContext((s) => s.roundProgress);
+  const numTerms = useMatchContext((s) => s.termsThisRound);
+  const completed = useMatchContext((s) => s.completed);
 
-  let [seconds, setSeconds] = React.useState("0");
+  const [seconds, setSeconds] = React.useState("0");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,7 +51,7 @@ const MatchInfo = () => {
       if (completed) clearInterval(interval);
     }, 100);
     return () => clearInterval(interval);
-  }, [completed]);
+  }, [completed, startTime]);
 
   const bg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.700");

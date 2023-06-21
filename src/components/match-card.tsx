@@ -1,10 +1,10 @@
-import { Card, Heading, useColorModeValue } from "@chakra-ui/react";
-import React from "react";
+import { Card, Text, useColorModeValue } from "@chakra-ui/react";
 import { animate, motion, useMotionValue } from "framer-motion";
-import { StoreApi, UseBoundStore } from "zustand";
-import { MatchStore } from "../pages/sets/[id]/match";
-import { useMatchContext } from "../stores/use-match-store";
+import React from "react";
+import type { StoreApi, UseBoundStore } from "zustand";
 import { shallow } from "zustand/shallow";
+import type { MatchStore } from "../pages/sets/[id]/match";
+import { useMatchContext } from "../stores/use-match-store";
 
 export interface MatchCardProps {
   index: number;
@@ -14,17 +14,18 @@ export interface MatchCardProps {
 export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
   const linkBg = useColorModeValue("white", "gray.800");
 
+  const [isAnimating, setIsAnimating] = React.useState(true);
   const [self, setCard, getBelow] = subscribe(
-    (e) => [e.terms[index]!, e.setCard, e.validateUnderIndexes],
+    (e) => [e.terms[index]!, e.setCard, e.validateUnderIndices],
     shallow
   );
 
-  let linkBorder = self.color
-    ? self.color + "!important"
-    : false || useColorModeValue("gray.200", "gray.700");
-  let zic = useMatchContext((e) => e.requestZIndex);
+  const gray = useColorModeValue("gray.200", "gray.700");
+  const linkBorder = self.color ?? gray;
 
-  let [zI, setZi] = React.useState(zic());
+  const requestZIndex = useMatchContext((e) => e.requestZIndex);
+
+  const [zIndex, setZIndex] = React.useState(requestZIndex());
 
   const cur = React.useRef<HTMLDivElement>(null);
 
@@ -33,15 +34,26 @@ export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
       ...self,
       height: cur.current ? cur.current.offsetHeight : 69,
     });
-  }, [cur.current]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cur]);
 
   const x = useMotionValue(self.x);
   const y = useMotionValue(self.y);
 
   React.useEffect(() => {
-    animate(x, self.x, { duration: 0.5 });
-    animate(y, self.y, { duration: 0.5 });
-  }, [self]);
+    if (!isAnimating) return;
+
+    void (async () => {
+      await animate(x, self.x, { duration: 0.5 });
+    })();
+    void (async () => {
+      await animate(y, self.y, { duration: 0.5 });
+    })();
+  }, [isAnimating, self, x, y]);
+
+  React.useEffect(() => {
+    setIsAnimating(false);
+  }, [isAnimating, setIsAnimating]);
 
   return (
     <motion.div
@@ -49,12 +61,12 @@ export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
       dragMomentum={false}
       animate={{
         position: "absolute",
-        zIndex: zI,
+        zIndex: zIndex,
         opacity: self.completed ? 0 : 1,
         pointerEvents:
           self.completed || self.color == "green.400" ? "none" : "initial",
       }}
-      onDragStart={() => setZi(zic())}
+      onDragStart={() => setZIndex(requestZIndex())}
       onDragEnd={(_, info) => {
         setCard(index, {
           ...self,
@@ -67,7 +79,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
     >
       <Card
         rounded="md"
-        p="5"
+        py="4"
+        px="5"
         ref={cur}
         bg={linkBg}
         borderColor={linkBorder}
@@ -78,10 +91,10 @@ export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
         position="absolute"
         _hover={{
           transform: "translateY(-2px)",
-          borderBottomColor: "blue.300",
+          borderBottomColor: self.color || "blue.300",
         }}
       >
-        <Heading size="sm">{self.word}</Heading>
+        <Text fontSize="sm">{self.word}</Text>
       </Card>
     </motion.div>
   );

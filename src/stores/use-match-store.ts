@@ -1,10 +1,9 @@
-import { Term } from "@prisma/client";
+import type { Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import { MATCH_TERMS_IN_ROUND } from "../server/api/common/constants";
 import { takeNRandom } from "../utils/array";
-
-const TERMS_IN_ROUND = 6;
 
 interface RoundSummary {
   endTime: number;
@@ -64,7 +63,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       initialize(studiableTerms, isEligableForLeaderboard) {
         set({
           studiableTerms,
-          termsThisRound: TERMS_IN_ROUND,
+          termsThisRound: MATCH_TERMS_IN_ROUND,
           isEligableForLeaderboard: isEligableForLeaderboard,
         });
 
@@ -118,7 +117,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
             incorrectGuesses: 0,
             roundQuestions: takeNRandom(
               state.studiableTerms,
-              TERMS_IN_ROUND
+              MATCH_TERMS_IN_ROUND
             ).map((term) => ({
               ...term,
               completed: false,
