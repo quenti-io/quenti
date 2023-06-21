@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
-import { create, createStore } from "zustand";
+import { create } from "zustand";
 import type { ComponentWithAuth } from "../../../components/auth-component";
 import { MatchCard } from "../../../components/match-card";
 import { CreateMatchData } from "../../../modules/create-match-data";
@@ -28,7 +28,7 @@ interface MatchItem {
     word: string
     y: number,
     x: number
-    color?: 'green.400' | 'red.400'
+    color?: 'green.400' | 'red.400' | false
 }
 
 export interface MatchStore {
@@ -40,6 +40,8 @@ export interface MatchStore {
 
 const MatchContainer = () => {
     const terms = useMatchContext((state) => state.roundQuestions);
+
+    const cur = React.useRef<HTMLDivElement>(null);
 
     let r = create<MatchStore>((set, get) => {
         let ter: MatchItem[] = terms.flatMap(term => {
@@ -104,7 +106,9 @@ const MatchContainer = () => {
                     incorrects.forEach(idx => {
                         get().setCard(idx,{
                             ...get().terms[idx]!,
-                            color: "red.400"
+                            color: "red.400",
+                            x: (Math.random() * (cur.current!.clientWidth - 450)) + 225,
+                            y: (Math.random() * (cur.current!.clientHeight - 200)) + 100
                         })
                     })
                 }
@@ -122,7 +126,19 @@ const MatchContainer = () => {
         }
     })
 
-    return (<Box w="100%" h="calc(100vh - 112px)" position="relative">
+    const setCard = r(e =>  e.setCard)
+    React.useEffect(() => {
+        r.getState().terms.forEach((term, index) => {
+            setCard(index,{
+                ...term,
+                x: (Math.random() * (cur.current!.clientWidth - 450)) + 225,
+                y: (Math.random() * (cur.current!.clientHeight - 200)) + 100
+            })
+        })
+    }, [cur.current])
+
+
+    return (<Box ref={cur} w="100%" h="calc(100vh - 112px)" position="relative">
         {Array.from({ length: r.getState().terms.length }, (_, index) =>
             <MatchCard index={index} subscribe={r} />)
         }

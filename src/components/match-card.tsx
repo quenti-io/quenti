@@ -4,10 +4,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
-import { motion } from "framer-motion";
+import { animate, motion, useMotionValue } from "framer-motion";
 import { StoreApi, UseBoundStore } from "zustand";
 import { MatchStore } from "../pages/sets/[id]/match";
 import { useMatchContext } from "../stores/use-match-store";
+import { shallow } from "zustand/shallow";
 
 export interface MatchCardProps {
   index: number,
@@ -19,29 +20,48 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   subscribe
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
-  let self = subscribe(e => e.terms[index]!)
-  let linkBorder = self.color || useColorModeValue("gray.200", "gray.700");
-  const setCard = subscribe(e => e.setCard)
-  const getBelow = subscribe(e => e.validateUnderIndexes)
-  let zic = useMatchContext(e => e.requestZIndex)
-  let [zI,setZi] = React.useState(zic())
 
+  const [self, setCard, getBelow] = subscribe(e => [e.terms[index]!, e.setCard, e.validateUnderIndexes], shallow)
+
+  let linkBorder = self.color || useColorModeValue("gray.200", "gray.700");
+  let zic = useMatchContext(e => e.requestZIndex)
+
+  let [zI, setZi] = React.useState(zic())
+
+  const cur = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setCard(index, {
+      ...self,
+      height: cur.current ? cur.current.offsetHeight : 69
+    })
+  }, [cur.current]);
+
+  const x = useMotionValue(self.x);
+  const y = useMotionValue(self.y);
+
+  React.useEffect(() => {
+    animate(x, self.x, { duration: 0.5 })
+    animate(y, self.y, { duration: 0.5 })
+  }, [self])
 
   return (
     <motion.div drag dragMomentum={false} animate={{
       position: "absolute",
-      zIndex: zI
-    }} onDragStart={() => setZi(zic())} onDragEnd={(_,info) => {
+      zIndex: zI,
+    }} onDragStart={() => setZi(zic())} onDragEnd={(_, info) => {
       setCard(index, {
         ...self,
-        x: self.x+info.offset.x,
-        y: self.y+info.offset.y
+        x: self.x + info.offset.x,
+        y: self.y + info.offset.y
       })
-      console.log(getBelow(index))
-    }}>
+      getBelow(index)
+    }} style={{ x, y }}
+    >
       <Card
         rounded="md"
         p="5"
+        ref={cur}
         bg={linkBg}
         borderColor={linkBorder}
         borderWidth="2px"
