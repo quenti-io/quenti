@@ -1,59 +1,58 @@
 import { Card, Text, useColorModeValue } from "@chakra-ui/react";
 import { animate, motion, useMotionValue } from "framer-motion";
 import React from "react";
-import type { StoreApi, UseBoundStore } from "zustand";
-import { shallow } from "zustand/shallow";
-import type { MatchStore } from "../pages/sets/[id]/match";
-import { useMatchContext } from "../stores/use-match-store";
+import { useMatchContext, type MatchItem } from "../stores/use-match-store";
+import { ScriptFormatter } from "./script-formatter";
 
 export interface MatchCardProps {
+  term: MatchItem;
   index: number;
-  subscribe: UseBoundStore<StoreApi<MatchStore>>;
+  onDragEnd: (term: MatchItem, x: number, y: number) => void;
 }
 
-export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
+export const MatchCard: React.FC<MatchCardProps> = ({
+  term,
+  index,
+  onDragEnd,
+}) => {
+  const setCard = useMatchContext((state) => state.setCard);
+
   const linkBg = useColorModeValue("white", "gray.800");
-
-  const [isAnimating, setIsAnimating] = React.useState(true);
-  const [self, setCard, getBelow] = subscribe(
-    (e) => [e.terms[index]!, e.setCard, e.validateUnderIndices],
-    shallow
-  );
-
   const gray = useColorModeValue("gray.200", "gray.700");
-  const linkBorder = self.color ?? gray;
+
+  const stateBorder = term.state
+    ? term.state == "correct"
+      ? "green.400"
+      : "red.400"
+    : undefined;
+
+  const linkBorder = term.state ? stateBorder : gray;
 
   const requestZIndex = useMatchContext((e) => e.requestZIndex);
-
   const [zIndex, setZIndex] = React.useState(requestZIndex());
 
   const cur = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setCard(index, {
-      ...self,
+      ...term,
       height: cur.current ? cur.current.offsetHeight : 69,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cur]);
 
-  const x = useMotionValue(self.x);
-  const y = useMotionValue(self.y);
+  const x = useMotionValue(term.x);
+  const y = useMotionValue(term.y);
 
   React.useEffect(() => {
-    if (!isAnimating) return;
-
     void (async () => {
-      await animate(x, self.x, { duration: 0.5 });
+      await animate(x, term.targetX, { duration: 0.5 });
     })();
     void (async () => {
-      await animate(y, self.y, { duration: 0.5 });
+      await animate(y, term.targetY, { duration: 0.5 });
     })();
-  }, [isAnimating, self, x, y]);
-
-  React.useEffect(() => {
-    setIsAnimating(false);
-  }, [isAnimating, setIsAnimating]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [term.targetX, term.targetY]);
 
   return (
     <motion.div
@@ -62,18 +61,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
       animate={{
         position: "absolute",
         zIndex: zIndex,
-        opacity: self.completed ? 0 : 1,
-        pointerEvents:
-          self.completed || self.color == "green.400" ? "none" : "initial",
+        pointerEvents: term.state == "correct" ? "none" : "initial",
+      }}
+      exit={{
+        opacity: 0,
+        transition: { duration: 0.5 },
       }}
       onDragStart={() => setZIndex(requestZIndex())}
       onDragEnd={(_, info) => {
-        setCard(index, {
-          ...self,
-          x: self.x + info.offset.x,
-          y: self.y + info.offset.y,
-        });
-        getBelow(index);
+        onDragEnd(term, info.offset.x, info.offset.y);
       }}
       style={{ x, y }}
     >
@@ -91,10 +87,12 @@ export const MatchCard: React.FC<MatchCardProps> = ({ index, subscribe }) => {
         position="absolute"
         _hover={{
           transform: "translateY(-2px)",
-          borderBottomColor: self.color || "blue.300",
+          borderBottomColor: stateBorder ?? "blue.300",
         }}
       >
-        <Text fontSize="sm">{self.word}</Text>
+        <Text fontSize="sm">
+          <ScriptFormatter>{term.word}</ScriptFormatter>
+        </Text>
       </Card>
     </motion.div>
   );

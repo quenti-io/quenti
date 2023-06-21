@@ -4,6 +4,7 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { MATCH_TERMS_IN_ROUND } from "../server/api/common/constants";
 import { takeNRandom } from "../utils/array";
+import { areRectanglesOverlapping } from "../utils/match";
 
 interface RoundSummary {
   endTime: number;
@@ -26,6 +27,21 @@ export interface MatchStoreProps {
   // For visuals. This isn't the best or anything but it works fine unless
   // someone picks up 2147483627 cards before finishing.
   zIndex: number;
+  terms: MatchItem[];
+}
+
+export interface MatchItem {
+  id: string;
+  width: number;
+  height: number;
+  type: "word" | "definition";
+  word: string;
+  y: number;
+  x: number;
+  targetX: number;
+  targetY: number;
+  completed: boolean;
+  state?: "correct" | "incorrect";
 }
 
 interface MatchState extends MatchStoreProps {
@@ -40,7 +56,11 @@ interface MatchState extends MatchStoreProps {
   //checkAnswer: (termId: string) => void;
   answerCallback: (correct: boolean) => void;
   nextRound: () => void;
+  setTerms: (terms: MatchItem[]) => void;
   requestZIndex: () => number;
+  setCard: (index: number, newTerm: MatchItem) => void;
+  getIndicesUnder: (index: number) => number[];
+  validateUnderIndices: (index: number, wrapper: HTMLDivElement) => void;
 }
 
 export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
@@ -54,6 +74,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
     isEligableForLeaderboard: false,
     completed: true,
     zIndex: 0,
+    terms: [],
   };
 
   return createStore<MatchState>()(
@@ -128,9 +149,89 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           };
         });
       },
+      setTerms(terms) {
+        set({ terms });
+      },
       requestZIndex() {
         set((state) => ({ zIndex: state.zIndex + 1 }));
         return get().zIndex;
+      },
+      setCard: (index: number, newTerm: MatchItem) => {
+        set((state) => {
+          const newTerms = [...state.terms];
+          newTerms[index] = newTerm;
+          return {
+            terms: newTerms,
+          };
+        });
+      },
+      getIndicesUnder: (index: number) => {
+        const cur = get().terms[index]!;
+        return get().terms.flatMap((term, i) => {
+          if (i == index || term.completed) return [];
+          if (areRectanglesOverlapping(cur, term)) {
+            return [i];
+          }
+          return [];
+        });
+      },
+      validateUnderIndices: (index: number, elem: HTMLDivElement) => {
+        const target = get().terms[index]!.id;
+        const targetType =
+          get().terms[index]!.type == "word" ? "definition" : "word";
+
+        const indexes = get().getIndicesUnder(index);
+        let correctIndex: number | undefined;
+        const incorrects: number[] = [];
+        indexes.forEach((index) => {
+          if (
+            get().terms[index]!.id == target &&
+            get().terms[index]!.type == targetType
+          )
+            correctIndex = index;
+          else incorrects.push(index);
+        });
+
+        if (correctIndex) {
+          get().setCard(index, {
+            ...get().terms[index]!,
+            state: "correct",
+          });
+
+          get().setCard(correctIndex, {
+            ...get().terms[correctIndex]!,
+            state: "correct",
+          });
+
+          get().answerCorrectly(get().terms[index]!.id);
+        } else if (incorrects.length > 0) {
+          incorrects.push(index);
+          incorrects.forEach((idx) => {
+            const x = Math.random() * (elem.clientWidth - 450) + 225;
+            const y = Math.random() * (elem.clientHeight - 200) + 100;
+
+            get().setCard(idx, {
+              ...get().terms[idx]!,
+              state: "incorrect",
+              x,
+              y,
+              targetX: x,
+              targetY: y,
+            });
+          });
+
+          get().answerIncorrectly(get().terms[index]!.id);
+        }
+
+        setTimeout(() => {
+          set((state) => ({
+            terms: state.terms.map((x) => ({
+              ...x,
+              completed: x.state == "correct",
+              state: x.state != "correct" ? undefined : x.state,
+            })),
+          }));
+        }, 500);
       },
     }))
   );
@@ -145,7 +246,7 @@ export const useMatchContext = <T>(
   equalityFn?: (left: T, right: T) => boolean
 ): T => {
   const store = React.useContext(MatchContext);
-  if (!store) throw new Error("Missing LearnContext.Provider in the tree");
+  if (!store) throw new Error("Missing MatchContext.Provider in the tree");
 
   return useStore(store, selector, equalityFn);
 };
