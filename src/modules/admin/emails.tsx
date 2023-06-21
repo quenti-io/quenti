@@ -17,7 +17,7 @@ import {
   Text,
   Th,
   Thead,
-  Tr
+  Tr,
 } from "@chakra-ui/react";
 import type { RecentFailedLogin } from "@prisma/client";
 import { IconPlus, IconTrash, IconUserPlus } from "@tabler/icons-react";

@@ -11,7 +11,7 @@ export interface SetFolderEntity {
   user: {
     username: string;
     image: string | null;
-  },
+  };
   viewedAt?: Date;
   verified?: boolean;
 }

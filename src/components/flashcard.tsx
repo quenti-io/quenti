@@ -66,13 +66,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   const rightColor = useColorModeValue("green.500", "green.200");
 
   return (
-    <Card
-      w="full"
-      h={h}
-      rounded="xl"
-      shadow="xl"
-      overflow="hidden"
-    >
+    <Card w="full" h={h} rounded="xl" shadow="xl" overflow="hidden">
       <Box
         bg="orange.300"
         height="1"

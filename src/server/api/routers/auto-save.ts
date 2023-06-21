@@ -34,7 +34,7 @@ export const autoSaveRouter = createTRPCRouter({
       ...autoSave,
       wordLanguage: autoSave.wordLanguage as Language,
       definitionLanguage: autoSave.definitionLanguage as Language,
-    }
+    };
   }),
 
   save: protectedProcedure

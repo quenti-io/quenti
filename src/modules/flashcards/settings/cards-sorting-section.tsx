@@ -20,7 +20,9 @@ export const CardsSortingSection = () => {
   return (
     <Flex gap={8}>
       <Stack spacing={1} w="full">
-        <Text fontWeight={700} fontSize="lg">Sort Flashcards</Text>
+        <Text fontWeight={700} fontSize="lg">
+          Sort Flashcards
+        </Text>
         <Text fontSize="sm" color={mutedColor}>
           Study your flashcards by sorting the ones you know. Leave this off to
           quickly review cards.

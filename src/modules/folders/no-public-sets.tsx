@@ -11,7 +11,9 @@ export const NoPublicSets = () => {
           <Heading>We can&apos;t show you this folder</Heading>
         </VStack>
         <VStack spacing={4}>
-          <Text>This folder does not contain any public sets you can view.</Text>
+          <Text>
+            This folder does not contain any public sets you can view.
+          </Text>
           <Button as={Link} href="/home" variant="ghost">
             Home
           </Button>

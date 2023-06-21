@@ -6,7 +6,7 @@ import {
   LinkOverlay,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { StudySetVisibility } from "@prisma/client";
 import { visibilityIcon } from "../../common/visibility-icon";

@@ -6,13 +6,13 @@ import {
   Heading,
   LinkBox,
   LinkOverlay,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   IconBrain,
   IconCards,
   IconLayersSubtract,
-  IconReport
+  IconReport,
 } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";

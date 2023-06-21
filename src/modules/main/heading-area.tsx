@@ -10,7 +10,7 @@ import {
   Stack,
   Tag,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/router";

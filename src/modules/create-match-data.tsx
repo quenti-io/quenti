@@ -15,23 +15,16 @@ export const CreateMatchData: React.FC<React.PropsWithChildren> = ({
   if (!storeRef.current) {
     storeRef.current = createMatchStore();
 
-    let isLeaderboardAllowed = true
+    let isLeaderboardAllowed = true;
 
-    let learnTerms = terms
+    let learnTerms = terms;
 
     if (experience.studyStarred) {
-      learnTerms = terms.filter((x) =>
-        experience.starredTerms.includes(x.id)
-      );
-      isLeaderboardAllowed = false
+      learnTerms = terms.filter((x) => experience.starredTerms.includes(x.id));
+      isLeaderboardAllowed = false;
     }
 
-    storeRef.current
-      .getState()
-      .initialize(
-        learnTerms,
-        isLeaderboardAllowed
-      );
+    storeRef.current.getState().initialize(learnTerms, isLeaderboardAllowed);
   }
 
   return (
