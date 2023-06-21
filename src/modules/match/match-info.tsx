@@ -1,4 +1,4 @@
-import { Card, Container, GridItem, Stat, StatLabel, StatNumber, useColorModeValue } from "@chakra-ui/react"
+import { Box, Card, Container, GridItem, Stat, StatLabel, StatNumber, useColorModeValue } from "@chakra-ui/react"
 import React, { useEffect } from "react";
 import { useMatchContext } from "../../stores/use-match-store";
 
@@ -31,8 +31,7 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
 const MatchInfo = () => {
     let startTime = useMatchContext(s => s.roundStartTime)
     let progress = useMatchContext(s => s.roundProgress)
-    let roundItems = useMatchContext(s => s.termsThisRound)
-    let incorrects = useMatchContext(s => s.incorrectGuesses)
+    let numTerms = useMatchContext(s => s.termsThisRound)
     let completed = useMatchContext(s => s.completed)
 
     let [seconds, setSeconds] = React.useState('0')
@@ -45,11 +44,29 @@ const MatchInfo = () => {
         return () => clearInterval(interval);
     }, [completed]);
 
-    return <>
-        <MatchStat label="Seconds" value={seconds} />
-        <MatchStat label="Progress" value={progress + '/' + roundItems} />
-        <MatchStat label="Incorrects" value={incorrects} />
-    </>
+    const bg = useColorModeValue("white", "gray.750");
+    const borderColor = useColorModeValue("gray.200", "gray.700");
+
+    return <Card bg={bg}
+        rounded="lg"
+        borderWidth="2px"
+        borderBottomWidth="4px"
+        borderTopWidth="0"
+        borderColor={borderColor}
+        w="300px"
+        ml="7"
+        overflow="hidden"
+        shadow="xl">
+        <Box bg="orange.300"
+            height="1" style={{
+                transition: "width 0.1s ease-in-out",
+                width: `calc(100% * ${progress} / ${numTerms})`,
+            }} />
+        <Container py="5"
+            px="6">
+            <MatchStat label="Seconds" value={seconds} />
+        </Container>
+    </Card>
 }
 
 export default MatchInfo
