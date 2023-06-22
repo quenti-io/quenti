@@ -1,5 +1,6 @@
 import {
   Button,
+  Flex,
   Grid,
   Heading,
   Modal,
@@ -7,8 +8,10 @@ import {
   ModalContent,
   ModalOverlay,
   Stack,
+  Wrap,
 } from "@chakra-ui/react";
-import { IconRefresh } from "@tabler/icons-react";
+import { IconArrowBack, IconRefresh } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import { useMatchContext } from "../../stores/use-match-store";
 import { GridStat } from "../learn/term-mastery";
 
@@ -20,10 +23,11 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
   const newRound = useMatchContext((e) => e.nextRound);
   const startTime = useMatchContext((e) => e.roundStartTime);
   const sum = useMatchContext((e) => e.roundSummary!);
+  const router = useRouter();
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    <Modal isOpen={isOpen} isCentered size="xl" onClose={() => {}}>
+    <Modal isOpen={isOpen} isCentered size="xl" onClose={() => { }}>
       <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent p="4" pb="8" rounded="xl">
         <ModalBody>
@@ -44,14 +48,24 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
                   value={sum ? sum.incorrectGuesses : 0}
                 />
               </Grid>
-              <Button
-                w="full"
-                leftIcon={<IconRefresh />}
-                variant={"solid"}
-                onClick={newRound}
-              >
-                New Match
-              </Button>
+              <Flex gap={4}>
+                <Button
+                  w="full"
+                  leftIcon={<IconArrowBack />}
+                  variant={"outline"}
+                  onClick={router.back}
+                >
+                  Back
+                </Button>
+                <Button
+                  w="full"
+                  leftIcon={<IconRefresh />}
+                  variant={"solid"}
+                  onClick={newRound}
+                >
+                  New Match
+                </Button>
+              </Flex>
             </Stack>
           </Stack>
         </ModalBody>
