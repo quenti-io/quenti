@@ -83,7 +83,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       initialize(studiableTerms, isEligableForLeaderboard) {
         set({
           studiableTerms,
-          termsThisRound: MATCH_TERMS_IN_ROUND,
+          termsThisRound: studiableTerms.length > MATCH_TERMS_IN_ROUND ? MATCH_TERMS_IN_ROUND : studiableTerms.length,
           isEligableForLeaderboard: isEligableForLeaderboard,
         });
 
@@ -137,7 +137,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
             incorrectGuesses: 0,
             roundQuestions: takeNRandom(
               state.studiableTerms,
-              MATCH_TERMS_IN_ROUND
+              state.termsThisRound
             ).map((term) => ({
               ...term,
               completed: false,
