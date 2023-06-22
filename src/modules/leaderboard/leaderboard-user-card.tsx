@@ -4,7 +4,8 @@
 
 import React from "react";
 import type { ColorProps} from "@chakra-ui/react";
-import { Card, Circle, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
+import { Avatar, Wrap, WrapItem } from "@chakra-ui/react";
+import { Card, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
 
 export interface GenericUserCardProps {
     variantBg?: boolean;
@@ -17,22 +18,29 @@ export const GenericUserCard: React.FC<GenericUserCardProps> = ({
 }) => {
     const setBg = useColorModeValue("gray.100", "gray.750");
 
-    const color: ColorProps["color"] = n == 1 ? "yellow.300" : n == 2 ? "gray.400" : n == 3 ? "orange.300" : "gray.700"
+    const color: ColorProps["color"] = n == 1 ? "yellow.300" : n == 2 ? "gray.300" : n == 3 ? "orange.300" : "gray.600"
 
     return (
-        <Card px="4" py="2" bg={variantBg ? setBg : undefined}>
+        <Card px="5" py="4" bg={variantBg ? setBg : undefined}>
             <Flex justifyContent={"space-between"} alignItems="center">
-                <Flex gap={"4"} alignItems="center">
-                    <Circle size={"40px"} bg={color}>
-                        <Heading size={"md"}>{n}</Heading>
-                    </Circle>
-                    <Text w="full" whiteSpace="pre-wrap">
-                        test
-                    </Text>
+                <Flex gap={"4"}>
+                    <Heading size={"md"} color={color}>{n}</Heading>
+                    <Text fontWeight={"bold"}>10.1 seconds</Text>
                 </Flex>
-                <Flex>
-                    <Text fontWeight={"bold"}>10.1</Text>
-                </Flex>
+                <Wrap spacing={"3"} align="center">
+                    <WrapItem>
+                        <Avatar
+                            src={undefined}
+                            size="sm"
+                            className="highlight-block"
+                        />
+                    </WrapItem>
+                    <WrapItem>
+                        <Text fontWeight={700} className="highlight-block">
+                            test
+                        </Text>
+                    </WrapItem>
+                </Wrap>
             </Flex>
         </Card>
     );
