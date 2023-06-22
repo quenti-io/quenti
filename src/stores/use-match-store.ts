@@ -191,7 +191,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           else incorrects.push(index);
         });
 
-        if (correctIndex) {
+        if (correctIndex != undefined) {
           get().setCard(index, {
             ...get().terms[index]!,
             state: "correct",
