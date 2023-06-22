@@ -26,7 +26,7 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
           {label}
         </StatLabel>
         <StatNumber
-          fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
+          fontSize="4xl"
           fontFamily="Outfit"
           fontWeight={800}
         >
@@ -64,7 +64,7 @@ const MatchInfo = () => {
       borderBottomWidth="4px"
       borderTopWidth="0"
       borderColor={borderColor}
-      w="300px"
+      w="250px"
       ml="7"
       overflow="hidden"
     >
