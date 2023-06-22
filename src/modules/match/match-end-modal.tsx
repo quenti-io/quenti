@@ -8,11 +8,11 @@ import {
   ModalContent,
   ModalOverlay,
   Stack,
-  Wrap,
 } from "@chakra-ui/react";
 import { IconArrowBack, IconRefresh } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useMatchContext } from "../../stores/use-match-store";
+import Leaderboard from "../leaderboard/leaderboard";
 import { GridStat } from "../learn/term-mastery";
 
 export interface MatchEndModalProps {
@@ -34,6 +34,7 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
           <Stack spacing={8}>
             <Heading>Round Complete</Heading>
             <Stack spacing={8}>
+              {/*<Leaderboard/>*/}
               <Grid gridTemplateColumns="1fr 1fr" gap={4} w="full">
                 <GridStat
                   bg="gray.750"
