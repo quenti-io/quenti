@@ -51,6 +51,7 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
               <Flex gap={4}>
                 <Button
                   w="full"
+                  colorScheme="gray"
                   leftIcon={<IconArrowBack />}
                   variant={"outline"}
                   onClick={router.back}
