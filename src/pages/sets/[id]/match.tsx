@@ -92,7 +92,6 @@ const MatchContainer = () => {
               index={index}
               key={index}
               onDragEnd={(term, x, y) => {
-                console.log(term, x, y);
                 setCard(index, {
                   ...term,
                   x: term.x + x,

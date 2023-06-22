@@ -47,8 +47,8 @@ const MatchInfo = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSeconds(() => ((Date.now() - startTime) / 1000).toFixed(1));
       if (completed) clearInterval(interval);
+      else setSeconds(() => ((Date.now() - startTime) / 1000).toFixed(1));
     }, 100);
     return () => clearInterval(interval);
   }, [completed, startTime]);
