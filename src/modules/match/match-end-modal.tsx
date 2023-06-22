@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalOverlay,
   Stack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconArrowBack, IconRefresh } from "@tabler/icons-react";
 import { useRouter } from "next/router";
@@ -25,9 +26,11 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
   const sum = useMatchContext((e) => e.roundSummary!);
   const router = useRouter();
 
+  const statBg = useColorModeValue("gray.200", "gray.750");
+
   return (
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    <Modal isOpen={isOpen} isCentered size="xl" onClose={() => { }}>
+    <Modal isOpen={isOpen} isCentered size="xl" onClose={() => {}}>
       <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent p="4" pb="8" rounded="xl">
         <ModalBody>
@@ -37,14 +40,14 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
               {/*<Leaderboard/>*/}
               <Grid gridTemplateColumns="1fr 1fr" gap={4} w="full">
                 <GridStat
-                  bg="gray.750"
+                  bg={statBg}
                   label="Time"
                   value={
                     sum ? ((sum.endTime - startTime) / 1000).toFixed(1) : 0
                   }
                 />
                 <GridStat
-                  bg="gray.750"
+                  bg={statBg}
                   label="Incorrect"
                   value={sum ? sum.incorrectGuesses : 0}
                 />
