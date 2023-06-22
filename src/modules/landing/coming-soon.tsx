@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   Heading,
   // eslint-disable-next-line no-restricted-imports
@@ -10,7 +9,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import {
-  IconLayersSubtract,
   IconReport,
   IconSchool,
 } from "@tabler/icons-react";
@@ -52,20 +50,12 @@ export const ComingSoon = () => {
               alt
             />
             <Feature
-              icon={<IconLayersSubtract size={40} />}
-              title="Match"
-              description="Compete with others for the fastest time to match terms with their definitions."
-              alt
-            />
-          </SimpleGrid>
-          <Box data-aos="fade-up" w={{ base: "full", md: "50%" }}>
-            <Feature
               icon={<IconSchool size={40} />}
               title="Courses"
               description="Courses allow you to enroll students and have a single place to group and assign study sets."
               alt
             />
-          </Box>
+          </SimpleGrid>
         </VStack>
       </Stack>
     </Flex>

@@ -136,7 +136,7 @@ export const ComparisonChart = () => {
                 <Td>
                   <IconCheck />
                 </Td>
-                <Td>Coming soon</Td>
+                <Td><IconCheck /></Td>
               </Tr>
             </Tbody>
           </Table>
