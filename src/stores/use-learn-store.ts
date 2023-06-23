@@ -7,7 +7,7 @@ import { CORRECT, INCORRECT } from "../constants/remarks";
 import type { Question } from "../interfaces/question";
 import type { RoundSummary } from "../interfaces/round-summary";
 import type { StudiableTerm } from "../interfaces/studiable-term";
-import { LEARN_TERMS_IN_ROUND } from "../server/api/common/constants";
+import { LEARN_TERMS_IN_ROUND } from "../constants/learn";
 import { shuffleArray, takeNRandom } from "../utils/array";
 
 export interface LearnStoreProps {

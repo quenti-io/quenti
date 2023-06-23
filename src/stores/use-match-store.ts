@@ -2,10 +2,7 @@ import type { Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import {
-  MATCH_SHUFFLE_TIME,
-  MATCH_TERMS_IN_ROUND,
-} from "../server/api/common/constants";
+import { MATCH_SHUFFLE_TIME, MATCH_TERMS_IN_ROUND } from "../constants/match";
 import { takeNRandom } from "../utils/array";
 import { pad, type Rect } from "../utils/area";
 import { areRectanglesOverlapping } from "../utils/area";
