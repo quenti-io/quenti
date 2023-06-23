@@ -4,6 +4,7 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { MATCH_TERMS_IN_ROUND } from "../server/api/common/constants";
 import { takeNRandom } from "../utils/array";
+import type { Rect } from "../utils/match";
 import { areRectanglesOverlapping } from "../utils/match";
 
 interface RoundSummary {
@@ -58,8 +59,9 @@ interface MatchState extends MatchStoreProps {
   setTerms: (terms: MatchItem[]) => void;
   requestZIndex: () => number;
   setCard: (index: number, newTerm: MatchItem) => void;
-  getIndicesUnder: (index: number) => number[];
+  getIndicesUnder: (index: number, newInfo?: Partial<Rect>) => number[];
   validateUnderIndices: (index: number, wrapper: HTMLDivElement) => void;
+  pickNewSpot: (index: number, elem: HTMLDivElement) => { x: number, y: number }
 }
 
 export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
@@ -164,15 +166,26 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           };
         });
       },
-      getIndicesUnder: (index: number) => {
+      getIndicesUnder: (index: number, newInfo?: Partial<Rect>) => {
         const cur = get().terms[index]!;
         return get().terms.flatMap((term, i) => {
           if (i == index || term.completed) return [];
-          if (areRectanglesOverlapping(cur, term)) {
+          if (
+            (newInfo && areRectanglesOverlapping({ ...cur, ...newInfo }, term))
+            || areRectanglesOverlapping(cur, term)
+          ) {
             return [i];
           }
           return [];
         });
+      },
+      pickNewSpot: (index: number, elem: HTMLDivElement) => {
+        while (true) {
+          const x = Math.random() * (elem.clientWidth - 450) + 225;
+          const y = Math.random() * (elem.clientHeight - 200) + 100;
+
+          if (get().getIndicesUnder(index, { x, y }).length == 1) return { x, y }
+        }
       },
       validateUnderIndices: (index: number, elem: HTMLDivElement) => {
         const target = get().terms[index]!.id;
@@ -204,19 +217,23 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
 
           get().answerCorrectly(get().terms[index]!.id);
         } else if (incorrects.length > 0) {
-          incorrects.push(index);
-          incorrects.forEach((idx) => {
-            const x = Math.random() * (elem.clientWidth - 450) + 225;
-            const y = Math.random() * (elem.clientHeight - 200) + 100;
-
+          [...incorrects, index].forEach((idx) => {
             get().setCard(idx, {
               ...get().terms[idx]!,
               state: "incorrect",
-              x,
-              y,
-              targetX: x,
-              targetY: y,
             });
+          });
+
+          //const { x, y } = get().pickNewSpot(idx,elem)
+          const x = Math.random() * (elem.clientWidth - 450) + 225;
+          const y = Math.random() * (elem.clientHeight - 200) + 100;
+
+          get().setCard(index, {
+            ...get().terms[index]!,
+            x,
+            y,
+            targetX: x,
+            targetY: y,
           });
 
           get().answerIncorrectly();
