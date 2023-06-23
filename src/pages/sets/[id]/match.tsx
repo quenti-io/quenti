@@ -81,20 +81,16 @@ const MatchContainer = () => {
            * By now, the component will have updated it's own height to be correct
            * But, `term` references a completely independent object that didn't see this change.
            * We need the most recent copy of terms from useMatchContext((s) => s.terms) (see above)
-           * But even that is lagging behind (Apparently the effect only sees stuff at the point in time it was started
-           * even though that's not how javascript normally works because objects are references??? but I digress).
-           * Now the normal fix is to add `terms` to the dependency array
-           * But terms updates so much that we literally cannot do that (run this every time it changes),
-           * But we *really* want the most recent copy to get that height, just not the reruns
-           * Introducing ✨ refs ✨: https://stackoverflow.com/questions/53633698/referencing-outdated-state-in-react-useeffect-hook
-           * God I love react. Maybe this is all common knowledge and stuff but like
+           * But even that is lagging behind (snapshots or whatever). The normal
+           * fix is to add `terms` to the dependency array, but terms updates
+           * so much that we literally cannot do that. Introducing ✨ refs ✨:
+           * https://stackoverflow.com/questions/53633698/referencing-outdated-state-in-react-useeffect-hook
            * that's why this is here and if there's some better solution please
-           * - https://react.dev/learn/state-as-a-snapshot
-           * - https://react.dev/learn/referencing-values-with-refs
+           * see https://react.dev/learn/state-as-a-snapshot & https://react.dev/learn/referencing-values-with-refs
            *
            * I do not think this can be a race condition. I think this fixes the race condition.
-           * Condition one: Card updates it's height after this runs -> Height is correct
-           * Condition two: Card updates it's height before this runs -> This sees the correct height and does not ruin it
+           * - height updated after this runs -> final height is correct (this cond is rare, but could result in overlapping)
+           * - height updated before this runs -> This sees the correct height and does not ruin it
            */
           height: grossTerms.current![index]!.height,
           x,
