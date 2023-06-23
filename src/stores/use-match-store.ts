@@ -181,12 +181,26 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
         });
       },
       pickNewSpot: (index: number, elem: HTMLDivElement) => {
-        while (true) {
-          const x = Math.random() * (elem.clientWidth - 450) + 225;
-          const y = Math.random() * (elem.clientHeight - 200) + 100;
+        for (let i = 0; i < 99; i++) {
+          const x = Math.random() * (elem.clientWidth - 250) + 25;
+          const y = Math.random() * (elem.clientHeight - 100) + 20;
 
+          // Avoid spawning on the timer
+          if (x < 300 && y < 150) continue
           if (get().getIndicesUnder(index, { x, y }).length == 0) return { x, y }
         }
+
+        /**
+         * Timeout after 100 tries on a card, just return some random place.
+         * Statistically it's very unlikely for this to happen in most situations
+         * where it doesn't need to, just given that it gets more likely over time
+         * and the chances of 100 attempts being unlucky is rare
+         * so like it happens 1/1 million or smth on most screens and then mobile screens
+         * might need to deal with an uneeded overlap occationally, still better than it was before
+         */
+        const x = Math.random() * (elem.clientWidth - 450) + 225;
+        const y = Math.random() * (elem.clientHeight - 200) + 100;
+        return { x, y }
       },
       validateUnderIndices: (index: number, elem: HTMLDivElement) => {
         const target = get().terms[index]!.id;
