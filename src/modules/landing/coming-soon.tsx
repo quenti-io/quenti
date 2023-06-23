@@ -8,10 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import {
-  IconReport,
-  IconSchool,
-} from "@tabler/icons-react";
+import { IconReport, IconSchool } from "@tabler/icons-react";
 import { Feature } from "./feature";
 
 export const ComingSoon = () => {

@@ -14,7 +14,7 @@ import { IconArrowBack, IconRefresh } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useMatchContext } from "../../stores/use-match-store";
 import Leaderboard from "../leaderboard/leaderboard";
-import { GridStat } from "../learn/term-mastery";
+import { GridStat } from "../../components/grid-stat";
 
 export interface MatchEndModalProps {
   isOpen: boolean;

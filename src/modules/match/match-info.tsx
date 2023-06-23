@@ -8,7 +8,7 @@ import {
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React from "react";
 import { useMatchContext } from "../../stores/use-match-store";
 
 export interface MatchStatProps {
@@ -25,11 +25,7 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
         <StatLabel color={text} fontWeight={700}>
           {label}
         </StatLabel>
-        <StatNumber
-          fontSize="4xl"
-          fontFamily="Outfit"
-          fontWeight={800}
-        >
+        <StatNumber fontSize="4xl" fontFamily="Outfit" fontWeight={800}>
           {value}
         </StatNumber>
       </Stat>
@@ -46,15 +42,16 @@ const MatchInfo = () => {
 
   const [seconds, setSeconds] = React.useState("0.0");
 
-  useEffect(() => {
+  React.useEffect(() => {
     const interval = setInterval(() => {
-      if (Date.now() < startTime) setSeconds("0.0")
-      else if (completed) {
+      if (Date.now() < startTime) {
+        setSeconds("0.0");
+      } else if (completed) {
         setSeconds(() => ((roundSum!.endTime - startTime) / 1000).toFixed(1));
         clearInterval(interval);
-      }
-      else setSeconds(() => ((Date.now() - startTime) / 1000).toFixed(1));
+      } else setSeconds(() => ((Date.now() - startTime) / 1000).toFixed(1));
     }, 100);
+
     return () => clearInterval(interval);
   }, [completed, roundSum, startTime]);
 

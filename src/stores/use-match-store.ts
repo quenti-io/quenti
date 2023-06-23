@@ -2,7 +2,10 @@ import type { Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import { MATCH_SHUFFLE_TIME, MATCH_TERMS_IN_ROUND } from "../server/api/common/constants";
+import {
+  MATCH_SHUFFLE_TIME,
+  MATCH_TERMS_IN_ROUND,
+} from "../server/api/common/constants";
 import { takeNRandom } from "../utils/array";
 import type { Rect } from "../utils/match";
 import { areRectanglesOverlapping } from "../utils/match";
@@ -61,7 +64,10 @@ interface MatchState extends MatchStoreProps {
   setCard: (index: number, newTerm: MatchItem) => void;
   getIndicesUnder: (index: number, newInfo?: Partial<Rect>) => number[];
   validateUnderIndices: (index: number, wrapper: HTMLDivElement) => void;
-  pickNewSpot: (index: number, elem: HTMLDivElement) => { x: number, y: number }
+  pickNewSpot: (
+    index: number,
+    elem: HTMLDivElement
+  ) => { x: number; y: number };
 }
 
 export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
@@ -85,7 +91,10 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       initialize(studiableTerms, isEligableForLeaderboard) {
         set({
           studiableTerms,
-          termsThisRound: studiableTerms.length > MATCH_TERMS_IN_ROUND ? MATCH_TERMS_IN_ROUND : studiableTerms.length,
+          termsThisRound:
+            studiableTerms.length > MATCH_TERMS_IN_ROUND
+              ? MATCH_TERMS_IN_ROUND
+              : studiableTerms.length,
           isEligableForLeaderboard: isEligableForLeaderboard,
         });
 
@@ -134,7 +143,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       nextRound() {
         set((state) => {
           return {
-            roundStartTime: Date.now() + (MATCH_SHUFFLE_TIME * 1000),
+            roundStartTime: Date.now() + MATCH_SHUFFLE_TIME * 1000,
             roundProgress: 0,
             incorrectGuesses: 0,
             roundQuestions: takeNRandom(
@@ -172,10 +181,9 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           if (i == index || term.completed) return [];
           if (newInfo) {
             if (areRectanglesOverlapping({ ...cur, ...newInfo }, term)) {
-              return [i]
+              return [i];
             }
-          }
-          else if (areRectanglesOverlapping(cur, term)) return [i];
+          } else if (areRectanglesOverlapping(cur, term)) return [i];
 
           return [];
         });
@@ -186,8 +194,9 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           const y = Math.random() * (elem.clientHeight - 100) + 20;
 
           // Avoid spawning on the timer
-          if (x < 300 && y < 150) continue
-          if (get().getIndicesUnder(index, { x, y }).length == 0) return { x, y }
+          if (x < 300 && y < 150) continue;
+          if (get().getIndicesUnder(index, { x, y }).length == 0)
+            return { x, y };
         }
 
         /**
@@ -200,7 +209,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
          */
         const x = Math.random() * (elem.clientWidth - 450) + 225;
         const y = Math.random() * (elem.clientHeight - 200) + 100;
-        return { x, y }
+        return { x, y };
       },
       validateUnderIndices: (index: number, elem: HTMLDivElement) => {
         const target = get().terms[index]!.id;
@@ -239,7 +248,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
             });
           });
 
-          const { x, y } = get().pickNewSpot(index, elem)
+          const { x, y } = get().pickNewSpot(index, elem);
 
           get().setCard(index, {
             ...get().terms[index]!,

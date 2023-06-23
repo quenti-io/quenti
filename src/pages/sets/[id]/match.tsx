@@ -27,7 +27,7 @@ const MatchContainer = () => {
   const terms = useMatchContext((s) => s.terms);
   const setTerms = useMatchContext((s) => s.setTerms);
   const setCard = useMatchContext((s) => s.setCard);
-  const pickNewSpot = useMatchContext((s) =>s.pickNewSpot)
+  const pickNewSpot = useMatchContext((s) => s.pickNewSpot);
 
   const completed = useMatchContext((state) => state.completed);
   const validateUnderIndices = useMatchContext(
@@ -37,11 +37,11 @@ const MatchContainer = () => {
   const wrapper = React.useRef<HTMLDivElement>(null);
 
   // See comment below
-  const grossTerms = React.useRef<MatchItem[]>()
-  grossTerms.current = terms
+  const grossTerms = React.useRef<MatchItem[]>();
+  grossTerms.current = terms;
 
   React.useEffect(() => {
-    if (!wrapper) return
+    if (!wrapper) return;
 
     const terms: MatchItem[] = roundQuestions.flatMap((term) => {
       const base: Omit<MatchItem, "type" | "word"> = {
@@ -73,12 +73,12 @@ const MatchContainer = () => {
 
     setTimeout(() => {
       terms.forEach((term, index) => {
-        const { x, y } = pickNewSpot(index, wrapper.current!)
+        const { x, y } = pickNewSpot(index, wrapper.current!);
 
         setCard(index, {
           ...term,
           /**
-           * By now, the component will have updated it's own height to be correct
+           * By now, the component will have updated its own height to be correct
            * But, `term` references a completely independent object that didn't see this change.
            * We need the most recent copy of terms from useMatchContext((s) => s.terms) (see above)
            * But even that is lagging behind (snapshots or whatever). The normal
@@ -101,7 +101,7 @@ const MatchContainer = () => {
       });
     });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wrapper]);
 
   return (
