@@ -66,8 +66,12 @@ export const MatchCard: React.FC<MatchCardProps> = ({
     <motion.div
       drag
       dragMomentum={false}
+      initial={{
+        opacity: 0,
+      }}
       animate={{
         position: "absolute",
+        opacity: 1,
         zIndex: zIndex,
         pointerEvents:
           term.state == "correct" || isInMotion ? "none" : "initial",

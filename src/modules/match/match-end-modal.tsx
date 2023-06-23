@@ -16,9 +16,9 @@ import {
   IconRefresh,
 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
-import { useMatchContext } from "../../stores/use-match-store";
-import Leaderboard from "../leaderboard/leaderboard";
+import React from "react";
 import { GridStat } from "../../components/grid-stat";
+import { useMatchContext } from "../../stores/use-match-store";
 
 export interface MatchEndModalProps {
   isOpen: boolean;
@@ -34,9 +34,17 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
 
   const statBg = useColorModeValue("gray.200", "gray.750");
 
+  const actionRef = React.useRef<HTMLButtonElement>(null);
+
   return (
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    <Modal isOpen={isOpen} isCentered size="xl" onClose={() => {}}>
+    <Modal
+      isOpen={isOpen}
+      isCentered
+      size="xl"
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      onClose={() => {}}
+      initialFocusRef={actionRef}
+    >
       <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent p="4" pb="8" rounded="xl">
         <ModalBody>
@@ -78,6 +86,7 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
                   leftIcon={sum ? <IconRefresh /> : <IconPlayerPlay />}
                   variant={"solid"}
                   onClick={newRound}
+                  ref={actionRef}
                 >
                   {sum ? "New Match" : "Start game"}
                 </Button>
