@@ -42,16 +42,20 @@ const MatchInfo = () => {
   const progress = useMatchContext((s) => s.roundProgress);
   const numTerms = useMatchContext((s) => s.termsThisRound);
   const completed = useMatchContext((s) => s.completed);
+  const roundSum = useMatchContext((s) => s.roundSummary);
 
   const [seconds, setSeconds] = React.useState("0");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (completed) clearInterval(interval);
+      if (completed) {
+        setSeconds(() => ((roundSum!.endTime - startTime) / 1000).toFixed(1));
+        clearInterval(interval);
+      }
       else setSeconds(() => ((Date.now() - startTime) / 1000).toFixed(1));
     }, 100);
     return () => clearInterval(interval);
-  }, [completed, startTime]);
+  }, [completed, roundSum, startTime]);
 
   const bg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.700");
