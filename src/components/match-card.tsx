@@ -1,6 +1,7 @@
 import { Card, Text, useColorModeValue } from "@chakra-ui/react";
 import { animate, motion, useMotionValue } from "framer-motion";
 import React from "react";
+import { MATCH_SHUFFLE_TIME } from "../server/api/common/constants";
 import { useMatchContext, type MatchItem } from "../stores/use-match-store";
 import { ScriptFormatter } from "./script-formatter";
 
@@ -16,6 +17,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   onDragEnd,
 }) => {
   const setCard = useMatchContext((state) => state.setCard);
+
+  const [isInMotion,setIsInMotion] = React.useState(false)
 
   const linkBg = useColorModeValue("white", "gray.800");
   const gray = useColorModeValue("gray.200", "gray.700");
@@ -45,12 +48,16 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   const y = useMotionValue(term.y);
 
   React.useEffect(() => {
+    setIsInMotion(true)
     void (async () => {
-      await animate(x, term.targetX, { duration: 0.5 });
+      await animate(x, term.targetX, { duration: MATCH_SHUFFLE_TIME });
     })();
     void (async () => {
-      await animate(y, term.targetY, { duration: 0.5 });
+      await animate(y, term.targetY, { duration: MATCH_SHUFFLE_TIME });
     })();
+    setTimeout(() => {
+      setIsInMotion(false)
+    }, MATCH_SHUFFLE_TIME * 1000)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term.targetX, term.targetY]);
 
@@ -61,7 +68,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       animate={{
         position: "absolute",
         zIndex: zIndex,
-        pointerEvents: term.state == "correct" ? "none" : "initial",
+        pointerEvents: (term.state == "correct" || isInMotion) ? "none" : "initial",
       }}
       exit={{
         opacity: 0,

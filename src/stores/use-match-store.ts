@@ -2,7 +2,7 @@ import type { Term } from "@prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import { MATCH_TERMS_IN_ROUND } from "../server/api/common/constants";
+import { MATCH_SHUFFLE_TIME, MATCH_TERMS_IN_ROUND } from "../server/api/common/constants";
 import { takeNRandom } from "../utils/array";
 import type { Rect } from "../utils/match";
 import { areRectanglesOverlapping } from "../utils/match";
@@ -134,7 +134,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       nextRound() {
         set((state) => {
           return {
-            roundStartTime: Date.now(),
+            roundStartTime: Date.now() + (MATCH_SHUFFLE_TIME * 1000),
             roundProgress: 0,
             incorrectGuesses: 0,
             roundQuestions: takeNRandom(
