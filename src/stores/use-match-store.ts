@@ -7,8 +7,8 @@ import {
   MATCH_TERMS_IN_ROUND,
 } from "../server/api/common/constants";
 import { takeNRandom } from "../utils/array";
-import type { Rect } from "../utils/match";
-import { areRectanglesOverlapping } from "../utils/match";
+import { pad, Rect } from "../utils/area";
+import { areRectanglesOverlapping } from "../utils/area";
 
 interface RoundSummary {
   endTime: number;
@@ -48,6 +48,10 @@ export interface MatchItem {
   state?: "correct" | "incorrect";
 }
 
+const MATCH_SIDE_WALL_PADDING = 20;
+const MATCH_MAX_OVERLAP_TRIES = 100;
+const MATCH_TIMER_BOUNDS = { x: 300, y: 150 };
+
 interface MatchState extends MatchStoreProps {
   initialize: (
     studiableTerms: Term[],
@@ -66,6 +70,7 @@ interface MatchState extends MatchStoreProps {
   validateUnderIndices: (index: number, wrapper: HTMLDivElement) => void;
   pickNewSpot: (
     index: number,
+    term: MatchItem,
     elem: HTMLDivElement
   ) => { x: number; y: number };
 }
@@ -187,13 +192,19 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           return [];
         });
       },
-      pickNewSpot: (index: number, elem: HTMLDivElement) => {
-        for (let i = 0; i < 99; i++) {
-          const x = Math.random() * (elem.clientWidth - 250) + 25;
-          const y = Math.random() * (elem.clientHeight - 100) + 20;
+      pickNewSpot: (index: number, term: MatchItem, elem: HTMLDivElement) => {
+        let x = 0,
+          y = 0;
+
+        for (let i = 1; i < MATCH_MAX_OVERLAP_TRIES; i++) {
+          x = pad(
+            Math.random() * (elem.clientWidth - term.width),
+            MATCH_SIDE_WALL_PADDING
+          );
+          y = Math.random() * (elem.clientHeight - term.height);
 
           // Avoid spawning on the timer
-          if (x < 300 && y < 150) continue;
+          if (x < MATCH_TIMER_BOUNDS.x && y < MATCH_TIMER_BOUNDS.y) continue;
           if (get().getIndicesUnder(index, { x, y }).length == 0)
             return { x, y };
         }
@@ -206,12 +217,11 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
          * so like it happens 1/1 million or smth on most screens and then mobile screens
          * might need to deal with an uneeded overlap occationally, still better than it was before
          */
-        const x = Math.random() * (elem.clientWidth - 450) + 225;
-        const y = Math.random() * (elem.clientHeight - 200) + 100;
         return { x, y };
       },
       validateUnderIndices: (index: number, elem: HTMLDivElement) => {
-        const target = get().terms[index]!.id;
+        const term = get().terms[index]!;
+        const target = term.id;
         const targetType =
           get().terms[index]!.type == "word" ? "definition" : "word";
 
@@ -247,7 +257,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
             });
           });
 
-          const { x, y } = get().pickNewSpot(index, elem);
+          const { x, y } = get().pickNewSpot(index, term, elem);
 
           get().setCard(index, {
             ...get().terms[index]!,

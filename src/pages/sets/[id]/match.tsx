@@ -8,9 +8,10 @@ import { HydrateSetData } from "../../../modules/hydrate-set-data";
 import { MatchEndModal } from "../../../modules/match/match-end-modal";
 import MatchInfo from "../../../modules/match/match-info";
 import {
-  type MatchItem,
   useMatchContext,
+  type MatchItem,
 } from "../../../stores/use-match-store";
+import { isRectInBounds } from "../../../utils/area";
 
 const Match: ComponentWithAuth = () => {
   return (
@@ -41,7 +42,7 @@ const MatchContainer = () => {
   grossTerms.current = terms;
 
   React.useEffect(() => {
-    if (!wrapper) return;
+    if (!wrapper.current) return;
 
     const terms: MatchItem[] = roundQuestions.flatMap((term) => {
       const base: Omit<MatchItem, "type" | "word"> = {
@@ -73,7 +74,13 @@ const MatchContainer = () => {
 
     setTimeout(() => {
       terms.forEach((term, index) => {
-        const { x, y } = pickNewSpot(index, wrapper.current!);
+        const width = grossTerms.current![index]!.width;
+        const height = grossTerms.current![index]!.height;
+        const { x, y } = pickNewSpot(
+          index,
+          { ...term, width, height },
+          wrapper.current!
+        );
 
         setCard(index, {
           ...term,
@@ -92,8 +99,8 @@ const MatchContainer = () => {
            * - height updated after this runs -> final height is correct (this cond is rare, but could result in overlapping)
            * - height updated before this runs -> This sees the correct height and does not ruin it
            */
-          height: grossTerms.current![index]!.height,
-          width: grossTerms.current![index]!.width,
+          height,
+          width,
           x,
           y,
           targetX: x,
@@ -101,6 +108,30 @@ const MatchContainer = () => {
         });
       });
     });
+
+    const resizeHandler = () => {
+      grossTerms
+        .current!.filter((t) => !t.completed)
+        .forEach((term, index) => {
+          const rect = wrapper.current!.getBoundingClientRect();
+          if (!isRectInBounds(term, rect)) {
+            const { x, y } = pickNewSpot(index, term, wrapper.current!);
+
+            setCard(index, {
+              ...term,
+              x,
+              y,
+              targetX: x,
+              targetY: y,
+            });
+          }
+        });
+    };
+
+    window.addEventListener("resize", resizeHandler);
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+    };
   }, [pickNewSpot, roundQuestions, setCard, setTerms, wrapper]);
 
   return (
