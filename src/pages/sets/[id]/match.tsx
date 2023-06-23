@@ -102,8 +102,7 @@ const MatchContainer = () => {
       });
     });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wrapper]);
+  }, [pickNewSpot, roundQuestions, setCard, setTerms, wrapper]);
 
   return (
     <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
