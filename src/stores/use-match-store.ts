@@ -7,7 +7,7 @@ import {
   MATCH_TERMS_IN_ROUND,
 } from "../server/api/common/constants";
 import { takeNRandom } from "../utils/array";
-import { pad, Rect } from "../utils/area";
+import { pad, type Rect } from "../utils/area";
 import { areRectanglesOverlapping } from "../utils/area";
 
 interface RoundSummary {
