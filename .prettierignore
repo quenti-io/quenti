@@ -1,0 +1,6 @@
+node_modules/
+.next/
+.turbo/
+
+pnpm-lock.yaml
+yarn.lock
