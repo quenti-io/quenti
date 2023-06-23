@@ -29,7 +29,6 @@ const MatchContainer = () => {
   const setCard = useMatchContext((s) => s.setCard);
   const pickNewSpot = useMatchContext((s) =>s.pickNewSpot)
 
-
   const completed = useMatchContext((state) => state.completed);
   const validateUnderIndices = useMatchContext(
     (state) => state.validateUnderIndices
@@ -37,7 +36,13 @@ const MatchContainer = () => {
 
   const wrapper = React.useRef<HTMLDivElement>(null);
 
+  // See comment below
+  const grossTerms = React.useRef<MatchItem[]>()
+  grossTerms.current = terms
+
   React.useEffect(() => {
+    if (!wrapper) return
+
     const terms: MatchItem[] = roundQuestions.flatMap((term) => {
       const base: Omit<MatchItem, "type" | "word"> = {
         id: term.id,
@@ -72,6 +77,26 @@ const MatchContainer = () => {
 
         setCard(index, {
           ...term,
+          /**
+           * By now, the component will have updated it's own height to be correct
+           * But, `term` references a completely independent object that didn't see this change.
+           * We need the most recent copy of terms from useMatchContext((s) => s.terms) (see above)
+           * But even that is lagging behind (Apparently the effect only sees stuff at the point in time it was started
+           * even though that's not how javascript normally works because objects are references??? but I digress).
+           * Now the normal fix is to add `terms` to the dependency array
+           * But terms updates so much that we literally cannot do that (run this every time it changes),
+           * But we *really* want the most recent copy to get that height, just not the reruns
+           * Introducing ✨ refs ✨: https://stackoverflow.com/questions/53633698/referencing-outdated-state-in-react-useeffect-hook
+           * God I love react. Maybe this is all common knowledge and stuff but like
+           * that's why this is here and if there's some better solution please
+           * - https://react.dev/learn/state-as-a-snapshot
+           * - https://react.dev/learn/referencing-values-with-refs
+           *
+           * I do not think this can be a race condition. I think this fixes the race condition.
+           * Condition one: Card updates it's height after this runs -> Height is correct
+           * Condition two: Card updates it's height before this runs -> This sees the correct height and does not ruin it
+           */
+          height: grossTerms.current![index]!.height,
           x,
           y,
           targetX: x,
@@ -79,7 +104,9 @@ const MatchContainer = () => {
         });
       });
     });
-  }, [setCard, roundQuestions, setTerms, wrapper, pickNewSpot]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wrapper]);
 
   return (
     <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">

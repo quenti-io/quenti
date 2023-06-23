@@ -39,7 +39,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   React.useEffect(() => {
     setCard(index, {
       ...term,
-      height: cur.current ? cur.current.offsetHeight : 69,
+      height: cur.current ? cur.current.offsetHeight : 60,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cur]);
