@@ -61,6 +61,10 @@ let config = withHighlightConfig(
         source: "/:id(c[a-z0-9]{24})/learn",
         destination: "/sets/:id/learn",
       },
+      {
+        source: "/:id(c[a-z0-9]{24})/match",
+        destination: "/sets/:id/match",
+      },
     ],
   }),
   {

@@ -45,7 +45,7 @@ const Item: React.FC<ItemProps> = ({ label, value }) => {
       borderColor={border}
       transition="all ease-in-out 150ms"
       _hover={{
-        borderBottomColor: "blue.300"
+        borderBottomColor: "blue.300",
       }}
     >
       <Stat>

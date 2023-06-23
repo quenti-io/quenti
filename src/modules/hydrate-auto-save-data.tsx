@@ -5,7 +5,7 @@ import { useLoading } from "../hooks/use-loading";
 import {
   createSetEditorStore,
   SetEditorStoreContext,
-  type SetEditorStore
+  type SetEditorStore,
 } from "../stores/use-set-editor-store";
 import { api, type RouterOutputs } from "../utils/api";
 

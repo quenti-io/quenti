@@ -4,7 +4,7 @@ import {
   Stack,
   Switch,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { IconUser } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";

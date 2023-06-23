@@ -1,13 +1,6 @@
-import {
-  Card,
-  Grid,
-  GridItem,
-  Stat,
-  StatLabel,
-  StatNumber,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 import { useTermMastery } from "../../hooks/use-term-mastery";
+import { GridStat } from "../../components/grid-stat";
 
 export const TermMastery = () => {
   const [unstudied, familiar, mastered] = useTermMastery();
@@ -18,39 +11,5 @@ export const TermMastery = () => {
       <GridStat label="Familiar" value={familiar?.length || 0} />
       <GridStat label="Mastered" value={mastered?.length || 0} />
     </Grid>
-  );
-};
-
-export interface GridStatProps {
-  value: number;
-  label: string;
-}
-
-export const GridStat: React.FC<GridStatProps> = ({ value, label }) => {
-  const text = useColorModeValue("gray.600", "gray.400");
-
-  return (
-    <GridItem>
-      <Card
-        pb="4"
-        shadow="lg"
-        rounded="lg"
-        borderBottomColor="orange.300"
-        borderBottomWidth="4px"
-      >
-        <Stat textAlign="center">
-          <StatNumber
-            fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
-            fontFamily="Outfit"
-            fontWeight={800}
-          >
-            {value}
-          </StatNumber>
-          <StatLabel color={text} fontWeight={700}>
-            {label}
-          </StatLabel>
-        </Stat>
-      </Card>
-    </GridItem>
   );
 };

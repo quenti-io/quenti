@@ -1,11 +1,4 @@
-import {
-  Button,
-  Center,
-  Heading,
-  Stack,
-  Text,
-  VStack
-} from "@chakra-ui/react";
+import { Button, Center, Heading, Stack, Text, VStack } from "@chakra-ui/react";
 import { IconReload } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";

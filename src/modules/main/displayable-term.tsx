@@ -6,7 +6,7 @@ import {
   IconButton,
   Text,
   useColorMode,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
