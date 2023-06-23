@@ -93,6 +93,7 @@ const MatchContainer = () => {
            * - height updated before this runs -> This sees the correct height and does not ruin it
            */
           height: grossTerms.current![index]!.height,
+          width: grossTerms.current![index]!.width,
           x,
           y,
           targetX: x,

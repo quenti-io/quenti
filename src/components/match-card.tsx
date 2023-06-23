@@ -39,6 +39,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   React.useEffect(() => {
     setCard(index, {
       ...term,
+      width: cur.current ? cur.current.offsetWidth : 200,
       height: cur.current ? cur.current.offsetHeight : 60,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,7 +92,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         borderWidth="2px"
         shadow="lg"
         transition="all ease-in-out 150ms"
-        w="200px"
+        maxW="200px"
+        w="max-content"
         position="absolute"
         _hover={{
           transform: "translateY(-2px)",
