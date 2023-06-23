@@ -20,6 +20,8 @@ export interface MatchEndModalProps {
   isOpen: boolean;
 }
 
+// TODO: <Enter> should start a new game
+
 export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
   const newRound = useMatchContext((e) => e.nextRound);
   const startTime = useMatchContext((e) => e.roundStartTime);
@@ -52,7 +54,7 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
                   value={sum ? sum.incorrectGuesses : 0}
                 />
               </Grid> : <p>Drag corresponding tiles together to clear the board</p>}
-              {/*There should be a gif here*/}
+              {/*TODO: There should be a gif here*/}
               <Flex gap={4}>
                 <Button
                   w="full"

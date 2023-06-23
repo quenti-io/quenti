@@ -44,10 +44,10 @@ const MatchInfo = () => {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      if (Date.now() < startTime || !roundSum) {
+      if (Date.now() < startTime || (!roundSum && completed)) {
         setSeconds("0.0");
       } else if (completed) {
-        setSeconds(() => ((roundSum.endTime - startTime) / 1000).toFixed(1));
+        setSeconds(() => ((roundSum!.endTime - startTime) / 1000).toFixed(1));
         clearInterval(interval);
       } else setSeconds(() => ((Date.now() - startTime) / 1000).toFixed(1));
     }, 100);
