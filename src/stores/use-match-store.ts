@@ -98,10 +98,10 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           isEligableForLeaderboard: isEligableForLeaderboard,
         });
 
-        set((state) => {
-          state.nextRound();
-          return {};
-        });
+        //set((state) => {
+        //  state.nextRound();
+        //  return {};
+        //});
       },
       answerCorrectly(termId) {
         set((state) => {

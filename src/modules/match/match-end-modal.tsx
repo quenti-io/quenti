@@ -35,10 +35,10 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
       <ModalContent p="4" pb="8" rounded="xl">
         <ModalBody>
           <Stack spacing={8}>
-            <Heading>Round Complete</Heading>
+            <Heading>{sum ? "Round Complete" : "Welcome to Match!"}</Heading>
             <Stack spacing={8}>
               {/*<Leaderboard/>*/}
-              <Grid gridTemplateColumns="1fr 1fr" gap={4} w="full">
+              {sum ? <Grid gridTemplateColumns="1fr 1fr" gap={4} w="full">
                 <GridStat
                   bg={statBg}
                   label="Time"
@@ -51,7 +51,8 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
                   label="Incorrect"
                   value={sum ? sum.incorrectGuesses : 0}
                 />
-              </Grid>
+              </Grid> : <p>Drag corresponding tiles together to clear the board</p>}
+              {/*There should be a gif here*/}
               <Flex gap={4}>
                 <Button
                   w="full"
@@ -68,7 +69,7 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
                   variant={"solid"}
                   onClick={newRound}
                 >
-                  New Match
+                  {sum ? "New Match" : "Start game"}
                 </Button>
               </Flex>
             </Stack>
