@@ -10,7 +10,11 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconArrowBack, IconRefresh } from "@tabler/icons-react";
+import {
+  IconArrowBack,
+  IconPlayerPlay,
+  IconRefresh,
+} from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { useMatchContext } from "../../stores/use-match-store";
 import Leaderboard from "../leaderboard/leaderboard";
@@ -40,20 +44,24 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
             <Heading>{sum ? "Round Complete" : "Welcome to Match!"}</Heading>
             <Stack spacing={8}>
               {/*<Leaderboard/>*/}
-              {sum ? <Grid gridTemplateColumns="1fr 1fr" gap={4} w="full">
-                <GridStat
-                  bg={statBg}
-                  label="Time"
-                  value={
-                    sum ? ((sum.endTime - startTime) / 1000).toFixed(1) : 0
-                  }
-                />
-                <GridStat
-                  bg={statBg}
-                  label="Incorrect"
-                  value={sum ? sum.incorrectGuesses : 0}
-                />
-              </Grid> : <p>Drag corresponding tiles together to clear the board</p>}
+              {sum ? (
+                <Grid gridTemplateColumns="1fr 1fr" gap={4} w="full">
+                  <GridStat
+                    bg={statBg}
+                    label="Time"
+                    value={
+                      sum ? ((sum.endTime - startTime) / 1000).toFixed(1) : 0
+                    }
+                  />
+                  <GridStat
+                    bg={statBg}
+                    label="Incorrect"
+                    value={sum ? sum.incorrectGuesses : 0}
+                  />
+                </Grid>
+              ) : (
+                <p>Drag corresponding tiles together to clear the board</p>
+              )}
               {/*TODO: There should be a gif here*/}
               <Flex gap={4}>
                 <Button
@@ -67,7 +75,7 @@ export const MatchEndModal: React.FC<MatchEndModalProps> = ({ isOpen }) => {
                 </Button>
                 <Button
                   w="full"
-                  leftIcon={<IconRefresh />}
+                  leftIcon={sum ? <IconRefresh /> : <IconPlayerPlay />}
                   variant={"solid"}
                   onClick={newRound}
                 >

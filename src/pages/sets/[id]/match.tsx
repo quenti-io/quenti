@@ -101,7 +101,6 @@ const MatchContainer = () => {
         });
       });
     });
-
   }, [pickNewSpot, roundQuestions, setCard, setTerms, wrapper]);
 
   return (
