@@ -170,12 +170,13 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
         const cur = get().terms[index]!;
         return get().terms.flatMap((term, i) => {
           if (i == index || term.completed) return [];
-          if (
-            (newInfo && areRectanglesOverlapping({ ...cur, ...newInfo }, term))
-            || areRectanglesOverlapping(cur, term)
-          ) {
-            return [i];
+          if (newInfo) {
+            if (areRectanglesOverlapping({ ...cur, ...newInfo }, term)) {
+              return [i]
+            }
           }
+          else if (areRectanglesOverlapping(cur, term)) return [i];
+
           return [];
         });
       },
@@ -184,7 +185,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
           const x = Math.random() * (elem.clientWidth - 450) + 225;
           const y = Math.random() * (elem.clientHeight - 200) + 100;
 
-          if (get().getIndicesUnder(index, { x, y }).length == 1) return { x, y }
+          if (get().getIndicesUnder(index, { x, y }).length == 0) return { x, y }
         }
       },
       validateUnderIndices: (index: number, elem: HTMLDivElement) => {
@@ -224,9 +225,7 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
             });
           });
 
-          //const { x, y } = get().pickNewSpot(idx,elem)
-          const x = Math.random() * (elem.clientWidth - 450) + 225;
-          const y = Math.random() * (elem.clientHeight - 200) + 100;
+          const { x, y } = get().pickNewSpot(index, elem)
 
           get().setCard(index, {
             ...get().terms[index]!,

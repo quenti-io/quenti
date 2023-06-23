@@ -23,10 +23,13 @@ const Match: ComponentWithAuth = () => {
 };
 
 const MatchContainer = () => {
-  const roundQuestions = useMatchContext((state) => state.roundQuestions);
-  const terms = useMatchContext((state) => state.terms);
-  const setTerms = useMatchContext((state) => state.setTerms);
-  const setCard = useMatchContext((state) => state.setCard);
+  const roundQuestions = useMatchContext((a) => a.roundQuestions);
+  const terms = useMatchContext((s) => s.terms);
+  const setTerms = useMatchContext((s) => s.setTerms);
+  const setCard = useMatchContext((s) => s.setCard);
+  const pickNewSpot = useMatchContext((s) =>s.pickNewSpot)
+
+
   const completed = useMatchContext((state) => state.completed);
   const validateUnderIndices = useMatchContext(
     (state) => state.validateUnderIndices
@@ -65,8 +68,7 @@ const MatchContainer = () => {
 
     setTimeout(() => {
       terms.forEach((term, index) => {
-        const x = Math.random() * (wrapper.current!.clientWidth - 450) + 225;
-        const y = Math.random() * (wrapper.current!.clientHeight - 200) + 100;
+        const { x, y } = pickNewSpot(index, wrapper.current!)
 
         setCard(index, {
           ...term,
@@ -77,7 +79,7 @@ const MatchContainer = () => {
         });
       });
     });
-  }, [setCard, roundQuestions, setTerms]);
+  }, [setCard, roundQuestions, setTerms, wrapper, pickNewSpot]);
 
   return (
     <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
