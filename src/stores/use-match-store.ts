@@ -3,9 +3,8 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { MATCH_SHUFFLE_TIME, MATCH_TERMS_IN_ROUND } from "../constants/match";
+import { areRectanglesOverlapping, pad, type Rect } from "../utils/area";
 import { takeNRandom } from "../utils/array";
-import { pad, type Rect } from "../utils/area";
-import { areRectanglesOverlapping } from "../utils/area";
 
 interface RoundSummary {
   endTime: number;
@@ -64,7 +63,7 @@ interface MatchState extends MatchStoreProps {
   requestZIndex: () => number;
   setCard: (index: number, newTerm: MatchItem) => void;
   getIndicesUnder: (index: number, newInfo?: Partial<Rect>) => number[];
-  validateUnderIndices: (index: number, wrapper: HTMLDivElement) => void;
+  validateUnderIndices: (index: number, wrapper: HTMLDivElement) => boolean;
   pickNewSpot: (
     index: number,
     term: MatchItem,
@@ -93,15 +92,8 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       initialize(studiableTerms, isEligableForLeaderboard) {
         set({
           studiableTerms,
-          termsThisRound:
-            studiableTerms.length > MATCH_TERMS_IN_ROUND
-              ? MATCH_TERMS_IN_ROUND
-              : studiableTerms.length,
+          termsThisRound: Math.min(studiableTerms.length, MATCH_TERMS_IN_ROUND),
           isEligableForLeaderboard: isEligableForLeaderboard,
-        });
-
-        set(() => {
-          return {};
         });
       },
       answerCorrectly(termId) {
@@ -142,23 +134,22 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
         });
       },
       nextRound() {
-        set((state) => {
-          return {
-            roundStartTime: Date.now() + MATCH_SHUFFLE_TIME * 1000,
-            roundProgress: 0,
-            incorrectGuesses: 0,
-            roundQuestions: takeNRandom(
-              state.studiableTerms,
-              state.termsThisRound
-            ).map((term) => ({
-              ...term,
-              completed: false,
-            })),
+        set((state) => ({
+          roundStartTime: Date.now() + MATCH_SHUFFLE_TIME * 1000,
+          roundProgress: 0,
+          incorrectGuesses: 0,
+          roundQuestions: takeNRandom(
+            state.studiableTerms,
+            state.termsThisRound
+          ).map((term) => ({
+            ...term,
             completed: false,
-            zIndex: 0,
-            roundSummary: undefined,
-          };
-        });
+          })),
+          completed: false,
+          zIndex: 0,
+          roundSummary: undefined,
+          terms: [],
+        }));
       },
       setTerms(terms) {
         set({ terms });
@@ -169,10 +160,11 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       },
       setCard: (index: number, newTerm: MatchItem) => {
         set((state) => {
-          const newTerms = [...state.terms];
-          newTerms[index] = newTerm;
           return {
-            terms: newTerms,
+            terms: state.terms.map((term, i) => {
+              if (i == index) return newTerm;
+              return term;
+            }),
           };
         });
       },
@@ -276,6 +268,8 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
             })),
           }));
         }, 500);
+
+        return correctIndex != undefined;
       },
     }))
   );

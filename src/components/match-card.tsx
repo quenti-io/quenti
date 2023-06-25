@@ -8,16 +8,17 @@ import { ScriptFormatter } from "./script-formatter";
 export interface MatchCardProps {
   term: MatchItem;
   index: number;
-  onDragEnd: (term: MatchItem, x: number, y: number) => void;
+  onDragEnd: (term: MatchItem, index: number, x: number, y: number) => boolean;
 }
 
-export const MatchCard: React.FC<MatchCardProps> = ({
+export const RawMatchCard: React.FC<MatchCardProps> = ({
   term,
   index,
   onDragEnd,
 }) => {
   const setCard = useMatchContext((state) => state.setCard);
 
+  const [dragging, setDragging] = React.useState(false);
   const [isInMotion, setIsInMotion] = React.useState(false);
 
   const linkBg = useColorModeValue("white", "gray.800");
@@ -28,22 +29,18 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       ? "green.400"
       : "red.400"
     : undefined;
-
   const linkBorder = term.state ? stateBorder : gray;
 
-  const requestZIndex = useMatchContext((e) => e.requestZIndex);
-  const [zIndex, setZIndex] = React.useState(requestZIndex());
-
-  const cur = React.useRef<HTMLDivElement>(null);
+  const card = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setCard(index, {
       ...term,
-      width: cur.current ? cur.current.offsetWidth : 200,
-      height: cur.current ? cur.current.offsetHeight : 60,
+      width: card.current ? card.current.offsetWidth : 200,
+      height: card.current ? card.current.offsetHeight : 60,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cur]);
+  }, [card]);
 
   const x = useMotionValue(term.x);
   const y = useMotionValue(term.y);
@@ -56,6 +53,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
     void (async () => {
       await animate(y, term.targetY, { duration: MATCH_SHUFFLE_TIME });
     })();
+
     setTimeout(() => {
       setIsInMotion(false);
     }, MATCH_SHUFFLE_TIME * 1000);
@@ -72,7 +70,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       animate={{
         position: "absolute",
         opacity: 1,
-        zIndex: zIndex,
         pointerEvents:
           term.state == "correct" || isInMotion ? "none" : "initial",
       }}
@@ -80,17 +77,17 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         opacity: 0,
         transition: { duration: 0.5 },
       }}
-      onDragStart={() => setZIndex(requestZIndex())}
+      onDragStart={() => setDragging(true)}
       onDragEnd={(_, info) => {
-        onDragEnd(term, info.offset.x, info.offset.y);
+        setDragging(onDragEnd(term, index, info.offset.x, info.offset.y));
       }}
-      style={{ x, y }}
+      style={{ x, y, zIndex: dragging || isInMotion ? 200 : 100 }}
     >
       <Card
         rounded="md"
         py="4"
         px="5"
-        ref={cur}
+        ref={card}
         bg={linkBg}
         borderColor={linkBorder}
         borderWidth="2px"
@@ -111,3 +108,5 @@ export const MatchCard: React.FC<MatchCardProps> = ({
     </motion.div>
   );
 };
+
+export const MatchCard = React.memo(RawMatchCard);

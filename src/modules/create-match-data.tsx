@@ -1,22 +1,21 @@
 import React from "react";
-import { useSet } from "../hooks/use-set";
+import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import {
   createMatchStore,
   MatchContext,
-  type MatchStore,
+  type MatchStore
 } from "../stores/use-match-store";
 
 export const CreateMatchData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms, experience } = useSet();
+  const { terms, experience } = useSetFolderUnison();
 
   const storeRef = React.useRef<MatchStore>();
   if (!storeRef.current) {
     storeRef.current = createMatchStore();
 
     let isLeaderboardAllowed = true;
-
     let learnTerms = terms;
 
     if (experience.studyStarred) {

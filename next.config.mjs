@@ -46,6 +46,10 @@ let config = withHighlightConfig(
         destination: "/profile/:profile/folders/:slug/flashcards",
       },
       {
+        source: "/:profile(@[a-zA-Z0-9-_]+)/folders/:slug/match",
+        destination: "/profile/:profile/folders/:slug/match",
+      },
+      {
         source: "/:id(c[a-z0-9]{24})",
         destination: "/sets/:id",
       },
