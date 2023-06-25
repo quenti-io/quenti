@@ -24,9 +24,6 @@ export interface MatchStoreProps {
   isEligableForLeaderboard: boolean;
   completed: boolean;
   roundSummary?: RoundSummary;
-  // For visuals. This isn't the best or anything but it works fine unless
-  // someone picks up 2147483627 cards before finishing.
-  zIndex: number;
   terms: MatchItem[];
 }
 
@@ -60,7 +57,6 @@ interface MatchState extends MatchStoreProps {
   answerCallback: () => void;
   nextRound: () => void;
   setTerms: (terms: MatchItem[]) => void;
-  requestZIndex: () => number;
   setCard: (index: number, newTerm: MatchItem) => void;
   getIndicesUnder: (index: number, newInfo?: Partial<Rect>) => number[];
   validateUnderIndices: (index: number, wrapper: HTMLDivElement) => boolean;
@@ -81,7 +77,6 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
     roundQuestions: [],
     isEligableForLeaderboard: false,
     completed: true,
-    zIndex: 0,
     terms: [],
   };
 
@@ -153,10 +148,6 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
       },
       setTerms(terms) {
         set({ terms });
-      },
-      requestZIndex() {
-        set((state) => ({ zIndex: state.zIndex + 1 }));
-        return get().zIndex;
       },
       setCard: (index: number, newTerm: MatchItem) => {
         set((state) => {
