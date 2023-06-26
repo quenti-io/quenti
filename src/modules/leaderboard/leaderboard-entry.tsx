@@ -59,6 +59,7 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
             position="absolute"
             top="0"
             left="0"
+            rounded="full"
             h="full"
             w="1"
             bg="blue.300"
