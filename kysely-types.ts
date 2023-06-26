@@ -103,6 +103,7 @@ export type Highscore = {
   leaderboardId: string;
   userId: string;
   time: number;
+  timestamp: Timestamp;
 };
 export type Leaderboard = {
   id: string;

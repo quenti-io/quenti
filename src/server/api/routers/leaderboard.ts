@@ -1,26 +1,84 @@
-import { LeaderboardType } from "@prisma/client";
+import {
+  LeaderboardType,
+  type Folder,
+  type Leaderboard,
+  type StudySet,
+} from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { MATCH_MIN_TIME } from "../common/constants";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
+export const validateLeaderboardAccess = (
+  leaderboard: Leaderboard & {
+    studySet: StudySet | null;
+    folder: (Folder & { studySets: { studySet: StudySet }[] }) | null;
+  },
+  userId: string
+) => {
+  if (
+    leaderboard.studySet &&
+    leaderboard.studySet.visibility === "Private" &&
+    leaderboard.studySet.userId !== userId
+  ) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "This set is private.",
+    });
+  } else if (leaderboard.folder && leaderboard.folder.userId !== userId) {
+    // Check if the user has access to at least one set in the folder
+    const studySets = leaderboard.folder.studySets.map((x) => x.studySet);
+    for (const s of studySets) {
+      if (s.visibility == "Public" || s.userId == userId) return;
+    }
+
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "You do not have access to this folder.",
+    });
+  }
+};
+
 export const leaderboardRouter = createTRPCRouter({
-  bySetId: protectedProcedure
+  byContainerId: protectedProcedure
     .input(
       z.object({
         mode: z.nativeEnum(LeaderboardType),
-        setId: z.string(),
+        containerId: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
       const leaderboard = await ctx.prisma.leaderboard.findFirst({
         where: {
-          studySetId: input.setId,
+          containerId: input.containerId,
           type: input.mode,
         },
         include: {
-          highscores: true,
+          highscores: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                  verified: true,
+                },
+              },
+            },
+            orderBy: {
+              time: "asc",
+            },
+          },
           studySet: true,
+          folder: {
+            include: {
+              studySets: {
+                include: {
+                  studySet: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -30,22 +88,33 @@ export const leaderboardRouter = createTRPCRouter({
         });
       }
 
-      if (
-        leaderboard.studySet &&
-        leaderboard.studySet!.visibility === "Private" &&
-        leaderboard.studySet!.userId !== ctx.session?.user?.id
-      ) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This set is private.",
-        });
-      }
+      validateLeaderboardAccess(leaderboard, ctx.session.user.id);
+      return { ...leaderboard, studySet: undefined, folder: undefined };
+    }),
 
-      return {
-        ...leaderboard,
-        highscores: leaderboard.highscores.sort((a, b) => a.time - b.time),
-        studySet: null,
-      };
+  highscore: protectedProcedure
+    .input(
+      z.object({ mode: z.nativeEnum(LeaderboardType), containerId: z.string() })
+    )
+    .query(async ({ ctx, input }) => {
+      const leaderboard = await ctx.prisma.leaderboard.findFirst({
+        where: {
+          containerId: input.containerId,
+          type: input.mode,
+        },
+      });
+      if (!leaderboard) return { bestTime: null };
+
+      const highscore = await ctx.prisma.highscore.findUnique({
+        where: {
+          leaderboardId_userId: {
+            leaderboardId: leaderboard.id,
+            userId: ctx.session.user.id,
+          },
+        },
+      });
+
+      return { bestTime: highscore?.time ?? null };
     }),
 
   add: protectedProcedure
@@ -53,29 +122,57 @@ export const leaderboardRouter = createTRPCRouter({
       z.object({
         mode: z.nativeEnum(LeaderboardType),
         time: z.number(),
-        id: z.string(),
+        studySetId: z.string().optional(),
+        folderId: z.string().optional(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      const leaderboard = await ctx.prisma.leaderboard.findUnique({
+    .mutation(async ({ ctx, input }) => {
+      const containerId = input.studySetId ?? input.folderId;
+      if (!containerId) throw new TRPCError({ code: "BAD_REQUEST" });
+
+      let leaderboard = await ctx.prisma.leaderboard.findFirst({
         where: {
-          id: input.id,
+          containerId,
+          type: input.mode,
         },
         include: {
           studySet: true,
+          folder: {
+            include: {
+              studySets: {
+                include: {
+                  studySet: true,
+                },
+              },
+            },
+          },
         },
       });
 
-      if (
-        leaderboard?.studySet &&
-        leaderboard.studySet!.visibility === "Private" &&
-        leaderboard.studySet!.userId !== ctx.session?.user?.id
-      ) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "This set is private.",
+      if (!leaderboard) {
+        leaderboard = await ctx.prisma.leaderboard.create({
+          data: {
+            containerId,
+            studySetId: input.studySetId,
+            folderId: input.folderId,
+            type: input.mode,
+          },
+          include: {
+            studySet: true,
+            folder: {
+              include: {
+                studySets: {
+                  include: {
+                    studySet: true,
+                  },
+                },
+              },
+            },
+          },
         });
       }
+
+      validateLeaderboardAccess(leaderboard, ctx.session.user.id);
 
       if (input.time < MATCH_MIN_TIME) {
         throw new TRPCError({
@@ -84,38 +181,36 @@ export const leaderboardRouter = createTRPCRouter({
         });
       }
 
-      const highscore = await ctx.prisma.highscore.findFirst({
+      const highscore = await ctx.prisma.highscore.findUnique({
         where: {
-          userId: ctx.session.user.id,
-          leaderboardId: input.id,
+          leaderboardId_userId: {
+            leaderboardId: leaderboard.id,
+            userId: ctx.session.user.id,
+          },
         },
       });
 
       if (highscore && highscore.time < input.time) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "User has already gotten a better time.",
-        });
+        return null;
       }
 
-      const res = await ctx.prisma.highscore
-        .create({
-          data: {
-            time: input.time,
-            leaderboardId: input.id,
+      await ctx.prisma.highscore.upsert({
+        where: {
+          leaderboardId_userId: {
+            leaderboardId: leaderboard.id,
             userId: ctx.session.user.id,
           },
-        })
-        .leaderboard({
-          include: {
-            highscores: true,
-          },
-        });
-
-      return {
-        ...res,
-        highscores: res.highscores.sort((a, b) => a.time - b.time),
-        studySet: null,
-      };
+        },
+        create: {
+          time: input.time,
+          timestamp: new Date(),
+          leaderboardId: leaderboard.id,
+          userId: ctx.session.user.id,
+        },
+        update: {
+          time: input.time,
+          timestamp: new Date(),
+        },
+      });
     }),
 });

@@ -1,12 +1,40 @@
-import { Stack } from "@chakra-ui/react";
-import { GenericUserCard } from "./leaderboard-user-card";
+import { Card, useColorModeValue } from "@chakra-ui/react";
+import type {
+  Highscore, Leaderboard as LeaderboardType, User
+} from "@prisma/client";
+import React from "react";
+import { LeaderboardEntry } from "./leaderboard-entry";
 
-export default function Leaderboard() {
-  return (
-    <Stack maxH={"375px"} overflow="scroll">
-      {["a", "b", "c", "d", "e", "f"].map((l, n) => (
-        <GenericUserCard variantBg={true} n={n + 1} key={n} />
-      ))}
-    </Stack>
-  );
+export interface LeaderboardProps {
+  data: LeaderboardType & {
+    highscores: (Highscore & {
+      user: Pick<User, "id" | "username" | "image" | "verified">;
+    })[];
+  };
 }
+
+export const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
+  const bg = useColorModeValue("white", "gray.800");
+
+  return (
+    <Card
+      w="full"
+      bg={bg}
+      px="0"
+      py="3"
+      shadow="lg"
+      rounded="xl"
+      overflow="hidden"
+    >
+      {data.highscores.map((h, i) => (
+        <LeaderboardEntry
+          key={i}
+          rank={i + 1}
+          time={h.time}
+          timestamp={h.timestamp}
+          user={h.user}
+        />
+      ))}
+    </Card>
+  );
+};

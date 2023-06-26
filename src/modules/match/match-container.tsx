@@ -3,14 +3,19 @@ import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { MatchCard } from "../../components/match-card";
 import { useMatchContext, type MatchItem } from "../../stores/use-match-store";
+import { isReloaded } from "../../utils/navigation";
 import { EventListener } from "./event-listener";
-import { MatchEndModal } from "./match-end-modal";
 import MatchInfo from "./match-info";
+import { MatchStartModal } from "./match-start-modal";
+import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
+  const reloaded = isReloaded();
   const completed = useMatchContext((state) => state.completed);
+  const summary = useMatchContext((state) => state.roundSummary);
   const terms = useMatchContext((s) => s.terms);
   const setCard = useMatchContext((s) => s.setCard);
+  const nextRound = useMatchContext((s) => s.nextRound);
 
   const validateUnderIndices = useMatchContext(
     (state) => state.validateUnderIndices
@@ -31,9 +36,16 @@ export const MatchContainer = () => {
     []
   );
 
+  React.useEffect(() => {
+    // Start the round immediately if the user is entering on the page
+    if (reloaded) nextRound();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloaded]);
+
   return (
     <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
-      <MatchEndModal isOpen={completed} />
+      {summary && <MatchSummary />}
+      <MatchStartModal isOpen={completed && !reloaded} />
       {!completed && (
         <AnimatePresence>
           {terms.map((term, index) =>
@@ -51,7 +63,7 @@ export const MatchContainer = () => {
         </AnimatePresence>
       )}
       <EventListener wrapper={wrapper} />
-      <MatchInfo />
+      {!completed && <MatchInfo />}
     </Box>
   );
 };

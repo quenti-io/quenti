@@ -3,13 +3,17 @@ import {
   Card,
   Container,
   GridItem,
+  Stack,
   Stat,
   StatLabel,
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useMatchContext } from "../../stores/use-match-store";
+import { api } from "../../utils/api";
+import { formatDeciseconds } from "../../utils/time";
 
 export interface MatchStatProps {
   value: number | string;
@@ -34,11 +38,16 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
 };
 
 const MatchInfo = () => {
+  const { id } = useSetFolderUnison();
   const startTime = useMatchContext((s) => s.roundStartTime);
   const progress = useMatchContext((s) => s.roundProgress);
   const numTerms = useMatchContext((s) => s.termsThisRound);
   const completed = useMatchContext((s) => s.completed);
   const roundSum = useMatchContext((s) => s.roundSummary);
+  const highscore = api.leaderboard.highscore.useQuery({
+    mode: "Match",
+    containerId: id,
+  });
 
   const [seconds, setSeconds] = React.useState("0.0");
 
@@ -79,7 +88,15 @@ const MatchInfo = () => {
         }}
       />
       <Container py="5" px="6">
-        <MatchStat label="Time" value={seconds} />
+        <Stack spacing="4">
+          <MatchStat label="Time" value={seconds} />
+          {highscore.data?.bestTime && (
+            <MatchStat
+              label="Best Time"
+              value={formatDeciseconds(highscore.data.bestTime)}
+            />
+          )}
+        </Stack>
       </Container>
     </Card>
   );

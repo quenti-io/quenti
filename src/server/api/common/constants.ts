@@ -4,7 +4,7 @@ export const MAX_CHARS_TAGS = 100;
 export const MAX_NUM_TAGS = 12;
 export const MAX_TERM = 1000;
 
-export const MATCH_MIN_TIME = 150;
+export const MATCH_MIN_TIME = 15;
 
 import json from "../../../../languages.json";
 const languages = json.languages;
