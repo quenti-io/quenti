@@ -13,7 +13,7 @@ import { formatDeciseconds } from "../../utils/time";
 
 interface MatchSummaryFeedbackProps {
   elapsed: number;
-  highscores: RouterOutputs["leaderboard"]["bySetId"]["highscores"];
+  highscores: RouterOutputs["leaderboard"]["byContainerId"]["highscores"];
 }
 
 export const MatchSummaryFeedback: React.FC<MatchSummaryFeedbackProps> = ({

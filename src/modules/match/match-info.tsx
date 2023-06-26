@@ -3,14 +3,14 @@ import {
   Card,
   Container,
   GridItem,
+  Stack,
   Stat,
   StatLabel,
   StatNumber,
-  Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
-import { useSet } from "../../hooks/use-set";
+import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useMatchContext } from "../../stores/use-match-store";
 import { api } from "../../utils/api";
 import { formatDeciseconds } from "../../utils/time";
@@ -38,7 +38,7 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
 };
 
 const MatchInfo = () => {
-  const { id } = useSet();
+  const { id } = useSetFolderUnison();
   const startTime = useMatchContext((s) => s.roundStartTime);
   const progress = useMatchContext((s) => s.roundProgress);
   const numTerms = useMatchContext((s) => s.termsThisRound);
@@ -46,7 +46,7 @@ const MatchInfo = () => {
   const roundSum = useMatchContext((s) => s.roundSummary);
   const highscore = api.leaderboard.highscore.useQuery({
     mode: "Match",
-    studySetId: id,
+    containerId: id,
   });
 
   const [seconds, setSeconds] = React.useState("0.0");
