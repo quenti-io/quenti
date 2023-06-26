@@ -4,7 +4,7 @@ import { Loading } from "../../components/loading";
 import { useSet } from "../../hooks/use-set";
 import { useMatchContext } from "../../stores/use-match-store";
 import { api } from "../../utils/api";
-import { Leaderboard } from "./leaderboard";
+import { Leaderboard } from "../leaderboard/leaderboard";
 
 export const MatchSummary = () => {
   const { id } = useSet();
