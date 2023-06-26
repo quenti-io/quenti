@@ -62,3 +62,10 @@ export const dtFormatter = new Intl.DateTimeFormat("en-US", {
   dateStyle: "medium",
   timeStyle: "short",
 });
+
+export const formatDeciseconds = (deciseconds: number) => {
+  const seconds = Math.floor(deciseconds / 10);
+  const deci = deciseconds % 10;
+
+  return `${seconds}.${deci}`;
+};

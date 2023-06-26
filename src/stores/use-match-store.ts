@@ -67,7 +67,14 @@ interface MatchState extends MatchStoreProps {
   ) => { x: number; y: number };
 }
 
-export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
+interface MatchBehaviors {
+  onRoundComplete: (roundSummary: RoundSummary) => void;
+}
+
+export const createMatchStore = (
+  initProps?: Partial<MatchStoreProps>,
+  behaviors?: Partial<MatchBehaviors>
+) => {
   const DEFAULT_PROPS: MatchStoreProps = {
     roundStartTime: 0,
     termsThisRound: 0,
@@ -113,20 +120,21 @@ export const createMatchStore = (initProps?: Partial<MatchStoreProps>) => {
         });
       },
       answerCallback() {
-        set((state) => {
-          if (state.roundProgress === state.termsThisRound - 1) {
-            return {
-              completed: true,
-              roundSummary: {
-                endTime: Date.now(),
-                termsThisRound: state.termsThisRound,
-                incorrectGuesses: state.incorrectGuesses,
-              },
-            };
-          }
+        const state = get();
+        if (state.roundProgress === state.termsThisRound - 1) {
+          const summary = {
+            endTime: Date.now(),
+            termsThisRound: state.termsThisRound,
+            incorrectGuesses: state.incorrectGuesses,
+          };
 
-          return {};
-        });
+          set({
+            completed: true,
+            roundSummary: summary,
+          });
+
+          behaviors?.onRoundComplete?.(summary);
+        }
       },
       nextRound() {
         set((state) => ({

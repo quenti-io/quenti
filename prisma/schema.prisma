@@ -211,10 +211,12 @@ model Leaderboard {
 
 model Highscore {
   leaderboardId String
-  leaderboard   Leaderboard @relation(fields: [leaderboardId], references: [id])
   userId        String
-  User          User        @relation(fields: [userId], references: [id])
   time          Int
+  timestamp     DateTime @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id])
+  leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id])
 
   @@id([leaderboardId, userId])
 }

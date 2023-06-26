@@ -5,6 +5,7 @@ import { discoverableRouter } from "./routers/discoverable";
 import { experienceRouter } from "./routers/experience";
 import { foldersRouter } from "./routers/folders";
 import { importRouter } from "./routers/import";
+import { leaderboardRouter } from "./routers/leaderboard";
 import { profileRouter } from "./routers/profile";
 import { recentRouter } from "./routers/recent";
 import { shareResolverRouter } from "./routers/share-resolver";
@@ -33,6 +34,7 @@ export const appRouter = createTRPCRouter({
   terms: termsRouter,
   experience: experienceRouter,
   studiableTerms: studiableTermsRouter,
+  leaderboard: leaderboardRouter,
   recent: recentRouter,
   autoSave: autoSaveRouter,
   import: importRouter,
