@@ -8,12 +8,14 @@ import { useSet } from "../../hooks/use-set";
 import { useMatchContext } from "../../stores/use-match-store";
 import { api } from "../../utils/api";
 import { Leaderboard } from "../leaderboard/leaderboard";
+import { MatchSummaryFeedback } from "./match-summary-feedback";
 
 export const MatchSummary = () => {
   const { id } = useSet();
   const rootUrl = useEntityRootUrl();
   const startTime = useMatchContext((s) => s.roundStartTime);
-  const summary = useMatchContext((s) => s.roundSummary);
+  const summary = useMatchContext((s) => s.roundSummary)!;
+  const elapsed = Math.floor((summary.endTime - startTime) / 100);
   const nextRound = useMatchContext((s) => s.nextRound);
 
   const add = api.leaderboard.add.useMutation();
@@ -28,13 +30,11 @@ export const MatchSummary = () => {
   );
 
   React.useEffect(() => {
-    if (!summary) return;
-
     void (async () => {
       await add.mutateAsync({
         studySetId: id,
         mode: "Match",
-        time: Math.floor((summary.endTime - startTime) / 100),
+        time: elapsed,
       });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,6 +51,10 @@ export const MatchSummary = () => {
       alignItems="center"
     >
       <Stack spacing="6" w="full">
+        <MatchSummaryFeedback
+          elapsed={elapsed}
+          highscores={leaderboard.data.highscores}
+        />
         <Leaderboard data={leaderboard.data} />
         <ButtonGroup w="full" justifyContent="end">
           <Button

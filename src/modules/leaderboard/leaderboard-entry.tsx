@@ -6,13 +6,13 @@ import {
   Stack,
   Text,
   Tooltip,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import type { User } from "@prisma/client";
 import { IconDiscountCheck, IconRosetteFilled } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { Link } from "../../components/link";
+import { UsernameLink } from "../../components/username-link";
 import { avatarUrl } from "../../utils/avatar";
 import { formatDeciseconds, getRelativeTime } from "../../utils/time";
 
@@ -31,8 +31,6 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
 }) => {
   const session = useSession();
   const isMyRank = session.data?.user?.id === user.id;
-
-  const highlight = useColorModeValue("blue.500", "blue.200");
 
   return (
     <Box
@@ -71,15 +69,7 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
           <Avatar src={avatarUrl(user)} width="40px" height="40px" />
           <Stack spacing="2px">
             <HStack spacing="1">
-              <Link
-                fontWeight={700}
-                href={`/@${user.username}`}
-                transition="color 0.2s ease-in-out"
-                _hover={{ color: highlight }}
-                className="highlight-block"
-              >
-                {user.username}
-              </Link>
+              <UsernameLink username={user.username} />
               {user.verified && (
                 <Box color="blue.300">
                   <Tooltip label="Verified">

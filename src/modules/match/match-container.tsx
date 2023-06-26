@@ -10,6 +10,7 @@ import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
   const completed = useMatchContext((state) => state.completed);
+  const summary = useMatchContext((state) => state.roundSummary);
   const terms = useMatchContext((s) => s.terms);
   const setCard = useMatchContext((s) => s.setCard);
   const nextRound = useMatchContext((s) => s.nextRound);
@@ -41,7 +42,7 @@ export const MatchContainer = () => {
 
   return (
     <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
-      {completed && <MatchSummary />}
+      {summary && <MatchSummary />}
       {/* <MatchStartModal isOpen={} /> */}
       {!completed && (
         <AnimatePresence>
