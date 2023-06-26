@@ -3,12 +3,14 @@ import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { MatchCard } from "../../components/match-card";
 import { useMatchContext, type MatchItem } from "../../stores/use-match-store";
+import { isReloaded } from "../../utils/navigation";
 import { EventListener } from "./event-listener";
 import MatchInfo from "./match-info";
 import { MatchStartModal } from "./match-start-modal";
 import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
+  const reloaded = isReloaded();
   const completed = useMatchContext((state) => state.completed);
   const summary = useMatchContext((state) => state.roundSummary);
   const terms = useMatchContext((s) => s.terms);
@@ -34,16 +36,16 @@ export const MatchContainer = () => {
     []
   );
 
-  // TEMPORARY UNTIL START MODAL IS FIXED
   React.useEffect(() => {
-    nextRound();
+    // Start the round immediately if the user is entering on the page
+    if (reloaded) nextRound();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reloaded]);
 
   return (
     <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
       {summary && <MatchSummary />}
-      {/* <MatchStartModal isOpen={} /> */}
+      <MatchStartModal isOpen={completed && !reloaded} />
       {!completed && (
         <AnimatePresence>
           {terms.map((term, index) =>
