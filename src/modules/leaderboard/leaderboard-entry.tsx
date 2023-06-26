@@ -4,9 +4,7 @@ import {
   Heading,
   HStack,
   Stack,
-  Td,
   Text,
-  Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { User } from "@prisma/client";

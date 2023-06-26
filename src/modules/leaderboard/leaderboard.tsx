@@ -1,8 +1,6 @@
-import { Box, Card, Table, Tbody, useColorModeValue } from "@chakra-ui/react";
+import { Card, useColorModeValue } from "@chakra-ui/react";
 import type {
-  Leaderboard as LeaderboardType,
-  Highscore,
-  User,
+  Highscore, Leaderboard as LeaderboardType, User
 } from "@prisma/client";
 import React from "react";
 import { LeaderboardEntry } from "./leaderboard-entry";
