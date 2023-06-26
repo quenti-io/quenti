@@ -45,7 +45,7 @@ export const MatchContainer = () => {
   return (
     <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
       {summary && <MatchSummary />}
-      <MatchStartModal isOpen={completed && !reloaded} />
+      <MatchStartModal isOpen={completed && !reloaded && !summary} />
       {!completed && (
         <AnimatePresence>
           {terms.map((term, index) =>
