@@ -1,19 +1,12 @@
 import { Flex, Heading, IconButton, Tag } from "@chakra-ui/react";
 import { IconX } from "@tabler/icons-react";
-import { useRouter } from "next/router";
 import { Link } from "../../components/link";
+import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 
 export const TitleBar = () => {
-  const router = useRouter();
-  const { id, title, type } = useSetFolderUnison();
-
-  const backHref =
-    type == "set"
-      ? `/${id}`
-      : `/${router.query.username as string}/folders/${
-          router.query.slug as string
-        }`;
+  const { title } = useSetFolderUnison();
+  const rootUrl = useEntityRootUrl();
 
   return (
     <Flex
@@ -41,7 +34,7 @@ export const TitleBar = () => {
         <IconButton
           icon={<IconX />}
           as={Link}
-          href={backHref}
+          href={rootUrl}
           aria-label="Close"
           rounded="full"
           variant="ghost"

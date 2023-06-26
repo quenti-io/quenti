@@ -26,6 +26,7 @@ export const leaderboardRouter = createTRPCRouter({
                   id: true,
                   username: true,
                   image: true,
+                  verified: true,
                 },
               },
             },

@@ -1,6 +1,9 @@
-import { Container, Stack } from "@chakra-ui/react";
+import { Button, ButtonGroup, Container, Stack } from "@chakra-ui/react";
+import { IconArrowBack } from "@tabler/icons-react";
 import React from "react";
+import { Link } from "../../components/link";
 import { Loading } from "../../components/loading";
+import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSet } from "../../hooks/use-set";
 import { useMatchContext } from "../../stores/use-match-store";
 import { api } from "../../utils/api";
@@ -8,8 +11,10 @@ import { Leaderboard } from "../leaderboard/leaderboard";
 
 export const MatchSummary = () => {
   const { id } = useSet();
+  const rootUrl = useEntityRootUrl();
   const startTime = useMatchContext((s) => s.roundStartTime);
   const summary = useMatchContext((s) => s.roundSummary);
+  const nextRound = useMatchContext((s) => s.nextRound);
 
   const add = api.leaderboard.add.useMutation();
   const leaderboard = api.leaderboard.bySetId.useQuery(
@@ -47,6 +52,17 @@ export const MatchSummary = () => {
     >
       <Stack spacing="6" w="full">
         <Leaderboard data={leaderboard.data} />
+        <ButtonGroup w="full" justifyContent="end">
+          <Button
+            variant="ghost"
+            leftIcon={<IconArrowBack />}
+            as={Link}
+            href={rootUrl}
+          >
+            Back to set
+          </Button>
+          <Button onClick={nextRound}>Play again</Button>
+        </ButtonGroup>
       </Stack>
     </Container>
   );

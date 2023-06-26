@@ -5,18 +5,20 @@ import {
   HStack,
   Stack,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { User } from "@prisma/client";
-import { IconRosetteFilled } from "@tabler/icons-react";
+import { IconDiscountCheck, IconRosetteFilled } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
+import { Link } from "../../components/link";
 import { avatarUrl } from "../../utils/avatar";
 import { formatDeciseconds, getRelativeTime } from "../../utils/time";
 
 export interface LeaderboardEntryProps {
   rank: number;
-  user: Pick<User, "id" | "username" | "image">;
+  user: Pick<User, "id" | "username" | "image" | "verified">;
   timestamp: Date;
   time: number;
 }
@@ -30,7 +32,7 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
   const session = useSession();
   const isMyRank = session.data?.user?.id === user.id;
 
-  const hoverBg = useColorModeValue("#17192306", "#F7FAFC06");
+  const highlight = useColorModeValue("blue.500", "blue.200");
 
   return (
     <Box
@@ -40,7 +42,7 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
       rounded="md"
       py="2"
       _hover={{
-        bg: hoverBg,
+        bg: "#4b83ff11",
       }}
     >
       <Box
@@ -68,7 +70,24 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
         <HStack spacing="4">
           <Avatar src={avatarUrl(user)} width="40px" height="40px" />
           <Stack spacing="2px">
-            <Text fontWeight={700}>{user.username}</Text>
+            <HStack spacing="1">
+              <Link
+                fontWeight={700}
+                href={`/@${user.username}`}
+                transition="color 0.2s ease-in-out"
+                _hover={{ color: highlight }}
+                className="highlight-block"
+              >
+                {user.username}
+              </Link>
+              {user.verified && (
+                <Box color="blue.300">
+                  <Tooltip label="Verified">
+                    <IconDiscountCheck aria-label="Verified" size={18} />
+                  </Tooltip>
+                </Box>
+              )}
+            </HStack>
             <Text color="gray.500" fontSize="xs">
               {getRelativeTime(timestamp)}
             </Text>

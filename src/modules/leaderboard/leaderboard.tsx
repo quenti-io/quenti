@@ -8,7 +8,7 @@ import { LeaderboardEntry } from "./leaderboard-entry";
 export interface LeaderboardProps {
   data: LeaderboardType & {
     highscores: (Highscore & {
-      user: Pick<User, "id" | "username" | "image">;
+      user: Pick<User, "id" | "username" | "image" | "verified">;
     })[];
   };
 }
