@@ -45,7 +45,6 @@ export const MatchSummary = () => {
   return (
     <Container
       maxW="container.md"
-      h="full"
       py="10"
       display="flex"
       alignItems="center"
