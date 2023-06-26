@@ -1,4 +1,4 @@
-import { Card, Table, Tbody, useColorModeValue } from "@chakra-ui/react";
+import { Box, Card, Table, Tbody, useColorModeValue } from "@chakra-ui/react";
 import type {
   Leaderboard as LeaderboardType,
   Highscore,
@@ -19,27 +19,24 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
   const bg = useColorModeValue("white", "gray.800");
 
   return (
-    <Card w="full" bg={bg} px="0" py="3">
-      <Table
-        size="md"
-        variant="unstyled"
-        p="0"
-        style={{
-          fontVariantNumeric: "normal",
-        }}
-      >
-        <Tbody>
-          {data.highscores.map((h, i) => (
-            <LeaderboardEntry
-              key={i}
-              rank={i + 1}
-              time={h.time}
-              timestamp={h.timestamp}
-              user={h.user}
-            />
-          ))}
-        </Tbody>
-      </Table>
+    <Card
+      w="full"
+      bg={bg}
+      px="0"
+      py="3"
+      shadow="lg"
+      rounded="xl"
+      overflow="hidden"
+    >
+      {data.highscores.map((h, i) => (
+        <LeaderboardEntry
+          key={i}
+          rank={i + 1}
+          time={h.time}
+          timestamp={h.timestamp}
+          user={h.user}
+        />
+      ))}
     </Card>
   );
 };
