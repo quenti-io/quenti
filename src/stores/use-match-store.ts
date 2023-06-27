@@ -26,6 +26,7 @@ export interface MatchStoreProps {
   roundSummary?: RoundSummary;
   terms: MatchItem[];
   zIndex: number;
+  highlightedIndices: number[];
 }
 
 export interface MatchItem {
@@ -69,6 +70,7 @@ interface MatchState extends MatchStoreProps {
   ) => { x: number; y: number };
   requestZIndex: () => number;
   setZIndex: (zIndex: number) => void;
+  setHighlightedIndices: (indices: number[]) => void;
 }
 
 interface MatchBehaviors {
@@ -90,6 +92,7 @@ export const createMatchStore = (
     completed: true,
     terms: [],
     zIndex: 0,
+    highlightedIndices: [],
   };
 
   return createStore<MatchState>()(
@@ -265,6 +268,7 @@ export const createMatchStore = (
 
         setTimeout(() => {
           set((state) => ({
+            highlightedIndices: [],
             terms: state.terms.map((x) => ({
               ...x,
               completed: x.state == "correct",
@@ -280,6 +284,8 @@ export const createMatchStore = (
         return get().zIndex;
       },
       setZIndex: (zIndex: number) => set({ zIndex }),
+      setHighlightedIndices: (highlightedIndices: number[]) =>
+        set({ highlightedIndices }),
     }))
   );
 };

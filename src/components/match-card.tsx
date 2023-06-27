@@ -9,28 +9,38 @@ export interface MatchCardProps {
   term: MatchItem;
   index: number;
   onDragStart: (term: MatchItem, index: number) => void;
-  onDragEnd: (term: MatchItem, index: number, x: number, y: number) => boolean;
+  onDrag: (term: MatchItem, index: number, x: number, y: number) => void;
+  onDragEnd: (term: MatchItem, index: number, x: number, y: number) => void;
 }
 
 export const RawMatchCard: React.FC<MatchCardProps> = ({
   term,
   index,
   onDragStart,
+  onDrag,
   onDragEnd,
 }) => {
   const setCard = useMatchContext((state) => state.setCard);
+  const isHighlighted = useMatchContext((state) =>
+    state.highlightedIndices.includes(index)
+  );
 
   const [isInMotion, setIsInMotion] = React.useState(false);
 
   const linkBg = useColorModeValue("white", "gray.800");
   const gray = useColorModeValue("gray.200", "gray.700");
+  const highlighted = useColorModeValue("gray.300", "gray.600");
 
   const stateBorder = term.state
     ? term.state == "correct"
       ? "green.400"
       : "red.400"
     : undefined;
-  const linkBorder = term.state ? stateBorder : gray;
+  const linkBorder = term.state
+    ? stateBorder
+    : isHighlighted
+    ? highlighted
+    : gray;
 
   const card = React.useRef<HTMLDivElement>(null);
 
@@ -81,6 +91,7 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
       onDragStart={() => {
         onDragStart(term, index);
       }}
+      onDrag={(_, info) => onDrag(term, index, info.offset.x, info.offset.y)}
       onDragEnd={(_, info) => {
         onDragEnd(term, index, info.offset.x, info.offset.y);
       }}
