@@ -11,17 +11,40 @@ import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
   const reloaded = isReloaded();
-  const completed = useMatchContext((state) => state.completed);
-  const summary = useMatchContext((state) => state.roundSummary);
-  const terms = useMatchContext((s) => s.terms);
-  const setCard = useMatchContext((s) => s.setCard);
-  const nextRound = useMatchContext((s) => s.nextRound);
 
+  const terms = useMatchContext((state) => state.terms);
+  const summary = useMatchContext((state) => state.roundSummary);
+  const completed = useMatchContext((state) => state.completed);
+  const setCard = useMatchContext((state) => state.setCard);
+  const nextRound = useMatchContext((state) => state.nextRound);
+  const requestZIndex = useMatchContext((state) => state.requestZIndex);
+
+  const getIndicesUnder = useMatchContext((state) => state.getIndicesUnder);
+  const setHighlightedIndices = useMatchContext(
+    (state) => state.setHighlightedIndices
+  );
   const validateUnderIndices = useMatchContext(
     (state) => state.validateUnderIndices
   );
 
   const wrapper = React.useRef<HTMLDivElement>(null);
+
+  const onDragStart = React.useCallback((term: MatchItem, index: number) => {
+    setCard(index, {
+      ...term,
+      zIndex: requestZIndex(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onDrag = React.useCallback(
+    (term: MatchItem, index: number, x: number, y: number) => {
+      const updated = { ...term, x: term.x + x, y: term.y + y };
+      setHighlightedIndices(getIndicesUnder(index, updated));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const onDragEnd = React.useCallback(
     (term: MatchItem, index: number, x: number, y: number) => {
@@ -30,7 +53,7 @@ export const MatchContainer = () => {
         x: term.x + x,
         y: term.y + y,
       });
-      return validateUnderIndices(index, wrapper.current!);
+      validateUnderIndices(index, wrapper.current!);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -56,6 +79,8 @@ export const MatchContainer = () => {
                 term={term}
                 index={index}
                 key={index}
+                onDragStart={onDragStart}
+                onDrag={onDrag}
                 onDragEnd={onDragEnd}
               />
             )
