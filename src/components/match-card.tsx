@@ -95,12 +95,12 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
         borderColor={linkBorder}
         borderWidth="2px"
         shadow="lg"
-        transition="all ease-in-out 150ms"
+        transition="border-color ease-in-out 150ms"
         maxW="200px"
         w="max-content"
         position="absolute"
+        cursor="move"
         _hover={{
-          transform: "translateY(-2px)",
           borderBottomColor: stateBorder ?? "blue.300",
         }}
       >
