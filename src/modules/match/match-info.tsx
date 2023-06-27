@@ -1,19 +1,26 @@
 import {
   Box,
+  ButtonGroup,
   Card,
   Container,
   GridItem,
+  HStack,
+  IconButton,
   Stack,
   Stat,
   StatLabel,
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { IconArrowBack, IconSettings } from "@tabler/icons-react";
 import React from "react";
+import { Link } from "../../components/link";
+import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useMatchContext } from "../../stores/use-match-store";
 import { api } from "../../utils/api";
 import { formatDeciseconds } from "../../utils/time";
+import { MatchSettingsModal } from "./match-settings-modal";
 
 export interface MatchStatProps {
   value: number | string;
@@ -39,16 +46,23 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
 
 const MatchInfo = () => {
   const { id } = useSetFolderUnison();
+  const entityRootUrl = useEntityRootUrl();
   const startTime = useMatchContext((s) => s.roundStartTime);
   const progress = useMatchContext((s) => s.roundProgress);
   const numTerms = useMatchContext((s) => s.termsThisRound);
   const completed = useMatchContext((s) => s.completed);
   const roundSum = useMatchContext((s) => s.roundSummary);
+  const isEligibleForLeaderboard = useMatchContext(
+    (s) => s.isEligibleForLeaderboard
+  );
+
   const highscore = api.leaderboard.highscore.useQuery({
     mode: "Match",
     containerId: id,
+    eligible: isEligibleForLeaderboard,
   });
 
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
   const [seconds, setSeconds] = React.useState("0.0");
 
   React.useEffect(() => {
@@ -68,37 +82,66 @@ const MatchInfo = () => {
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
   return (
-    <Card
-      bg={bg}
-      rounded="lg"
-      borderWidth="2px"
-      borderBottomWidth="4px"
-      borderTopWidth="0"
-      borderColor={borderColor}
-      w="250px"
-      ml="7"
-      overflow="hidden"
-    >
-      <Box
-        bg="orange.300"
-        height="1"
-        style={{
-          transition: "width 0.1s ease-in-out",
-          width: `calc(100% * ${progress} / ${numTerms})`,
-        }}
+    <>
+      <MatchSettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
       />
-      <Container py="5" px="6">
-        <Stack spacing="4">
-          <MatchStat label="Time" value={seconds} />
-          {highscore.data?.bestTime && (
-            <MatchStat
-              label="Best Time"
-              value={formatDeciseconds(highscore.data.bestTime)}
-            />
-          )}
-        </Stack>
-      </Container>
-    </Card>
+      <Card
+        bg={bg}
+        rounded="lg"
+        borderWidth="2px"
+        borderBottomWidth="4px"
+        borderTopWidth="0"
+        borderColor={borderColor}
+        w="250px"
+        ml="7"
+        overflow="hidden"
+      >
+        <Box
+          bg="orange.300"
+          height="1"
+          style={{
+            transition: "width 0.1s ease-in-out",
+            width: `calc(100% * ${progress} / ${numTerms})`,
+          }}
+        />
+        <Container py="5" px="6">
+          <Stack spacing="4">
+            <HStack justifyContent="space-between" alignItems="start">
+              <MatchStat label="Time" value={seconds} />
+              <ButtonGroup>
+                <IconButton
+                  icon={<IconArrowBack />}
+                  aria-label="Back"
+                  variant="ghost"
+                  rounded="full"
+                  colorScheme="gray"
+                  size="sm"
+                  as={Link}
+                  href={entityRootUrl}
+                />
+                <IconButton
+                  icon={<IconSettings />}
+                  aria-label="Settings"
+                  variant="ghost"
+                  rounded="full"
+                  colorScheme="gray"
+                  size="sm"
+                  onClick={() => setSettingsOpen(true)}
+                />
+              </ButtonGroup>
+            </HStack>
+            {highscore.data?.bestTime && (
+              <MatchStat
+                label="Best Time"
+                value={formatDeciseconds(highscore.data.bestTime)}
+              />
+            )}
+          </Stack>
+        </Container>
+      </Card>
+    </>
   );
 };
 

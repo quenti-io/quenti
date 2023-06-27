@@ -84,6 +84,22 @@ export const experienceRouter = createTRPCRouter({
       });
     }),
 
+  setMatchStudyStarred: protectedProcedure
+    .input(z.object({ genericId: z.string(), matchStudyStarred: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.studySetExperience.update({
+        where: {
+          userId_studySetId: {
+            userId: ctx.session.user.id,
+            studySetId: input.genericId,
+          },
+        },
+        data: {
+          matchStudyStarred: input.matchStudyStarred,
+        },
+      });
+    }),
+
   setStudyStarred: protectedProcedure
     .input(z.object({ studySetId: z.string(), studyStarred: z.boolean() }))
     .mutation(async ({ ctx, input }) => {

@@ -18,6 +18,7 @@ export interface ExperienceStoreProps {
   enableCardsSorting: boolean;
   cardsStudyStarred: boolean;
   cardsAnswerWith: LimitedStudySetAnswerMode;
+  matchStudyStarred: boolean;
   starredTerms: string[];
 }
 
@@ -32,6 +33,7 @@ interface ExperienceState extends ExperienceStoreProps {
   setEnableCardsSorting: (enableCardsSorting: boolean) => void;
   setCardsStudyStarred: (cardsStudyStarred: boolean) => void;
   setCardsAnswerWith: (cardsAnswerWith: LimitedStudySetAnswerMode) => void;
+  setMatchStudyStarred: (matchStudyStarred: boolean) => void;
   starTerm: (termId: string) => void;
   unstarTerm: (termId: string) => void;
 }
@@ -52,6 +54,7 @@ export const createExperienceStore = (
     cardsAnswerWith: "Definition",
     cardsStudyStarred: false,
     enableCardsSorting: false,
+    matchStudyStarred: false,
     starredTerms: [],
   };
 
@@ -86,6 +89,8 @@ export const createExperienceStore = (
         set({ cardsStudyStarred }),
       setCardsAnswerWith: (cardsAnswerWith: LimitedStudySetAnswerMode) =>
         set({ cardsAnswerWith }),
+      setMatchStudyStarred: (matchStudyStarred: boolean) =>
+        set({ matchStudyStarred }),
       starTerm: (termId: string) => {
         set((state) => {
           return {
