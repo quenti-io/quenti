@@ -5,7 +5,7 @@ import { MatchContainer } from "../../../modules/match/match-container";
 
 const Match: ComponentWithAuth = () => {
   return (
-    <HydrateSetData>
+    <HydrateSetData disallowDirty requireFresh>
       <CreateMatchData>
         <MatchContainer />
       </CreateMatchData>

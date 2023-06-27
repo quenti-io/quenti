@@ -95,7 +95,7 @@ export const createMatchStore = (
         set({
           studiableTerms,
           termsThisRound: Math.min(studiableTerms.length, MATCH_TERMS_IN_ROUND),
-          isEligableForLeaderboard: isEligableForLeaderboard,
+          isEligableForLeaderboard,
         });
       },
       answerCorrectly(termId) {

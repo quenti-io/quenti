@@ -6,8 +6,11 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  Stack,
+  Stack
 } from "@chakra-ui/react";
+import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
+import { useExperienceContext } from "../../stores/use-experience-store";
+import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { StudyStarredSection } from "./settings/study-starred-section";
 
 export interface MatchSettingsModalProps {
@@ -19,8 +22,20 @@ export const MatchSettingsModal: React.FC<MatchSettingsModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { experience } = useSetFolderUnison();
+  const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
+  const matchStudyStarred = useExperienceContext((s) => s.matchStudyStarred);
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        const isDirty = experience.matchStudyStarred !== matchStudyStarred;
+        if (isDirty) setIsDirty(true);
+        onClose();
+      }}
+      isCentered
+    >
       <ModalOverlay backdropFilter="blur(6px)" />
       <ModalContent p="4" pb="8" rounded="xl">
         <ModalBody>

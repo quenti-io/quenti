@@ -27,11 +27,12 @@ export type SetData = BaseReturn & {
 
 export interface HydrateSetDataProps {
   disallowDirty?: boolean;
+  requireFresh?: boolean;
 }
 
 export const HydrateSetData: React.FC<
   React.PropsWithChildren<HydrateSetDataProps>
-> = ({ disallowDirty = false, children }) => {
+> = ({ disallowDirty = false, requireFresh, children }) => {
   const id = useRouter().query.id as string;
   const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
     s.isDirty,
@@ -39,14 +40,16 @@ export const HydrateSetData: React.FC<
   ]);
   const { loading } = useLoading();
 
-  const { data, error, refetch } = api.studySets.byId.useQuery(id, {
-    retry: false,
-    enabled: !!id && !isDirty,
-    onSuccess: (data) => {
-      if (isDirty) setIsDirty(false);
-      queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
-    },
-  });
+  const { data, error, refetch, isFetchedAfterMount } =
+    api.studySets.byId.useQuery(id, {
+      retry: false,
+      // refetchOnMount: !!requireFresh,
+      enabled: !!id && !isDirty,
+      onSuccess: (data) => {
+        if (isDirty) setIsDirty(false);
+        queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
+      },
+    });
 
   React.useEffect(() => {
     void (async () => {
@@ -73,7 +76,13 @@ export const HydrateSetData: React.FC<
 
   if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
-  if (loading || !data || (disallowDirty && isDirty)) return <Loading />;
+  if (
+    loading ||
+    !data ||
+    (disallowDirty && isDirty) ||
+    (!isFetchedAfterMount && requireFresh)
+  )
+    return <Loading />;
 
   return (
     <ContextLayer data={createInjectedData(data)}>

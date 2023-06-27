@@ -1,5 +1,6 @@
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
+import { useExperienceContext } from "../stores/use-experience-store";
 import {
   createMatchStore,
   MatchContext,
@@ -9,7 +10,9 @@ import {
 export const CreateMatchData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms, experience } = useSetFolderUnison();
+  const { terms } = useSetFolderUnison();
+  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const matchStudyStarred = useExperienceContext((s) => s.matchStudyStarred);
 
   const storeRef = React.useRef<MatchStore>();
   if (!storeRef.current) {
@@ -18,8 +21,8 @@ export const CreateMatchData: React.FC<React.PropsWithChildren> = ({
     let isLeaderboardAllowed = true;
     let learnTerms = terms;
 
-    if (experience.studyStarred) {
-      learnTerms = terms.filter((x) => experience.starredTerms.includes(x.id));
+    if (matchStudyStarred) {
+      learnTerms = terms.filter((x) => starredTerms.includes(x.id));
       isLeaderboardAllowed = false;
     }
 
