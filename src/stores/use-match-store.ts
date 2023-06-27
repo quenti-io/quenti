@@ -21,7 +21,7 @@ export interface MatchStoreProps {
   roundQuestions: (Term & {
     completed: boolean;
   })[];
-  isEligableForLeaderboard: boolean;
+  isEligibleForLeaderboard: boolean;
   completed: boolean;
   roundSummary?: RoundSummary;
   terms: MatchItem[];
@@ -48,7 +48,7 @@ const MATCH_TIMER_BOUNDS = { x: 300, y: 150 };
 interface MatchState extends MatchStoreProps {
   initialize: (
     studiableTerms: Term[],
-    isEligableForLeaderboard: boolean
+    isEligibleForLeaderboard: boolean
   ) => void;
   // Maybe this shouldn't use ids because it's pretty easy to cheat this way
   // But the code is open source and the easiest method of cheating
@@ -82,7 +82,7 @@ export const createMatchStore = (
     incorrectGuesses: 0,
     studiableTerms: [],
     roundQuestions: [],
-    isEligableForLeaderboard: false,
+    isEligibleForLeaderboard: false,
     completed: true,
     terms: [],
   };
@@ -91,11 +91,11 @@ export const createMatchStore = (
     subscribeWithSelector((set, get) => ({
       ...DEFAULT_PROPS,
       ...initProps,
-      initialize(studiableTerms, isEligableForLeaderboard) {
+      initialize(studiableTerms, isEligibleForLeaderboard) {
         set({
           studiableTerms,
           termsThisRound: Math.min(studiableTerms.length, MATCH_TERMS_IN_ROUND),
-          isEligableForLeaderboard,
+          isEligibleForLeaderboard: isEligibleForLeaderboard,
         });
       },
       answerCorrectly(termId) {

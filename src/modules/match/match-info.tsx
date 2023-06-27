@@ -48,9 +48,14 @@ const MatchInfo = () => {
   const numTerms = useMatchContext((s) => s.termsThisRound);
   const completed = useMatchContext((s) => s.completed);
   const roundSum = useMatchContext((s) => s.roundSummary);
+  const isEligibleForLeaderboard = useMatchContext(
+    (s) => s.isEligibleForLeaderboard
+  );
+
   const highscore = api.leaderboard.highscore.useQuery({
     mode: "Match",
     containerId: id,
+    eligible: isEligibleForLeaderboard,
   });
 
   const [settingsOpen, setSettingsOpen] = React.useState(false);

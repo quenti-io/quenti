@@ -219,7 +219,7 @@ model Highscore {
   user        User        @relation(fields: [userId], references: [id])
   leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id])
 
-  @@id([leaderboardId, userId])
+  @@id([leaderboardId, userId, eligible])
 }
 
 model EntityShare {
