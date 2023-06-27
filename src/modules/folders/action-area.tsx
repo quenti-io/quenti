@@ -8,12 +8,14 @@ import {
   MenuButton,
   MenuList,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
   IconCards,
   IconDotsVertical,
   IconEdit,
+  IconLayersSubtract,
   IconShare,
   IconTrash,
 } from "@tabler/icons-react";
@@ -71,18 +73,10 @@ export const ActionArea = () => {
       />
       <Flex justifyContent="space-between">
         <ButtonGroup size={{ base: "md", sm: "lg" }} gap={2}>
-          <Button
-            leftIcon={<IconCards />}
-            isDisabled={!folder.sets.length}
-            as={!folder.sets.length ? undefined : Link}
-            href={
-              folder.sets.length
-                ? `/@${folder.user.username}/folders/${slug}/flashcards`
-                : undefined
-            }
-          >
-            Study
-          </Button>
+          <ButtonGroup size="lg" gap={0}>
+            <StudyButton folder={folder} slug={slug} mode="Flashcards" />
+            <StudyButton folder={folder} slug={slug} mode="Match" />
+          </ButtonGroup>
           <Button
             leftIcon={<IconShare />}
             variant="outline"
@@ -126,5 +120,35 @@ export const ActionArea = () => {
         </HStack>
       </Flex>
     </>
+  );
+};
+
+interface StudyButtonProps {
+  folder: ReturnType<typeof useFolder>;
+  slug: string;
+  mode: "Flashcards" | "Match";
+}
+
+const StudyButton: React.FC<StudyButtonProps> = ({ folder, slug, mode }) => {
+  const icon = mode == "Flashcards" ? <IconCards /> : <IconLayersSubtract />;
+
+  return (
+    <Tooltip label={mode}>
+      <span>
+        <IconButton
+          icon={icon}
+          aria-label={mode}
+          isDisabled={!folder.sets.length}
+          as={!folder.sets.length ? undefined : Link}
+          href={
+            folder.sets.length
+              ? `/@${
+                  folder.user.username
+                }/folders/${slug}/${mode.toLowerCase()}`
+              : undefined
+          }
+        />
+      </span>
+    </Tooltip>
   );
 };

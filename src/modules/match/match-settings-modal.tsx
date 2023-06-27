@@ -6,7 +6,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  Stack
+  Stack,
 } from "@chakra-ui/react";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useExperienceContext } from "../../stores/use-experience-store";
@@ -31,7 +31,6 @@ export const MatchSettingsModal: React.FC<MatchSettingsModalProps> = ({
       isOpen={isOpen}
       onClose={() => {
         const isDirty = experience.matchStudyStarred !== matchStudyStarred;
-        console.log("closing", isDirty);
         if (isDirty) setIsDirty(true);
         onClose();
       }}
