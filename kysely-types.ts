@@ -105,6 +105,7 @@ export type Highscore = {
   userId: string;
   time: number;
   timestamp: Timestamp;
+  eligible: Generated<boolean>;
 };
 export type Leaderboard = {
   id: string;

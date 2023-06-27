@@ -214,6 +214,7 @@ model Highscore {
   userId        String
   time          Int
   timestamp     DateTime @updatedAt
+  eligible      Boolean  @default(true)
 
   user        User        @relation(fields: [userId], references: [id])
   leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id])
