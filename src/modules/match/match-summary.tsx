@@ -15,6 +15,9 @@ export const MatchSummary = () => {
   const rootUrl = useEntityRootUrl();
   const startTime = useMatchContext((s) => s.roundStartTime);
   const summary = useMatchContext((s) => s.roundSummary)!;
+  const isEligibleForLeaderboard = useMatchContext(
+    (s) => s.isEligableForLeaderboard
+  );
   const elapsed = Math.floor((summary.endTime - startTime) / 100);
   const nextRound = useMatchContext((s) => s.nextRound);
 
@@ -31,12 +34,13 @@ export const MatchSummary = () => {
 
   React.useEffect(() => {
     void (async () => {
-      await add.mutateAsync({
-        studySetId: type === "set" ? id : undefined,
-        folderId: type === "folder" ? id : undefined,
-        mode: "Match",
-        time: elapsed,
-      });
+      if (isEligibleForLeaderboard)
+        await add.mutateAsync({
+          studySetId: type === "set" ? id : undefined,
+          folderId: type === "folder" ? id : undefined,
+          mode: "Match",
+          time: elapsed,
+        });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -50,7 +54,7 @@ export const MatchSummary = () => {
           elapsed={elapsed}
           highscores={leaderboard.data.highscores}
         />
-        <Leaderboard data={leaderboard.data} />
+        {isEligibleForLeaderboard && <Leaderboard data={leaderboard.data} />}
         <ButtonGroup w="full" justifyContent="end">
           <Button
             variant="ghost"
