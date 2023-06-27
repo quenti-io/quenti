@@ -8,28 +8,39 @@ import { ScriptFormatter } from "./script-formatter";
 export interface MatchCardProps {
   term: MatchItem;
   index: number;
-  onDragEnd: (term: MatchItem, index: number, x: number, y: number) => boolean;
+  onDragStart: (term: MatchItem, index: number) => void;
+  onDrag: (term: MatchItem, index: number, x: number, y: number) => void;
+  onDragEnd: (term: MatchItem, index: number, x: number, y: number) => void;
 }
 
 export const RawMatchCard: React.FC<MatchCardProps> = ({
   term,
   index,
+  onDragStart,
+  onDrag,
   onDragEnd,
 }) => {
   const setCard = useMatchContext((state) => state.setCard);
+  const isHighlighted = useMatchContext((state) =>
+    state.highlightedIndices.includes(index)
+  );
 
-  const [dragging, setDragging] = React.useState(false);
   const [isInMotion, setIsInMotion] = React.useState(false);
 
   const linkBg = useColorModeValue("white", "gray.800");
   const gray = useColorModeValue("gray.200", "gray.700");
+  const highlighted = useColorModeValue("gray.300", "gray.600");
 
   const stateBorder = term.state
     ? term.state == "correct"
       ? "green.400"
       : "red.400"
     : undefined;
-  const linkBorder = term.state ? stateBorder : gray;
+  const linkBorder = term.state
+    ? stateBorder
+    : isHighlighted
+    ? highlighted
+    : gray;
 
   const card = React.useRef<HTMLDivElement>(null);
 
@@ -77,11 +88,14 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
         opacity: 0,
         transition: { duration: 0.5 },
       }}
-      onDragStart={() => setDragging(true)}
-      onDragEnd={(_, info) => {
-        setDragging(onDragEnd(term, index, info.offset.x, info.offset.y));
+      onDragStart={() => {
+        onDragStart(term, index);
       }}
-      style={{ x, y, zIndex: dragging || isInMotion ? 200 : 100 }}
+      onDrag={(_, info) => onDrag(term, index, info.offset.x, info.offset.y)}
+      onDragEnd={(_, info) => {
+        onDragEnd(term, index, info.offset.x, info.offset.y);
+      }}
+      style={{ x, y, zIndex: term.zIndex }}
     >
       <Card
         rounded="md"
@@ -92,12 +106,12 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
         borderColor={linkBorder}
         borderWidth="2px"
         shadow="lg"
-        transition="all ease-in-out 150ms"
+        transition="border-color ease-in-out 150ms"
         maxW="200px"
         w="max-content"
         position="absolute"
+        cursor="move"
         _hover={{
-          transform: "translateY(-2px)",
           borderBottomColor: stateBorder ?? "blue.300",
         }}
       >

@@ -25,6 +25,23 @@ export const MatchContainer = () => {
 
   const wrapper = React.useRef<HTMLDivElement>(null);
 
+  const onDragStart = React.useCallback((term: MatchItem, index: number) => {
+    setCard(index, {
+      ...term,
+      zIndex: requestZIndex(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onDrag = React.useCallback(
+    (term: MatchItem, index: number, x: number, y: number) => {
+      const updated = { ...term, x: term.x + x, y: term.y + y };
+      setHighlightedIndices(getIndicesUnder(index, updated));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   const onDragEnd = React.useCallback(
     (term: MatchItem, index: number, x: number, y: number) => {
       setCard(index, {
@@ -32,7 +49,7 @@ export const MatchContainer = () => {
         x: term.x + x,
         y: term.y + y,
       });
-      return validateUnderIndices(index, wrapper.current!);
+      validateUnderIndices(index, wrapper.current!);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -60,6 +77,8 @@ export const MatchContainer = () => {
                 term={term}
                 index={index}
                 key={index}
+                onDragStart={onDragStart}
+                onDrag={onDrag}
                 onDragEnd={onDragEnd}
               />
             )
