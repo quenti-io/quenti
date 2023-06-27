@@ -15,6 +15,9 @@ export const MatchSummary = () => {
   const rootUrl = useEntityRootUrl();
   const startTime = useMatchContext((s) => s.roundStartTime);
   const summary = useMatchContext((s) => s.roundSummary)!;
+  const isEligibleForLeaderboard = useMatchContext(
+    (s) => s.isEligibleForLeaderboard
+  );
   const elapsed = Math.floor((summary.endTime - startTime) / 100);
   const nextRound = useMatchContext((s) => s.nextRound);
 
@@ -36,21 +39,37 @@ export const MatchSummary = () => {
         folderId: type === "folder" ? id : undefined,
         mode: "Match",
         time: elapsed,
+        eligible: isEligibleForLeaderboard,
       });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!summary || !leaderboard.data) return <Loading />;
+  const { data: highscore, isFetchedAfterMount } =
+    api.leaderboard.highscore.useQuery(
+      {
+        mode: "Match",
+        containerId: id,
+        eligible: isEligibleForLeaderboard,
+      },
+      {
+        refetchOnMount: "always",
+        enabled: add.isSuccess,
+      }
+    );
+
+  if (!summary || !leaderboard.data || !highscore || !isFetchedAfterMount)
+    return <Loading />;
 
   return (
     <Container maxW="container.md" py="10" display="flex" alignItems="center">
       <Stack spacing="6" w="full">
         <MatchSummaryFeedback
           elapsed={elapsed}
+          highscore={highscore}
           highscores={leaderboard.data.highscores}
         />
-        <Leaderboard data={leaderboard.data} />
+        {isEligibleForLeaderboard && <Leaderboard data={leaderboard.data} />}
         <ButtonGroup w="full" justifyContent="end">
           <Button
             variant="ghost"

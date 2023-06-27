@@ -214,11 +214,12 @@ model Highscore {
   userId        String
   time          Int
   timestamp     DateTime @updatedAt
+  eligible      Boolean  @default(true)
 
   user        User        @relation(fields: [userId], references: [id])
   leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id])
 
-  @@id([leaderboardId, userId])
+  @@id([leaderboardId, userId, eligible])
 }
 
 model EntityShare {
@@ -284,6 +285,7 @@ model StudySetExperience {
   cardsRound           Int                       @default(0)
   cardsStudyStarred    Boolean                   @default(false)
   cardsAnswerWith      LimitedStudySetAnswerMode @default(Definition)
+  matchStudyStarred    Boolean                   @default(false)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -303,6 +305,7 @@ model FolderExperience {
   cardsRound         Int                       @default(0)
   cardsStudyStarred  Boolean                   @default(false)
   cardsAnswerWith    LimitedStudySetAnswerMode @default(Definition)
+  matchStudyStarred  Boolean                   @default(false)
 
   studiableTerms StudiableTerm[]
 

@@ -39,6 +39,7 @@ export const FolderContext = React.createContext<FolderData>({
     cardsRound: 0,
     cardsStudyStarred: false,
     cardsAnswerWith: "Definition",
+    matchStudyStarred: false,
   },
   terms: [],
   editableSets: [],
@@ -46,11 +47,12 @@ export const FolderContext = React.createContext<FolderData>({
 
 export interface HydrateFolderDataProps {
   withTerms?: boolean;
+  disallowDirty?: boolean;
 }
 
 export const HydrateFolderData: React.FC<
   React.PropsWithChildren<HydrateFolderDataProps>
-> = ({ children, withTerms = false }) => {
+> = ({ children, withTerms = false, disallowDirty }) => {
   const router = useRouter();
   const username = router.query.username as string;
   const slug = router.query.slug as string;
@@ -86,7 +88,7 @@ export const HydrateFolderData: React.FC<
 
   if (folder.error?.data?.httpStatus === 404) return <Folder404 />;
   if (folder.error?.data?.httpStatus === 403) return <NoPublicSets />;
-  if (loading || !folder.data) return <Loading />;
+  if (loading || !folder.data || (disallowDirty && isDirty)) return <Loading />;
 
   return (
     <ContextLayer data={folder.data}>
@@ -108,6 +110,7 @@ const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({
     enableCardsSorting: data.experience.enableCardsSorting,
     cardsStudyStarred: data.experience.cardsStudyStarred,
     cardsAnswerWith: data.experience.cardsAnswerWith,
+    matchStudyStarred: data.experience.matchStudyStarred,
   });
 
   const storeRef = React.useRef<ExperienceStore>();

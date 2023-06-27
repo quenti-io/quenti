@@ -55,6 +55,9 @@ export const leaderboardRouter = createTRPCRouter({
         },
         include: {
           highscores: {
+            where: {
+              eligible: true,
+            },
             include: {
               user: {
                 select: {
@@ -94,7 +97,11 @@ export const leaderboardRouter = createTRPCRouter({
 
   highscore: protectedProcedure
     .input(
-      z.object({ mode: z.nativeEnum(LeaderboardType), containerId: z.string() })
+      z.object({
+        mode: z.nativeEnum(LeaderboardType),
+        containerId: z.string(),
+        eligible: z.boolean(),
+      })
     )
     .query(async ({ ctx, input }) => {
       const leaderboard = await ctx.prisma.leaderboard.findFirst({
@@ -107,9 +114,10 @@ export const leaderboardRouter = createTRPCRouter({
 
       const highscore = await ctx.prisma.highscore.findUnique({
         where: {
-          leaderboardId_userId: {
+          leaderboardId_userId_eligible: {
             leaderboardId: leaderboard.id,
             userId: ctx.session.user.id,
+            eligible: input.eligible,
           },
         },
       });
@@ -124,6 +132,7 @@ export const leaderboardRouter = createTRPCRouter({
         time: z.number(),
         studySetId: z.string().optional(),
         folderId: z.string().optional(),
+        eligible: z.boolean(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -183,9 +192,10 @@ export const leaderboardRouter = createTRPCRouter({
 
       const highscore = await ctx.prisma.highscore.findUnique({
         where: {
-          leaderboardId_userId: {
+          leaderboardId_userId_eligible: {
             leaderboardId: leaderboard.id,
             userId: ctx.session.user.id,
+            eligible: input.eligible,
           },
         },
       });
@@ -196,9 +206,10 @@ export const leaderboardRouter = createTRPCRouter({
 
       await ctx.prisma.highscore.upsert({
         where: {
-          leaderboardId_userId: {
+          leaderboardId_userId_eligible: {
             leaderboardId: leaderboard.id,
             userId: ctx.session.user.id,
+            eligible: input.eligible,
           },
         },
         create: {
@@ -206,6 +217,7 @@ export const leaderboardRouter = createTRPCRouter({
           timestamp: new Date(),
           leaderboardId: leaderboard.id,
           userId: ctx.session.user.id,
+          eligible: input.eligible,
         },
         update: {
           time: input.time,
