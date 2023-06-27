@@ -284,6 +284,7 @@ model StudySetExperience {
   cardsRound           Int                       @default(0)
   cardsStudyStarred    Boolean                   @default(false)
   cardsAnswerWith      LimitedStudySetAnswerMode @default(Definition)
+  matchStudyStarred    Boolean                   @default(false)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -303,6 +304,7 @@ model FolderExperience {
   cardsRound         Int                       @default(0)
   cardsStudyStarred  Boolean                   @default(false)
   cardsAnswerWith    LimitedStudySetAnswerMode @default(Definition)
+  matchStudyStarred  Boolean                   @default(false)
 
   studiableTerms StudiableTerm[]
 

@@ -98,6 +98,7 @@ export type FolderExperience = {
   cardsRound: Generated<number>;
   cardsStudyStarred: Generated<boolean>;
   cardsAnswerWith: Generated<LimitedStudySetAnswerMode>;
+  matchStudyStarred: Generated<boolean>;
 };
 export type Highscore = {
   leaderboardId: string;
@@ -181,6 +182,7 @@ export type StudySetExperience = {
   cardsRound: Generated<number>;
   cardsStudyStarred: Generated<boolean>;
   cardsAnswerWith: Generated<LimitedStudySetAnswerMode>;
+  matchStudyStarred: Generated<boolean>;
 };
 export type StudySetsOnFolders = {
   studySetId: string;
