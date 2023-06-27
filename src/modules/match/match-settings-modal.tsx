@@ -31,6 +31,7 @@ export const MatchSettingsModal: React.FC<MatchSettingsModalProps> = ({
       isOpen={isOpen}
       onClose={() => {
         const isDirty = experience.matchStudyStarred !== matchStudyStarred;
+        console.log("closing", isDirty);
         if (isDirty) setIsDirty(true);
         onClose();
       }}

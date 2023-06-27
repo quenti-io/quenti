@@ -20,6 +20,7 @@ export const CreateMatchData: React.FC<React.PropsWithChildren> = ({
 
     let isLeaderboardAllowed = true;
     let learnTerms = terms;
+    console.log("matchStudyStarred", matchStudyStarred);
 
     if (matchStudyStarred) {
       learnTerms = terms.filter((x) => starredTerms.includes(x.id));
