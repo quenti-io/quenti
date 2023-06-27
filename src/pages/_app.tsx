@@ -20,6 +20,7 @@ import { api } from "../utils/api";
 
 import pjson from "../../package.json";
 import { ErrorBoundary } from "../components/error-bounary";
+import { HistoryProvider } from "../modules/history-provider";
 const version = pjson.version;
 
 export { reportWebVitals } from "next-axiom";
@@ -143,18 +144,20 @@ const App: AppType<
         <meta name="robots" content="noindex" />
       </Head>
       <ChakraProvider theme={theme}>
-        <LoadingProvider>
-          <SessionProvider session={session}>
-            {staticPage ? (
-              <DarkMode>
-                <GlobalStyle />
-                {children}
-              </DarkMode>
-            ) : (
-              children
-            )}
-          </SessionProvider>
-        </LoadingProvider>
+        <HistoryProvider>
+          <LoadingProvider>
+            <SessionProvider session={session}>
+              {staticPage ? (
+                <DarkMode>
+                  <GlobalStyle />
+                  {children}
+                </DarkMode>
+              ) : (
+                children
+              )}
+            </SessionProvider>
+          </LoadingProvider>
+        </HistoryProvider>
       </ChakraProvider>
       <Analytics />
     </>
