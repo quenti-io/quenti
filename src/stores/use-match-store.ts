@@ -25,6 +25,7 @@ export interface MatchStoreProps {
   completed: boolean;
   roundSummary?: RoundSummary;
   terms: MatchItem[];
+  zIndex: number;
 }
 
 export interface MatchItem {
@@ -39,6 +40,7 @@ export interface MatchItem {
   targetY: number;
   completed: boolean;
   state?: "correct" | "incorrect";
+  zIndex: number;
 }
 
 const MATCH_SIDE_WALL_PADDING = 20;
@@ -65,6 +67,8 @@ interface MatchState extends MatchStoreProps {
     term: MatchItem,
     elem: HTMLDivElement
   ) => { x: number; y: number };
+  requestZIndex: () => number;
+  setZIndex: (zIndex: number) => void;
 }
 
 interface MatchBehaviors {
@@ -85,6 +89,7 @@ export const createMatchStore = (
     isEligableForLeaderboard: false,
     completed: true,
     terms: [],
+    zIndex: 0,
   };
 
   return createStore<MatchState>()(
@@ -270,6 +275,11 @@ export const createMatchStore = (
 
         return correctIndex != undefined;
       },
+      requestZIndex: () => {
+        set((state) => ({ zIndex: state.zIndex + 1 }));
+        return get().zIndex;
+      },
+      setZIndex: (zIndex: number) => set({ zIndex }),
     }))
   );
 };

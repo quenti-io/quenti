@@ -8,17 +8,18 @@ import { ScriptFormatter } from "./script-formatter";
 export interface MatchCardProps {
   term: MatchItem;
   index: number;
+  onDragStart: (term: MatchItem, index: number) => void;
   onDragEnd: (term: MatchItem, index: number, x: number, y: number) => boolean;
 }
 
 export const RawMatchCard: React.FC<MatchCardProps> = ({
   term,
   index,
+  onDragStart,
   onDragEnd,
 }) => {
   const setCard = useMatchContext((state) => state.setCard);
 
-  const [dragging, setDragging] = React.useState(false);
   const [isInMotion, setIsInMotion] = React.useState(false);
 
   const linkBg = useColorModeValue("white", "gray.800");
@@ -77,11 +78,13 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
         opacity: 0,
         transition: { duration: 0.5 },
       }}
-      onDragStart={() => setDragging(true)}
-      onDragEnd={(_, info) => {
-        setDragging(onDragEnd(term, index, info.offset.x, info.offset.y));
+      onDragStart={() => {
+        onDragStart(term, index);
       }}
-      style={{ x, y, zIndex: dragging || isInMotion ? 200 : 100 }}
+      onDragEnd={(_, info) => {
+        onDragEnd(term, index, info.offset.x, info.offset.y);
+      }}
+      style={{ x, y, zIndex: term.zIndex }}
     >
       <Card
         rounded="md"

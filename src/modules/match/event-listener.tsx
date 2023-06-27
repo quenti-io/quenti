@@ -10,6 +10,7 @@ export const EventListener: React.FC<{
   const setTerms = useMatchContext((s) => s.setTerms);
   const setCard = useMatchContext((s) => s.setCard);
   const pickNewSpot = useMatchContext((s) => s.pickNewSpot);
+  const setZIndex = useMatchContext((s) => s.setZIndex);
 
   const grossTerms = React.useRef<MatchItem[]>();
   grossTerms.current = terms;
@@ -17,8 +18,8 @@ export const EventListener: React.FC<{
   React.useEffect(() => {
     if (!wrapper.current) return;
 
-    const terms: MatchItem[] = roundQuestions.flatMap((term) => {
-      const base: Omit<MatchItem, "type" | "word"> = {
+    const terms: MatchItem[] = roundQuestions.flatMap((term, i) => {
+      const base: Omit<MatchItem, "type" | "word" | "zIndex"> = {
         id: term.id,
         completed: false,
         width: 200,
@@ -34,16 +35,19 @@ export const EventListener: React.FC<{
           ...base,
           type: "word",
           word: term.word,
+          zIndex: i * 2 + 1,
         },
         {
           ...base,
           type: "definition",
           word: term.definition,
+          zIndex: i * 2 + 2,
         },
       ];
     });
 
     setTerms(terms);
+    setZIndex(terms.length);
 
     setTimeout(() => {
       terms.forEach((term, index) => {
