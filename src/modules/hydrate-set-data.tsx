@@ -115,6 +115,7 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
     enableCardsSorting: data.experience.enableCardsSorting,
     cardsStudyStarred: data.experience.cardsStudyStarred,
     cardsAnswerWith: data.experience.cardsAnswerWith,
+    matchStudyStarred: data.experience.matchStudyStarred,
   });
 
   const storeRef = React.useRef<ExperienceStore>();

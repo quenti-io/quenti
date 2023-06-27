@@ -39,6 +39,7 @@ export const FolderContext = React.createContext<FolderData>({
     cardsRound: 0,
     cardsStudyStarred: false,
     cardsAnswerWith: "Definition",
+    matchStudyStarred: false,
   },
   terms: [],
   editableSets: [],
@@ -108,6 +109,7 @@ const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({
     enableCardsSorting: data.experience.enableCardsSorting,
     cardsStudyStarred: data.experience.cardsStudyStarred,
     cardsAnswerWith: data.experience.cardsAnswerWith,
+    matchStudyStarred: data.experience.matchStudyStarred,
   });
 
   const storeRef = React.useRef<ExperienceStore>();
