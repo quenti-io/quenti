@@ -11,14 +11,19 @@ import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
   const history = useHistory();
-  const completed = useMatchContext((state) => state.completed);
+  const terms = useMatchContext((state) => state.terms);
   const summary = useMatchContext((state) => state.roundSummary);
-  const terms = useMatchContext((s) => s.terms);
-  const setCard = useMatchContext((s) => s.setCard);
-  const nextRound = useMatchContext((s) => s.nextRound);
+  const completed = useMatchContext((state) => state.completed);
+  const setCard = useMatchContext((state) => state.setCard);
+  const nextRound = useMatchContext((state) => state.nextRound);
+  const requestZIndex = useMatchContext((state) => state.requestZIndex);
 
   const [reloaded, setReloaded] = React.useState<boolean | undefined>();
 
+  const getIndicesUnder = useMatchContext((state) => state.getIndicesUnder);
+  const setHighlightedIndices = useMatchContext(
+    (state) => state.setHighlightedIndices
+  );
   const validateUnderIndices = useMatchContext(
     (state) => state.validateUnderIndices
   );
