@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonGroup,
   Card,
   Container,
   GridItem,
@@ -11,8 +12,10 @@ import {
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconSettings } from "@tabler/icons-react";
+import { IconArrowBack, IconSettings } from "@tabler/icons-react";
 import React from "react";
+import { Link } from "../../components/link";
+import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useMatchContext } from "../../stores/use-match-store";
 import { api } from "../../utils/api";
@@ -43,6 +46,7 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
 
 const MatchInfo = () => {
   const { id } = useSetFolderUnison();
+  const entityRootUrl = useEntityRootUrl();
   const startTime = useMatchContext((s) => s.roundStartTime);
   const progress = useMatchContext((s) => s.roundProgress);
   const numTerms = useMatchContext((s) => s.termsThisRound);
@@ -106,15 +110,27 @@ const MatchInfo = () => {
           <Stack spacing="4">
             <HStack justifyContent="space-between" alignItems="start">
               <MatchStat label="Time" value={seconds} />
-              <IconButton
-                icon={<IconSettings />}
-                aria-label="Settings"
-                variant="ghost"
-                rounded="full"
-                colorScheme="gray"
-                size="sm"
-                onClick={() => setSettingsOpen(true)}
-              />
+              <ButtonGroup>
+                <IconButton
+                  icon={<IconArrowBack />}
+                  aria-label="Back"
+                  variant="ghost"
+                  rounded="full"
+                  colorScheme="gray"
+                  size="sm"
+                  as={Link}
+                  href={entityRootUrl}
+                />
+                <IconButton
+                  icon={<IconSettings />}
+                  aria-label="Settings"
+                  variant="ghost"
+                  rounded="full"
+                  colorScheme="gray"
+                  size="sm"
+                  onClick={() => setSettingsOpen(true)}
+                />
+              </ButtonGroup>
             </HStack>
             {highscore.data?.bestTime && (
               <MatchStat
