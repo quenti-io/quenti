@@ -79,8 +79,8 @@ export const MatchSummary = () => {
 
         </> : <>
           <Heading size={"2xl"}>Too fast!</Heading>
-          <Text>Your time was too fast for our server to process. {
-            summary.termsThisRound > 3 ? "." : "Consider playing with more terms."
+          <Text>Your time was too fast for our server to process.{
+            summary.termsThisRound > 3 ? "" : " Consider playing with more terms."
           }</Text>
         </>}
         <ButtonGroup w="full" justifyContent="end">
