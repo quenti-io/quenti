@@ -33,10 +33,10 @@ export const MatchSummary = () => {
     }
   );
 
-  const isGood = elapsed > MATCH_MIN_TIME
+  const isStorable = elapsed > MATCH_MIN_TIME
 
   React.useEffect(() => {
-    if (isGood) {
+    if (isStorable) {
       void (async () => {
         await add.mutateAsync({
           studySetId: type === "set" ? id : undefined,
@@ -48,7 +48,7 @@ export const MatchSummary = () => {
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isGood]);
+  }, [isStorable]);
 
   const { data: highscore, isFetchedAfterMount } =
     api.leaderboard.highscore.useQuery(
@@ -59,7 +59,7 @@ export const MatchSummary = () => {
       },
       {
         refetchOnMount: "always",
-        enabled: add.isSuccess || !isGood,
+        enabled: add.isSuccess || !isStorable,
       }
     );
 
@@ -69,7 +69,7 @@ export const MatchSummary = () => {
   return (
     <Container maxW="container.md" py="10" display="flex" alignItems="center">
       <Stack spacing="6" w="full">
-        {isGood ? <>
+        {isStorable ? <>
           <MatchSummaryFeedback
             elapsed={elapsed}
             highscore={highscore}
@@ -78,8 +78,8 @@ export const MatchSummary = () => {
           {isEligibleForLeaderboard && <Leaderboard data={leaderboard.data} />}
 
         </> : <>
-          <Heading size={"2xl"}>Too fast!</Heading>
-          <Text>Your time was too fast for our server to process.{
+          <Heading size={"2xl"}>Woah! You{"'"}re too fast!</Heading>
+          <Text>Your time was too fast to record on our leaderboard.{
             summary.termsThisRound > 3 ? "" : " Consider playing with more terms."
           }</Text>
         </>}
