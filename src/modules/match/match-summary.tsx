@@ -1,10 +1,11 @@
-import { Button, ButtonGroup, Container, Stack } from "@chakra-ui/react";
+import { Button, ButtonGroup, Container, Heading, Stack, Text } from "@chakra-ui/react";
 import { IconArrowBack } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
+import { MATCH_MIN_TIME } from "../../server/api/common/constants";
 import { useMatchContext } from "../../stores/use-match-store";
 import { api } from "../../utils/api";
 import { Leaderboard } from "../leaderboard/leaderboard";
@@ -32,18 +33,22 @@ export const MatchSummary = () => {
     }
   );
 
+  const isGood = elapsed > MATCH_MIN_TIME
+
   React.useEffect(() => {
-    void (async () => {
-      await add.mutateAsync({
-        studySetId: type === "set" ? id : undefined,
-        folderId: type === "folder" ? id : undefined,
-        mode: "Match",
-        time: elapsed,
-        eligible: isEligibleForLeaderboard,
-      });
-    })();
+    if (isGood) {
+      void (async () => {
+        await add.mutateAsync({
+          studySetId: type === "set" ? id : undefined,
+          folderId: type === "folder" ? id : undefined,
+          mode: "Match",
+          time: elapsed,
+          eligible: isEligibleForLeaderboard,
+        });
+      })();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isGood]);
 
   const { data: highscore, isFetchedAfterMount } =
     api.leaderboard.highscore.useQuery(
@@ -54,7 +59,7 @@ export const MatchSummary = () => {
       },
       {
         refetchOnMount: "always",
-        enabled: add.isSuccess,
+        enabled: add.isSuccess || !isGood,
       }
     );
 
@@ -64,12 +69,20 @@ export const MatchSummary = () => {
   return (
     <Container maxW="container.md" py="10" display="flex" alignItems="center">
       <Stack spacing="6" w="full">
-        <MatchSummaryFeedback
-          elapsed={elapsed}
-          highscore={highscore}
-          highscores={leaderboard.data.highscores}
-        />
-        {isEligibleForLeaderboard && <Leaderboard data={leaderboard.data} />}
+        {isGood ? <>
+          <MatchSummaryFeedback
+            elapsed={elapsed}
+            highscore={highscore}
+            highscores={leaderboard.data.highscores}
+          />
+          {isEligibleForLeaderboard && <Leaderboard data={leaderboard.data} />}
+
+        </> : <>
+          <Heading size={"2xl"}>Too fast!</Heading>
+          <Text>Your time was too fast for our server to process. {
+            summary.termsThisRound > 3 ? "." : "Consider playing with more terms."
+          }</Text>
+        </>}
         <ButtonGroup w="full" justifyContent="end">
           <Button
             variant="ghost"
