@@ -53,10 +53,6 @@ model Session {
   @@index([userId])
 }
 
-enum EnabledFeature {
-  ExtendedFeedbackBank
-}
-
 model User {
   id               String    @id @default(cuid())
   name             String?

@@ -3,10 +3,6 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
-export type EnabledFeature = "ExtendedFeedbackBank";
-export const EnabledFeature = {
-  ExtendedFeedbackBank: "ExtendedFeedbackBank",
-};
 export type StudySetVisibility = "Private" | "Unlisted" | "Public";
 export const StudySetVisibility = {
   Private: "Private",
