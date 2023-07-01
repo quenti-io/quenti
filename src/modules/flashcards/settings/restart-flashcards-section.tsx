@@ -18,9 +18,7 @@ export const RestartFlashcardsSection: React.FC<{
   };
 
   const apiResetCardsProgress =
-    type == "set"
-      ? api.experience.resetCardsProgress.useMutation(setDirtyProps)
-      : api.folders.resetCardsProgress.useMutation(setDirtyProps);
+    api.container.resetCardsProgress.useMutation(setDirtyProps);
 
   return (
     <Flex justifyContent="end">
@@ -30,7 +28,8 @@ export const RestartFlashcardsSection: React.FC<{
         isLoading={apiResetCardsProgress.isLoading}
         onClick={() => {
           apiResetCardsProgress.mutate({
-            genericId: id,
+            entityId: id,
+            type: type == "set" ? "StudySet" : "Folder",
           });
         }}
       >

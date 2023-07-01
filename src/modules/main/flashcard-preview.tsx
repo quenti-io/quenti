@@ -3,24 +3,24 @@ import {
   IconArrowsShuffle,
   IconMaximize,
   IconPlayerPlay,
-  IconSettings,
+  IconSettings
 } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSet } from "../../hooks/use-set";
 import { FlashcardsSettingsModal } from "../../modules/flashcards/flashcards-settings-modal";
-import { useExperienceContext } from "../../stores/use-experience-store";
+import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
 
 export const FlashcardPreview = () => {
   const data = useSet();
-  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
+  const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
-  const setShuffle = api.experience.setShuffle.useMutation({
+  const setShuffle = api.container.setShuffle.useMutation({
     onSuccess: () => {
       if (enableCardsSorting) {
         setIsDirty(true);
@@ -28,11 +28,11 @@ export const FlashcardPreview = () => {
     },
   });
 
-  const [shuffle, toggleShuffle] = useExperienceContext((s) => [
+  const [shuffle, toggleShuffle] = useContainerContext((s) => [
     s.shuffleFlashcards,
     s.toggleShuffleFlashcards,
   ]);
-  const [autoplay, toggleAutoplay] = useExperienceContext((s) => [
+  const [autoplay, toggleAutoplay] = useContainerContext((s) => [
     s.autoplayFlashcards,
     s.toggleAutoplayFlashcards,
   ]);
@@ -79,7 +79,11 @@ export const FlashcardPreview = () => {
                 variant={shuffle ? "solid" : "outline"}
                 onClick={() => {
                   toggleShuffle();
-                  setShuffle.mutate({ studySetId: data.id, shuffle: !shuffle });
+                  setShuffle.mutate({
+                    entityId: data.id,
+                    shuffle: !shuffle,
+                    type: "StudySet",
+                  });
                 }}
                 isLoading={enableCardsSorting && setShuffle.isLoading}
               >

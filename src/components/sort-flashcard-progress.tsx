@@ -44,7 +44,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   onNextRound,
   onResetProgress,
 }) => {
-  const { id, experience, type } = useSetFolderUnison();
+  const { id, container, type } = useSetFolderUnison();
   const router = useRouter();
   const cardBg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.750");
@@ -67,7 +67,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
 
       await apiDelete.mutateAsync({
         id: current.id,
-        containerId: experience.id,
+        containerId: container.id,
         mode: "Flashcards",
       });
     })();

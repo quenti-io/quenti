@@ -29,7 +29,7 @@ import { useAdmin } from "../../hooks/use-admin";
 import { api } from "../../utils/api";
 import { avatarUrl } from "../../utils/avatar";
 import { dtFormatter } from "../../utils/time";
-import { UserEnabledFeatures } from "./user-enabled-features";
+import { UserEnabledFlags } from "./user-enabled-flags";
 
 interface UserModalProps {
   userId?: string;
@@ -118,7 +118,7 @@ export const UserModal: React.FC<UserModalProps> = ({
               </Flex>
             </Box>
             <Stack p="6" spacing={6}>
-              <UserEnabledFeatures user={user} />
+              <UserEnabledFlags user={user} />
               <Divider />
               <ButtonGroup w="full" spacing={4}>
                 <Button

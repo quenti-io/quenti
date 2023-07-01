@@ -40,17 +40,17 @@ export const validateLeaderboardAccess = (
 };
 
 export const leaderboardRouter = createTRPCRouter({
-  byContainerId: protectedProcedure
+  byEntityId: protectedProcedure
     .input(
       z.object({
         mode: z.nativeEnum(LeaderboardType),
-        containerId: z.string(),
+        entityId: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
       const leaderboard = await ctx.prisma.leaderboard.findFirst({
         where: {
-          containerId: input.containerId,
+          entityId: input.entityId,
           type: input.mode,
         },
         include: {
@@ -99,14 +99,14 @@ export const leaderboardRouter = createTRPCRouter({
     .input(
       z.object({
         mode: z.nativeEnum(LeaderboardType),
-        containerId: z.string(),
+        entityId: z.string(),
         eligible: z.boolean(),
       })
     )
     .query(async ({ ctx, input }) => {
       const leaderboard = await ctx.prisma.leaderboard.findFirst({
         where: {
-          containerId: input.containerId,
+          entityId: input.entityId,
           type: input.mode,
         },
       });
@@ -130,18 +130,14 @@ export const leaderboardRouter = createTRPCRouter({
       z.object({
         mode: z.nativeEnum(LeaderboardType),
         time: z.number(),
-        studySetId: z.string().optional(),
-        folderId: z.string().optional(),
+        entityId: z.string(),
         eligible: z.boolean(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const containerId = input.studySetId ?? input.folderId;
-      if (!containerId) throw new TRPCError({ code: "BAD_REQUEST" });
-
       let leaderboard = await ctx.prisma.leaderboard.findFirst({
         where: {
-          containerId,
+          entityId: input.entityId,
           type: input.mode,
         },
         include: {
@@ -161,9 +157,7 @@ export const leaderboardRouter = createTRPCRouter({
       if (!leaderboard) {
         leaderboard = await ctx.prisma.leaderboard.create({
           data: {
-            containerId,
-            studySetId: input.studySetId,
-            folderId: input.folderId,
+            entityId: input.entityId,
             type: input.mode,
           },
           include: {

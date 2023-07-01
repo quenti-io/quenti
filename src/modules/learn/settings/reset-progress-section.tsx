@@ -14,7 +14,7 @@ export const ResetProgressSection = () => {
   const { onClose, dirtyOnReset } = React.useContext(LearnSettingsModalContext);
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
-  const apiResetLearnProgress = api.experience.resetLearnProgress.useMutation({
+  const apiResetLearnProgress = api.container.resetLearnProgress.useMutation({
     onSuccess: async () => {
       if (!dirtyOnReset) await utils.studySets.invalidate();
       onClose();
@@ -38,7 +38,7 @@ export const ResetProgressSection = () => {
         isLoading={apiResetLearnProgress.isLoading}
         onClick={() => {
           apiResetLearnProgress.mutate({
-            studySetId: id,
+            entityId: id,
           });
         }}
       >

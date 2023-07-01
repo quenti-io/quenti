@@ -15,7 +15,7 @@ import { useSet } from "../../../../hooks/use-set";
 import type { Question } from "../../../../interfaces/question";
 import { evaluate, EvaluationResult } from "../../../../lib/evaluator";
 import { placeholderLanguage } from "../../../../lib/language";
-import { useExperienceContext } from "../../../../stores/use-experience-store";
+import { useContainerContext } from "../../../../stores/use-container-store";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
 import { api } from "../../../../utils/api";
 
@@ -25,8 +25,8 @@ export interface InputStateProps {
 }
 
 export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
-  const { experience, wordLanguage, definitionLanguage } = useSet();
-  const mutlipleAnswerMode = useExperienceContext((s) => s.multipleAnswerMode);
+  const { container, wordLanguage, definitionLanguage } = useSet();
+  const mutlipleAnswerMode = useContainerContext((s) => s.multipleAnswerMode);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
   const answerUnknownPartial = useLearnContext((s) => s.answerUnknownPartial);
@@ -65,7 +65,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
       void (async () =>
         await put.mutateAsync({
           id: active.term.id,
-          experienceId: experience.id,
+          containerId: container.id,
           mode: "Learn",
           correctness: 2,
           appearedInRound: active.term.appearedInRound || 0,

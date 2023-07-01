@@ -16,7 +16,7 @@ import { ScriptFormatter } from "../../components/script-formatter";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
-import { useExperienceContext } from "../../stores/use-experience-store";
+import { useContainerContext } from "../../stores/use-container-store";
 import { api } from "../../utils/api";
 
 export interface DisplayableTermProps {
@@ -26,13 +26,13 @@ export interface DisplayableTermProps {
 export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const utils = api.useContext();
 
-  const starMutation = api.experience.starTerm.useMutation();
-  const unstarMutation = api.experience.unstarTerm.useMutation();
+  const starMutation = api.container.starTerm.useMutation();
+  const unstarMutation = api.container.unstarTerm.useMutation();
 
-  const { experience } = useSet();
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const starTerm = useExperienceContext((s) => s.starTerm);
-  const unstarTerm = useExperienceContext((s) => s.unstarTerm);
+  const { container } = useSet();
+  const starredTerms = useContainerContext((s) => s.starredTerms);
+  const starTerm = useContainerContext((s) => s.starTerm);
+  const unstarTerm = useContainerContext((s) => s.unstarTerm);
 
   const starred = starredTerms.includes(term.id);
   const Star = starred ? IconStarFilled : IconStar;
@@ -183,7 +183,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                       starTerm(term.id);
                       starMutation.mutate({
                         termId: term.id,
-                        experienceId: experience.id,
+                        containerId: container.id,
                       });
                     } else {
                       unstarTerm(term.id);

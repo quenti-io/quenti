@@ -69,11 +69,11 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-import type { EnabledFeature } from "@prisma/client";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { Counter } from "prom-client";
 import superjson from "superjson";
 import { env } from "../../env/server.mjs";
+import type { EnabledFeature } from "./common/constants";
 
 const t = initTRPC
   .context<Awaited<ReturnType<typeof createTRPCContext>>>()
@@ -143,7 +143,8 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 
 const enforceEnabledFeatures = (features: EnabledFeature[]) =>
   enforceUserIsAuthed.unstable_pipe(({ ctx, next }) => {
-    if (!ctx.session.user.features.find((x) => features.includes(x))) {
+    const flags = ctx.session.user.flags;
+    if (!features.find((f) => (flags & f) == f)) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
 

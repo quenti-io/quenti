@@ -1,4 +1,11 @@
-import { Button, ButtonGroup, Container, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  Heading,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { IconArrowBack } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
@@ -23,24 +30,23 @@ export const MatchSummary = () => {
   const nextRound = useMatchContext((s) => s.nextRound);
 
   const add = api.leaderboard.add.useMutation();
-  const leaderboard = api.leaderboard.byContainerId.useQuery(
+  const leaderboard = api.leaderboard.byEntityId.useQuery(
     {
       mode: "Match",
-      containerId: id,
+      entityId: id,
     },
     {
       enabled: add.isSuccess,
     }
   );
 
-  const isStorable = elapsed > MATCH_MIN_TIME
+  const isStorable = elapsed > MATCH_MIN_TIME;
 
   React.useEffect(() => {
     if (isStorable) {
       void (async () => {
         await add.mutateAsync({
-          studySetId: type === "set" ? id : undefined,
-          folderId: type === "folder" ? id : undefined,
+          entityId: id,
           mode: "Match",
           time: elapsed,
           eligible: isEligibleForLeaderboard,
@@ -54,7 +60,7 @@ export const MatchSummary = () => {
     api.leaderboard.highscore.useQuery(
       {
         mode: "Match",
-        containerId: id,
+        entityId: id,
         eligible: isEligibleForLeaderboard,
       },
       {
@@ -69,20 +75,28 @@ export const MatchSummary = () => {
   return (
     <Container maxW="container.md" py="10" display="flex" alignItems="center">
       <Stack spacing="6" w="full">
-        {isStorable ? <>
-          <MatchSummaryFeedback
-            elapsed={elapsed}
-            highscore={highscore}
-            highscores={leaderboard.data.highscores}
-          />
-          {isEligibleForLeaderboard && <Leaderboard data={leaderboard.data} />}
-
-        </> : <>
-          <Heading size={"2xl"}>Woah! You{"'"}re too fast!</Heading>
-          <Text>Your time was too fast to record on our leaderboard.{
-            summary.termsThisRound > 3 ? "" : " Consider playing with more terms."
-          }</Text>
-        </>}
+        {isStorable ? (
+          <>
+            <MatchSummaryFeedback
+              elapsed={elapsed}
+              highscore={highscore}
+              highscores={leaderboard.data.highscores}
+            />
+            {isEligibleForLeaderboard && (
+              <Leaderboard data={leaderboard.data} />
+            )}
+          </>
+        ) : (
+          <>
+            <Heading size={"2xl"}>Woah! You{"'"}re too fast!</Heading>
+            <Text>
+              Your time was too fast to record on our leaderboard.
+              {summary.termsThisRound > 3
+                ? ""
+                : " Consider playing with more terms."}
+            </Text>
+          </>
+        )}
         <ButtonGroup w="full" justifyContent="end">
           <Button
             variant="ghost"

@@ -3,7 +3,7 @@ import type { Term } from "@prisma/client";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
-import { useExperienceContext } from "../stores/use-experience-store";
+import { useContainerContext } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { api } from "../utils/api";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
@@ -44,15 +44,15 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
 
   const isDirty = useSetPropertiesStore((s) => s.isDirty);
 
-  const setStarMutation = api.experience.starTerm.useMutation();
+  const setStarMutation = api.container.starTerm.useMutation();
   const folderStarMutation = api.folders.starTerm.useMutation();
-  const unstarMutation = api.experience.unstarTerm.useMutation();
+  const unstarMutation = api.container.unstarTerm.useMutation();
 
-  const { type, experience } = useSetFolderUnison();
-  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const starTerm = useExperienceContext((s) => s.starTerm);
-  const unstarTerm = useExperienceContext((s) => s.unstarTerm);
+  const { type, container } = useSetFolderUnison();
+  const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
+  const starTerm = useContainerContext((s) => s.starTerm);
+  const unstarTerm = useContainerContext((s) => s.unstarTerm);
 
   const FlashcardWrapper = enableCardsSorting
     ? SortFlashcardWrapper
@@ -76,7 +76,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
             if (type === "set") {
               setStarMutation.mutate({
                 termId: term.id,
-                experienceId: experience.id,
+                containerId: container.id,
               });
             } else {
               folderStarMutation.mutate({

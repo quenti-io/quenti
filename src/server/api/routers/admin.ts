@@ -1,4 +1,3 @@
-import { EnabledFeature } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
@@ -13,14 +12,14 @@ export const adminRouter = createTRPCRouter({
       studiableTerms,
       starredTerms,
       folders,
-      experiences,
+      containers,
     ] = await ctx.prisma.$transaction([
       ctx.prisma.studySet.count(),
       ctx.prisma.term.count(),
       ctx.prisma.studiableTerm.count(),
       ctx.prisma.starredTerm.count(),
       ctx.prisma.folder.count(),
-      ctx.prisma.studySetExperience.count(),
+      ctx.prisma.container.count(),
     ]);
 
     return {
@@ -29,7 +28,7 @@ export const adminRouter = createTRPCRouter({
       studiableTerms,
       starredTerms,
       folders,
-      experiences,
+      containers,
       grafanaUrl: env.GRAFANA_DASHBOARD_URL,
     };
   }),
@@ -46,7 +45,7 @@ export const adminRouter = createTRPCRouter({
           email: true,
           name: true,
           bannedAt: true,
-          features: true,
+          flags: true,
         },
       }),
     };
@@ -97,11 +96,11 @@ export const adminRouter = createTRPCRouter({
       });
     }),
 
-  setEnabledFeatures: adminProcedure
+  setEnabledFlags: adminProcedure
     .input(
       z.object({
         userId: z.string(),
-        features: z.array(z.nativeEnum(EnabledFeature)),
+        flags: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -110,9 +109,7 @@ export const adminRouter = createTRPCRouter({
           id: input.userId,
         },
         data: {
-          features: {
-            set: input.features,
-          },
+          flags: input.flags,
         },
       });
     }),

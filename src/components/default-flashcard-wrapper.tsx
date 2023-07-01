@@ -1,7 +1,7 @@
 import { motion, useAnimationControls } from "framer-motion";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import { useExperienceContext } from "../stores/use-experience-store";
+import { useContainerContext } from "../stores/use-container-store";
 import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";
 import { RootFlashcardContext } from "./root-flashcard-wrapper";
@@ -12,15 +12,15 @@ export const DefaultFlashcardWrapper = () => {
 
   const controls = useAnimationControls();
 
-  const { experience } = useSetFolderUnison();
-  const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
-  const autoplayFlashcards = useExperienceContext((s) => s.autoplayFlashcards);
+  const { container } = useSetFolderUnison();
+  const cardsAnswerWith = useContainerContext((s) => s.cardsAnswerWith);
+  const autoplayFlashcards = useContainerContext((s) => s.autoplayFlashcards);
   const shouldFlip = cardsAnswerWith == "Word";
 
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
 
   let sortedTerms = termOrder.map((id) => terms.find((t) => t.id === id));
-  sortedTerms = experience.cardsStudyStarred
+  sortedTerms = container.cardsStudyStarred
     ? sortedTerms.filter((t) => t && starredTerms.includes(t.id))
     : sortedTerms;
 

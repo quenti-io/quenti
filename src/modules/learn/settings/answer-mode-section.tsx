@@ -2,7 +2,7 @@ import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import type { StudySetAnswerMode } from "@prisma/client";
 import { Select } from "chakra-react-select";
 import { useSet } from "../../../hooks/use-set";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { api } from "../../../utils/api";
 
 const options: { label: string; value: StudySetAnswerMode }[] = [
@@ -23,15 +23,15 @@ const options: { label: string; value: StudySetAnswerMode }[] = [
 export const AnswerModeSection = () => {
   const { id } = useSet();
 
-  const answerWith = useExperienceContext((s) => s.answerWith);
-  const setAnswerWith = useExperienceContext((s) => s.setAnswerWith);
+  const answerWith = useContainerContext((s) => s.answerWith);
+  const setAnswerWith = useContainerContext((s) => s.setAnswerWith);
 
   const baseBg = useColorModeValue("gray.100", "gray.750");
   const dropdownBg = useColorModeValue("gray.200", "gray.700");
   const chevronColor = useColorModeValue("blue.400", "blue.200");
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
-  const apiAnswerWith = api.experience.setAnswerMode.useMutation();
+  const apiAnswerWith = api.container.setAnswerMode.useMutation();
 
   return (
     <Flex gap={{ base: 4, sm: 8 }} flexDir={{ base: "column", sm: "row" }}>
@@ -49,7 +49,7 @@ export const AnswerModeSection = () => {
           onChange={(e) => {
             setAnswerWith(e!.value);
             apiAnswerWith.mutate({
-              studySetId: id,
+              entityId: id,
               answerWith: e!.value,
             });
           }}

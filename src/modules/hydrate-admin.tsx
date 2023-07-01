@@ -9,7 +9,7 @@ type LandingData = RouterOutputs["admin"]["landing"] &
 
 export const AdminContext = React.createContext<LandingData>({
   users: [],
-  experiences: 0,
+  containers: 0,
   folders: 0,
   studySets: 0,
   terms: 0,

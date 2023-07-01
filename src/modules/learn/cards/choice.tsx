@@ -23,7 +23,7 @@ interface ChoiceCardProps {
 }
 
 export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
-  const { experience } = useSet();
+  const { container } = useSet();
   const answered = useLearnContext((s) => s.answered);
   const status = useLearnContext((s) => s.status);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
@@ -55,7 +55,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
       void (async () =>
         await put.mutateAsync({
           id: active.term.id,
-          experienceId: experience.id,
+          containerId: container.id,
           mode: "Learn",
           correctness: 1,
           appearedInRound: active.term.appearedInRound || 0,
@@ -67,7 +67,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
       void (async () =>
         await put.mutateAsync({
           id: active.term.id,
-          experienceId: experience.id,
+          containerId: container.id,
           mode: "Learn",
           correctness: -1,
           appearedInRound: active.term.appearedInRound || 0,

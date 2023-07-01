@@ -1,19 +1,17 @@
 import { Flex, Stack, Switch, Text, useColorModeValue } from "@chakra-ui/react";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { api } from "../../../utils/api";
 
 export const CardsSortingSection = () => {
   const { id, type } = useSetFolderUnison();
 
-  const [enableCardsSorting, setEnableCardsSorting] = useExperienceContext(
+  const [enableCardsSorting, setEnableCardsSorting] = useContainerContext(
     (s) => [s.enableCardsSorting, s.setEnableCardsSorting]
   );
 
   const apiEnableCardsSorting =
-    type == "set"
-      ? api.experience.setEnableCardsSorting.useMutation()
-      : api.folders.setEnableCardsSorting.useMutation();
+    api.container.setEnableCardsSorting.useMutation();
 
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
@@ -34,8 +32,9 @@ export const CardsSortingSection = () => {
         onChange={(e) => {
           setEnableCardsSorting(e.target.checked);
           apiEnableCardsSorting.mutate({
-            genericId: id,
+            entityId: id,
             enableCardsSorting: e.target.checked,
+            type: type == "set" ? "StudySet" : "Folder",
           });
         }}
       />

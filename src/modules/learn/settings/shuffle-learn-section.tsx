@@ -11,7 +11,7 @@ import {
 import { IconDice5 } from "@tabler/icons-react";
 import React from "react";
 import { useSet } from "../../../hooks/use-set";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../../stores/use-set-properties-store";
 import { api } from "../../../utils/api";
 
@@ -23,10 +23,10 @@ export const ShuffleLearnSection = () => {
   reshuffleRef.current = reshuffle;
 
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
-  const shuffleLearn = useExperienceContext((s) => s.shuffleLearn);
-  const setShuffleLearn = useExperienceContext((s) => s.setShuffleLearn);
+  const shuffleLearn = useContainerContext((s) => s.shuffleLearn);
+  const setShuffleLearn = useContainerContext((s) => s.setShuffleLearn);
 
-  const apiShuffleLearn = api.experience.setShuffleLearn.useMutation({
+  const apiShuffleLearn = api.container.setShuffleLearn.useMutation({
     onSuccess: () => {
       if (reshuffleRef.current === true) setIsDirty(true);
       setReshuffle(false);
@@ -50,7 +50,7 @@ export const ShuffleLearnSection = () => {
           onChange={(e) => {
             setShuffleLearn(e.target.checked);
             apiShuffleLearn.mutate({
-              studySetId: id,
+              entityId: id,
               shuffleLearn: e.target.checked,
             });
           }}
@@ -68,7 +68,7 @@ export const ShuffleLearnSection = () => {
               setReshuffle(true);
 
               apiShuffleLearn.mutate({
-                studySetId: id,
+                entityId: id,
                 shuffleLearn: true,
               });
             }}

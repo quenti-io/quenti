@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { EnabledFeature } from "../common/constants";
 import { createTRPCRouter, lockedProcedure } from "../trpc";
 
 const staticDir = path.join(process.cwd(), "src/server/static");
@@ -16,7 +17,9 @@ const incorrect: string[] = fs
   .filter((i) => !!i.length);
 
 export const discoverableRouter = createTRPCRouter({
-  fetchInsults: lockedProcedure(["ExtendedFeedbackBank"]).query(() => {
-    return { correct, incorrect };
-  }),
+  fetchInsults: lockedProcedure([EnabledFeature.ExtendedFeedbackBank]).query(
+    () => {
+      return { correct, incorrect };
+    }
+  ),
 });

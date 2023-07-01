@@ -20,7 +20,7 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
   active,
   guess,
 }) => {
-  const { experience } = useSet();
+  const { container } = useSet();
   const overrideCorrect = useLearnContext((s) => s.overrideCorrect);
 
   const feedbackBank = useLearnContext((s) => s.feedbackBank);
@@ -43,7 +43,7 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
     void (async () =>
       await put.mutateAsync({
         id: active.term.id,
-        experienceId: experience.id,
+        containerId: container.id,
         mode: "Learn",
         correctness: 2,
         appearedInRound: active.term.appearedInRound || 0,

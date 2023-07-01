@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
         session.user.displayName = user.displayName;
         session.user.admin = user.email == env.ADMIN_EMAIL;
         session.user.banned = !!user.bannedAt;
-        session.user.features = user.features;
+        session.user.flags = user.flags;
         session.user.enableUsageData = user.enableUsageData;
         session.user.changelogVersion = user.changelogVersion;
 

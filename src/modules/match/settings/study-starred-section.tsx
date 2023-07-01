@@ -1,21 +1,19 @@
 import { Flex, Stack, Switch, Text } from "@chakra-ui/react";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { api } from "../../../utils/api";
 
 export const StudyStarredSection = () => {
   const { id, type } = useSetFolderUnison();
 
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const matchStudyStarred = useExperienceContext((s) => s.matchStudyStarred);
-  const setMatchStudyStarred = useExperienceContext(
+  const starredTerms = useContainerContext((s) => s.starredTerms);
+  const matchStudyStarred = useContainerContext((s) => s.matchStudyStarred);
+  const setMatchStudyStarred = useContainerContext(
     (s) => s.setMatchStudyStarred
   );
 
   const apiSetMatchStudyStarred =
-    type == "set"
-      ? api.experience.setMatchStudyStarred.useMutation()
-      : api.folders.setMatchStudyStarred.useMutation();
+    api.container.setMatchStudyStarred.useMutation();
 
   return (
     <Flex gap={8}>
@@ -29,7 +27,8 @@ export const StudyStarredSection = () => {
         onChange={(e) => {
           setMatchStudyStarred(e.target.checked);
           apiSetMatchStudyStarred.mutate({
-            genericId: id,
+            entityId: id,
+            type: type == "set" ? "StudySet" : "Folder",
             matchStudyStarred: e.target.checked,
           });
         }}

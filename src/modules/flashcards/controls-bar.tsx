@@ -5,7 +5,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
-import { useExperienceContext } from "../../stores/use-experience-store";
+import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { api } from "../../utils/api";
 
@@ -17,25 +17,20 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
   onSettingsClick,
 }) => {
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
-  const enableCardsSorting = useExperienceContext((s) => s.enableCardsSorting);
+  const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
 
   const { id, type } = useSetFolderUnison();
-  const setShuffleSet = api.experience.setShuffle.useMutation({
-    onSuccess: () => {
-      if (enableCardsSorting) setIsDirty(true);
-    },
-  });
-  const setShuffleFolder = api.folders.setShuffle.useMutation({
+  const setShuffle = api.container.setShuffle.useMutation({
     onSuccess: () => {
       if (enableCardsSorting) setIsDirty(true);
     },
   });
 
-  const [shuffle, toggleShuffle] = useExperienceContext((s) => [
+  const [shuffle, toggleShuffle] = useContainerContext((s) => [
     s.shuffleFlashcards,
     s.toggleShuffleFlashcards,
   ]);
-  const [autoplay, toggleAutoplay] = useExperienceContext((s) => [
+  const [autoplay, toggleAutoplay] = useContainerContext((s) => [
     s.autoplayFlashcards,
     s.toggleAutoplayFlashcards,
   ]);
@@ -50,18 +45,14 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
             rounded="full"
             variant={shuffle ? "solid" : "ghost"}
             colorScheme="gray"
-            isLoading={
-              enableCardsSorting &&
-              (setShuffleSet.isLoading || setShuffleFolder.isLoading)
-            }
+            isLoading={enableCardsSorting && setShuffle.isLoading}
             onClick={() => {
               toggleShuffle();
-
-              if (type === "set") {
-                setShuffleSet.mutate({ studySetId: id, shuffle: !shuffle });
-              } else {
-                setShuffleFolder.mutate({ folderId: id, shuffle: !shuffle });
-              }
+              setShuffle.mutate({
+                entityId: id,
+                type: type == "set" ? "StudySet" : "Folder",
+                shuffle: !shuffle,
+              });
             }}
           />
         </Tooltip>

@@ -10,16 +10,16 @@ import { api } from "../../utils/api";
 import { TermMastery } from "./term-mastery";
 
 export const CompletedView = () => {
-  const { id, experience } = useSet();
+  const { id, container } = useSet();
   const router = useRouter();
   const numTerms = useLearnContext((s) => s.allTerms).length;
 
-  const resetProgress = api.experience.resetLearnProgress.useMutation({
+  const resetProgress = api.container.resetLearnProgress.useMutation({
     onSuccess() {
       router.reload();
     },
   });
-  const beginReview = api.experience.beginReview.useMutation({
+  const beginReview = api.container.beginReview.useMutation({
     onSuccess() {
       router.reload();
     },
@@ -35,7 +35,7 @@ export const CompletedView = () => {
           setResetModalOpen(false);
         }}
         onConfirm={async () => {
-          await resetProgress.mutateAsync({ studySetId: id });
+          await resetProgress.mutateAsync({ entityId: id });
         }}
         heading="Reset Progress"
         body={
@@ -53,7 +53,7 @@ export const CompletedView = () => {
           </Center>
           <Stack textAlign="center" spacing={6}>
             <Heading>Congratulations, you&apos;ve learned everything!</Heading>
-            {experience.learnMode == "Learn" && (
+            {container.learnMode == "Learn" && (
               <Text fontSize="lg">
                 Keep reviewing your most missed terms to make sure they stick.
               </Text>
@@ -61,7 +61,7 @@ export const CompletedView = () => {
           </Stack>
           <Center>
             <VStack w="max" gap={1}>
-              {experience.learnMode == "Learn" ? (
+              {container.learnMode == "Learn" ? (
                 <Button
                   size="lg"
                   isLoading={beginReview.isLoading}

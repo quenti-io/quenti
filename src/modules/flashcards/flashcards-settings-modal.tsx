@@ -10,7 +10,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
-import { useExperienceContext } from "../../stores/use-experience-store";
+import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { CardsAnswerModeSection } from "./settings/cards-answer-mode-section";
 import { CardsSortingSection } from "./settings/cards-sorting-section";
@@ -25,15 +25,15 @@ export interface FlashcardsSettingsModalProps {
 export const FlashcardsSettingsModal: React.FC<
   FlashcardsSettingsModalProps
 > = ({ isOpen, onClose }) => {
-  const { experience } = useSetFolderUnison();
+  const { container } = useSetFolderUnison();
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
-  const cardsStudyStarred = useExperienceContext((s) => s.cardsStudyStarred);
+  const cardsStudyStarred = useContainerContext((s) => s.cardsStudyStarred);
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={() => {
-        const isDirty = experience?.cardsStudyStarred !== cardsStudyStarred;
+        const isDirty = container?.cardsStudyStarred !== cardsStudyStarred;
         if (isDirty) setIsDirty(true);
 
         onClose();

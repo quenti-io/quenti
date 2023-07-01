@@ -1,9 +1,4 @@
-import {
-  LimitedStudySetAnswerMode,
-  type PrismaClient,
-  type StudiableTerm,
-  type Term,
-} from "@prisma/client";
+import type { PrismaClient, StudiableTerm, Term } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
@@ -17,22 +12,23 @@ export const getRecentFolders = async (
   prisma: PrismaClient,
   userId: string
 ) => {
-  const recentExperiences = await prisma.folderExperience.findMany({
+  const recentContainers = await prisma.container.findMany({
     where: {
       userId,
+      type: "Folder",
     },
     orderBy: {
       viewedAt: "desc",
     },
     take: 16,
   });
-  const experienceIds = recentExperiences.map((e) => e.folderId);
+  const entityIds = recentContainers.map((e) => e.entityId);
 
   return (
     await prisma.folder.findMany({
       where: {
         id: {
-          in: experienceIds,
+          in: entityIds,
         },
       },
       include: {
@@ -46,7 +42,7 @@ export const getRecentFolders = async (
     })
   ).map((x) => ({
     ...x,
-    viewedAt: recentExperiences.find((e) => e.folderId === x.id)!.viewedAt,
+    viewedAt: recentContainers.find((e) => e.entityId === x.id)!.viewedAt,
     user: {
       username: x.user.username,
       image: x.user.image,
@@ -143,28 +139,31 @@ export const foldersRouter = createTRPCRouter({
         });
       }
 
-      await ctx.prisma.folderExperience.upsert({
+      await ctx.prisma.container.upsert({
         where: {
-          userId_folderId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            folderId: folder.id,
+            entityId: folder.id,
+            type: "Folder",
           },
         },
         create: {
-          folderId: folder.id,
+          entityId: folder.id,
           userId: ctx.session.user.id,
           viewedAt: new Date(),
+          type: "Folder",
         },
         update: {
           viewedAt: new Date(),
         },
       });
 
-      const experience = await ctx.prisma.folderExperience.findUnique({
+      const container = await ctx.prisma.container.findUnique({
         where: {
-          userId_folderId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            folderId: folder.id,
+            entityId: folder.id,
+            type: "Folder",
           },
         },
         include: {
@@ -172,7 +171,7 @@ export const foldersRouter = createTRPCRouter({
         },
       });
 
-      if (!experience) {
+      if (!container) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
         });
@@ -212,18 +211,17 @@ export const foldersRouter = createTRPCRouter({
       }
 
       if (!starredTerms.length) {
-        await ctx.prisma.folderExperience.update({
+        await ctx.prisma.container.update({
           where: {
-            userId_folderId: {
-              userId: ctx.session.user.id,
-              folderId: folder.id,
-            },
+            id: container.id,
           },
           data: {
             cardsStudyStarred: false,
+            matchStudyStarred: false,
           },
         });
-        experience.cardsStudyStarred = false;
+        container.cardsStudyStarred = false;
+        container.cardsStudyStarred = false;
       }
 
       return {
@@ -245,10 +243,19 @@ export const foldersRouter = createTRPCRouter({
             verified: s.user.verified,
           },
         })),
-        experience: {
-          ...experience,
+        container: {
+          id: container.id,
+          entityId: container.entityId,
+          userId: container.userId,
+          viewedAt: container.viewedAt,
+          shuffleFlashcards: container.shuffleFlashcards,
+          enableCardsSorting: container.enableCardsSorting,
+          cardsRound: container.cardsRound,
+          cardsStudyStarred: container.cardsStudyStarred,
+          cardsAnswerWith: container.cardsAnswerWith,
+          matchStudyStarred: container.matchStudyStarred,
           starredTerms,
-          studiableTerms: experience.studiableTerms.map((x: StudiableTerm) => ({
+          studiableTerms: container.studiableTerms.map((x: StudiableTerm) => ({
             id: x.termId,
             mode: x.mode,
             correctness: x.correctness,
@@ -270,9 +277,10 @@ export const foldersRouter = createTRPCRouter({
   recentForSetAdd: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const recent = await ctx.prisma.folderExperience.findMany({
+      const recent = await ctx.prisma.container.findMany({
         where: {
           userId: ctx.session.user.id,
+          type: "Folder",
           folder: {
             userId: ctx.session.user.id,
           },
@@ -298,10 +306,10 @@ export const foldersRouter = createTRPCRouter({
       });
 
       return recent.map((r) => ({
-        id: r.folder.id,
-        title: r.folder.title,
-        slug: r.folder.slug,
-        includes: r.folder.studySets.length > 0,
+        id: r.folder!.id,
+        title: r.folder!.title,
+        slug: r.folder!.slug,
+        includes: r.folder!.studySets.length > 0,
       }));
     }),
 
@@ -456,10 +464,11 @@ export const foldersRouter = createTRPCRouter({
                 },
               }
             : {},
-          folderExperiences: {
+          containers: {
             create: {
               userId: ctx.session.user.id,
               viewedAt: new Date(),
+              type: "Folder",
             },
           },
         },
@@ -607,150 +616,22 @@ export const foldersRouter = createTRPCRouter({
       });
     }),
 
-  setShuffle: protectedProcedure
-    .input(z.object({ folderId: z.string(), shuffle: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.folderExperience.update({
-        where: {
-          userId_folderId: {
-            userId: ctx.session.user.id,
-            folderId: input.folderId,
-          },
-        },
-        data: {
-          shuffleFlashcards: input.shuffle,
-        },
-      });
-    }),
-
-  setEnableCardsSorting: protectedProcedure
-    .input(z.object({ genericId: z.string(), enableCardsSorting: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.folderExperience.update({
-        where: {
-          userId_folderId: {
-            userId: ctx.session.user.id,
-            folderId: input.genericId,
-          },
-        },
-        data: {
-          enableCardsSorting: input.enableCardsSorting,
-        },
-      });
-    }),
-
-  setCardsStudyStarred: protectedProcedure
-    .input(z.object({ genericId: z.string(), cardsStudyStarred: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.folderExperience.update({
-        where: {
-          userId_folderId: {
-            userId: ctx.session.user.id,
-            folderId: input.genericId,
-          },
-        },
-        data: {
-          cardsStudyStarred: input.cardsStudyStarred,
-          cardsRound: 0,
-          studiableTerms: {
-            deleteMany: {
-              mode: "Flashcards",
-            },
-          },
-        },
-      });
-    }),
-
-  setCardsAnswerWith: protectedProcedure
-    .input(
-      z.object({
-        genericId: z.string(),
-        cardsAnswerWith: z.nativeEnum(LimitedStudySetAnswerMode),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.folderExperience.update({
-        where: {
-          userId_folderId: {
-            userId: ctx.session.user.id,
-            folderId: input.genericId,
-          },
-        },
-        data: {
-          cardsAnswerWith: input.cardsAnswerWith,
-        },
-      });
-    }),
-
-  setMatchStudyStarred: protectedProcedure
-    .input(z.object({ genericId: z.string(), matchStudyStarred: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.folderExperience.update({
-        where: {
-          userId_folderId: {
-            userId: ctx.session.user.id,
-            folderId: input.genericId,
-          },
-        },
-        data: {
-          matchStudyStarred: input.matchStudyStarred,
-        },
-      });
-    }),
-
-  completeCardsRound: protectedProcedure
-    .input(z.object({ genericId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.folderExperience.update({
-        where: {
-          userId_folderId: {
-            userId: ctx.session.user.id,
-            folderId: input.genericId,
-          },
-        },
-        data: {
-          cardsRound: {
-            increment: 1,
-          },
-        },
-      });
-    }),
-
-  resetCardsProgress: protectedProcedure
-    .input(z.object({ genericId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.folderExperience.update({
-        where: {
-          userId_folderId: {
-            userId: ctx.session.user.id,
-            folderId: input.genericId,
-          },
-        },
-        data: {
-          cardsRound: 0,
-          studiableTerms: {
-            deleteMany: {
-              mode: "Flashcards",
-            },
-          },
-        },
-      });
-    }),
-
   starTerm: protectedProcedure
     .input(z.object({ studySetId: z.string(), termId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const experience = await ctx.prisma.studySetExperience.upsert({
+      const container = await ctx.prisma.container.upsert({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.studySetId,
+            type: "StudySet",
           },
         },
         create: {
           userId: ctx.session.user.id,
-          studySetId: input.studySetId,
+          entityId: input.studySetId,
           viewedAt: new Date(),
+          type: "StudySet",
         },
         update: {},
       });
@@ -758,7 +639,7 @@ export const foldersRouter = createTRPCRouter({
       await ctx.prisma.starredTerm.create({
         data: {
           termId: input.termId,
-          experienceId: experience.id,
+          containerId: container.id,
           userId: ctx.session.user.id,
         },
       });

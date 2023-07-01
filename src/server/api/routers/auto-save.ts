@@ -32,6 +32,7 @@ export const autoSaveRouter = createTRPCRouter({
 
     return {
       ...autoSave,
+      tags: autoSave.tags as string[],
       wordLanguage: autoSave.wordLanguage as Language,
       definitionLanguage: autoSave.definitionLanguage as Language,
     };

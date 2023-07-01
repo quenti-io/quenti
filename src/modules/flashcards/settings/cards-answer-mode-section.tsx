@@ -2,7 +2,7 @@ import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import type { LimitedStudySetAnswerMode } from "@prisma/client";
 import { Select } from "chakra-react-select";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { api } from "../../../utils/api";
 
 const options: { label: string; value: LimitedStudySetAnswerMode }[] = [
@@ -19,18 +19,15 @@ const options: { label: string; value: LimitedStudySetAnswerMode }[] = [
 export const CardsAnswerModeSection = () => {
   const { id, type } = useSetFolderUnison();
 
-  const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
-  const setCardsAnswerWith = useExperienceContext((s) => s.setCardsAnswerWith);
+  const cardsAnswerWith = useContainerContext((s) => s.cardsAnswerWith);
+  const setCardsAnswerWith = useContainerContext((s) => s.setCardsAnswerWith);
 
   const baseBg = useColorModeValue("gray.100", "gray.750");
   const dropdownBg = useColorModeValue("gray.200", "gray.700");
   const chevronColor = useColorModeValue("blue.400", "blue.200");
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
-  const apiCardsAnswerWith =
-    type == "set"
-      ? api.experience.setCardsAnswerWith.useMutation()
-      : api.folders.setCardsAnswerWith.useMutation();
+  const apiCardsAnswerWith = api.container.setCardsAnswerWith.useMutation();
 
   return (
     <Flex gap={{ base: 4, sm: 8 }} flexDir={{ base: "column", sm: "row" }}>
@@ -48,8 +45,9 @@ export const CardsAnswerModeSection = () => {
           onChange={(e) => {
             setCardsAnswerWith(e!.value);
             apiCardsAnswerWith.mutate({
-              genericId: id,
+              entityId: id,
               cardsAnswerWith: e!.value,
+              type: type == "set" ? "StudySet" : "Folder",
             });
           }}
           chakraStyles={{

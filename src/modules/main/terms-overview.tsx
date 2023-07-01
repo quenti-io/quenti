@@ -11,7 +11,7 @@ import {
 import type { Term } from "@prisma/client";
 import React from "react";
 import { useSet } from "../../hooks/use-set";
-import { useExperienceContext } from "../../stores/use-experience-store";
+import { useContainerContext } from "../../stores/use-container-store";
 import { DisplayableTermPure } from "./displayable-term";
 import { TermsSortSelect } from "./terms-sort-select";
 
@@ -26,7 +26,7 @@ const TermsOverviewContext = React.createContext<TermsOverviewContextProps>({
 export const TermsOverview = () => {
   const { terms, injected } = useSet();
 
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
   const studiable = !!injected.studiableLearnTerms.length;
   const [sortType, setSortType] = React.useState(
     studiable ? "stats" : "original"
@@ -92,7 +92,7 @@ export const TermsOverview = () => {
 };
 
 const TermsByStats = () => {
-  const { terms, experience, injected } = useSet();
+  const { terms, container, injected } = useSet();
 
   let familiarTerms = injected.studiableLearnTerms
     .filter((x) => x.correctness != 0 && x.correctness != 2)
@@ -109,9 +109,9 @@ const TermsByStats = () => {
     .filter((x) => x.correctness === 2)
     .map((x) => terms.find((t) => t.id === x.id)!);
 
-  familiarTerms = experience.learnMode == "Learn" ? familiarTerms : [];
-  unstudiedTerms = experience.learnMode == "Learn" ? unstudiedTerms : [];
-  masteredTerms = experience.learnMode == "Learn" ? masteredTerms : terms;
+  familiarTerms = container.learnMode == "Learn" ? familiarTerms : [];
+  unstudiedTerms = container.learnMode == "Learn" ? unstudiedTerms : [];
+  masteredTerms = container.learnMode == "Learn" ? masteredTerms : terms;
 
   return (
     <>
@@ -173,7 +173,7 @@ const TermsCategory: React.FC<TermsCategoryProps> = ({
 }) => {
   const headingColor = useColorModeValue(`${color}.500`, `${color}.300`);
 
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
   const starredOnly = React.useContext(TermsOverviewContext).starredOnly;
   const internalTerms = starredOnly
     ? terms.filter((x) => starredTerms.includes(x.id))
@@ -201,7 +201,7 @@ interface TermsListProps {
 }
 
 const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
   const internalSort =
     sortOrder || terms.sort((a, b) => a.rank - b.rank).map((x) => x.id);
 
