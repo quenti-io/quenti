@@ -113,8 +113,8 @@ model StudySet {
   user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt          DateTime             @default(now())
   savedAt            DateTime             @default(now()) @updatedAt
-  title              String
-  description        String
+  title              String               @db.VarChar(255)
+  description        String               @db.VarChar(2000)
   tags               Json                 @default("[]")
   visibility         StudySetVisibility   @default(Public)
   wordLanguage       String               @default("en")
@@ -139,9 +139,9 @@ model Folder {
   createdAt    DateTime             @default(now())
   userId       String
   user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title        String
+  title        String               @db.VarChar(255)
   slug         String?
-  description  String
+  description  String               @db.VarChar(2000)
   studySets    StudySetsOnFolders[]
   containers   Container[]
   leaderboards Leaderboard[]
@@ -165,8 +165,8 @@ model SetAutoSave {
   userId             String             @id
   savedAt            DateTime           @updatedAt
   user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title              String
-  description        String
+  title              String             @db.VarChar(255)
+  description        String             @db.VarChar(2000)
   tags               Json               @default("[]")
   visibility         StudySetVisibility @default(Public)
   wordLanguage       String             @default("en")
@@ -178,8 +178,8 @@ model SetAutoSave {
 
 model Term {
   id         String   @id @default(cuid())
-  word       String
-  definition String
+  word       String   @db.VarChar(1000)
+  definition String   @db.VarChar(1000)
   rank       Int
   studySetId String
   StudySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
@@ -193,8 +193,8 @@ model Term {
 
 model AutoSaveTerm {
   id            String      @id @default(cuid())
-  word          String
-  definition    String
+  word          String      @db.VarChar(1000)
+  definition    String      @db.VarChar(1000)
   rank          Int
   setAutoSaveId String
   setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
