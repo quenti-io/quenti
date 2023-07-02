@@ -299,8 +299,8 @@ model Container {
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
-  studySet       StudySet?       @relation(fields: [entityId], references: [id], map: "container_study_set")
-  folder         Folder?         @relation(fields: [entityId], references: [id], map: "container_folder")
+  studySet       StudySet?       @relation(fields: [entityId], references: [id], map: "container_study_set", onDelete: Cascade)
+  folder         Folder?         @relation(fields: [entityId], references: [id], map: "container_folder", onDelete: Cascade)
 
   @@unique([userId, entityId, type])
   @@index([entityId])
