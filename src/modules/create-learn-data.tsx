@@ -4,21 +4,19 @@ import type { StudiableTerm } from "../interfaces/studiable-term";
 import {
   createLearnStore,
   LearnContext,
-  type LearnStore,
+  type LearnStore
 } from "../stores/use-learn-store";
 
 export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms, experience } = useSet();
+  const { terms, container } = useSet();
 
   const storeRef = React.useRef<LearnStore>();
   if (!storeRef.current) {
     storeRef.current = createLearnStore();
 
-    const studiable = experience.studiableTerms.filter(
-      (s) => s.mode == "Learn"
-    );
+    const studiable = container.studiableTerms.filter((s) => s.mode == "Learn");
 
     let learnTerms: StudiableTerm[] = terms
       .map((term) => {
@@ -37,12 +35,12 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
           : a.rank - b.rank
       );
 
-    if (experience.studyStarred) {
+    if (container.studyStarred) {
       learnTerms = learnTerms.filter((x) =>
-        experience.starredTerms.includes(x.id)
+        container.starredTerms.includes(x.id)
       );
     }
-    if (experience.learnMode == "Review") {
+    if (container.learnMode == "Review") {
       learnTerms = learnTerms
         .filter((x) => x.incorrectCount > 0)
         .sort((a, b) => b.incorrectCount - a.incorrectCount);
@@ -51,11 +49,11 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
     storeRef.current
       .getState()
       .initialize(
-        experience.learnMode,
-        experience.answerWith,
+        container.learnMode,
+        container.answerWith,
         learnTerms,
         terms,
-        experience.learnRound
+        container.learnRound
       );
   }
 

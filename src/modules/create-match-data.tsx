@@ -1,6 +1,6 @@
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import { useExperienceContext } from "../stores/use-experience-store";
+import { useContainerContext } from "../stores/use-container-store";
 import {
   createMatchStore,
   MatchContext,
@@ -11,8 +11,8 @@ export const CreateMatchData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { terms } = useSetFolderUnison();
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const matchStudyStarred = useExperienceContext((s) => s.matchStudyStarred);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
+  const matchStudyStarred = useContainerContext((s) => s.matchStudyStarred);
 
   const storeRef = React.useRef<MatchStore>();
   if (!storeRef.current) {

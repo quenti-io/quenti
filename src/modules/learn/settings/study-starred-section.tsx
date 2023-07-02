@@ -7,17 +7,17 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useSet } from "../../../hooks/use-set";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { api } from "../../../utils/api";
 
 export const StudyStarredSection = () => {
   const { id } = useSet();
 
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const studyStarred = useExperienceContext((s) => s.studyStarred);
-  const setStudyStarred = useExperienceContext((s) => s.setStudyStarred);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
+  const studyStarred = useContainerContext((s) => s.studyStarred);
+  const setStudyStarred = useContainerContext((s) => s.setStudyStarred);
 
-  const apiStudyStarred = api.experience.setStudyStarred.useMutation();
+  const apiStudyStarred = api.container.setStudyStarred.useMutation();
 
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
@@ -35,7 +35,7 @@ export const StudyStarredSection = () => {
           onClick={() => {
             setStudyStarred(false);
             apiStudyStarred.mutate({
-              studySetId: id,
+              entityId: id,
               studyStarred: false,
             });
           }}
@@ -47,7 +47,7 @@ export const StudyStarredSection = () => {
           onClick={() => {
             setStudyStarred(true);
             apiStudyStarred.mutate({
-              studySetId: id,
+              entityId: id,
               studyStarred: true,
             });
           }}

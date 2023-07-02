@@ -18,7 +18,7 @@ export const AdminDashboard = () => {
       <Item label="Study Sets" value={data.studySets} />
       <Item label="Terms" value={data.terms} />
       <Item label="Folders" value={data.folders} />
-      <Item label="Experiences" value={data.experiences} />
+      <Item label="Containers" value={data.containers} />
       <Item label="Starred Terms" value={data.starredTerms} />
       <Item label="Studiable Terms" value={data.studiableTerms} />
     </Grid>

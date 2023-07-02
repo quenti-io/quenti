@@ -3,10 +3,6 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
-export type EnabledFeature = "ExtendedFeedbackBank";
-export const EnabledFeature = {
-  ExtendedFeedbackBank: "ExtendedFeedbackBank",
-};
 export type StudySetVisibility = "Private" | "Unlisted" | "Public";
 export const StudySetVisibility = {
   Private: "Private",
@@ -49,6 +45,11 @@ export const MultipleAnswerMode = {
   All: "All",
   Unknown: "Unknown",
 };
+export type ContainerType = "StudySet" | "Folder";
+export const ContainerType = {
+  StudySet: "StudySet",
+  Folder: "Folder",
+};
 export type Account = {
   id: string;
   userId: string;
@@ -75,6 +76,26 @@ export type AutoSaveTerm = {
   rank: number;
   setAutoSaveId: string;
 };
+export type Container = {
+  id: string;
+  entityId: string;
+  type: ContainerType;
+  userId: string;
+  viewedAt: Timestamp;
+  shuffleFlashcards: Generated<number>;
+  learnRound: Generated<number>;
+  learnMode: Generated<LearnMode>;
+  shuffleLearn: Generated<number>;
+  studyStarred: Generated<number>;
+  answerWith: Generated<StudySetAnswerMode>;
+  multipleAnswerMode: Generated<MultipleAnswerMode>;
+  extendedFeedbackBank: Generated<number>;
+  enableCardsSorting: Generated<number>;
+  cardsRound: Generated<number>;
+  cardsStudyStarred: Generated<number>;
+  cardsAnswerWith: Generated<LimitedStudySetAnswerMode>;
+  matchStudyStarred: Generated<number>;
+};
 export type EntityShare = {
   id: string;
   entityId: string;
@@ -88,30 +109,16 @@ export type Folder = {
   slug: string | null;
   description: string;
 };
-export type FolderExperience = {
-  id: string;
-  userId: string;
-  folderId: string;
-  viewedAt: Timestamp;
-  shuffleFlashcards: Generated<boolean>;
-  enableCardsSorting: Generated<boolean>;
-  cardsRound: Generated<number>;
-  cardsStudyStarred: Generated<boolean>;
-  cardsAnswerWith: Generated<LimitedStudySetAnswerMode>;
-  matchStudyStarred: Generated<boolean>;
-};
 export type Highscore = {
   leaderboardId: string;
   userId: string;
   time: number;
   timestamp: Timestamp;
-  eligible: Generated<boolean>;
+  eligible: Generated<number>;
 };
 export type Leaderboard = {
   id: string;
-  containerId: string;
-  studySetId: string | null;
-  folderId: string | null;
+  entityId: string;
   type: LeaderboardType;
 };
 export type RecentFailedLogin = {
@@ -132,7 +139,7 @@ export type SetAutoSave = {
   savedAt: Timestamp;
   title: string;
   description: string;
-  tags: Generated<string>[];
+  tags: Generated<unknown>;
   visibility: Generated<StudySetVisibility>;
   wordLanguage: Generated<string>;
   definitionLanguage: Generated<string>;
@@ -140,13 +147,11 @@ export type SetAutoSave = {
 export type StarredTerm = {
   userId: string;
   termId: string;
-  experienceId: string;
+  containerId: string;
 };
 export type StudiableTerm = {
   userId: string;
   termId: string;
-  experienceId: string | null;
-  folderExperienceId: string | null;
   containerId: string;
   mode: Generated<StudiableMode>;
   correctness: number;
@@ -161,29 +166,10 @@ export type StudySet = {
   savedAt: Generated<Timestamp>;
   title: string;
   description: string;
-  tags: Generated<string>[];
+  tags: Generated<unknown>;
   visibility: Generated<StudySetVisibility>;
   wordLanguage: Generated<string>;
   definitionLanguage: Generated<string>;
-};
-export type StudySetExperience = {
-  id: string;
-  userId: string;
-  studySetId: string;
-  viewedAt: Timestamp;
-  shuffleFlashcards: Generated<boolean>;
-  learnRound: Generated<number>;
-  learnMode: Generated<LearnMode>;
-  shuffleLearn: Generated<boolean>;
-  studyStarred: Generated<boolean>;
-  answerWith: Generated<StudySetAnswerMode>;
-  multipleAnswerMode: Generated<MultipleAnswerMode>;
-  extendedFeedbackBank: Generated<boolean>;
-  enableCardsSorting: Generated<boolean>;
-  cardsRound: Generated<number>;
-  cardsStudyStarred: Generated<boolean>;
-  cardsAnswerWith: Generated<LimitedStudySetAnswerMode>;
-  matchStudyStarred: Generated<boolean>;
 };
 export type StudySetsOnFolders = {
   studySetId: string;
@@ -203,13 +189,13 @@ export type User = {
   email: string | null;
   emailVerified: Timestamp | null;
   image: string | null;
-  verified: Generated<boolean>;
+  verified: Generated<number>;
   createdAt: Generated<Timestamp>;
   lastSeenAt: Generated<Timestamp>;
   bannedAt: Timestamp | null;
-  displayName: Generated<boolean>;
-  features: Generated<EnabledFeature>[];
-  enableUsageData: Generated<boolean>;
+  displayName: Generated<number>;
+  flags: Generated<number>;
+  enableUsageData: Generated<number>;
   changelogVersion: string;
 };
 export type VerificationToken = {
@@ -225,9 +211,9 @@ export type DB = {
   Account: Account;
   AllowedEmailRegex: AllowedEmailRegex;
   AutoSaveTerm: AutoSaveTerm;
+  Container: Container;
   EntityShare: EntityShare;
   Folder: Folder;
-  FolderExperience: FolderExperience;
   Highscore: Highscore;
   Leaderboard: Leaderboard;
   RecentFailedLogin: RecentFailedLogin;
@@ -236,7 +222,6 @@ export type DB = {
   StarredTerm: StarredTerm;
   StudiableTerm: StudiableTerm;
   StudySet: StudySet;
-  StudySetExperience: StudySetExperience;
   StudySetsOnFolders: StudySetsOnFolders;
   Term: Term;
   User: User;

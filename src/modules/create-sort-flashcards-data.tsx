@@ -4,7 +4,7 @@ import { RootFlashcardContext } from "../components/root-flashcard-wrapper";
 import { queryEventChannel } from "../events/query";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import type { StudiableTerm } from "../interfaces/studiable-term";
-import { useExperienceContext } from "../stores/use-experience-store";
+import { useContainerContext } from "../stores/use-container-store";
 import {
   createSortFlashcardsStore,
   SortFlashcardsContext,
@@ -16,9 +16,9 @@ import type { SetData } from "./hydrate-set-data";
 export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms, experience } = useSetFolderUnison();
+  const { terms, container } = useSetFolderUnison();
   const { termOrder } = React.useContext(RootFlashcardContext);
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
   const storeRef = React.useRef<SortFlashcardsStore>();
 
   const initState = (
@@ -54,22 +54,22 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
   if (!storeRef.current) {
     storeRef.current = createSortFlashcardsStore();
     initState(
-      experience.cardsRound,
-      experience.studiableTerms.filter((x) => x.mode == "Flashcards"),
+      container.cardsRound,
+      container.studiableTerms.filter((x) => x.mode == "Flashcards"),
       terms,
       termOrder,
-      experience.cardsStudyStarred
+      container.cardsStudyStarred
     );
   }
 
   React.useEffect(() => {
     const trigger = (data: SetData | FolderData) =>
       initState(
-        data.experience.cardsRound,
-        data.experience.studiableTerms.filter((x) => x.mode == "Flashcards"),
+        data.container.cardsRound,
+        data.container.studiableTerms.filter((x) => x.mode == "Flashcards"),
         data.terms,
         termOrder,
-        data.experience.cardsStudyStarred
+        data.container.cardsStudyStarred
       );
 
     queryEventChannel.on("setQueryRefetched", trigger);

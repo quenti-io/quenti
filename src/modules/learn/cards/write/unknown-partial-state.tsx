@@ -12,7 +12,7 @@ import {
 import { useSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
 import type { Question } from "../../../../interfaces/question";
-import { useExperienceContext } from "../../../../stores/use-experience-store";
+import { useContainerContext } from "../../../../stores/use-container-store";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
 import { api } from "../../../../utils/api";
 
@@ -25,8 +25,8 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
   active,
   guess,
 }) => {
-  const { id, experience } = useSet();
-  const setMutlipleAnswerMode = useExperienceContext(
+  const { id, container } = useSet();
+  const setMutlipleAnswerMode = useContainerContext(
     (s) => s.setMultipleAnswerMode
   );
   const correctFromUnknown = useLearnContext((s) => s.correctFromUnknown);
@@ -34,7 +34,7 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
 
   const put = api.studiableTerms.put.useMutation();
   const apiSetMultipleAnswerMode =
-    api.experience.setMutlipleAnswerMode.useMutation();
+    api.container.setMutlipleAnswerMode.useMutation();
 
   const onRequireOne = () => {
     setMutlipleAnswerMode("One");
@@ -42,13 +42,13 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
 
     void (async () => {
       await apiSetMultipleAnswerMode.mutateAsync({
-        studySetId: id,
+        entityId: id,
         multipleAnswerMode: "One",
       });
 
       await put.mutateAsync({
         id: active.term.id,
-        experienceId: experience.id,
+        containerId: container.id,
         mode: "Learn",
         correctness: 2,
         appearedInRound: active.term.appearedInRound || 0,
@@ -63,13 +63,13 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
 
     void (async () => {
       await apiSetMultipleAnswerMode.mutateAsync({
-        studySetId: id,
+        entityId: id,
         multipleAnswerMode: "All",
       });
 
       await put.mutateAsync({
         id: active.term.id,
-        experienceId: experience.id,
+        containerId: container.id,
         mode: "Learn",
         correctness: -1,
         appearedInRound: active.term.appearedInRound || 0,

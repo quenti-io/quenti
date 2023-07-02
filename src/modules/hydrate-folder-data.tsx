@@ -5,11 +5,11 @@ import { Loading } from "../components/loading";
 import { queryEventChannel } from "../events/query";
 import { useLoading } from "../hooks/use-loading";
 import {
-  createExperienceStore,
-  ExperienceContext,
-  type ExperienceStore,
-  type ExperienceStoreProps,
-} from "../stores/use-experience-store";
+  ContainerContext,
+  createContainerStore,
+  type ContainerStore,
+  type ContainerStoreProps,
+} from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { api, type RouterOutputs } from "../utils/api";
 import { Folder404 } from "./folders/folder-404";
@@ -27,9 +27,9 @@ export const FolderContext = React.createContext<FolderData>({
     image: "",
     verified: false,
   },
-  experience: {
+  container: {
     id: "",
-    folderId: "",
+    entityId: "",
     shuffleFlashcards: false,
     userId: "",
     viewedAt: new Date(),
@@ -104,18 +104,18 @@ const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({
   data,
   children,
 }) => {
-  const getVal = (data: FolderData): Partial<ExperienceStoreProps> => ({
-    shuffleFlashcards: data.experience.shuffleFlashcards,
-    starredTerms: data.experience.starredTerms,
-    enableCardsSorting: data.experience.enableCardsSorting,
-    cardsStudyStarred: data.experience.cardsStudyStarred,
-    cardsAnswerWith: data.experience.cardsAnswerWith,
-    matchStudyStarred: data.experience.matchStudyStarred,
+  const getVal = (data: FolderData): Partial<ContainerStoreProps> => ({
+    shuffleFlashcards: data.container.shuffleFlashcards,
+    starredTerms: data.container.starredTerms,
+    enableCardsSorting: data.container.enableCardsSorting,
+    cardsStudyStarred: data.container.cardsStudyStarred,
+    cardsAnswerWith: data.container.cardsAnswerWith,
+    matchStudyStarred: data.container.matchStudyStarred,
   });
 
-  const storeRef = React.useRef<ExperienceStore>();
+  const storeRef = React.useRef<ContainerStore>();
   if (!storeRef.current) {
-    storeRef.current = createExperienceStore(getVal(data));
+    storeRef.current = createContainerStore(getVal(data));
   }
 
   React.useEffect(() => {
@@ -132,9 +132,9 @@ const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({
 
   return (
     <FolderContext.Provider value={data}>
-      <ExperienceContext.Provider value={storeRef.current}>
+      <ContainerContext.Provider value={storeRef.current}>
         {children}
-      </ExperienceContext.Provider>
+      </ContainerContext.Provider>
     </FolderContext.Provider>
   );
 };

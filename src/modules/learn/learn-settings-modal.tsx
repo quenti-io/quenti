@@ -13,7 +13,8 @@ import {
 import React from "react";
 import { useFeature } from "../../hooks/use-feature";
 import { useSet } from "../../hooks/use-set";
-import { useExperienceContext } from "../../stores/use-experience-store";
+import { EnabledFeature } from "../../server/api/common/constants";
+import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { AnswerModeSection } from "./settings/answer-mode-section";
 import { ExtendedFeedbackSection } from "./settings/extended-feedback-bank-section";
@@ -44,14 +45,16 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
   onClose,
   dirtyOnReset,
 }) => {
-  const useExtendedFeedbackBank = useFeature("ExtendedFeedbackBank");
+  const useExtendedFeedbackBank = useFeature(
+    EnabledFeature.ExtendedFeedbackBank
+  );
 
-  const { experience } = useSet();
+  const { container } = useSet();
 
-  const shuffleLearn = useExperienceContext((s) => s.shuffleLearn);
-  const studyStarred = useExperienceContext((s) => s.studyStarred);
-  const answerWith = useExperienceContext((s) => s.answerWith);
-  const multipleAnswerMode = useExperienceContext((s) => s.multipleAnswerMode);
+  const shuffleLearn = useContainerContext((s) => s.shuffleLearn);
+  const studyStarred = useContainerContext((s) => s.studyStarred);
+  const answerWith = useContainerContext((s) => s.answerWith);
+  const multipleAnswerMode = useContainerContext((s) => s.multipleAnswerMode);
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
   const sm = useMediaQuery("(min-width: 768px)")[0];
@@ -62,9 +65,9 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
         isOpen={isOpen}
         onClose={() => {
           const isDirty =
-            experience.shuffleLearn !== shuffleLearn ||
-            experience.answerWith !== answerWith ||
-            experience.studyStarred !== studyStarred;
+            container.shuffleLearn !== shuffleLearn ||
+            container.answerWith !== answerWith ||
+            container.studyStarred !== studyStarred;
 
           setIsDirty(isDirty);
           onClose();

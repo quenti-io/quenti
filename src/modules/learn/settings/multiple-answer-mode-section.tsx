@@ -7,20 +7,20 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useSet } from "../../../hooks/use-set";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { api } from "../../../utils/api";
 
 export const MultipleAnswerModeSection: React.FC = () => {
   const { id } = useSet();
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
-  const multipleAnswerMode = useExperienceContext((s) => s.multipleAnswerMode);
-  const setMultipleAnswerMode = useExperienceContext(
+  const multipleAnswerMode = useContainerContext((s) => s.multipleAnswerMode);
+  const setMultipleAnswerMode = useContainerContext(
     (s) => s.setMultipleAnswerMode
   );
 
   const apiSetMultipleAnswerMode =
-    api.experience.setMutlipleAnswerMode.useMutation();
+    api.container.setMutlipleAnswerMode.useMutation();
 
   return (
     <Flex gap={4} direction="column">
@@ -37,7 +37,7 @@ export const MultipleAnswerModeSection: React.FC = () => {
             onClick={() => {
               setMultipleAnswerMode("One");
               apiSetMultipleAnswerMode.mutate({
-                studySetId: id,
+                entityId: id,
                 multipleAnswerMode: "One",
               });
             }}
@@ -49,7 +49,7 @@ export const MultipleAnswerModeSection: React.FC = () => {
             onClick={() => {
               setMultipleAnswerMode("All");
               apiSetMultipleAnswerMode.mutate({
-                studySetId: id,
+                entityId: id,
                 multipleAnswerMode: "All",
               });
             }}

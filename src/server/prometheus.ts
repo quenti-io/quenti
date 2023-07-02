@@ -62,17 +62,10 @@ export const register =
       },
     });
     new client.Gauge({
-      name: "study_set_experiences",
-      help: "The number of study set experiences",
+      name: "containers",
+      help: "The number of containers",
       async collect() {
-        this.set(await prisma.studySetExperience.count());
-      },
-    });
-    new client.Gauge({
-      name: "folder_experiences",
-      help: "The number of folder experiences",
-      async collect() {
-        this.set(await prisma.folderExperience.count());
+        this.set(await prisma.container.count());
       },
     });
     new client.Gauge({

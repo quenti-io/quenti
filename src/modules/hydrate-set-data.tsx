@@ -5,19 +5,20 @@ import { Loading } from "../components/loading";
 import { queryEventChannel } from "../events/query";
 import { useFeature } from "../hooks/use-feature";
 import { useLoading } from "../hooks/use-loading";
+import { EnabledFeature } from "../server/api/common/constants";
 import {
-  createExperienceStore,
-  ExperienceContext,
-  type ExperienceStore,
-  type ExperienceStoreProps,
-} from "../stores/use-experience-store";
+  ContainerContext,
+  createContainerStore,
+  type ContainerStore,
+  type ContainerStoreProps,
+} from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { api, type RouterOutputs } from "../utils/api";
 import { Set404 } from "./main/set-404";
 import { SetPrivate } from "./main/set-private";
 
 type BaseReturn = RouterOutputs["studySets"]["byId"];
-type StudiableType = BaseReturn["experience"]["studiableTerms"][number];
+type StudiableType = BaseReturn["container"]["studiableTerms"][number];
 export type SetData = BaseReturn & {
   injected: {
     studiableLearnTerms: StudiableType[];
@@ -59,10 +60,10 @@ export const HydrateSetData: React.FC<
   }, [isDirty]);
 
   const createInjectedData = (data: BaseReturn): SetData => {
-    const studiableLearnTerms = data.experience.studiableTerms.filter(
+    const studiableLearnTerms = data.container.studiableTerms.filter(
       (t) => t.mode == "Learn"
     );
-    const studiableFlashcardTerms = data.experience.studiableTerms.filter(
+    const studiableFlashcardTerms = data.container.studiableTerms.filter(
       (t) => t.mode == "Flashcards"
     );
     return {
@@ -110,26 +111,26 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   data,
   children,
 }) => {
-  const extendedFeedbackBank = useFeature("ExtendedFeedbackBank");
+  const extendedFeedbackBank = useFeature(EnabledFeature.ExtendedFeedbackBank);
 
-  const getVal = (data: SetData): Partial<ExperienceStoreProps> => ({
-    shuffleFlashcards: data.experience.shuffleFlashcards,
-    shuffleLearn: data.experience.shuffleLearn,
-    studyStarred: data.experience.studyStarred,
-    answerWith: data.experience.answerWith,
-    starredTerms: data.experience.starredTerms,
-    multipleAnswerMode: data.experience.multipleAnswerMode,
+  const getVal = (data: SetData): Partial<ContainerStoreProps> => ({
+    shuffleFlashcards: data.container.shuffleFlashcards,
+    shuffleLearn: data.container.shuffleLearn,
+    studyStarred: data.container.studyStarred,
+    answerWith: data.container.answerWith,
+    starredTerms: data.container.starredTerms,
+    multipleAnswerMode: data.container.multipleAnswerMode,
     extendedFeedbackBank:
-      data.experience.extendedFeedbackBank && extendedFeedbackBank,
-    enableCardsSorting: data.experience.enableCardsSorting,
-    cardsStudyStarred: data.experience.cardsStudyStarred,
-    cardsAnswerWith: data.experience.cardsAnswerWith,
-    matchStudyStarred: data.experience.matchStudyStarred,
+      data.container.extendedFeedbackBank && extendedFeedbackBank,
+    enableCardsSorting: data.container.enableCardsSorting,
+    cardsStudyStarred: data.container.cardsStudyStarred,
+    cardsAnswerWith: data.container.cardsAnswerWith,
+    matchStudyStarred: data.container.matchStudyStarred,
   });
 
-  const storeRef = React.useRef<ExperienceStore>();
+  const storeRef = React.useRef<ContainerStore>();
   if (!storeRef.current) {
-    storeRef.current = createExperienceStore(getVal(data));
+    storeRef.current = createContainerStore(getVal(data));
   }
 
   React.useEffect(() => {
@@ -146,9 +147,9 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
 
   return (
     <SetContext.Provider value={{ data }}>
-      <ExperienceContext.Provider value={storeRef.current}>
+      <ContainerContext.Provider value={storeRef.current}>
         {children}
-      </ExperienceContext.Provider>
+      </ContainerContext.Provider>
     </SetContext.Provider>
   );
 };

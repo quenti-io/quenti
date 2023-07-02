@@ -24,13 +24,14 @@ export const getRecentStudySets = async (
   userId: string,
   exclude?: string[]
 ) => {
-  const recentExperiences = await prisma.studySetExperience.findMany({
+  const recentContainers = await prisma.container.findMany({
     where: {
       userId: userId,
+      type: "StudySet",
       NOT: {
         OR: [
           {
-            studySetId: {
+            entityId: {
               in: exclude ?? [],
             },
           },
@@ -61,13 +62,13 @@ export const getRecentStudySets = async (
     },
     take: 16,
   });
-  const experienceIds = recentExperiences.map((e) => e.studySetId);
+  const containerIds = recentContainers.map((e) => e.entityId);
 
   return (
     await prisma.studySet.findMany({
       where: {
         id: {
-          in: experienceIds,
+          in: containerIds,
         },
       },
       include: {
@@ -80,11 +81,10 @@ export const getRecentStudySets = async (
       },
     })
   )
-    .sort((a, b) => experienceIds.indexOf(a.id) - experienceIds.indexOf(b.id))
+    .sort((a, b) => containerIds.indexOf(a.id) - containerIds.indexOf(b.id))
     .map((set) => ({
       ...set,
-      viewedAt: recentExperiences.find((e) => e.studySetId === set.id)!
-        .viewedAt,
+      viewedAt: recentContainers.find((e) => e.entityId === set.id)!.viewedAt,
       user: {
         username: set.user.username,
         image: set.user.image!,
@@ -174,28 +174,31 @@ export const studySetsRouter = createTRPCRouter({
       });
     }
 
-    await ctx.prisma.studySetExperience.upsert({
+    await ctx.prisma.container.upsert({
       where: {
-        userId_studySetId: {
+        userId_entityId_type: {
           userId: ctx.session.user.id,
-          studySetId: input,
+          entityId: input,
+          type: "StudySet",
         },
       },
       create: {
-        studySetId: input,
+        entityId: input,
         userId: ctx.session.user.id,
         viewedAt: new Date(),
+        type: "StudySet",
       },
       update: {
         viewedAt: new Date(),
       },
     });
 
-    const experience = await ctx.prisma.studySetExperience.findUnique({
+    const container = await ctx.prisma.container.findUnique({
       where: {
-        userId_studySetId: {
+        userId_entityId_type: {
           userId: ctx.session.user.id,
-          studySetId: input,
+          entityId: input,
+          type: "StudySet",
         },
       },
       include: {
@@ -204,18 +207,19 @@ export const studySetsRouter = createTRPCRouter({
       },
     });
 
-    if (!experience) {
+    if (!container) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
       });
     }
 
-    if (!experience.starredTerms.length) {
-      await ctx.prisma.studySetExperience.update({
+    if (!container.starredTerms.length) {
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input,
+            entityId: input,
+            type: "StudySet",
           },
         },
         data: {
@@ -223,12 +227,14 @@ export const studySetsRouter = createTRPCRouter({
           cardsStudyStarred: false,
         },
       });
-      experience.studyStarred = false;
-      experience.cardsStudyStarred = false;
+      container.studyStarred = false;
+      container.cardsStudyStarred = false;
+      container.matchStudyStarred = false;
     }
 
     return {
       ...studySet,
+      tags: studySet.tags as string[],
       wordLanguage: studySet.wordLanguage as Language,
       definitionLanguage: studySet.definitionLanguage as Language,
       user: {
@@ -236,10 +242,10 @@ export const studySetsRouter = createTRPCRouter({
         image: studySet.user.image!,
         verified: studySet.user.verified,
       },
-      experience: {
-        ...experience,
-        starredTerms: experience.starredTerms.map((x: StarredTerm) => x.termId),
-        studiableTerms: experience.studiableTerms.map((x: StudiableTerm) => ({
+      container: {
+        ...container,
+        starredTerms: container.starredTerms.map((x: StarredTerm) => x.termId),
+        studiableTerms: container.studiableTerms.map((x: StudiableTerm) => ({
           id: x.termId,
           mode: x.mode,
           correctness: x.correctness,
@@ -320,11 +326,12 @@ export const studySetsRouter = createTRPCRouter({
       },
     });
 
+    const tags = autoSave.tags as string[];
     const studySet = await ctx.prisma.studySet.create({
       data: {
         title: profanity.censor(autoSave.title.slice(0, MAX_TITLE)),
         description: profanity.censor(autoSave.description.slice(0, MAX_DESC)),
-        tags: autoSave.tags
+        tags: tags
           .slice(0, MAX_NUM_TAGS)
           .map((x) => profanity.censor(x.slice(0, MAX_CHARS_TAGS))),
         wordLanguage: autoSave.wordLanguage,

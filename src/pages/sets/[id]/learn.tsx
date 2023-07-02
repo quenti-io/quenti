@@ -10,7 +10,7 @@ import { CompletedView } from "../../../modules/learn/completed-view";
 import { InteractionCard } from "../../../modules/learn/interaction-card";
 import { RoundSummary } from "../../../modules/learn/round-summary";
 import { Titlebar } from "../../../modules/learn/titlebar";
-import { useExperienceContext } from "../../../stores/use-experience-store";
+import { useContainerContext } from "../../../stores/use-container-store";
 import { useLearnContext } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
 
@@ -32,14 +32,14 @@ const Learn: ComponentWithAuth = () => {
 
 const LearnContainer = () => {
   const { id } = useSet();
-  const extendedFeedbackBank = useExperienceContext(
+  const extendedFeedbackBank = useContainerContext(
     (s) => s.extendedFeedbackBank
   );
   const completed = useLearnContext((s) => s.completed);
   const roundSummary = useLearnContext((s) => s.roundSummary);
   const setFeedbackBank = useLearnContext((s) => s.setFeedbackBank);
 
-  const completeLearnRound = api.experience.completeLearnRound.useMutation();
+  const completeLearnRound = api.container.completeLearnRound.useMutation();
   const discoverable = api.disoverable.fetchInsults.useQuery(undefined, {
     retry: false,
     enabled: extendedFeedbackBank,
@@ -50,7 +50,7 @@ const LearnContainer = () => {
 
     void (async () =>
       await completeLearnRound.mutateAsync({
-        studySetId: id,
+        entityId: id,
       }))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roundSummary, id]);

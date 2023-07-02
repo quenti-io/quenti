@@ -1,4 +1,3 @@
-import type { EnabledFeature } from "@prisma/client";
 import type { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
@@ -13,7 +12,7 @@ declare module "next-auth" {
       displayName: boolean;
       admin: boolean;
       banned: boolean;
-      features: EnabledFeature[];
+      flags: number;
       enableUsageData: boolean;
       changelogVersion: string;
     } & DefaultSession["user"];
@@ -27,7 +26,7 @@ declare module "next-auth" {
     image: string;
     displayName: boolean;
     bannedAt?: Date;
-    features: EnabledFeature[];
+    flags: number;
     enableUsageData: boolean;
     changelogVersion: string;
   }

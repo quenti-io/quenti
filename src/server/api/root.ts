@@ -1,8 +1,8 @@
 import { register } from "../prometheus";
 import { adminRouter } from "./routers/admin";
 import { autoSaveRouter } from "./routers/auto-save";
+import { containerRouter } from "./routers/container";
 import { discoverableRouter } from "./routers/discoverable";
-import { experienceRouter } from "./routers/experience";
 import { foldersRouter } from "./routers/folders";
 import { importRouter } from "./routers/import";
 import { leaderboardRouter } from "./routers/leaderboard";
@@ -32,7 +32,7 @@ export const appRouter = createTRPCRouter({
   studySets: studySetsRouter,
   folders: foldersRouter,
   terms: termsRouter,
-  experience: experienceRouter,
+  container: containerRouter,
   studiableTerms: studiableTermsRouter,
   leaderboard: leaderboardRouter,
   recent: recentRouter,

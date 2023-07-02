@@ -58,7 +58,7 @@ const MatchInfo = () => {
 
   const highscore = api.leaderboard.highscore.useQuery({
     mode: "Match",
-    containerId: id,
+    entityId: id,
     eligible: isEligibleForLeaderboard,
   });
 

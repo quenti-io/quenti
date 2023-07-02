@@ -1,4 +1,5 @@
 import {
+  ContainerType,
   LimitedStudySetAnswerMode,
   MultipleAnswerMode,
   Prisma,
@@ -6,17 +7,25 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { shuffleArray } from "../../../utils/array";
+import { EnabledFeature } from "../common/constants";
 import { createTRPCRouter, lockedProcedure, protectedProcedure } from "../trpc";
 
-export const experienceRouter = createTRPCRouter({
+export const containerRouter = createTRPCRouter({
   setShuffle: protectedProcedure
-    .input(z.object({ studySetId: z.string(), shuffle: z.boolean() }))
+    .input(
+      z.object({
+        entityId: z.string(),
+        type: z.nativeEnum(ContainerType),
+        shuffle: z.boolean(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: input.type,
           },
         },
         data: {
@@ -26,13 +35,20 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   setEnableCardsSorting: protectedProcedure
-    .input(z.object({ genericId: z.string(), enableCardsSorting: z.boolean() }))
+    .input(
+      z.object({
+        entityId: z.string(),
+        type: z.nativeEnum(ContainerType),
+        enableCardsSorting: z.boolean(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.genericId,
+            entityId: input.entityId,
+            type: input.type,
           },
         },
         data: {
@@ -42,13 +58,20 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   setCardsStudyStarred: protectedProcedure
-    .input(z.object({ genericId: z.string(), cardsStudyStarred: z.boolean() }))
+    .input(
+      z.object({
+        entityId: z.string(),
+        type: z.nativeEnum(ContainerType),
+        cardsStudyStarred: z.boolean(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.genericId,
+            entityId: input.entityId,
+            type: input.type,
           },
         },
         data: {
@@ -66,16 +89,18 @@ export const experienceRouter = createTRPCRouter({
   setCardsAnswerWith: protectedProcedure
     .input(
       z.object({
-        genericId: z.string(),
+        entityId: z.string(),
+        type: z.nativeEnum(ContainerType),
         cardsAnswerWith: z.nativeEnum(LimitedStudySetAnswerMode),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.genericId,
+            entityId: input.entityId,
+            type: input.type,
           },
         },
         data: {
@@ -85,13 +110,20 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   setMatchStudyStarred: protectedProcedure
-    .input(z.object({ genericId: z.string(), matchStudyStarred: z.boolean() }))
+    .input(
+      z.object({
+        entityId: z.string(),
+        type: z.nativeEnum(ContainerType),
+        matchStudyStarred: z.boolean(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.genericId,
+            entityId: input.entityId,
+            type: input.type,
           },
         },
         data: {
@@ -101,13 +133,19 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   setStudyStarred: protectedProcedure
-    .input(z.object({ studySetId: z.string(), studyStarred: z.boolean() }))
+    .input(
+      z.object({
+        entityId: z.string(),
+        studyStarred: z.boolean(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: "StudySet",
           },
         },
         data: {
@@ -119,16 +157,17 @@ export const experienceRouter = createTRPCRouter({
   setAnswerMode: protectedProcedure
     .input(
       z.object({
-        studySetId: z.string(),
+        entityId: z.string(),
         answerWith: z.enum(["Word", "Definition", "Both"]),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: "StudySet",
           },
         },
         data: {
@@ -140,16 +179,17 @@ export const experienceRouter = createTRPCRouter({
   setMutlipleAnswerMode: protectedProcedure
     .input(
       z.object({
-        studySetId: z.string(),
+        entityId: z.string(),
         multipleAnswerMode: z.nativeEnum(MultipleAnswerMode),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: "StudySet",
           },
         },
         data: {
@@ -161,16 +201,17 @@ export const experienceRouter = createTRPCRouter({
   setShuffleLearn: protectedProcedure
     .input(
       z.object({
-        studySetId: z.string(),
+        entityId: z.string(),
         shuffleLearn: z.boolean(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const experience = await ctx.prisma.studySetExperience.update({
+      const container = await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: "StudySet",
           },
         },
         data: {
@@ -178,12 +219,12 @@ export const experienceRouter = createTRPCRouter({
         },
       });
 
-      if (!experience) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!container) throw new TRPCError({ code: "NOT_FOUND" });
 
       if (input.shuffleLearn) {
         const termIds = (
           await ctx.prisma.term.findMany({
-            where: { studySetId: input.studySetId },
+            where: { studySetId: input.entityId },
             select: { id: true },
           })
         ).map((x) => x.id);
@@ -192,15 +233,14 @@ export const experienceRouter = createTRPCRouter({
         const vals = shuffledIds.map((id, i) => [
           ctx.session.user.id,
           id,
-          experience.id,
-          experience.id,
+          container.id,
           0,
           i,
         ]);
         const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
 
         const query = Prisma.sql`
-      INSERT INTO "StudiableTerm" ("userId", "termId", "experienceId", "containerId", "correctness", "studiableRank")
+      INSERT INTO "StudiableTerm" ("userId", "termId", "containerId", "correctness", "studiableRank")
       VALUES ${Prisma.join(formatted)}
       ON CONFLICT ON CONSTRAINT "StudiableTerm_pkey"
       DO UPDATE SET "studiableRank" = EXCLUDED."studiableRank";
@@ -209,9 +249,10 @@ export const experienceRouter = createTRPCRouter({
         await ctx.prisma.$executeRaw(query);
       } else {
         await ctx.prisma.studiableTerm.updateMany({
+          // Using half of the composite primary key
           where: {
             userId: ctx.session.user.id,
-            experienceId: experience.id,
+            containerId: container.id,
           },
           data: {
             studiableRank: null,
@@ -220,19 +261,22 @@ export const experienceRouter = createTRPCRouter({
       }
     }),
 
-  setExtendedFeedbackBank: lockedProcedure(["ExtendedFeedbackBank"])
+  setExtendedFeedbackBank: lockedProcedure([
+    EnabledFeature.ExtendedFeedbackBank,
+  ])
     .input(
       z.object({
-        studySetId: z.string(),
+        entityId: z.string(),
         extendedFeedbackBank: z.boolean(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: "StudySet",
           },
         },
         data: {
@@ -242,12 +286,12 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   starTerm: protectedProcedure
-    .input(z.object({ experienceId: z.string(), termId: z.string() }))
+    .input(z.object({ containerId: z.string(), termId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.starredTerm.create({
         data: {
           termId: input.termId,
-          experienceId: input.experienceId,
+          containerId: input.containerId,
           userId: ctx.session.user.id,
         },
       });
@@ -267,13 +311,14 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   completeLearnRound: protectedProcedure
-    .input(z.object({ studySetId: z.string() }))
+    .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: "StudySet",
           },
         },
         data: {
@@ -285,13 +330,16 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   completeCardsRound: protectedProcedure
-    .input(z.object({ genericId: z.string() }))
+    .input(
+      z.object({ entityId: z.string(), type: z.nativeEnum(ContainerType) })
+    )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.genericId,
+            entityId: input.entityId,
+            type: input.type,
           },
         },
         data: {
@@ -303,13 +351,16 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   resetCardsProgress: protectedProcedure
-    .input(z.object({ genericId: z.string() }))
+    .input(
+      z.object({ entityId: z.string(), type: z.nativeEnum(ContainerType) })
+    )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.genericId,
+            entityId: input.entityId,
+            type: input.type,
           },
         },
         data: {
@@ -324,13 +375,14 @@ export const experienceRouter = createTRPCRouter({
     }),
 
   resetLearnProgress: protectedProcedure
-    .input(z.object({ studySetId: z.string() }))
+    .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input.studySetId,
+            entityId: input.entityId,
+            type: "StudySet",
           },
         },
         data: {
@@ -355,11 +407,12 @@ export const experienceRouter = createTRPCRouter({
   beginReview: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const experience = await ctx.prisma.studySetExperience.findUnique({
+      const container = await ctx.prisma.container.findUnique({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input,
+            entityId: input,
+            type: "StudySet",
           },
         },
         include: {
@@ -367,14 +420,14 @@ export const experienceRouter = createTRPCRouter({
         },
       });
 
-      if (!experience) {
+      if (!container) {
         throw new TRPCError({
           code: "NOT_FOUND",
         });
       }
 
       if (
-        !experience.studiableTerms.filter((x) => x.incorrectCount > 0).length
+        !container.studiableTerms.filter((x) => x.incorrectCount > 0).length
       ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -382,11 +435,12 @@ export const experienceRouter = createTRPCRouter({
         });
       }
 
-      await ctx.prisma.studySetExperience.update({
+      await ctx.prisma.container.update({
         where: {
-          userId_studySetId: {
+          userId_entityId_type: {
             userId: ctx.session.user.id,
-            studySetId: input,
+            entityId: input,
+            type: "StudySet",
           },
         },
         data: {
@@ -395,7 +449,7 @@ export const experienceRouter = createTRPCRouter({
           studiableTerms: {
             updateMany: {
               where: {
-                experienceId: experience.id,
+                containerId: container.id,
               },
               data: {
                 appearedInRound: null,

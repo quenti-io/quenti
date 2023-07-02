@@ -4,7 +4,7 @@ import throttle from "lodash.throttle";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import type { StudiableTerm } from "../interfaces/studiable-term";
-import { useExperienceContext } from "../stores/use-experience-store";
+import { useContainerContext } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
 import { api } from "../utils/api";
@@ -14,13 +14,13 @@ import { SortFlashcardProgress } from "./sort-flashcard-progress";
 import { SortableShortcutLayer } from "./sortable-shortcut-layer";
 
 export const SortFlashcardWrapper = () => {
-  const { id, experience, type } = useSetFolderUnison();
+  const { id, container, type } = useSetFolderUnison();
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const { h, editTerm, starTerm } = React.useContext(RootFlashcardContext);
   const controls = useAnimationControls();
 
-  const starredTerms = useExperienceContext((s) => s.starredTerms);
-  const cardsAnswerWith = useExperienceContext((s) => s.cardsAnswerWith);
+  const starredTerms = useContainerContext((s) => s.starredTerms);
+  const cardsAnswerWith = useContainerContext((s) => s.cardsAnswerWith);
   const shouldFlip = cardsAnswerWith == "Word";
 
   const termsThisRound = useSortFlashcardsContext((s) => s.termsThisRound);
@@ -36,9 +36,6 @@ export const SortFlashcardWrapper = () => {
 
   const term = !progressView ? termsThisRound[index] : undefined;
 
-  const genericExperienceKey =
-    type == "folder" ? "folderExperienceId" : "experienceId";
-
   const put = api.studiableTerms.put.useMutation();
   const apiDelete = api.studiableTerms.delete.useMutation();
 
@@ -48,14 +45,9 @@ export const SortFlashcardWrapper = () => {
     },
   };
 
-  const apiCompleteCardsRound =
-    type == "set"
-      ? api.experience.completeCardsRound.useMutation()
-      : api.folders.completeCardsRound.useMutation();
+  const apiCompleteCardsRound = api.container.completeCardsRound.useMutation();
   const apiResetCardsProgress =
-    type == "set"
-      ? api.experience.resetCardsProgress.useMutation(setDirtyProps)
-      : api.folders.resetCardsProgress.useMutation(setDirtyProps);
+    api.container.resetCardsProgress.useMutation(setDirtyProps);
 
   type Flashcard = StudiableTerm & { isFlipped: boolean; index: number };
   const [visibleFlashcards, setVisibleFlashcards] = React.useState<Flashcard[]>(
@@ -107,7 +99,7 @@ export const SortFlashcardWrapper = () => {
     void (async () => {
       await put.mutateAsync({
         id: term.id,
-        [genericExperienceKey]: experience.id,
+        containerId: container.id,
         mode: "Flashcards",
         correctness: know ? 1 : -1,
         appearedInRound: currentRound,
@@ -133,7 +125,7 @@ export const SortFlashcardWrapper = () => {
     void (async () => {
       await apiDelete.mutateAsync({
         id: studiableTerm.id,
-        containerId: experience.id,
+        containerId: container.id,
         mode: "Flashcards",
       });
     })();
@@ -160,7 +152,8 @@ export const SortFlashcardWrapper = () => {
 
     void (async () => {
       await apiCompleteCardsRound.mutateAsync({
-        genericId: id,
+        entityId: id,
+        type: type == "set" ? "StudySet" : "Folder",
       });
     })();
   };
@@ -168,7 +161,8 @@ export const SortFlashcardWrapper = () => {
   const onResetProgress = () => {
     void (async () => {
       await apiResetCardsProgress.mutateAsync({
-        genericId: id,
+        entityId: id,
+        type: type == "set" ? "StudySet" : "Folder",
       });
     })();
   };

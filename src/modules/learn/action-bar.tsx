@@ -4,7 +4,7 @@ import {
   Container,
   Flex,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSet } from "../../hooks/use-set";
@@ -13,7 +13,7 @@ import { api } from "../../utils/api";
 import { AnyKeyPressLayer } from "./any-key-press-layer";
 
 export const ActionBar = () => {
-  const { experience } = useSet();
+  const { container } = useSet();
   const status = useLearnContext((s) => s.status);
   const roundSummary = useLearnContext((s) => s.roundSummary);
   const roundTimeline = useLearnContext((s) => s.roundTimeline);
@@ -31,7 +31,7 @@ export const ActionBar = () => {
       void (async () =>
         await put.mutateAsync({
           id: active.term.id,
-          experienceId: experience.id,
+          containerId: container.id,
           mode: "Learn",
           correctness: -1,
           appearedInRound: active.term.appearedInRound || 0,

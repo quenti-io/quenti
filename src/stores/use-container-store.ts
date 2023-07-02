@@ -7,7 +7,7 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-export interface ExperienceStoreProps {
+export interface ContainerStoreProps {
   shuffleFlashcards: boolean;
   autoplayFlashcards: boolean;
   shuffleLearn: boolean;
@@ -22,7 +22,7 @@ export interface ExperienceStoreProps {
   starredTerms: string[];
 }
 
-interface ExperienceState extends ExperienceStoreProps {
+interface ContainerState extends ContainerStoreProps {
   toggleShuffleFlashcards: () => void;
   toggleAutoplayFlashcards: () => void;
   setShuffleLearn: (shuffleLearn: boolean) => void;
@@ -38,12 +38,12 @@ interface ExperienceState extends ExperienceStoreProps {
   unstarTerm: (termId: string) => void;
 }
 
-export type ExperienceStore = ReturnType<typeof createExperienceStore>;
+export type ContainerStore = ReturnType<typeof createContainerStore>;
 
-export const createExperienceStore = (
-  initProps?: Partial<ExperienceStoreProps>
+export const createContainerStore = (
+  initProps?: Partial<ContainerStoreProps>
 ) => {
-  const DEFAULT_PROPS: ExperienceStoreProps = {
+  const DEFAULT_PROPS: ContainerStoreProps = {
     shuffleFlashcards: false,
     autoplayFlashcards: false,
     shuffleLearn: false,
@@ -58,7 +58,7 @@ export const createExperienceStore = (
     starredTerms: [],
   };
 
-  return createStore<ExperienceState>()(
+  return createStore<ContainerState>()(
     subscribeWithSelector((set) => ({
       ...DEFAULT_PROPS,
       ...initProps,
@@ -109,16 +109,16 @@ export const createExperienceStore = (
   );
 };
 
-export const ExperienceContext = React.createContext<ExperienceStore | null>(
+export const ContainerContext = React.createContext<ContainerStore | null>(
   null
 );
 
-export const useExperienceContext = <T>(
-  selector: (state: ExperienceState) => T,
+export const useContainerContext = <T>(
+  selector: (state: ContainerState) => T,
   equalityFn?: (left: T, right: T) => boolean
 ): T => {
-  const store = React.useContext(ExperienceContext);
-  if (!store) throw new Error("Missing ExperienceContext.Provider in the tree");
+  const store = React.useContext(ContainerContext);
+  if (!store) throw new Error("Missing ContainerContext.Provider in the tree");
 
   return useStore(store, selector, equalityFn);
 };

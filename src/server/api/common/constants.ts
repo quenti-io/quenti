@@ -13,3 +13,7 @@ export type Language = keyof typeof languages;
 export const LANGUAGE_VALUES: [string, ...string[]] = Object.keys(
   languages
 ) as [Language, ...Language[]];
+
+export enum EnabledFeature {
+  ExtendedFeedbackBank = 1,
+}
