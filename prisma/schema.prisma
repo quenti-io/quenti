@@ -322,6 +322,7 @@ model StudiableTerm {
 
   // Full composite primary key will always be used for lookups
   @@id([userId, containerId, termId, mode])
+  @@index([containerId])
 }
 
 model StarredTerm {
