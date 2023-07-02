@@ -206,8 +206,8 @@ model Leaderboard {
   entityId String
   type     LeaderboardType
 
-  studySet   StudySet?   @relation(fields: [entityId], references: [id], map: "leaderboard_study_set")
-  folder     Folder?     @relation(fields: [entityId], references: [id], map: "leaderboard_folder")
+  studySet   StudySet?   @relation(fields: [entityId], references: [id], map: "leaderboard_study_set", onDelete: Cascade)
+  folder     Folder?     @relation(fields: [entityId], references: [id], map: "leaderboard_folder", onDelete: Cascade)
   highscores Highscore[]
 
   @@unique([id, entityId, type])
@@ -221,8 +221,8 @@ model Highscore {
   timestamp     DateTime @updatedAt
   eligible      Boolean  @default(true)
 
-  user        User        @relation(fields: [userId], references: [id])
-  leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id], onDelete: Cascade)
 
   @@id([leaderboardId, userId, eligible])
 }
