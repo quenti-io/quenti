@@ -73,7 +73,7 @@ export const ActionArea = () => {
       />
       <Flex justifyContent="space-between">
         <ButtonGroup size={{ base: "md", sm: "lg" }} gap={2}>
-          <ButtonGroup size="lg" gap={0}>
+          <ButtonGroup size={{ base: "md", sm: "lg" }} gap={0}>
             <StudyButton folder={folder} slug={slug} mode="Flashcards" />
             <StudyButton folder={folder} slug={slug} mode="Match" />
           </ButtonGroup>
