@@ -37,6 +37,6 @@ const Set: ComponentWithAuth = () => {
   );
 };
 
-Set.authenticationEnabled = true;
+Set.authenticationEnabled = false;
 
 export default Set;

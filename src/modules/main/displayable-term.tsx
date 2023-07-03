@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { ScriptFormatter } from "../../components/script-formatter";
@@ -24,6 +25,7 @@ export interface DisplayableTermProps {
 }
 
 export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
+  const { status } = useSession();
   const utils = api.useContext();
 
   const starMutation = api.container.starTerm.useMutation();
@@ -179,11 +181,13 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                   aria-label="Edit"
                   rounded="full"
                   onClick={() => {
+                    if (status !== "authenticated") return;
+
                     if (!starred) {
                       starTerm(term.id);
                       starMutation.mutate({
                         termId: term.id,
-                        containerId: container.id,
+                        containerId: container!.id,
                       });
                     } else {
                       unstarTerm(term.id);

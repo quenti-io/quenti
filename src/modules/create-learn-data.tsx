@@ -1,16 +1,16 @@
 import React from "react";
-import { useSet } from "../hooks/use-set";
+import { useAuthedSet } from "../hooks/use-set";
 import type { StudiableTerm } from "../interfaces/studiable-term";
 import {
   createLearnStore,
   LearnContext,
-  type LearnStore
+  type LearnStore,
 } from "../stores/use-learn-store";
 
 export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms, container } = useSet();
+  const { terms, container } = useAuthedSet();
 
   const storeRef = React.useRef<LearnStore>();
   if (!storeRef.current) {

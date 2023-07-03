@@ -1,10 +1,10 @@
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
 import { queryEventChannel } from "../events/query";
 import { useFeature } from "../hooks/use-feature";
-import { useLoading } from "../hooks/use-loading";
 import { EnabledFeature } from "../server/api/common/constants";
 import {
   ContainerContext,
@@ -14,12 +14,22 @@ import {
 } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { api, type RouterOutputs } from "../utils/api";
+import type { Widen } from "../utils/widen";
 import { Set404 } from "./main/set-404";
 import { SetPrivate } from "./main/set-private";
 
-type BaseReturn = RouterOutputs["studySets"]["byId"];
-type StudiableType = BaseReturn["container"]["studiableTerms"][number];
+type AuthedReturn = RouterOutputs["studySets"]["byId"];
+type BaseReturn = Widen<AuthedReturn | RouterOutputs["studySets"]["getPublic"]>;
+type StudiableType = AuthedReturn["container"]["studiableTerms"][number];
 export type SetData = BaseReturn & {
+  authed: boolean;
+  injected?: {
+    studiableLearnTerms: StudiableType[];
+    studiableFlashcardTerms: StudiableType[];
+  };
+};
+export type AuthedData = AuthedReturn & {
+  authed: boolean;
   injected: {
     studiableLearnTerms: StudiableType[];
     studiableFlashcardTerms: StudiableType[];
@@ -34,23 +44,24 @@ export interface HydrateSetDataProps {
 export const HydrateSetData: React.FC<
   React.PropsWithChildren<HydrateSetDataProps>
 > = ({ disallowDirty = false, requireFresh, children }) => {
+  const { status } = useSession();
   const id = useRouter().query.id as string;
   const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
     s.isDirty,
     s.setIsDirty,
   ]);
-  const { loading } = useLoading();
 
-  const { data, error, refetch, isFetchedAfterMount } =
-    api.studySets.byId.useQuery(id, {
-      retry: false,
-      // refetchOnMount: !!requireFresh,
-      enabled: !!id && !isDirty,
-      onSuccess: (data) => {
-        if (isDirty) setIsDirty(false);
-        queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
-      },
-    });
+  const queryKey = status == "authenticated" ? "byId" : "getPublic";
+  const { data, error, refetch, isFetchedAfterMount } = (
+    api.studySets[queryKey] as typeof api.studySets.byId
+  ).useQuery(id, {
+    retry: false,
+    enabled: !!id && !isDirty,
+    onSuccess: (data) => {
+      if (isDirty) setIsDirty(false);
+      queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
+    },
+  });
 
   React.useEffect(() => {
     void (async () => {
@@ -60,6 +71,8 @@ export const HydrateSetData: React.FC<
   }, [isDirty]);
 
   const createInjectedData = (data: BaseReturn): SetData => {
+    if (!data.container) return { ...data, authed: false };
+
     const studiableLearnTerms = data.container.studiableTerms.filter(
       (t) => t.mode == "Learn"
     );
@@ -68,6 +81,7 @@ export const HydrateSetData: React.FC<
     );
     return {
       ...data,
+      authed: true,
       injected: {
         studiableLearnTerms,
         studiableFlashcardTerms,
@@ -78,7 +92,6 @@ export const HydrateSetData: React.FC<
   if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (
-    loading ||
     !data ||
     (disallowDirty && isDirty) ||
     (!isFetchedAfterMount && requireFresh)
@@ -111,9 +124,10 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   data,
   children,
 }) => {
+  const { status } = useSession();
   const extendedFeedbackBank = useFeature(EnabledFeature.ExtendedFeedbackBank);
 
-  const getVal = (data: SetData): Partial<ContainerStoreProps> => ({
+  const getVal = (data: AuthedData): Partial<ContainerStoreProps> => ({
     shuffleFlashcards: data.container.shuffleFlashcards,
     shuffleLearn: data.container.shuffleLearn,
     studyStarred: data.container.studyStarred,
@@ -130,12 +144,15 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
 
   const storeRef = React.useRef<ContainerStore>();
   if (!storeRef.current) {
-    storeRef.current = createContainerStore(getVal(data));
+    storeRef.current = createContainerStore(
+      status == "authenticated" ? getVal(data as AuthedData) : undefined
+    );
   }
 
   React.useEffect(() => {
     const trigger = (data: SetData) => {
-      storeRef.current?.setState(getVal(data));
+      if (status == "authenticated")
+        storeRef.current?.setState(getVal(data as AuthedData));
     };
 
     queryEventChannel.on("setQueryRefetched", trigger);

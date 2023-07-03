@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useSet } from "../../../../hooks/use-set";
+import { useAuthedSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
 import type { Question } from "../../../../interfaces/question";
 import { useContainerContext } from "../../../../stores/use-container-store";
@@ -25,7 +25,7 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
   active,
   guess,
 }) => {
-  const { id, container } = useSet();
+  const { id, container } = useAuthedSet();
   const setMutlipleAnswerMode = useContainerContext(
     (s) => s.setMultipleAnswerMode
   );

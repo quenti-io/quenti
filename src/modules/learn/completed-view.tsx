@@ -4,13 +4,13 @@ import { useRouter } from "next/router";
 import React from "react";
 import { ConfirmModal } from "../../components/confirm-modal";
 import { Link } from "../../components/link";
-import { useSet } from "../../hooks/use-set";
+import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
 import { api } from "../../utils/api";
 import { TermMastery } from "./term-mastery";
 
 export const CompletedView = () => {
-  const { id, container } = useSet();
+  const { id, container } = useAuthedSet();
   const router = useRouter();
   const numTerms = useLearnContext((s) => s.allTerms).length;
 

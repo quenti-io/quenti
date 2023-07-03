@@ -9,8 +9,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import React from "react";
-import { useSet } from "../../hooks/use-set";
+import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { DisplayableTermPure } from "./displayable-term";
 import { TermsSortSelect } from "./terms-sort-select";
@@ -24,10 +25,12 @@ const TermsOverviewContext = React.createContext<TermsOverviewContextProps>({
 });
 
 export const TermsOverview = () => {
+  const { status } = useSession();
   const { terms, injected } = useSet();
 
   const starredTerms = useContainerContext((s) => s.starredTerms);
-  const studiable = !!injected.studiableLearnTerms.length;
+  const studiable =
+    status == "authenticated" && !!injected!.studiableLearnTerms.length;
   const [sortType, setSortType] = React.useState(
     studiable ? "stats" : "original"
   );
@@ -79,10 +82,7 @@ export const TermsOverview = () => {
                 </Button>
               </ButtonGroup>
             )}
-            <TermsSortSelect
-              studiable={!!injected.studiableLearnTerms.length}
-              onChange={setSortType}
-            />
+            <TermsSortSelect studiable={studiable} onChange={setSortType} />
           </HStack>
         </Flex>
         {termsListComponent()}
@@ -92,7 +92,7 @@ export const TermsOverview = () => {
 };
 
 const TermsByStats = () => {
-  const { terms, container, injected } = useSet();
+  const { terms, container, injected } = useAuthedSet();
 
   let familiarTerms = injected.studiableLearnTerms
     .filter((x) => x.correctness != 0 && x.correctness != 2)

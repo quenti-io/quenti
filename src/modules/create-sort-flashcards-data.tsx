@@ -16,7 +16,7 @@ import type { SetData } from "./hydrate-set-data";
 export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms, container } = useSetFolderUnison();
+  const { terms, container } = useSetFolderUnison(true);
   const { termOrder } = React.useContext(RootFlashcardContext);
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const storeRef = React.useRef<SortFlashcardsStore>();
@@ -65,11 +65,11 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
   React.useEffect(() => {
     const trigger = (data: SetData | FolderData) =>
       initState(
-        data.container.cardsRound,
-        data.container.studiableTerms.filter((x) => x.mode == "Flashcards"),
+        data.container!.cardsRound,
+        data.container!.studiableTerms.filter((x) => x.mode == "Flashcards"),
         data.terms,
         termOrder,
-        data.container.cardsStudyStarred
+        data.container!.cardsStudyStarred
       );
 
     queryEventChannel.on("setQueryRefetched", trigger);

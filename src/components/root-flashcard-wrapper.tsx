@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
@@ -38,6 +39,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   termOrder,
   h = "500px",
 }) => {
+  const { status } = useSession();
   const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [editTerm, setEditTerm] = React.useState<Term | null>(null);
   const [focusDefinition, setFocusDefinition] = React.useState(false);
@@ -57,6 +59,9 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   const FlashcardWrapper = enableCardsSorting
     ? SortFlashcardWrapper
     : DefaultFlashcardWrapper;
+
+  const Wrapper =
+    status == "authenticated" ? CreateSortFlashcardsData : React.Fragment;
 
   if (isDirty) return <LoadingFlashcard h={h} />;
 
@@ -95,7 +100,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
         },
       }}
     >
-      <CreateSortFlashcardsData>
+      <Wrapper>
         <Box w="full" minH={h} zIndex="100">
           <EditTermModal
             term={editTerm}
@@ -107,7 +112,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
           />
           <FlashcardWrapper />
         </Box>
-      </CreateSortFlashcardsData>
+      </Wrapper>
     </RootFlashcardContext.Provider>
   );
 };
