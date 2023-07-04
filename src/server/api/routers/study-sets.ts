@@ -287,7 +287,7 @@ export const studySetsRouter = createTRPCRouter({
     };
   }),
 
-  getShareId: protectedProcedure
+  getShareId: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const studySet = await ctx.prisma.studySet.findUnique({

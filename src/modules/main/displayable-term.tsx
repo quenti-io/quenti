@@ -15,6 +15,7 @@ import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { ScriptFormatter } from "../../components/script-formatter";
 import { SetCreatorOnly } from "../../components/set-creator-only";
+import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
@@ -25,7 +26,7 @@ export interface DisplayableTermProps {
 }
 
 export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
-  const { status } = useSession();
+  const authed = useSession().status == "authenticated";
   const utils = api.useContext();
 
   const starMutation = api.container.starTerm.useMutation();
@@ -181,7 +182,13 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                   aria-label="Edit"
                   rounded="full"
                   onClick={() => {
-                    if (status !== "authenticated") return;
+                    if (!authed) {
+                      menuEventChannel.emit("openSignup", {
+                        message:
+                          "Create an account for free to customize and star terms",
+                      });
+                      return;
+                    }
 
                     if (!starred) {
                       starTerm(term.id);

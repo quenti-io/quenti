@@ -8,9 +8,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconSpeakerphone } from "@tabler/icons-react";
+import { IconBrandGoogle, IconSpeakerphone } from "@tabler/icons-react";
+import { signIn } from "next-auth/react";
 import { menuEventChannel } from "../events/menu";
 import { MOD } from "../lib/tinykeys";
+import { Authed } from "./authed";
 
 export const Footer = () => {
   const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
@@ -27,30 +29,43 @@ export const Footer = () => {
         <Flex justifyContent="space-between" alignItems="center">
           <Heading size="md">Quizlet.cc</Heading>
           <HStack gap={2}>
-            <Button
-              variant="outline"
-              size="sm"
-              color="gray.500"
-              display={{ base: "none", md: "block" }}
-              onClick={() => {
-                window.dispatchEvent(
-                  new KeyboardEvent("keydown", {
-                    key: "k",
-                    code: "KeyK",
-                    ctrlKey: MOD == "Control",
-                    metaKey: MOD == "Meta",
-                    shiftKey: false,
-                  })
-                );
-              }}
+            <Authed
+              fallback={
+                <Button
+                  size="sm"
+                  display={{ base: "none", md: "flex" }}
+                  leftIcon={<IconBrandGoogle size={16} stroke="4px" />}
+                  onClick={async () => await signIn("google")}
+                >
+                  Sign up for free
+                </Button>
+              }
             >
-              <HStack>
-                <Text color={textColor}>Command Menu</Text>
-                <Text color={textColor}>
-                  <Kbd>{MOD == "Control" ? "Ctrl" : "⌘"}</Kbd> + <Kbd>K</Kbd>
-                </Text>
-              </HStack>
-            </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                color="gray.500"
+                display={{ base: "none", md: "flex" }}
+                onClick={() => {
+                  window.dispatchEvent(
+                    new KeyboardEvent("keydown", {
+                      key: "k",
+                      code: "KeyK",
+                      ctrlKey: MOD == "Control",
+                      metaKey: MOD == "Meta",
+                      shiftKey: false,
+                    })
+                  );
+                }}
+              >
+                <HStack>
+                  <Text color={textColor}>Command Menu</Text>
+                  <Text color={textColor}>
+                    <Kbd>{MOD == "Control" ? "Ctrl" : "⌘"}</Kbd> + <Kbd>K</Kbd>
+                  </Text>
+                </HStack>
+              </Button>
+            </Authed>
             <Button
               variant="outline"
               size="sm"

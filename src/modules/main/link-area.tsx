@@ -14,8 +14,10 @@ import {
   IconLayersSubtract,
   IconReport,
 } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { Link } from "../../components/link";
+import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 
 export const LinkArea = () => {
@@ -33,7 +35,12 @@ export const LinkArea = () => {
       gap={4}
     >
       <GridItem>
-        <Linkable name="Learn" icon={<IconBrain />} href={`/${id}/learn`} />
+        <Linkable
+          name="Learn"
+          icon={<IconBrain />}
+          href={`/${id}/learn`}
+          requireAuth
+        />
       </GridItem>
       <GridItem>
         <Linkable
@@ -48,6 +55,7 @@ export const LinkArea = () => {
           icon={<IconReport />}
           href="/#coming-soon"
           disabled
+          requireAuth
         />
       </GridItem>
       <GridItem>
@@ -55,6 +63,7 @@ export const LinkArea = () => {
           name="Match"
           icon={<IconLayersSubtract />}
           href={`/${id}/match`}
+          requireAuth
         />
       </GridItem>
     </Grid>
@@ -66,6 +75,7 @@ interface LinkableProps {
   icon: React.ReactNode;
   href: string;
   disabled?: boolean;
+  requireAuth?: boolean;
 }
 
 const Linkable: React.FC<LinkableProps> = ({
@@ -73,13 +83,25 @@ const Linkable: React.FC<LinkableProps> = ({
   icon,
   href,
   disabled = false,
+  requireAuth = false,
 }) => {
+  const authed = useSession().status == "authenticated";
+  const authEnabled = requireAuth && !authed;
+
   const bg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
   const disabledHeading = useColorModeValue("gray.600", "gray.400");
   const disabledBorder = useColorModeValue("white", "gray.750");
   const disabledHover = useColorModeValue("gray.200", "gray.600");
+
+  const overlay = !authEnabled ? (
+    <LinkOverlay as={Link} href={href}>
+      {name}
+    </LinkOverlay>
+  ) : (
+    name
+  );
 
   return (
     <LinkBox
@@ -98,13 +120,18 @@ const Linkable: React.FC<LinkableProps> = ({
         borderBottomColor: !disabled ? "blue.300" : disabledHover,
       }}
       cursor="pointer"
+      onClick={() => {
+        if (authEnabled)
+          menuEventChannel.emit("openSignup", {
+            message: `Create an account for free to study with ${name}`,
+            callbackUrl: href,
+          });
+      }}
     >
       <Flex gap={4}>
         <Box color="blue.300">{icon}</Box>
         <Heading size="md" color={disabled ? disabledHeading : undefined}>
-          <LinkOverlay as={Link} href={href}>
-            {name}
-          </LinkOverlay>
+          {overlay}
         </Heading>
       </Flex>
     </LinkBox>

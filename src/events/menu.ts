@@ -5,4 +5,5 @@ export const menuEventChannel = eventBus<{
   openImportDialog: () => void;
   folderWithSetCreated: (setId: string) => void;
   openChangelog: () => void;
+  openSignup: (args: { message?: string; callbackUrl?: string }) => void;
 }>();

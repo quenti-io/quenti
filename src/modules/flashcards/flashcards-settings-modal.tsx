@@ -7,8 +7,10 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  Stack,
+  Stack
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
+import { Authed } from "../../components/authed";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
@@ -25,6 +27,7 @@ export interface FlashcardsSettingsModalProps {
 export const FlashcardsSettingsModal: React.FC<
   FlashcardsSettingsModalProps
 > = ({ isOpen, onClose }) => {
+  const { status } = useSession();
   const { container } = useSetFolderUnison();
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const cardsStudyStarred = useContainerContext((s) => s.cardsStudyStarred);
@@ -34,7 +37,7 @@ export const FlashcardsSettingsModal: React.FC<
       isOpen={isOpen}
       onClose={() => {
         const isDirty = container?.cardsStudyStarred !== cardsStudyStarred;
-        if (isDirty) setIsDirty(true);
+        if (status == "authenticated" && isDirty) setIsDirty(true);
 
         onClose();
       }}
@@ -53,8 +56,10 @@ export const FlashcardsSettingsModal: React.FC<
             <Divider />
             <CardsAnswerModeSection />
             <StudyStarredSection />
-            <Divider />
-            <RestartFlashcardsSection requestClose={onClose} />
+            <Authed>
+              <Divider />
+              <RestartFlashcardsSection requestClose={onClose} />
+            </Authed>
           </Stack>
         </ModalBody>
       </ModalContent>

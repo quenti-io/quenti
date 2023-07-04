@@ -33,6 +33,9 @@ const ChangelogContainer = dynamic(
   () => import("../modules/changelog/changelog-container"),
   { ssr: false }
 );
+const SignupModal = dynamic(() => import("../components/signup-modal"), {
+  ssr: false,
+});
 
 if (env.NEXT_PUBLIC_DEPLOYMENT) {
   H.init(env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, {
@@ -71,6 +74,8 @@ const App: AppType<
     <>
       <Navbar />
       <GlobalShortcutLayer />
+      <SignupModal />
+      <ChangelogContainer />
       {Component.authenticationEnabled ? (
         <HighlightBoundary customDialog={<ErrorBoundary />} showDialog>
           <Head>
@@ -81,7 +86,6 @@ const App: AppType<
             </title>
           </Head>
           <Auth>
-            <ChangelogContainer />
             <Component {...pageProps} />
           </Auth>
         </HighlightBoundary>

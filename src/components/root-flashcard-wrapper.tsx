@@ -2,6 +2,7 @@ import { Box } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
+import { menuEventChannel } from "../events/menu";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
 import { useContainerContext } from "../stores/use-container-store";
@@ -39,7 +40,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   termOrder,
   h = "500px",
 }) => {
-  const { status } = useSession();
+  const authed = useSession().status == "authenticated";
   const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [editTerm, setEditTerm] = React.useState<Term | null>(null);
   const [focusDefinition, setFocusDefinition] = React.useState(false);
@@ -60,8 +61,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
     ? SortFlashcardWrapper
     : DefaultFlashcardWrapper;
 
-  const Wrapper =
-    status == "authenticated" ? CreateSortFlashcardsData : React.Fragment;
+  const Wrapper = authed ? CreateSortFlashcardsData : React.Fragment;
 
   if (isDirty) return <LoadingFlashcard h={h} />;
 
@@ -77,6 +77,13 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
           setEditModalOpen(true);
         },
         starTerm: (term) => {
+          if (!authed) {
+            menuEventChannel.emit("openSignup", {
+              message: "Create an account for free to customize and star terms",
+            });
+            return;
+          }
+
           if (!starredTerms.includes(term.id)) {
             if (type === "set") {
               setStarMutation.mutate({
