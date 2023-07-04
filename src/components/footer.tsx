@@ -40,6 +40,7 @@ export const Footer = () => {
                   Sign up for free
                 </Button>
               }
+              nullOnLoad
             >
               <Button
                 variant="outline"

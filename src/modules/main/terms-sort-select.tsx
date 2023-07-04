@@ -44,12 +44,14 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
           onChange(e!.value);
         }}
         chakraStyles={{
+          container: (provided) => ({
+            ...provided,
+            background: baseBg,
+            rounded: "lg",
+          }),
           inputContainer: () => ({
             width: 100,
-          }),
-          valueContainer: (provided) => ({
-            ...provided,
-            backgroundColor: baseBg,
+            rounded: "lg",
           }),
           dropdownIndicator: (provided) => ({
             ...provided,

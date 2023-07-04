@@ -18,14 +18,14 @@ export const ProfileArea = () => {
   const grayText = useColorModeValue("gray.700", "gray.300");
 
   return (
-    <HStack gap={4}>
+    <HStack spacing="6">
       <Avatar src={avatarUrl(profile)} size="lg" className="highlight-block" />
       <Flex
         flexDir="column"
         justifyContent={profile.name ? "space-between" : "center"}
         h="16"
       >
-        <HStack gap={0}>
+        <HStack spacing="2">
           <Heading className="highlight-block" w="max-content">
             {profile.username}
           </Heading>
