@@ -21,7 +21,6 @@ let config = withHighlightConfig(
   withAxiom({
     reactStrictMode: true,
     swcMinify: true,
-    productionBrowserSourceMaps: true,
     i18n: {
       locales: ["en"],
       defaultLocale: "en",
@@ -71,11 +70,12 @@ let config = withHighlightConfig(
         destination: "/sets/:id/match",
       },
     ],
+    productionBrowserSourceMaps: true,
   }),
   {
     appVersion,
     configureHighlightProxy: true,
-    uploadSourceMaps: true,
+    uploadSourceMaps: false,
   }
 );
 

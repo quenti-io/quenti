@@ -6,11 +6,11 @@
     "build": "next build",
     "dev": "next dev",
     "postinstall": "prisma generate",
-    "migrate-vercel": "node ./migrate-vercel.js",
     "db-setup": "yarn prisma migrate deploy && yarn prisma db seed",
     "lint": "next lint",
     "start": "next start",
-    "theme": "chakra-cli tokens src/lib/chakra-theme.ts"
+    "theme": "chakra-cli tokens src/lib/chakra-theme.ts",
+    "upload-sourcemaps": "npx @highlight-run/sourcemap-uploader upload --path=\".next\" -k ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY}"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma-seed.ts"
