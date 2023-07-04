@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useFeature } from "../../hooks/use-feature";
-import { useSet } from "../../hooks/use-set";
+import { useAuthedSet } from "../../hooks/use-set";
 import { EnabledFeature } from "../../server/api/common/constants";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
@@ -49,7 +49,7 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
     EnabledFeature.ExtendedFeedbackBank
   );
 
-  const { container } = useSet();
+  const { container } = useAuthedSet();
 
   const shuffleLearn = useContainerContext((s) => s.shuffleLearn);
   const studyStarred = useContainerContext((s) => s.studyStarred);

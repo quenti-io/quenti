@@ -17,7 +17,7 @@ import {
 import { shortId } from "../common/generator";
 import { profanity } from "../common/profanity";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const getRecentStudySets = async (
   prisma: PrismaClient,
@@ -257,7 +257,37 @@ export const studySetsRouter = createTRPCRouter({
     };
   }),
 
-  getShareId: protectedProcedure
+  getPublic: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
+    const studySet = await ctx.prisma.studySet.findUnique({
+      where: {
+        id: input,
+      },
+      include: {
+        user: true,
+        terms: true,
+      },
+    });
+
+    if (studySet?.visibility !== "Public") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+      });
+    }
+
+    return {
+      ...studySet,
+      tags: studySet.tags as string[],
+      wordLanguage: studySet.wordLanguage as Language,
+      definitionLanguage: studySet.definitionLanguage as Language,
+      user: {
+        username: studySet.user.username,
+        image: studySet.user.image!,
+        verified: studySet.user.verified,
+      },
+    };
+  }),
+
+  getShareId: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const studySet = await ctx.prisma.studySet.findUnique({

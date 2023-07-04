@@ -12,7 +12,7 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { ScriptFormatter } from "../../../components/script-formatter";
-import { useSet } from "../../../hooks/use-set";
+import { useAuthedSet } from "../../../hooks/use-set";
 import type { Question } from "../../../interfaces/question";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
 import { api } from "../../../utils/api";
@@ -23,7 +23,7 @@ interface ChoiceCardProps {
 }
 
 export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
-  const { container } = useSet();
+  const { container } = useAuthedSet();
   const answered = useLearnContext((s) => s.answered);
   const status = useLearnContext((s) => s.status);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);

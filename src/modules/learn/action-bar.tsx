@@ -4,16 +4,16 @@ import {
   Container,
   Flex,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSet } from "../../hooks/use-set";
+import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
 import { api } from "../../utils/api";
 import { AnyKeyPressLayer } from "./any-key-press-layer";
 
 export const ActionBar = () => {
-  const { container } = useSet();
+  const { container } = useAuthedSet();
   const status = useLearnContext((s) => s.status);
   const roundSummary = useLearnContext((s) => s.roundSummary);
   const roundTimeline = useLearnContext((s) => s.roundTimeline);

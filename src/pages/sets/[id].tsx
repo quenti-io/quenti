@@ -10,7 +10,7 @@ import { TermsOverview } from "../../modules/main/terms-overview";
 
 const Set: ComponentWithAuth = () => {
   return (
-    <HydrateSetData>
+    <HydrateSetData allowEmpty>
       <WithFooter>
         <Container maxW="7xl">
           <Stack spacing={10}>
@@ -37,6 +37,6 @@ const Set: ComponentWithAuth = () => {
   );
 };
 
-Set.authenticationEnabled = true;
+Set.authenticationEnabled = false;
 
 export default Set;

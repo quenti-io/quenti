@@ -4,7 +4,7 @@ import { motion, useAnimationControls } from "framer-motion";
 import levenshtein from "js-levenshtein";
 import React from "react";
 import { ScriptFormatter } from "../../../../components/script-formatter";
-import { useSet } from "../../../../hooks/use-set";
+import { useAuthedSet } from "../../../../hooks/use-set";
 import type { Question } from "../../../../interfaces/question";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
 import { api } from "../../../../utils/api";
@@ -20,7 +20,7 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
   active,
   guess,
 }) => {
-  const { container } = useSet();
+  const { container } = useAuthedSet();
   const overrideCorrect = useLearnContext((s) => s.overrideCorrect);
 
   const feedbackBank = useLearnContext((s) => s.feedbackBank);

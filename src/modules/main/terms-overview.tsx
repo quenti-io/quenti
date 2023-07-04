@@ -4,13 +4,15 @@ import {
   Flex,
   Heading,
   HStack,
+  Skeleton,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import React from "react";
-import { useSet } from "../../hooks/use-set";
+import { useAuthedSet, useSet, useSetReady } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { DisplayableTermPure } from "./displayable-term";
 import { TermsSortSelect } from "./terms-sort-select";
@@ -24,14 +26,27 @@ const TermsOverviewContext = React.createContext<TermsOverviewContextProps>({
 });
 
 export const TermsOverview = () => {
+  const ready = useSetReady();
+  const { status } = useSession();
   const { terms, injected } = useSet();
 
   const starredTerms = useContainerContext((s) => s.starredTerms);
-  const studiable = !!injected.studiableLearnTerms.length;
+  const studiable =
+    ready &&
+    status == "authenticated" &&
+    !!injected!.studiableLearnTerms.length;
   const [sortType, setSortType] = React.useState(
     studiable ? "stats" : "original"
   );
   const [starredOnly, setStarredOnly] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!ready) return;
+    setTimeout(() => {
+      setSortType(studiable ? "stats" : "original");
+    }, 50);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready]);
 
   const termsListComponent = () => {
     switch (sortType) {
@@ -56,7 +71,11 @@ export const TermsOverview = () => {
           flexDir={{ base: "column", md: "row" }}
           gap="6"
         >
-          <Heading size="lg">Terms in this set ({terms.length})</Heading>
+          <Skeleton isLoaded={ready} fitContent>
+            <Heading size="lg">
+              Terms in this set ({ready ? terms.length : 0})
+            </Heading>
+          </Skeleton>
           <HStack spacing={4}>
             {!!starredTerms.length && (
               <ButtonGroup
@@ -79,10 +98,9 @@ export const TermsOverview = () => {
                 </Button>
               </ButtonGroup>
             )}
-            <TermsSortSelect
-              studiable={!!injected.studiableLearnTerms.length}
-              onChange={setSortType}
-            />
+            <Skeleton isLoaded={ready} fitContent rounded="md">
+              <TermsSortSelect studiable={studiable} onChange={setSortType} />
+            </Skeleton>
           </HStack>
         </Flex>
         {termsListComponent()}
@@ -92,7 +110,7 @@ export const TermsOverview = () => {
 };
 
 const TermsByStats = () => {
-  const { terms, container, injected } = useSet();
+  const { terms, container, injected } = useAuthedSet();
 
   let familiarTerms = injected.studiableLearnTerms
     .filter((x) => x.correctness != 0 && x.correctness != 2)
@@ -201,14 +219,26 @@ interface TermsListProps {
 }
 
 const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
+  const ready = useSetReady();
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const internalSort =
-    sortOrder || terms.sort((a, b) => a.rank - b.rank).map((x) => x.id);
+    sortOrder ||
+    (ready
+      ? terms.sort((a, b) => a.rank - b.rank).map((x) => x.id)
+      : Array.from({ length: 5 }).map((_, i) => i.toString()));
 
   const starredOnly = React.useContext(TermsOverviewContext).starredOnly;
-  const internalTerms = starredOnly
-    ? terms.filter((x) => starredTerms.includes(x.id))
-    : terms;
+  const internalTerms = ready
+    ? starredOnly
+      ? terms.filter((x) => starredTerms.includes(x.id))
+      : terms
+    : Array.from({ length: 5 }).map((_, i) => ({
+        id: Math.random().toString(),
+        word: "Loading...",
+        definition: "Loading...",
+        rank: i,
+        studySetId: "",
+      }));
 
   const [showSlice, setShowSlice] = React.useState(slice);
 
@@ -224,7 +254,7 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
             <DisplayableTermPure term={term} key={term.id} />
           ))}
       </Stack>
-      {showSlice !== undefined && showSlice < terms.length && (
+      {ready && showSlice !== undefined && showSlice < terms.length && (
         <Button
           onClick={() => {
             setShowSlice((s) => (s || 0) + 100);

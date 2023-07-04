@@ -6,6 +6,7 @@ import {
   Heading,
   LinkBox,
   LinkOverlay,
+  Skeleton,
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
@@ -14,9 +15,11 @@ import {
   IconLayersSubtract,
   IconReport,
 } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { Link } from "../../components/link";
-import { useSet } from "../../hooks/use-set";
+import { menuEventChannel } from "../../events/menu";
+import { useSet, useSetReady } from "../../hooks/use-set";
 
 export const LinkArea = () => {
   const { id } = useSet();
@@ -33,7 +36,12 @@ export const LinkArea = () => {
       gap={4}
     >
       <GridItem>
-        <Linkable name="Learn" icon={<IconBrain />} href={`/${id}/learn`} />
+        <Linkable
+          name="Learn"
+          icon={<IconBrain />}
+          href={`/${id}/learn`}
+          requireAuth
+        />
       </GridItem>
       <GridItem>
         <Linkable
@@ -48,6 +56,7 @@ export const LinkArea = () => {
           icon={<IconReport />}
           href="/#coming-soon"
           disabled
+          requireAuth
         />
       </GridItem>
       <GridItem>
@@ -55,6 +64,7 @@ export const LinkArea = () => {
           name="Match"
           icon={<IconLayersSubtract />}
           href={`/${id}/match`}
+          requireAuth
         />
       </GridItem>
     </Grid>
@@ -66,6 +76,7 @@ interface LinkableProps {
   icon: React.ReactNode;
   href: string;
   disabled?: boolean;
+  requireAuth?: boolean;
 }
 
 const Linkable: React.FC<LinkableProps> = ({
@@ -73,7 +84,12 @@ const Linkable: React.FC<LinkableProps> = ({
   icon,
   href,
   disabled = false,
+  requireAuth = false,
 }) => {
+  const ready = useSetReady();
+  const authed = useSession().status == "authenticated";
+  const authEnabled = requireAuth && !authed;
+
   const bg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
@@ -81,32 +97,47 @@ const Linkable: React.FC<LinkableProps> = ({
   const disabledBorder = useColorModeValue("white", "gray.750");
   const disabledHover = useColorModeValue("gray.200", "gray.600");
 
+  const overlay = !authEnabled ? (
+    <LinkOverlay as={Link} href={href}>
+      {name}
+    </LinkOverlay>
+  ) : (
+    name
+  );
+
   return (
-    <LinkBox
-      bg={bg}
-      rounded="lg"
-      py="5"
-      px="6"
-      borderWidth="2px"
-      borderBottomWidth="4px"
-      h="full"
-      borderColor={!disabled ? borderColor : disabledBorder}
-      shadow={!disabled ? "xl" : "sm"}
-      transition="all ease-in-out 150ms"
-      _hover={{
-        transform: "translateY(-2px)",
-        borderBottomColor: !disabled ? "blue.300" : disabledHover,
-      }}
-      cursor="pointer"
-    >
-      <Flex gap={4}>
-        <Box color="blue.300">{icon}</Box>
-        <Heading size="md" color={disabled ? disabledHeading : undefined}>
-          <LinkOverlay as={Link} href={href}>
-            {name}
-          </LinkOverlay>
-        </Heading>
-      </Flex>
-    </LinkBox>
+    <Skeleton rounded="lg" isLoaded={ready}>
+      <LinkBox
+        bg={bg}
+        rounded="lg"
+        py="5"
+        px="6"
+        borderWidth="2px"
+        borderBottomWidth="4px"
+        h="full"
+        borderColor={!disabled ? borderColor : disabledBorder}
+        shadow={!disabled ? "xl" : "sm"}
+        transition="all ease-in-out 150ms"
+        _hover={{
+          transform: "translateY(-2px)",
+          borderBottomColor: !disabled ? "blue.300" : disabledHover,
+        }}
+        cursor="pointer"
+        onClick={() => {
+          if (authEnabled)
+            menuEventChannel.emit("openSignup", {
+              message: `Create an account for free to study with ${name}`,
+              callbackUrl: href,
+            });
+        }}
+      >
+        <Flex gap={4}>
+          <Box color="blue.300">{icon}</Box>
+          <Heading size="md" color={disabled ? disabledHeading : undefined}>
+            {overlay}
+          </Heading>
+        </Flex>
+      </LinkBox>
+    </Skeleton>
   );
 };

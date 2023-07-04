@@ -163,7 +163,8 @@ export const useSortFlashcardsContext = <T>(
   equalityFn?: (left: T, right: T) => boolean
 ): T => {
   const store = React.useContext(SortFlashcardsContext);
-  if (!store) throw new Error("Missing LearnContext.Provider in the tree");
+  if (!store)
+    throw new Error("Missing SortFlashcardsContext.Provider in the tree");
 
   return useStore(store, selector, equalityFn);
 };

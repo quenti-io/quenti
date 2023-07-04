@@ -7,6 +7,7 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Skeleton,
   Stack,
   Tag,
   Text,
@@ -20,10 +21,11 @@ import { ConfirmModal } from "../../components/confirm-modal";
 import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
 import { SetCreatorOnly } from "../../components/set-creator-only";
-import { useSet } from "../../hooks/use-set";
+import { useSet, useSetReady } from "../../hooks/use-set";
 import { api } from "../../utils/api";
 
 export const HeadingArea = () => {
+  const ready = useSetReady();
   const { id, title, tags, terms, visibility } = useSet();
   const router = useRouter();
   const text = useColorModeValue("gray.600", "gray.400");
@@ -56,7 +58,7 @@ export const HeadingArea = () => {
         }}
       />
       <Stack spacing={4} maxW="1000px">
-        {tags.length && (
+        {ready && tags.length && (
           <HStack spacing={3}>
             {tags.map((t, i) => (
               <Tag bg={tagBg} key={i}>
@@ -65,18 +67,22 @@ export const HeadingArea = () => {
             ))}
           </HStack>
         )}
-        <Heading size="2xl">{title}</Heading>
+        <Skeleton isLoaded={ready}>
+          <Heading size="2xl">{title || "Placeholder"}</Heading>
+        </Skeleton>
         <Flex justifyContent="space-between" maxW="1000px" h="32px">
-          <HStack color={text} fontWeight={600} spacing={2}>
-            <HStack>
-              {visibilityIcon(visibility, 18)}
-              <Text>{visibility}</Text>
+          <Skeleton isLoaded={ready} fitContent>
+            <HStack color={text} fontWeight={600} spacing={2}>
+              <HStack>
+                {visibilityIcon(visibility || "Public", 18)}
+                <Text>{visibility || "Public"}</Text>
+              </HStack>
+              <Text>•</Text>
+              <Text>
+                {terms?.length || 5} term{terms?.length != 1 ? "s" : ""}
+              </Text>
             </HStack>
-            <Text>•</Text>
-            <Text>
-              {terms.length} term{terms.length != 1 ? "s" : ""}
-            </Text>
-          </HStack>
+          </Skeleton>
           <SetCreatorOnly>
             <HStack>
               <Button

@@ -35,6 +35,6 @@ const Flashcards: ComponentWithAuth = () => {
   );
 };
 
-Flashcards.authenticationEnabled = true;
+Flashcards.authenticationEnabled = false;
 
 export default Flashcards;

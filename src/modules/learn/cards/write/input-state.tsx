@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useEventCallback } from "../../../../hooks/use-event-callback";
-import { useSet } from "../../../../hooks/use-set";
+import { useAuthedSet } from "../../../../hooks/use-set";
 import type { Question } from "../../../../interfaces/question";
 import { evaluate, EvaluationResult } from "../../../../lib/evaluator";
 import { placeholderLanguage } from "../../../../lib/language";
@@ -25,7 +25,7 @@ export interface InputStateProps {
 }
 
 export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
-  const { container, wordLanguage, definitionLanguage } = useSet();
+  const { container, wordLanguage, definitionLanguage } = useAuthedSet();
   const mutlipleAnswerMode = useContainerContext((s) => s.multipleAnswerMode);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);

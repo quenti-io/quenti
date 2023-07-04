@@ -1,6 +1,8 @@
 import { Box } from "@chakra-ui/react";
 import type { Term } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import React from "react";
+import { menuEventChannel } from "../events/menu";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
 import { useContainerContext } from "../stores/use-container-store";
@@ -9,6 +11,7 @@ import { api } from "../utils/api";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
 import { EditTermModal } from "./edit-term-modal";
 import { LoadingFlashcard } from "./loading-flashcard";
+import { SetReady } from "./set-ready";
 import { SortFlashcardWrapper } from "./sort-flashcard-wrapper";
 
 export interface RootFlashcardWrapperProps {
@@ -38,6 +41,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   termOrder,
   h = "500px",
 }) => {
+  const authed = useSession().status == "authenticated";
   const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [editTerm, setEditTerm] = React.useState<Term | null>(null);
   const [focusDefinition, setFocusDefinition] = React.useState(false);
@@ -58,6 +62,8 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
     ? SortFlashcardWrapper
     : DefaultFlashcardWrapper;
 
+  const Wrapper = authed ? CreateSortFlashcardsData : React.Fragment;
+
   if (isDirty) return <LoadingFlashcard h={h} />;
 
   return (
@@ -72,6 +78,13 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
           setEditModalOpen(true);
         },
         starTerm: (term) => {
+          if (!authed) {
+            menuEventChannel.emit("openSignup", {
+              message: "Create an account for free to customize and star terms",
+            });
+            return;
+          }
+
           if (!starredTerms.includes(term.id)) {
             if (type === "set") {
               setStarMutation.mutate({
@@ -95,19 +108,21 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
         },
       }}
     >
-      <CreateSortFlashcardsData>
+      <Wrapper>
         <Box w="full" minH={h} zIndex="100">
-          <EditTermModal
-            term={editTerm}
-            isOpen={editModalOpen}
-            onClose={() => {
-              setEditModalOpen(false);
-            }}
-            onDefinition={focusDefinition}
-          />
-          <FlashcardWrapper />
+          <SetReady>
+            <EditTermModal
+              term={editTerm}
+              isOpen={editModalOpen}
+              onClose={() => {
+                setEditModalOpen(false);
+              }}
+              onDefinition={focusDefinition}
+            />
+            <FlashcardWrapper />
+          </SetReady>
         </Box>
-      </CreateSortFlashcardsData>
+      </Wrapper>
     </RootFlashcardContext.Provider>
   );
 };

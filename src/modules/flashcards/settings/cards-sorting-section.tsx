@@ -1,9 +1,12 @@
 import { Flex, Stack, Switch, Text, useColorModeValue } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
+import { menuEventChannel } from "../../../events/menu";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../../stores/use-container-store";
 import { api } from "../../../utils/api";
 
 export const CardsSortingSection = () => {
+  const authed = useSession().status == "authenticated";
   const { id, type } = useSetFolderUnison();
 
   const [enableCardsSorting, setEnableCardsSorting] = useContainerContext(
@@ -30,6 +33,14 @@ export const CardsSortingSection = () => {
         size="lg"
         isChecked={enableCardsSorting}
         onChange={(e) => {
+          if (!authed) {
+            menuEventChannel.emit("openSignup", {
+              message:
+                "Create an account for free to sort and study flashcards effectively",
+            });
+            return;
+          }
+
           setEnableCardsSorting(e.target.checked);
           apiEnableCardsSorting.mutate({
             entityId: id,
