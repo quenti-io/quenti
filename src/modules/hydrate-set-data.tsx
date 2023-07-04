@@ -39,11 +39,12 @@ export type AuthedData = AuthedReturn & {
 export interface HydrateSetDataProps {
   disallowDirty?: boolean;
   requireFresh?: boolean;
+  allowEmpty?: boolean;
 }
 
 export const HydrateSetData: React.FC<
   React.PropsWithChildren<HydrateSetDataProps>
-> = ({ disallowDirty = false, requireFresh, children }) => {
+> = ({ disallowDirty = false, requireFresh, allowEmpty = false, children }) => {
   const { status } = useSession();
   const id = useRouter().query.id as string;
   const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
@@ -92,16 +93,16 @@ export const HydrateSetData: React.FC<
   if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (
-    !data ||
+    (!allowEmpty && !data) ||
     (disallowDirty && isDirty) ||
     (!isFetchedAfterMount && requireFresh)
   )
     return <Loading />;
 
   return (
-    <ContextLayer data={createInjectedData(data)}>
+    <ContextLayer data={data ? createInjectedData(data) : undefined}>
       <Head>
-        <title>{data.title} | Quizlet.cc</title>
+        <title>{data?.title} | Quizlet.cc</title>
       </Head>
       {children}
     </ContextLayer>
@@ -109,11 +110,11 @@ export const HydrateSetData: React.FC<
 };
 
 interface ContextLayerProps {
-  data: SetData;
+  data?: SetData;
 }
 
 interface SetContextProps {
-  data: SetData;
+  data?: SetData;
 }
 
 export const SetContext = React.createContext<SetContextProps | undefined>(
@@ -143,11 +144,13 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   });
 
   const storeRef = React.useRef<ContainerStore>();
-  if (!storeRef.current) {
-    storeRef.current = createContainerStore(
-      status == "authenticated" ? getVal(data as AuthedData) : undefined
-    );
-  }
+  if (!storeRef.current) storeRef.current = createContainerStore(undefined);
+
+  React.useEffect(() => {
+    if (status == "authenticated" && data)
+      storeRef.current?.setState(getVal(data as AuthedData));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   React.useEffect(() => {
     const trigger = (data: SetData) => {

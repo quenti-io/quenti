@@ -6,6 +6,7 @@ import {
   Heading,
   LinkBox,
   LinkOverlay,
+  Skeleton,
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
@@ -18,7 +19,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { Link } from "../../components/link";
 import { menuEventChannel } from "../../events/menu";
-import { useSet } from "../../hooks/use-set";
+import { useSet, useSetReady } from "../../hooks/use-set";
 
 export const LinkArea = () => {
   const { id } = useSet();
@@ -85,6 +86,7 @@ const Linkable: React.FC<LinkableProps> = ({
   disabled = false,
   requireAuth = false,
 }) => {
+  const ready = useSetReady();
   const authed = useSession().status == "authenticated";
   const authEnabled = requireAuth && !authed;
 
@@ -104,36 +106,38 @@ const Linkable: React.FC<LinkableProps> = ({
   );
 
   return (
-    <LinkBox
-      bg={bg}
-      rounded="lg"
-      py="5"
-      px="6"
-      borderWidth="2px"
-      borderBottomWidth="4px"
-      h="full"
-      borderColor={!disabled ? borderColor : disabledBorder}
-      shadow={!disabled ? "xl" : "sm"}
-      transition="all ease-in-out 150ms"
-      _hover={{
-        transform: "translateY(-2px)",
-        borderBottomColor: !disabled ? "blue.300" : disabledHover,
-      }}
-      cursor="pointer"
-      onClick={() => {
-        if (authEnabled)
-          menuEventChannel.emit("openSignup", {
-            message: `Create an account for free to study with ${name}`,
-            callbackUrl: href,
-          });
-      }}
-    >
-      <Flex gap={4}>
-        <Box color="blue.300">{icon}</Box>
-        <Heading size="md" color={disabled ? disabledHeading : undefined}>
-          {overlay}
-        </Heading>
-      </Flex>
-    </LinkBox>
+    <Skeleton rounded="lg" isLoaded={ready}>
+      <LinkBox
+        bg={bg}
+        rounded="lg"
+        py="5"
+        px="6"
+        borderWidth="2px"
+        borderBottomWidth="4px"
+        h="full"
+        borderColor={!disabled ? borderColor : disabledBorder}
+        shadow={!disabled ? "xl" : "sm"}
+        transition="all ease-in-out 150ms"
+        _hover={{
+          transform: "translateY(-2px)",
+          borderBottomColor: !disabled ? "blue.300" : disabledHover,
+        }}
+        cursor="pointer"
+        onClick={() => {
+          if (authEnabled)
+            menuEventChannel.emit("openSignup", {
+              message: `Create an account for free to study with ${name}`,
+              callbackUrl: href,
+            });
+        }}
+      >
+        <Flex gap={4}>
+          <Box color="blue.300">{icon}</Box>
+          <Heading size="md" color={disabled ? disabledHeading : undefined}>
+            {overlay}
+          </Heading>
+        </Flex>
+      </LinkBox>
+    </Skeleton>
   );
 };

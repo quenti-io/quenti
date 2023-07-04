@@ -11,6 +11,7 @@ import { api } from "../utils/api";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
 import { EditTermModal } from "./edit-term-modal";
 import { LoadingFlashcard } from "./loading-flashcard";
+import { SetReady } from "./set-ready";
 import { SortFlashcardWrapper } from "./sort-flashcard-wrapper";
 
 export interface RootFlashcardWrapperProps {
@@ -109,15 +110,17 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
     >
       <Wrapper>
         <Box w="full" minH={h} zIndex="100">
-          <EditTermModal
-            term={editTerm}
-            isOpen={editModalOpen}
-            onClose={() => {
-              setEditModalOpen(false);
-            }}
-            onDefinition={focusDefinition}
-          />
-          <FlashcardWrapper />
+          <SetReady>
+            <EditTermModal
+              term={editTerm}
+              isOpen={editModalOpen}
+              onClose={() => {
+                setEditModalOpen(false);
+              }}
+              onDefinition={focusDefinition}
+            />
+            <FlashcardWrapper />
+          </SetReady>
         </Box>
       </Wrapper>
     </RootFlashcardContext.Provider>

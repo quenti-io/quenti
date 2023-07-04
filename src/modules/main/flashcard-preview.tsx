@@ -1,14 +1,15 @@
-import { Button, Flex, IconButton, Stack } from "@chakra-ui/react";
+import { Button, Flex, IconButton, Skeleton, Stack } from "@chakra-ui/react";
 import {
   IconArrowsShuffle,
   IconMaximize,
   IconPlayerPlay,
-  IconSettings
+  IconSettings,
 } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
-import { useSet } from "../../hooks/use-set";
+import { SetReady } from "../../components/set-ready";
+import { useSet, useSetReady } from "../../hooks/use-set";
 import { FlashcardsSettingsModal } from "../../modules/flashcards/flashcards-settings-modal";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
@@ -16,6 +17,7 @@ import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
 
 export const FlashcardPreview = () => {
+  const ready = useSetReady();
   const data = useSet();
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
@@ -37,26 +39,29 @@ export const FlashcardPreview = () => {
     s.toggleAutoplayFlashcards,
   ]);
 
-  const _termOrder = data.terms
-    .sort((a, b) => a.rank - b.rank)
-    .map((t) => t.id);
+  const _termOrder = ready
+    ? data.terms.sort((a, b) => a.rank - b.rank).map((t) => t.id)
+    : [];
   const [termOrder, setTermOrder] = React.useState<string[]>(
     shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder
   );
 
+  const length = ready ? data.terms.length : 0;
   React.useEffect(() => {
     setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shuffle, data.terms.length]);
+  }, [shuffle, length]);
 
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
   return (
     <>
-      <FlashcardsSettingsModal
-        isOpen={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-      />
+      <SetReady>
+        <FlashcardsSettingsModal
+          isOpen={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+        />
+      </SetReady>
       <Flex
         gap={8}
         flexDir={{ base: "column", md: "row" }}
@@ -64,7 +69,11 @@ export const FlashcardPreview = () => {
         w="full"
       >
         <Flex maxW="1000px" flex="1">
-          <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
+          <Skeleton fitContent w="full" rounded="lg" isLoaded={ready} minH="500px">
+            {termOrder.length && (
+              <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
+            )}
+          </Skeleton>
         </Flex>
         <Flex flexDir="column" justifyContent="space-between">
           <Stack spacing={4}>
@@ -73,62 +82,81 @@ export const FlashcardPreview = () => {
               w="full"
               spacing={4}
             >
-              <Button
-                w="full"
-                leftIcon={<IconArrowsShuffle />}
-                variant={shuffle ? "solid" : "outline"}
-                onClick={() => {
-                  toggleShuffle();
-                  setShuffle.mutate({
-                    entityId: data.id,
-                    shuffle: !shuffle,
-                    type: "StudySet",
-                  });
-                }}
-                isLoading={enableCardsSorting && setShuffle.isLoading}
-              >
-                Shuffle
-              </Button>
-              <Button
-                leftIcon={<IconPlayerPlay />}
-                variant={autoplay ? "solid" : "outline"}
-                w="full"
-                onClick={toggleAutoplay}
-                isDisabled={enableCardsSorting}
-              >
-                Autoplay
-              </Button>
+              <Skeleton isLoaded={ready} rounded="md">
+                <Button
+                  w="full"
+                  leftIcon={<IconArrowsShuffle />}
+                  variant={shuffle ? "solid" : "outline"}
+                  onClick={() => {
+                    toggleShuffle();
+                    setShuffle.mutate({
+                      entityId: data.id,
+                      shuffle: !shuffle,
+                      type: "StudySet",
+                    });
+                  }}
+                  isLoading={enableCardsSorting && setShuffle.isLoading}
+                >
+                  Shuffle
+                </Button>
+              </Skeleton>
+              <Skeleton isLoaded={ready} rounded="md">
+                <Button
+                  leftIcon={<IconPlayerPlay />}
+                  variant={autoplay ? "solid" : "outline"}
+                  w="full"
+                  onClick={toggleAutoplay}
+                  isDisabled={enableCardsSorting}
+                >
+                  Autoplay
+                </Button>
+              </Skeleton>
             </Stack>
-            <Button
-              leftIcon={<IconSettings />}
-              variant="ghost"
-              display={{ base: "none", md: "flex" }}
-              onClick={() => setSettingsOpen(true)}
-            >
-              Settings
-            </Button>
+            <Skeleton isLoaded={ready} rounded="md">
+              <Button
+                leftIcon={<IconSettings />}
+                variant="ghost"
+                display={{ base: "none", md: "flex" }}
+                onClick={() => setSettingsOpen(true)}
+              >
+                Settings
+              </Button>
+            </Skeleton>
           </Stack>
           <Flex justifyContent={{ base: "end", md: "start" }} marginTop="4">
-            <IconButton
-              w="max"
-              icon={<IconSettings />}
-              rounded="full"
-              variant="ghost"
+            <Skeleton
               display={{ base: "flex", md: "none" }}
-              aria-label="Settings"
-              colorScheme="gray"
-              onClick={() => setSettingsOpen(true)}
-            />
-            <IconButton
-              w="max"
-              rounded="full"
-              variant="ghost"
-              as={Link}
-              href={`/${data.id}/flashcards`}
-              icon={<IconMaximize />}
-              aria-label="Full screen"
-              colorScheme="gray"
-            />
+              isLoaded={ready}
+              startColor="transparent"
+              endColor="transparent"
+            >
+              <IconButton
+                w="max"
+                icon={<IconSettings />}
+                rounded="full"
+                variant="ghost"
+                display={{ base: "flex", md: "none" }}
+                aria-label="Settings"
+                colorScheme="gray"
+                onClick={() => setSettingsOpen(true)}
+              />
+            </Skeleton>
+            <Skeleton
+              isLoaded={ready}
+              startColor="transparent"
+              endColor="transparent"
+            >
+              <IconButton
+                w="max"
+                rounded="full"
+                variant="ghost"
+                as={Link}
+                href={`/${data.id}/flashcards`}
+                icon={<IconMaximize />}
+                aria-label="Full screen"
+                colorScheme="gray"
+              />
+            </Skeleton>
           </Flex>
         </Flex>
       </Flex>
