@@ -4,6 +4,7 @@ import {
   IconPlayerPlay,
   IconSettings,
 } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
@@ -16,6 +17,7 @@ interface ControlsBarProps {
 export const ControlsBar: React.FC<ControlsBarProps> = ({
   onSettingsClick,
 }) => {
+  const authed = useSession().status == "authenticated";
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
 
@@ -48,11 +50,13 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
             isLoading={enableCardsSorting && setShuffle.isLoading}
             onClick={() => {
               toggleShuffle();
-              setShuffle.mutate({
-                entityId: id,
-                type: type == "set" ? "StudySet" : "Folder",
-                shuffle: !shuffle,
-              });
+
+              if (authed)
+                setShuffle.mutate({
+                  entityId: id,
+                  type: type == "set" ? "StudySet" : "Folder",
+                  shuffle: !shuffle,
+                });
             }}
           />
         </Tooltip>
