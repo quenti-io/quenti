@@ -74,6 +74,7 @@ let config = withHighlightConfig(
   {
     appVersion,
     configureHighlightProxy: true,
+    uploadSourceMaps: true,
   }
 );
 
