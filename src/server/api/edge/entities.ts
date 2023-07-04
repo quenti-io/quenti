@@ -56,7 +56,7 @@ export const getSharedEntity = async (
     description = set.description;
     username = set.username;
     image = avatarUrl({ username: set.username, image: set.image });
-    entities = set.entities;
+    entities = set.entities || 0;
   } else {
     const folder = await db
       .selectFrom("Folder")
@@ -138,7 +138,7 @@ export const getEntityGeneric = async (
         description: set.description,
         username: set.username,
         image: avatarUrl({ username: set.username, image: set.image }),
-        entities: set.entities,
+        entities: set.entities || 0,
         type: "StudySet",
       };
     } else return null;

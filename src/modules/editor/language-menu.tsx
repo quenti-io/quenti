@@ -19,7 +19,7 @@ import {
   IconCheck,
   IconHexagons,
   IconLanguage,
-  IconQuestionCircle,
+  IconHelpHexagon,
   IconSearch,
   IconVariable,
 } from "@tabler/icons-react";
@@ -88,7 +88,7 @@ export const LanguageMenuWrapper: React.FC<
       isSelected: selected === "unknown",
       name: languages.unknown,
       value: "unknown" as const,
-      icon: <IconQuestionCircle size={18} />,
+      icon: <IconHelpHexagon size={18} />,
     },
   ].filter(filterFn);
 

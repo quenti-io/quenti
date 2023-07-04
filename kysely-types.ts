@@ -3,53 +3,59 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
-export type StudySetVisibility = "Private" | "Unlisted" | "Public";
+
 export const StudySetVisibility = {
   Private: "Private",
   Unlisted: "Unlisted",
   Public: "Public",
-};
-export type EntityType = "StudySet" | "Folder";
+} as const;
+export type StudySetVisibility =
+  (typeof StudySetVisibility)[keyof typeof StudySetVisibility];
 export const EntityType = {
   StudySet: "StudySet",
   Folder: "Folder",
-};
-export type StudiableMode = "Flashcards" | "Learn";
+} as const;
+export type EntityType = (typeof EntityType)[keyof typeof EntityType];
 export const StudiableMode = {
   Flashcards: "Flashcards",
   Learn: "Learn",
-};
-export type LearnMode = "Learn" | "Review";
+} as const;
+export type StudiableMode = (typeof StudiableMode)[keyof typeof StudiableMode];
 export const LearnMode = {
   Learn: "Learn",
   Review: "Review",
-};
-export type LeaderboardType = "Match";
+} as const;
+export type LearnMode = (typeof LearnMode)[keyof typeof LearnMode];
 export const LeaderboardType = {
   Match: "Match",
-};
-export type StudySetAnswerMode = "Word" | "Definition" | "Both";
+} as const;
+export type LeaderboardType =
+  (typeof LeaderboardType)[keyof typeof LeaderboardType];
 export const StudySetAnswerMode = {
   Word: "Word",
   Definition: "Definition",
   Both: "Both",
-};
-export type LimitedStudySetAnswerMode = "Word" | "Definition";
+} as const;
+export type StudySetAnswerMode =
+  (typeof StudySetAnswerMode)[keyof typeof StudySetAnswerMode];
 export const LimitedStudySetAnswerMode = {
   Word: "Word",
   Definition: "Definition",
-};
-export type MultipleAnswerMode = "One" | "All" | "Unknown";
+} as const;
+export type LimitedStudySetAnswerMode =
+  (typeof LimitedStudySetAnswerMode)[keyof typeof LimitedStudySetAnswerMode];
 export const MultipleAnswerMode = {
   One: "One",
   All: "All",
   Unknown: "Unknown",
-};
-export type ContainerType = "StudySet" | "Folder";
+} as const;
+export type MultipleAnswerMode =
+  (typeof MultipleAnswerMode)[keyof typeof MultipleAnswerMode];
 export const ContainerType = {
   StudySet: "StudySet",
   Folder: "Folder",
-};
+} as const;
+export type ContainerType = (typeof ContainerType)[keyof typeof ContainerType];
 export type Account = {
   id: string;
   userId: string;
