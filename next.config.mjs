@@ -21,6 +21,7 @@ let config = withHighlightConfig(
   withAxiom({
     reactStrictMode: true,
     swcMinify: true,
+    productionBrowserSourceMaps: true,
     i18n: {
       locales: ["en"],
       defaultLocale: "en",
