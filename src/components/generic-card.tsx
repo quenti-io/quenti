@@ -98,7 +98,7 @@ export const GenericCard: React.FC<GenericCardProps> = ({
               {title}
             </LinkOverlay>
           </Heading>
-          <HStack gap={0} color={termsTextColor}>
+          <HStack spacing="2" color={termsTextColor}>
             {leftIcon}
             <Text fontSize="sm">{plural(numItems, itemsLabel)}</Text>
             {rightIcon}

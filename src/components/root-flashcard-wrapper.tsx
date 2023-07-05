@@ -64,7 +64,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
 
   const Wrapper = authed ? CreateSortFlashcardsData : React.Fragment;
 
-  if (isDirty) return <LoadingFlashcard h={h} />;
+  if (isDirty || !termOrder.length) return <LoadingFlashcard h={h} />;
 
   return (
     <RootFlashcardContext.Provider
@@ -119,8 +119,8 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
               }}
               onDefinition={focusDefinition}
             />
-            <FlashcardWrapper />
           </SetReady>
+          <FlashcardWrapper />
         </Box>
       </Wrapper>
     </RootFlashcardContext.Provider>

@@ -20,10 +20,11 @@ export const FolderHeading = () => {
 
   return (
     <Stack spacing={4}>
-      <HStack gap={2} fontWeight={600}>
+      <HStack spacing="2" fontWeight={600}>
         <Text>{plural(folder.sets.length, "set")}</Text>
+        <Text>&middot;</Text>
         <Text>created by</Text>
-        <HStack gap={0} fontWeight={700}>
+        <HStack spacing="2" fontWeight={700}>
           <Avatar
             src={avatarUrl(folder.user)}
             size="xs"

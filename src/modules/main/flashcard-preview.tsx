@@ -1,4 +1,11 @@
-import { Button, Flex, IconButton, Skeleton, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Skeleton,
+  Stack,
+} from "@chakra-ui/react";
 import {
   IconArrowsShuffle,
   IconMaximize,
@@ -75,17 +82,9 @@ export const FlashcardPreview = () => {
         w="full"
       >
         <Flex maxW="1000px" flex="1">
-          <Skeleton
-            fitContent
-            w="full"
-            rounded="lg"
-            isLoaded={ready}
-            minH="500px"
-          >
-            {!!termOrder.length && (
-              <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
-            )}
-          </Skeleton>
+          <Box w="full">
+            <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
+          </Box>
         </Flex>
         <Flex flexDir="column" justifyContent="space-between">
           <Stack spacing={4}>

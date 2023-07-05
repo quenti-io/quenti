@@ -68,13 +68,13 @@ export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
           >
             {studySet.title}
           </Heading>
-          <HStack gap={0} color={termsTextColor}>
+          <HStack spacing="2" color={termsTextColor}>
             <Text fontSize="sm">{plural(numTerms, "term")}</Text>
             {studySet.visibility !== "Public" &&
               visibilityIcon(studySet.visibility, 16)}
           </HStack>
         </Stack>
-        <HStack gap="2px">
+        <HStack spacing="2">
           <Avatar src={avatarUrl(user)} size="xs" className="highlight-block" />
           <Text
             fontSize="sm"
