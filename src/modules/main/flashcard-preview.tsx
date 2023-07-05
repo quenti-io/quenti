@@ -20,9 +20,10 @@ export const FlashcardPreview = () => {
   const ready = useSetReady();
   const data = useSet();
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
+  const isDirty = useSetPropertiesStore((s) => s.isDirty);
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
-  const setShuffle = api.container.setShuffle.useMutation({
+  const apiSetShuffle = api.container.setShuffle.useMutation({
     onSuccess: () => {
       if (enableCardsSorting) {
         setIsDirty(true);
@@ -30,14 +31,19 @@ export const FlashcardPreview = () => {
     },
   });
 
-  const [shuffle, toggleShuffle] = useContainerContext((s) => [
+  const [_shuffle, toggleShuffle] = useContainerContext((s) => [
     s.shuffleFlashcards,
     s.toggleShuffleFlashcards,
   ]);
+  const [shuffle, setShuffle] = React.useState(_shuffle);
   const [autoplay, toggleAutoplay] = useContainerContext((s) => [
     s.autoplayFlashcards,
     s.toggleAutoplayFlashcards,
   ]);
+
+  React.useEffect(() => {
+    if (!isDirty && !apiSetShuffle.isLoading) setShuffle(_shuffle);
+  }, [isDirty, _shuffle, apiSetShuffle.isLoading]);
 
   const _termOrder = ready
     ? data.terms.sort((a, b) => a.rank - b.rank).map((t) => t.id)
@@ -69,8 +75,14 @@ export const FlashcardPreview = () => {
         w="full"
       >
         <Flex maxW="1000px" flex="1">
-          <Skeleton fitContent w="full" rounded="lg" isLoaded={ready} minH="500px">
-            {termOrder.length && (
+          <Skeleton
+            fitContent
+            w="full"
+            rounded="lg"
+            isLoaded={ready}
+            minH="500px"
+          >
+            {!!termOrder.length && (
               <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
             )}
           </Skeleton>
@@ -82,25 +94,30 @@ export const FlashcardPreview = () => {
               w="full"
               spacing={4}
             >
-              <Skeleton isLoaded={ready} rounded="md">
+              <Skeleton isLoaded={ready} rounded="md" w="full">
                 <Button
                   w="full"
                   leftIcon={<IconArrowsShuffle />}
                   variant={shuffle ? "solid" : "outline"}
                   onClick={() => {
+                    void (async () => {
+                      await apiSetShuffle.mutateAsync({
+                        entityId: data.id,
+                        shuffle: !shuffle,
+                        type: "StudySet",
+                      });
+                    })();
+
                     toggleShuffle();
-                    setShuffle.mutate({
-                      entityId: data.id,
-                      shuffle: !shuffle,
-                      type: "StudySet",
-                    });
                   }}
-                  isLoading={enableCardsSorting && setShuffle.isLoading}
+                  isLoading={
+                    enableCardsSorting && (apiSetShuffle.isLoading || isDirty)
+                  }
                 >
                   Shuffle
                 </Button>
               </Skeleton>
-              <Skeleton isLoaded={ready} rounded="md">
+              <Skeleton isLoaded={ready} rounded="md" w="full">
                 <Button
                   leftIcon={<IconPlayerPlay />}
                   variant={autoplay ? "solid" : "outline"}
