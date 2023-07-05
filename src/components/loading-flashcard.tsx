@@ -1,23 +1,22 @@
-import { Card, Center, Spinner, useColorModeValue } from "@chakra-ui/react";
+import { Box, Card, Progress, Skeleton } from "@chakra-ui/react";
 import React from "react";
 
 export const LoadingFlashcard: React.FC<{ h?: string }> = ({ h }) => {
-  const borderColor = useColorModeValue("gray.200", "gray.750");
-
   return (
-    <Card
-      w="full"
-      minH={h}
-      rounded="xl"
-      shadow="none"
-      border="2px"
-      bg="transparent"
-      borderColor={borderColor}
-      overflow="hidden"
-    >
-      <Center flex="1">
-        <Spinner color="blue.200" />
-      </Center>
-    </Card>
+    <Box position="relative" rounded="xl" overflow="hidden">
+      <Skeleton rounded="xl">
+        <Card w="full" minH={h} rounded="xl" shadow="none" border="2px" />
+      </Skeleton>
+      <Progress
+        position="absolute"
+        top="0"
+        left="0"
+        w="full"
+        isIndeterminate
+        size="xs"
+        colorScheme="orange"
+        zIndex="1000"
+      />
+    </Box>
   );
 };
