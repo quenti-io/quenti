@@ -95,6 +95,7 @@ export const UserMenu = () => {
         </TeacherOnly>
         {!onStaticPage && (
           <>
+            <MenuDivider />
             <MenuOption
               icon={
                 colorMode == "dark" ? (
@@ -106,7 +107,6 @@ export const UserMenu = () => {
               label={colorMode == "dark" ? "Light mode" : "Dark mode"}
               onClick={toggleColorMode}
             />
-            <MenuDivider />
           </>
         )}
         <MenuOption

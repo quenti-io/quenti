@@ -2,6 +2,7 @@ import { register } from "../prometheus";
 import { adminRouter } from "./routers/admin";
 import { autoSaveRouter } from "./routers/auto-save";
 import { containerRouter } from "./routers/container";
+import { devRouter } from "./routers/dev";
 import { discoverableRouter } from "./routers/discoverable";
 import { foldersRouter } from "./routers/folders";
 import { importRouter } from "./routers/import";
@@ -42,6 +43,7 @@ export const appRouter = createTRPCRouter({
   organizations: organizationsRouter,
   disoverable: discoverableRouter,
   shareResolver: shareResolverRouter,
+  dev: devRouter,
 });
 
 // export type definition of API

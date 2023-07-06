@@ -22,7 +22,6 @@ import { avatarUrl } from "../utils/avatar";
 const Settings: ComponentWithAuth = () => {
   const session = useSession()!.data!;
   const divider = useColorModeValue("gray.400", "gray.600");
-
   const { loading } = useLoading();
   if (loading) return <Loading />;
 
