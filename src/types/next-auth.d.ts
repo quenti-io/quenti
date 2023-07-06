@@ -1,3 +1,4 @@
+import type { UserType } from "@prisma/client";
 import type { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
@@ -9,12 +10,14 @@ declare module "next-auth" {
       id: string;
       name?: string;
       username: string;
+      type: UserType;
       displayName: boolean;
       admin: boolean;
       banned: boolean;
       flags: number;
       enableUsageData: boolean;
       changelogVersion: string;
+      organizationId?: string;
     } & DefaultSession["user"];
     version: string;
   }
@@ -23,11 +26,13 @@ declare module "next-auth" {
     id: string;
     name?: string;
     username: string;
+    type: UserType;
     image: string;
     displayName: boolean;
     bannedAt?: Date;
     flags: number;
     enableUsageData: boolean;
     changelogVersion: string;
+    organizationId?: string;
   }
 }

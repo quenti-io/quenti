@@ -106,6 +106,8 @@ model Organization {
 
   members Membership[]
   users   User[]
+
+  @@unique([slug])
 }
 
 enum MembershipRole {

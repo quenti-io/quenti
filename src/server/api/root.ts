@@ -6,6 +6,7 @@ import { discoverableRouter } from "./routers/discoverable";
 import { foldersRouter } from "./routers/folders";
 import { importRouter } from "./routers/import";
 import { leaderboardRouter } from "./routers/leaderboard";
+import { organizationsRouter } from "./routers/organizations";
 import { profileRouter } from "./routers/profile";
 import { recentRouter } from "./routers/recent";
 import { shareResolverRouter } from "./routers/share-resolver";
@@ -38,6 +39,7 @@ export const appRouter = createTRPCRouter({
   recent: recentRouter,
   autoSave: autoSaveRouter,
   import: importRouter,
+  organizations: organizationsRouter,
   disoverable: discoverableRouter,
   shareResolver: shareResolverRouter,
 });
