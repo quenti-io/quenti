@@ -2,6 +2,7 @@ import { ButtonGroup, IconButton, Skeleton, Tooltip } from "@chakra-ui/react";
 import {
   IconPlus,
   IconPrinter,
+  IconHexagon,
   IconShare,
   IconTableExport,
   type TablerIconsProps,
@@ -11,14 +12,13 @@ import React from "react";
 import { useReactToPrint } from "react-to-print";
 import { ExportTermsModal } from "../../components/export-terms-modal";
 import { SetPrintComponent } from "../../components/set-print-component";
-import { SetReady } from "../../components/set-ready";
 import { menuEventChannel } from "../../events/menu";
-import { useSet, useSetReady } from "../../hooks/use-set";
+import { useSet } from "../../hooks/use-set";
 import { api } from "../../utils/api";
 import { AddToFolderModal } from "./add-to-folder-modal";
 import { ShareSetModal } from "./share-set-modal";
 
-export const ActionArea: React.FC = () => {
+export const ActionArea = () => {
   const utils = api.useContext();
   const { id } = useSet();
 
@@ -38,22 +38,20 @@ export const ActionArea: React.FC = () => {
 
   return (
     <>
-      <SetReady>
-        <AddToFolderModal
-          isOpen={addToFolder}
-          onClose={async () => {
-            setAddToFolder(false);
-            await utils.folders.invalidate(undefined, {
-              queryKey: ["recentForSetAdd", id],
-            });
-          }}
-        />
-        <ShareSetModal isOpen={share} onClose={() => setShare(false)} />
-        <ExportTermsModal
-          isOpen={exportOpen}
-          onClose={() => setExportOpen(false)}
-        />
-      </SetReady>
+      <AddToFolderModal
+        isOpen={addToFolder}
+        onClose={async () => {
+          setAddToFolder(false);
+          await utils.folders.invalidate(undefined, {
+            queryKey: ["recentForSetAdd", id],
+          });
+        }}
+      />
+      <ShareSetModal isOpen={share} onClose={() => setShare(false)} />
+      <ExportTermsModal
+        isOpen={exportOpen}
+        onClose={() => setExportOpen(false)}
+      />
       <ButtonGroup spacing={4}>
         <ActionButton
           label="Add to folder"
@@ -92,6 +90,22 @@ export const ActionArea: React.FC = () => {
   );
 };
 
+ActionArea.Skeleton = function ActionAreaSkeleton() {
+  return (
+    <ButtonGroup spacing={4}>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Skeleton rounded="full" fitContent h="max-content" key={i}>
+          <IconButton
+            rounded="full"
+            aria-label="loading"
+            icon={<IconHexagon size={18} />}
+          />
+        </Skeleton>
+      ))}
+    </ButtonGroup>
+  );
+};
+
 interface ActionButtonProps {
   label: string;
   icon: React.FC<TablerIconsProps>;
@@ -109,7 +123,6 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   unauthedMessage,
   unauthedCallbackUrl,
 }) => {
-  const ready = useSetReady();
   const authed = useSession().status == "authenticated";
   const Icon = icon;
 
@@ -121,19 +134,17 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   };
 
   return (
-    <Skeleton isLoaded={ready} rounded="full" h="max-content">
-      <Tooltip label={label}>
-        <IconButton
-          icon={<Icon size={18} />}
-          rounded="full"
-          variant="outline"
-          colorScheme="blue"
-          aria-label={label}
-          outline="solid 1px"
-          onClick={authed || !unauthedMessage ? onClick : unauthedHandler}
-          isLoading={isLoading}
-        />
-      </Tooltip>
-    </Skeleton>
+    <Tooltip label={label}>
+      <IconButton
+        icon={<Icon size={18} />}
+        rounded="full"
+        variant="outline"
+        colorScheme="blue"
+        aria-label={label}
+        outline="solid 1px"
+        onClick={authed || !unauthedMessage ? onClick : unauthedHandler}
+        isLoading={isLoading}
+      />
+    </Tooltip>
   );
 };

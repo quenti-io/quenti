@@ -7,10 +7,11 @@ import { FlashcardPreview } from "../../modules/main/flashcard-preview";
 import { HeadingArea } from "../../modules/main/heading-area";
 import { LinkArea } from "../../modules/main/link-area";
 import { TermsOverview } from "../../modules/main/terms-overview";
+import { SetLoading } from "../../modules/main/set-loading";
 
 const Set: ComponentWithAuth = () => {
   return (
-    <HydrateSetData allowEmpty>
+    <HydrateSetData placeholder={<SetLoading />}>
       <WithFooter>
         <Container maxW="7xl">
           <Stack spacing={10}>

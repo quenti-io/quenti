@@ -14,9 +14,9 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
+import { LoadingFlashcard } from "../../components/loading-flashcard";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
-import { SetReady } from "../../components/set-ready";
-import { useSet, useSetReady } from "../../hooks/use-set";
+import { useSet } from "../../hooks/use-set";
 import { FlashcardsSettingsModal } from "../../modules/flashcards/flashcards-settings-modal";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
@@ -24,10 +24,8 @@ import { api } from "../../utils/api";
 import { shuffleArray } from "../../utils/array";
 
 export const FlashcardPreview = () => {
-  const ready = useSetReady();
   const data = useSet();
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
-  const isDirty = useSetPropertiesStore((s) => s.isDirty);
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
   const apiSetShuffle = api.container.setShuffle.useMutation({
@@ -38,43 +36,35 @@ export const FlashcardPreview = () => {
     },
   });
 
-  const [_shuffle, toggleShuffle] = useContainerContext((s) => [
+  const [shuffle, toggleShuffle] = useContainerContext((s) => [
     s.shuffleFlashcards,
     s.toggleShuffleFlashcards,
   ]);
-  const [shuffle, setShuffle] = React.useState(_shuffle);
   const [autoplay, toggleAutoplay] = useContainerContext((s) => [
     s.autoplayFlashcards,
     s.toggleAutoplayFlashcards,
   ]);
 
-  React.useEffect(() => {
-    if (!isDirty && !apiSetShuffle.isLoading) setShuffle(_shuffle);
-  }, [isDirty, _shuffle, apiSetShuffle.isLoading]);
-
-  const _termOrder = ready
-    ? data.terms.sort((a, b) => a.rank - b.rank).map((t) => t.id)
-    : [];
+  const _termOrder = data.terms
+    .sort((a, b) => a.rank - b.rank)
+    .map((t) => t.id);
   const [termOrder, setTermOrder] = React.useState<string[]>(
     shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder
   );
 
-  const length = ready ? data.terms.length : 0;
   React.useEffect(() => {
     setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shuffle, length]);
+  }, [shuffle]);
 
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
   return (
     <>
-      <SetReady>
-        <FlashcardsSettingsModal
-          isOpen={settingsOpen}
-          onClose={() => setSettingsOpen(false)}
-        />
-      </SetReady>
+      <FlashcardsSettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
       <Flex
         gap={8}
         flexDir={{ base: "column", md: "row" }}
@@ -93,89 +83,102 @@ export const FlashcardPreview = () => {
               w="full"
               spacing={4}
             >
-              <Skeleton isLoaded={ready} rounded="md" w="full">
-                <Button
-                  w="full"
-                  leftIcon={<IconArrowsShuffle />}
-                  variant={shuffle ? "solid" : "outline"}
-                  onClick={() => {
-                    void (async () => {
-                      await apiSetShuffle.mutateAsync({
-                        entityId: data.id,
-                        shuffle: !shuffle,
-                        type: "StudySet",
-                      });
-                    })();
-
-                    toggleShuffle();
-                  }}
-                  isLoading={
-                    enableCardsSorting && (apiSetShuffle.isLoading || isDirty)
-                  }
-                >
-                  Shuffle
-                </Button>
-              </Skeleton>
-              <Skeleton isLoaded={ready} rounded="md" w="full">
-                <Button
-                  leftIcon={<IconPlayerPlay />}
-                  variant={autoplay ? "solid" : "outline"}
-                  w="full"
-                  onClick={toggleAutoplay}
-                  isDisabled={enableCardsSorting}
-                >
-                  Autoplay
-                </Button>
-              </Skeleton>
-            </Stack>
-            <Skeleton isLoaded={ready} rounded="md">
               <Button
-                leftIcon={<IconSettings />}
-                variant="ghost"
-                display={{ base: "none", md: "flex" }}
-                onClick={() => setSettingsOpen(true)}
+                w="full"
+                leftIcon={<IconArrowsShuffle />}
+                variant={shuffle ? "solid" : "outline"}
+                onClick={() => {
+                  void (async () => {
+                    await apiSetShuffle.mutateAsync({
+                      entityId: data.id,
+                      shuffle: !shuffle,
+                      type: "StudySet",
+                    });
+                  })();
+
+                  toggleShuffle();
+                }}
+                isLoading={enableCardsSorting && apiSetShuffle.isLoading}
               >
-                Settings
+                Shuffle
               </Button>
-            </Skeleton>
+              <Button
+                leftIcon={<IconPlayerPlay />}
+                variant={autoplay ? "solid" : "outline"}
+                w="full"
+                onClick={toggleAutoplay}
+                isDisabled={enableCardsSorting}
+              >
+                Autoplay
+              </Button>
+            </Stack>
+            <Button
+              leftIcon={<IconSettings />}
+              variant="ghost"
+              display={{ base: "none", md: "flex" }}
+              onClick={() => setSettingsOpen(true)}
+            >
+              Settings
+            </Button>
           </Stack>
           <Flex justifyContent={{ base: "end", md: "start" }} marginTop="4">
-            <Skeleton
+            <IconButton
+              w="max"
+              icon={<IconSettings />}
+              rounded="full"
+              variant="ghost"
               display={{ base: "flex", md: "none" }}
-              isLoaded={ready}
-              startColor="transparent"
-              endColor="transparent"
-            >
-              <IconButton
-                w="max"
-                icon={<IconSettings />}
-                rounded="full"
-                variant="ghost"
-                display={{ base: "flex", md: "none" }}
-                aria-label="Settings"
-                colorScheme="gray"
-                onClick={() => setSettingsOpen(true)}
-              />
-            </Skeleton>
-            <Skeleton
-              isLoaded={ready}
-              startColor="transparent"
-              endColor="transparent"
-            >
-              <IconButton
-                w="max"
-                rounded="full"
-                variant="ghost"
-                as={Link}
-                href={`/${data.id}/flashcards`}
-                icon={<IconMaximize />}
-                aria-label="Full screen"
-                colorScheme="gray"
-              />
-            </Skeleton>
+              aria-label="Settings"
+              colorScheme="gray"
+              onClick={() => setSettingsOpen(true)}
+            />
+
+            <IconButton
+              w="max"
+              rounded="full"
+              variant="ghost"
+              as={Link}
+              href={`/${data.id}/flashcards`}
+              icon={<IconMaximize />}
+              aria-label="Full screen"
+              colorScheme="gray"
+            />
           </Flex>
         </Flex>
       </Flex>
     </>
+  );
+};
+
+FlashcardPreview.Skeleton = function FlashcardPreviewSkeleton() {
+  return (
+    <Flex
+      gap={8}
+      flexDir={{ base: "column", md: "row" }}
+      alignItems="stretch"
+      w="full"
+    >
+      <Flex maxW="1000px" flex="1">
+        <Box w="full">
+          <LoadingFlashcard h="500px" />
+        </Box>
+      </Flex>
+      <Flex flexDir="column" justifyContent="space-between">
+        <Stack spacing={4}>
+          <Stack direction={{ base: "row", md: "column" }} w="full" spacing={4}>
+            <Skeleton w="full" rounded="md">
+              <Button w="full" leftIcon={<IconArrowsShuffle />}>
+                Shuffle
+              </Button>
+            </Skeleton>
+            <Skeleton w="full" rounded="md">
+              <Button w="full" leftIcon={<IconPlayerPlay />}>
+                Autoplay
+              </Button>
+            </Skeleton>
+          </Stack>
+        </Stack>
+      </Flex>
+    </Flex>
   );
 };

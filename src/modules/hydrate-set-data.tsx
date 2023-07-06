@@ -39,12 +39,12 @@ export type AuthedData = AuthedReturn & {
 export interface HydrateSetDataProps {
   disallowDirty?: boolean;
   requireFresh?: boolean;
-  allowEmpty?: boolean;
+  placeholder?: React.ReactNode;
 }
 
 export const HydrateSetData: React.FC<
   React.PropsWithChildren<HydrateSetDataProps>
-> = ({ disallowDirty = false, requireFresh, allowEmpty = false, children }) => {
+> = ({ disallowDirty = false, requireFresh, placeholder, children }) => {
   const { status } = useSession();
   const id = useRouter().query.id as string;
   const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
@@ -93,16 +93,16 @@ export const HydrateSetData: React.FC<
   if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (
-    (!allowEmpty && !data) ||
+    !data ||
     (disallowDirty && isDirty) ||
     (!isFetchedAfterMount && requireFresh)
   )
-    return <Loading />;
+    return placeholder || <Loading />;
 
   return (
-    <ContextLayer data={data ? createInjectedData(data) : undefined}>
+    <ContextLayer data={createInjectedData(data)}>
       <Head>
-        <title>{data?.title} | Quizlet.cc</title>
+        <title>{data.title} | Quizlet.cc</title>
       </Head>
       {children}
     </ContextLayer>
@@ -110,11 +110,11 @@ export const HydrateSetData: React.FC<
 };
 
 interface ContextLayerProps {
-  data?: SetData;
+  data: SetData;
 }
 
 interface SetContextProps {
-  data?: SetData;
+  data: SetData;
 }
 
 export const SetContext = React.createContext<SetContextProps | undefined>(
@@ -144,13 +144,11 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   });
 
   const storeRef = React.useRef<ContainerStore>();
-  if (!storeRef.current) storeRef.current = createContainerStore(undefined);
-
-  React.useEffect(() => {
-    if (status == "authenticated" && data)
-      storeRef.current?.setState(getVal(data as AuthedData));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  if (!storeRef.current) {
+    storeRef.current = createContainerStore(
+      status == "authenticated" ? getVal(data as AuthedData) : undefined
+    );
+  }
 
   React.useEffect(() => {
     const trigger = (data: SetData) => {

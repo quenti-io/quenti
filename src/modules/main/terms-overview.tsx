@@ -4,7 +4,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Skeleton,
   Stack,
   Text,
   useColorModeValue,
@@ -12,7 +11,7 @@ import {
 import type { Term } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { useAuthedSet, useSet, useSetReady } from "../../hooks/use-set";
+import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { DisplayableTermPure } from "./displayable-term";
 import { TermsSortSelect } from "./terms-sort-select";
@@ -26,27 +25,16 @@ const TermsOverviewContext = React.createContext<TermsOverviewContextProps>({
 });
 
 export const TermsOverview = () => {
-  const ready = useSetReady();
   const { status } = useSession();
   const { terms, injected } = useSet();
 
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const studiable =
-    ready &&
-    status == "authenticated" &&
-    !!injected!.studiableLearnTerms.length;
+    status == "authenticated" && !!injected!.studiableLearnTerms.length;
   const [sortType, setSortType] = React.useState(
     studiable ? "stats" : "original"
   );
   const [starredOnly, setStarredOnly] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!ready) return;
-    setTimeout(() => {
-      setSortType(studiable ? "stats" : "original");
-    }, 50);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready]);
 
   const termsListComponent = () => {
     switch (sortType) {
@@ -71,11 +59,7 @@ export const TermsOverview = () => {
           flexDir={{ base: "column", md: "row" }}
           gap="6"
         >
-          <Skeleton isLoaded={ready} fitContent>
-            <Heading size="lg">
-              Terms in this set ({ready ? terms.length : 0})
-            </Heading>
-          </Skeleton>
+          <Heading size="lg">Terms in this set ({terms.length})</Heading>
           <HStack spacing={4}>
             {!!starredTerms.length && (
               <ButtonGroup
@@ -98,9 +82,7 @@ export const TermsOverview = () => {
                 </Button>
               </ButtonGroup>
             )}
-            <Skeleton isLoaded={ready} fitContent rounded="md">
-              <TermsSortSelect studiable={studiable} onChange={setSortType} />
-            </Skeleton>
+            <TermsSortSelect studiable={studiable} onChange={setSortType} />
           </HStack>
         </Flex>
         {termsListComponent()}
@@ -219,26 +201,14 @@ interface TermsListProps {
 }
 
 const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
-  const ready = useSetReady();
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const internalSort =
-    sortOrder ||
-    (ready
-      ? terms.sort((a, b) => a.rank - b.rank).map((x) => x.id)
-      : Array.from({ length: 5 }).map((_, i) => i.toString()));
+    sortOrder || terms.sort((a, b) => a.rank - b.rank).map((x) => x.id);
 
   const starredOnly = React.useContext(TermsOverviewContext).starredOnly;
-  const internalTerms = ready
-    ? starredOnly
-      ? terms.filter((x) => starredTerms.includes(x.id))
-      : terms
-    : Array.from({ length: 5 }).map((_, i) => ({
-        id: Math.random().toString(),
-        word: "Loading...",
-        definition: "Loading...",
-        rank: i,
-        studySetId: "",
-      }));
+  const internalTerms = starredOnly
+    ? terms.filter((x) => starredTerms.includes(x.id))
+    : terms;
 
   const [showSlice, setShowSlice] = React.useState(slice);
 
@@ -254,7 +224,7 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
             <DisplayableTermPure term={term} key={term.id} />
           ))}
       </Stack>
-      {ready && showSlice !== undefined && showSlice < terms.length && (
+      {showSlice !== undefined && showSlice < terms.length && (
         <Button
           onClick={() => {
             setShowSlice((s) => (s || 0) + 100);

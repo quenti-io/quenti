@@ -19,7 +19,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { Link } from "../../components/link";
 import { menuEventChannel } from "../../events/menu";
-import { useSet, useSetReady } from "../../hooks/use-set";
+import { useSet } from "../../hooks/use-set";
 
 export const LinkArea = () => {
   const { id } = useSet();
@@ -71,12 +71,34 @@ export const LinkArea = () => {
   );
 };
 
+LinkArea.Skeleton = function LinkAreaSkeleton() {
+  return (
+    <Grid
+      w="full"
+      maxW="1000px"
+      gridTemplateColumns={{
+        base: "1fr",
+        sm: "1fr 1fr",
+        md: "1fr 1fr 1fr 1fr",
+      }}
+      gap={4}
+    >
+      {["Learn", "Flashcards", "Test", "Match"].map((name, i) => (
+        <GridItem key={i}>
+          <Linkable name={name} href="" icon={<IconCards />} skeleton />
+        </GridItem>
+      ))}
+    </Grid>
+  );
+};
+
 interface LinkableProps {
   name: string;
   icon: React.ReactNode;
   href: string;
   disabled?: boolean;
   requireAuth?: boolean;
+  skeleton?: boolean;
 }
 
 const Linkable: React.FC<LinkableProps> = ({
@@ -85,8 +107,8 @@ const Linkable: React.FC<LinkableProps> = ({
   href,
   disabled = false,
   requireAuth = false,
+  skeleton,
 }) => {
-  const ready = useSetReady();
   const authed = useSession().status == "authenticated";
   const authEnabled = requireAuth && !authed;
 
@@ -105,8 +127,10 @@ const Linkable: React.FC<LinkableProps> = ({
     name
   );
 
+  const Wrapper = skeleton ? Skeleton : React.Fragment;
+
   return (
-    <Skeleton rounded="lg" isLoaded={ready}>
+    <Wrapper rounded="lg">
       <LinkBox
         bg={bg}
         rounded="lg"
@@ -138,6 +162,6 @@ const Linkable: React.FC<LinkableProps> = ({
           </Heading>
         </Flex>
       </LinkBox>
-    </Skeleton>
+    </Wrapper>
   );
 };
