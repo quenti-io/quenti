@@ -1,5 +1,6 @@
+import { TRPCError } from "@trpc/server";
+import slugify from "slugify";
 import { z } from "zod";
-import { MAX_TITLE } from "../common/constants";
 import { createTRPCRouter, teacherProcedure } from "../trpc";
 
 export const organizationsRouter = createTRPCRouter({
@@ -72,15 +73,38 @@ export const organizationsRouter = createTRPCRouter({
   create: teacherProcedure
     .input(
       z.object({
-        name: z.string().min(1).max(MAX_TITLE),
-        slug: z.string().min(1).max(50),
+        name: z.string(),
+        slug: z
+          .string()
+          .transform((slug) =>
+            slugify(slug.trim(), { lower: true, strict: true })
+          ),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.organization.create({
+      const existing = await ctx.prisma.organization.findUnique({
+        where: {
+          slug: input.slug,
+        },
+      });
+
+      if (existing)
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "slug_conflict",
+        });
+
+      return await ctx.prisma.organization.create({
         data: {
           name: input.name,
           slug: input.slug,
+          members: {
+            create: {
+              userId: ctx.session.user.id,
+              role: "Owner",
+              accepted: true,
+            },
+          },
         },
       });
     }),
