@@ -13,6 +13,7 @@ import {
 import React from "react";
 import { organizationIcon } from "../../utils/icons";
 import { getColorFromId } from "../../utils/color";
+import { Link } from "../../components/link";
 
 export interface OrganizationCardProps {
   id: string;
@@ -37,7 +38,9 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   const children = skeleton ? (
     name
   ) : (
-    <LinkOverlay href={`/orgs/${slug}`}>{name}</LinkOverlay>
+    <LinkOverlay as={Link} href={`/orgs/${slug}`}>
+      {name}
+    </LinkOverlay>
   );
 
   const Icon = organizationIcon(icon);
@@ -73,7 +76,11 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
             pointerEvents="none"
           />
           <Stack mt="-1" spacing="4">
-            <Flex justifyContent="space-between" alignItems="end">
+            <Flex
+              justifyContent="space-between"
+              alignItems="end"
+              pointerEvents="none"
+            >
               <Box
                 w="16"
                 h="16"

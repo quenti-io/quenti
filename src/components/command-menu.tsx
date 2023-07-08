@@ -18,6 +18,7 @@ import {
 import type { User } from "@prisma/client";
 import {
   IconBooks,
+  IconBuilding,
   IconCloudDownload,
   IconFolder,
   IconFolderPlus,
@@ -190,6 +191,15 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           label: "Navigate to admin panel",
           action: (ctrl) => openLink(`/admin`, ctrl),
           shouldShow: () => window.location.pathname !== "/admin",
+        });
+      }
+      if (session.data?.user?.type == "Teacher") {
+        total.push({
+          icon: <IconBuilding />,
+          name: "Organizations",
+          label: "Navigate to your organizations",
+          action: (ctrl) => openLink(`/orgs`, ctrl),
+          shouldShow: () => window.location.pathname !== "/orgs",
         });
       }
 
