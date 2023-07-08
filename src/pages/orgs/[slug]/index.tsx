@@ -23,6 +23,7 @@ import { WithFooter } from "../../../components/with-footer";
 import { OrganizationTab } from "../../../modules/organizations/organization-tab";
 import { api } from "../../../utils/api";
 import { organizationIcon } from "../../../utils/icons";
+import { SettingsTab } from "../../../modules/organizations/settings-tab";
 
 export default function OrganizationsPage() {
   const router = useRouter();
@@ -98,6 +99,10 @@ export default function OrganizationsPage() {
             <TabPanels mt="10">
               <TabPanel p="0">
                 <OrganizationTab />
+              </TabPanel>
+              <TabPanel p="0" />
+              <TabPanel p="0">
+                <SettingsTab />
               </TabPanel>
             </TabPanels>
           </Tabs>

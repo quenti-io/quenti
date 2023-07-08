@@ -170,4 +170,37 @@ export const organizationsRouter = createTRPCRouter({
         },
       });
     }),
+
+  delete: teacherProcedure
+    .input(z.string().cuid2())
+    .mutation(async ({ ctx, input }) => {
+      const org = await ctx.prisma.organization.findUnique({
+        where: {
+          id: input,
+        },
+        include: {
+          members: {
+            where: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+
+      if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!org.members[0]) throw new TRPCError({ code: "FORBIDDEN" });
+
+      const role = org.members[0].role;
+      if (role !== "Owner")
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "not_owner",
+        });
+
+      await ctx.prisma.organization.delete({
+        where: {
+          id: input,
+        },
+      });
+    }),
 });
