@@ -108,4 +108,66 @@ export const organizationsRouter = createTRPCRouter({
         },
       });
     }),
+
+  update: teacherProcedure
+    .input(
+      z.object({
+        id: z.string().cuid2(),
+        name: z.string(),
+        slug: z
+          .string()
+          .transform((slug) =>
+            slugify(slug.trim(), { lower: true, strict: true })
+          ),
+        icon: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const org = await ctx.prisma.organization.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          members: {
+            where: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+
+      if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!org.members[0]) throw new TRPCError({ code: "FORBIDDEN" });
+
+      const role = org.members[0].role;
+      if (role !== "Owner" && role !== "Admin")
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "not_admin_or_owner",
+        });
+
+      const existing = await ctx.prisma.organization.findUnique({
+        where: {
+          slug: input.slug,
+        },
+      });
+
+      if (existing && existing.id !== input.id) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "slug_conflict",
+        });
+      }
+
+      return await ctx.prisma.organization.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          slug: input.slug,
+          icon: input.icon,
+        },
+      });
+    }),
 });

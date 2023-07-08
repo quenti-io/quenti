@@ -103,6 +103,7 @@ model Organization {
   name      String
   slug      String
   createdAt DateTime @default(now())
+  icon      Int      @default(0)
 
   members Membership[]
   users   User[]

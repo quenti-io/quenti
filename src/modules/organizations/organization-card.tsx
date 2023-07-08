@@ -10,22 +10,28 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconBuilding } from "@tabler/icons-react";
 import React from "react";
+import { organizationIcon } from "../../utils/icons";
+import { getColorFromId } from "../../utils/color";
 
 export interface OrganizationCardProps {
+  id: string;
   name: string;
   slug: string;
+  icon?: number;
   skeleton?: boolean;
 }
 
 export const OrganizationCard: React.FC<OrganizationCardProps> = ({
+  id,
   name,
   slug,
+  icon = 0,
   skeleton,
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
+  const iconBg = useColorModeValue("gray.700", "whiteAlpha.900");
 
   const Wrapper = skeleton ? Skeleton : React.Fragment;
   const children = skeleton ? (
@@ -33,6 +39,8 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   ) : (
     <LinkOverlay href={`/orgs/${slug}`}>{name}</LinkOverlay>
   );
+
+  const Icon = organizationIcon(icon);
 
   return (
     <Wrapper rounded="md">
@@ -60,8 +68,9 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
             position="absolute"
             top="0"
             left="0"
-            bgGradient="linear(to-r, blue.300, purple.300)"
+            bgGradient={`linear(to-r, blue.300, ${getColorFromId(id)})`}
             zIndex="50"
+            pointerEvents="none"
           />
           <Stack mt="-1" spacing="4">
             <Flex justifyContent="space-between" alignItems="end">
@@ -78,14 +87,14 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
                   w="full"
                   h="full"
                   rounded="full"
-                  bg="blue.200"
+                  bg={iconBg}
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
                   shadow="xl"
                 >
                   <Box color={linkBg}>
-                    <IconBuilding size={32} />
+                    <Icon size={32} />
                   </Box>
                 </Box>
               </Box>

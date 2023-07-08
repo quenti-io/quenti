@@ -57,13 +57,21 @@ export default function Organizations() {
                   .filter(filterFn)
                   .map((org) => (
                     <OrganizationCard
+                      id={org.id}
                       name={org.name}
                       slug={org.slug}
+                      icon={org.icon}
                       key={org.id}
                     />
                   ))
               : Array.from({ length: 12 }).map((_, i) => (
-                  <OrganizationCard name="" slug="" skeleton key={i} />
+                  <OrganizationCard
+                    id=""
+                    name="loading"
+                    slug=""
+                    skeleton
+                    key={i}
+                  />
                 ))}
           </SimpleGrid>
         </Stack>

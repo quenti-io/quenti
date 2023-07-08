@@ -151,6 +151,7 @@ export type Organization = {
   name: string;
   slug: string;
   createdAt: Generated<Timestamp>;
+  icon: Generated<number>;
 };
 export type RecentFailedLogin = {
   id: string;
