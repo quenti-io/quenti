@@ -65,14 +65,14 @@ const App: AppType<
   } & JSX.IntrinsicAttributes
 > = ({ Component: _Component, pageProps: { session, ...pageProps } }) => {
   const Component = _Component as NextComponentWithAuth & {
-    layout?: JSX.Element;
+    layout?: React.ComponentType;
   };
   const router = useRouter();
   const base = env.NEXT_PUBLIC_BASE_URL;
   const pathname = router.pathname;
   const staticPage = BASE_PAGES.includes(pathname);
 
-  const Layout = Component.layout || React.Fragment;
+  const Layout = Component.layout ?? React.Fragment;
 
   const children = (
     <>

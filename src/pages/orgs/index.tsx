@@ -9,19 +9,42 @@ import {
   SimpleGrid,
   Stack,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import type { Organization } from "@prisma/client";
 import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
+import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Link } from "../../components/link";
 import { WithFooter } from "../../components/with-footer";
 import { OrganizationCard } from "../../modules/organizations/organization-card";
 import { api } from "../../utils/api";
 
 export default function Organizations() {
-  const menuBg = useColorModeValue("white", "gray.800");
+  const router = useRouter();
+  const utils = api.useContext();
+  const toast = useToast();
+
   const { data } = api.organizations.getBelonging.useQuery(undefined, {
     retry: false,
+  });
+
+  const [tokenChecked, setTokenChecked] = React.useState(false);
+
+  const acceptToken = api.organizations.acceptToken.useMutation({
+    onSuccess: async (name) => {
+      await utils.organizations.getBelonging.invalidate();
+
+      toast({
+        title: `You have been invited to ${name}`,
+        icon: <AnimatedCheckCircle />,
+        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+      });
+    },
+    onSettled: () => {
+      setTokenChecked(true);
+    },
   });
 
   const [search, setSearch] = React.useState("");
@@ -29,6 +52,18 @@ export default function Organizations() {
     if (!search) return true;
     return org.name.toLowerCase().includes(search.toLowerCase());
   };
+
+  React.useEffect(() => {
+    if (!router.isReady) return;
+    if (router.query.token)
+      acceptToken.mutate({ token: router.query.token as string });
+    else setTokenChecked(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady]);
+
+  const menuBg = useColorModeValue("white", "gray.800");
+
+  const isLoading = !data || !tokenChecked;
 
   return (
     <WithFooter>
@@ -52,7 +87,7 @@ export default function Organizations() {
             </Button>
           </HStack>
           <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap="4">
-            {data
+            {!isLoading
               ? data
                   .filter(filterFn)
                   .map((org) => (
@@ -62,6 +97,7 @@ export default function Organizations() {
                       slug={org.slug}
                       icon={org.icon}
                       key={org.id}
+                      accepted={org.accepted}
                     />
                   ))
               : Array.from({ length: 12 }).map((_, i) => (

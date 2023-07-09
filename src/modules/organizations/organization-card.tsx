@@ -1,7 +1,10 @@
 import {
   Box,
+  Button,
+  ButtonGroup,
   Fade,
   Flex,
+  useToast,
   Heading,
   LinkBox,
   LinkOverlay,
@@ -14,11 +17,14 @@ import React from "react";
 import { organizationIcon } from "../../utils/icons";
 import { getColorFromId } from "../../utils/color";
 import { Link } from "../../components/link";
+import { api } from "../../utils/api";
+import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 
 export interface OrganizationCardProps {
   id: string;
   name: string;
   slug: string;
+  accepted?: boolean;
   icon?: number;
   skeleton?: boolean;
 }
@@ -27,12 +33,26 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   id,
   name,
   slug,
+  accepted = true,
   icon = 0,
   skeleton,
 }) => {
-  const linkBg = useColorModeValue("white", "gray.800");
-  const linkBorder = useColorModeValue("gray.200", "gray.700");
-  const iconBg = useColorModeValue("gray.700", "whiteAlpha.900");
+  const utils = api.useContext();
+  const toast = useToast();
+
+  const acceptInvite = api.organizations.acceptInvite.useMutation({
+    onSuccess: async () => {
+      await utils.organizations.getBelonging.invalidate();
+      if (acceptInvite.variables?.accept) {
+        toast({
+          title: `Successfully joined ${name}`,
+          status: "success",
+          icon: <AnimatedCheckCircle />,
+          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        });
+      }
+    },
+  });
 
   const Wrapper = skeleton ? Skeleton : React.Fragment;
   const children = skeleton ? (
@@ -44,6 +64,12 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   );
 
   const Icon = organizationIcon(icon);
+
+  const linkBg = useColorModeValue("white", "gray.800");
+  const linkBorder = useColorModeValue("gray.200", "gray.700");
+  const iconBg = useColorModeValue("gray.700", "whiteAlpha.900");
+  const buttonBg = useColorModeValue("whiteAlpha.500", "blackAlpha.500");
+  const buttonBgHover = useColorModeValue("whiteAlpha.600", "blackAlpha.600");
 
   return (
     <Wrapper rounded="md">
@@ -69,12 +95,58 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
             w="full"
             h="12"
             position="absolute"
+            p="2"
+            display="flex"
+            justifyContent="end"
             top="0"
             left="0"
             bgGradient={`linear(to-r, blue.300, ${getColorFromId(id)})`}
             zIndex="50"
             pointerEvents="none"
-          />
+          >
+            {!accepted && (
+              <ButtonGroup size="sm" pointerEvents="all">
+                <Button
+                  variant="unstyled"
+                  px="3"
+                  colorScheme="gray"
+                  bg={buttonBg}
+                  display="flex"
+                  _hover={{
+                    bg: buttonBgHover,
+                  }}
+                  isLoading={
+                    acceptInvite.isLoading &&
+                    acceptInvite.variables?.orgId == id &&
+                    acceptInvite.variables?.accept == false
+                  }
+                  onClick={() => {
+                    acceptInvite.mutate({
+                      accept: false,
+                      orgId: id,
+                    });
+                  }}
+                >
+                  Reject
+                </Button>
+                <Button
+                  isLoading={
+                    acceptInvite.isLoading &&
+                    acceptInvite.variables?.orgId == id &&
+                    acceptInvite.variables?.accept == true
+                  }
+                  onClick={() => {
+                    acceptInvite.mutate({
+                      accept: true,
+                      orgId: id,
+                    });
+                  }}
+                >
+                  Accept
+                </Button>
+              </ButtonGroup>
+            )}
+          </Box>
           <Stack mt="-1" spacing="4">
             <Flex
               justifyContent="space-between"

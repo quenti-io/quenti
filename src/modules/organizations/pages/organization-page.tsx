@@ -27,7 +27,8 @@ export const OrganizationPage = () => {
   const slug = router.query.slug as string;
 
   const toast = useToast();
-  const inputBorder = useColorModeValue("gray.400", "gray.600");
+  const inputBg = useColorModeValue("white", "gray.900");
+  const inputBorder = useColorModeValue("gray.200", "gray.600");
   const addonBg = useColorModeValue("gray.100", "gray.750");
   const iconColor = useColorModeValue("#171923", "white");
 
@@ -83,18 +84,21 @@ export const OrganizationPage = () => {
         <Stack spacing="3" pb="2px">
           <Skeleton rounded="md" w="full" isLoaded={!!org}>
             <Input
+              bg={inputBg}
               borderColor={inputBorder}
               value={orgName}
               onChange={(e) => setOrgName(e.target.value)}
+              shadow="sm"
             />
           </Skeleton>
           <Skeleton rounded="md" w="full" isLoaded={!!org}>
-            <InputGroup borderColor={inputBorder}>
+            <InputGroup borderColor={inputBorder} shadow="sm">
               <InputLeftAddon bg={addonBg} color="gray.500">
                 {getBaseDomain()}/orgs/
               </InputLeftAddon>
               <Input
                 value={orgSlug}
+                bg={inputBg}
                 onChange={(e) => setOrgSlug(e.target.value)}
               />
             </InputGroup>

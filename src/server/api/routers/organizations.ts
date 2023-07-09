@@ -12,7 +12,7 @@ import { createTRPCRouter, teacherProcedure } from "../trpc";
 
 export const organizationsRouter = createTRPCRouter({
   getBelonging: teacherProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.organization.findMany({
+    const organizations = await ctx.prisma.organization.findMany({
       where: {
         members: {
           some: {
@@ -22,16 +22,11 @@ export const organizationsRouter = createTRPCRouter({
       },
       include: {
         members: {
-          take: 5,
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                username: true,
-                image: true,
-              },
-            },
+          where: {
+            userId: ctx.session.user.id,
+          },
+          select: {
+            accepted: true,
           },
         },
         _count: {
@@ -41,6 +36,12 @@ export const organizationsRouter = createTRPCRouter({
         },
       },
     });
+
+    return organizations.map((org) => ({
+      ...org,
+      members: undefined,
+      accepted: org.members[0]!.accepted,
+    }));
   }),
 
   get: teacherProcedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -295,5 +296,37 @@ export const organizationsRouter = createTRPCRouter({
       }
 
       return token.organization.name;
+    }),
+
+  acceptInvite: teacherProcedure
+    .input(
+      z.object({
+        orgId: z.string().cuid2(),
+        accept: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.accept) {
+        await ctx.prisma.membership.update({
+          where: {
+            userId_orgId: {
+              userId: ctx.session.user.id,
+              orgId: input.orgId,
+            },
+          },
+          data: {
+            accepted: true,
+          },
+        });
+      } else {
+        await ctx.prisma.membership.delete({
+          where: {
+            userId_orgId: {
+              userId: ctx.session.user.id,
+              orgId: input.orgId,
+            },
+          },
+        });
+      }
     }),
 });
