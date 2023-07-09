@@ -91,6 +91,15 @@ const components = {
       _hover: { textDecoration: "none" },
     },
   },
+  Checkbox: {
+    baseStyle: () => ({
+      control: {
+        rounded: "md",
+        _checked: { background: "blue.400", borderColor: "blue.400" },
+      },
+      icon: { color: "white", padding: "2px" },
+    }),
+  },
 };
 
 const styles = {

@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { api } from "../../../utils/api";
 import { avatarUrl } from "../../../utils/avatar";
+import { InviteMemberModal } from "../invite-member-modal";
 
 export const OrganizationMembers = () => {
   const router = useRouter();
@@ -34,6 +35,7 @@ export const OrganizationMembers = () => {
     ? org.members.find((m) => m.userId == session?.user?.id)?.user
     : undefined;
 
+  const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
   const menuBg = useColorModeValue("white", "gray.800");
@@ -41,6 +43,10 @@ export const OrganizationMembers = () => {
 
   return (
     <Stack spacing="6">
+      <InviteMemberModal
+        isOpen={inviteModalOpen}
+        onClose={() => setInviteModalOpen(false)}
+      />
       <HStack>
         <InputGroup bg={menuBg} shadow="sm" rounded="md">
           <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
@@ -53,7 +59,12 @@ export const OrganizationMembers = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </InputGroup>
-        <Button leftIcon={<IconPlus size={18} />}>Add</Button>
+        <Button
+          leftIcon={<IconPlus size={18} />}
+          onClick={() => setInviteModalOpen(true)}
+        >
+          Add
+        </Button>
       </HStack>
       <Stack>
         <Box px="4" py="3" border="2px" borderColor={borderColor} rounded="lg">
