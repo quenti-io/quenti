@@ -2,11 +2,11 @@ import { Button, Skeleton, Stack } from "@chakra-ui/react";
 import { IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { api } from "../../utils/api";
-import { DeleteModal } from "./delete-modal";
-import { SettingsWrapper } from "./settings-wrapper";
+import { api } from "../../../utils/api";
+import { DeleteModal } from "../delete-modal";
+import { SettingsWrapper } from "../settings-wrapper";
 
-export const SettingsTab = () => {
+export const OrganizationSettings = () => {
   const router = useRouter();
   const slug = router.query.slug as string;
 

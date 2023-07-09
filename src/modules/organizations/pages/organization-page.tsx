@@ -14,14 +14,14 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { AnimatedCheckCircle } from "../../components/animated-icons/check";
-import { AnimatedXCircle } from "../../components/animated-icons/x";
-import { getBaseDomain } from "../../lib/urls";
-import { SettingsWrapper } from "../../modules/organizations/settings-wrapper";
-import { api } from "../../utils/api";
-import { ORGANIZATION_ICONS } from "../../utils/icons";
+import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
+import { AnimatedXCircle } from "../../../components/animated-icons/x";
+import { getBaseDomain } from "../../../lib/urls";
+import { SettingsWrapper } from "../settings-wrapper";
+import { api } from "../../../utils/api";
+import { ORGANIZATION_ICONS } from "../../../utils/icons";
 
-export const OrganizationTab = () => {
+export const OrganizationPage = () => {
   const router = useRouter();
   const utils = api.useContext();
   const slug = router.query.slug as string;
