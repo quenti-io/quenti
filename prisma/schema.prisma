@@ -91,11 +91,15 @@ model User {
 }
 
 model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+  identifier     String
+  token          String   @unique
+  expires        DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  organizationId String?  @unique
 
   @@unique([identifier, token])
+  @@index([token])
 }
 
 model Organization {
