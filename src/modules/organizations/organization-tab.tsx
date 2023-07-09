@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
+import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { getBaseDomain } from "../../lib/urls";
 import { SettingsWrapper } from "../../modules/organizations/settings-wrapper";
 import { api } from "../../utils/api";
@@ -43,13 +44,23 @@ export const OrganizationTab = () => {
         title: "Organization updated successfully",
         status: "success",
         icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem" },
+        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
       });
 
       if (data.slug == slug) {
         await utils.organizations.get.invalidate();
       } else {
         await router.push(`/orgs/${data.slug}`);
+      }
+    },
+    onError: (err) => {
+      if (err.data?.code == "BAD_REQUEST") {
+        toast({
+          title: "That organization URL is already taken",
+          status: "error",
+          icon: <AnimatedXCircle />,
+          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        });
       }
     },
   });

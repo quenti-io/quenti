@@ -29,7 +29,10 @@ export default function NewOrganization() {
 
   const create = api.organizations.create.useMutation({
     onError: (error) => {
-      if (error.message == "slug_conflict") {
+      if (
+        error.message == "slug_conflict" ||
+        error.data?.code == "BAD_REQUEST"
+      ) {
         setSlugError(true);
       }
     },

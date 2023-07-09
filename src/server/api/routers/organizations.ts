@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import slugify from "slugify";
 import { z } from "zod";
+import { DISALLOWED_ORG_SLUGS } from "../common/constants";
 import { createTRPCRouter, teacherProcedure } from "../trpc";
 
 export const organizationsRouter = createTRPCRouter({
@@ -78,7 +79,8 @@ export const organizationsRouter = createTRPCRouter({
           .string()
           .transform((slug) =>
             slugify(slug.trim(), { lower: true, strict: true })
-          ),
+          )
+          .refine((slug) => !DISALLOWED_ORG_SLUGS.includes(slug)),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -118,7 +120,8 @@ export const organizationsRouter = createTRPCRouter({
           .string()
           .transform((slug) =>
             slugify(slug.trim(), { lower: true, strict: true })
-          ),
+          )
+          .refine((slug) => !DISALLOWED_ORG_SLUGS.includes(slug)),
         icon: z.number(),
       })
     )

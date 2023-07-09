@@ -6,6 +6,8 @@ export const MAX_TERM = 1000;
 
 export const MATCH_MIN_TIME = 15;
 
+export const DISALLOWED_ORG_SLUGS = ["new"];
+
 import json from "../../../../languages.json";
 const languages = json.languages;
 
