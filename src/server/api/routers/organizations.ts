@@ -68,6 +68,13 @@ export const organizationsRouter = createTRPCRouter({
             },
           },
         },
+        inviteToken: {
+          select: {
+            token: true,
+            expires: true,
+            expiresInDays: true,
+          },
+        },
         _count: {
           select: {
             users: true,
@@ -202,6 +209,8 @@ export const organizationsRouter = createTRPCRouter({
           organizationId: input,
         },
       });
+
+      return token;
     }),
 
   setInviteExpiration: teacherProcedure

@@ -43,10 +43,14 @@ export const OrganizationMembers = () => {
 
   return (
     <Stack spacing="6">
-      <InviteMemberModal
-        isOpen={inviteModalOpen}
-        onClose={() => setInviteModalOpen(false)}
-      />
+      {org && (
+        <InviteMemberModal
+          isOpen={inviteModalOpen}
+          onClose={() => setInviteModalOpen(false)}
+          orgId={org.id}
+          token={org.inviteToken?.token}
+        />
+      )}
       <HStack>
         <InputGroup bg={menuBg} shadow="sm" rounded="md">
           <InputLeftElement pointerEvents="none" pl="2" color="gray.500">

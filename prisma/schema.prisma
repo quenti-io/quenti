@@ -111,9 +111,9 @@ model Organization {
   createdAt DateTime @default(now())
   icon      Int      @default(0)
 
-  members           Membership[]
-  users             User[]
-  VerificationToken VerificationToken?
+  members     Membership[]
+  users       User[]
+  inviteToken VerificationToken?
 
   @@unique([slug])
 }
