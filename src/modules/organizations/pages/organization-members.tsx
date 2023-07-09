@@ -2,11 +2,13 @@ import {
   Avatar,
   Box,
   Button,
+  Flex,
   HStack,
   Input,
   InputGroup,
   InputLeftElement,
   Skeleton,
+  SkeletonText,
   Stack,
   Tag,
   Text,
@@ -63,21 +65,35 @@ export const OrganizationMembers = () => {
               />
             </Skeleton>
             <Stack spacing="0">
-              <Skeleton isLoaded={!!me} fitContent>
-                <HStack>
-                  <Text fontWeight={700} fontFamily="Outfit">
-                    {me?.name || "placeholder text"}
+              <Flex alignItems="center" h="6">
+                <SkeletonText
+                  isLoaded={!!me}
+                  fitContent
+                  noOfLines={1}
+                  skeletonHeight="5"
+                >
+                  <HStack>
+                    <Text fontWeight={700} fontFamily="Outfit">
+                      {me?.name || "placeholder text"}
+                    </Text>
+                    <Tag size="sm" colorScheme="blue">
+                      You
+                    </Tag>
+                  </HStack>
+                </SkeletonText>
+              </Flex>
+              <Flex alignItems="center" h="21px">
+                <SkeletonText
+                  isLoaded={!!me}
+                  noOfLines={1}
+                  fitContent
+                  skeletonHeight="3"
+                >
+                  <Text fontSize="sm" color="gray.500">
+                    Owner <b>&middot;</b> {me?.email || "placeholder@email.com"}
                   </Text>
-                  <Tag size="sm" colorScheme="blue">
-                    You
-                  </Tag>
-                </HStack>
-              </Skeleton>
-              <Skeleton isLoaded={!!me} fitContent>
-                <Text fontSize="sm" color="gray.500">
-                  Owner
-                </Text>
-              </Skeleton>
+                </SkeletonText>
+              </Flex>
             </Stack>
           </HStack>
         </Box>
