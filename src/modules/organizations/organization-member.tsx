@@ -35,6 +35,7 @@ export interface OrganizationMemberProps {
   accepted?: boolean;
   isCurrent?: boolean;
   skeleton?: boolean;
+  onEdit?: () => void;
 }
 
 export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
@@ -43,6 +44,7 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
   isCurrent = false,
   accepted = true,
   skeleton = false,
+  onEdit,
 }) => {
   const org = useOrganization();
   const myRole: MembershipRole = org?.me?.role || "Member";
@@ -50,8 +52,9 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   const canManageMember =
+    user.id !== org?.me?.userId &&
     myRole !== "Member" &&
-    (role == "Member" || (myRole == "Owner" && role !== "Owner"));
+    (role !== "Owner" || myRole === "Owner");
 
   const borderColor = useColorModeValue("gray.100", "gray.750");
   const bg = useColorModeValue("white", "gray.800");
@@ -169,6 +172,7 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
                       label="Edit"
                       fontSize="sm"
                       py="6px"
+                      onClick={onEdit}
                     />
                     <MenuOption
                       icon={<IconUserX size={16} />}

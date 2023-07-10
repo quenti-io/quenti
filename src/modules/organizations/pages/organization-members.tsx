@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { api } from "../../../utils/api";
 import { plural } from "../../../utils/string";
+import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
 import { OrganizationMember } from "../organization-member";
 
@@ -34,6 +35,7 @@ export const OrganizationMembers = () => {
     : [];
 
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
+  const [editMember, setEditMember] = React.useState<string | undefined>();
   const [search, setSearch] = React.useState("");
 
   const menuBg = useColorModeValue("white", "gray.800");
@@ -41,12 +43,22 @@ export const OrganizationMembers = () => {
   return (
     <Stack spacing="6">
       {org && (
-        <InviteMemberModal
-          isOpen={inviteModalOpen}
-          onClose={() => setInviteModalOpen(false)}
-          orgId={org.id}
-          token={org.inviteToken?.token}
-        />
+        <>
+          <InviteMemberModal
+            isOpen={inviteModalOpen}
+            onClose={() => setInviteModalOpen(false)}
+            orgId={org.id}
+            token={org.inviteToken?.token}
+          />
+          <EditMemberModal
+            isOpen={!!editMember}
+            onClose={() => setEditMember(undefined)}
+            id={editMember || ""}
+            role={
+              org.members.find((m) => m.userId == editMember)?.role || "Member"
+            }
+          />
+        </>
       )}
       <HStack>
         <Skeleton rounded="md" fitContent isLoaded={!!org} w="full">
@@ -90,6 +102,7 @@ export const OrganizationMembers = () => {
                 user={m.user}
                 role={m.role}
                 accepted={m.accepted}
+                onEdit={() => setEditMember(m.user.id)}
               />
             ))
           : Array.from({ length: 10 }).map((_, i) => (
