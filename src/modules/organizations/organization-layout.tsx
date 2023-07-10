@@ -17,13 +17,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { WithFooter } from "../../components/with-footer";
 import { api, type RouterOutputs } from "../../utils/api";
 import { organizationIcon } from "../../utils/icons";
-import { useSession } from "next-auth/react";
 
 type BaseReturn = RouterOutputs["organizations"]["get"];
 type OrgMember = BaseReturn["members"][number];
@@ -58,7 +58,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
     switch (route) {
       case `/orgs/[slug]`:
         return 0;
-      case `/orgs/[slug]/members`:
+      case `/orgs/[slug]/users`:
         return 1;
       case `/orgs/[slug]/settings`:
         return 2;
@@ -130,10 +130,10 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
             >
               <TabList gap="10">
                 <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}`}>
-                  Organization
-                </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/members`}>
                   Members
+                </SkeletonTab>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/students`}>
+                  Students
                 </SkeletonTab>
                 <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/settings`}>
                   Settings

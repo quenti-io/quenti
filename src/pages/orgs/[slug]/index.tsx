@@ -1,8 +1,8 @@
 import { OrganizationLayout } from "../../../modules/organizations/organization-layout";
-import { OrganizationPage } from "../../../modules/organizations/pages/organization-page";
+import { OrganizationMembers } from "../../../modules/organizations/pages/organization-members";
 
 const Page = () => {
-  return <OrganizationPage />;
+  return <OrganizationMembers />;
 };
 
 Page.layout = OrganizationLayout;
