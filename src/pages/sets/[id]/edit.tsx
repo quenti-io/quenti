@@ -38,7 +38,7 @@ const HeadComponent = () => {
 
   return (
     <Head>
-      <title>Edit {title} | Quizlet.cc</title>
+      <title>Edit {title} | Quenti</title>
     </Head>
   );
 };

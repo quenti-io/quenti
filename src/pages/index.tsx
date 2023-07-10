@@ -27,7 +27,7 @@ const Home: NextPage = () => {
   return (
     <StaticWrapper>
       <Head>
-        <title>Quizlet.cc - A batteries included Quizlet alternative</title>
+        <title>Quenti - A batteries included Quizlet alternative</title>
       </Head>
       <Hero />
       <EngineeredLearn />

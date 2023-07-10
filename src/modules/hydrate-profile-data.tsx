@@ -42,7 +42,7 @@ export const HydrateProfileData: React.FC<React.PropsWithChildren> = ({
       }}
     >
       <Head>
-        <title>{profile.data.username} | Quizlet.cc</title>
+        <title>{profile.data.username} | Quenti</title>
       </Head>
       {children}
     </ProfileContext.Provider>

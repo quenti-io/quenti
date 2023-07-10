@@ -56,7 +56,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             fontSize="lg"
             color={useColorModeValue("black", "white")}
           >
-            Quizlet.cc
+            Quenti
           </Heading>
         </HStack>
       </Flex>

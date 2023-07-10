@@ -85,8 +85,8 @@ const App: AppType<
           <Head>
             <title>
               {Component.title
-                ? `${Component.title} | Quizlet.cc`
-                : `Quizlet.cc`}
+                ? `${Component.title} | Quenti`
+                : `Quenti`}
             </title>
           </Head>
           <Auth>
@@ -103,7 +103,7 @@ const App: AppType<
     </>
   );
 
-  const title = "Quizlet.cc - A batteries included Quizlet alternative";
+  const title = "Quenti - A batteries included Quizlet alternative";
   const desc =
     "Tired of Quizlet showing ads and only giving you a few practice rounds for free? Stop wasting your time getting bombarded by premium offers, and resume studying today.";
 
@@ -142,7 +142,7 @@ const App: AppType<
         <meta name="theme-color" content="#171923" />
         <meta name="title" content={title} />
         <meta name="description" content={desc} />
-        <meta property="og:site_name" content="Quizlet.cc" />
+        <meta property="og:site_name" content="Quenti" />
         <meta property="og:url" content={base} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={desc} />

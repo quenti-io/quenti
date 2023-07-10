@@ -6,18 +6,18 @@ const version = pjson.version;
 
 async function main() {
   await prisma.user.upsert({
-    where: { email: "quizlet@quizlet.cc" },
+    where: { email: "quenti@quenti.io" },
     update: {},
     create: {
       username: "Quizlet",
       name: "Quizlet",
-      email: "quizlet@quizlet.cc",
+      email: "quenti@quenti.io",
       changelogVersion: version,
       verified: true,
       studySets: {
         create: {
           title: "Local Development Overview",
-          description: "Here are a few extra notes about Quizlet.cc.",
+          description: "Here are a few extra notes about Quenti.",
           visibility: "Public",
           terms: {
             createMany: {

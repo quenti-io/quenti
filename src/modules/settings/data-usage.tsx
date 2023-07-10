@@ -59,7 +59,7 @@ export const DataUsage = () => {
             }}
           />
           <Text color={grayText} fontSize="sm">
-            Report anonymous usage data to improve Quizlet.cc
+            Report anonymous usage data to improve Quenti
           </Text>
         </HStack>
       </Stack>

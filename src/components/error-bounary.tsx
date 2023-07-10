@@ -6,7 +6,7 @@ export const ErrorBoundary: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Error | Quizlet.cc</title>
+        <title>Error | Quenti</title>
       </Head>
       <Center height="calc(100vh - 120px)">
         <VStack textAlign="center" px="4">
