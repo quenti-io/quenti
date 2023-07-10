@@ -45,7 +45,7 @@ export const organizationsRouter = createTRPCRouter({
   }),
 
   get: teacherProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    return await ctx.prisma.organization.findFirst({
+    const org = await ctx.prisma.organization.findFirst({
       where: {
         slug: input,
         members: {
@@ -83,6 +83,10 @@ export const organizationsRouter = createTRPCRouter({
         },
       },
     });
+
+    if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+
+    return org;
   }),
 
   create: teacherProcedure

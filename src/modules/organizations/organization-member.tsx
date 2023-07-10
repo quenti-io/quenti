@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  ButtonGroup,
   Flex,
   HStack,
   IconButton,
@@ -13,9 +14,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { MembershipRole, User } from "@prisma/client";
-import { avatarUrl } from "../../utils/avatar";
-import { IconExternalLink } from "@tabler/icons-react";
+import { IconDotsVertical, IconExternalLink } from "@tabler/icons-react";
 import { Link } from "../../components/link";
+import { useOrganization } from "../../hooks/use-organization";
+import { avatarUrl } from "../../utils/avatar";
+import { OrganizationAdminOnly } from "./organization-admin-only";
 
 export interface OrganizationMemberProps {
   user: Pick<User, "id" | "name" | "username" | "email" | "image">;
@@ -32,8 +35,15 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
   accepted = true,
   skeleton = false,
 }) => {
+  const org = useOrganization();
+  const myRole: MembershipRole = org?.me?.role || "Member";
   const borderColor = useColorModeValue("gray.100", "gray.750");
   const bg = useColorModeValue("white", "gray.800");
+  const buttonGroupBg = useColorModeValue("gray.50", "gray.800");
+
+  const canManageMember =
+    myRole !== "Member" &&
+    (role == "Member" || (myRole == "Owner" && role !== "Owner"));
 
   return (
     <Box
@@ -99,20 +109,38 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
             </Flex>
           </Stack>
         </HStack>
-        <Skeleton fitContent rounded="md" isLoaded={!skeleton}>
-          <Tooltip label="View public profile" placement="top">
-            <span>
+        <ButtonGroup
+          size="sm"
+          alignItems="center"
+          isAttached
+          variant="outline"
+          colorScheme="gray"
+          bg={buttonGroupBg}
+          rounded="md"
+        >
+          <Skeleton fitContent rounded="md" isLoaded={!skeleton}>
+            <Tooltip label="View public profile" placement="top">
+              <span>
+                <IconButton
+                  aria-label="View public profile"
+                  icon={<IconExternalLink size={18} />}
+                  as={Link}
+                  roundedRight={canManageMember ? "none" : "md"}
+                  href={`/@${user.username}`}
+                />
+              </span>
+            </Tooltip>
+          </Skeleton>
+          <OrganizationAdminOnly>
+            {canManageMember && (
               <IconButton
-                aria-label="View public profile"
-                size="sm"
-                icon={<IconExternalLink size={18} />}
-                as={Link}
-                href={`/@${user.username}`}
-                variant="ghost"
+                roundedLeft="none"
+                aria-label="Manage member"
+                icon={<IconDotsVertical size={18} />}
               />
-            </span>
-          </Tooltip>
-        </Skeleton>
+            )}
+          </OrganizationAdminOnly>
+        </ButtonGroup>
       </Flex>
     </Box>
   );
