@@ -35,7 +35,8 @@ export interface OrganizationMemberProps {
   accepted?: boolean;
   isCurrent?: boolean;
   skeleton?: boolean;
-  onEdit?: () => void;
+  onRequestEdit?: () => void;
+  onRequestRemove?: () => void;
 }
 
 export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
@@ -44,7 +45,8 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
   isCurrent = false,
   accepted = true,
   skeleton = false,
-  onEdit,
+  onRequestEdit,
+  onRequestRemove,
 }) => {
   const org = useOrganization();
   const myRole: MembershipRole = org?.me?.role || "Member";
@@ -172,7 +174,7 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
                       label="Edit"
                       fontSize="sm"
                       py="6px"
-                      onClick={onEdit}
+                      onClick={onRequestEdit}
                     />
                     <MenuOption
                       icon={<IconUserX size={16} />}
@@ -180,6 +182,7 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
                       fontSize="sm"
                       py="6px"
                       color={redMenuColor}
+                      onClick={onRequestRemove}
                     />
                   </MenuList>
                 </Menu>

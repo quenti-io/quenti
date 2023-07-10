@@ -18,6 +18,7 @@ import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationMember } from "../organization-member";
+import { RemoveMemberModal } from "../remove-member-modal";
 
 export const OrganizationMembers = () => {
   const router = useRouter();
@@ -37,6 +38,7 @@ export const OrganizationMembers = () => {
 
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [editMember, setEditMember] = React.useState<string | undefined>();
+  const [removeMember, setRemoveMember] = React.useState<string | undefined>();
   const [search, setSearch] = React.useState("");
 
   const menuBg = useColorModeValue("white", "gray.800");
@@ -58,6 +60,11 @@ export const OrganizationMembers = () => {
             role={
               org.members.find((m) => m.userId == editMember)?.role || "Member"
             }
+          />
+          <RemoveMemberModal
+            isOpen={!!removeMember}
+            onClose={() => setRemoveMember(undefined)}
+            id={removeMember || ""}
           />
         </>
       )}
@@ -103,7 +110,8 @@ export const OrganizationMembers = () => {
                 user={m.user}
                 role={m.role}
                 accepted={m.accepted}
-                onEdit={() => setEditMember(m.user.id)}
+                onRequestEdit={() => setEditMember(m.user.id)}
+                onRequestRemove={() => setRemoveMember(m.user.id)}
               />
             ))
           : Array.from({ length: 10 }).map((_, i) => (
