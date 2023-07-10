@@ -1,20 +1,27 @@
 import { Button, ButtonGroup, Text, useColorModeValue } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { Modal } from "../../components/modal";
+import { useOrganization } from "../../hooks/use-organization";
+import { api } from "../../utils/api";
 
-interface DeleteModalProps {
+interface DeleteOrganizationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  isLoading?: boolean;
-  onDelete: () => void;
 }
 
-export const DeleteModal: React.FC<DeleteModalProps> = ({
-  isOpen,
-  onClose,
-  isLoading,
-  onDelete,
-}) => {
+export const DeleteOrganizationModal: React.FC<
+  DeleteOrganizationModalProps
+> = ({ isOpen, onClose }) => {
+  const org = useOrganization();
+  const router = useRouter();
+
+  const apiDelete = api.organizations.delete.useMutation({
+    onSuccess: async () => {
+      await router.push("/orgs");
+    },
+  });
+
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
@@ -37,8 +44,10 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
               Cancel
             </Button>
             <Button
-              onClick={onDelete}
-              isLoading={isLoading}
+              onClick={() => {
+                apiDelete.mutate(org!.id);
+              }}
+              isLoading={apiDelete.isLoading}
               colorScheme="red"
               variant="ghost"
             >

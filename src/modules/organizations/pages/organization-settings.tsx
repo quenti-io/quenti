@@ -16,7 +16,8 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconLogout, IconSettings, IconTrash } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
@@ -24,22 +25,19 @@ import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { getBaseDomain } from "../../../lib/urls";
 import { api } from "../../../utils/api";
 import { ORGANIZATION_ICONS } from "../../../utils/icons";
-import { DeleteModal } from "../delete-modal";
+import { DeleteOrganizationModal } from "../delete-organization-modal";
+import { LeaveOrganizationModal } from "../leave-organization-modal";
+import { OrganizationAdminOnly } from "../organization-admin-only";
 import { SettingsWrapper } from "../settings-wrapper";
 
 export const OrganizationSettings = () => {
   const router = useRouter();
+  const { data: session } = useSession();
   const utils = api.useContext();
   const slug = router.query.slug as string;
 
   const { data: org } = api.organizations.get.useQuery(slug, {
     enabled: !!slug,
-  });
-
-  const apiDelete = api.organizations.delete.useMutation({
-    onSuccess: async () => {
-      await router.push("/orgs");
-    },
   });
 
   const toast = useToast();
@@ -51,6 +49,7 @@ export const OrganizationSettings = () => {
   const [orgName, setOrgName] = React.useState("");
   const [orgSlug, setOrgSlug] = React.useState("");
   const [icon, setIcon] = React.useState<number | undefined>();
+  const [leaveOpen, setLeaveOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   const update = api.organizations.update.useMutation({
@@ -88,16 +87,22 @@ export const OrganizationSettings = () => {
     }
   }, [org]);
 
+  const isAdmin = org
+    ? org.members.find((x) => x.userId == session?.user?.id)?.role != "Member"
+    : false;
+
   return (
     <Stack spacing="8">
-      <DeleteModal
+      <LeaveOrganizationModal
+        isOpen={leaveOpen}
+        onClose={() => {
+          setLeaveOpen(false);
+        }}
+      />
+      <DeleteOrganizationModal
         isOpen={deleteOpen}
         onClose={() => {
           setDeleteOpen(false);
-        }}
-        isLoading={apiDelete.isLoading}
-        onDelete={() => {
-          apiDelete.mutate(org!.id);
         }}
       />
       <Flex justifyContent="space-between" alignItems="center">
@@ -116,8 +121,8 @@ export const OrganizationSettings = () => {
             </SkeletonText>
           </Flex>
         </HStack>
-        <ButtonGroup>
-          <Skeleton rounded="md" isLoaded={!!org}>
+        <OrganizationAdminOnly>
+          <ButtonGroup>
             <Button
               variant="ghost"
               onClick={() => {
@@ -128,8 +133,6 @@ export const OrganizationSettings = () => {
             >
               Reset
             </Button>
-          </Skeleton>
-          <Skeleton rounded="md" isLoaded={!!org}>
             <Button
               isLoading={update.isLoading}
               onClick={() => {
@@ -143,8 +146,8 @@ export const OrganizationSettings = () => {
             >
               Save Changes
             </Button>
-          </Skeleton>
-        </ButtonGroup>
+          </ButtonGroup>
+        </OrganizationAdminOnly>
       </Flex>
       <Divider />
       <SettingsWrapper
@@ -160,6 +163,7 @@ export const OrganizationSettings = () => {
               value={orgName}
               onChange={(e) => setOrgName(e.target.value)}
               shadow="sm"
+              isDisabled={!isAdmin}
             />
           </Skeleton>
           <Skeleton rounded="md" w="full" isLoaded={!!org}>
@@ -171,6 +175,7 @@ export const OrganizationSettings = () => {
                 value={orgSlug}
                 bg={inputBg}
                 onChange={(e) => setOrgSlug(e.target.value)}
+                isDisabled={!isAdmin}
               />
             </InputGroup>
           </Skeleton>
@@ -191,6 +196,7 @@ export const OrganizationSettings = () => {
                   variant={icon == i ? "solid" : "ghost"}
                   aria-label="Icon"
                   onClick={() => setIcon(i)}
+                  isDisabled={!isAdmin}
                   icon={
                     <Icon
                       size={18}
@@ -205,7 +211,6 @@ export const OrganizationSettings = () => {
         </Box>
       </SettingsWrapper>
       <Divider />
-
       <SettingsWrapper
         heading="Danger Zone"
         description="Actions in this area are irreversible"
@@ -215,11 +220,13 @@ export const OrganizationSettings = () => {
           <Button
             colorScheme="red"
             variant="outline"
-            leftIcon={<IconTrash size={18} />}
+            leftIcon={
+              isAdmin ? <IconTrash size={18} /> : <IconLogout size={18} />
+            }
             w="max"
-            onClick={() => setDeleteOpen(true)}
+            onClick={() => (isAdmin ? setDeleteOpen(true) : setLeaveOpen(true))}
           >
-            Delete {org?.name || "Organization"}
+            {isAdmin ? "Delete" : "Leave"} {org?.name || "Organization"}
           </Button>
         </Skeleton>
       </SettingsWrapper>

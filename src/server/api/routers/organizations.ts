@@ -182,14 +182,7 @@ export const organizationsRouter = createTRPCRouter({
   delete: teacherProcedure
     .input(z.string().cuid2())
     .mutation(async ({ ctx, input }) => {
-      const org = await ctx.prisma.organization.findUnique({
-        where: {
-          id: input,
-        },
-      });
-
-      if (!org) throw new TRPCError({ code: "NOT_FOUND" });
-      if (!(await isOrganizationOwner(ctx.session.user.id, org.id)))
+      if (!(await isOrganizationOwner(ctx.session.user.id, input)))
         throw new TRPCError({ code: "UNAUTHORIZED" });
 
       await ctx.prisma.organization.delete({
@@ -408,7 +401,6 @@ export const organizationsRouter = createTRPCRouter({
           userId: ctx.session.user.id,
           orgId: input.orgId,
           accepted: true,
-          OR: [{ role: "Admin" }, { role: "Owner" }],
         },
       });
       if (!membership) throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -432,6 +424,11 @@ export const organizationsRouter = createTRPCRouter({
               "Cannot remove yourself as the only owner of an organization",
           });
         }
+      } else if (membership.role == "Member") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Must be an admin to remove other members",
+        });
       }
 
       if (membership.role == "Admin" && targetMembership.role == "Owner") {
