@@ -36,7 +36,7 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       ctx.req.log.debug("user.changeUsername");
 
-      if (ctx.session.user.username.toLowerCase() == "quizlet") {
+      if (ctx.session.user.username.toLowerCase() == "quenti") {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Unable to change official account username.",
@@ -105,7 +105,7 @@ export const userRouter = createTRPCRouter({
         message: "Unable to delete admin account.",
       });
     }
-    if (ctx.session.user.username.toLowerCase() == "quizlet") {
+    if (ctx.session.user.username.toLowerCase() == "quenti") {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Unable to delete official account.",

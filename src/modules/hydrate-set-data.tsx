@@ -102,7 +102,7 @@ export const HydrateSetData: React.FC<
   return (
     <ContextLayer data={createInjectedData(data)}>
       <Head>
-        <title>{data.title} | Quizlet.cc</title>
+        <title>{data.title} | Quenti</title>
       </Head>
       {children}
     </ContextLayer>

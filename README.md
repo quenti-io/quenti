@@ -1,4 +1,4 @@
-[![og:image](./public/og-image.png)](https://quizlet.cc)
+[![og:image](./public/og-image.png)](https://quenti)
 
 > Tired of Quizlet showing ads and only giving you a few practice rounds for free? Stop wasting your time getting bombarded by premium offers, and resume studying today.
 
@@ -30,13 +30,13 @@ Get up and running by following these steps.
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/miapolis/quizlet.cc
+   git clone https://github.com/miapolis/quenti
    ```
 
 2. Go to the project folder
 
    ```sh
-   cd quizlet.cc
+   cd quenti
    ```
 
 3. Install dependencies with yarn
@@ -97,4 +97,4 @@ yarn build
 yarn start
 ```
 
-Navigate to http://localhost:3000 and Quizlet.cc should be up and running!
+Navigate to http://localhost:3000 and Quenti should be up and running!

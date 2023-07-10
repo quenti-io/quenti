@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
 
       const bypass =
         user.email == env.ADMIN_EMAIL ||
-        (user.username && user.username.toLowerCase() == "quizlet");
+        (user.username && user.username.toLowerCase() == "quenti");
 
       if (!emailAllowed && !bypass) {
         const tenRecent = await prisma.recentFailedLogin.findMany({

@@ -2,8 +2,8 @@ import { Box, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { Arrow } from "../../components/landing/arrow";
 
-import quizletPlusSrc from "public/assets/landing/quizlet-plus.png";
 import continuedLearnSrc from "public/assets/landing/continued-learn.png";
+import quizletPlusSrc from "public/assets/landing/quizlet-plus.png";
 
 export const EngineeredLearn = () => {
   return (
@@ -84,7 +84,7 @@ export const EngineeredLearn = () => {
             </Box>
             <Stack spacing={4}>
               <Heading data-aos="fade" color="whiteAlpha.900">
-                With Our Learn
+                With Quenti Learn
               </Heading>
               <Text fontSize={{ base: "lg" }} color="gray.400" data-aos="fade">
                 Study, review and master the entire set, for free!

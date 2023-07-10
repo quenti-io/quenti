@@ -93,7 +93,7 @@ export const HydrateFolderData: React.FC<
   return (
     <ContextLayer data={folder.data}>
       <Head>
-        <title>{folder.data.title} | Quizlet.cc</title>
+        <title>{folder.data.title} | Quenti</title>
       </Head>
       {children}
     </ContextLayer>

@@ -52,7 +52,7 @@ const Onboarding: ComponentWithAuth = () => {
               <Heading size="3xl">👋</Heading>
             </motion.div>
             <motion.div variants={item}>
-              <Heading size="3xl">Welcome to Quizlet.cc!</Heading>
+              <Heading size="3xl">Welcome to Quenti!</Heading>
             </motion.div>
             <motion.div variants={item}>
               <Text fontSize="lg">

@@ -48,7 +48,7 @@ export const ComparisonChart = () => {
                 </Th>
                 <Th>Quizlet</Th>
                 <Th>Quizlet Plus</Th>
-                <Th color="blue.200">Quizlet.cc</Th>
+                <Th color="blue.200">Quenti</Th>
               </Tr>
             </Thead>
             <Tbody color="whiteAlpha.900">

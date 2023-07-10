@@ -27,7 +27,7 @@ export const Footer = () => {
     >
       <Container maxW="7xl" py="10">
         <Flex justifyContent="space-between" alignItems="center">
-          <Heading size="md">Quizlet.cc</Heading>
+          <Heading size="md">Quenti</Heading>
           <HStack gap={2}>
             <Authed
               fallback={

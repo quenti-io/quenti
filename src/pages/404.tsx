@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <StaticWrapper>
       <Head>
-        <title>404 | Quizlet.cc</title>
+        <title>404 | Quenti</title>
       </Head>
       <Center height="calc(100vh - 120px)">
         <VStack color="whiteAlpha.900">

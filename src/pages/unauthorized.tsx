@@ -42,7 +42,7 @@ export default function Unauthorized() {
   return (
     <StaticWrapper>
       <Head>
-        <title>Missing Acccess | Quizlet.cc</title>
+        <title>Missing Acccess | Quenti</title>
       </Head>
       <Center height="calc(100vh - 120px)" px="8" textAlign="center">
         <VStack color="whiteAlpha.900">
@@ -67,7 +67,7 @@ export default function Unauthorized() {
                 color="whiteAlpha.900"
                 fontWeight={600}
               >
-                Sorry, you don&apos;t have access to Quizlet.cc without a
+                Sorry, you don&apos;t have access to Quenti without a
                 verified email.
               </Text>
             </motion.div>

@@ -23,7 +23,7 @@ const ogLine = fetch(
 
 const ogAvatarUrl = (image: string) =>
   image.startsWith("/")
-    ? new URL(`../../../public/avatars/quizlet.png`, import.meta.url)
+    ? new URL(`../../../public/avatars/quenti.png`, import.meta.url)
     : image;
 
 const outfit = fetch(
@@ -168,7 +168,7 @@ export default async function handler(request: NextRequest, ctx: any) {
               }}
               tw="text-white text-3xl ml-4"
             >
-              Quizlet.cc
+              Quenti
             </div>
           </div>
         </div>
