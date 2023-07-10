@@ -394,4 +394,60 @@ export const organizationsRouter = createTRPCRouter({
         },
       });
     }),
+
+  removeMember: teacherProcedure
+    .input(
+      z.object({
+        orgId: z.string().cuid2(),
+        userId: z.string().cuid2(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const membership = await ctx.prisma.membership.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          orgId: input.orgId,
+          accepted: true,
+          OR: [{ role: "Admin" }, { role: "Owner" }],
+        },
+      });
+      if (!membership) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      const members = await ctx.prisma.membership.findMany({
+        where: {
+          orgId: input.orgId,
+        },
+      });
+
+      const targetMembership = members.find((m) => m.userId === input.userId);
+      if (!targetMembership) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const owners = members.filter((m) => m.role === "Owner");
+
+      if (membership.userId == input.userId) {
+        if (membership.role == "Owner" && owners.length == 1) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "Cannot remove yourself as the only owner of an organization",
+          });
+        }
+      }
+
+      if (membership.role == "Admin" && targetMembership.role == "Owner") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Must be an owner to remove an owner",
+        });
+      }
+
+      await ctx.prisma.membership.delete({
+        where: {
+          userId_orgId: {
+            userId: input.userId,
+            orgId: input.orgId,
+          },
+        },
+      });
+    }),
 });

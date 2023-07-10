@@ -1,5 +1,7 @@
 import { Button, ButtonGroup, Text } from "@chakra-ui/react";
 import { Modal } from "../../components/modal";
+import { useOrganization } from "../../hooks/use-organization";
+import { api } from "../../utils/api";
 
 export interface RemoveMemberModalProps {
   isOpen: boolean;
@@ -12,6 +14,15 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
   onClose,
   id,
 }) => {
+  const org = useOrganization();
+  const utils = api.useContext();
+  const removeMember = api.organizations.removeMember.useMutation({
+    onSuccess: async () => {
+      onClose();
+      await utils.organizations.get.invalidate();
+    },
+  });
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Modal.Overlay />
@@ -28,7 +39,17 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>
-            <Button>Remove member</Button>
+            <Button
+              isLoading={removeMember.isLoading}
+              onClick={() =>
+                removeMember.mutate({
+                  orgId: org!.id,
+                  userId: id,
+                })
+              }
+            >
+              Remove member
+            </Button>
           </ButtonGroup>
         </Modal.Footer>
       </Modal.Content>
