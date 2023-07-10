@@ -19,6 +19,7 @@ import { getColorFromId } from "../../utils/color";
 import { Link } from "../../components/link";
 import { api } from "../../utils/api";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
+import { useRouter } from "next/router";
 
 export interface OrganizationCardProps {
   id: string;
@@ -37,6 +38,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   icon = 0,
   skeleton,
 }) => {
+  const router = useRouter();
   const utils = api.useContext();
   const toast = useToast();
 
@@ -44,6 +46,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
     onSuccess: async () => {
       await utils.organizations.getBelonging.invalidate();
       if (acceptInvite.variables?.accept) {
+        await router.push(`/orgs/${slug}`);
         toast({
           title: `Successfully joined ${name}`,
           status: "success",

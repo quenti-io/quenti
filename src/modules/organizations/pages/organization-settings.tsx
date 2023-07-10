@@ -16,6 +16,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import type { MembershipRole } from "@prisma/client";
 import { IconLogout, IconSettings, IconTrash } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -38,6 +39,7 @@ export const OrganizationSettings = () => {
 
   const { data: org } = api.organizations.get.useQuery(slug, {
     enabled: !!slug,
+    retry: false,
   });
 
   const toast = useToast();
@@ -87,9 +89,12 @@ export const OrganizationSettings = () => {
     }
   }, [org]);
 
-  const isAdmin = org
-    ? org.members.find((x) => x.userId == session?.user?.id)?.role != "Member"
-    : false;
+  const role: MembershipRole = org
+    ? org.members.find((x) => x.userId == session?.user?.id)!.role
+    : "Member";
+
+  const isOwner = role == "Owner";
+  const isAdmin = role == "Admin" || isOwner;
 
   return (
     <Stack spacing="8">
@@ -105,7 +110,7 @@ export const OrganizationSettings = () => {
           setDeleteOpen(false);
         }}
       />
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex justifyContent="space-between" alignItems="center" h="40px">
         <HStack spacing="3">
           <Skeleton rounded="full" isLoaded={!!org}>
             <IconSettings />
@@ -221,12 +226,12 @@ export const OrganizationSettings = () => {
             colorScheme="red"
             variant="outline"
             leftIcon={
-              isAdmin ? <IconTrash size={18} /> : <IconLogout size={18} />
+              isOwner ? <IconTrash size={18} /> : <IconLogout size={18} />
             }
             w="max"
-            onClick={() => (isAdmin ? setDeleteOpen(true) : setLeaveOpen(true))}
+            onClick={() => (isOwner ? setDeleteOpen(true) : setLeaveOpen(true))}
           >
-            {isAdmin ? "Delete" : "Leave"} {org?.name || "Organization"}
+            {isOwner ? "Delete" : "Leave"} {org?.name || "Organization"}
           </Button>
         </Skeleton>
       </SettingsWrapper>

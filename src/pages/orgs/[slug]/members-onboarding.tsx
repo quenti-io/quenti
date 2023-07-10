@@ -24,6 +24,7 @@ export default function OrgMembersOnboarding() {
 
   const { data: org } = api.organizations.get.useQuery(slug, {
     enabled: !!slug,
+    retry: false,
   });
 
   const me = org

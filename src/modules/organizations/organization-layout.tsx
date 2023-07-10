@@ -15,6 +15,7 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
@@ -24,6 +25,7 @@ import React from "react";
 import { WithFooter } from "../../components/with-footer";
 import { api, type RouterOutputs } from "../../utils/api";
 import { organizationIcon } from "../../utils/icons";
+import { AnimatedXCircle } from "../../components/animated-icons/x";
 
 type BaseReturn = RouterOutputs["organizations"]["get"];
 type OrgMember = BaseReturn["members"][number];
@@ -40,17 +42,37 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
 }) => {
   const session = useSession();
   const router = useRouter();
+  const toast = useToast();
   const slug = router.query.slug as string;
 
   const borderColor = useColorModeValue("gray.300", "gray.700");
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
-  const { data: org } = api.organizations.get.useQuery(slug, {
+  const { data: org, error } = api.organizations.get.useQuery(slug, {
     enabled: !!slug && !!session.data?.user,
+    retry: false,
   });
   const me = org
     ? org.members.find((m) => m.user.id === session.data!.user!.id)
     : null;
+
+  React.useEffect(() => {
+    if (!error) return;
+
+    if (error.data?.httpStatus == 404) {
+      void (async () => {
+        await router.push("/orgs");
+      })();
+
+      toast({
+        title: "That organization does not exist",
+        status: "error",
+        icon: <AnimatedXCircle />,
+        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   const Icon = organizationIcon(org?.icon || 0);
 
