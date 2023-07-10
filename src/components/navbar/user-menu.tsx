@@ -12,6 +12,7 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import {
+  IconBuilding,
   IconChevronDown,
   IconLogout,
   IconMoon,
@@ -26,6 +27,7 @@ import React from "react";
 import { BASE_PAGES } from "../../pages/_app";
 import { avatarUrl } from "../../utils/avatar";
 import { MenuOption } from "../menu-option";
+import { TeacherOnly } from "../teacher-only";
 
 export const UserMenu = () => {
   const router = useRouter();
@@ -76,15 +78,31 @@ export const UserMenu = () => {
           </WrapItem>
         </Wrap>
       </MenuButton>
-      <MenuList bg={menuBg} py={0} overflow="hidden" w="max" marginTop={2}>
+      <MenuList
+        bg={menuBg}
+        py={0}
+        overflow="hidden"
+        w="max"
+        marginTop={2}
+        shadow="lg"
+      >
         <Link href={`/@${user.username}`} passHref>
           <MenuOption icon={<IconUser size={18} />} label="Profile" />
         </Link>
         <Link href="/settings" passHref>
           <MenuOption icon={<IconSettings size={18} />} label="Settings" />
         </Link>
+        <TeacherOnly>
+          <Link href="/orgs" passHref>
+            <MenuOption
+              icon={<IconBuilding size={18} />}
+              label="Organizations"
+            />
+          </Link>
+        </TeacherOnly>
         {!onStaticPage && (
           <>
+            <MenuDivider />
             <MenuOption
               icon={
                 colorMode == "dark" ? (
@@ -96,7 +114,6 @@ export const UserMenu = () => {
               label={colorMode == "dark" ? "Light mode" : "Dark mode"}
               onClick={toggleColorMode}
             />
-            <MenuDivider />
           </>
         )}
         <MenuOption

@@ -18,10 +18,12 @@ export const authOptions: NextAuthOptions = {
         session.user.username = user.username;
         session.user.displayName = user.displayName;
         session.user.admin = user.email == env.ADMIN_EMAIL;
+        session.user.type = user.type;
         session.user.banned = !!user.bannedAt;
         session.user.flags = user.flags;
         session.user.enableUsageData = user.enableUsageData;
         session.user.changelogVersion = user.changelogVersion;
+        session.user.organizationId = user.organizationId;
 
         session.version = version;
       }

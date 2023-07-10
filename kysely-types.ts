@@ -4,6 +4,18 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export const UserType = {
+  Student: "Student",
+  Teacher: "Teacher",
+} as const;
+export type UserType = (typeof UserType)[keyof typeof UserType];
+export const MembershipRole = {
+  Member: "Member",
+  Admin: "Admin",
+  Owner: "Owner",
+} as const;
+export type MembershipRole =
+  (typeof MembershipRole)[keyof typeof MembershipRole];
 export const StudySetVisibility = {
   Private: "Private",
   Unlisted: "Unlisted",
@@ -127,6 +139,20 @@ export type Leaderboard = {
   entityId: string;
   type: LeaderboardType;
 };
+export type Membership = {
+  id: string;
+  orgId: string;
+  userId: string;
+  accepted: Generated<number>;
+  role: MembershipRole;
+};
+export type Organization = {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: Generated<Timestamp>;
+  icon: Generated<number>;
+};
 export type RecentFailedLogin = {
   id: string;
   email: string;
@@ -195,6 +221,7 @@ export type User = {
   email: string | null;
   emailVerified: Timestamp | null;
   image: string | null;
+  type: Generated<UserType>;
   verified: Generated<number>;
   createdAt: Generated<Timestamp>;
   lastSeenAt: Generated<Timestamp>;
@@ -203,11 +230,16 @@ export type User = {
   flags: Generated<number>;
   enableUsageData: Generated<number>;
   changelogVersion: string;
+  organizationId: string | null;
 };
 export type VerificationToken = {
   identifier: string;
   token: string;
   expires: Timestamp;
+  expiresInDays: number | null;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp;
+  organizationId: string | null;
 };
 export type WhitelistedEmail = {
   email: string;
@@ -222,6 +254,8 @@ export type DB = {
   Folder: Folder;
   Highscore: Highscore;
   Leaderboard: Leaderboard;
+  Membership: Membership;
+  Organization: Organization;
   RecentFailedLogin: RecentFailedLogin;
   Session: Session;
   SetAutoSave: SetAutoSave;

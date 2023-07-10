@@ -18,6 +18,7 @@ import {
 import type { User } from "@prisma/client";
 import {
   IconBooks,
+  IconBuilding,
   IconCloudDownload,
   IconFolder,
   IconFolderPlus,
@@ -38,6 +39,7 @@ import { menuEventChannel } from "../events/menu";
 import { useShortcut } from "../hooks/use-shortcut";
 import { api } from "../utils/api";
 import { avatarUrl } from "../utils/avatar";
+import { useDevActions } from "../hooks/use-dev-actions";
 
 export interface CommandMenuProps {
   isOpen: boolean;
@@ -54,7 +56,7 @@ interface Entity {
   viewedAt: Date;
 }
 
-interface MenuOption {
+export interface MenuOption {
   icon: React.ReactNode;
   name: string;
   searchableName?: string;
@@ -72,6 +74,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 }) => {
   const router = useRouter();
   const session = useSession();
+  const devActions = useDevActions();
   const { colorMode, toggleColorMode } = useColorMode();
 
   const onSet = router.pathname == "/sets/[id]";
@@ -190,6 +193,15 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           shouldShow: () => window.location.pathname !== "/admin",
         });
       }
+      if (session.data?.user?.type == "Teacher") {
+        total.push({
+          icon: <IconBuilding />,
+          name: "Organizations",
+          label: "Navigate to your organizations",
+          action: (ctrl) => openLink(`/orgs`, ctrl),
+          shouldShow: () => window.location.pathname !== "/orgs",
+        });
+      }
 
       total.push({
         icon: <IconUser />,
@@ -235,6 +247,8 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         label: `Switch to ${colorMode == "dark" ? "light" : "dark"} mode`,
         action: toggleColorMode,
       });
+
+      if (env.NEXT_PUBLIC_DEPLOYMENT === undefined) total.push(...devActions);
 
       setOptions(total);
     },

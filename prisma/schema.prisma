@@ -52,6 +52,11 @@ model Session {
   @@index([userId])
 }
 
+enum UserType {
+  Student
+  Teacher
+}
+
 model User {
   id               String    @id @default(cuid())
   name             String?
@@ -59,6 +64,7 @@ model User {
   email            String?   @unique
   emailVerified    DateTime?
   image            String?
+  type             UserType  @default(Student)
   verified         Boolean   @default(false)
   createdAt        DateTime  @default(now())
   lastSeenAt       DateTime  @default(now())
@@ -67,24 +73,70 @@ model User {
   flags            Int       @default(0)
   enableUsageData  Boolean   @default(true)
   changelogVersion String
-  accounts         Account[]
-  sessions         Session[]
+  organizationId   String?
 
+  accounts       Account[]
+  sessions       Session[]
   studySets      StudySet[]
   folders        Folder[]
   setAutoSave    SetAutoSave?
   containers     Container[]
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
   highscores     Highscore[]
+  organizations  Membership[]
+
+  @@index([organizationId])
 }
 
 model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+  identifier     String
+  token          String        @unique
+  expires        DateTime
+  expiresInDays  Int?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organizationId String?       @unique
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@unique([identifier, token])
+  @@index([token])
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+  icon      Int      @default(0)
+
+  members     Membership[]
+  users       User[]
+  inviteToken VerificationToken?
+
+  @@unique([slug])
+}
+
+enum MembershipRole {
+  Member
+  Admin
+  Owner
+}
+
+model Membership {
+  id       String         @id @default(cuid())
+  orgId    String
+  userId   String
+  accepted Boolean        @default(false)
+  role     MembershipRole
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, orgId])
+  @@index([orgId])
+  @@index([userId])
 }
 
 model AllowedEmailRegex {

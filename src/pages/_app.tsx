@@ -64,11 +64,15 @@ const App: AppType<
     folderData?: { username: string; idOrSlug: string };
   } & JSX.IntrinsicAttributes
 > = ({ Component: _Component, pageProps: { session, ...pageProps } }) => {
-  const Component = _Component as NextComponentWithAuth;
+  const Component = _Component as NextComponentWithAuth & {
+    layout?: React.ComponentType;
+  };
   const router = useRouter();
   const base = env.NEXT_PUBLIC_BASE_URL;
   const pathname = router.pathname;
   const staticPage = BASE_PAGES.includes(pathname);
+
+  const Layout = Component.layout ?? React.Fragment;
 
   const children = (
     <>
@@ -86,11 +90,15 @@ const App: AppType<
             </title>
           </Head>
           <Auth>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </Auth>
         </HighlightBoundary>
       ) : (
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       )}
     </>
   );

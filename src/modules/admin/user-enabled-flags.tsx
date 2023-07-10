@@ -32,7 +32,7 @@ export const UserEnabledFlags = ({
         .sort()
         .map((f, i) => (
           <HStack key={i} spacing={4}>
-            <Text color={featureColor}>{f}</Text>
+            <Text color={featureColor}>{EnabledFeature[f]}</Text>
             <Switch
               isChecked={(flags & f) == f}
               onChange={(e) => {

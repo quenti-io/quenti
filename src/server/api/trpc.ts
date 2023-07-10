@@ -174,5 +174,26 @@ const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(
 
 export const adminProcedure = protectedProcedure.use(enforceUserIsAdmin);
 
+export const enforceUserIsTeacher = enforceUserIsAuthed.unstable_pipe(
+  ({ ctx, next }) => {
+    if (ctx.session.user.type !== "Teacher") {
+      throw new TRPCError({ code: "FORBIDDEN" });
+    }
+
+    return next();
+  }
+);
+
+export const teacherProcedure = protectedProcedure.use(enforceUserIsTeacher);
+
+export const enforceDevMode = t.middleware(({ next }) => {
+  if (env.SERVER_NAME !== undefined) {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+  return next();
+});
+
 export const lockedProcedure = (features: EnabledFeature[]) =>
   protectedProcedure.use(enforceEnabledFeatures(features));
+
+export const devProcedure = protectedProcedure.use(enforceDevMode);
