@@ -2,25 +2,18 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
-  Divider,
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
   Stack,
-  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import { IconLink } from "@tabler/icons-react";
-import { api } from "../../utils/api";
-import { env } from "../../env/client.mjs";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
+import { Modal } from "../../components/modal";
+import { env } from "../../env/client.mjs";
+import { api } from "../../utils/api";
 
 export interface InviteMemberModalProps {
   isOpen: boolean;
@@ -37,9 +30,6 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
 }) => {
   const utils = api.useContext();
   const toast = useToast();
-
-  const modalBg = useColorModeValue("white", "gray.800");
-  const dividerColor = useColorModeValue("gray.200", "gray.700");
 
   const createInvite = api.organizations.createInvite.useMutation({
     onSuccess: async (token) => {
@@ -61,25 +51,23 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
-      <ModalOverlay backdropFilter="blur(6px)" background="blackAlpha.400" />
-      <ModalContent rounded="lg" bg={modalBg} shadow="xl">
-        <ModalBody py="8" px="10">
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Invite organization member</Modal.Heading>
           <Stack spacing="6">
-            <Heading size="lg">Invite organization member</Heading>
-            <Stack spacing="6">
-              <FormControl>
-                <FormLabel>Email or username</FormLabel>
-                <Input placeholder="email@example.com" />
-              </FormControl>
-              <FormControl>
-                <Checkbox defaultChecked>Send an invite email</Checkbox>
-              </FormControl>
-            </Stack>
+            <FormControl>
+              <FormLabel>Email or username</FormLabel>
+              <Input placeholder="email@example.com" />
+            </FormControl>
+            <FormControl>
+              <Checkbox defaultChecked>Send an invite email</Checkbox>
+            </FormControl>
           </Stack>
-        </ModalBody>
-        <Divider borderColor={dividerColor} borderBottomWidth="2px" />
-        <ModalFooter px="10" py="6">
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
           <Flex justifyContent="space-between" w="full">
             <Button
               variant="link"
@@ -102,8 +90,8 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
               <Button colorScheme="blue">Invite</Button>
             </ButtonGroup>
           </Flex>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };
