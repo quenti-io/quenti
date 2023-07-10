@@ -78,7 +78,14 @@ export const UserMenu = () => {
           </WrapItem>
         </Wrap>
       </MenuButton>
-      <MenuList bg={menuBg} py={0} overflow="hidden" w="max" marginTop={2}>
+      <MenuList
+        bg={menuBg}
+        py={0}
+        overflow="hidden"
+        w="max"
+        marginTop={2}
+        shadow="lg"
+      >
         <Link href={`/@${user.username}`} passHref>
           <MenuOption icon={<IconUser size={18} />} label="Profile" />
         </Link>
