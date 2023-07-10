@@ -111,6 +111,14 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
                       You
                     </Tag>
                   )}
+                  {accepted && role !== "Member" && (
+                    <Tag
+                      size="sm"
+                      colorScheme={role == "Owner" ? "purple" : "gray"}
+                    >
+                      {role}
+                    </Tag>
+                  )}
                 </HStack>
               </SkeletonText>
             </Flex>
@@ -122,7 +130,7 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
                 skeletonHeight="3"
               >
                 <Text fontSize="sm" color="gray.500">
-                  {role} <b>&middot;</b> {user.email}
+                  {user.email}
                 </Text>
               </SkeletonText>
             </Flex>
