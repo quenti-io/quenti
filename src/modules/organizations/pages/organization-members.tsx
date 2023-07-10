@@ -16,6 +16,7 @@ import { api } from "../../../utils/api";
 import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
+import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationMember } from "../organization-member";
 
 export const OrganizationMembers = () => {
@@ -77,14 +78,14 @@ export const OrganizationMembers = () => {
             />
           </InputGroup>
         </Skeleton>
-        <Skeleton rounded="md" fitContent isLoaded={!!org}>
+        <OrganizationAdminOnly>
           <Button
             leftIcon={<IconPlus size={18} />}
             onClick={() => setInviteModalOpen(true)}
           >
             Add
           </Button>
-        </Skeleton>
+        </OrganizationAdminOnly>
       </HStack>
       <Stack pb="20">
         {me && (
