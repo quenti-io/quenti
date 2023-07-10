@@ -5,17 +5,26 @@ import {
   Flex,
   HStack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
   Skeleton,
   SkeletonText,
   Stack,
   Tag,
   Text,
-  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { MembershipRole, User } from "@prisma/client";
-import { IconDotsVertical, IconExternalLink } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconEdit,
+  IconExternalLink,
+  IconUserX,
+} from "@tabler/icons-react";
+import React from "react";
 import { Link } from "../../components/link";
+import { MenuOption } from "../../components/menu-option";
 import { useOrganization } from "../../hooks/use-organization";
 import { avatarUrl } from "../../utils/avatar";
 import { OrganizationAdminOnly } from "./organization-admin-only";
@@ -37,13 +46,18 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
 }) => {
   const org = useOrganization();
   const myRole: MembershipRole = org?.me?.role || "Member";
-  const borderColor = useColorModeValue("gray.100", "gray.750");
-  const bg = useColorModeValue("white", "gray.800");
-  const buttonGroupBg = useColorModeValue("gray.50", "gray.800");
+
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   const canManageMember =
     myRole !== "Member" &&
     (role == "Member" || (myRole == "Owner" && role !== "Owner"));
+
+  const borderColor = useColorModeValue("gray.100", "gray.750");
+  const bg = useColorModeValue("white", "gray.800");
+  const buttonGroupBg = useColorModeValue("gray.50", "gray.800");
+  const menuBg = useColorModeValue("white", "gray.800");
+  const redMenuColor = useColorModeValue("red.600", "red.200");
 
   return (
     <Box
@@ -119,25 +133,53 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
           rounded="md"
         >
           <Skeleton fitContent rounded="md" isLoaded={!skeleton}>
-            <Tooltip label="View public profile" placement="top">
-              <span>
-                <IconButton
-                  aria-label="View public profile"
-                  icon={<IconExternalLink size={18} />}
-                  as={Link}
-                  roundedRight={canManageMember ? "none" : "md"}
-                  href={`/@${user.username}`}
-                />
-              </span>
-            </Tooltip>
+            <IconButton
+              aria-label="View public profile"
+              icon={<IconExternalLink size={18} />}
+              as={Link}
+              roundedRight={canManageMember ? "none" : "md"}
+              href={`/@${user.username}`}
+            />
           </Skeleton>
           <OrganizationAdminOnly>
             {canManageMember && (
-              <IconButton
-                roundedLeft="none"
-                aria-label="Manage member"
-                icon={<IconDotsVertical size={18} />}
-              />
+              <Box position="relative">
+                <Menu
+                  placement="bottom-end"
+                  isOpen={menuOpen}
+                  onOpen={() => setMenuOpen(true)}
+                  onClose={() => setMenuOpen(false)}
+                >
+                  <MenuButton roundedLeft="none" as={IconButton} w="8" h="8">
+                    <Box w="8" display="flex" justifyContent="center">
+                      <IconDotsVertical size="18" />
+                    </Box>
+                  </MenuButton>
+                  <MenuList
+                    bg={menuBg}
+                    py={0}
+                    overflow="hidden"
+                    minW="auto"
+                    w="32"
+                    shadow="lg"
+                    display={menuOpen ? "block" : "none"}
+                  >
+                    <MenuOption
+                      icon={<IconEdit size={16} />}
+                      label="Edit"
+                      fontSize="sm"
+                      py="6px"
+                    />
+                    <MenuOption
+                      icon={<IconUserX size={16} />}
+                      label="Remove"
+                      fontSize="sm"
+                      py="6px"
+                      color={redMenuColor}
+                    />
+                  </MenuList>
+                </Menu>
+              </Box>
             )}
           </OrganizationAdminOnly>
         </ButtonGroup>

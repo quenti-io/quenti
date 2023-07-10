@@ -74,7 +74,7 @@ export const OrganizationMembers = () => {
           </Button>
         </Skeleton>
       </HStack>
-      <Stack>
+      <Stack pb="20">
         {me && (
           <OrganizationMember
             user={me.user}
