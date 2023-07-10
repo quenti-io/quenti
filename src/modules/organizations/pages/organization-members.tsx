@@ -4,6 +4,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Skeleton,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -12,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { api } from "../../../utils/api";
+import { plural } from "../../../utils/string";
 import { InviteMemberModal } from "../invite-member-modal";
 import { OrganizationMember } from "../organization-member";
 
@@ -47,23 +49,30 @@ export const OrganizationMembers = () => {
         />
       )}
       <HStack>
-        <InputGroup bg={menuBg} shadow="sm" rounded="md">
-          <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
-            <IconSearch size={18} />
-          </InputLeftElement>
-          <Input
-            placeholder="Search..."
-            pl="44px"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </InputGroup>
-        <Button
-          leftIcon={<IconPlus size={18} />}
-          onClick={() => setInviteModalOpen(true)}
-        >
-          Add
-        </Button>
+        <Skeleton rounded="md" fitContent isLoaded={!!org} w="full">
+          <InputGroup bg={menuBg} shadow="sm" rounded="md">
+            <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
+              <IconSearch size={18} />
+            </InputLeftElement>
+            <Input
+              placeholder={`Search ${plural(
+                org?.members.length || 0,
+                "member"
+              )}...`}
+              pl="44px"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </InputGroup>
+        </Skeleton>
+        <Skeleton rounded="md" fitContent isLoaded={!!org}>
+          <Button
+            leftIcon={<IconPlus size={18} />}
+            onClick={() => setInviteModalOpen(true)}
+          >
+            Add
+          </Button>
+        </Skeleton>
       </HStack>
       <Stack>
         {me && (
@@ -83,7 +92,7 @@ export const OrganizationMembers = () => {
                 accepted={m.accepted}
               />
             ))
-          : Array.from({ length: 5 }).map((_, i) => (
+          : Array.from({ length: 10 }).map((_, i) => (
               <OrganizationMember
                 key={i}
                 skeleton
