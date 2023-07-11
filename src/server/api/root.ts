@@ -1,5 +1,5 @@
 import { register } from "../prometheus";
-import { adminRouter } from "./routers/admin";
+import { adminRouter } from "./routers/admin/_router";
 import { autoSaveRouter } from "./routers/auto-save";
 import { containerRouter } from "./routers/container";
 import { devRouter } from "./routers/dev";

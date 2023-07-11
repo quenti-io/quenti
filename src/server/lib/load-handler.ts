@@ -23,7 +23,7 @@ export async function loadHandler<T extends Cache>(
     ).then((m: T["handlers"]) => {
       if (!m.default || typeof m.default != "function") {
         throw new Error(
-          `Unable to load handler ${handler}... either it doesn't exist or you're missing the default export.`
+          `Unable to load handler ${handler}... either it doesn't exist or you're missing the default export`
         );
       }
       return m.default;

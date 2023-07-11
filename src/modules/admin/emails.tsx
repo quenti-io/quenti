@@ -40,7 +40,7 @@ export const AdminEmails = () => {
   });
 
   const handleSubmit = async () => {
-    await whitelistEmail.mutateAsync(email);
+    await whitelistEmail.mutateAsync({ email });
   };
 
   return (
@@ -124,7 +124,7 @@ const Entry: React.FC<EntryProps> = ({ email, createdAt }) => {
   const { users } = useAdmin();
   const user = users.find((u) => u.email === email);
 
-  const removeEmail = api.admin.removeEmail.useMutation({
+  const whitelistEmail = api.admin.whitelistEmail.useMutation({
     onSuccess: async () => {
       await utils.admin.getWhitelist.refetch();
     },
@@ -155,8 +155,12 @@ const Entry: React.FC<EntryProps> = ({ email, createdAt }) => {
           variant="ghost"
           icon={<IconTrash />}
           aria-label="remove"
-          isLoading={removeEmail.isLoading && removeEmail.variables === email}
-          onClick={() => removeEmail.mutate(email)}
+          isLoading={
+            whitelistEmail.isLoading &&
+            whitelistEmail.variables?.delete &&
+            whitelistEmail.variables?.email == email
+          }
+          onClick={() => whitelistEmail.mutate({ email, delete: true })}
         />
       </Td>
     </Tr>
@@ -172,11 +176,6 @@ const FailedEntry: React.FC<RecentFailedLogin> = ({
 }) => {
   const utils = api.useContext();
   const allowFailedLogin = api.admin.allowFailedLogin.useMutation({
-    onSuccess: async () => {
-      await utils.admin.getWhitelist.refetch();
-    },
-  });
-  const removeFailedLogin = api.admin.removeFailedLogin.useMutation({
     onSuccess: async () => {
       await utils.admin.getWhitelist.refetch();
     },
@@ -200,9 +199,11 @@ const FailedEntry: React.FC<RecentFailedLogin> = ({
             icon={<IconPlus />}
             aria-label="remove"
             isLoading={
-              allowFailedLogin.isLoading && allowFailedLogin.variables === email
+              allowFailedLogin.isLoading &&
+              allowFailedLogin.variables?.email == email &&
+              allowFailedLogin.variables?.allow
             }
-            onClick={() => allowFailedLogin.mutate(email)}
+            onClick={() => allowFailedLogin.mutate({ email, allow: true })}
           />
           <IconButton
             size="sm"
@@ -210,10 +211,11 @@ const FailedEntry: React.FC<RecentFailedLogin> = ({
             icon={<IconTrash />}
             aria-label="remove"
             isLoading={
-              removeFailedLogin.isLoading &&
-              removeFailedLogin.variables === email
+              allowFailedLogin.isLoading &&
+              allowFailedLogin.variables?.email == email &&
+              !allowFailedLogin.variables?.allow
             }
-            onClick={() => removeFailedLogin.mutate(email)}
+            onClick={() => allowFailedLogin.mutate({ email, allow: false })}
           />
         </ButtonGroup>
       </Td>
