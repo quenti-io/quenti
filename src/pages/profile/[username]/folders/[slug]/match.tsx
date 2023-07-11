@@ -7,7 +7,7 @@ const Match: ComponentWithAuth = () => {
   return (
     <HydrateFolderData withTerms disallowDirty>
       <CreateMatchData>
-        <MatchContainer />;
+        <MatchContainer />
       </CreateMatchData>
     </HydrateFolderData>
   );

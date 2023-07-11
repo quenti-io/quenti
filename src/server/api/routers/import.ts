@@ -20,13 +20,8 @@ type ApiResponse = {
   };
 };
 
-const withProxy = (url: string) => {
-  return axios.get(
-    `http://api.scraperapi.com?api_key=${
-      env.SCRAPER_API_KEY
-    }&url=${encodeURIComponent(url)}`
-  );
-};
+// Chrome, macOS.
+const AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 
 export const importRouter = createTRPCRouter({
   fromUrl: protectedProcedure
@@ -48,8 +43,13 @@ export const importRouter = createTRPCRouter({
         register.getSingleMetric("fetch_import_requests_total") as Counter
       ).inc();
 
-      const response = await withProxy(
-        `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${LIMIT}&page=1`
+      const response = await axios.get(
+        `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${LIMIT}&page=1`,
+        {
+          headers: {
+            'User-Agent': AGENT
+          }
+        }
       );
       if (!response.data) {
         throw new TRPCError({
