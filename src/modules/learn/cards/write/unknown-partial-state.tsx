@@ -26,7 +26,7 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
   guess,
 }) => {
   const { id, container } = useAuthedSet();
-  const setMutlipleAnswerMode = useContainerContext(
+  const setMultipleAnswerMode = useContainerContext(
     (s) => s.setMultipleAnswerMode
   );
   const correctFromUnknown = useLearnContext((s) => s.correctFromUnknown);
@@ -34,10 +34,10 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
 
   const put = api.studiableTerms.put.useMutation();
   const apiSetMultipleAnswerMode =
-    api.container.setMutlipleAnswerMode.useMutation();
+    api.container.setMultipleAnswerMode.useMutation();
 
   const onRequireOne = () => {
-    setMutlipleAnswerMode("One");
+    setMultipleAnswerMode("One");
     correctFromUnknown(active.term.id);
 
     void (async () => {
@@ -58,7 +58,7 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
   };
 
   const onRequireAll = () => {
-    setMutlipleAnswerMode("All");
+    setMultipleAnswerMode("All");
     incorrectFromUnknown(active.term.id);
 
     void (async () => {
