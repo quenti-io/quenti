@@ -55,14 +55,17 @@ export const HydrateSetData: React.FC<
   const queryKey = status == "authenticated" ? "byId" : "getPublic";
   const { data, error, refetch, isFetchedAfterMount } = (
     api.studySets[queryKey] as typeof api.studySets.byId
-  ).useQuery(id, {
-    retry: false,
-    enabled: status !== "loading" && !!id && !isDirty,
-    onSuccess: (data) => {
-      if (isDirty) setIsDirty(false);
-      queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
-    },
-  });
+  ).useQuery(
+    { studySetId: id },
+    {
+      retry: false,
+      enabled: status !== "loading" && !!id && !isDirty,
+      onSuccess: (data) => {
+        if (isDirty) setIsDirty(false);
+        queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
+      },
+    }
+  );
 
   React.useEffect(() => {
     void (async () => {

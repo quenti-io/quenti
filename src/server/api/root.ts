@@ -12,7 +12,7 @@ import { profileRouter } from "./routers/profile";
 import { recentRouter } from "./routers/recent";
 import { shareResolverRouter } from "./routers/share-resolver";
 import { studiableTermsRouter } from "./routers/studiable-terms";
-import { studySetsRouter } from "./routers/study-sets";
+import { studySetsRouter } from "./routers/study-sets/_router";
 import { termsRouter } from "./routers/terms";
 import { userRouter } from "./routers/user/_router";
 import { createTRPCRouter } from "./trpc";

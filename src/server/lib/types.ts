@@ -12,6 +12,12 @@ export type UserContext = {
   prisma: PrismaClient;
 };
 
+export type DefaultContext = {
+  req: AxiomAPIRequest;
+  session: Session | null;
+  prisma: PrismaClient;
+};
+
 export type NonNullableUserContext = {
   req: AxiomAPIRequest;
   session: {

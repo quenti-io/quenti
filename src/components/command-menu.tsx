@@ -89,7 +89,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   };
 
   const getSetShareId = api.studySets.getShareId.useQuery(
-    router.query.id as string,
+    { studySetId: router.query.id as string },
     {
       enabled: false,
       refetchOnWindowFocus: false,

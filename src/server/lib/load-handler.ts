@@ -1,9 +1,8 @@
-import type { NonNullableUserContext } from "./types";
-
 interface Cache {
   handlers: {
     [key: string]: (args: {
-      ctx: NonNullableUserContext;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ctx: any;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       input: any;
     }) => unknown;

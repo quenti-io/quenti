@@ -53,7 +53,7 @@ export const HeadingArea = () => {
         actionText="Delete"
         isLoading={deleteSet.isLoading}
         onConfirm={() => {
-          deleteSet.mutate(id);
+          deleteSet.mutate({ studySetId: id });
         }}
       />
       <Stack spacing={4} maxW="1000px">
