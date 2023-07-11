@@ -14,7 +14,7 @@ import { shareResolverRouter } from "./routers/share-resolver";
 import { studiableTermsRouter } from "./routers/studiable-terms";
 import { studySetsRouter } from "./routers/study-sets";
 import { termsRouter } from "./routers/terms";
-import { userRouter } from "./routers/user";
+import { userRouter } from "./routers/user/_router";
 import { createTRPCRouter } from "./trpc";
 
 // Call register.metrics() to ensure the context is properly initialized on startup

@@ -38,9 +38,12 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
   );
   const debouncedUsername = useDebounce(usernameValue, 500);
 
-  const checkUsername = api.user.checkUsername.useQuery(debouncedUsername, {
-    enabled: !!debouncedUsername.length,
-  });
+  const checkUsername = api.user.checkUsername.useQuery(
+    { username: debouncedUsername },
+    {
+      enabled: !!debouncedUsername.length,
+    }
+  );
   const changeUsername = api.user.changeUsername.useMutation({
     onSuccess: () => onChange?.(),
   });
@@ -107,7 +110,7 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
             (disabledIfUnchanged &&
               usernameValue === session.data!.user!.username)
           }
-          onClick={() => changeUsername.mutate(usernameValue)}
+          onClick={() => changeUsername.mutate({ username: usernameValue })}
           isLoading={changeUsername.isLoading}
         >
           {buttonLabel}
