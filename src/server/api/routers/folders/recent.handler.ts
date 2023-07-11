@@ -1,5 +1,5 @@
 import type { NonNullableUserContext } from "../../../lib/types";
-import { getRecentFolders } from "../folders";
+import { getRecentFolders } from "./utils/recent";
 
 type RecentOptions = {
   ctx: NonNullableUserContext;

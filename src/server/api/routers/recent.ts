@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { getRecentFolders } from "./folders";
+import { getRecentFolders } from "./folders/utils/recent";
 import { getRecentStudySets } from "./study-sets";
 
 export const recentRouter = createTRPCRouter({
