@@ -32,72 +32,63 @@ const HANDLER_CACHE: AdminRouterHandlerCache = {
 
 export const adminRouter = createTRPCRouter({
   landing: adminProcedure.query(async ({ ctx }) => {
-    await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "landing");
+    await loadHandler(HANDLER_CACHE, "landing");
     return HANDLER_CACHE.handlers["landing"]!({ ctx });
   }),
   getUsers: adminProcedure.query(async ({ ctx }) => {
-    await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "get-users");
+    await loadHandler(HANDLER_CACHE, "get-users");
     return HANDLER_CACHE.handlers["get-users"]!({ ctx });
   }),
   getWhitelist: adminProcedure.query(async ({ ctx }) => {
-    await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "get-whitelist");
+    await loadHandler(HANDLER_CACHE, "get-whitelist");
     return HANDLER_CACHE.handlers["get-whitelist"]!({ ctx });
   }),
   verifyUser: adminProcedure
     .input(ZVerifyUserSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "verify-user");
+      await loadHandler(HANDLER_CACHE, "verify-user");
       return HANDLER_CACHE.handlers["verify-user"]!({ ctx, input });
     }),
   banUser: adminProcedure
     .input(ZBanUserSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "ban-user");
+      await loadHandler(HANDLER_CACHE, "ban-user");
       return HANDLER_CACHE.handlers["ban-user"]!({ ctx, input });
     }),
   setEnabledFlags: adminProcedure
     .input(ZSetEnabledFlagsSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-enabled-flags"
-      );
+      await loadHandler(HANDLER_CACHE, "set-enabled-flags");
       return HANDLER_CACHE.handlers["set-enabled-flags"]!({ ctx, input });
     }),
   allowFailedLogin: adminProcedure
     .input(ZAllowFailedLoginSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(
-        HANDLER_CACHE,
-        "allow-failed-login"
-      );
+      await loadHandler(HANDLER_CACHE, "allow-failed-login");
       return HANDLER_CACHE.handlers["allow-failed-login"]!({ ctx, input });
     }),
   whitelistEmail: adminProcedure
     .input(ZWhitelistEmailSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(
-        HANDLER_CACHE,
-        "whitelist-email"
-      );
+      await loadHandler(HANDLER_CACHE, "whitelist-email");
       return HANDLER_CACHE.handlers["whitelist-email"]!({ ctx, input });
     }),
   addRegex: adminProcedure
     .input(ZAddRegexSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "add-regex");
+      await loadHandler(HANDLER_CACHE, "add-regex");
       return HANDLER_CACHE.handlers["add-regex"]!({ ctx, input });
     }),
   editRegex: adminProcedure
     .input(ZEditRegexSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "edit-regex");
+      await loadHandler(HANDLER_CACHE, "edit-regex");
       return HANDLER_CACHE.handlers["edit-regex"]!({ ctx, input });
     }),
   removeRegex: adminProcedure
     .input(ZRemoveRegexSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<AdminRouterHandlerCache>(HANDLER_CACHE, "remove-regex");
+      await loadHandler(HANDLER_CACHE, "remove-regex");
       return HANDLER_CACHE.handlers["remove-regex"]!({ ctx, input });
     }),
 });

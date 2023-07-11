@@ -54,19 +54,13 @@ export const containerRouter = createTRPCRouter({
   setShuffle: protectedProcedure
     .input(ZSetShuffleSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-shuffle"
-      );
+      await loadHandler(HANDLER_CACHE, "set-shuffle");
       return HANDLER_CACHE.handlers["set-shuffle"]!({ ctx, input });
     }),
   setEnableCardsSorting: protectedProcedure
     .input(ZSetEnableCardsSortingSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-enable-cards-sorting"
-      );
+      await loadHandler(HANDLER_CACHE, "set-enable-cards-sorting");
       return HANDLER_CACHE.handlers["set-enable-cards-sorting"]!({
         ctx,
         input,
@@ -75,10 +69,7 @@ export const containerRouter = createTRPCRouter({
   setCardsStudyStarred: protectedProcedure
     .input(ZSetCardsStudyStarredSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-cards-study-starred"
-      );
+      await loadHandler(HANDLER_CACHE, "set-cards-study-starred");
       return HANDLER_CACHE.handlers["set-cards-study-starred"]!({
         ctx,
         input,
@@ -87,10 +78,7 @@ export const containerRouter = createTRPCRouter({
   setCardsAnswerWith: protectedProcedure
     .input(ZSetCardsAnswerWithSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-cards-answer-with"
-      );
+      await loadHandler(HANDLER_CACHE, "set-cards-answer-with");
       return HANDLER_CACHE.handlers["set-cards-answer-with"]!({
         ctx,
         input,
@@ -99,10 +87,7 @@ export const containerRouter = createTRPCRouter({
   setMatchStudyStarred: protectedProcedure
     .input(ZSetMatchStudyStarredSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-match-study-starred"
-      );
+      await loadHandler(HANDLER_CACHE, "set-match-study-starred");
       return HANDLER_CACHE.handlers["set-match-study-starred"]!({
         ctx,
         input,
@@ -111,28 +96,19 @@ export const containerRouter = createTRPCRouter({
   setStudyStarred: protectedProcedure
     .input(ZSetStudyStarredSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-study-starred"
-      );
+      await loadHandler(HANDLER_CACHE, "set-study-starred");
       return HANDLER_CACHE.handlers["set-study-starred"]!({ ctx, input });
     }),
   setAnswerMode: protectedProcedure
     .input(ZSetAnswerModeSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-answer-mode"
-      );
+      await loadHandler(HANDLER_CACHE, "set-answer-mode");
       return HANDLER_CACHE.handlers["set-answer-mode"]!({ ctx, input });
     }),
   setMultipleAnswerMode: protectedProcedure
     .input(ZSetMultipleAnswerModeSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-multiple-answer-mode"
-      );
+      await loadHandler(HANDLER_CACHE, "set-multiple-answer-mode");
       return HANDLER_CACHE.handlers["set-multiple-answer-mode"]!({
         ctx,
         input,
@@ -141,10 +117,7 @@ export const containerRouter = createTRPCRouter({
   setShuffleLearn: protectedProcedure
     .input(ZSetShuffleLearnSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-shuffle-learn"
-      );
+      await loadHandler(HANDLER_CACHE, "set-shuffle-learn");
       return HANDLER_CACHE.handlers["set-shuffle-learn"]!({ ctx, input });
     }),
   setExtendedFeedbackBank: lockedProcedure([
@@ -152,10 +125,7 @@ export const containerRouter = createTRPCRouter({
   ])
     .input(ZSetExtendedFeedbackBankSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-extended-feedback-bank"
-      );
+      await loadHandler(HANDLER_CACHE, "set-extended-feedback-bank");
       return HANDLER_CACHE.handlers["set-extended-feedback-bank"]!({
         ctx,
         input,
@@ -164,28 +134,19 @@ export const containerRouter = createTRPCRouter({
   starTerm: protectedProcedure
     .input(ZStarTermSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "star-term"
-      );
+      await loadHandler(HANDLER_CACHE, "star-term");
       return HANDLER_CACHE.handlers["star-term"]!({ ctx, input });
     }),
   unstarTerm: protectedProcedure
     .input(ZUnstarTermSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "unstar-term"
-      );
+      await loadHandler(HANDLER_CACHE, "unstar-term");
       return HANDLER_CACHE.handlers["unstar-term"]!({ ctx, input });
     }),
   completeLearnRound: protectedProcedure
     .input(ZCompleteLearnRoundSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "complete-learn-round"
-      );
+      await loadHandler(HANDLER_CACHE, "complete-learn-round");
       return HANDLER_CACHE.handlers["complete-learn-round"]!({
         ctx,
         input,
@@ -194,10 +155,7 @@ export const containerRouter = createTRPCRouter({
   completeCardsRound: protectedProcedure
     .input(ZCompleteCardsRoundSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "complete-cards-round"
-      );
+      await loadHandler(HANDLER_CACHE, "complete-cards-round");
       return HANDLER_CACHE.handlers["complete-cards-round"]!({
         ctx,
         input,
@@ -206,10 +164,7 @@ export const containerRouter = createTRPCRouter({
   resetCardsProgress: protectedProcedure
     .input(ZResetCardsProgressSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "reset-cards-progress"
-      );
+      await loadHandler(HANDLER_CACHE, "reset-cards-progress");
       return HANDLER_CACHE.handlers["reset-cards-progress"]!({
         ctx,
         input,
@@ -218,10 +173,7 @@ export const containerRouter = createTRPCRouter({
   resetLearnProgress: protectedProcedure
     .input(ZResetLearnProgressSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "reset-learn-progress"
-      );
+      await loadHandler(HANDLER_CACHE, "reset-learn-progress");
       return HANDLER_CACHE.handlers["reset-learn-progress"]!({
         ctx,
         input,
@@ -230,10 +182,7 @@ export const containerRouter = createTRPCRouter({
   beginReview: protectedProcedure
     .input(ZBeginReviewSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<ContainerRouterHandlerCache>(
-        HANDLER_CACHE,
-        "begin-review"
-      );
+      await loadHandler(HANDLER_CACHE, "begin-review");
       return HANDLER_CACHE.handlers["begin-review"]!({ ctx, input });
     }),
 });

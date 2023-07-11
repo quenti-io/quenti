@@ -32,65 +32,59 @@ const HANDLER_CACHE: FoldersRouterHandlerCache = {
 
 export const foldersRouter = createTRPCRouter({
   get: protectedProcedure.input(ZGetSchema).query(async ({ ctx, input }) => {
-    await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "get");
+    await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers["get"]!({ ctx, input });
   }),
   recent: protectedProcedure.query(async ({ ctx }) => {
-    await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "recent");
+    await loadHandler(HANDLER_CACHE, "recent");
     return HANDLER_CACHE.handlers["recent"]!({ ctx });
   }),
   recentForSetAdd: protectedProcedure
     .input(ZRecentForSetAddSchema)
     .query(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(
-        HANDLER_CACHE,
-        "recent-for-set-add"
-      );
+      await loadHandler(HANDLER_CACHE, "recent-for-set-add");
       return HANDLER_CACHE.handlers["recent-for-set-add"]!({ ctx, input });
     }),
   getShareId: protectedProcedure
     .input(ZGetShareIdSchema)
     .query(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(
-        HANDLER_CACHE,
-        "get-share-id"
-      );
+      await loadHandler(HANDLER_CACHE, "get-share-id");
       return HANDLER_CACHE.handlers["get-share-id"]!({ ctx, input });
     }),
   create: protectedProcedure
     .input(ZCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "create");
+      await loadHandler(HANDLER_CACHE, "create");
       return HANDLER_CACHE.handlers["create"]!({ ctx, input });
     }),
   edit: protectedProcedure
     .input(ZEditSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "edit");
+      await loadHandler(HANDLER_CACHE, "edit");
       return HANDLER_CACHE.handlers["edit"]!({ ctx, input });
     }),
   addSets: protectedProcedure
     .input(ZAddSetsSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "add-sets");
+      await loadHandler(HANDLER_CACHE, "add-sets");
       return HANDLER_CACHE.handlers["add-sets"]!({ ctx, input });
     }),
   delete: protectedProcedure
     .input(ZDeleteSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "delete");
+      await loadHandler(HANDLER_CACHE, "delete");
       return HANDLER_CACHE.handlers["delete"]!({ ctx, input });
     }),
   removeSet: protectedProcedure
     .input(ZRemoveSetSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "remove-set");
+      await loadHandler(HANDLER_CACHE, "remove-set");
       return HANDLER_CACHE.handlers["remove-set"]!({ ctx, input });
     }),
   starTerm: protectedProcedure
     .input(ZStarTermSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<FoldersRouterHandlerCache>(HANDLER_CACHE, "star-term");
+      await loadHandler(HANDLER_CACHE, "star-term");
       return HANDLER_CACHE.handlers["star-term"]!({ ctx, input });
     }),
 });
