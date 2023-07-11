@@ -4,7 +4,7 @@ import { autoSaveRouter } from "./routers/auto-save/_router";
 import { containerRouter } from "./routers/container/_router";
 import { devRouter } from "./routers/dev";
 import { discoverableRouter } from "./routers/discoverable";
-import { foldersRouter } from "./routers/folders";
+import { foldersRouter } from "./routers/folders/_router";
 import { importRouter } from "./routers/import";
 import { leaderboardRouter } from "./routers/leaderboard";
 import { organizationsRouter } from "./routers/organizations";

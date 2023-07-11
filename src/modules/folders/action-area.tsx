@@ -63,7 +63,7 @@ export const ActionArea = () => {
         actionText="Delete"
         isLoading={deleteFolder.isLoading}
         onConfirm={() => {
-          deleteFolder.mutate(id);
+          deleteFolder.mutate({ folderId: id });
         }}
       />
       <EditFolderModal isOpen={editOpen} onClose={() => setEditOpen(false)} />
