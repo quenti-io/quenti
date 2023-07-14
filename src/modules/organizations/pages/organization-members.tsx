@@ -25,10 +25,13 @@ export const OrganizationMembers = () => {
   const slug = router.query.slug as string;
   const { data: session } = useSession();
 
-  const { data: org } = api.organizations.get.useQuery(slug, {
-    enabled: !!slug,
-    retry: false,
-  });
+  const { data: org } = api.organizations.get.useQuery(
+    { slug },
+    {
+      enabled: !!slug,
+      retry: false,
+    }
+  );
 
   const me = org
     ? org.members.find((m) => m.userId == session?.user?.id)

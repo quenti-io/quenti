@@ -76,7 +76,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                 if (token) {
                   await copyInviteLink();
                 } else {
-                  await createInvite.mutateAsync(orgId);
+                  await createInvite.mutateAsync({ orgId });
                 }
               }}
               isLoading={createInvite.isLoading}

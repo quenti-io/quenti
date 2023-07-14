@@ -45,7 +45,7 @@ export const DeleteOrganizationModal: React.FC<
             </Button>
             <Button
               onClick={() => {
-                apiDelete.mutate(org!.id);
+                apiDelete.mutate({ orgId: org!.id });
               }}
               isLoading={apiDelete.isLoading}
               colorScheme="red"

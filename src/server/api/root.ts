@@ -7,7 +7,7 @@ import { discoverableRouter } from "./routers/discoverable";
 import { foldersRouter } from "./routers/folders/_router";
 import { importRouter } from "./routers/import";
 import { leaderboardRouter } from "./routers/leaderboard/_router";
-import { organizationsRouter } from "./routers/organizations";
+import { organizationsRouter } from "./routers/organizations/_router";
 import { profileRouter } from "./routers/profile";
 import { recentRouter } from "./routers/recent";
 import { shareResolverRouter } from "./routers/share-resolver";
