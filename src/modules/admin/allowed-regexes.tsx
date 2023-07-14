@@ -49,7 +49,8 @@ export const AllowedRegexes = () => {
         actionText="Delete"
         isLoading={removeRegex.isLoading}
         onConfirm={() => {
-          if (currentRegex !== undefined) removeRegex.mutate(currentRegex);
+          if (currentRegex !== undefined)
+            removeRegex.mutate({ regex: currentRegex });
         }}
       />
       {!!emails?.data && (

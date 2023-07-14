@@ -28,9 +28,12 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
   const primaryBg = useColorModeValue("gray.200", "gray.800");
   const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
-  const getShareId = api.folders.getShareId.useQuery(id, {
-    enabled: isOpen,
-  });
+  const getShareId = api.folders.getShareId.useQuery(
+    { folderId: id },
+    {
+      enabled: isOpen,
+    }
+  );
   const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
 
   const [copied, setCopied] = React.useState(false);

@@ -1,0 +1,55 @@
+import { TRPCError } from "@trpc/server";
+import type { NonNullableUserContext } from "../../../lib/types";
+import type { TGetSchema } from "./get.schema";
+
+type GetOptions = {
+  ctx: NonNullableUserContext;
+  input: TGetSchema;
+};
+
+export const getHandler = async ({ ctx, input }: GetOptions) => {
+  const org = await ctx.prisma.organization.findFirst({
+    where: {
+      slug: input.slug,
+      members: {
+        some: {
+          userId: ctx.session.user.id,
+        },
+      },
+    },
+    include: {
+      members: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+              email: true,
+              // TODO: include classes
+            },
+          },
+        },
+      },
+      inviteToken: {
+        select: {
+          token: true,
+          expires: true,
+          expiresInDays: true,
+        },
+      },
+      _count: {
+        select: {
+          users: true,
+        },
+      },
+    },
+  });
+
+  if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+
+  return org;
+};
+
+export default getHandler;

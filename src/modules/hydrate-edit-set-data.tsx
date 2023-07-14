@@ -4,8 +4,8 @@ import React from "react";
 import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
 import {
-  createSetEditorStore,
   SetEditorStoreContext,
+  createSetEditorStore,
   type SetEditorStore,
 } from "../stores/use-set-editor-store";
 import { api, type RouterOutputs } from "../utils/api";
@@ -18,24 +18,27 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   const id = router.query.id as string;
   const { loading } = useLoading();
 
-  const { data } = api.studySets.byId.useQuery(id, {
-    retry: false,
-    enabled: !!id,
-    onError: (e) => {
-      if (e.data?.httpStatus == 403) {
-        void (async () => {
-          await router.push("/[id]", `/${id}`);
-        })();
-      }
-    },
-    onSuccess: (data) => {
-      if (data.userId !== session.data?.user?.id) {
-        void (async () => {
-          await router.push("/[id]", `/${id}`);
-        })();
-      }
-    },
-  });
+  const { data } = api.studySets.byId.useQuery(
+    { studySetId: id },
+    {
+      retry: false,
+      enabled: !!id,
+      onError: (e) => {
+        if (e.data?.httpStatus == 403) {
+          void (async () => {
+            await router.push("/[id]", `/${id}`);
+          })();
+        }
+      },
+      onSuccess: (data) => {
+        if (data.userId !== session.data?.user?.id) {
+          void (async () => {
+            await router.push("/[id]", `/${id}`);
+          })();
+        }
+      },
+    }
+  );
 
   if (loading || !data || data.userId !== session.data?.user?.id)
     return <Loading />;

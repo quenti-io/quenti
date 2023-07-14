@@ -11,21 +11,24 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { IconUserPlus } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { api } from "../../../utils/api";
 import { avatarUrl } from "../../../utils/avatar";
-import { useSession } from "next-auth/react";
 
 export default function OrgMembersOnboarding() {
   const router = useRouter();
   const slug = router.query.slug as string;
   const { data: session } = useSession();
 
-  const { data: org } = api.organizations.get.useQuery(slug, {
-    enabled: !!slug,
-    retry: false,
-  });
+  const { data: org } = api.organizations.get.useQuery(
+    { slug },
+    {
+      enabled: !!slug,
+      retry: false,
+    }
+  );
 
   const me = org
     ? org.members.find((m) => m.userId == session?.user?.id)?.user

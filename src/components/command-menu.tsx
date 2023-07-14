@@ -89,7 +89,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   };
 
   const getSetShareId = api.studySets.getShareId.useQuery(
-    router.query.id as string,
+    { studySetId: router.query.id as string },
     {
       enabled: false,
       refetchOnWindowFocus: false,
@@ -97,7 +97,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
     }
   );
 
-  const getFolderShareId = api.folders.getShareIdByUsername.useQuery(
+  const getFolderShareId = api.folders.getShareId.useQuery(
     {
       idOrSlug: router.query.slug as string,
       username: ((router.query.username as string) || "").slice(1),

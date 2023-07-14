@@ -37,10 +37,13 @@ export const OrganizationSettings = () => {
   const utils = api.useContext();
   const slug = router.query.slug as string;
 
-  const { data: org } = api.organizations.get.useQuery(slug, {
-    enabled: !!slug,
-    retry: false,
-  });
+  const { data: org } = api.organizations.get.useQuery(
+    { slug },
+    {
+      enabled: !!slug,
+      retry: false,
+    }
+  );
 
   const toast = useToast();
   const inputBg = useColorModeValue("white", "gray.900");

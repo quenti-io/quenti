@@ -1,6 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { getRecentFolders } from "./folders";
-import { getRecentStudySets } from "./study-sets";
+import { getRecentFolders } from "./folders/utils/recent";
+import { getRecentStudySets } from "./study-sets/utils/recent";
 
 export const recentRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {

@@ -1,20 +1,20 @@
 import { register } from "../prometheus";
-import { adminRouter } from "./routers/admin";
-import { autoSaveRouter } from "./routers/auto-save";
-import { containerRouter } from "./routers/container";
+import { adminRouter } from "./routers/admin/_router";
+import { autoSaveRouter } from "./routers/auto-save/_router";
+import { containerRouter } from "./routers/container/_router";
 import { devRouter } from "./routers/dev";
 import { discoverableRouter } from "./routers/discoverable";
-import { foldersRouter } from "./routers/folders";
+import { foldersRouter } from "./routers/folders/_router";
 import { importRouter } from "./routers/import";
-import { leaderboardRouter } from "./routers/leaderboard";
-import { organizationsRouter } from "./routers/organizations";
+import { leaderboardRouter } from "./routers/leaderboard/_router";
+import { organizationsRouter } from "./routers/organizations/_router";
 import { profileRouter } from "./routers/profile";
 import { recentRouter } from "./routers/recent";
 import { shareResolverRouter } from "./routers/share-resolver";
 import { studiableTermsRouter } from "./routers/studiable-terms";
-import { studySetsRouter } from "./routers/study-sets";
-import { termsRouter } from "./routers/terms";
-import { userRouter } from "./routers/user";
+import { studySetsRouter } from "./routers/study-sets/_router";
+import { termsRouter } from "./routers/terms/_router";
+import { userRouter } from "./routers/user/_router";
 import { createTRPCRouter } from "./trpc";
 
 // Call register.metrics() to ensure the context is properly initialized on startup

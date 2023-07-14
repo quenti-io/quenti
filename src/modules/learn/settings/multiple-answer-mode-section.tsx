@@ -20,7 +20,7 @@ export const MultipleAnswerModeSection: React.FC = () => {
   );
 
   const apiSetMultipleAnswerMode =
-    api.container.setMutlipleAnswerMode.useMutation();
+    api.container.setMultipleAnswerMode.useMutation();
 
   return (
     <Flex gap={4} direction="column">

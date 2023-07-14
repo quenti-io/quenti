@@ -66,7 +66,7 @@ export const CompletedView = () => {
                   size="lg"
                   isLoading={beginReview.isLoading}
                   onClick={async () => {
-                    await beginReview.mutateAsync(id);
+                    await beginReview.mutateAsync({ entityId: id });
                   }}
                 >
                   Review Missed Terms

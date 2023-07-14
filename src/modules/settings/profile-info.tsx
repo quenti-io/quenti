@@ -44,7 +44,7 @@ export const ProfileInfo = () => {
             isChecked={checked}
             onChange={(e) => {
               setChecked(e.target.checked);
-              setDisplayName.mutate(e.target.checked);
+              setDisplayName.mutate({ displayName: e.target.checked });
             }}
           />
           <Text color={grayText} fontSize="sm">

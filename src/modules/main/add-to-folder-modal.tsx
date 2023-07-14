@@ -41,7 +41,7 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
   const { id } = useSet();
 
   const { data, isLoading, refetch } = api.folders.recentForSetAdd.useQuery(
-    id,
+    { studySetId: id },
     {
       enabled: isOpen,
     }

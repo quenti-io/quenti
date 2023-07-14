@@ -55,7 +55,7 @@ export const DataUsage = () => {
             isChecked={enabled}
             onChange={(e) => {
               setEnabled(e.target.checked);
-              setEnabledUsageData.mutate(e.target.checked);
+              setEnabledUsageData.mutate({ enableUsageData: e.target.checked });
             }}
           />
           <Text color={grayText} fontSize="sm">

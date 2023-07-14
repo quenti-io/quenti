@@ -32,9 +32,12 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
   const primaryBg = useColorModeValue("gray.200", "gray.800");
   const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
-  const getShareId = api.studySets.getShareId.useQuery(id, {
-    enabled: isOpen && visibility !== "Private",
-  });
+  const getShareId = api.studySets.getShareId.useQuery(
+    { studySetId: id },
+    {
+      enabled: isOpen && visibility !== "Private",
+    }
+  );
   const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
 
   const [copied, setCopied] = React.useState(false);
