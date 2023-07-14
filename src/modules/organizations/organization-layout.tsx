@@ -48,10 +48,13 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const borderColor = useColorModeValue("gray.300", "gray.700");
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
-  const { data: org, error } = api.organizations.get.useQuery(slug, {
-    enabled: !!slug && !!session.data?.user,
-    retry: false,
-  });
+  const { data: org, error } = api.organizations.get.useQuery(
+    { slug },
+    {
+      enabled: !!slug && !!session.data?.user,
+      retry: false,
+    }
+  );
   const me = org
     ? org.members.find((m) => m.user.id === session.data!.user!.id)
     : null;
