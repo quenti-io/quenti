@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { USERNAME_REGEXP } from "../src/constants/characters";
 import { PrismaClient } from "@prisma/client";
 
-const NUM_STUDENTS = 100;
+const NUM_STUDENTS = 10000;
 const prisma = new PrismaClient();
 
 const main = async () => {
@@ -21,18 +21,19 @@ const main = async () => {
 
     let username = "";
     while (!username.length || !USERNAME_REGEXP.test(username)) {
-      username = faker.internet
-        .userName({
-          firstName: name.split(" ")[0],
-          lastName: name.split(" ")[1],
-        })
-        .replace(".", "");
+      username =
+        faker.internet
+          .userName({
+            firstName: name.split(" ")[0],
+            lastName: name.split(" ")[1],
+          })
+          .replace(".", "") + i.toString();
     }
 
     users.push({
       name,
       username,
-      email,
+      email: email.replace("@", `+${i}@`),
       image,
     });
   }
@@ -55,9 +56,20 @@ const main = async () => {
     });
   }
 
-  await prisma.user.createMany({
-    data: users.map((u) => ({ ...u, changelogVersion: "" })),
-  });
+  const chunkSize = 1000;
+  const chunks = [];
+  for (let i = 0; i < users.length; i += chunkSize) {
+    const chunk = users.slice(i, i + chunkSize);
+    chunks.push(chunk);
+  }
+
+  for (const chunk of chunks) {
+    console.log(`Inserting chunk with ${chunk.length} users...`);
+    await prisma.user.createMany({
+      data: chunk.map((u) => ({ ...u, changelogVersion: "" })),
+    });
+  }
+
   console.log(`Created ${NUM_STUDENTS} users`);
 };
 
