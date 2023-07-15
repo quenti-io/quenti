@@ -79,11 +79,11 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
 
   const Icon = organizationIcon(org?.icon || 0);
 
-  const getTabIndex = (route = router.asPath) => {
+  const getTabIndex = (route = router.pathname) => {
     switch (route) {
       case `/orgs/[slug]`:
         return 0;
-      case `/orgs/[slug]/users`:
+      case `/orgs/[slug]/students`:
         return 1;
       case `/orgs/[slug]/settings`:
         return 2;
