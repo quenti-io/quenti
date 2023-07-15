@@ -98,6 +98,8 @@ export default function Organizations() {
                       icon={org.icon}
                       key={org.id}
                       accepted={org.accepted}
+                      members={org._count.members}
+                      students={org._count.users}
                     />
                   ))
               : Array.from({ length: 12 }).map((_, i) => (
@@ -107,6 +109,8 @@ export default function Organizations() {
                     slug=""
                     skeleton
                     key={i}
+                    members={0}
+                    students={0}
                   />
                 ))}
           </SimpleGrid>
