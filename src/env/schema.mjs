@@ -25,6 +25,7 @@ export const serverSchema = z.object({
   METRICS_API_USER: z.string(),
   METRICS_API_PASSWORD: z.string(),
   GRAFANA_DASHBOARD_URL: z.string().url().optional(),
+  STRIPE_PRIVATE_KEY: z.string().optional(),
   SERVER_NAME: z.enum(["production", "staging"]).optional(),
 });
 
@@ -40,6 +41,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_DEPLOYMENT: deployment,
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string().optional(),
   NEXT_PUBLIC_BETTERUPTIME_ID: z.string().optional(),
+  NEXT_PUBLIC_STRIPE_PUBLIC_KEY: z.string().optional(),
 });
 
 /**
@@ -54,4 +56,5 @@ export const clientEnv = {
   NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID:
     process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID,
   NEXT_PUBLIC_BETTERUPTIME_ID: process.env.NEXT_PUBLIC_BETTERUPTIME_ID,
+  NEXT_PUBLIC_STRIPE_PUBLIC_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
 };
