@@ -152,6 +152,11 @@ export type Organization = {
   slug: string;
   createdAt: Generated<Timestamp>;
   icon: Generated<number>;
+  published: Generated<number>;
+  /**
+   * @zod.custom(imports.orgMetadataSchema)
+   */
+  metadata: unknown | null;
 };
 export type RecentFailedLogin = {
   id: string;

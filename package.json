@@ -67,6 +67,7 @@
     "superjson": "1.12.4",
     "use-fit-text": "^2.4.0",
     "zod": "^3.21.4",
+    "zod-prisma": "^0.5.4",
     "zustand": "^4.3.9"
   },
   "devDependencies": {

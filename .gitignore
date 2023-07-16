@@ -11,6 +11,7 @@ node_modules
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
+/prisma/zod
 
 # next.js
 /.next/
