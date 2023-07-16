@@ -29,7 +29,7 @@ export const OrganizationMembers = () => {
   const { data: org } = api.organizations.get.useQuery(
     { slug },
     {
-      enabled: !!slug,
+      enabled: !!slug && !!session?.user,
       retry: false,
     }
   );
