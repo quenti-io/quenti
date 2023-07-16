@@ -10,7 +10,7 @@
       }
     },
     {
-      "files": ["src/server/**/*"],
+      "files": ["src/server/**/*", "scripts/**/*", "prisma-seed.ts"],
       "rules": {
         "no-restricted-syntax": "off"
       }

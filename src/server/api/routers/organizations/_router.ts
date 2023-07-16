@@ -6,6 +6,7 @@ import { ZCreateInviteSchema } from "./create-invite.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZEditMemberRoleSchema } from "./edit-member-role.schema";
+import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
@@ -15,6 +16,7 @@ type OrganizationsRouterHandlerCache = {
   handlers: {
     ["get-belonging"]?: typeof import("./get-belonging.handler").getBelongingHandler;
     get?: typeof import("./get.handler").getHandler;
+    ["get-students"]?: typeof import("./get-students.handler").getStudentsHandler;
     create?: typeof import("./create.handler").createHandler;
     update?: typeof import("./update.handler").updateHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
@@ -34,95 +36,71 @@ const HANDLER_CACHE: OrganizationsRouterHandlerCache = {
 
 export const organizationsRouter = createTRPCRouter({
   getBelonging: teacherProcedure.query(async ({ ctx }) => {
-    await loadHandler<OrganizationsRouterHandlerCache>(
-      HANDLER_CACHE,
-      "get-belonging"
-    );
+    await loadHandler(HANDLER_CACHE, "get-belonging");
     return HANDLER_CACHE.handlers["get-belonging"]!({ ctx });
   }),
   get: teacherProcedure.input(ZGetSchema).query(async ({ ctx, input }) => {
-    await loadHandler<OrganizationsRouterHandlerCache>(HANDLER_CACHE, "get");
+    await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers["get"]!({ ctx, input });
   }),
+  getStudents: teacherProcedure
+    .input(ZGetStudentsSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-students");
+      return HANDLER_CACHE.handlers["get-students"]!({ ctx, input });
+    }),
   create: teacherProcedure
     .input(ZCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "create"
-      );
+      await loadHandler(HANDLER_CACHE, "create");
       return HANDLER_CACHE.handlers["create"]!({ ctx, input });
     }),
   update: teacherProcedure
     .input(ZUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "update"
-      );
+      await loadHandler(HANDLER_CACHE, "update");
       return HANDLER_CACHE.handlers["update"]!({ ctx, input });
     }),
   delete: teacherProcedure
     .input(ZDeleteSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "delete"
-      );
+      await loadHandler(HANDLER_CACHE, "delete");
       return HANDLER_CACHE.handlers["delete"]!({ ctx, input });
     }),
   createInvite: teacherProcedure
     .input(ZCreateInviteSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "create-invite"
-      );
+      await loadHandler(HANDLER_CACHE, "create-invite");
       return HANDLER_CACHE.handlers["create-invite"]!({ ctx, input });
     }),
   setInviteExpiration: teacherProcedure
     .input(ZSetInviteExpirationSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "set-invite-expiration"
-      );
+      await loadHandler(HANDLER_CACHE, "set-invite-expiration");
       return HANDLER_CACHE.handlers["set-invite-expiration"]!({ ctx, input });
     }),
   acceptToken: teacherProcedure
     .input(ZAcceptTokenSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "accept-token"
-      );
+      await loadHandler(HANDLER_CACHE, "accept-token");
       return HANDLER_CACHE.handlers["accept-token"]!({ ctx, input });
     }),
   acceptInvite: teacherProcedure
     .input(ZAcceptInviteSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "accept-invite"
-      );
+      await loadHandler(HANDLER_CACHE, "accept-invite");
       return HANDLER_CACHE.handlers["accept-invite"]!({ ctx, input });
     }),
   editMemberRole: teacherProcedure
     .input(ZEditMemberRoleSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "edit-member-role"
-      );
+      await loadHandler(HANDLER_CACHE, "edit-member-role");
       return HANDLER_CACHE.handlers["edit-member-role"]!({ ctx, input });
     }),
   removeMember: teacherProcedure
     .input(ZRemoveMemberSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<OrganizationsRouterHandlerCache>(
-        HANDLER_CACHE,
-        "remove-member"
-      );
+      await loadHandler(HANDLER_CACHE, "remove-member");
       return HANDLER_CACHE.handlers["remove-member"]!({ ctx, input });
     }),
 });

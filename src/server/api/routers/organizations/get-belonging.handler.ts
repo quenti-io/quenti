@@ -25,6 +25,7 @@ export const getBelongingHandler = async ({ ctx }: GetBeloningOptions) => {
       _count: {
         select: {
           users: true,
+          members: true,
         },
       },
     },

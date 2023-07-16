@@ -20,6 +20,7 @@ import { Link } from "../../components/link";
 import { api } from "../../utils/api";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { useRouter } from "next/router";
+import { plural } from "../../utils/string";
 
 export interface OrganizationCardProps {
   id: string;
@@ -28,6 +29,8 @@ export interface OrganizationCardProps {
   accepted?: boolean;
   icon?: number;
   skeleton?: boolean;
+  members: number;
+  students: number;
 }
 
 export const OrganizationCard: React.FC<OrganizationCardProps> = ({
@@ -37,6 +40,8 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   accepted = true,
   icon = 0,
   skeleton,
+  members,
+  students,
 }) => {
   const router = useRouter();
   const utils = api.useContext();
@@ -196,7 +201,8 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
                 {children}
               </Heading>
               <Text fontSize="sm" color="gray.500">
-                40 members &middot; 653 students
+                {plural(members, "member")} &middot;{" "}
+                {plural(students, "student")}
               </Text>
             </Stack>
           </Stack>

@@ -25,7 +25,7 @@ export const userRouter = createTRPCRouter({
   checkUsername: protectedProcedure
     .input(ZCheckUsernameSchema)
     .query(async ({ ctx, input }) => {
-      await loadHandler<UserRouterHandlerCache>(
+      await loadHandler(
         HANDLER_CACHE,
         "check-username"
       );
@@ -34,7 +34,7 @@ export const userRouter = createTRPCRouter({
   changeUsername: protectedProcedure
     .input(ZChangeUsernameSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<UserRouterHandlerCache>(
+      await loadHandler(
         HANDLER_CACHE,
         "change-username"
       );
@@ -43,27 +43,27 @@ export const userRouter = createTRPCRouter({
   setDisplayName: protectedProcedure
     .input(ZSetDisplayNameSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<UserRouterHandlerCache>(
+      await loadHandler(
         HANDLER_CACHE,
         "set-display-name"
       );
       return HANDLER_CACHE.handlers["set-display-name"]!({ ctx, input });
     }),
   viewChangelog: protectedProcedure.mutation(async ({ ctx }) => {
-    await loadHandler<UserRouterHandlerCache>(HANDLER_CACHE, "view-changelog");
+    await loadHandler(HANDLER_CACHE, "view-changelog");
     return HANDLER_CACHE.handlers["view-changelog"]!({ ctx });
   }),
   setEnableUsageData: protectedProcedure
     .input(ZSetEnableUsageDataSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler<UserRouterHandlerCache>(
+      await loadHandler(
         HANDLER_CACHE,
         "set-enable-usage-data"
       );
       return HANDLER_CACHE.handlers["set-enable-usage-data"]!({ ctx, input });
     }),
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
-    await loadHandler<UserRouterHandlerCache>(HANDLER_CACHE, "delete-account");
+    await loadHandler(HANDLER_CACHE, "delete-account");
     return HANDLER_CACHE.handlers["delete-account"]!({ ctx });
   }),
 });

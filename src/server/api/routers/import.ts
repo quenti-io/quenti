@@ -5,7 +5,6 @@ import { nanoid } from "nanoid";
 import type { Counter } from "prom-client";
 import { z } from "zod";
 import { QUIZLET_IMPORT_REGEXP } from "../../../constants/characters";
-import { env } from "../../../env/server.mjs";
 import type { ApiStudiableItem } from "../../../interfaces/api-studiable-item";
 import { register } from "../../prometheus";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -21,7 +20,8 @@ type ApiResponse = {
 };
 
 // Chrome, macOS.
-const AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+const AGENT =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
 
 export const importRouter = createTRPCRouter({
   fromUrl: protectedProcedure
@@ -47,8 +47,8 @@ export const importRouter = createTRPCRouter({
         `https://quizlet.com/webapi/3.4/studiable-item-documents?filters%5BstudiableContainerId%5D=${id}&filters%5BstudiableContainerType%5D=1&perPage=${LIMIT}&page=1`,
         {
           headers: {
-            'User-Agent': AGENT
-          }
+            "User-Agent": AGENT,
+          },
         }
       );
       if (!response.data) {
