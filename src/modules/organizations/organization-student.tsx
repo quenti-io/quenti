@@ -39,8 +39,8 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
           />
         </Skeleton>
       </Td>
-      <Td>
-        <Flex alignItems="center" h="6">
+      <Td w="full">
+        <Flex alignItems="center" h="6" flex="1">
           <SkeletonText
             isLoaded={!skeleton}
             fitContent
@@ -52,7 +52,7 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
           </SkeletonText>
         </Flex>
       </Td>
-      <Td>
+      <Td w="full">
         <Flex alignItems="center" h="21px">
           <SkeletonText
             isLoaded={!skeleton}
