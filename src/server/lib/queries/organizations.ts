@@ -1,4 +1,4 @@
-import { prisma } from "../../../server/db";
+import { prisma } from "../../db";
 
 export const isOrganizationAdmin = async (userId: string, orgId: string) => {
   return !!(await prisma.membership.findFirst({

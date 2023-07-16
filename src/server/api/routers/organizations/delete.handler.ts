@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { isOrganizationOwner } from "../../../../lib/server/queries/organizations";
+import { isOrganizationOwner } from "../../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TDeleteSchema } from "./delete.schema";
 

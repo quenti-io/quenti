@@ -63,6 +63,7 @@
     "sharp": "^0.32.1",
     "short-unique-id": "^4.4.4",
     "slugify": "^1.6.6",
+    "stripe": "^12.13.0",
     "superjson": "1.12.4",
     "use-fit-text": "^2.4.0",
     "zod": "^3.21.4",
