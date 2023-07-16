@@ -233,6 +233,10 @@ export type User = {
   bannedAt: Timestamp | null;
   displayName: Generated<number>;
   flags: Generated<number>;
+  /**
+   * @zod.custom(imports.userMetadataSchema)
+   */
+  metadata: unknown | null;
   enableUsageData: Generated<number>;
   changelogVersion: string;
   organizationId: string | null;

@@ -77,6 +77,8 @@ model User {
   bannedAt         DateTime?
   displayName      Boolean   @default(true)
   flags            Int       @default(0)
+  /// @zod.custom(imports.userMetadataSchema)
+  metadata         Json?
   enableUsageData  Boolean   @default(true)
   changelogVersion String
   organizationId   String?
