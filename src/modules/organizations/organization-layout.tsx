@@ -22,10 +22,10 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { WithFooter } from "../../components/with-footer";
 import { api, type RouterOutputs } from "../../utils/api";
 import { organizationIcon } from "../../utils/icons";
-import { AnimatedXCircle } from "../../components/animated-icons/x";
 
 type BaseReturn = RouterOutputs["organizations"]["get"];
 type OrgMember = BaseReturn["members"][number];
@@ -92,8 +92,6 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
     }
   };
 
-  const [tabIndex, setTabIndex] = React.useState(getTabIndex());
-
   return (
     <WithFooter>
       <OrganizationContext.Provider value={org && me ? { ...org, me } : null}>
@@ -149,9 +147,8 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
             <Tabs
               borderColor={borderColor}
               size="sm"
-              index={tabIndex}
+              index={getTabIndex()}
               isManual
-              onChange={(i) => setTabIndex(i)}
             >
               <TabList gap="10">
                 <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}`}>

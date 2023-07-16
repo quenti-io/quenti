@@ -5,6 +5,7 @@ import {
   InputGroup,
   InputLeftElement,
   Skeleton,
+  SlideFade,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -44,6 +45,17 @@ export const OrganizationMembers = () => {
   const [editMember, setEditMember] = React.useState<string | undefined>();
   const [removeMember, setRemoveMember] = React.useState<string | undefined>();
   const [search, setSearch] = React.useState("");
+
+  const filterFn = (m: NonNullable<typeof me>) => {
+    const refined = search.trim().toLowerCase();
+    if (!refined.length) return true;
+
+    return (
+      m.user.name?.toLowerCase().includes(refined) ||
+      m.user.email?.toLowerCase().includes(refined) ||
+      m.user.username.toLowerCase().includes(refined)
+    );
+  };
 
   const menuBg = useColorModeValue("white", "gray.800");
 
@@ -98,17 +110,18 @@ export const OrganizationMembers = () => {
           </Button>
         </OrganizationAdminOnly>
       </HStack>
-      <Stack pb="20">
-        {me && (
-          <OrganizationMember
-            user={me.user}
-            role={me.role}
-            accepted
-            isCurrent
-          />
-        )}
-        {org
-          ? others.map((m) => (
+      {org ? (
+        <SlideFade in={!!org} offsetY="20px">
+          <Stack pb="20">
+            {me && filterFn(me) && (
+              <OrganizationMember
+                user={me.user}
+                role={me.role}
+                accepted
+                isCurrent
+              />
+            )}
+            {others.filter(filterFn).map((m) => (
               <OrganizationMember
                 key={m.user.id}
                 user={m.user}
@@ -117,22 +130,27 @@ export const OrganizationMembers = () => {
                 onRequestEdit={() => setEditMember(m.user.id)}
                 onRequestRemove={() => setRemoveMember(m.user.id)}
               />
-            ))
-          : Array.from({ length: 10 }).map((_, i) => (
-              <OrganizationMember
-                key={i}
-                skeleton
-                user={{
-                  id: "",
-                  name: "Jonathan Doe",
-                  username: "johndoe",
-                  email: "placeholder@example.com",
-                  image: null,
-                }}
-                role={"Member"}
-              />
             ))}
-      </Stack>
+          </Stack>
+        </SlideFade>
+      ) : (
+        <Stack pb="20">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <OrganizationMember
+              key={i}
+              skeleton
+              user={{
+                id: "",
+                name: "Jonathan Doe",
+                username: "johndoe",
+                email: "placeholder@example.com",
+                image: null,
+              }}
+              role={"Member"}
+            />
+          ))}
+        </Stack>
+      )}
     </Stack>
   );
 };
