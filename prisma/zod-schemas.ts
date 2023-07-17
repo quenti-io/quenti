@@ -10,9 +10,9 @@ export const userMetadataSchema = z
 export const orgMetadataSchema = z
   .object({
     requestedDomain: z.string(),
-    paymentId: z.string(),
-    subscriptionId: z.string(),
-    subscriptionItemId: z.string(),
+    paymentId: z.string().nullable(),
+    subscriptionId: z.string().nullable(),
+    subscriptionItemId: z.string().nullable(),
   })
   .partial()
   .nullable();

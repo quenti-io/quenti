@@ -4,6 +4,7 @@ import { z } from "zod";
 import stripe from "../../../../payments/stripe";
 import { prisma } from "../../../../server/db";
 import { getServerAuthSession } from "../../../../server/auth";
+import { orgMetadataSchema } from "../../../../../prisma/zod-schemas";
 
 const querySchema = z.object({
   id: z.string().cuid2(),
@@ -31,18 +32,21 @@ export default async function handler(
   });
 
   if (!org) {
-    await prisma.organization.findFirstOrThrow({
+    const prevOrg = await prisma.organization.findFirstOrThrow({
       where: { id },
     });
+    const metadata = orgMetadataSchema.parse(prevOrg.metadata);
 
     org = await prisma.organization.update({
       where: { id },
       data: {
         metadata: {
+          ...metadata,
           paymentId: checkoutSession.id,
           subscriptionId: subscription.id || null,
           subscriptionItemId: subscription.items.data[0]?.id || null,
         },
+        published: true,
       },
     });
   }

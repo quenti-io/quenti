@@ -61,3 +61,32 @@ export const purchaseOrganizationSubscription = async ({
 
   return { callback: session.url };
 };
+
+export const cancelOrganizationSubscription = async (orgId: string) => {
+  const org = await prisma.organization.findUniqueOrThrow({
+    where: { id: orgId },
+    select: { members: true, metadata: true },
+  });
+
+  const metadata = orgMetadataSchema.parse(org.metadata);
+  if (!metadata?.subscriptionId) return;
+
+  const subscription = await stripe.subscriptions.retrieve(
+    metadata.subscriptionId
+  );
+  if (subscription.status !== "canceled")
+    await stripe.subscriptions.cancel(metadata.subscriptionId);
+
+  await prisma.organization.update({
+    where: { id: orgId },
+    data: {
+      metadata: {
+        ...metadata,
+        paymentId: null,
+        subscriptionId: null,
+        subscriptionItemId: null,
+      },
+      published: false,
+    },
+  });
+};

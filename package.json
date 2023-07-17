@@ -11,6 +11,7 @@
     "start": "next start",
     "theme": "chakra-cli tokens src/lib/chakra-theme.ts",
     "upload-sourcemaps": "npx @highlight-run/sourcemap-uploader upload --path=\".next\" -k ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY}",
+    "stripe-webhook": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts"
   },
   "prisma": {
@@ -51,6 +52,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.omit": "^4.5.0",
     "lodash.throttle": "^4.1.1",
+    "micro": "^10.0.1",
     "nanoid": "^4.0.2",
     "next": "^13.4.8",
     "next-auth": "^4.22.1",

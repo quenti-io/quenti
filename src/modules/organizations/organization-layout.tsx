@@ -121,11 +121,13 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                       >
                         {org?.name || "Loading..."}
                       </Heading>
-                      <Box color="blue.300">
-                        <Tooltip label="Verified Organization">
-                          <IconDiscountCheck aria-label="Verified" />
-                        </Tooltip>
-                      </Box>
+                      {org?.published && (
+                        <Box color="blue.300">
+                          <Tooltip label="Verified Organization">
+                            <IconDiscountCheck aria-label="Verified" />
+                          </Tooltip>
+                        </Box>
+                      )}
                     </HStack>
                   </SkeletonText>
                 </Flex>
