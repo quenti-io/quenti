@@ -1,6 +1,5 @@
 import {
   Box,
-  Card,
   Center,
   Container,
   Flex,
@@ -18,12 +17,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import {
-  IconAlertCircleFilled,
-  IconDiscountCheck,
-  IconExclamationCircle,
-  IconExclamationMark,
-} from "@tabler/icons-react";
+import { IconAlertCircleFilled, IconDiscountCheck } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
