@@ -1,5 +1,6 @@
 import {
   Box,
+  Card,
   Center,
   Container,
   Flex,
@@ -17,7 +18,12 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { IconDiscountCheck } from "@tabler/icons-react";
+import {
+  IconAlertCircleFilled,
+  IconDiscountCheck,
+  IconExclamationCircle,
+  IconExclamationMark,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -121,10 +127,16 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                       >
                         {org?.name || "Loading..."}
                       </Heading>
-                      {org?.published && (
+                      {org?.published ? (
                         <Box color="blue.300">
                           <Tooltip label="Verified Organization">
                             <IconDiscountCheck aria-label="Verified" />
+                          </Tooltip>
+                        </Box>
+                      ) : (
+                        <Box color="orange.400">
+                          <Tooltip label="Not published">
+                            <IconAlertCircleFilled aria-label="Not published" />
                           </Tooltip>
                         </Box>
                       )}
@@ -166,7 +178,19 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                   me?.role == "Admin" ||
                   me?.role == "Owner") && (
                   <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/billing`}>
-                    Billing
+                    <Box display="flex" gap="2" alignItems="center">
+                      Billing
+                      {org && !org.published && (
+                        <Box
+                          display="inline-flex"
+                          color="orange.400"
+                          w="4"
+                          h="4"
+                        >
+                          <IconAlertCircleFilled size={16} />
+                        </Box>
+                      )}
+                    </Box>
                   </SkeletonTab>
                 )}
               </TabList>
@@ -194,7 +218,7 @@ const SkeletonTab: React.FC<React.PropsWithChildren<SkeletonTabProps>> = ({
       <Tab px="0" bg="none" fontWeight={600} pb="3" isSelected>
         <Flex alignItems="center" h="21px">
           <SkeletonText isLoaded={isLoaded} noOfLines={1} skeletonHeight="4">
-            <Text>{children}</Text>
+            {children}
           </SkeletonText>
         </Flex>
       </Tab>

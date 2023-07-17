@@ -32,8 +32,11 @@ export const getBelongingHandler = async ({ ctx }: GetBeloningOptions) => {
   });
 
   return organizations.map((org) => ({
-    ...org,
+    id: org.id,
+    name: org.name,
+    icon: org.icon,
     members: undefined,
+    _count: org._count,
     accepted: org.members[0]!.accepted,
   }));
 };

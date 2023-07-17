@@ -37,7 +37,7 @@ export default function NewOrganization() {
       }
     },
     onSuccess: async (data) => {
-      await router.push(`/orgs/${data.slug}/members-onboarding`);
+      await router.push(`/orgs/${data.id}/members-onboarding`);
     },
   });
 

@@ -48,7 +48,7 @@ export default function Organizations() {
   });
 
   const [search, setSearch] = React.useState("");
-  const filterFn = (org: Organization) => {
+  const filterFn = (org: Pick<Organization, "name">) => {
     if (!search) return true;
     return org.name.toLowerCase().includes(search.toLowerCase());
   };

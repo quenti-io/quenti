@@ -48,8 +48,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   });
 
   if (!org) throw new TRPCError({ code: "NOT_FOUND" });
-
-  return org;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { metadata: _, ...rest } = org;
+  return rest;
 };
 
 export default getHandler;
