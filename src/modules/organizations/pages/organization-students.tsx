@@ -22,6 +22,7 @@ import { useOrganization } from "../../../hooks/use-organization";
 import { api } from "../../../utils/api";
 import { plural } from "../../../utils/string";
 import { OrganizationStudent } from "../organization-student";
+import { EmptyStudentsCard } from "../empty-students-card";
 
 export const OrganizationStudents = () => {
   const org = useOrganization();
@@ -66,6 +67,8 @@ export const OrganizationStudents = () => {
   }, [data?.pageParams, fetchNextPage]);
 
   const menuBg = useColorModeValue("white", "gray.800");
+
+  if (org && org._count.users == 0) return <EmptyStudentsCard />;
 
   return (
     <Stack spacing="6">
