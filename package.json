@@ -60,6 +60,7 @@
     "prisma-kysely": "^1.5.0",
     "prom-client": "^14.2.0",
     "react": "^18.2.0",
+    "react-canvas-confetti": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-to-print": "^2.14.13",
     "sharp": "^0.32.1",

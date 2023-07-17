@@ -26,6 +26,7 @@ import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { WithFooter } from "../../components/with-footer";
 import { api, type RouterOutputs } from "../../utils/api";
 import { organizationIcon } from "../../utils/icons";
+import { ConfettiLayer } from "./confetti-layer";
 
 type BaseReturn = RouterOutputs["organizations"]["get"];
 type OrgMember = BaseReturn["members"][number];
@@ -44,6 +45,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
   const toast = useToast();
   const id = router.query.id as string;
+  const isUpgraded = router.query.upgrade === "success";
 
   const borderColor = useColorModeValue("gray.300", "gray.700");
   const mutedColor = useColorModeValue("gray.700", "gray.300");
@@ -96,6 +98,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
     <WithFooter>
       <OrganizationContext.Provider value={org && me ? { ...org, me } : null}>
         <Container maxW="6xl" overflow="hidden">
+          {org && isUpgraded && org.published && <ConfettiLayer />}
           <Stack spacing="10">
             <HStack spacing="6">
               <Skeleton isLoaded={!!org} fitContent rounded="full">

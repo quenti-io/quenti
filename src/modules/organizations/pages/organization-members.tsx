@@ -20,11 +20,13 @@ import { InviteMemberModal } from "../invite-member-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationMember } from "../organization-member";
 import { RemoveMemberModal } from "../remove-member-modal";
+import { OrganizationWelcome } from "../organization-welcome";
 
 export const OrganizationMembers = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: session } = useSession();
+  const isUpgraded = router.query.upgrade === "success";
 
   const { data: org } = api.organizations.get.useQuery(
     { id },
@@ -61,6 +63,7 @@ export const OrganizationMembers = () => {
 
   return (
     <Stack spacing="6">
+      {org && isUpgraded && org.published && <OrganizationWelcome />}
       {org && (
         <>
           <InviteMemberModal
