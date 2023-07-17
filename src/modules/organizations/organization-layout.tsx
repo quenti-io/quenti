@@ -160,9 +160,13 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                 <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/settings`}>
                   Settings
                 </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/billing`}>
-                  Billing
-                </SkeletonTab>
+                {(getTabIndex() == 3 ||
+                  me?.role == "Admin" ||
+                  me?.role == "Owner") && (
+                  <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/billing`}>
+                    Billing
+                  </SkeletonTab>
+                )}
               </TabList>
               <TabPanels mt="10">{children}</TabPanels>
             </Tabs>
