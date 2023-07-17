@@ -43,15 +43,15 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const session = useSession();
   const router = useRouter();
   const toast = useToast();
-  const slug = router.query.slug as string;
+  const id = router.query.id as string;
 
   const borderColor = useColorModeValue("gray.300", "gray.700");
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   const { data: org, error } = api.organizations.get.useQuery(
-    { slug },
+    { id },
     {
-      enabled: !!slug && !!session.data?.user,
+      enabled: !!id && !!session.data?.user,
       retry: false,
     }
   );
@@ -81,13 +81,13 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
 
   const getTabIndex = (route = router.pathname) => {
     switch (route) {
-      case `/orgs/[slug]`:
+      case `/orgs/[id]`:
         return 0;
-      case `/orgs/[slug]/students`:
+      case `/orgs/[id]/students`:
         return 1;
-      case `/orgs/[slug]/settings`:
+      case `/orgs/[id]/settings`:
         return 2;
-      case `/orgs/[slug]/billing`:
+      case `/orgs/[id]/billing`:
         return 3;
     }
   };
@@ -151,16 +151,16 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
               isManual
             >
               <TabList gap="10">
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}`}>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}`}>
                   Members
                 </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/students`}>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/students`}>
                   Students
                 </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/settings`}>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/settings`}>
                   Settings
                 </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/billing`}>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/billing`}>
                   Billing
                 </SkeletonTab>
               </TabList>

@@ -19,13 +19,13 @@ import { avatarUrl } from "../../../utils/avatar";
 
 export default function OrgMembersOnboarding() {
   const router = useRouter();
-  const slug = router.query.slug as string;
+  const id = router.query.id as string;
   const { data: session } = useSession();
 
   const { data: org } = api.organizations.get.useQuery(
-    { slug },
+    { id },
     {
-      enabled: !!slug && !!session?.user?.id,
+      enabled: !!id && !!session?.user?.id,
       retry: false,
     }
   );

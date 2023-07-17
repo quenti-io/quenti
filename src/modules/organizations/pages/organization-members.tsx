@@ -23,13 +23,13 @@ import { RemoveMemberModal } from "../remove-member-modal";
 
 export const OrganizationMembers = () => {
   const router = useRouter();
-  const slug = router.query.slug as string;
+  const id = router.query.id as string;
   const { data: session } = useSession();
 
   const { data: org } = api.organizations.get.useQuery(
-    { slug },
+    { id },
     {
-      enabled: !!slug && !!session?.user,
+      enabled: !!id && !!session?.user,
       retry: false,
     }
   );

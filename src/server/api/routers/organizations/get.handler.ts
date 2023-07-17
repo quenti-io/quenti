@@ -10,7 +10,7 @@ type GetOptions = {
 export const getHandler = async ({ ctx, input }: GetOptions) => {
   const org = await ctx.prisma.organization.findFirst({
     where: {
-      slug: input.slug,
+      id: input.id,
       members: {
         some: {
           userId: ctx.session.user.id,
