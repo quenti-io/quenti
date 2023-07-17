@@ -41,6 +41,7 @@ export const OrganizationBilling = () => {
 
   const cardBg = useColorModeValue("white", "gray.750");
   const highlight = useColorModeValue("blue.500", "blue.200");
+  const mutedText = useColorModeValue("gray.600", "gray.400");
 
   return (
     <Stack spacing="12">
@@ -57,7 +58,7 @@ export const OrganizationBilling = () => {
           >
             <Stack>
               <Heading size="md">Thanks for trying out organizations!</Heading>
-              <Text fontSize="sm">
+              <Text fontSize="sm" color={mutedText}>
                 In order to unlock the full suite of features and enroll
                 students, you need to{" "}
                 <Link
