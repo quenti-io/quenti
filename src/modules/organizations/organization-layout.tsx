@@ -17,7 +17,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { IconDiscountCheck } from "@tabler/icons-react";
+import { IconAlertCircleFilled, IconDiscountCheck } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -26,6 +26,7 @@ import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { WithFooter } from "../../components/with-footer";
 import { api, type RouterOutputs } from "../../utils/api";
 import { organizationIcon } from "../../utils/icons";
+import { ConfettiLayer } from "./confetti-layer";
 
 type BaseReturn = RouterOutputs["organizations"]["get"];
 type OrgMember = BaseReturn["members"][number];
@@ -43,15 +44,16 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const session = useSession();
   const router = useRouter();
   const toast = useToast();
-  const slug = router.query.slug as string;
+  const id = router.query.id as string;
+  const isUpgraded = router.query.upgrade === "success";
 
   const borderColor = useColorModeValue("gray.300", "gray.700");
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   const { data: org, error } = api.organizations.get.useQuery(
-    { slug },
+    { id },
     {
-      enabled: !!slug && !!session.data?.user,
+      enabled: !!id && !!session.data?.user,
       retry: false,
     }
   );
@@ -81,13 +83,13 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
 
   const getTabIndex = (route = router.pathname) => {
     switch (route) {
-      case `/orgs/[slug]`:
+      case `/orgs/[id]`:
         return 0;
-      case `/orgs/[slug]/students`:
+      case `/orgs/[id]/students`:
         return 1;
-      case `/orgs/[slug]/settings`:
+      case `/orgs/[id]/settings`:
         return 2;
-      case `/orgs/[slug]/billing`:
+      case `/orgs/[id]/billing`:
         return 3;
     }
   };
@@ -96,6 +98,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
     <WithFooter>
       <OrganizationContext.Provider value={org && me ? { ...org, me } : null}>
         <Container maxW="6xl" overflow="hidden">
+          {org && isUpgraded && org.published && <ConfettiLayer />}
           <Stack spacing="10">
             <HStack spacing="6">
               <Skeleton isLoaded={!!org} fitContent rounded="full">
@@ -121,11 +124,19 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                       >
                         {org?.name || "Loading..."}
                       </Heading>
-                      <Box color="blue.300">
-                        <Tooltip label="Verified Organization">
-                          <IconDiscountCheck aria-label="Verified" />
-                        </Tooltip>
-                      </Box>
+                      {org?.published ? (
+                        <Box color="blue.300">
+                          <Tooltip label="Verified Organization">
+                            <IconDiscountCheck aria-label="Verified" />
+                          </Tooltip>
+                        </Box>
+                      ) : (
+                        <Box color="orange.400">
+                          <Tooltip label="Not published">
+                            <IconAlertCircleFilled aria-label="Not published" />
+                          </Tooltip>
+                        </Box>
+                      )}
                     </HStack>
                   </SkeletonText>
                 </Flex>
@@ -151,18 +162,34 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
               isManual
             >
               <TabList gap="10">
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}`}>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}`}>
                   Members
                 </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/students`}>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/students`}>
                   Students
                 </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/settings`}>
+                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/settings`}>
                   Settings
                 </SkeletonTab>
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${slug}/billing`}>
-                  Billing
-                </SkeletonTab>
+                {(getTabIndex() == 3 ||
+                  me?.role == "Admin" ||
+                  me?.role == "Owner") && (
+                  <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/billing`}>
+                    <Box display="flex" gap="2" alignItems="center">
+                      Billing
+                      {org && !org.published && (
+                        <Box
+                          display="inline-flex"
+                          color="orange.400"
+                          w="4"
+                          h="4"
+                        >
+                          <IconAlertCircleFilled size={16} />
+                        </Box>
+                      )}
+                    </Box>
+                  </SkeletonTab>
+                )}
               </TabList>
               <TabPanels mt="10">{children}</TabPanels>
             </Tabs>
@@ -188,7 +215,7 @@ const SkeletonTab: React.FC<React.PropsWithChildren<SkeletonTabProps>> = ({
       <Tab px="0" bg="none" fontWeight={600} pb="3" isSelected>
         <Flex alignItems="center" h="21px">
           <SkeletonText isLoaded={isLoaded} noOfLines={1} skeletonHeight="4">
-            <Text>{children}</Text>
+            {children}
           </SkeletonText>
         </Flex>
       </Tab>

@@ -11,12 +11,13 @@ import {
 export interface SettingsWrapperProps {
   heading: string;
   description: string | React.ReactNode;
+  noOfLines?: number;
   isLoaded: boolean;
 }
 
 export const SettingsWrapper: React.FC<
   React.PropsWithChildren<SettingsWrapperProps>
-> = ({ heading, description, children, isLoaded }) => {
+> = ({ heading, description, noOfLines = 1, children, isLoaded }) => {
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   return (
@@ -25,14 +26,18 @@ export const SettingsWrapper: React.FC<
       gap={{ base: 4, md: 16 }}
       maxW="4xl"
     >
-      <Stack spacing="1">
+      <Stack spacing="1" h="full">
         <Flex h="6" alignItems="center">
           <SkeletonText noOfLines={1} skeletonHeight="5" isLoaded={isLoaded}>
             <Heading size="md">{heading}</Heading>
           </SkeletonText>
         </Flex>
-        <Flex h="21px" alignItems="center">
-          <SkeletonText noOfLines={1} skeletonHeight="3" isLoaded={isLoaded}>
+        <Flex h={`${21 * noOfLines}px`} alignItems="center">
+          <SkeletonText
+            noOfLines={noOfLines}
+            skeletonHeight={3}
+            isLoaded={isLoaded}
+          >
             <Text fontSize="sm" color={mutedColor}>
               {description}
             </Text>

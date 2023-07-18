@@ -11,6 +11,13 @@ generator kysely {
   fileName = "kysely-types.ts"
 }
 
+generator zod {
+  provider      = "zod-prisma"
+  output        = "./zod"
+  imports       = "./zod-schemas"
+  relationModel = "default"
+}
+
 datasource db {
   provider     = "mysql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
@@ -70,6 +77,8 @@ model User {
   bannedAt         DateTime?
   displayName      Boolean   @default(true)
   flags            Int       @default(0)
+  /// @zod.custom(imports.userMetadataSchema)
+  metadata         Json?
   enableUsageData  Boolean   @default(true)
   changelogVersion String
   organizationId   String?
@@ -109,6 +118,9 @@ model Organization {
   slug      String
   createdAt DateTime @default(now())
   icon      Int      @default(0)
+  published Boolean  @default(false)
+  /// @zod.custom(imports.orgMetadataSchema)
+  metadata  Json?
 
   members     Membership[]
   users       User[]

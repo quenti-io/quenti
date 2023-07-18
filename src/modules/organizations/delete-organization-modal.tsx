@@ -40,7 +40,11 @@ export const DeleteOrganizationModal: React.FC<
         <Modal.Divider />
         <Modal.Footer>
           <ButtonGroup>
-            <Button onClick={onClose} ref={cancelRef}>
+            <Button
+              onClick={onClose}
+              ref={cancelRef}
+              isDisabled={apiDelete.isLoading}
+            >
               Cancel
             </Button>
             <Button

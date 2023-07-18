@@ -10,7 +10,7 @@ type GetOptions = {
 export const getHandler = async ({ ctx, input }: GetOptions) => {
   const org = await ctx.prisma.organization.findFirst({
     where: {
-      slug: input.slug,
+      id: input.id,
       members: {
         some: {
           userId: ctx.session.user.id,
@@ -48,8 +48,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   });
 
   if (!org) throw new TRPCError({ code: "NOT_FOUND" });
-
-  return org;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { metadata: _, ...rest } = org;
+  return rest;
 };
 
 export default getHandler;

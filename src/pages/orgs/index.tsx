@@ -48,7 +48,7 @@ export default function Organizations() {
   });
 
   const [search, setSearch] = React.useState("");
-  const filterFn = (org: Organization) => {
+  const filterFn = (org: Pick<Organization, "name">) => {
     if (!search) return true;
     return org.name.toLowerCase().includes(search.toLowerCase());
   };
@@ -94,7 +94,6 @@ export default function Organizations() {
                     <OrganizationCard
                       id={org.id}
                       name={org.name}
-                      slug={org.slug}
                       icon={org.icon}
                       key={org.id}
                       accepted={org.accepted}
@@ -106,7 +105,6 @@ export default function Organizations() {
                   <OrganizationCard
                     id=""
                     name="loading"
-                    slug=""
                     skeleton
                     key={i}
                     members={0}

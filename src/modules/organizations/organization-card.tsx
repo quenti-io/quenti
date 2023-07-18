@@ -25,7 +25,6 @@ import { plural } from "../../utils/string";
 export interface OrganizationCardProps {
   id: string;
   name: string;
-  slug: string;
   accepted?: boolean;
   icon?: number;
   skeleton?: boolean;
@@ -36,7 +35,6 @@ export interface OrganizationCardProps {
 export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   id,
   name,
-  slug,
   accepted = true,
   icon = 0,
   skeleton,
@@ -51,7 +49,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
     onSuccess: async () => {
       await utils.organizations.getBelonging.invalidate();
       if (acceptInvite.variables?.accept) {
-        await router.push(`/orgs/${slug}`);
+        await router.push(`/orgs/${id}`);
         toast({
           title: `Successfully joined ${name}`,
           status: "success",
@@ -66,7 +64,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   const children = skeleton ? (
     name
   ) : (
-    <LinkOverlay as={Link} href={`/orgs/${slug}`}>
+    <LinkOverlay as={Link} href={`/orgs/${id}`}>
       {name}
     </LinkOverlay>
   );

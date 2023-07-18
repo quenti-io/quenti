@@ -152,6 +152,11 @@ export type Organization = {
   slug: string;
   createdAt: Generated<Timestamp>;
   icon: Generated<number>;
+  published: Generated<number>;
+  /**
+   * @zod.custom(imports.orgMetadataSchema)
+   */
+  metadata: unknown | null;
 };
 export type RecentFailedLogin = {
   id: string;
@@ -228,6 +233,10 @@ export type User = {
   bannedAt: Timestamp | null;
   displayName: Generated<number>;
   flags: Generated<number>;
+  /**
+   * @zod.custom(imports.userMetadataSchema)
+   */
+  metadata: unknown | null;
   enableUsageData: Generated<number>;
   changelogVersion: string;
   organizationId: string | null;

@@ -35,12 +35,12 @@ export const OrganizationSettings = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const utils = api.useContext();
-  const slug = router.query.slug as string;
+  const id = router.query.id as string;
 
   const { data: org } = api.organizations.get.useQuery(
-    { slug },
+    { id },
     {
-      enabled: !!slug && !!session?.user,
+      enabled: !!id && !!session?.user,
       retry: false,
     }
   );
@@ -58,7 +58,7 @@ export const OrganizationSettings = () => {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   const update = api.organizations.update.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       toast({
         title: "Organization updated successfully",
         status: "success",
@@ -66,11 +66,7 @@ export const OrganizationSettings = () => {
         containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
       });
 
-      if (data.slug == slug) {
-        await utils.organizations.get.invalidate();
-      } else {
-        await router.push(`/orgs/${data.slug}`);
-      }
+      await utils.organizations.get.invalidate();
     },
     onError: (err) => {
       if (err.data?.code == "BAD_REQUEST") {
@@ -152,7 +148,7 @@ export const OrganizationSettings = () => {
                 });
               }}
             >
-              Save Changes
+              Save changes
             </Button>
           </ButtonGroup>
         </OrganizationAdminOnly>

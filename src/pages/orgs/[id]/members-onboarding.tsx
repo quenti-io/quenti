@@ -10,7 +10,7 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
-import { IconUserPlus } from "@tabler/icons-react";
+import { IconUserPlus, IconWorld } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { WizardLayout } from "../../../components/wizard-layout";
@@ -19,16 +19,25 @@ import { avatarUrl } from "../../../utils/avatar";
 
 export default function OrgMembersOnboarding() {
   const router = useRouter();
-  const slug = router.query.slug as string;
+  const id = router.query.id as string;
   const { data: session } = useSession();
 
   const { data: org } = api.organizations.get.useQuery(
-    { slug },
+    { id },
     {
-      enabled: !!slug,
+      enabled: !!id && !!session?.user?.id,
       retry: false,
     }
   );
+
+  const publish = api.organizations.publish.useMutation({
+    onSuccess: async ({ callback }) => {
+      await router.push(callback);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 
   const me = org
     ? org.members.find((m) => m.userId == session?.user?.id)?.user
@@ -73,6 +82,21 @@ export default function OrgMembersOnboarding() {
             <Fade in={!!org}>
               <Button w="full" size="sm" leftIcon={<IconUserPlus size={16} />}>
                 Add organization member
+              </Button>
+            </Fade>
+          </Skeleton>
+          <Skeleton w="full" rounded="md" isLoaded={!!org}>
+            <Fade in={!!org}>
+              <Button
+                w="full"
+                size="sm"
+                leftIcon={<IconWorld size={16} />}
+                onClick={() => {
+                  publish.mutate({ orgId: org!.id });
+                }}
+                isLoading={publish.isLoading}
+              >
+                Publish organization
               </Button>
             </Fade>
           </Skeleton>

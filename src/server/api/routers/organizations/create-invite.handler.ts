@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { randomBytes } from "crypto";
-import { isOrganizationAdmin } from "../../../../lib/server/queries/organizations";
+import { isOrganizationAdmin } from "../../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TCreateInviteSchema } from "./create-invite.schema";
 
