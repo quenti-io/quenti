@@ -149,7 +149,6 @@ export type Membership = {
 export type Organization = {
   id: string;
   name: string;
-  slug: string;
   createdAt: Generated<Timestamp>;
   icon: Generated<number>;
   published: Generated<number>;
@@ -250,6 +249,13 @@ export type VerificationToken = {
   updatedAt: Timestamp;
   organizationId: string | null;
 };
+export type VerifiedOrganizationDomain = {
+  id: string;
+  orgId: string;
+  domain: string;
+  verifiedEmail: string;
+  verifiedAt: Timestamp;
+};
 export type WhitelistedEmail = {
   email: string;
   createdAt: Generated<Timestamp>;
@@ -275,5 +281,6 @@ export type DB = {
   Term: Term;
   User: User;
   VerificationToken: VerificationToken;
+  VerifiedOrganizationDomain: VerifiedOrganizationDomain;
   WhitelistedEmail: WhitelistedEmail;
 };

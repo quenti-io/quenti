@@ -5066,6 +5066,11 @@ electron-to-chromium@^1.4.431:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.450.tgz#df232c961ee9bf4e8980f86e96a6e9f291720138"
   integrity sha512-BLG5HxSELlrMx7dJ2s+8SFlsCtJp37Zpk2VAxyC6CZtbc+9AJeZHfYHbrlSgdXp6saQ8StMqOTEDaBKgA7u1sw==
 
+email-providers@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/email-providers/-/email-providers-2.0.1.tgz#45c9cf1ad3981acc4a2f062e8d0b5afb6b12707b"
+  integrity sha512-lFWdT7sJilGO0UOO25D3urNH7Np1XTB/7GD/9nGM4YxNqAzkunuJyt9ZyG4cZ+UEGqH/lbK4vczg0B6NtyPflw==
+
 emittery@^0.13.1:
   version "0.13.1"
   resolved "https://registry.npmjs.org/emittery/-/emittery-0.13.1.tgz"

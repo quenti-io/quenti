@@ -113,20 +113,28 @@ model VerificationToken {
 }
 
 model Organization {
-  id        String   @id @default(cuid())
+  id        String                      @id @default(cuid())
   name      String
-  slug      String
-  createdAt DateTime @default(now())
-  icon      Int      @default(0)
-  published Boolean  @default(false)
+  createdAt DateTime                    @default(now())
+  icon      Int                         @default(0)
+  published Boolean                     @default(false)
+  domain    VerifiedOrganizationDomain?
   /// @zod.custom(imports.orgMetadataSchema)
   metadata  Json?
 
   members     Membership[]
   users       User[]
   inviteToken VerificationToken?
+}
 
-  @@unique([slug])
+model VerifiedOrganizationDomain {
+  id            String   @id @default(cuid())
+  orgId         String   @unique
+  domain        String   @unique
+  verifiedEmail String   @unique
+  verifiedAt    DateTime @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id])
 }
 
 enum MembershipRole {

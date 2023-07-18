@@ -12,6 +12,7 @@ import { ZPublishSchema } from "./publish.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
 import { ZUpdateSchema } from "./update.schema";
+import { ZVerifyDomainSchema } from "./verify-domain.schema";
 
 type OrganizationsRouterHandlerCache = {
   handlers: {
@@ -28,6 +29,7 @@ type OrganizationsRouterHandlerCache = {
     ["accept-invite"]?: typeof import("./accept-invite.handler").acceptInviteHandler;
     ["edit-member-role"]?: typeof import("./edit-member-role.handler").editMemberRoleHandler;
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
+    ["verify-domain"]?: typeof import("./verify-domain.handler").verifyDomainHandler;
   };
 } & { routerPath: string };
 
@@ -110,5 +112,11 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "remove-member");
       return HANDLER_CACHE.handlers["remove-member"]!({ ctx, input });
+    }),
+  verifyDomain: teacherProcedure
+    .input(ZVerifyDomainSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "verify-domain");
+      return HANDLER_CACHE.handlers["verify-domain"]!({ ctx, input });
     }),
 });

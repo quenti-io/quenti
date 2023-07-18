@@ -45,6 +45,7 @@
     "axios": "^1.4.0",
     "chakra-react-select": "^4.6.0",
     "diff": "^5.1.0",
+    "email-providers": "^2.0.1",
     "framer-motion": "^10.12.18",
     "highlight.run": "^7.3.4",
     "js-levenshtein": "^1.1.6",
