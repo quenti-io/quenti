@@ -39,6 +39,13 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
           expiresInDays: true,
         },
       },
+      domain: {
+        select: {
+          domain: true,
+          verifiedAt: true,
+          verifiedEmail: true,
+        },
+      },
       _count: {
         select: {
           users: true,

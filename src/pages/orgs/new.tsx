@@ -1,31 +1,28 @@
 import {
+  Box,
   Button,
   ButtonGroup,
   Card,
   FormControl,
-  FormErrorMessage,
   FormLabel,
+  IconButton,
   Input,
-  InputGroup,
-  InputLeftAddon,
+  Skeleton,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import slugify from "slugify";
 import { WizardLayout } from "../../components/wizard-layout";
-import { getBaseDomain } from "../../lib/urls";
 import { api } from "../../utils/api";
+import { ORGANIZATION_ICONS } from "../../utils/icons";
 
 export default function NewOrganization() {
   const router = useRouter();
-  const addonBg = useColorModeValue("gray.100", "gray.750");
 
   const [orgName, setOrgName] = React.useState("");
-  const [orgSlug, setOrgSlug] = React.useState("");
-  const [slugError, setSlugError] = React.useState(false);
+  const [icon, setIcon] = React.useState(0);
 
   const create = api.organizations.create.useMutation({
     onError: (error) => {
@@ -33,7 +30,6 @@ export default function NewOrganization() {
         error.message == "slug_conflict" ||
         error.data?.code == "BAD_REQUEST"
       ) {
-        setSlugError(true);
       }
     },
     onSuccess: async (data) => {
@@ -41,11 +37,13 @@ export default function NewOrganization() {
     },
   });
 
+  const iconColor = useColorModeValue("#171923", "white");
+
   return (
     <WizardLayout
       title="Create a new organization"
       description="Create an organization to manage teachers and students."
-      steps={2}
+      steps={5}
       currentStep={0}
     >
       <Card p="8" variant="outline" shadow="lg" rounded="lg">
@@ -61,31 +59,34 @@ export default function NewOrganization() {
                 value={orgName}
                 onChange={(e) => {
                   setOrgName(e.target.value);
-                  setOrgSlug(
-                    slugify(e.target.value, { lower: true, strict: true })
-                  );
                 }}
               />
             </FormControl>
-            <FormControl isInvalid={slugError}>
+            <FormControl>
               <FormLabel fontSize="sm" mb="10px">
-                Organization URL
+                Icon
               </FormLabel>
-              <InputGroup>
-                <InputLeftAddon bg={addonBg}>
-                  {getBaseDomain()}/orgs/
-                </InputLeftAddon>
-                <Input
-                  placeholder="acme-inc"
-                  value={orgSlug}
-                  onChange={(e) => setOrgSlug(e.target.value)}
-                />
-              </InputGroup>
-              {slugError && (
-                <FormErrorMessage mt="3">
-                  That URL is already taken.
-                </FormErrorMessage>
-              )}
+              <Box ml="-4px" mt="-4px">
+                {ORGANIZATION_ICONS.map((Icon, i) => (
+                  <Box display="inline-block" p="1" key={i}>
+                    <Skeleton rounded="md" isLoaded>
+                      <IconButton
+                        w="max"
+                        variant={icon == i ? "solid" : "ghost"}
+                        aria-label="Icon"
+                        onClick={() => setIcon(i)}
+                        icon={
+                          <Icon
+                            size={18}
+                            style={{ transition: "all 300ms" }}
+                            color={icon == i ? "white" : iconColor}
+                          />
+                        }
+                      />
+                    </Skeleton>
+                  </Box>
+                ))}
+              </Box>
             </FormControl>
           </Stack>
           <ButtonGroup w="full">
@@ -96,8 +97,7 @@ export default function NewOrganization() {
               w="full"
               rightIcon={<IconArrowRight size="18" />}
               onClick={async () => {
-                setSlugError(false);
-                await create.mutateAsync({ name: orgName, slug: orgSlug });
+                await create.mutateAsync({ name: orgName, icon });
               }}
               isLoading={create.isLoading}
             >

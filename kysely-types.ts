@@ -254,7 +254,7 @@ export type VerifiedOrganizationDomain = {
   orgId: string;
   domain: string;
   verifiedEmail: string;
-  verifiedAt: Timestamp;
+  verifiedAt: Timestamp | null;
 };
 export type WhitelistedEmail = {
   email: string;

@@ -2,7 +2,6 @@ import {
   Avatar,
   Button,
   Card,
-  Divider,
   Fade,
   HStack,
   Skeleton,
@@ -10,7 +9,7 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
-import { IconUserPlus, IconWorld } from "@tabler/icons-react";
+import { IconUserPlus } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { WizardLayout } from "../../../components/wizard-layout";
@@ -30,15 +29,6 @@ export default function OrgMembersOnboarding() {
     }
   );
 
-  const publish = api.organizations.publish.useMutation({
-    onSuccess: async ({ callback }) => {
-      await router.push(callback);
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
   const me = org
     ? org.members.find((m) => m.userId == session?.user?.id)?.user
     : undefined;
@@ -46,8 +36,8 @@ export default function OrgMembersOnboarding() {
   return (
     <WizardLayout
       title="Invite members"
-      description="Invite additional members to your organization."
-      steps={2}
+      description="Invite additional members to join your organization."
+      steps={5}
       currentStep={1}
     >
       <Card p="8" variant="outline" shadow="lg" rounded="lg">
@@ -77,10 +67,14 @@ export default function OrgMembersOnboarding() {
               </Skeleton>
             </Stack>
           </HStack>
-          <Divider />
           <Skeleton w="full" rounded="md" isLoaded={!!org}>
             <Fade in={!!org}>
-              <Button w="full" size="sm" leftIcon={<IconUserPlus size={16} />}>
+              <Button
+                w="full"
+                size="sm"
+                leftIcon={<IconUserPlus size={16} />}
+                variant="outline"
+              >
                 Add organization member
               </Button>
             </Fade>
@@ -89,14 +83,11 @@ export default function OrgMembersOnboarding() {
             <Fade in={!!org}>
               <Button
                 w="full"
-                size="sm"
-                leftIcon={<IconWorld size={16} />}
-                onClick={() => {
-                  publish.mutate({ orgId: org!.id });
+                onClick={async () => {
+                  await router.push(`/orgs/${org!.id}/domain-setup`);
                 }}
-                isLoading={publish.isLoading}
               >
-                Publish organization
+                Set up domain
               </Button>
             </Fade>
           </Skeleton>

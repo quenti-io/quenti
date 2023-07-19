@@ -1,6 +1,7 @@
 import {
   Container,
   Heading,
+  Skeleton,
   SlideFade,
   Stack,
   Text,
@@ -14,26 +15,42 @@ export interface WizardLayoutProps {
   description: string;
   steps: number;
   currentStep: number;
+  enableSkeleton?: boolean;
+  isLoaded?: boolean;
 }
 
 export const WizardLayout: React.FC<
   React.PropsWithChildren<WizardLayoutProps>
-> = ({ title, description, steps, currentStep, children }) => {
+> = ({
+  title,
+  description,
+  steps,
+  currentStep,
+  children,
+  enableSkeleton,
+  isLoaded,
+}) => {
   const text = useColorModeValue("gray.600", "gray.400");
 
   return (
     <Container maxW="2xl" mt="10">
       <Stack>
         <Stack spacing="8" p="8">
-          <Stack spacing="4">
-            <Heading size="lg">{title}</Heading>
-            <Text color={text}>{description}</Text>
-          </Stack>
           <Stack>
             <Text color={text} fontSize="sm" fontWeight={600}>
               Step {currentStep + 1} of {steps}
             </Text>
             <SegmentedProgress steps={steps} currentStep={currentStep} />
+          </Stack>
+          <Stack spacing="4">
+            <Heading size="lg">{title}</Heading>
+            {enableSkeleton ? (
+              <Skeleton isLoaded={isLoaded} fitContent>
+                <Text color={text}>{description}</Text>
+              </Skeleton>
+            ) : (
+              <Text color={text}>{description}</Text>
+            )}
           </Stack>
         </Stack>
         <SlideFade

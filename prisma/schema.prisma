@@ -128,11 +128,11 @@ model Organization {
 }
 
 model VerifiedOrganizationDomain {
-  id            String   @id @default(cuid())
-  orgId         String   @unique
-  domain        String   @unique
-  verifiedEmail String   @unique
-  verifiedAt    DateTime @updatedAt
+  id            String    @id @default(cuid())
+  orgId         String    @unique
+  domain        String    @unique
+  verifiedEmail String    @unique
+  verifiedAt    DateTime?
 
   organization Organization @relation(fields: [orgId], references: [id])
 }

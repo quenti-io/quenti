@@ -2,6 +2,7 @@ import { loadHandler } from "../../../lib/load-handler";
 import { createTRPCRouter, teacherProcedure } from "../../trpc";
 import { ZAcceptInviteSchema } from "./accept-invite.schema";
 import { ZAcceptTokenSchema } from "./accept-token.schema";
+import { ZConfirmCodeSchema } from "./confirm-code.schema";
 import { ZCreateInviteSchema } from "./create-invite.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
@@ -30,6 +31,7 @@ type OrganizationsRouterHandlerCache = {
     ["edit-member-role"]?: typeof import("./edit-member-role.handler").editMemberRoleHandler;
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
     ["verify-domain"]?: typeof import("./verify-domain.handler").verifyDomainHandler;
+    ["confirm-code"]?: typeof import("./confirm-code.handler").confirmCodeHandler;
   };
 } & { routerPath: string };
 
@@ -118,5 +120,11 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "verify-domain");
       return HANDLER_CACHE.handlers["verify-domain"]!({ ctx, input });
+    }),
+  confirmCode: teacherProcedure
+    .input(ZConfirmCodeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "confirm-code");
+      return HANDLER_CACHE.handlers["confirm-code"]!({ ctx, input });
     }),
 });
