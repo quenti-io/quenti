@@ -133,6 +133,7 @@ model VerifiedOrganizationDomain {
   requestedDomain String
   domain          String?   @unique
   verifiedEmail   String    @unique
+  otpHash         String?
   verifiedAt      DateTime?
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)

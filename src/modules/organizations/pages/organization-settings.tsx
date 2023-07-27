@@ -8,8 +8,6 @@ import {
   Heading,
   IconButton,
   Input,
-  InputGroup,
-  InputLeftAddon,
   Skeleton,
   SkeletonText,
   Stack,
@@ -23,7 +21,6 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
-import { getBaseDomain } from "../../../lib/urls";
 import { api } from "../../../utils/api";
 import { ORGANIZATION_ICONS } from "../../../utils/icons";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
@@ -48,11 +45,9 @@ export const OrganizationSettings = () => {
   const toast = useToast();
   const inputBg = useColorModeValue("white", "gray.900");
   const inputBorder = useColorModeValue("gray.200", "gray.600");
-  const addonBg = useColorModeValue("gray.100", "gray.750");
   const iconColor = useColorModeValue("#171923", "white");
 
   const [orgName, setOrgName] = React.useState("");
-  const [orgSlug, setOrgSlug] = React.useState("");
   const [icon, setIcon] = React.useState<number | undefined>();
   const [leaveOpen, setLeaveOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
@@ -83,7 +78,6 @@ export const OrganizationSettings = () => {
   React.useEffect(() => {
     if (org) {
       setOrgName(org.name);
-      setOrgSlug(org.slug);
       setIcon(org.icon);
     }
   }, [org]);
@@ -131,7 +125,6 @@ export const OrganizationSettings = () => {
               variant="ghost"
               onClick={() => {
                 setOrgName(org!.name);
-                setOrgSlug(org!.slug);
                 setIcon(org!.icon);
               }}
             >
@@ -143,7 +136,6 @@ export const OrganizationSettings = () => {
                 update.mutate({
                   id: org!.id,
                   name: orgName,
-                  slug: orgSlug,
                   icon: icon || 0,
                 });
               }}
@@ -169,19 +161,6 @@ export const OrganizationSettings = () => {
               shadow="sm"
               isDisabled={!isAdmin}
             />
-          </Skeleton>
-          <Skeleton rounded="md" w="full" isLoaded={!!org}>
-            <InputGroup borderColor={inputBorder} shadow="sm">
-              <InputLeftAddon bg={addonBg} color="gray.500">
-                {getBaseDomain()}/orgs/
-              </InputLeftAddon>
-              <Input
-                value={orgSlug}
-                bg={inputBg}
-                onChange={(e) => setOrgSlug(e.target.value)}
-                isDisabled={!isAdmin}
-              />
-            </InputGroup>
           </Skeleton>
         </Stack>
       </SettingsWrapper>

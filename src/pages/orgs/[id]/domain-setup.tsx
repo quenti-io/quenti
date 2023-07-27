@@ -36,6 +36,19 @@ export default function OrgDomainSetup() {
     },
   });
 
+  React.useEffect(() => {
+    if (org?.domain) {
+      void (async () => {
+        if (org.domain?.verifiedAt) {
+          await router.push(`/orgs/${org.id}/publish`);
+        } else {
+          await router.push(`/orgs/${org.id}/verify-email`);
+        }
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
+
   return (
     <WizardLayout
       title="Set up domain"

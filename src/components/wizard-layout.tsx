@@ -17,6 +17,7 @@ export interface WizardLayoutProps {
   currentStep: number;
   enableSkeleton?: boolean;
   isLoaded?: boolean;
+  cardIn?: boolean;
 }
 
 export const WizardLayout: React.FC<
@@ -29,6 +30,7 @@ export const WizardLayout: React.FC<
   children,
   enableSkeleton,
   isLoaded,
+  cardIn = true,
 }) => {
   const text = useColorModeValue("gray.600", "gray.400");
 
@@ -58,11 +60,15 @@ export const WizardLayout: React.FC<
             opacity: 0,
             transform: "translateY(-20px)",
           }}
-          animate={{
-            opacity: 1,
-            transform: "translateY(0)",
-          }}
-          in
+          animate={
+            cardIn
+              ? {
+                  opacity: 1,
+                  transform: "translateY(0)",
+                }
+              : undefined
+          }
+          in={cardIn}
         >
           {children}
         </SlideFade>

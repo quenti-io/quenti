@@ -11,6 +11,7 @@ import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZPublishSchema } from "./publish.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
+import { ZResendCodeSchema } from "./resend-code.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
 import { ZUpdateSchema } from "./update.schema";
 import { ZVerifyDomainSchema } from "./verify-domain.schema";
@@ -32,6 +33,7 @@ type OrganizationsRouterHandlerCache = {
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
     ["verify-domain"]?: typeof import("./verify-domain.handler").verifyDomainHandler;
     ["confirm-code"]?: typeof import("./confirm-code.handler").confirmCodeHandler;
+    ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
   };
 } & { routerPath: string };
 
@@ -126,5 +128,11 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "confirm-code");
       return HANDLER_CACHE.handlers["confirm-code"]!({ ctx, input });
+    }),
+  resendCode: teacherProcedure
+    .input(ZResendCodeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "resend-code");
+      return HANDLER_CACHE.handlers["resend-code"]!({ ctx, input });
     }),
 });

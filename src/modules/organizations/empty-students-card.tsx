@@ -11,7 +11,7 @@ export const EmptyStudentsCard = () => {
   const muted = useColorModeValue("gray.600", "gray.400");
 
   return (
-    <Stack>
+    <Stack spacing="3">
       <HStack spacing="4">
         <IconUsers />
         <Heading size="lg">No students</Heading>

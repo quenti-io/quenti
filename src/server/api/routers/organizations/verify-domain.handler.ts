@@ -5,6 +5,7 @@ import { isOrganizationAdmin } from "../../../lib/queries/organizations";
 import type { PrismaClient } from "@prisma/client";
 
 import all from "email-providers/all.json" assert { type: "json" };
+import { genOtp } from "../../../lib/otp";
 
 type VerifyDomainOptions = {
   ctx: NonNullableUserContext;
@@ -18,8 +19,6 @@ const verifyEmailFlow = async (
   domain: string,
   deleteExisting = false
 ) => {
-  // TODO: handle email sending, this method will most likely return a confirmation that an email has been sent
-
   if (deleteExisting) {
     await prisma.verifiedOrganizationDomain.delete({
       where: {
@@ -28,9 +27,15 @@ const verifyEmailFlow = async (
     });
   }
 
-  return await prisma.verifiedOrganizationDomain.create({
+  const { hash, otp } = genOtp(email);
+
+  // TODO: send email with otp
+  console.log("OTP:", otp);
+
+  await prisma.verifiedOrganizationDomain.create({
     data: {
       orgId,
+      otpHash: hash,
       requestedDomain: domain,
       verifiedEmail: email,
     },
@@ -61,20 +66,21 @@ export const verifyDomainHandler = async ({
     });
   }
 
-  const existing = await ctx.prisma.verifiedOrganizationDomain.findFirst({
-    where: {
-      domain: input.domain,
-    },
-  });
+  const existingVerified =
+    await ctx.prisma.verifiedOrganizationDomain.findFirst({
+      where: {
+        domain: input.domain,
+      },
+    });
 
-  if (existing) {
-    if (existing.orgId !== input.orgId) {
+  if (existingVerified) {
+    if (existingVerified.orgId !== input.orgId) {
       // Another organization has already registered this domain, email support to resolve the issue
       throw new TRPCError({
         code: "CONFLICT",
         message: "domain_already_verified",
       });
-    } else if (existing.verifiedEmail !== input.email) {
+    } else if (existingVerified.verifiedEmail !== input.email) {
       // Update the organization to use a different domain
       return await verifyEmailFlow(
         ctx.prisma,
@@ -91,11 +97,21 @@ export const verifyDomainHandler = async ({
     }
   }
 
+  const existing = await ctx.prisma.verifiedOrganizationDomain.findUnique({
+    where: {
+      orgId: input.orgId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
   return await verifyEmailFlow(
     ctx.prisma,
     input.orgId,
     input.email,
-    input.domain
+    input.domain,
+    !!existing
   );
 };
 

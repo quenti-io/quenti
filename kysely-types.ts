@@ -255,6 +255,7 @@ export type VerifiedOrganizationDomain = {
   requestedDomain: string;
   domain: string | null;
   verifiedEmail: string;
+  otpHash: string | null;
   verifiedAt: Timestamp | null;
 };
 export type WhitelistedEmail = {

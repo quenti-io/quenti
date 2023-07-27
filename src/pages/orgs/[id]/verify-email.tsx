@@ -21,6 +21,9 @@ export default function OrgVerifyEmail() {
   const router = useRouter();
   const id = router.query.id as string;
 
+  const [code, setCode] = React.useState("");
+  const lastInputRef = React.useRef<HTMLInputElement>(null);
+
   const { data: org } = api.organizations.get.useQuery(
     { id },
     {
@@ -37,7 +40,23 @@ export default function OrgVerifyEmail() {
         })();
       }, 1000);
     },
+    onError: () => {
+      requestAnimationFrame(() => {
+        lastInputRef.current?.focus();
+      });
+    },
   });
+
+  const resendCode = api.organizations.resendCode.useMutation();
+
+  React.useEffect(() => {
+    if (org?.domain?.verifiedAt) {
+      void (async () => {
+        await router.push(`/orgs/${org.id}/publish`);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
 
   const loading = (
     <Box
@@ -74,12 +93,20 @@ export default function OrgVerifyEmail() {
       currentStep={3}
       enableSkeleton
       isLoaded={!!org?.domain}
+      cardIn={!!org?.domain}
     >
       <Stack spacing="5">
         <Box px="8">
           <Text fontSize="sm">
             Not seeing your email?{" "}
-            <Button variant="link" fontSize="sm">
+            <Button
+              variant="link"
+              fontSize="sm"
+              isLoading={resendCode.isLoading}
+              onClick={() => {
+                resendCode.mutate({ orgId: org!.id });
+              }}
+            >
               Resend
             </Button>
           </Text>
@@ -94,7 +121,9 @@ export default function OrgVerifyEmail() {
                     <PinInput
                       type="number"
                       size="lg"
+                      value={code}
                       onChange={(e) => {
+                        setCode(e);
                         if (e.length == 6)
                           confirmCode.mutate({
                             orgId: org!.id,
@@ -110,7 +139,7 @@ export default function OrgVerifyEmail() {
                       <PinInputField />
                       <PinInputField />
                       <PinInputField />
-                      <PinInputField />
+                      <PinInputField ref={lastInputRef} />
                     </PinInput>
                   </HStack>
                   <Box w="6" h="6">

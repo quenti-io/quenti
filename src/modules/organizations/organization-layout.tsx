@@ -12,7 +12,6 @@ import {
   TabList,
   TabPanels,
   Tabs,
-  Text,
   Tooltip,
   useColorModeValue,
   useToast,
@@ -48,7 +47,6 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const isUpgraded = router.query.upgrade === "success";
 
   const borderColor = useColorModeValue("gray.300", "gray.700");
-  const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   const { data: org, error } = api.organizations.get.useQuery(
     { id },
@@ -138,19 +136,6 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                         </Box>
                       )}
                     </HStack>
-                  </SkeletonText>
-                </Flex>
-                <Flex h="21px" alignItems="center">
-                  <SkeletonText
-                    noOfLines={1}
-                    fitContent
-                    w="max-content"
-                    isLoaded={!!org}
-                    skeletonHeight="10px"
-                  >
-                    <Text fontSize="sm" color={mutedColor}>
-                      {org?.slug || "loading"}
-                    </Text>
                   </SkeletonText>
                 </Flex>
               </Stack>
