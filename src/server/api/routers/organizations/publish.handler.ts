@@ -47,11 +47,27 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
 
   if (checkoutSession) return checkoutSession;
 
-  // TODO: handle auto join domain, conflicts, etc.
+  const requestedDomain = await prisma.verifiedOrganizationDomain.findUnique({
+    where: {
+      orgId: org.id,
+    },
+  });
+
+  if (!requestedDomain || !requestedDomain.verifiedAt)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Must have verified domain before publishing",
+    });
+
   await prisma.organization.update({
     where: { id: org.id },
     data: {
       published: true,
+      domain: {
+        update: {
+          domain: requestedDomain.domain,
+        },
+      },
     },
   });
 

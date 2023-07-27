@@ -124,7 +124,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                       </Heading>
                       {org?.published ? (
                         <Box color="blue.300">
-                          <Tooltip label="Verified Organization">
+                          <Tooltip label="Verified organization">
                             <IconDiscountCheck aria-label="Verified" />
                           </Tooltip>
                         </Box>

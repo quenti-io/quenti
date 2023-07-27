@@ -132,7 +132,7 @@ model VerifiedOrganizationDomain {
   orgId           String    @unique
   requestedDomain String
   domain          String?   @unique
-  verifiedEmail   String    @unique
+  verifiedEmail   String
   otpHash         String?
   verifiedAt      DateTime?
 

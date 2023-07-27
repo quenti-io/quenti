@@ -34,6 +34,7 @@ export default async function handler(
   if (!org) {
     const prevOrg = await prisma.organization.findFirstOrThrow({
       where: { id },
+      include: { domain: true },
     });
     const metadata = orgMetadataSchema.parse(prevOrg.metadata);
 
@@ -47,6 +48,13 @@ export default async function handler(
           subscriptionItemId: subscription.items.data[0]?.id || null,
         },
         published: true,
+        domain: prevOrg.domain
+          ? {
+              update: {
+                domain: prevOrg.domain.requestedDomain,
+              },
+            }
+          : undefined,
       },
     });
   }
