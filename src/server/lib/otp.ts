@@ -15,7 +15,7 @@ export const genOtp = (email: string, expiresInMinutes = 5) => {
 
   const data = `${email}.${otp}.${expires}`;
   const base = crypto
-    .createHmac("sha256", env.NEXTAUTH_SECRET!)
+    .createHmac("sha256", env.QUENTI_ENCRYPTION_KEY)
     .update(data)
     .digest("hex");
 
@@ -32,7 +32,7 @@ export const verifyOtp = (email: string, otp: string, hash: string) => {
 
   const data = `${email}.${otp}.${expires}`;
   const newHash = crypto
-    .createHmac("sha256", env.NEXTAUTH_SECRET!)
+    .createHmac("sha256", env.QUENTI_ENCRYPTION_KEY)
     .update(data)
     .digest("hex");
 

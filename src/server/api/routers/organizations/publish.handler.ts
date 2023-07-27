@@ -56,7 +56,7 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
   if (!requestedDomain || !requestedDomain.verifiedAt)
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Must have verified domain before publishing",
+      message: "Must have a verified domain before publishing",
     });
 
   await prisma.organization.update({
