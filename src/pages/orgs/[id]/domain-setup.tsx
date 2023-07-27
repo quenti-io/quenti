@@ -1,26 +1,17 @@
+import { Button, ButtonGroup, Card } from "@chakra-ui/react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { api } from "../../../utils/api";
-import { WizardLayout } from "../../../components/wizard-layout";
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  FormControl,
-  FormLabel,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
 import React from "react";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { WizardLayout } from "../../../components/wizard-layout";
+import { DomainForm } from "../../../modules/organizations/domain-form";
+import { api } from "../../../utils/api";
+import { OrganizationContext } from "../../../modules/organizations/organization-layout";
 
 export default function OrgDomainSetup() {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: session } = useSession();
-
-  const [domain, setDomain] = React.useState("");
-  const [email, setEmail] = React.useState("");
 
   const { data: org } = api.organizations.get.useQuery(
     { id },
@@ -30,11 +21,11 @@ export default function OrgDomainSetup() {
     }
   );
 
-  const verifyDomain = api.organizations.verifyDomain.useMutation({
-    onSuccess: async () => {
-      await router.push(`/orgs/${org!.id}/verify-email`);
-    },
-  });
+  const me = org
+    ? org.members.find((m) => m.user.id === session!.user!.id)
+    : null;
+
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (org?.domain) {
@@ -57,64 +48,30 @@ export default function OrgDomainSetup() {
       currentStep={2}
     >
       <Card p="8" variant="outline" shadow="lg" rounded="lg">
-        <Stack spacing="10">
-          <Stack spacing="6">
-            <FormControl>
-              <FormLabel fontSize="sm" mb="10px">
-                Domain
-              </FormLabel>
-              <Input
-                placeholder="example.edu"
-                autoFocus
-                value={domain}
-                onChange={(e) => {
-                  setDomain(e.target.value);
+        <OrganizationContext.Provider value={org && me ? { ...org, me } : null}>
+          <DomainForm
+            onChangeLoading={setLoading}
+            onSuccess={async () => {
+              await router.push(`/orgs/${id}/verify-email`);
+            }}
+          >
+            <ButtonGroup w="full">
+              <Button
+                w="full"
+                variant="outline"
+                leftIcon={<IconArrowLeft size={18} />}
+                onClick={async () => {
+                  await router.push(`/orgs/${id}/members-onboarding`);
                 }}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel fontSize="sm" mb="10px">
-                Email for verification
-              </FormLabel>
-              <Input
-                placeholder={
-                  !domain.trim().length
-                    ? `Email address for that domain`
-                    : `Email address ending in @${domain.trim()}`
-                }
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-            </FormControl>
-          </Stack>
-          <ButtonGroup w="full">
-            <Button
-              w="full"
-              variant="outline"
-              leftIcon={<IconArrowLeft size={18} />}
-              onClick={async () => {
-                await router.push(`/orgs/${id}/members-onboarding`);
-              }}
-            >
-              Go back
-            </Button>
-            <Button
-              w="full"
-              isLoading={verifyDomain.isLoading}
-              onClick={async () => {
-                await verifyDomain.mutateAsync({
-                  domain: domain.trim(),
-                  email: email.trim(),
-                  orgId: org!.id,
-                });
-              }}
-            >
-              Add domain
-            </Button>
-          </ButtonGroup>
-        </Stack>
+              >
+                Go back
+              </Button>
+              <Button w="full" type="submit" isLoading={loading}>
+                Add domain
+              </Button>
+            </ButtonGroup>
+          </DomainForm>
+        </OrganizationContext.Provider>
       </Card>
     </WizardLayout>
   );

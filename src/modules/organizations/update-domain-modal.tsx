@@ -2,10 +2,7 @@ import {
   Box,
   Button,
   ButtonGroup,
-  FormControl,
-  FormLabel,
   HStack,
-  Input,
   PinInput,
   PinInputField,
   Spinner,
@@ -22,6 +19,7 @@ import { Modal } from "../../components/modal";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useOrganization } from "../../hooks/use-organization";
 import { api } from "../../utils/api";
+import { DomainForm } from "./domain-form";
 
 export interface UpdateDomainModalProps {
   isOpen: boolean;
@@ -57,56 +55,23 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const org = useOrganization();
   const utils = api.useContext();
-  const [domain, setDomain] = React.useState("");
-  const [email, setEmail] = React.useState("");
-
-  const muted = useColorModeValue("gray.700", "gray.300");
-
-  const verifyDomain = api.organizations.verifyDomain.useMutation({
-    onSuccess: async () => {
-      await utils.organizations.get.invalidate();
-      onSuccess();
-    },
-  });
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const [loading, setLoading] = React.useState(false);
 
   return (
     <Modal.Content>
       <Modal.Body>
         <SegmentedProgress steps={2} currentStep={0} />
-        <Modal.Heading>Update domain</Modal.Heading>
-        <Stack spacing="6">
-          <Text color={muted}>
-            Once updated, students enrolled with the previous domain will no
-            longer be connected to this organization.
-          </Text>
-          <FormControl>
-            <FormLabel>Domain</FormLabel>
-            <Input
-              placeholder="example.edu"
-              autoFocus
-              value={domain}
-              onChange={(e) => {
-                setDomain(e.target.value);
-              }}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Email for verification</FormLabel>
-            <Input
-              placeholder={
-                !domain.trim().length
-                  ? `Email address for that domain`
-                  : `Email address ending in @${domain.trim()}`
-              }
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-            />
-          </FormControl>
-        </Stack>
+        <Modal.Heading>Update your domain</Modal.Heading>
+        <DomainForm
+          formRef={formRef}
+          onSuccess={async () => {
+            await utils.organizations.get.invalidate();
+            onSuccess();
+          }}
+          onChangeLoading={setLoading}
+        />
       </Modal.Body>
       <Modal.Divider />
       <Modal.Footer>
@@ -115,15 +80,12 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
             Cancel
           </Button>
           <Button
-            isDisabled={!domain.trim().length || !email.trim().length}
-            isLoading={verifyDomain.isLoading}
             onClick={() => {
-              verifyDomain.mutate({
-                orgId: org!.id,
-                domain: domain.trim(),
-                email: email.trim(),
-              });
+              formRef.current?.dispatchEvent(
+                new Event("submit", { cancelable: true, bubbles: true })
+              );
             }}
+            isLoading={loading}
           >
             Update domain
           </Button>
