@@ -252,7 +252,8 @@ export type VerificationToken = {
 export type VerifiedOrganizationDomain = {
   id: string;
   orgId: string;
-  domain: string;
+  requestedDomain: string;
+  domain: string | null;
   verifiedEmail: string;
   verifiedAt: Timestamp | null;
 };

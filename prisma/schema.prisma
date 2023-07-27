@@ -128,13 +128,14 @@ model Organization {
 }
 
 model VerifiedOrganizationDomain {
-  id            String    @id @default(cuid())
-  orgId         String    @unique
-  domain        String    @unique
-  verifiedEmail String    @unique
-  verifiedAt    DateTime?
+  id              String    @id @default(cuid())
+  orgId           String    @unique
+  requestedDomain String
+  domain          String?   @unique
+  verifiedEmail   String    @unique
+  verifiedAt      DateTime?
 
-  organization Organization @relation(fields: [orgId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 }
 
 enum MembershipRole {

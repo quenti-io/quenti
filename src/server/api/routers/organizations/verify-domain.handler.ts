@@ -31,7 +31,7 @@ const verifyEmailFlow = async (
   return await prisma.verifiedOrganizationDomain.create({
     data: {
       orgId,
-      domain: domain,
+      requestedDomain: domain,
       verifiedEmail: email,
     },
   });
