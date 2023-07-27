@@ -89,11 +89,10 @@ export const Modal = forwardRef<ModalProps, "div">(
 };
 
 const Overlay = function ModalOverlay() {
+  const background = useColorModeValue("blackAlpha.400", "blackAlpha.600");
+
   return (
-    <ChakraModalOverlay
-      backdropFilter="blur(6px)"
-      background="blackAlpha.400"
-    />
+    <ChakraModalOverlay backdropFilter="blur(6px)" background={background} />
   );
 };
 

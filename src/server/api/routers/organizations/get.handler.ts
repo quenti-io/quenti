@@ -42,6 +42,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       domain: {
         select: {
           domain: true,
+          requestedDomain: true,
           verifiedAt: true,
           verifiedEmail: true,
         },

@@ -21,12 +21,15 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
+import { SkeletonLabel } from "../../../components/skeleton-label";
 import { api } from "../../../utils/api";
 import { ORGANIZATION_ICONS } from "../../../utils/icons";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
+import { DomainCard } from "../domain-card";
 import { LeaveOrganizationModal } from "../leave-organization-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
 import { SettingsWrapper } from "../settings-wrapper";
+import { UpdateDomainModal } from "../update-domain-modal";
 
 export const OrganizationSettings = () => {
   const router = useRouter();
@@ -47,10 +50,13 @@ export const OrganizationSettings = () => {
   const inputBorder = useColorModeValue("gray.200", "gray.600");
   const iconColor = useColorModeValue("#171923", "white");
 
+  const [mounted, setMounted] = React.useState(false);
   const [orgName, setOrgName] = React.useState("");
   const [icon, setIcon] = React.useState<number | undefined>();
   const [leaveOpen, setLeaveOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [domainVerify, setDomainVerify] = React.useState(false);
+  const [updateDomainOpen, setUpdateDomainOpen] = React.useState(false);
 
   const update = api.organizations.update.useMutation({
     onSuccess: async () => {
@@ -76,10 +82,13 @@ export const OrganizationSettings = () => {
   });
 
   React.useEffect(() => {
-    if (org) {
+    if (org && !mounted) {
+      setMounted(true);
       setOrgName(org.name);
       setIcon(org.icon);
+      setDomainVerify(!!org.domain?.verifiedAt);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
   const role: MembershipRole = org
@@ -101,6 +110,16 @@ export const OrganizationSettings = () => {
         isOpen={deleteOpen}
         onClose={() => {
           setDeleteOpen(false);
+        }}
+      />
+      <UpdateDomainModal
+        isOpen={updateDomainOpen}
+        onClose={() => {
+          setUpdateDomainOpen(false);
+        }}
+        verify={domainVerify}
+        onUpdate={() => {
+          setDomainVerify(true);
         }}
       />
       <Flex justifyContent="space-between" alignItems="center" h="40px">
@@ -151,17 +170,30 @@ export const OrganizationSettings = () => {
         description="Global organization settings"
         isLoaded={!!org}
       >
-        <Stack spacing="3" pb="2px">
-          <Skeleton rounded="md" w="full" isLoaded={!!org}>
-            <Input
-              bg={inputBg}
-              borderColor={inputBorder}
-              value={orgName}
-              onChange={(e) => setOrgName(e.target.value)}
-              shadow="sm"
-              isDisabled={!isAdmin}
-            />
-          </Skeleton>
+        <Stack spacing="5" pb="2px">
+          <Stack spacing="1">
+            <SkeletonLabel isLoaded={!!org}>Name</SkeletonLabel>
+            <Skeleton rounded="md" w="full" isLoaded={!!org}>
+              <Input
+                bg={inputBg}
+                borderColor={inputBorder}
+                value={orgName}
+                onChange={(e) => setOrgName(e.target.value)}
+                shadow="sm"
+                isDisabled={!isAdmin}
+              />
+            </Skeleton>
+          </Stack>
+          <DomainCard
+            onRequestVerify={() => {
+              setDomainVerify(true);
+              setUpdateDomainOpen(true);
+            }}
+            onRequestUpdate={() => {
+              setDomainVerify(false);
+              setUpdateDomainOpen(true);
+            }}
+          />
         </Stack>
       </SettingsWrapper>
       <Divider />
