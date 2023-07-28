@@ -32,7 +32,19 @@ const webhookHandlers: Record<string, WebhookHandler | undefined> = {
       });
     }
 
-    await cancelOrganizationSubscription(metadata.data.orgId);
+    try {
+      await cancelOrganizationSubscription(metadata.data.orgId);
+    } catch (_err) {
+      const err = getErrorFromUnknown(_err);
+      if (err.message == "No Organization found") {
+        throw new HttpError({
+          statusCode: 202,
+          message: "Organization already deleted",
+        });
+      }
+
+      throw err;
+    }
     await deactivateOrgDomain(metadata.data.orgId);
     await disbandOrgStudents(metadata.data.orgId);
   },
