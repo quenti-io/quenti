@@ -3,9 +3,7 @@ import type { CreateEmailOptions } from "resend/build/src/emails/interfaces";
 import { env } from "../env/server.mjs";
 import ConfirmCodeEmail, { type ConfirmCodeEmailProps } from "./confirm-code";
 
-const NOTIFICATIONS_SENDER = `notifications@${
-  process.env.VERCEL_URL || "quenti.io"
-}`;
+const NOTIFICATIONS_SENDER = `notifications@${env.EMAIL_SENDER || ""}`;
 
 const to = (email: string | string[]) => {
   if (env.USE_RESEND_PREVIEWS) return "delivered@resend.dev";
