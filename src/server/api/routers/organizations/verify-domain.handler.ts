@@ -8,6 +8,7 @@ import all from "email-providers/all.json" assert { type: "json" };
 import { genOtp } from "../../../lib/otp";
 import { disbandOrgStudentsByDomain } from "../../../lib/orgs/students";
 import { env } from "../../../../env/server.mjs";
+import { sendConfirmCodeEmail } from "../../../../emails/resend";
 
 type VerifyDomainOptions = {
   ctx: NonNullableUserContext;
@@ -17,6 +18,7 @@ type VerifyDomainOptions = {
 const verifyEmailFlow = async (
   prisma: PrismaClient,
   orgId: string,
+  orgName: string,
   email: string,
   domain: string,
   published: boolean,
@@ -34,9 +36,6 @@ const verifyEmailFlow = async (
 
   const { hash, otp } = genOtp(email);
 
-  // TODO: send email with otp
-  console.log("OTP:", otp);
-
   await prisma.verifiedOrganizationDomain.create({
     data: {
       orgId,
@@ -44,6 +43,12 @@ const verifyEmailFlow = async (
       requestedDomain: domain,
       verifiedEmail: email,
     },
+  });
+
+  await sendConfirmCodeEmail(email, {
+    domain,
+    orgName,
+    otp,
   });
 };
 
@@ -98,6 +103,7 @@ export const verifyDomainHandler = async ({
       return await verifyEmailFlow(
         ctx.prisma,
         input.orgId,
+        org.name,
         input.email,
         input.domain,
         org.published,
@@ -123,6 +129,7 @@ export const verifyDomainHandler = async ({
   return await verifyEmailFlow(
     ctx.prisma,
     input.orgId,
+    org.name,
     input.email,
     input.domain,
     org.published,

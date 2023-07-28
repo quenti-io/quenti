@@ -25,6 +25,8 @@ export const serverSchema = z.object({
   ADMIN_EMAIL: z.string().email(),
   METRICS_API_USER: z.string(),
   METRICS_API_PASSWORD: z.string(),
+  RESEND_API_KEY: z.string().optional(),
+  USE_RESEND_PREVIEWS: z.boolean().optional().default(true),
   GRAFANA_DASHBOARD_URL: z.string().url().optional(),
   STRIPE_PRIVATE_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
