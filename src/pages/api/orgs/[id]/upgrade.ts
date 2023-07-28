@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type Stripe from "stripe";
 import { z } from "zod";
-import stripe from "../../../../payments/stripe";
-import { prisma } from "../../../../server/db";
-import { getServerAuthSession } from "../../../../server/auth";
 import { orgMetadataSchema } from "../../../../../prisma/zod-schemas";
+import stripe from "../../../../payments/stripe";
+import { getServerAuthSession } from "../../../../server/auth";
+import { prisma } from "../../../../server/db";
+import { conflictingDomain } from "../../../../server/lib/orgs/domains";
+import { bulkJoinOrgStudents } from "../../../../server/lib/orgs/students";
 
 const querySchema = z.object({
   id: z.string().cuid2(),
@@ -34,8 +36,13 @@ export default async function handler(
   if (!org) {
     const prevOrg = await prisma.organization.findFirstOrThrow({
       where: { id },
+      include: { domain: true },
     });
     const metadata = orgMetadataSchema.parse(prevOrg.metadata);
+
+    const conflicting =
+      !!prevOrg.domain &&
+      !!(await conflictingDomain(id, prevOrg.domain.requestedDomain));
 
     org = await prisma.organization.update({
       where: { id },
@@ -47,8 +54,19 @@ export default async function handler(
           subscriptionItemId: subscription.items.data[0]?.id || null,
         },
         published: true,
+        domain:
+          prevOrg.domain && !conflicting
+            ? {
+                update: {
+                  domain: prevOrg.domain.requestedDomain,
+                },
+              }
+            : undefined,
       },
     });
+
+    if (prevOrg.domain)
+      await bulkJoinOrgStudents(org.id, prevOrg.domain.requestedDomain);
   }
 
   const session = await getServerAuthSession({ req, res });

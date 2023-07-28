@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import { cancelOrganizationSubscription } from "../../../../payments/subscription";
+import { disbandOrgStudents } from "../../../lib/orgs/students";
 import { isOrganizationOwner } from "../../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TDeleteSchema } from "./delete.schema";
-import { cancelOrganizationSubscription } from "../../../../payments/subscription";
 
 type DeleteOptions = {
   ctx: NonNullableUserContext;
@@ -15,11 +16,15 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
 
   await cancelOrganizationSubscription(input.orgId);
 
-  await ctx.prisma.organization.delete({
+  const deleted = await ctx.prisma.organization.delete({
     where: {
       id: input.orgId,
     },
   });
+
+  if (deleted.published) {
+    await disbandOrgStudents(deleted.id);
+  }
 };
 
 export default deleteHandler;

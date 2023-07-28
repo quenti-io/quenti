@@ -6,6 +6,8 @@ import { prisma } from "../../../db";
 import { IS_PAYMENT_ENABLED } from "../../../../constants/payments";
 import { purchaseOrganizationSubscription } from "../../../../payments/subscription";
 import { BASE_URL } from "../../../../constants/url";
+import { bulkJoinOrgStudents } from "../../../lib/orgs/students";
+import { conflictingDomain } from "../../../lib/orgs/domains";
 
 type PublishOptions = {
   ctx: NonNullableUserContext;
@@ -47,13 +49,38 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
 
   if (checkoutSession) return checkoutSession;
 
-  // TODO: handle auto join domain, conflicts, etc.
+  const domain = await prisma.verifiedOrganizationDomain.findUnique({
+    where: {
+      orgId: org.id,
+    },
+  });
+
+  if (!domain || !domain.verifiedAt)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Must have a verified domain before publishing",
+    });
+
+  if (await conflictingDomain(org.id, domain.requestedDomain)) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "Domain conflict",
+    });
+  }
+
   await prisma.organization.update({
     where: { id: org.id },
     data: {
       published: true,
+      domain: {
+        update: {
+          domain: domain.requestedDomain,
+        },
+      },
     },
   });
+
+  await bulkJoinOrgStudents(org.id, domain.requestedDomain);
 
   return {
     callback: `${BASE_URL}/orgs/${org.id}`,

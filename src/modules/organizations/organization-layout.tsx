@@ -17,7 +17,12 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { IconAlertCircleFilled, IconDiscountCheck } from "@tabler/icons-react";
+import {
+  IconAlertCircleFilled,
+  IconAt,
+  IconCircleDot,
+  IconDiscountCheck,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -126,33 +131,36 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                       </Heading>
                       {org?.published ? (
                         <Box color="blue.300">
-                          <Tooltip label="Verified Organization">
+                          <Tooltip label="Verified organization">
                             <IconDiscountCheck aria-label="Verified" />
                           </Tooltip>
                         </Box>
                       ) : (
-                        <Box color="orange.400">
+                        <Box color="gray.500">
                           <Tooltip label="Not published">
-                            <IconAlertCircleFilled aria-label="Not published" />
+                            <IconCircleDot aria-label="Not published" />
                           </Tooltip>
                         </Box>
                       )}
                     </HStack>
                   </SkeletonText>
                 </Flex>
-                <Flex h="21px" alignItems="center">
-                  <SkeletonText
-                    noOfLines={1}
-                    fitContent
-                    w="max-content"
-                    isLoaded={!!org}
-                    skeletonHeight="10px"
-                  >
-                    <Text fontSize="sm" color={mutedColor}>
-                      {org?.slug || "loading"}
-                    </Text>
-                  </SkeletonText>
-                </Flex>
+                {org?.domain?.domain && (
+                  <Flex h="21px" alignItems="center">
+                    <SkeletonText
+                      noOfLines={1}
+                      fitContent
+                      w="max-content"
+                      isLoaded={!!org}
+                      skeletonHeight="10px"
+                    >
+                      <HStack spacing="1" color={mutedColor}>
+                        <IconAt size="16" />
+                        <Text fontSize="sm">{org?.domain?.domain}</Text>
+                      </HStack>
+                    </SkeletonText>
+                  </Flex>
+                )}
               </Stack>
             </HStack>
             <Tabs
@@ -169,7 +177,14 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                   Students
                 </SkeletonTab>
                 <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/settings`}>
-                  Settings
+                  <Box display="flex" gap="2" alignItems="center">
+                    Settings
+                    {org?.domain?.conflict && (
+                      <Box display="inline-flex" color="orange.400" w="4" h="4">
+                        <IconAlertCircleFilled size={16} />
+                      </Box>
+                    )}
+                  </Box>
                 </SkeletonTab>
                 {(getTabIndex() == 3 ||
                   me?.role == "Admin" ||

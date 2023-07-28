@@ -113,20 +113,31 @@ model VerificationToken {
 }
 
 model Organization {
-  id        String   @id @default(cuid())
+  id        String                      @id @default(cuid())
   name      String
-  slug      String
-  createdAt DateTime @default(now())
-  icon      Int      @default(0)
-  published Boolean  @default(false)
+  createdAt DateTime                    @default(now())
+  icon      Int                         @default(0)
+  published Boolean                     @default(false)
+  domain    VerifiedOrganizationDomain?
   /// @zod.custom(imports.orgMetadataSchema)
   metadata  Json?
 
-  members     Membership[]
-  users       User[]
-  inviteToken VerificationToken?
+  members        Membership[]
+  users          User[]
+  inviteToken    VerificationToken?
+  pendingInvites PendingInvite[]
+}
 
-  @@unique([slug])
+model VerifiedOrganizationDomain {
+  id              String    @id @default(cuid())
+  orgId           String    @unique
+  requestedDomain String
+  domain          String?   @unique
+  verifiedEmail   String
+  otpHash         String?
+  verifiedAt      DateTime?
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 }
 
 enum MembershipRole {
@@ -148,6 +159,18 @@ model Membership {
   @@unique([userId, orgId])
   @@index([orgId])
   @@index([userId])
+}
+
+model PendingInvite {
+  id    String         @id @default(cuid())
+  orgId String
+  email String
+  role  MembershipRole
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, email])
+  @@index([email])
 }
 
 model AllowedEmailRegex {

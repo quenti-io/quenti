@@ -7,12 +7,14 @@ export interface RemoveMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   id: string;
+  type: "user" | "invite";
 }
 
 export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
   isOpen,
   onClose,
   id,
+  type,
 }) => {
   const org = useOrganization();
   const utils = api.useContext();
@@ -28,9 +30,15 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body spacing="2">
-          <Modal.Heading>Remove member</Modal.Heading>
+          <Modal.Heading>
+            {type == "user" ? "Remove member" : "Remove invite"}
+          </Modal.Heading>
           <Text>
-            Are you sure you want to remove this member from the organization?
+            Are you sure you want to{" "}
+            {type == "user"
+              ? "remove this member from the organization"
+              : "cancel this invite to the organization"}
+            ?
           </Text>
         </Modal.Body>
         <Modal.Divider />
@@ -44,11 +52,12 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
               onClick={() =>
                 removeMember.mutate({
                   orgId: org!.id,
-                  userId: id,
+                  genericId: id,
+                  type,
                 })
               }
             >
-              Remove member
+              {type == "user" ? "Remove member" : "Remove invite"}
             </Button>
           </ButtonGroup>
         </Modal.Footer>

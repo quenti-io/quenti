@@ -26,12 +26,9 @@ export const removeMemberHandler = async ({
     },
   });
 
-  const targetMembership = members.find((m) => m.userId === input.userId);
-  if (!targetMembership) throw new TRPCError({ code: "NOT_FOUND" });
-
   const owners = members.filter((m) => m.role === "Owner");
 
-  if (membership.userId == input.userId) {
+  if (membership.userId == input.genericId) {
     if (membership.role == "Owner" && owners.length == 1) {
       throw new TRPCError({
         code: "FORBIDDEN",
@@ -45,21 +42,41 @@ export const removeMemberHandler = async ({
     });
   }
 
-  if (membership.role == "Admin" && targetMembership.role == "Owner") {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Must be an owner to remove an owner",
+  if (input.type == "user") {
+    const targetMembership = members.find((m) => m.userId === input.genericId);
+    if (!targetMembership) throw new TRPCError({ code: "NOT_FOUND" });
+
+    if (membership.role == "Admin" && targetMembership.role == "Owner") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Must be an owner to remove an owner",
+      });
+    }
+
+    await ctx.prisma.membership.delete({
+      where: {
+        userId_orgId: {
+          userId: input.genericId,
+          orgId: input.orgId,
+        },
+      },
+    });
+  } else {
+    const targetInvite = await ctx.prisma.pendingInvite.findUnique({
+      where: {
+        id: input.genericId,
+      },
+    });
+
+    if (!targetInvite || targetInvite.orgId !== input.orgId)
+      throw new TRPCError({ code: "NOT_FOUND" });
+
+    await ctx.prisma.pendingInvite.delete({
+      where: {
+        id: input.genericId,
+      },
     });
   }
-
-  await ctx.prisma.membership.delete({
-    where: {
-      userId_orgId: {
-        userId: input.userId,
-        orgId: input.orgId,
-      },
-    },
-  });
 };
 
 export default removeMemberHandler;

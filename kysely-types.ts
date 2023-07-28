@@ -149,7 +149,6 @@ export type Membership = {
 export type Organization = {
   id: string;
   name: string;
-  slug: string;
   createdAt: Generated<Timestamp>;
   icon: Generated<number>;
   published: Generated<number>;
@@ -157,6 +156,12 @@ export type Organization = {
    * @zod.custom(imports.orgMetadataSchema)
    */
   metadata: unknown | null;
+};
+export type PendingInvite = {
+  id: string;
+  orgId: string;
+  email: string;
+  role: MembershipRole;
 };
 export type RecentFailedLogin = {
   id: string;
@@ -250,6 +255,15 @@ export type VerificationToken = {
   updatedAt: Timestamp;
   organizationId: string | null;
 };
+export type VerifiedOrganizationDomain = {
+  id: string;
+  orgId: string;
+  requestedDomain: string;
+  domain: string | null;
+  verifiedEmail: string;
+  otpHash: string | null;
+  verifiedAt: Timestamp | null;
+};
 export type WhitelistedEmail = {
   email: string;
   createdAt: Generated<Timestamp>;
@@ -265,6 +279,7 @@ export type DB = {
   Leaderboard: Leaderboard;
   Membership: Membership;
   Organization: Organization;
+  PendingInvite: PendingInvite;
   RecentFailedLogin: RecentFailedLogin;
   Session: Session;
   SetAutoSave: SetAutoSave;
@@ -275,5 +290,6 @@ export type DB = {
   Term: Term;
   User: User;
   VerificationToken: VerificationToken;
+  VerifiedOrganizationDomain: VerifiedOrganizationDomain;
   WhitelistedEmail: WhitelistedEmail;
 };

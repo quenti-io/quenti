@@ -63,6 +63,11 @@ export const dtFormatter = new Intl.DateTimeFormat("en-US", {
   timeStyle: "short",
 });
 
+export const briefFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+});
+
 export const formatDeciseconds = (deciseconds: number) => {
   const seconds = Math.floor(deciseconds / 10);
   const deci = deciseconds % 10;

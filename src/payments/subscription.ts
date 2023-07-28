@@ -1,7 +1,9 @@
+import { log } from "next-axiom";
 import { orgMetadataSchema } from "../../prisma/zod-schemas";
 import { BASE_URL } from "../constants/url";
 import { env } from "../env/server.mjs";
 import { prisma } from "../server/db";
+import { getErrorFromUnknown } from "../utils/error";
 import { getStripeCustomerIdFromUserId } from "./customer";
 import stripe from "./stripe";
 
@@ -71,11 +73,15 @@ export const cancelOrganizationSubscription = async (orgId: string) => {
   const metadata = orgMetadataSchema.parse(org.metadata);
   if (!metadata?.subscriptionId) return;
 
-  const subscription = await stripe.subscriptions.retrieve(
-    metadata.subscriptionId
-  );
-  if (subscription.status !== "canceled")
-    await stripe.subscriptions.cancel(metadata.subscriptionId);
+  try {
+    const subscription = await stripe.subscriptions.retrieve(
+      metadata.subscriptionId
+    );
+    if (subscription && subscription.status !== "canceled")
+      await stripe.subscriptions.cancel(metadata.subscriptionId);
+  } catch (e) {
+    log.error(getErrorFromUnknown(e).message);
+  }
 
   await prisma.organization.update({
     where: { id: orgId },

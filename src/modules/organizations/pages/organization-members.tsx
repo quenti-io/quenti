@@ -19,8 +19,8 @@ import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationMember } from "../organization-member";
-import { RemoveMemberModal } from "../remove-member-modal";
 import { OrganizationWelcome } from "../organization-welcome";
+import { RemoveMemberModal } from "../remove-member-modal";
 
 export const OrganizationMembers = () => {
   const router = useRouter();
@@ -42,10 +42,17 @@ export const OrganizationMembers = () => {
   const others = org
     ? org.members.filter((m) => m.userId != session?.user?.id)
     : [];
+  const pending = org ? org.pendingInvites : [];
 
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [editMember, setEditMember] = React.useState<string | undefined>();
+  const [editMemberType, setEditMemberType] = React.useState<"user" | "invite">(
+    "user"
+  );
   const [removeMember, setRemoveMember] = React.useState<string | undefined>();
+  const [removeMemberType, setRemoveMemberType] = React.useState<
+    "user" | "invite"
+  >("user");
   const [search, setSearch] = React.useState("");
 
   const filterFn = (m: NonNullable<typeof me>) => {
@@ -57,6 +64,13 @@ export const OrganizationMembers = () => {
       m.user.email?.toLowerCase().includes(refined) ||
       m.user.username.toLowerCase().includes(refined)
     );
+  };
+
+  const pendingFilterFn = (m: (typeof pending)[number]) => {
+    const refined = search.trim().toLowerCase();
+    if (!refined.length) return true;
+
+    return m.email?.toLowerCase().includes(refined);
   };
 
   const menuBg = useColorModeValue("white", "gray.800");
@@ -77,13 +91,19 @@ export const OrganizationMembers = () => {
             onClose={() => setEditMember(undefined)}
             id={editMember || ""}
             role={
-              org.members.find((m) => m.userId == editMember)?.role || "Member"
+              editMemberType == "user"
+                ? org.members.find((m) => m.userId == editMember)?.role ||
+                  "Member"
+                : org.pendingInvites.find((m) => m.id == editMember)?.role ||
+                  "Member"
             }
+            type={editMemberType}
           />
           <RemoveMemberModal
             isOpen={!!removeMember}
             onClose={() => setRemoveMember(undefined)}
             id={removeMember || ""}
+            type={removeMemberType}
           />
         </>
       )}
@@ -130,8 +150,37 @@ export const OrganizationMembers = () => {
                 user={m.user}
                 role={m.role}
                 accepted={m.accepted}
-                onRequestEdit={() => setEditMember(m.user.id)}
-                onRequestRemove={() => setRemoveMember(m.user.id)}
+                onRequestEdit={() => {
+                  setEditMemberType("user");
+                  setEditMember(m.user.id);
+                }}
+                onRequestRemove={() => {
+                  setRemoveMemberType("user");
+                  setRemoveMember(m.user.id);
+                }}
+              />
+            ))}
+            {pending.filter(pendingFilterFn).map((m) => (
+              <OrganizationMember
+                key={m.id}
+                user={{
+                  id: "",
+                  name: m.email,
+                  username: "",
+                  email: m.email,
+                  image: null,
+                }}
+                role={m.role}
+                accepted={false}
+                isEmpty
+                onRequestEdit={() => {
+                  setEditMemberType("invite");
+                  setEditMember(m.id);
+                }}
+                onRequestRemove={() => {
+                  setRemoveMemberType("invite");
+                  setRemoveMember(m.id);
+                }}
               />
             ))}
           </Stack>

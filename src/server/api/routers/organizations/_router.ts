@@ -2,16 +2,20 @@ import { loadHandler } from "../../../lib/load-handler";
 import { createTRPCRouter, teacherProcedure } from "../../trpc";
 import { ZAcceptInviteSchema } from "./accept-invite.schema";
 import { ZAcceptTokenSchema } from "./accept-token.schema";
+import { ZConfirmCodeSchema } from "./confirm-code.schema";
 import { ZCreateInviteSchema } from "./create-invite.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZEditMemberRoleSchema } from "./edit-member-role.schema";
 import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetSchema } from "./get.schema";
+import { ZInviteMemberSchema } from "./invite-member.schema";
 import { ZPublishSchema } from "./publish.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
+import { ZResendCodeSchema } from "./resend-code.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
 import { ZUpdateSchema } from "./update.schema";
+import { ZVerifyDomainSchema } from "./verify-domain.schema";
 
 type OrganizationsRouterHandlerCache = {
   handlers: {
@@ -22,12 +26,16 @@ type OrganizationsRouterHandlerCache = {
     update?: typeof import("./update.handler").updateHandler;
     publish?: typeof import("./publish.handler").publishHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
+    ["invite-member"]?: typeof import("./invite-member.handler").inviteMemberHandler;
     ["create-invite"]?: typeof import("./create-invite.handler").createInviteHandler;
     ["set-invite-expiration"]?: typeof import("./set-invite-expiration.handler").setInviteExpirationHandler;
     ["accept-token"]?: typeof import("./accept-token.handler").acceptTokenHandler;
     ["accept-invite"]?: typeof import("./accept-invite.handler").acceptInviteHandler;
     ["edit-member-role"]?: typeof import("./edit-member-role.handler").editMemberRoleHandler;
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
+    ["verify-domain"]?: typeof import("./verify-domain.handler").verifyDomainHandler;
+    ["confirm-code"]?: typeof import("./confirm-code.handler").confirmCodeHandler;
+    ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
   };
 } & { routerPath: string };
 
@@ -75,6 +83,12 @@ export const organizationsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "delete");
       return HANDLER_CACHE.handlers["delete"]!({ ctx, input });
     }),
+  inviteMember: teacherProcedure
+    .input(ZInviteMemberSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "invite-member");
+      return HANDLER_CACHE.handlers["invite-member"]!({ ctx, input });
+    }),
   createInvite: teacherProcedure
     .input(ZCreateInviteSchema)
     .mutation(async ({ ctx, input }) => {
@@ -110,5 +124,23 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "remove-member");
       return HANDLER_CACHE.handlers["remove-member"]!({ ctx, input });
+    }),
+  verifyDomain: teacherProcedure
+    .input(ZVerifyDomainSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "verify-domain");
+      return HANDLER_CACHE.handlers["verify-domain"]!({ ctx, input });
+    }),
+  confirmCode: teacherProcedure
+    .input(ZConfirmCodeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "confirm-code");
+      return HANDLER_CACHE.handlers["confirm-code"]!({ ctx, input });
+    }),
+  resendCode: teacherProcedure
+    .input(ZResendCodeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "resend-code");
+      return HANDLER_CACHE.handlers["resend-code"]!({ ctx, input });
     }),
 });

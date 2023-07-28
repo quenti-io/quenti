@@ -45,4 +45,7 @@ yarn-error.log*
 # Local Netlify folder
 .netlify
 
+# React email
+.react-email
+
 .turbo
