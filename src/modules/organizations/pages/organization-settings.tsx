@@ -187,6 +187,7 @@ export const OrganizationSettings = () => {
           </Stack>
           <Stack spacing="3">
             <DomainCard
+              role={role}
               onRequestVerify={() => {
                 setDomainVerify(true);
                 setUpdateDomainOpen(true);

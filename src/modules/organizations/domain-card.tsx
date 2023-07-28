@@ -30,8 +30,10 @@ import { SkeletonLabel } from "../../components/skeleton-label";
 import { useOrganization } from "../../hooks/use-organization";
 import { briefFormatter } from "../../utils/time";
 import { OrganizationAdminOnly } from "./organization-admin-only";
+import type { MembershipRole } from "@prisma/client";
 
 interface DomainCardProps {
+  role: MembershipRole;
   onRequestVerify: () => void;
   onRequestUpdate: () => void;
 }
@@ -39,6 +41,8 @@ interface DomainCardProps {
 export const DomainCard: React.FC<DomainCardProps> = (props) => {
   const org = useOrganization();
   const hasDomain = !!org?.domain;
+
+  const isAdmin = props.role == "Admin" || props.role == "Owner";
 
   return (
     <Stack spacing="1">
@@ -52,8 +56,9 @@ export const DomainCard: React.FC<DomainCardProps> = (props) => {
           <Button
             variant="outline"
             leftIcon={<IconAt size={18} />}
-            as={Link}
-            href={`/orgs/${org?.id || ""}/domain-setup`}
+            as={isAdmin ? Link : undefined}
+            isDisabled={!isAdmin}
+            href={isAdmin ? `/orgs/${org?.id || ""}/domain-setup` : undefined}
           >
             Set up a domain
           </Button>

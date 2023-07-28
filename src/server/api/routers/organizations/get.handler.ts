@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TGetSchema } from "./get.schema";
+import { conflictingDomain } from "../../../lib/orgs/domains";
 
 type GetOptions = {
   ctx: NonNullableUserContext;
@@ -57,11 +58,8 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   if (!org) throw new TRPCError({ code: "NOT_FOUND" });
 
-  const conflicting = await ctx.prisma.verifiedOrganizationDomain.findUnique({
-    where: {
-      domain: org.domain?.requestedDomain,
-    },
-  });
+  const conflict =
+    org.domain && (await conflictingDomain(org.id, org.domain.requestedDomain));
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { metadata: _, ...rest } = org;
@@ -70,7 +68,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     domain: rest.domain
       ? {
           ...rest.domain,
-          conflict: !!conflicting && conflicting.orgId !== org.id,
+          conflict,
         }
       : null,
   };
