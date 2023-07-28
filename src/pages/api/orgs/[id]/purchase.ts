@@ -1,9 +1,13 @@
-import { z } from "zod";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerAuthSession } from "../../../../server/auth";
-import { isOrganizationAdmin } from "../../../../server/lib/queries/organizations";
+import { z } from "zod";
 import { IS_PAYMENT_ENABLED } from "../../../../constants/payments";
 import { purchaseOrganizationSubscription } from "../../../../payments/subscription";
+import { getServerAuthSession } from "../../../../server/auth";
+import {
+  conflictingDomain,
+  getOrgDomain,
+} from "../../../../server/lib/orgs/domains";
+import { isOrganizationAdmin } from "../../../../server/lib/queries/organizations";
 
 const querySchema = z.object({
   id: z.string().cuid2(),
@@ -29,6 +33,15 @@ export default async function handler(
 
   if (!(await isOrganizationAdmin(session.user.id, orgId)))
     return res.status(403).json({ error: "Forbidden" });
+
+  const domain = await getOrgDomain(orgId);
+  if (!domain?.verifiedAt)
+    return res
+      .status(400)
+      .json({ error: "Must have a verified domain before publishing" });
+
+  if (await conflictingDomain(orgId, domain.requestedDomain))
+    return res.status(409).json({ error: "Domain conflict" });
 
   const checkoutSession = await purchaseOrganizationSubscription({
     orgId,

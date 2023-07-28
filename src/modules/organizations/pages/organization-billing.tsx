@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Link } from "../../../components/link";
+import { ORG_SUPPORT_EMAIL } from "../../../constants/email";
 import { BASE_URL } from "../../../constants/url";
 import { useOrganization } from "../../../hooks/use-organization";
 import { SettingsWrapper } from "../settings-wrapper";
@@ -41,7 +42,51 @@ export const OrganizationBilling = () => {
 
   const cardBg = useColorModeValue("white", "gray.750");
   const highlight = useColorModeValue("blue.500", "blue.200");
-  const mutedText = useColorModeValue("gray.600", "gray.400");
+  const mutedText = useColorModeValue("gray.700", "gray.300");
+
+  const defaultMessage = (
+    <>
+      In order to unlock the full suite of features and enroll students, you
+      need to{" "}
+      <Link
+        href={`/api/orgs/${org?.id || ""}/purchase`}
+        color="blue.300"
+        transition="color 0.2s ease-in-out"
+        _hover={{ color: highlight }}
+        fontWeight={600}
+      >
+        purchase a plan
+      </Link>
+      .
+    </>
+  );
+
+  const missingDomainMessage = (
+    <>
+      In order to unlock the full suite of features and enroll students, you
+      need to purchase a plan. Before continuing, please set up and verify your
+      domain in settings.
+    </>
+  );
+
+  const domainConflictMessage = (
+    <>
+      In order to unlock the full suite of features and enroll students, you
+      need to purchase a plan. It appears as though your domain{" "}
+      <b>{org?.domain?.requestedDomain || ""}</b> has already been verified by
+      another organization. Please reach out to us at{" "}
+      <Link
+        href={`mailto:${ORG_SUPPORT_EMAIL}`}
+        color="blue.300"
+        transition="color 0.2s ease-in-out"
+        _hover={{ color: highlight }}
+        fontWeight={700}
+      >
+        {ORG_SUPPORT_EMAIL}
+      </Link>{" "}
+      so that we can resolve this issue.
+    </>
+  );
 
   return (
     <Stack spacing="12">
@@ -50,27 +95,21 @@ export const OrganizationBilling = () => {
           <Card
             px="6"
             py="6"
+            variant="outline"
             rounded="md"
             borderLeftColor="orange.400"
-            borderLeftWidth="3px"
+            borderLeftWidth="2px"
             shadow="md"
             bg={cardBg}
           >
             <Stack>
               <Heading size="md">Thanks for trying out organizations!</Heading>
               <Text fontSize="sm" color={mutedText}>
-                In order to unlock the full suite of features and enroll
-                students, you need to{" "}
-                <Link
-                  href={`/api/orgs/${org.id}/purchase`}
-                  color="blue.300"
-                  transition="color 0.2s ease-in-out"
-                  _hover={{ color: highlight }}
-                  fontWeight={600}
-                >
-                  purchase a plan
-                </Link>
-                .
+                {org.domain?.conflict
+                  ? domainConflictMessage
+                  : org.domain?.verifiedAt
+                  ? defaultMessage
+                  : missingDomainMessage}
               </Text>
             </Stack>
           </Card>

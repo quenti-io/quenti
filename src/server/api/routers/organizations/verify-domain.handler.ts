@@ -7,6 +7,7 @@ import type { PrismaClient } from "@prisma/client";
 import all from "email-providers/all.json" assert { type: "json" };
 import { genOtp } from "../../../lib/otp";
 import { disbandOrgStudentsByDomain } from "../../../lib/orgs/students";
+import { env } from "../../../../env/server.mjs";
 
 type VerifyDomainOptions = {
   ctx: NonNullableUserContext;
@@ -63,12 +64,14 @@ export const verifyDomainHandler = async ({
     });
   }
 
-  // if (all.find((domain) => domain === input.domain)) {
-  //   throw new TRPCError({
-  //     code: "BAD_REQUEST",
-  //     message: "email_domain_blacklisted",
-  //   });
-  // }
+  if (env.SERVER_NAME) {
+    if (all.find((domain) => domain === input.domain)) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "email_domain_blacklisted",
+      });
+    }
+  }
 
   const org = (await ctx.prisma.organization.findUnique({
     where: {

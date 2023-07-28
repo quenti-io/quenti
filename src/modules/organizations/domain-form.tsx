@@ -2,28 +2,21 @@ import {
   Alert,
   AlertDescription,
   Box,
-  Card,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
-  Heading,
   Input,
-  SlideFade,
   Stack,
-  Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import { Link } from "../../components/link";
-import { ORG_SUPPORT_EMAIL } from "../../constants/email";
 import { DOMAIN_REGEX } from "../../constants/organizations";
 import { useOrganization } from "../../hooks/use-organization";
 import { api } from "../../utils/api";
+import { DomainConflictCard } from "./domain-conflict-card";
 
 interface DomainFormInputs {
   domain: string;
@@ -114,11 +107,6 @@ export const DomainForm: React.FC<React.PropsWithChildren<DomainFormProps>> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verifyDomain.isLoading]);
 
-  const cardBg = useColorModeValue("gray.50", "gray.750");
-  const mutedColor = useColorModeValue("gray.700", "gray.300");
-  const linkDefault = useColorModeValue("gray.900", "whiteAlpha.900");
-  const highlight = useColorModeValue("blue.500", "blue.200");
-
   return (
     <form onSubmit={domainFormMethods.handleSubmit(onSubmit)} ref={formRef}>
       <Stack spacing="10">
@@ -168,41 +156,7 @@ export const DomainForm: React.FC<React.PropsWithChildren<DomainFormProps>> = ({
               </FormControl>
             )}
           />
-          {domainConflict && (
-            <SlideFade in>
-              <Card
-                rounded="md"
-                variant="outline"
-                px="4"
-                py="3"
-                shadow="md"
-                bg={cardBg}
-              >
-                <Stack spacing="3">
-                  <HStack>
-                    <IconExclamationCircle size={18} />
-                    <Heading size="sm">
-                      {domainConflict} is already verified
-                    </Heading>
-                  </HStack>
-                  <Text fontSize="sm" color={mutedColor}>
-                    This domain has already been verified by another
-                    organization. Please reach out to us at{" "}
-                    <Link
-                      href={`mailto:${ORG_SUPPORT_EMAIL}`}
-                      color={linkDefault}
-                      fontWeight={700}
-                      transition="color 0.2s ease-in-out"
-                      _hover={{ color: highlight }}
-                    >
-                      {ORG_SUPPORT_EMAIL}
-                    </Link>{" "}
-                    so that we can resolve this issue.
-                  </Text>
-                </Stack>
-              </Card>
-            </SlideFade>
-          )}
+          {domainConflict && <DomainConflictCard domain={domainConflict} />}
           {errors.root && (
             <Alert status="error" rounded="md" fontSize="sm">
               <Box color="red.400" mr="2">

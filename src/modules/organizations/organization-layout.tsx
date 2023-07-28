@@ -16,7 +16,11 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { IconAlertCircleFilled, IconDiscountCheck } from "@tabler/icons-react";
+import {
+  IconAlertCircleFilled,
+  IconCircleDot,
+  IconDiscountCheck,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -129,9 +133,9 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                           </Tooltip>
                         </Box>
                       ) : (
-                        <Box color="orange.400">
+                        <Box color="gray.500">
                           <Tooltip label="Not published">
-                            <IconAlertCircleFilled aria-label="Not published" />
+                            <IconCircleDot aria-label="Not published" />
                           </Tooltip>
                         </Box>
                       )}
@@ -154,7 +158,14 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                   Students
                 </SkeletonTab>
                 <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/settings`}>
-                  Settings
+                  <Box display="flex" gap="2" alignItems="center">
+                    Settings
+                    {org?.domain?.conflict && (
+                      <Box display="inline-flex" color="orange.400" w="4" h="4">
+                        <IconAlertCircleFilled size={16} />
+                      </Box>
+                    )}
+                  </Box>
                 </SkeletonTab>
                 {(getTabIndex() == 3 ||
                   me?.role == "Admin" ||

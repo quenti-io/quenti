@@ -56,9 +56,24 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   });
 
   if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+
+  const conflicting = await ctx.prisma.verifiedOrganizationDomain.findUnique({
+    where: {
+      domain: org.domain?.requestedDomain,
+    },
+  });
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { metadata: _, ...rest } = org;
-  return rest;
+  return {
+    ...rest,
+    domain: rest.domain
+      ? {
+          ...rest.domain,
+          conflict: !!conflicting && conflicting.orgId !== org.id,
+        }
+      : null,
+  };
 };
 
 export default getHandler;

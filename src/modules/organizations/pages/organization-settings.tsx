@@ -30,6 +30,7 @@ import { LeaveOrganizationModal } from "../leave-organization-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
 import { SettingsWrapper } from "../settings-wrapper";
 import { UpdateDomainModal } from "../update-domain-modal";
+import { DomainConflictCard } from "../domain-conflict-card";
 
 export const OrganizationSettings = () => {
   const router = useRouter();
@@ -184,16 +185,21 @@ export const OrganizationSettings = () => {
               />
             </Skeleton>
           </Stack>
-          <DomainCard
-            onRequestVerify={() => {
-              setDomainVerify(true);
-              setUpdateDomainOpen(true);
-            }}
-            onRequestUpdate={() => {
-              setDomainVerify(false);
-              setUpdateDomainOpen(true);
-            }}
-          />
+          <Stack spacing="3">
+            <DomainCard
+              onRequestVerify={() => {
+                setDomainVerify(true);
+                setUpdateDomainOpen(true);
+              }}
+              onRequestUpdate={() => {
+                setDomainVerify(false);
+                setUpdateDomainOpen(true);
+              }}
+            />
+            {org?.domain?.conflict && (
+              <DomainConflictCard domain={org.domain.requestedDomain} />
+            )}
+          </Stack>
         </Stack>
       </SettingsWrapper>
       <Divider />
