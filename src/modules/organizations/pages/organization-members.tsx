@@ -42,6 +42,7 @@ export const OrganizationMembers = () => {
   const others = org
     ? org.members.filter((m) => m.userId != session?.user?.id)
     : [];
+  const pending = org ? org.pendingInvites : [];
 
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [editMember, setEditMember] = React.useState<string | undefined>();
@@ -132,6 +133,21 @@ export const OrganizationMembers = () => {
                 accepted={m.accepted}
                 onRequestEdit={() => setEditMember(m.user.id)}
                 onRequestRemove={() => setRemoveMember(m.user.id)}
+              />
+            ))}
+            {pending.map((m) => (
+              <OrganizationMember
+                key={m.id}
+                user={{
+                  id: "",
+                  name: m.email,
+                  username: "",
+                  email: m.email,
+                  image: null,
+                }}
+                role={m.role}
+                accepted={false}
+                isEmpty
               />
             ))}
           </Stack>

@@ -35,6 +35,7 @@ export interface OrganizationMemberProps {
   accepted?: boolean;
   isCurrent?: boolean;
   skeleton?: boolean;
+  isEmpty?: boolean;
   onRequestEdit?: () => void;
   onRequestRemove?: () => void;
 }
@@ -45,6 +46,7 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
   isCurrent = false,
   accepted = true,
   skeleton = false,
+  isEmpty = false,
   onRequestEdit,
   onRequestRemove,
 }) => {
@@ -146,13 +148,15 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
           rounded="md"
         >
           <Skeleton fitContent rounded="md" isLoaded={!skeleton}>
-            <IconButton
-              aria-label="View public profile"
-              icon={<IconExternalLink size={18} />}
-              as={Link}
-              roundedRight={canManageMember ? "none" : "md"}
-              href={`/@${user.username}`}
-            />
+            {!isEmpty && (
+              <IconButton
+                aria-label="View public profile"
+                icon={<IconExternalLink size={18} />}
+                as={Link}
+                roundedRight={canManageMember ? "none" : "md"}
+                href={`/@${user.username}`}
+              />
+            )}
           </Skeleton>
           <OrganizationAdminOnly>
             {canManageMember && (
@@ -163,7 +167,12 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
                   onOpen={() => setMenuOpen(true)}
                   onClose={() => setMenuOpen(false)}
                 >
-                  <MenuButton roundedLeft="none" as={IconButton} w="8" h="8">
+                  <MenuButton
+                    roundedLeft={!isEmpty ? "none" : undefined}
+                    as={IconButton}
+                    w="8"
+                    h="8"
+                  >
                     <Box w="8" display="flex" justifyContent="center">
                       <IconDotsVertical size="18" />
                     </Box>

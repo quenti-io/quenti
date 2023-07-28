@@ -33,6 +33,13 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
           },
         },
       },
+      pendingInvites: {
+        select: {
+          id: true,
+          email: true,
+          role: true,
+        },
+      },
       inviteToken: {
         select: {
           token: true,

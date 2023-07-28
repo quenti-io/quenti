@@ -27,8 +27,6 @@ export const inviteMemberHandler = async ({
       message: "Only owners can invite owners",
     });
 
-  const pendingInvites = new Array<string>();
-
   let existingUsers = await ctx.prisma.user.findMany({
     where: {
       email: {
@@ -47,13 +45,23 @@ export const inviteMemberHandler = async ({
     },
   });
 
+  const existingInvites = await ctx.prisma.pendingInvite.findMany({
+    where: {
+      orgId: input.orgId,
+    },
+  });
+
   // Filter out users that are already part of the organization
   existingUsers = existingUsers.filter((u) => u.organizations.length === 0);
 
   const existingIds = existingUsers.map((u) => u.id);
-  const existingEmails = existingUsers.map((u) => u.email);
-  pendingInvites.concat(
-    input.emails.filter((e) => !existingEmails.includes(e))
+  const existingEmails = existingUsers
+    .map((u) => u.email)
+    .filter((e) => !!e) as string[];
+  const existingInviteEmails = existingInvites.map((i) => i.email);
+
+  const pendingInvites = input.emails.filter(
+    (e) => !existingEmails.includes(e) && !existingInviteEmails.includes(e)
   );
 
   await ctx.prisma.membership.createMany({
@@ -74,7 +82,7 @@ export const inviteMemberHandler = async ({
   });
 
   if (input.sendEmail) {
-    for (const email of input.emails) {
+    for (const email of pendingInvites.concat(existingEmails)) {
       // TODO: Send email
       console.log(`Sending email to ${email}`);
     }
