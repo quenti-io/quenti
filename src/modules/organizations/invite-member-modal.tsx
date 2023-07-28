@@ -136,6 +136,14 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
 
   const [tabIndex, setTabIndex] = React.useState(0);
 
+  React.useEffect(() => {
+    if (!isOpen) {
+      setTabIndex(0);
+      inviteMemberFormMethods.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   const importRef = React.useRef<HTMLInputElement | null>(null);
 
   const borderColor = useColorModeValue("gray.200", "gray.700");
