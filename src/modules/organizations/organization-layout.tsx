@@ -12,12 +12,14 @@ import {
   TabList,
   TabPanels,
   Tabs,
+  Text,
   Tooltip,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import {
   IconAlertCircleFilled,
+  IconAt,
   IconCircleDot,
   IconDiscountCheck,
 } from "@tabler/icons-react";
@@ -51,6 +53,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const isUpgraded = router.query.upgrade === "success";
 
   const borderColor = useColorModeValue("gray.300", "gray.700");
+  const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   const { data: org, error } = api.organizations.get.useQuery(
     { id },
@@ -142,6 +145,22 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                     </HStack>
                   </SkeletonText>
                 </Flex>
+                {org?.domain?.domain && (
+                  <Flex h="21px" alignItems="center">
+                    <SkeletonText
+                      noOfLines={1}
+                      fitContent
+                      w="max-content"
+                      isLoaded={!!org}
+                      skeletonHeight="10px"
+                    >
+                      <HStack spacing="1" color={mutedColor}>
+                        <IconAt size="16" />
+                        <Text fontSize="sm">{org?.domain?.domain}</Text>
+                      </HStack>
+                    </SkeletonText>
+                  </Flex>
+                )}
               </Stack>
             </HStack>
             <Tabs
