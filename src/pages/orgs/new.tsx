@@ -89,7 +89,7 @@ export default function NewOrganization() {
               </Box>
             </FormControl>
           </Stack>
-          <ButtonGroup w="full">
+          <ButtonGroup w="full" size="sm">
             <Button variant="outline" w="full" onClick={() => router.back()}>
               Cancel
             </Button>

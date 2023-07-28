@@ -58,7 +58,7 @@ export default function OrgDomainSetup() {
               await utils.organizations.get.invalidate();
             }}
           >
-            <ButtonGroup w="full">
+            <ButtonGroup w="full" size="sm">
               <Button
                 w="full"
                 variant="outline"

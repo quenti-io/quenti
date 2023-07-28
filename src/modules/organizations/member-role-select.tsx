@@ -15,16 +15,16 @@ const options: {
   isDisabled?: boolean;
 }[] = [
   {
-    label: "Owner",
-    value: "Owner",
+    label: "Member",
+    value: "Member",
   },
   {
     label: "Admin",
     value: "Admin",
   },
   {
-    label: "Member",
-    value: "Member",
+    label: "Owner",
+    value: "Owner",
   },
 ];
 
