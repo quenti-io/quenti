@@ -157,6 +157,12 @@ export type Organization = {
    */
   metadata: unknown | null;
 };
+export type PendingInvite = {
+  id: string;
+  orgId: string;
+  email: string;
+  role: MembershipRole;
+};
 export type RecentFailedLogin = {
   id: string;
   email: string;
@@ -273,6 +279,7 @@ export type DB = {
   Leaderboard: Leaderboard;
   Membership: Membership;
   Organization: Organization;
+  PendingInvite: PendingInvite;
   RecentFailedLogin: RecentFailedLogin;
   Session: Session;
   SetAutoSave: SetAutoSave;

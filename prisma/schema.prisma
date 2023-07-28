@@ -122,9 +122,10 @@ model Organization {
   /// @zod.custom(imports.orgMetadataSchema)
   metadata  Json?
 
-  members     Membership[]
-  users       User[]
-  inviteToken VerificationToken?
+  members        Membership[]
+  users          User[]
+  inviteToken    VerificationToken?
+  pendingInvites PendingInvite[]
 }
 
 model VerifiedOrganizationDomain {
@@ -158,6 +159,18 @@ model Membership {
   @@unique([userId, orgId])
   @@index([orgId])
   @@index([userId])
+}
+
+model PendingInvite {
+  id    String         @id @default(cuid())
+  orgId String
+  email String
+  role  MembershipRole
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, email])
+  @@index([email])
 }
 
 model AllowedEmailRegex {
