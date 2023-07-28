@@ -5,13 +5,14 @@ import { useRouter } from "next/router";
 import React from "react";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { DomainForm } from "../../../modules/organizations/domain-form";
-import { api } from "../../../utils/api";
 import { OrganizationContext } from "../../../modules/organizations/organization-layout";
+import { api } from "../../../utils/api";
 
 export default function OrgDomainSetup() {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: session } = useSession();
+  const utils = api.useContext();
 
   const { data: org } = api.organizations.get.useQuery(
     { id },
@@ -26,6 +27,7 @@ export default function OrgDomainSetup() {
     : null;
 
   const [loading, setLoading] = React.useState(false);
+  const [shouldTransition, setShouldTransition] = React.useState(false);
 
   React.useEffect(() => {
     if (org?.domain) {
@@ -43,7 +45,7 @@ export default function OrgDomainSetup() {
   return (
     <WizardLayout
       title="Set up domain"
-      description="Set up your organization's domain to start enrolling students. New and existing accounts with an associated email ending in your domain will be automatically enrolled as students."
+      description="Set up your organization's domain to start enrolling students. New and existing accounts with an associated email ending in your domain will be automatically enrolled once your organization is published."
       steps={5}
       currentStep={2}
     >
@@ -52,7 +54,8 @@ export default function OrgDomainSetup() {
           <DomainForm
             onChangeLoading={setLoading}
             onSuccess={async () => {
-              await router.push(`/orgs/${id}/verify-email`);
+              setShouldTransition(true);
+              await utils.organizations.get.invalidate();
             }}
           >
             <ButtonGroup w="full">
@@ -66,7 +69,11 @@ export default function OrgDomainSetup() {
               >
                 Go back
               </Button>
-              <Button w="full" type="submit" isLoading={loading}>
+              <Button
+                w="full"
+                type="submit"
+                isLoading={loading || shouldTransition}
+              >
                 Add domain
               </Button>
             </ButtonGroup>
