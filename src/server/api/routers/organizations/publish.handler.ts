@@ -6,6 +6,7 @@ import { prisma } from "../../../db";
 import { IS_PAYMENT_ENABLED } from "../../../../constants/payments";
 import { purchaseOrganizationSubscription } from "../../../../payments/subscription";
 import { BASE_URL } from "../../../../constants/url";
+import { bulkJoinOrgStudents } from "../../../lib/orgs/students";
 
 type PublishOptions = {
   ctx: NonNullableUserContext;
@@ -47,13 +48,13 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
 
   if (checkoutSession) return checkoutSession;
 
-  const requestedDomain = await prisma.verifiedOrganizationDomain.findUnique({
+  const domain = await prisma.verifiedOrganizationDomain.findUnique({
     where: {
       orgId: org.id,
     },
   });
 
-  if (!requestedDomain || !requestedDomain.verifiedAt)
+  if (!domain || !domain.verifiedAt)
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Must have a verified domain before publishing",
@@ -65,11 +66,13 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
       published: true,
       domain: {
         update: {
-          domain: requestedDomain.domain,
+          domain: domain.requestedDomain,
         },
       },
     },
   });
+
+  await bulkJoinOrgStudents(org.id, domain.requestedDomain);
 
   return {
     callback: `${BASE_URL}/orgs/${org.id}`,

@@ -12,10 +12,13 @@ import {
   Stack,
   Tag,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
 import {
   IconAt,
+  IconCircleCheck,
+  IconCircleDot,
   IconDiscountCheck,
   IconDotsVertical,
   IconEditCircle,
@@ -40,7 +43,7 @@ export const DomainCard: React.FC<DomainCardProps> = (props) => {
   return (
     <Stack spacing="1">
       <SkeletonLabel isLoaded={!!org}>Domain</SkeletonLabel>
-      <Skeleton rounded="md" w="full" isLoaded={!!org}>
+      <Skeleton rounded="md" w="full" h="50px" isLoaded={!!org}>
         {hasDomain ? (
           <Card variant="outline" py="3" px="4">
             <InnerDomainCard {...props} />
@@ -69,12 +72,13 @@ const InnerDomainCard: React.FC<DomainCardProps> = ({
   const [menuOpen, setMenuOpen] = React.useState(false);
   const menuBg = useColorModeValue("white", "gray.800");
   const verified = !!org?.domain?.verifiedAt;
+  const verifiedDomain = org?.domain?.requestedDomain == org?.domain?.domain;
 
   return (
     <Flex justifyContent="space-between">
       <HStack>
         <Text>{org?.domain?.requestedDomain || "Loading..."}</Text>
-        {!verified && (
+        {!verified ? (
           <Tag
             size="sm"
             colorScheme="orange"
@@ -83,6 +87,18 @@ const InnerDomainCard: React.FC<DomainCardProps> = ({
           >
             Unverified
           </Tag>
+        ) : verifiedDomain ? (
+          <Box w="18px" h="18px" color="green.300">
+            <Tooltip label="Active">
+              <IconCircleCheck size="18" />
+            </Tooltip>
+          </Box>
+        ) : (
+          <Box w="18px" h="18px" color="gray.500">
+            <Tooltip label="Not yet active">
+              <IconCircleDot size="18" />
+            </Tooltip>
+          </Box>
         )}
       </HStack>
       <HStack>

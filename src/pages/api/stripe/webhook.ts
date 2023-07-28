@@ -1,12 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getErrorFromUnknown } from "../../../utils/error";
-import { env } from "../../../env/server.mjs";
 import { buffer } from "micro";
-import { z } from "zod";
-import stripe from "../../../payments/stripe";
-import { HttpError } from "../../../server/lib/http-error";
+import type { NextApiRequest, NextApiResponse } from "next";
 import type Stripe from "stripe";
+import { z } from "zod";
+import { env } from "../../../env/server.mjs";
+import stripe from "../../../payments/stripe";
 import { cancelOrganizationSubscription } from "../../../payments/subscription";
+import { HttpError } from "../../../server/lib/http-error";
+import { deactivateOrgDomain } from "../../../server/lib/orgs/domains";
+import { disbandOrgStudents } from "../../../server/lib/orgs/students";
+import { getErrorFromUnknown } from "../../../utils/error";
 
 export const config = {
   api: {
@@ -31,6 +33,8 @@ const webhookHandlers: Record<string, WebhookHandler | undefined> = {
     }
 
     await cancelOrganizationSubscription(metadata.data.orgId);
+    await deactivateOrgDomain(metadata.data.orgId);
+    await disbandOrgStudents(metadata.data.orgId);
   },
 };
 

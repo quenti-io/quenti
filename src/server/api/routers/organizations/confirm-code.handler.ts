@@ -3,6 +3,7 @@ import { verifyOtp } from "../../../lib/otp";
 import { isOrganizationAdmin } from "../../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TConfirmCodeSchema } from "./confirm-code.schema";
+import { bulkJoinOrgStudents } from "../../../lib/orgs/students";
 
 type ConfirmCodeOptions = {
   ctx: NonNullableUserContext;
@@ -27,6 +28,20 @@ export const confirmCodeHandler = async ({
   if (!verifyOtp(domain.verifiedEmail, input.code, domain.otpHash))
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
+  const existingVerified =
+    await ctx.prisma.verifiedOrganizationDomain.findUnique({
+      where: {
+        domain: domain.requestedDomain,
+      },
+    });
+
+  if (existingVerified && existingVerified.orgId !== input.orgId) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "domain_already_verified",
+    });
+  }
+
   const published = (await ctx.prisma.organization.findUnique({
     where: {
       id: input.orgId,
@@ -36,15 +51,19 @@ export const confirmCodeHandler = async ({
     },
   }))!.published;
 
-  return await ctx.prisma.verifiedOrganizationDomain.update({
+  await ctx.prisma.verifiedOrganizationDomain.update({
     where: {
       orgId: input.orgId,
     },
     data: {
       verifiedAt: new Date(),
-      domain: published ? domain.domain : null,
+      domain: published ? domain.requestedDomain : null,
     },
   });
+
+  if (published) {
+    await bulkJoinOrgStudents(input.orgId, domain.requestedDomain);
+  }
 };
 
 export default confirmCodeHandler;

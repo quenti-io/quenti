@@ -5,6 +5,7 @@ import stripe from "../../../../payments/stripe";
 import { prisma } from "../../../../server/db";
 import { getServerAuthSession } from "../../../../server/auth";
 import { orgMetadataSchema } from "../../../../../prisma/zod-schemas";
+import { bulkJoinOrgStudents } from "../../../../server/lib/orgs/students";
 
 const querySchema = z.object({
   id: z.string().cuid2(),
@@ -57,6 +58,9 @@ export default async function handler(
           : undefined,
       },
     });
+
+    if (prevOrg.domain)
+      await bulkJoinOrgStudents(org.id, prevOrg.domain.requestedDomain);
   }
 
   const session = await getServerAuthSession({ req, res });

@@ -6,6 +6,7 @@ import type { PrismaClient } from "@prisma/client";
 
 import all from "email-providers/all.json" assert { type: "json" };
 import { genOtp } from "../../../lib/otp";
+import { disbandOrgStudentsByDomain } from "../../../lib/orgs/students";
 
 type VerifyDomainOptions = {
   ctx: NonNullableUserContext;
@@ -17,14 +18,17 @@ const verifyEmailFlow = async (
   orgId: string,
   email: string,
   domain: string,
+  published: boolean,
   deleteExisting = false
 ) => {
   if (deleteExisting) {
-    await prisma.verifiedOrganizationDomain.delete({
+    const result = await prisma.verifiedOrganizationDomain.delete({
       where: {
         orgId,
       },
     });
+
+    if (result && published) await disbandOrgStudentsByDomain(result.domain!);
   }
 
   const { hash, otp } = genOtp(email);
@@ -59,12 +63,18 @@ export const verifyDomainHandler = async ({
     });
   }
 
-  if (all.find((domain) => domain === input.domain)) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "email_domain_blacklisted",
-    });
-  }
+  // if (all.find((domain) => domain === input.domain)) {
+  //   throw new TRPCError({
+  //     code: "BAD_REQUEST",
+  //     message: "email_domain_blacklisted",
+  //   });
+  // }
+
+  const org = (await ctx.prisma.organization.findUnique({
+    where: {
+      id: input.orgId,
+    },
+  }))!;
 
   const existingVerified =
     await ctx.prisma.verifiedOrganizationDomain.findFirst({
@@ -80,13 +90,14 @@ export const verifyDomainHandler = async ({
         code: "CONFLICT",
         message: "domain_already_verified",
       });
-    } else if (existingVerified.verifiedEmail !== input.email) {
+    } else if (existingVerified.requestedDomain !== input.domain) {
       // Update the organization to use a different domain
       return await verifyEmailFlow(
         ctx.prisma,
         input.orgId,
         input.email,
         input.domain,
+        org.published,
         true
       );
     } else {
@@ -111,6 +122,7 @@ export const verifyDomainHandler = async ({
     input.orgId,
     input.email,
     input.domain,
+    org.published,
     !!existing
   );
 };
