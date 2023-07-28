@@ -10,6 +10,7 @@ export interface EditMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   id: string;
+  type: "user" | "invite";
   role: MembershipRole;
 }
 
@@ -17,6 +18,7 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
   isOpen,
   onClose,
   id,
+  type,
   role: _role,
 }) => {
   const org = useOrganization();
@@ -57,8 +59,9 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
               onClick={() => {
                 editMemberRole.mutate({
                   orgId: org!.id,
-                  userId: id,
+                  genericId: id,
                   role,
+                  type,
                 });
               }}
               isLoading={editMemberRole.isLoading}

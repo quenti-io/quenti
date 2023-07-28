@@ -266,38 +266,36 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                     </TabPanel>
                     <TabPanel p="0">
                       <Stack spacing="4">
-                        {false && (
-                          <Controller
-                            name="emails"
-                            control={inviteMemberFormMethods.control}
-                            render={({ field: { value, onChange } }) => (
-                              <FormControl isInvalid={!!errors.emails}>
-                                <FormLabel>Invite via email</FormLabel>
-                                <AutoResizeTextarea
-                                  allowTab={false}
-                                  placeholder="email-one@example.com, email-two@example.com"
-                                  minH="120px"
-                                  defaultValue={value}
-                                  onChange={(e) => {
-                                    const values = e.target.value
-                                      .toLowerCase()
-                                      .split(",");
+                        <Controller
+                          name="emails"
+                          control={inviteMemberFormMethods.control}
+                          render={({ field: { value, onChange } }) => (
+                            <FormControl isInvalid={!!errors.emails}>
+                              <FormLabel>Invite via email</FormLabel>
+                              <AutoResizeTextarea
+                                allowTab={false}
+                                placeholder="email-one@example.com, email-two@example.com"
+                                minH="120px"
+                                defaultValue={value}
+                                onChange={(e) => {
+                                  const values = e.target.value
+                                    .toLowerCase()
+                                    .split(",");
 
-                                    const emails =
-                                      values.length == 1
-                                        ? values[0]!.trim()
-                                        : values.map((v) => v.trim());
+                                  const emails =
+                                    values.length == 1
+                                      ? values[0]!.trim()
+                                      : values.map((v) => v.trim());
 
-                                    onChange(emails);
-                                  }}
-                                />
-                                <FormErrorMessage>
-                                  {errors.emails?.message}
-                                </FormErrorMessage>
-                              </FormControl>
-                            )}
-                          />
-                        )}
+                                  onChange(emails);
+                                }}
+                              />
+                              <FormErrorMessage>
+                                {errors.emails?.message}
+                              </FormErrorMessage>
+                            </FormControl>
+                          )}
+                        />
                         <Button
                           variant="outline"
                           colorScheme="gray"

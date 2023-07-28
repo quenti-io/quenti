@@ -27,21 +27,12 @@ export const editMemberRoleHandler = async ({
       message: "Must be an admin to edit member roles",
     });
   }
-  if (input.userId == ctx.session.user.id) {
+  if (input.genericId == ctx.session.user.id) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Cannot change your own role",
     });
   }
-
-  const members = await ctx.prisma.membership.findMany({
-    where: {
-      orgId: input.orgId,
-    },
-  });
-
-  const target = members.find((m) => m.userId === input.userId);
-  if (!target) throw new TRPCError({ code: "NOT_FOUND" });
 
   if (membership.role == "Admin" && input.role == "Owner") {
     throw new TRPCError({
@@ -50,17 +41,46 @@ export const editMemberRoleHandler = async ({
     });
   }
 
-  await ctx.prisma.membership.update({
-    where: {
-      userId_orgId: {
-        userId: input.userId,
+  if (input.type == "user") {
+    const members = await ctx.prisma.membership.findMany({
+      where: {
         orgId: input.orgId,
       },
-    },
-    data: {
-      role: input.role,
-    },
-  });
+    });
+
+    const target = members.find((m) => m.userId === input.genericId);
+    if (!target) throw new TRPCError({ code: "NOT_FOUND" });
+
+    await ctx.prisma.membership.update({
+      where: {
+        userId_orgId: {
+          userId: input.genericId,
+          orgId: input.orgId,
+        },
+      },
+      data: {
+        role: input.role,
+      },
+    });
+  } else {
+    const invite = await ctx.prisma.pendingInvite.findUnique({
+      where: {
+        id: input.genericId,
+      },
+    });
+
+    if (!invite || invite.orgId !== input.orgId)
+      throw new TRPCError({ code: "NOT_FOUND" });
+
+    await ctx.prisma.pendingInvite.update({
+      where: {
+        id: input.genericId,
+      },
+      data: {
+        role: input.role,
+      },
+    });
+  }
 };
 
 export default editMemberRoleHandler;

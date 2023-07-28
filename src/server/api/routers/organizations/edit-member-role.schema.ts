@@ -3,7 +3,8 @@ import { z } from "zod";
 
 export const ZEditMemberRoleSchema = z.object({
   orgId: z.string().cuid2(),
-  userId: z.string().cuid2(),
+  genericId: z.string().cuid2(),
+  type: z.enum(["user", "invite"]),
   role: z.nativeEnum(MembershipRole),
 });
 
