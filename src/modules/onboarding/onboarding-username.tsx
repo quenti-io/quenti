@@ -1,26 +1,21 @@
 import { VStack } from "@chakra-ui/react";
+import React from "react";
 import { ChangeUsernameInput } from "../../components/change-username-input";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";
-import React from "react";
-import { useRouter } from "next/router";
 
 export const OnboardingUsername = () => {
-  const router = useRouter();
   const [disabled, setDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   const inputRef = React.useRef<{ mutate: () => void }>(null);
 
   return (
-    <PresentWrapper step={2}>
+    <PresentWrapper>
       <DefaultLayout
         heading="Choose a username to get started"
         description="You can change your username any time in settings."
-        onNext={async () => {
-          inputRef.current?.mutate();
-          await router.push("/onboarding/account-type");
-        }}
+        onNext={() => inputRef.current?.mutate()}
         nextDisabled={disabled}
         nextLoading={loading}
       >

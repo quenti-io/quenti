@@ -29,7 +29,7 @@ export const OnboardingCommandMenu = () => {
   const keyBorderHover = useColorModeValue("gray.400", "gray.500");
 
   return (
-    <PresentWrapper step={4}>
+    <PresentWrapper>
       <DefaultLayout
         heading={interacted ? "That wasn't too bad!" : "Command menu"}
         description={
@@ -44,7 +44,6 @@ export const OnboardingCommandMenu = () => {
         }
         nextVariant={interacted ? "solid" : "outline"}
         nextDisabled={!interacted}
-        nextUrl="/onboarding/subscribe"
       >
         {!interacted && (
           <Card

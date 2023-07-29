@@ -9,7 +9,6 @@ const version = pjson.version;
 export function CustomPrismaAdapter(p: PrismaClient): Adapter {
   return {
     ...PrismaAdapter(p),
-    // @ts-expect-error Type '(data: Omit<AdapterUser, "id">) => Promise<User>' is not assignable to type
     createUser: async (data) => {
       const name = data.name!;
       const sanitized = name.replace(USERNAME_REPLACE_REGEXP, "");
@@ -33,13 +32,37 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
         uniqueUsername = sanitized + suffix;
       }
 
-      return await p.user.create({
+      const user = await p.user.create({
         data: {
           ...data,
           username: uniqueUsername,
           changelogVersion: version,
         },
       });
+
+      // Get pending invites to organizations
+      const pendingInvites = await p.pendingInvite.findMany({
+        where: {
+          email: data.email,
+        },
+      });
+
+      await p.membership.createMany({
+        data: pendingInvites.map((invite) => ({
+          orgId: invite.orgId,
+          role: invite.role,
+          userId: user.id,
+          accepted: false,
+        })),
+      });
+
+      await p.pendingInvite.deleteMany({
+        where: {
+          email: data.email,
+        },
+      });
+
+      return user;
     },
   };
 }

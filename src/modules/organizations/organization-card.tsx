@@ -4,7 +4,7 @@ import {
   ButtonGroup,
   Fade,
   Flex,
-  useToast,
+  HStack,
   Heading,
   LinkBox,
   LinkOverlay,
@@ -12,14 +12,15 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
-import { organizationIcon } from "../../utils/icons";
-import { getColorFromId } from "../../utils/color";
+import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Link } from "../../components/link";
 import { api } from "../../utils/api";
-import { AnimatedCheckCircle } from "../../components/animated-icons/check";
-import { useRouter } from "next/router";
+import { getColorFromId } from "../../utils/color";
+import { organizationIcon } from "../../utils/icons";
 import { plural } from "../../utils/string";
 
 export interface OrganizationCardProps {
@@ -28,6 +29,7 @@ export interface OrganizationCardProps {
   accepted?: boolean;
   icon?: number;
   skeleton?: boolean;
+  displayJoined?: boolean;
   members: number;
   students: number;
 }
@@ -38,6 +40,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   accepted = true,
   icon = 0,
   skeleton,
+  displayJoined = false,
   members,
   students,
 }) => {
@@ -48,7 +51,12 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   const acceptInvite = api.organizations.acceptInvite.useMutation({
     onSuccess: async () => {
       await utils.organizations.getBelonging.invalidate();
-      if (acceptInvite.variables?.accept) {
+      await utils.user.me.invalidate();
+
+      if (
+        acceptInvite.variables?.accept &&
+        !router.asPath.includes("onboarding")
+      ) {
         await router.push(`/orgs/${id}`);
         toast({
           title: `Successfully joined ${name}`,
@@ -61,13 +69,14 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   });
 
   const Wrapper = skeleton ? Skeleton : React.Fragment;
-  const children = skeleton ? (
-    name
-  ) : (
-    <LinkOverlay as={Link} href={`/orgs/${id}`}>
-      {name}
-    </LinkOverlay>
-  );
+  const children =
+    skeleton || !accepted ? (
+      name
+    ) : (
+      <LinkOverlay as={Link} href={`/orgs/${id}`}>
+        {name}
+      </LinkOverlay>
+    );
 
   const Icon = organizationIcon(icon);
 
@@ -110,7 +119,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
             zIndex="50"
             pointerEvents="none"
           >
-            {!accepted && (
+            {!accepted ? (
               <ButtonGroup size="sm" pointerEvents="all">
                 <Button
                   variant="unstyled"
@@ -151,13 +160,22 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
                   Accept
                 </Button>
               </ButtonGroup>
-            )}
+            ) : displayJoined ? (
+              <HStack color="green.400" spacing="1" bg={linkBg} pr="2" pl="4" rounded="full">
+                <Text fontSize="xs" fontWeight={700}>
+                  Joined
+                </Text>
+                <Box transform="scale(0.75)" mr="-1">
+                  <AnimatedCheckCircle />
+                </Box>
+              </HStack>
+            ) : undefined}
           </Box>
           <Stack mt="-1" spacing="4">
             <Flex
-              justifyContent="space-between"
               alignItems="end"
               pointerEvents="none"
+              justifyContent="space-between"
             >
               <Box
                 w="16"

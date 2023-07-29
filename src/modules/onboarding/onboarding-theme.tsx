@@ -18,11 +18,10 @@ export const OnboardingTheme = () => {
   const hoverColor = useColorModeValue("gray.100", "gray.800");
 
   return (
-    <PresentWrapper step={1}>
+    <PresentWrapper>
       <DefaultLayout
         heading="Choose your theme"
         description="You can change this later in settings."
-        nextUrl="/onboarding/username"
       >
         <Tabs variant="unstyled" shadow="sm" rounded="md">
           <TabList border="2px solid" borderColor={borderColor} rounded="md">

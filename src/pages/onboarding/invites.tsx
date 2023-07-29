@@ -1,11 +1,12 @@
 import type { ComponentWithAuth } from "../../components/auth-component";
-import { OnboardingAccountType } from "../../modules/onboarding/onboarding-account-type";
+import { OnboardingInvites } from "../../modules/onboarding/onboarding-invites";
 
 const Page: ComponentWithAuth = () => {
-  return <OnboardingAccountType />;
+  return <OnboardingInvites />;
 };
 
-Page.title = "Quenti | Onboarding";
+Page.title = "Quenti | Join organizations";
 Page.authenticationEnabled = true;
 
 export default Page;
+

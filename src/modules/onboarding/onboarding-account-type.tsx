@@ -19,11 +19,10 @@ export const OnboardingAccountType = () => {
   const [index, setIndex] = React.useState(0);
 
   return (
-    <PresentWrapper step={3}>
+    <PresentWrapper>
       <DefaultLayout
         heading="Are you a student or a teacher?"
         description="You can change this later in settings."
-        nextUrl="/onboarding/command-menu"
       >
         <Tabs
           variant="unstyled"

@@ -8,7 +8,7 @@ declare module "next-auth" {
   interface Session {
     user?: {
       id: string;
-      name?: string;
+      name: string | null;
       username: string;
       type: UserType;
       displayName: boolean;
@@ -17,22 +17,22 @@ declare module "next-auth" {
       flags: number;
       enableUsageData: boolean;
       changelogVersion: string;
-      organizationId?: string;
+      organizationId: string | null;
     } & DefaultSession["user"];
     version: string;
   }
 
   interface User {
     id: string;
-    name?: string;
+    name: string | null;
     username: string;
     type: UserType;
-    image: string;
+    image: string | null;
     displayName: boolean;
-    bannedAt?: Date;
+    bannedAt: Date | null;
     flags: number;
     enableUsageData: boolean;
     changelogVersion: string;
-    organizationId?: string;
+    organizationId: string | null;
   }
 }

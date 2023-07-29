@@ -17,11 +17,10 @@ export const OnboardingSubscribe = () => {
   const muted = useColorModeValue("gray.600", "gray.400");
 
   return (
-    <PresentWrapper step={5}>
+    <PresentWrapper>
       <DefaultLayout
         heading="Subscribe to updates"
         description="We're always adding new features and improvements. Want to stay in the loop?"
-        nextUrl="/onboarding/done"
       >
         <Card bg={cardBg} shadow="lg" p="6" w="md">
           <Flex justifyContent="space-between" alignItems="center">

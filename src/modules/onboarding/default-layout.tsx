@@ -5,14 +5,14 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
+import { useNextStep } from "./present-wrapper";
 
 interface DefaultLayoutProps {
   heading: string;
   description: string | React.ReactNode;
   action?: string;
-  nextUrl?: string;
+  defaultNext?: boolean;
   onNext?: () => void | Promise<void>;
   nextDisabled?: boolean;
   nextLoading?: boolean;
@@ -25,14 +25,14 @@ export const DefaultLayout: React.FC<
   heading,
   description,
   action = "Continue",
-  nextUrl,
+  defaultNext = true,
   onNext,
   nextDisabled,
   nextLoading,
   nextVariant,
   children,
 }) => {
-  const router = useRouter();
+  const next = useNextStep();
 
   const text = useColorModeValue("gray.700", "gray.300");
 
@@ -49,8 +49,8 @@ export const DefaultLayout: React.FC<
         w="72"
         size="lg"
         onClick={async () => {
-          if (nextUrl) await router.push(nextUrl);
           await onNext?.();
+          if (defaultNext) next();
         }}
         isDisabled={nextDisabled}
         isLoading={nextLoading}
