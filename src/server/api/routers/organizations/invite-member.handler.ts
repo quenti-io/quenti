@@ -32,7 +32,6 @@ export const inviteMemberHandler = async ({
       email: {
         in: input.emails,
       },
-      type: "Teacher",
     },
     select: {
       id: true,
@@ -55,9 +54,7 @@ export const inviteMemberHandler = async ({
   existingUsers = existingUsers.filter((u) => u.organizations.length === 0);
 
   const existingIds = existingUsers.map((u) => u.id);
-  const existingEmails = existingUsers
-    .map((u) => u.email)
-    .filter((e) => !!e) as string[];
+  const existingEmails = existingUsers.map((u) => u.email).filter((e) => !!e);
   const existingInviteEmails = existingInvites.map((i) => i.email);
 
   const pendingInvites = input.emails.filter(
