@@ -2,6 +2,7 @@ import { loadHandler } from "../../../lib/load-handler";
 import { createTRPCRouter, teacherProcedure } from "../../trpc";
 import { ZAcceptInviteSchema } from "./accept-invite.schema";
 import { ZAcceptTokenSchema } from "./accept-token.schema";
+import { ZAddStudentSchema } from "./add-student.schema";
 import { ZConfirmCodeSchema } from "./confirm-code.schema";
 import { ZCreateInviteSchema } from "./create-invite.schema";
 import { ZCreateSchema } from "./create.schema";
@@ -12,6 +13,7 @@ import { ZGetSchema } from "./get.schema";
 import { ZInviteMemberSchema } from "./invite-member.schema";
 import { ZPublishSchema } from "./publish.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
+import { ZRemoveStudentSchema } from "./remove-student.schema";
 import { ZResendCodeSchema } from "./resend-code.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
 import { ZUpdateSchema } from "./update.schema";
@@ -34,6 +36,8 @@ type OrganizationsRouterHandlerCache = {
     ["edit-member-role"]?: typeof import("./edit-member-role.handler").editMemberRoleHandler;
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
     ["verify-domain"]?: typeof import("./verify-domain.handler").verifyDomainHandler;
+    ["add-student"]?: typeof import("./add-student.handler").addStudentHandler;
+    ["remove-student"]?: typeof import("./remove-student.handler").removeStudentHandler;
     ["confirm-code"]?: typeof import("./confirm-code.handler").confirmCodeHandler;
     ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
   };
@@ -130,6 +134,18 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "verify-domain");
       return HANDLER_CACHE.handlers["verify-domain"]!({ ctx, input });
+    }),
+  addStudent: teacherProcedure
+    .input(ZAddStudentSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "add-student");
+      return HANDLER_CACHE.handlers["add-student"]!({ ctx, input });
+    }),
+  removeStudent: teacherProcedure
+    .input(ZRemoveStudentSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "remove-student");
+      return HANDLER_CACHE.handlers["remove-student"]!({ ctx, input });
     }),
   confirmCode: teacherProcedure
     .input(ZConfirmCodeSchema)
