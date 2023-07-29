@@ -32,11 +32,26 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
         uniqueUsername = sanitized + suffix;
       }
 
+      const domain = data.email.split("@")[1]!;
+
+      const associatedOrg = await p.verifiedOrganizationDomain.findFirst({
+        where: {
+          domain,
+          AND: {
+            // Just to be super cautious, even though this condition is implied
+            organization: {
+              published: true,
+            },
+          },
+        },
+      });
+
       const user = await p.user.create({
         data: {
           ...data,
           username: uniqueUsername,
           changelogVersion: version,
+          organizationId: associatedOrg?.orgId,
         },
       });
 

@@ -1,19 +1,34 @@
-import { Box, Center, Container, Fade, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Container,
+  Fade,
+  HStack,
+  Heading,
+  Tooltip,
+  VStack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../../components/loading";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useLoading } from "../../hooks/use-loading";
 import { api } from "../../utils/api";
+import { organizationIcon } from "../../utils/icons";
 
-const computeMap = (invites = false) => {
-  const base = ["", "/theme", "/username", "/account-type", "/command-menu"];
+const computeMap = (invites = false, organizationBound = false) => {
+  const base = ["", "/theme", "/username"];
 
-  if (invites) {
-    base.push("/invites");
+  if (organizationBound) {
+    base.push("/command-menu", "/done");
+    return base;
   }
 
+  base.push("/account-type", "/command-menu");
+  if (invites) base.push("/invites");
   base.push("/subscribe", "/done");
+
   return base;
 };
 
@@ -48,10 +63,12 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [me, hasInvites]);
 
+  const muted = useColorModeValue("gray.500", "gray.500");
+
   const { loading } = useLoading();
   if (loading || !me) return <Loading />;
 
-  const map = computeMap(hasInvites);
+  const map = computeMap(hasInvites, !!me.organization);
 
   const currentStep = router.pathname.replace("/onboarding", "");
   const query = hasInvites ? `?orgInvites=true` : "";
@@ -62,9 +79,31 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
     void router.push(next ? `/onboarding${next}${query}` : "/home");
   };
 
+  const Icon = me.organization
+    ? organizationIcon(me.organization.icon)
+    : React.Fragment;
+
   return (
     <PresentWrapperContext.Provider value={{ nextStep }}>
       <Center h="calc(100vh - 120px)" position="relative">
+        {me.organization && (
+          <VStack position="absolute" left="0" top="4" w="full">
+            <Tooltip
+              textAlign="center"
+              py="2"
+              label={`${
+                me.organization.domain?.domain || "example.com"
+              } accounts are managed by your organization`}
+            >
+              <HStack>
+                <Box color={muted}>
+                  <Icon />
+                </Box>
+                <Heading size="sm">{me.organization.name}</Heading>
+              </HStack>
+            </Tooltip>
+          </VStack>
+        )}
         <Container maxW="3xl">
           <Fade
             in
