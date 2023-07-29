@@ -24,7 +24,6 @@ import React from "react";
 import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
 import { avatarUrl } from "../../utils/avatar";
-import { OrganizationAdminOnly } from "./organization-admin-only";
 
 interface OrganizationStudentProps {
   user: Pick<User, "id" | "name" | "username" | "email" | "image">;
@@ -110,7 +109,7 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
               href={`/@${user.username}`}
             />
           </Skeleton>
-          <OrganizationAdminOnly>
+          {canManage && (
             <Box position="relative">
               <Menu
                 placement="bottom-end"
@@ -143,7 +142,7 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
                 </MenuList>
               </Menu>
             </Box>
-          </OrganizationAdminOnly>
+          )}
         </ButtonGroup>
       </Td>
     </Tr>
