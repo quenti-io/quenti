@@ -24,7 +24,12 @@ export const OnboardingTheme = () => {
         description="You can change this later in settings."
       >
         <Tabs variant="unstyled" shadow="sm" rounded="md">
-          <TabList border="2px solid" borderColor={borderColor} rounded="md">
+          <TabList
+            border="2px solid"
+            borderColor={borderColor}
+            rounded="md"
+            overflow="hidden"
+          >
             <Tab
               w="72"
               h="48"
