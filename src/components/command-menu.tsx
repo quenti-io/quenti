@@ -36,10 +36,10 @@ import { useRouter } from "next/router";
 import React from "react";
 import { env } from "../env/client.mjs";
 import { menuEventChannel } from "../events/menu";
+import { useDevActions } from "../hooks/use-dev-actions";
 import { useShortcut } from "../hooks/use-shortcut";
 import { api } from "../utils/api";
 import { avatarUrl } from "../utils/avatar";
-import { useDevActions } from "../hooks/use-dev-actions";
 
 export interface CommandMenuProps {
   isOpen: boolean;
@@ -77,6 +77,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const devActions = useDevActions();
   const { colorMode, toggleColorMode } = useColorMode();
 
+  const dismiss = router.pathname == "/onboarding/command-menu";
   const onSet = router.pathname == "/sets/[id]";
   const onFolder = router.pathname == "/profile/[username]/folders/[slug]";
 
@@ -295,9 +296,11 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const onSubmit = (i: number, ctrl: boolean) => {
     const option = filteredOptions[i]!;
 
-    void (async () => {
-      await option.action(ctrl);
-    })();
+    if (!dismiss || option.name == "Toggle Theme") {
+      void (async () => {
+        await option.action(ctrl);
+      })();
+    }
 
     if (option.loadable) {
       option.isLoading = true;
