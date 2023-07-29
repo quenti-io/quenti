@@ -10,16 +10,13 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import { env } from "../../env/server.mjs";
 
 export interface ConfirmCodeEmailProps {
   orgName: string;
   domain: string;
   otp: string;
 }
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
 
 export const ConfirmCodeEmail = ({
   orgName = "Organization Name",
@@ -33,7 +30,7 @@ export const ConfirmCodeEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${baseUrl}/avatars/quenti.png`}
+            src={`${env.NEXT_PUBLIC_BASE_URL}/avatars/quenti.png`}
             width="42"
             height="42"
             alt="Quenti"
@@ -49,7 +46,7 @@ export const ConfirmCodeEmail = ({
           </Text>
           <code style={code}>{otp}</code>
           <Hr style={hr} />
-          <Link href={baseUrl} style={reportLink}>
+          <Link href={env.NEXT_PUBLIC_BASE_URL} style={reportLink}>
             Quenti
           </Link>
         </Container>

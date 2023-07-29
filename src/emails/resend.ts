@@ -1,7 +1,9 @@
 import { Resend } from "resend";
 import type { CreateEmailOptions } from "resend/build/src/emails/interfaces";
 import { env } from "../env/server.mjs";
-import ConfirmCodeEmail, { type ConfirmCodeEmailProps } from "./confirm-code";
+import ConfirmCodeEmail, {
+  type ConfirmCodeEmailProps,
+} from "./templates/confirm-code";
 
 const NOTIFICATIONS_SENDER = `notifications@${env.EMAIL_SENDER || ""}`;
 
