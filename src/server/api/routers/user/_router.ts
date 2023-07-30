@@ -11,6 +11,7 @@ type UserRouterHandlerCache = {
     ["change-username"]?: typeof import("./change-username.handler").changeUsernameHandler;
     ["check-username"]?: typeof import("./check-username.handler").checkUsernameHandler;
     ["set-display-name"]?: typeof import("./set-display-name.handler").setDisplayNameHandler;
+    ["set-user-type"]?: typeof import("./set-user-type.handler").setUserTypeHandler;
     ["view-changelog"]?: typeof import("./view-changelog.handler").viewChangelogHandler;
     ["set-enable-usage-data"]?: typeof import("./set-enable-usage-data.handler").setEnableUsageDataHandler;
     ["delete-account"]?: typeof import("./delete-account.handler").deleteAccountHandler;

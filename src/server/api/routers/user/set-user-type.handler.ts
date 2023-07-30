@@ -7,7 +7,7 @@ type SetUserTypeOptions = {
   input: TSetUserTypeSchema;
 };
 
-export async function setUserType({ ctx, input }: SetUserTypeOptions) {
+export async function setUserTypeHandler({ ctx, input }: SetUserTypeOptions) {
   const user = await ctx.prisma.user.findUniqueOrThrow({
     where: { id: ctx.session.user.id },
   });
@@ -23,3 +23,5 @@ export async function setUserType({ ctx, input }: SetUserTypeOptions) {
     data: { type: input.type },
   });
 }
+
+export default setUserTypeHandler;
