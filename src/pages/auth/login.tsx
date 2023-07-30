@@ -7,9 +7,9 @@ export default function Login() {
   return (
     <AuthLayout
       mode="login"
-      onUserExists={() => {
-        void router.push("/home");
+      onUserExists={(callback) => {
+        void router.push(callback);
       }}
     />
-  )
+  );
 }

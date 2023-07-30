@@ -17,20 +17,28 @@ import React from "react";
 import { Logo } from "../icons/logo";
 import { Loading } from "./loading";
 import { Link } from "./link";
+import { useRouter } from "next/router";
+import { getSafeRedirectUrl } from "../lib/urls";
 
 export interface AuthLayoutProps {
   mode: "login" | "signup";
-  onUserExists: () => void;
+  onUserExists: (callbackUrl: string) => void;
 }
 
 export const AuthLayout: React.FC<AuthLayoutProps> = ({
   mode,
   onUserExists,
 }) => {
+  const router = useRouter();
   const { status, data: session } = useSession();
+  const callbackUrl =
+    typeof router.query.callbackUrl == "string"
+      ? router.query.callbackUrl
+      : "/home";
+  const safeCallbackUrl = getSafeRedirectUrl(callbackUrl);
 
   React.useEffect(() => {
-    if (session?.user) onUserExists();
+    if (session?.user) onUserExists(safeCallbackUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user]);
 
@@ -86,7 +94,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                   leftIcon={<IconBrandGoogle size={18} strokeWidth={4} />}
                   onClick={async () => {
                     await signIn("google", {
-                      callbackUrl: "/home",
+                      callbackUrl: safeCallbackUrl,
                       redirect: false,
                     });
                   }}
