@@ -23,11 +23,11 @@ import { useDebounce } from "../../../hooks/use-debounce";
 import { useOrganization } from "../../../hooks/use-organization";
 import { api } from "../../../utils/api";
 import { plural } from "../../../utils/string";
+import { AddStudentModal } from "../add-student-modal";
 import { EmptyStudentsCard } from "../empty-students-card";
+import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationStudent } from "../organization-student";
 import { RemoveStudentModal } from "../remove-student-modal";
-import { OrganizationAdminOnly } from "../organization-admin-only";
-import { AddStudentModal } from "../add-student-modal";
 
 export const OrganizationStudents = () => {
   const org = useOrganization();
@@ -40,6 +40,7 @@ export const OrganizationStudents = () => {
       {
         orgId: org?.id || "",
         query: debouncedSearch.length ? debouncedSearch : undefined,
+        limit: 20,
       },
       {
         enabled: !!org,
@@ -75,6 +76,10 @@ export const OrganizationStudents = () => {
   const [removeStudent, setRemoveStudent] = React.useState<
     string | undefined
   >();
+
+  const onRequestRemove = React.useCallback((id: string) => {
+    setRemoveStudent(id);
+  }, []);
 
   const menuBg = useColorModeValue("white", "gray.800");
 
@@ -175,14 +180,12 @@ export const OrganizationStudents = () => {
             </InputGroup>
           </Skeleton>
           <OrganizationAdminOnly>
-            <Skeleton fitContent rounded="md" isLoaded={!!data?.pages}>
-              <Button
-                leftIcon={<IconPlus size={18} />}
-                onClick={() => setAddModalOpen(true)}
-              >
-                Add
-              </Button>
-            </Skeleton>
+            <Button
+              leftIcon={<IconPlus size={18} />}
+              onClick={() => setAddModalOpen(true)}
+            >
+              Add
+            </Button>
           </OrganizationAdminOnly>
         </HStack>
         {data?.pages && !data.pages[0]!.students.length && (
@@ -213,7 +216,7 @@ export const OrganizationStudents = () => {
                         user={student}
                         key={student.id}
                         canManage={isAdmin}
-                        onRequestRemove={() => setRemoveStudent(student.id)}
+                        onRequestRemove={onRequestRemove}
                       />
                     ))}
                   </>

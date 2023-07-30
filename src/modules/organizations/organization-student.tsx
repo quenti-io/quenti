@@ -22,14 +22,14 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
-import { MenuOption } from "../../components/menu-option";
+import { MenuOptionPure } from "../../components/menu-option";
 import { avatarUrl } from "../../utils/avatar";
 
 interface OrganizationStudentProps {
   user: Pick<User, "id" | "name" | "username" | "email" | "image">;
   skeleton?: boolean;
   canManage?: boolean;
-  onRequestRemove?: () => void;
+  onRequestRemove?: (id: string) => void;
 }
 
 const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
@@ -43,6 +43,18 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
   const buttonGroupBg = useColorModeValue("gray.50", "gray.800");
   const menuBg = useColorModeValue("white", "gray.800");
   const redMenuColor = useColorModeValue("red.600", "red.200");
+
+  const callback = React.useCallback(() => {
+    onRequestRemove?.(user.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const openCallback = React.useCallback(() => {
+    setMenuOpen(true);
+  }, []);
+  const closeCallback = React.useCallback(() => {
+    setMenuOpen(false);
+  }, []);
 
   return (
     <Tr>
@@ -114,8 +126,8 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
               <Menu
                 placement="bottom-end"
                 isOpen={menuOpen}
-                onOpen={() => setMenuOpen(true)}
-                onClose={() => setMenuOpen(false)}
+                onOpen={openCallback}
+                onClose={closeCallback}
               >
                 <MenuButton roundedLeft="none" as={IconButton} w="8" h="8">
                   <Box w="8" display="flex" justifyContent="center">
@@ -131,13 +143,13 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
                   shadow="lg"
                   display={menuOpen ? "block" : "none"}
                 >
-                  <MenuOption
+                  <MenuOptionPure
                     icon={<IconUserX size={16} />}
                     label="Remove"
                     fontSize="sm"
                     py="6px"
                     color={redMenuColor}
-                    onClick={onRequestRemove}
+                    onClick={callback}
                   />
                 </MenuList>
               </Menu>
