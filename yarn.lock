@@ -3454,7 +3454,7 @@
   dependencies:
     react "18.2.0"
 
-"@react-email/tailwind@0.0.8":
+"@react-email/tailwind@0.0.8", "@react-email/tailwind@^0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@react-email/tailwind/-/tailwind-0.0.8.tgz#d5cb9a2e55b386ce7dfb3c60527a1c98cc4d4c64"
   integrity sha512-0BLjD5GpiyBK7YDlaDrjHIpj9eTrrZrMJud3f1UPoCZhS+0S/M8LcR8WMbQsR+8/aLGmiy4F4TGZuRQcsJEsFw==

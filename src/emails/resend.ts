@@ -4,6 +4,10 @@ import { env } from "../env/server.mjs";
 import ConfirmCodeEmail, {
   type ConfirmCodeEmailProps,
 } from "./templates/confirm-code";
+import {
+  OrganizationInviteEmail,
+  type OrganizationInviteEmailProps,
+} from "./templates/organization-invite";
 
 const NOTIFICATIONS_SENDER = `notifications@${env.EMAIL_SENDER || ""}`;
 
@@ -22,6 +26,18 @@ export const sendEmail = async (opts: CreateEmailOptions) => {
     return;
   }
   await resend.sendEmail({ ...opts, to: to(opts.to) });
+};
+
+export const sendOrganizationInviteEmail = async (
+  email: string,
+  opts: OrganizationInviteEmailProps
+) => {
+  await sendEmail({
+    from: NOTIFICATIONS_SENDER,
+    to: email,
+    subject: `You've been invited to ${opts.orgName}`,
+    react: OrganizationInviteEmail(opts),
+  });
 };
 
 export const sendConfirmCodeEmail = async (
