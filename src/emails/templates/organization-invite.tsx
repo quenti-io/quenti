@@ -64,7 +64,7 @@ export const OrganizationInviteEmail = ({
           </Content>
           <Button
             href={url}
-            className="mt-3 rounded-md bg-[#1a5fff] px-6 py-3 text-lg text-white"
+            className="mt-3 rounded-md bg-[#1a5fff] px-6 py-3 text-base text-white"
           >
             Accept invite
           </Button>
