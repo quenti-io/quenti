@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import tinykeys from "../lib/tinykeys";
 import { CommandMenu } from "./command-menu";
+import { menuEventChannel } from "../events/menu";
 
 export default function GlobalShortcutLayer() {
   const [open, setOpen] = React.useState(false);
@@ -22,5 +23,13 @@ export default function GlobalShortcutLayer() {
     };
   }, [session.data?.user, setOpen, open]);
 
-  return <CommandMenu isOpen={open} onClose={() => setOpen(false)} />;
+  return (
+    <CommandMenu
+      isOpen={open}
+      onClose={() => {
+        setOpen(false);
+        menuEventChannel.emit("commandMenuClosed");
+      }}
+    />
+  );
 }

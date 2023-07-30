@@ -9,14 +9,7 @@ type UpdateOptions = {
 };
 
 export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
-  const org = await ctx.prisma.organization.findUnique({
-    where: {
-      id: input.id,
-    },
-  });
-
-  if (!org) throw new TRPCError({ code: "NOT_FOUND" });
-  if (!(await isOrganizationAdmin(ctx.session.user.id, org.id)))
+  if (!(await isOrganizationAdmin(ctx.session.user.id, input.id)))
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
   return await ctx.prisma.organization.update({

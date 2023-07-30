@@ -67,7 +67,7 @@ model User {
   id               String    @id @default(cuid())
   name             String?
   username         String    @unique
-  email            String?   @unique
+  email            String    @unique
   emailVerified    DateTime?
   image            String?
   type             UserType  @default(Student)
@@ -91,7 +91,7 @@ model User {
   containers     Container[]
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
-  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   highscores     Highscore[]
   organizations  Membership[]
 

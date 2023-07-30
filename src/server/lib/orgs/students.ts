@@ -18,6 +18,11 @@ export const bulkJoinOrgStudents = async (orgId: string, domain: string) => {
       email: {
         endsWith: `@${domain}`,
       },
+      organizations: {
+        none: {
+          orgId,
+        },
+      },
     },
     data: {
       organizationId: orgId,

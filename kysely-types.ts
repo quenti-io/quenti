@@ -228,7 +228,7 @@ export type User = {
   id: string;
   name: string | null;
   username: string;
-  email: string | null;
+  email: string;
   emailVerified: Timestamp | null;
   image: string | null;
   type: Generated<UserType>;

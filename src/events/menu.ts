@@ -6,4 +6,5 @@ export const menuEventChannel = eventBus<{
   folderWithSetCreated: (setId: string) => void;
   openChangelog: () => void;
   openSignup: (args: { message?: string; callbackUrl?: string }) => void;
+  commandMenuClosed: () => void;
 }>();

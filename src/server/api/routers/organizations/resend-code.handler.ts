@@ -3,6 +3,7 @@ import { genOtp } from "../../../lib/otp";
 import { isOrganizationAdmin } from "../../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TResendCodeSchema } from "./resend-code.schema";
+import { sendConfirmCodeEmail } from "../../../../emails/resend";
 
 type ResentCodeOptions = {
   ctx: NonNullableUserContext;
@@ -26,8 +27,6 @@ export const resendCodeHandler = async ({ ctx, input }: ResentCodeOptions) => {
 
   const { hash, otp } = genOtp(domain.verifiedEmail);
 
-  console.log("OTP:", otp);
-
   await ctx.prisma.verifiedOrganizationDomain.update({
     where: {
       orgId: input.orgId,
@@ -35,6 +34,18 @@ export const resendCodeHandler = async ({ ctx, input }: ResentCodeOptions) => {
     data: {
       otpHash: hash,
     },
+  });
+
+  const org = await ctx.prisma.organization.findUniqueOrThrow({
+    where: {
+      id: input.orgId,
+    },
+  });
+
+  await sendConfirmCodeEmail(domain.verifiedEmail, {
+    domain: domain.requestedDomain,
+    orgName: org.name,
+    otp,
   });
 };
 
