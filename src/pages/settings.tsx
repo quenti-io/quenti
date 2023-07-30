@@ -18,6 +18,7 @@ import { DataUsage } from "../modules/settings/data-usage";
 import { GAccountInfo } from "../modules/settings/g-account-info";
 import { ProfileInfo } from "../modules/settings/profile-info";
 import { avatarUrl } from "../utils/avatar";
+import { AccountType } from "../modules/settings/account-type";
 
 const Settings: ComponentWithAuth = () => {
   const session = useSession()!.data!;
@@ -40,6 +41,12 @@ const Settings: ComponentWithAuth = () => {
           <Stack spacing={8}>
             <GAccountInfo />
             <Divider borderColor={divider} />
+            {!session.user!.organizationId && (
+              <>
+                <AccountType />
+                <Divider borderColor={divider} />
+              </>
+            )}
             <ProfileInfo />
             <Divider borderColor={divider} />
             <AppPreferences />

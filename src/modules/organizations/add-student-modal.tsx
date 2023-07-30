@@ -67,6 +67,11 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
     },
     onError: (error) => {
       switch (error.message) {
+        case "cannot_add_self":
+          addStudentFormMethods.setError("root", {
+            message: "You can't add yourself as a student.",
+          });
+          break;
         case "no_account_for_email":
           addStudentFormMethods.setError("root", {
             message:
@@ -76,6 +81,12 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
         case "student_already_in_org":
           addStudentFormMethods.setError("root", {
             message: "This student is already in your organization.",
+          });
+          break;
+        case "member_in_org":
+          addStudentFormMethods.setError("root", {
+            message:
+              "This email belongs to a member of your organization. If you wish to add them a student, remove them as a member first.",
           });
           break;
       }

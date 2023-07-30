@@ -4,6 +4,7 @@ import { ZChangeUsernameSchema } from "./change-username.schema";
 import { ZCheckUsernameSchema } from "./check-username.schema";
 import { ZSetDisplayNameSchema } from "./set-display-name.schema";
 import { ZSetEnableUsageDataSchema } from "./set-enable-usage-data.schema";
+import { ZSetUserTypeSchema } from "./set-user-type.schema";
 
 type UserRouterHandlerCache = {
   handlers: {
@@ -45,6 +46,12 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "set-display-name");
       return HANDLER_CACHE.handlers["set-display-name"]!({ ctx, input });
+    }),
+  setUserType: protectedProcedure
+    .input(ZSetUserTypeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "set-user-type");
+      return HANDLER_CACHE.handlers["set-user-type"]!({ ctx, input });
     }),
   viewChangelog: protectedProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "view-changelog");

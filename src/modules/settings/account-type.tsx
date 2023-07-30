@@ -8,53 +8,31 @@ import {
 } from "@chakra-ui/react";
 import type { UserType } from "@prisma/client";
 import { IconBooks, IconSchool } from "@tabler/icons-react";
-import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { api } from "../../utils/api";
-import { DefaultLayout } from "./default-layout";
-import { PresentWrapper, useNextStep } from "./present-wrapper";
+import { SectionWrapper } from "./section-wrapper";
 
-export const OnboardingAccountType = () => {
-  return (
-    <PresentWrapper>
-      <AccountType />
-    </PresentWrapper>
-  );
-};
-
-const AccountType = () => {
-  const router = useRouter();
-  const next = useNextStep();
-
-  const borderColor = useColorModeValue("gray.100", "gray.750");
-  const hoverColor = useColorModeValue("gray.50", "gray.800");
-  const textHighlight = useColorModeValue("blue.600", "blue.300");
-
-  const hasOrgInvites = router.query.orgInvites === "true";
+export const AccountType = () => {
+  const { data: session } = useSession();
 
   const setUserType = api.user.setUserType.useMutation({
     onSuccess: () => {
       const event = new Event("visibilitychange");
       document.dispatchEvent(event);
-      next();
     },
   });
 
-  const [type, setType] = React.useState<UserType>(
-    hasOrgInvites ? "Teacher" : "Student"
-  );
+  const [type, setType] = React.useState<UserType>(session!.user!.type);
+
+  const borderColor = useColorModeValue("gray.100", "gray.750");
+  const hoverColor = useColorModeValue("gray.50", "gray.800");
+  const textHighlight = useColorModeValue("blue.600", "blue.300");
 
   return (
-    <DefaultLayout
-      heading="Are you a student or a teacher?"
-      description="You can change this later in settings."
-      defaultNext={false}
-      nextLoading={setUserType.isLoading}
-      onNext={async () => {
-        await setUserType.mutateAsync({
-          type,
-        });
-      }}
+    <SectionWrapper
+      heading="Account Type"
+      description="Select your account type."
     >
       <Tabs variant="unstyled" shadow="sm" rounded="md" isManual>
         <TabList
@@ -64,9 +42,8 @@ const AccountType = () => {
           overflow="hidden"
         >
           <Tab
-            w={{ base: "36", md: "48" }}
-            h={{ base: "24", md: "32" }}
-            background={type == "Student" ? borderColor : undefined}
+            w="full"
+            background={type === "Student" ? borderColor : undefined}
             _hover={
               type !== "Student"
                 ? {
@@ -77,6 +54,7 @@ const AccountType = () => {
             onClick={(e) => {
               e.preventDefault();
               setType("Student");
+              void setUserType.mutateAsync({ type: "Student" });
             }}
           >
             <HStack
@@ -88,9 +66,8 @@ const AccountType = () => {
             </HStack>
           </Tab>
           <Tab
-            w={{ base: "36", md: "48" }}
-            h={{ base: "24", md: "32" }}
-            background={type == "Teacher" ? borderColor : undefined}
+            w="full"
+            background={type === "Teacher" ? borderColor : undefined}
             _hover={
               type !== "Teacher"
                 ? {
@@ -101,6 +78,7 @@ const AccountType = () => {
             onClick={(e) => {
               e.preventDefault();
               setType("Teacher");
+              void setUserType.mutateAsync({ type: "Teacher" });
             }}
           >
             <HStack
@@ -113,6 +91,6 @@ const AccountType = () => {
           </Tab>
         </TabList>
       </Tabs>
-    </DefaultLayout>
+    </SectionWrapper>
   );
 };

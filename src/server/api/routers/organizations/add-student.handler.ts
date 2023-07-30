@@ -12,6 +12,9 @@ export const addStudentHandler = async ({ ctx, input }: AddStudentOptions) => {
   if (!(await isOrganizationAdmin(ctx.session.user.id, input.orgId)))
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
+  if (input.email == ctx.session.user.email)
+    throw new TRPCError({ code: "BAD_REQUEST", message: "cannot_add_self" });
+
   const domain = await ctx.prisma.verifiedOrganizationDomain.findUnique({
     where: {
       orgId: input.orgId,
@@ -50,6 +53,20 @@ export const addStudentHandler = async ({ ctx, input }: AddStudentOptions) => {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "student_already_in_org",
+    });
+  }
+
+  const membership = await ctx.prisma.membership.findFirst({
+    where: {
+      userId: student.id,
+      orgId: input.orgId,
+    },
+  });
+
+  if (membership) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "member_in_org",
     });
   }
 
