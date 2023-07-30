@@ -33,8 +33,8 @@ export const OnboardingAccountType = () => {
         >
           <TabList border="2px solid" borderColor={borderColor} rounded="md">
             <Tab
-              w="48"
-              h="32"
+              w={{ base: "36", md: "48" }}
+              h={{ base: "24", md: "32" }}
               _selected={{
                 background: borderColor,
               }}
@@ -55,8 +55,8 @@ export const OnboardingAccountType = () => {
               </HStack>
             </Tab>
             <Tab
-              w="48"
-              h="32"
+              w={{ base: "36", md: "48" }}
+              h={{ base: "24", md: "32" }}
               _selected={{
                 background: borderColor,
               }}

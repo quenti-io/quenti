@@ -22,8 +22,16 @@ export const OnboardingSubscribe = () => {
         heading="Subscribe to updates"
         description="We're always adding new features and improvements. Want to stay in the loop?"
       >
-        <Card bg={cardBg} shadow="lg" p="6" w="md">
-          <Flex justifyContent="space-between" alignItems="center">
+        <Card bg={cardBg} shadow="lg" p="6" w={{ base: "full", md: "md" }} mx="4">
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            gap={{ base: "4", md: 0 }}
+            flexDir={{
+              base: "column",
+              md: "row",
+            }}
+          >
             <Stack spacing="0">
               <Heading fontSize="md">Follow us on Twitter</Heading>
               <Text fontSize="sm" color={muted}>
@@ -34,6 +42,7 @@ export const OnboardingSubscribe = () => {
               as={Link}
               href="https://twitter.com/quentiapp"
               leftIcon={<IconBrandTwitterFilled size={18} />}
+              w={{ base: "full", md: "auto" }}
             >
               @quentiapp
             </Button>

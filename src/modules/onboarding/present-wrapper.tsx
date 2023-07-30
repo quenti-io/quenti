@@ -8,6 +8,7 @@ import {
   Tooltip,
   VStack,
   useColorModeValue,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -17,15 +18,21 @@ import { useLoading } from "../../hooks/use-loading";
 import { api } from "../../utils/api";
 import { organizationIcon } from "../../utils/icons";
 
-const computeMap = (invites = false, organizationBound = false) => {
+const computeMap = (
+  invites = false,
+  organizationBound = false,
+  isMobile = false
+) => {
   const base = ["", "/theme", "/username"];
 
   if (organizationBound) {
-    base.push("/command-menu", "/done");
+    if (!isMobile) base.push("/command-menu");
+    base.push("/done");
     return base;
   }
 
-  base.push("/account-type", "/command-menu");
+  base.push("/account-type");
+  if (!isMobile) base.push("/command-menu");
   if (invites) base.push("/invites");
   base.push("/subscribe", "/done");
 
@@ -47,6 +54,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
 }) => {
   const router = useRouter();
   const hasInvites = router.query.orgInvites === "true";
+  const isMobile = useMediaQuery("(max-width: 768px)")[0];
 
   const { data: me } = api.user.me.useQuery(undefined, {
     retry: false,
@@ -68,7 +76,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   const { loading } = useLoading();
   if (loading || !me) return <Loading />;
 
-  const map = computeMap(hasInvites, !!me.organization);
+  const map = computeMap(hasInvites, !!me.organization, isMobile);
 
   const currentStep = router.pathname.replace("/onboarding", "");
   const query = hasInvites ? `?orgInvites=true` : "";
@@ -85,7 +93,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
 
   return (
     <PresentWrapperContext.Provider value={{ nextStep }}>
-      <Center h="calc(100vh - 120px)" position="relative">
+      <Center minH="calc(100vh - 120px)" position="relative" pb="20">
         {me.organization && (
           <VStack position="absolute" left="0" top="4" w="full">
             <Tooltip
@@ -132,7 +140,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
           </Fade>
         </Container>
         <VStack position="absolute" left="0" bottom="4" w="full">
-          <Box w="xs">
+          <Box w="xs" px="4">
             <SegmentedProgress
               steps={map.length}
               currentStep={map.indexOf(currentStep)}

@@ -19,7 +19,7 @@ export const OnboardingUsername = () => {
         nextDisabled={disabled}
         nextLoading={loading}
       >
-        <VStack w="sm" p="0" m="0">
+        <VStack w={{ base: "full", md: "sm" }} p="0" m="0">
           <ChangeUsernameInput
             ref={inputRef}
             showButton={false}

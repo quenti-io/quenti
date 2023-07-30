@@ -29,6 +29,7 @@ export const OnboardingTheme = () => {
             borderColor={borderColor}
             rounded="md"
             overflow="hidden"
+            flexDir={{ base: "column", md: "row" }}
           >
             <Tab
               w="72"
