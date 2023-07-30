@@ -52,6 +52,7 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
           username: uniqueUsername,
           changelogVersion: version,
           organizationId: associatedOrg?.orgId,
+          type: "Student",
         },
       });
 

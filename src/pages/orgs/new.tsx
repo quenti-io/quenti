@@ -41,6 +41,14 @@ export default function NewOrganization() {
     onSuccess: async (data) => {
       await router.push(`/orgs/${data.id}/members-onboarding`);
     },
+    onError: (error) => {
+      if (error.message == "name_profane") {
+        newOrganizationFormMethods.setError("name", {
+          type: "custom",
+          message: "Profane organization names are not allowed",
+        });
+      }
+    },
   });
 
   const newOrganizationFormMethods = useForm<NewOrganizationFormInput>({
