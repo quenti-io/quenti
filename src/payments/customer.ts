@@ -44,7 +44,7 @@ export const getStripeCustomerId = async (user: SelectedUser) => {
     return customers.data[0].id;
   }
 
-  const customer = await stripe.customers.create({ email: user.email! });
+  const customer = await stripe.customers.create({ email: user.email });
   await updateUserWithCustomerId(user, customer.id);
 
   return customer.id;
