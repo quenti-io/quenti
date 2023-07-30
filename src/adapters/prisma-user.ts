@@ -46,6 +46,17 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
         },
       });
 
+      /**
+       * All users by default need to be students and connected to an organization if their email matches a verified domain.
+       * We don't want to disallow org invites for anyone with a verified 'student' email in case a teacher is accidentally added as a student.
+       * It's possible that a teacher might be accidentally added as a student, and unable to join the org(s) they were invited to,
+       * so why not make them a teacher by default or if they have pending org invites?
+       *
+       * Here's a possible exploit for students:
+       * 1. Student signs up with a personal account and changes their account type to 'Teacher'
+       * 2. Student creates an organization and invites their school email to join
+       * 3. When the account with the school email is created, it will be created as a teacher and not bound to the org
+       */
       const user = await p.user.create({
         data: {
           ...data,
