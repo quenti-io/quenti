@@ -1,4 +1,6 @@
 import { TRPCError } from "@trpc/server";
+import { sendOrganizationInviteEmail } from "../../../../emails/resend";
+import { env } from "../../../../env/server.mjs";
 import {
   isOrganizationAdmin,
   isOrganizationOwner,
@@ -79,9 +81,32 @@ export const inviteMemberHandler = async ({
   });
 
   if (input.sendEmail) {
-    for (const email of pendingInvites.concat(existingEmails)) {
-      // TODO: Send email
-      console.log(`Sending email to ${email}`);
+    const org = await ctx.prisma.organization.findUniqueOrThrow({
+      where: {
+        id: input.orgId,
+      },
+    });
+
+    const inviter = {
+      image: ctx.session.user.image!,
+      name: ctx.session.user.name,
+      email: ctx.session.user.email!,
+    };
+
+    for (const email of pendingInvites) {
+      await sendOrganizationInviteEmail(email, {
+        orgName: org.name,
+        // Onboarding fetches pending invites so we can use the regular signup
+        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
+        inviter,
+      });
+    }
+    for (const email of existingEmails) {
+      await sendOrganizationInviteEmail(email, {
+        orgName: org.name,
+        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/orgs`,
+        inviter,
+      });
     }
   }
 };

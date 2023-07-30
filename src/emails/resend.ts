@@ -9,7 +9,7 @@ import {
   type OrganizationInviteEmailProps,
 } from "./templates/organization-invite";
 
-const NOTIFICATIONS_SENDER = `notifications@${env.EMAIL_SENDER || ""}`;
+const NOTIFICATIONS_SENDER = `Quenti <notifications@${env.EMAIL_SENDER || ""}>`;
 
 const to = (email: string | string[]) => {
   if (env.USE_RESEND_PREVIEWS) return "delivered@resend.dev";
@@ -35,7 +35,9 @@ export const sendOrganizationInviteEmail = async (
   await sendEmail({
     from: NOTIFICATIONS_SENDER,
     to: email,
-    subject: `You've been invited to ${opts.orgName}`,
+    subject: `${opts.inviter.name ?? opts.inviter.email} invited you to join ${
+      opts.orgName
+    } on Quenti`,
     react: OrganizationInviteEmail(opts),
   });
 };
