@@ -35,7 +35,7 @@ export const getStripeCustomerId = async (user: SelectedUser) => {
   }
 
   const customers = await stripe.customers.list({
-    email: user.email!,
+    email: user.email,
     limit: 1,
   });
 
