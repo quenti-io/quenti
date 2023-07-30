@@ -35,7 +35,7 @@ export const WizardLayout: React.FC<
   const text = useColorModeValue("gray.600", "gray.400");
 
   return (
-    <Container maxW="2xl" mt="10">
+    <Container maxW="2xl" mt="10" pb="20">
       <Stack>
         <Stack spacing="8" p="8">
           <Stack>

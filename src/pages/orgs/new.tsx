@@ -4,6 +4,7 @@ import {
   ButtonGroup,
   Card,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   IconButton,
   Input,
@@ -11,31 +12,52 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useRouter } from "next/router";
-import React from "react";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { z } from "zod";
 import { WizardLayout } from "../../components/wizard-layout";
 import { api } from "../../utils/api";
 import { ORGANIZATION_ICONS } from "../../utils/icons";
 
+const schema = z.object({
+  name: z
+    .string()
+    .nonempty({ message: "Enter a name" })
+    .max(50, { message: "Name must be less than 50 characters" }),
+  icon: z.number().int().min(0),
+});
+
+interface NewOrganizationFormInput {
+  name: string;
+  icon: number;
+}
+
 export default function NewOrganization() {
   const router = useRouter();
 
-  const [orgName, setOrgName] = React.useState("");
-  const [icon, setIcon] = React.useState(0);
-
   const create = api.organizations.create.useMutation({
-    onError: (error) => {
-      if (
-        error.message == "slug_conflict" ||
-        error.data?.code == "BAD_REQUEST"
-      ) {
-      }
-    },
     onSuccess: async (data) => {
       await router.push(`/orgs/${data.id}/members-onboarding`);
     },
   });
+
+  const newOrganizationFormMethods = useForm<NewOrganizationFormInput>({
+    defaultValues: {
+      name: "",
+      icon: 0,
+    },
+    resolver: zodResolver(schema),
+  });
+
+  const {
+    formState: { errors },
+  } = newOrganizationFormMethods;
+
+  const onSubmit: SubmitHandler<NewOrganizationFormInput> = async (data) => {
+    await create.mutateAsync(data);
+  };
 
   const iconColor = useColorModeValue("#171923", "white");
 
@@ -46,66 +68,77 @@ export default function NewOrganization() {
       steps={5}
       currentStep={0}
     >
-      <Card p="8" variant="outline" shadow="lg" rounded="lg">
-        <Stack spacing="10">
-          <Stack spacing="6">
-            <FormControl>
-              <FormLabel fontSize="sm" mb="10px">
-                Organization Name
-              </FormLabel>
-              <Input
-                placeholder="Acme, Inc."
-                autoFocus
-                value={orgName}
-                onChange={(e) => {
-                  setOrgName(e.target.value);
-                }}
+      <form onSubmit={newOrganizationFormMethods.handleSubmit(onSubmit)}>
+        <Card p="8" variant="outline" shadow="lg" rounded="lg">
+          <Stack spacing="10">
+            <Stack spacing="6">
+              <Controller
+                name="name"
+                control={newOrganizationFormMethods.control}
+                render={({ field: { value, onChange } }) => (
+                  <FormControl isInvalid={!!errors.name}>
+                    <FormLabel fontSize="sm" mb="10px">
+                      Organization name
+                    </FormLabel>
+                    <Input
+                      placeholder="Acme, Inc."
+                      autoFocus
+                      defaultValue={value}
+                      onChange={onChange}
+                    />
+                    <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+                  </FormControl>
+                )}
               />
-            </FormControl>
-            <FormControl>
-              <FormLabel fontSize="sm" mb="10px">
-                Icon
-              </FormLabel>
-              <Box ml="-4px" mt="-4px">
-                {ORGANIZATION_ICONS.map((Icon, i) => (
-                  <Box display="inline-block" p="1" key={i}>
-                    <Skeleton rounded="md" isLoaded>
-                      <IconButton
-                        w="max"
-                        variant={icon == i ? "solid" : "ghost"}
-                        aria-label="Icon"
-                        onClick={() => setIcon(i)}
-                        icon={
-                          <Icon
-                            size={18}
-                            style={{ transition: "all 300ms" }}
-                            color={icon == i ? "white" : iconColor}
-                          />
-                        }
-                      />
-                    </Skeleton>
-                  </Box>
-                ))}
-              </Box>
-            </FormControl>
+              <Controller
+                name="icon"
+                control={newOrganizationFormMethods.control}
+                render={({ field: { value, onChange } }) => (
+                  <FormControl>
+                    <FormLabel fontSize="sm" mb="10px">
+                      Icon
+                    </FormLabel>
+                    <Box ml="-4px" mt="-4px">
+                      {ORGANIZATION_ICONS.map((Icon, i) => (
+                        <Box display="inline-block" p="1" key={i}>
+                          <Skeleton rounded="md" isLoaded>
+                            <IconButton
+                              w="max"
+                              variant={value == i ? "solid" : "ghost"}
+                              aria-label="Icon"
+                              onClick={() => onChange(i)}
+                              icon={
+                                <Icon
+                                  size={18}
+                                  style={{ transition: "all 300ms" }}
+                                  color={value == i ? "white" : iconColor}
+                                />
+                              }
+                            />
+                          </Skeleton>
+                        </Box>
+                      ))}
+                    </Box>
+                  </FormControl>
+                )}
+              />
+            </Stack>
+            <ButtonGroup w="full" size="sm">
+              <Button variant="outline" w="full" onClick={() => router.back()}>
+                Cancel
+              </Button>
+              <Button
+                w="full"
+                rightIcon={<IconArrowRight size="18" />}
+                type="submit"
+                isLoading={create.isLoading}
+              >
+                Continue
+              </Button>
+            </ButtonGroup>
           </Stack>
-          <ButtonGroup w="full" size="sm">
-            <Button variant="outline" w="full" onClick={() => router.back()}>
-              Cancel
-            </Button>
-            <Button
-              w="full"
-              rightIcon={<IconArrowRight size="18" />}
-              onClick={async () => {
-                await create.mutateAsync({ name: orgName, icon });
-              }}
-              isLoading={create.isLoading}
-            >
-              Continue
-            </Button>
-          </ButtonGroup>
-        </Stack>
-      </Card>
+        </Card>
+      </form>
     </WizardLayout>
   );
 }
