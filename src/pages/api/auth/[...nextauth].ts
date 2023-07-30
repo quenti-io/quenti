@@ -2,7 +2,7 @@ import type { NextApiHandler } from "next";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { withHighlight } from "../../../../highlight.config";
-import { CustomPrismaAdapter } from "../../../adapters/prisma-username";
+import { CustomPrismaAdapter } from "../../../adapters/prisma-user";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
 

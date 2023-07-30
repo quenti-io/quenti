@@ -56,6 +56,7 @@ type NextComponentWithAuth = NextComponentType<NextPageContext, any, {}> &
   Partial<AuthEnabledComponentConfig>;
 
 export const BASE_PAGES = ["/", "/signup", "/404", "/unauthorized"];
+export const AUTH_PAGES = ["/auth/login", "/auth/signup"];
 
 const App: AppType<
   {
@@ -71,12 +72,13 @@ const App: AppType<
   const base = env.NEXT_PUBLIC_BASE_URL;
   const pathname = router.pathname;
   const staticPage = BASE_PAGES.includes(pathname);
+  const authPage = AUTH_PAGES.includes(pathname);
 
   const Layout = Component.layout ?? React.Fragment;
 
   const children = (
     <>
-      <Navbar />
+      {!authPage && <Navbar />}
       <GlobalShortcutLayer />
       <SignupModal />
       <ChangelogContainer />
@@ -84,9 +86,7 @@ const App: AppType<
         <HighlightBoundary customDialog={<ErrorBoundary />} showDialog>
           <Head>
             <title>
-              {Component.title
-                ? `${Component.title} | Quenti`
-                : `Quenti`}
+              {Component.title ? `${Component.title} | Quenti` : `Quenti`}
             </title>
           </Head>
           <Auth>

@@ -7,6 +7,7 @@ import {
   type MenuItemProps,
 } from "@chakra-ui/react";
 import type { TablerIconsProps } from "@tabler/icons-react";
+import React from "react";
 import { Link } from "./link";
 
 export interface MenuOptionProps {
@@ -40,3 +41,5 @@ export const MenuOption = forwardRef<MenuItemProps & MenuOptionProps, "div">(
     );
   }
 );
+
+export const MenuOptionPure = React.memo(MenuOption);

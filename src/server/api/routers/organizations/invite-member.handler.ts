@@ -1,4 +1,6 @@
 import { TRPCError } from "@trpc/server";
+import { sendOrganizationInviteEmail } from "../../../../emails/resend";
+import { env } from "../../../../env/server.mjs";
 import {
   isOrganizationAdmin,
   isOrganizationOwner,
@@ -32,7 +34,6 @@ export const inviteMemberHandler = async ({
       email: {
         in: input.emails,
       },
-      type: "Teacher",
     },
     select: {
       id: true,
@@ -55,9 +56,7 @@ export const inviteMemberHandler = async ({
   existingUsers = existingUsers.filter((u) => u.organizations.length === 0);
 
   const existingIds = existingUsers.map((u) => u.id);
-  const existingEmails = existingUsers
-    .map((u) => u.email)
-    .filter((e) => !!e) as string[];
+  const existingEmails = existingUsers.map((u) => u.email).filter((e) => !!e);
   const existingInviteEmails = existingInvites.map((i) => i.email);
 
   const pendingInvites = input.emails.filter(
@@ -82,9 +81,32 @@ export const inviteMemberHandler = async ({
   });
 
   if (input.sendEmail) {
-    for (const email of pendingInvites.concat(existingEmails)) {
-      // TODO: Send email
-      console.log(`Sending email to ${email}`);
+    const org = await ctx.prisma.organization.findUniqueOrThrow({
+      where: {
+        id: input.orgId,
+      },
+    });
+
+    const inviter = {
+      image: ctx.session.user.image!,
+      name: ctx.session.user.name,
+      email: ctx.session.user.email!,
+    };
+
+    for (const email of pendingInvites) {
+      await sendOrganizationInviteEmail(email, {
+        orgName: org.name,
+        // Onboarding fetches pending invites so we can use the regular signup
+        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
+        inviter,
+      });
+    }
+    for (const email of existingEmails) {
+      await sendOrganizationInviteEmail(email, {
+        orgName: org.name,
+        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/orgs`,
+        inviter,
+      });
     }
   }
 };

@@ -1,9 +1,15 @@
 import { Resend } from "resend";
 import type { CreateEmailOptions } from "resend/build/src/emails/interfaces";
 import { env } from "../env/server.mjs";
-import ConfirmCodeEmail, { type ConfirmCodeEmailProps } from "./confirm-code";
+import ConfirmCodeEmail, {
+  type ConfirmCodeEmailProps,
+} from "./templates/confirm-code";
+import {
+  OrganizationInviteEmail,
+  type OrganizationInviteEmailProps,
+} from "./templates/organization-invite";
 
-const NOTIFICATIONS_SENDER = `notifications@${env.EMAIL_SENDER || ""}`;
+const NOTIFICATIONS_SENDER = `Quenti <notifications@${env.EMAIL_SENDER || ""}>`;
 
 const to = (email: string | string[]) => {
   if (env.USE_RESEND_PREVIEWS) return "delivered@resend.dev";
@@ -20,6 +26,20 @@ export const sendEmail = async (opts: CreateEmailOptions) => {
     return;
   }
   await resend.sendEmail({ ...opts, to: to(opts.to) });
+};
+
+export const sendOrganizationInviteEmail = async (
+  email: string,
+  opts: OrganizationInviteEmailProps
+) => {
+  await sendEmail({
+    from: NOTIFICATIONS_SENDER,
+    to: email,
+    subject: `${opts.inviter.name ?? opts.inviter.email} invited you to join ${
+      opts.orgName
+    } on Quenti`,
+    react: OrganizationInviteEmail(opts),
+  });
 };
 
 export const sendConfirmCodeEmail = async (

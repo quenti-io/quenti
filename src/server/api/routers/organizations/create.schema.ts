@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ZCreateSchema = z.object({
-  name: z.string(),
+  name: z.string().nonempty().max(50),
   icon: z.number().int().min(0),
 });
 

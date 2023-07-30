@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { IconMenu, IconX } from "@tabler/icons-react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
@@ -135,15 +135,12 @@ export const Navbar: React.FC = () => {
                 <Button
                   colorScheme="blue"
                   variant="outline"
-                  onClick={async () => {
-                    await signIn("google", {
-                      callbackUrl: "/home",
-                    });
-                  }}
+                  as={Link}
+                  href="/auth/login"
                 >
                   Log in
                 </Button>
-                <Button as={Link} href={"/signup"}>
+                <Button as={Link} href="/auth/signup">
                   Sign up for free
                 </Button>
               </>
