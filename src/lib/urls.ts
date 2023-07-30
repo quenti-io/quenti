@@ -16,6 +16,5 @@ export const getSafeRedirectUrl = (url: string) => {
     return env.NEXT_PUBLIC_BASE_URL;
   }
 
-  console.log("SAFE", safeUrl);
   return safeUrl;
 };

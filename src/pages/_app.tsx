@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { H } from "highlight.run";
 import type { NextComponentType, NextPageContext } from "next";
 import { type Session } from "next-auth";
-import { SessionProvider, signIn, useSession } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { type AppType } from "next/app";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -73,12 +73,13 @@ const App: AppType<
   const pathname = router.pathname;
   const staticPage = BASE_PAGES.includes(pathname);
   const authPage = AUTH_PAGES.includes(pathname);
+  const isOnboarding = pathname.startsWith("/onboarding");
 
   const Layout = Component.layout ?? React.Fragment;
 
   const children = (
     <>
-      {!authPage && <Navbar />}
+      {!authPage && !isOnboarding && <Navbar />}
       <GlobalShortcutLayer />
       <SignupModal />
       <ChangelogContainer />
@@ -186,8 +187,12 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
   React.useEffect(() => {
     void (async () => {
       if (status == "loading") return;
-      if (!isUser) await signIn("google");
+      if (!isUser)
+        await router.push(
+          `/auth/login?callbackUrl=${encodeURIComponent(router.asPath)}`
+        );
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUser, status]);
 
   React.useEffect(() => {

@@ -74,7 +74,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   const muted = useColorModeValue("gray.500", "gray.500");
 
   const { loading } = useLoading();
-  if (loading || !me) return <Loading />;
+  if (loading || !me) return <Loading fullHeight />;
 
   const map = computeMap(hasInvites, !!me.organization, isMobile);
 
@@ -83,7 +83,6 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
 
   const nextStep = () => {
     const next = map[map.indexOf(currentStep)! + 1];
-    console.log(router.query);
     void router.push(next ? `/onboarding${next}${query}` : "/home");
   };
 
@@ -93,7 +92,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
 
   return (
     <PresentWrapperContext.Provider value={{ nextStep }}>
-      <Center minH="calc(100vh - 120px)" position="relative" pb="20">
+      <Center minH="100vh" position="relative">
         {me.organization && (
           <VStack position="absolute" left="0" top="4" w="full">
             <Tooltip
@@ -112,7 +111,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
             </Tooltip>
           </VStack>
         )}
-        <Container maxW="3xl">
+        <Container maxW="3xl" py="20">
           <Fade
             in
             initial={{

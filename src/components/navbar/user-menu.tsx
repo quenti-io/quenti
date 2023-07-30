@@ -121,7 +121,7 @@ export const UserMenu = () => {
           label="Sign out"
           onClick={async () => {
             await signOut({
-              callbackUrl: "/",
+              callbackUrl: "/auth/login",
             });
           }}
         />

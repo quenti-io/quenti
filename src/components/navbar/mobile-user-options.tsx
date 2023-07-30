@@ -98,7 +98,7 @@ export const MobileUserOptions: React.FC<MobileUserOptionsProps> = ({
           leftIcon={<IconLogout size={18} />}
           onClick={async () => {
             await signOut({
-              callbackUrl: "/",
+              callbackUrl: "/auth/login",
             });
           }}
         >
