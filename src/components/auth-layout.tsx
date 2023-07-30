@@ -13,12 +13,12 @@ import {
 } from "@chakra-ui/react";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { Logo } from "../icons/logo";
-import { Loading } from "./loading";
-import { Link } from "./link";
-import { useRouter } from "next/router";
 import { getSafeRedirectUrl } from "../lib/urls";
+import { Link } from "./link";
+import { Loading } from "./loading";
 
 export interface AuthLayoutProps {
   mode: "login" | "signup";
@@ -54,27 +54,39 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
 
   return (
     <Center h="100vh" w="full" position="relative">
-      <Box
-        position="absolute"
-        top="0"
-        left="0"
-        w="full"
-        h="50vh"
-        opacity={gradientOpacity}
-        bgGradient={gradient}
-      />
+      <Fade
+        in
+        transition={{
+          enter: {
+            duration: 1.5,
+            delay: 0.2,
+            ease: "easeOut",
+          },
+        }}
+      >
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          w="full"
+          h="50vh"
+          opacity={gradientOpacity}
+          bgGradient={gradient}
+        />
+      </Fade>
       {!loading ? (
         <Container w="sm" zIndex={10}>
           <Fade
             in
             initial={{
               opacity: -1,
-              translateY: -16,
+              transform: "translateY(-16px)",
             }}
             animate={{
               opacity: 1,
-              translateY: 0,
+              transform: "translateY(0)",
               transition: {
+                delay: 0.1,
                 duration: 0.3,
                 ease: "easeOut",
               },
