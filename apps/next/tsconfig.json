@@ -1,0 +1,11 @@
+{
+  "extends": ["../../tsconfig.base.json"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "../../packages/types/next-auth.d.ts"
+, "../../packages/core/language.ts", "../../packages/lib/avatar.ts", "../../packages/lib/array.ts", "../../packages/lib/error.ts"  ]
+}

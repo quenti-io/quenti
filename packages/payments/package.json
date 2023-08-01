@@ -1,0 +1,11 @@
+{
+  "name": "@quenti/payments",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "dependencies": {
+    "@quenti/lib": "*",
+    "@quenti/prisma": "*"
+  }
+}

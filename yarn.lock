@@ -3545,6 +3545,18 @@
   dependencies:
     tslib "^2.4.0"
 
+"@t3-oss/env-core@0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-core/-/env-core-0.6.0.tgz#a2e6a6a2b166aad2df7ecc5e7a72400946a84fbe"
+  integrity sha512-3FkPAba069WRZVVab/sB1m3eSGn/rZeypx5k+sWEu1d+k0OQdRDnvFS+7MtxYgqVrwaRk3b7yVnX2dgSPVmWPQ==
+
+"@t3-oss/env-nextjs@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-nextjs/-/env-nextjs-0.6.0.tgz#47b44d4fc6f872f3782c4e1ebfe94a55f09dd1e1"
+  integrity sha512-SpzcGNIbUYcQw4zPPFeRJqCC1560zL7QmB0puIqOnuCsmykPkqHPX+n9CNZLXVQerboHzfvb7Kd+jAdouk72Vw==
+  dependencies:
+    "@t3-oss/env-core" "0.6.0"
+
 "@tabler/icons-react@^2.23.0":
   version "2.23.0"
   resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-2.23.0.tgz#c342ee171f289d8a18b6cd972bdc38181373bf28"
@@ -3584,27 +3596,27 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
-"@trpc/client@^10.33.1":
-  version "10.33.1"
-  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.33.1.tgz#7c46f35ca1851f6aaa1e9d8111d505c14e1d4e21"
-  integrity sha512-j1YKBl/VtjCK3nUQFacsouGpsk/DFVNiekp4sZf8Lryb6f1OIChlLJZNEipl+DUuHxsPVuaCQis4PGkrIb2ieg==
+"@trpc/client@^10.36.0":
+  version "10.36.0"
+  resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.36.0.tgz#cb138f94e0c4a87df05f0300f7d63771daca1f5a"
+  integrity sha512-Qj1T4vwhEEeLgXCUHFT7S5fqytkNYAudHwZtooEZ+NN+yN/a5oDZy1wd5D/gkY9y+nO8JCSgc7P5KhLjwzdeVw==
 
-"@trpc/next@^10.33.1":
-  version "10.33.1"
-  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-10.33.1.tgz#22e87ca709ed272e01a9bd2fe5a63647c5de7bbf"
-  integrity sha512-rgactlguj37D5ILwtEHdiuE8MadZAjE+i7LVKEkZ1y+NySVXiiA/S0I4XtnY66QbOuNB5lZjVTdlnv22AeihvA==
+"@trpc/next@^10.36.0":
+  version "10.36.0"
+  resolved "https://registry.yarnpkg.com/@trpc/next/-/next-10.36.0.tgz#45ded85856e004301acf6d86da478b2c5b2a952d"
+  integrity sha512-R0DYUMXkzKGQy49vvVou1fqOu459D47OsejwhMUktTNadTpUAuaE8SM0mo9a/faK59NhdlihDvRGq74PHupIkQ==
   dependencies:
     react-ssr-prepass "^1.5.0"
 
-"@trpc/react-query@^10.33.1":
-  version "10.33.1"
-  resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-10.33.1.tgz#b26b175903d67690f19507b5e2e718b1ef65acc4"
-  integrity sha512-Jpdg9xOyVJ4k+0wg28CxEEU1KcUVP+nMzpPbhISWOKaP1WZTGaQxphsCwx8KEFVaRiutKGBxhC24D+WhX7tMpA==
+"@trpc/react-query@^10.36.0":
+  version "10.36.0"
+  resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-10.36.0.tgz#d8726fad40af243c324a641aa663c122223562e0"
+  integrity sha512-ueIdfP/Xl4DIeBLMh6hEb0QdvcUjDZ+V+4lzIuztmkpRIvL4ZpwyBS7TGbKs+1EUwWu42AJB0t8n/LrtO6MxgQ==
 
-"@trpc/server@^10.33.1":
-  version "10.33.1"
-  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.33.1.tgz#2659921208c9222cde71e9ab0f366439551a1546"
-  integrity sha512-ObMzyEALXhQ7QTVQdSJ+IL1wYB7UdLLoIhqHraYzqKb9sTTsL3+U64kK084KPsRd4b8R3yH/bzBOnCn8Hbrxkw==
+"@trpc/server@^10.36.0":
+  version "10.36.0"
+  resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.36.0.tgz#5cbec49edaa8b59b97a4a3c6084c350a1e865bf7"
+  integrity sha512-9kwFeGBuihUPZT2wRv2cmTpSoI+sSGj0/lBwvtgIq1P0+ONpj5NJOcWlvYbpnr5nRxc/+44lM/mg4TnSuTd5Kg==
 
 "@ts-morph/common@~0.12.3":
   version "0.12.3"
@@ -4915,20 +4927,10 @@ camelize@^1.0.0:
   resolved "https://registry.npmjs.org/camelize/-/camelize-1.0.1.tgz"
   integrity sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==
 
-caniuse-lite@^1.0.30001406:
-  version "1.0.30001442"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001442.tgz"
-  integrity sha512-239m03Pqy0hwxYPYR5JwOIxRJfLTWtle9FV8zosfV5pHg+/51uD4nxcUlM8+mWWGfwKtt8lJNHnD3cWw9VZ6ow==
-
-caniuse-lite@^1.0.30001449:
-  version "1.0.30001460"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001460.tgz"
-  integrity sha512-Bud7abqjvEjipUkpLs4D7gR0l8hBYBHoa+tGtKJHvT2AYzLp1z7EmVkUT4ERpVUfca8S2HGIVs883D8pUH1ZzQ==
-
-caniuse-lite@^1.0.30001464, caniuse-lite@^1.0.30001503:
-  version "1.0.30001512"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001512.tgz#7450843fb581c39f290305a83523c7a9ef0d4cb4"
-  integrity sha512-2S9nK0G/mE+jasCUsMPlARhRCts1ebcp2Ji8Y8PWi4NDE1iRdLCnEPHkEfeBrGC45L4isBx5ur3IQ6yTE2mRZw==
+caniuse-lite@^1.0.30001406, caniuse-lite@^1.0.30001449, caniuse-lite@^1.0.30001464, caniuse-lite@^1.0.30001503:
+  version "1.0.30001518"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001518.tgz"
+  integrity sha512-rup09/e3I0BKjncL+FesTayKtPrdwKhUufQFd3riFw1hHg8JmIFoInYfB102cFcY/pPgGmdyl/iy+jgiDi2vdA==
 
 canvas-confetti@1.6.0:
   version "1.6.0"
@@ -10181,10 +10183,10 @@ sucrase@^3.32.0:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-superjson@1.12.4:
-  version "1.12.4"
-  resolved "https://registry.yarnpkg.com/superjson/-/superjson-1.12.4.tgz#cfea35b0d1eb0f12d8b185f1d871272555f5a61f"
-  integrity sha512-vkpPQAxdCg9SLfPv5GPC5fnGrui/WryktoN9O5+Zif/14QIMjw+RITf/5LbBh+9QpBFb3KNvJth+puz2H8o6GQ==
+superjson@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/superjson/-/superjson-1.13.1.tgz#a0b6ab5d22876f6207fcb9d08b0cb2acad8ee5cd"
+  integrity sha512-AVH2eknm9DEd3qvxM4Sq+LTCkSXE2ssfh1t11MHMXyYXFQyQ1HLgVvV+guLTsaQnJU3gnaVo34TohHPulY/wLg==
   dependencies:
     copy-anything "^3.0.2"
 

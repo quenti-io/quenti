@@ -1,9 +1,18 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "build": {
+    "@quenti/next#build": {
+      "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "start": {
+      "outputs": ["dist/**", "build/**"]
+    },
     "lint": {}
-  }
+  },
+  "globalDependencies": ["**/.env", "yarn.lock"]
 }

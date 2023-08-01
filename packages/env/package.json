@@ -1,0 +1,9 @@
+{
+  "name": "@quenti/env",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@t3-oss/env-nextjs": "^0.6.0",
+    "zod": "^3.21.4"
+  }
+}

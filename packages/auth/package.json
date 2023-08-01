@@ -1,0 +1,10 @@
+{
+  "name": "@quenti/auth",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@quenti/env": "*",
+    "@quenti/lib": "*",
+    "@quenti/prisma": "*"
+  }
+}
