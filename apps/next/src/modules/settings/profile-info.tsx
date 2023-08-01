@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { ChangeUsernameInput } from "../../components/change-username-input";
 import { Link } from "../../components/link";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { SectionWrapper } from "./section-wrapper";
 
 export const ProfileInfo = () => {

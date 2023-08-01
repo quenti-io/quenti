@@ -19,7 +19,7 @@ import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Link } from "../../components/link";
 import { WithFooter } from "../../components/with-footer";
 import { OrganizationCard } from "../../modules/organizations/organization-card";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export default function Organizations() {
   const router = useRouter();

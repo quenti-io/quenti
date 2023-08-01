@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export interface EditFolderModalProps {
   isOpen: boolean;

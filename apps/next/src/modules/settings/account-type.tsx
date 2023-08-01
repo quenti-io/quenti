@@ -4,7 +4,7 @@ import { IconBooks, IconSchool } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { ToggleGroup } from "../../components/toggle-group";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { SectionWrapper } from "./section-wrapper";
 
 export const AccountType = () => {

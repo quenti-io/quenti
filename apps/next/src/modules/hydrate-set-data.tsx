@@ -1,3 +1,5 @@
+import { api, type RouterOutputs } from "@quenti/trpc";
+import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -5,7 +7,6 @@ import React from "react";
 import { Loading } from "../components/loading";
 import { queryEventChannel } from "../events/query";
 import { useFeature } from "../hooks/use-feature";
-import { EnabledFeature } from "../server/api/common/constants";
 import {
   ContainerContext,
   createContainerStore,
@@ -13,7 +14,6 @@ import {
   type ContainerStoreProps,
 } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
-import { api, type RouterOutputs } from "../utils/api";
 import type { Widen } from "../utils/widen";
 import { Set404 } from "./main/set-404";
 import { SetPrivate } from "./main/set-private";

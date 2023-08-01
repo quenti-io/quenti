@@ -2,7 +2,7 @@ import React from "react";
 import { ChangelogModal } from "./changelog-modal";
 import { menuEventChannel } from "../../events/menu";
 import { useSession } from "next-auth/react";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export default function ChangelogContainer() {
   const { data } = useSession();

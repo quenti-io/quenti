@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { BASE_URL } from "../../constants/url";
-import { getStripeCustomerIdFromUserId } from "../../payments/customer";
-import stripe from "../../payments/stripe";
-import { getServerAuthSession } from "../../server/auth";
+import { BASE_URL } from "../../../../../packages/lib/constants/url";
+import { stripe, getStripeCustomerIdFromUserId } from "@quenti/payments";
+import { getServerAuthSession } from "@quenti/auth";
 
 const querySchema = z.object({
   orgId: z.string().cuid2(),

@@ -19,7 +19,7 @@ import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export interface DisplayableTermProps {
   term: Term;

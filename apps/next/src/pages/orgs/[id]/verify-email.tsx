@@ -15,7 +15,7 @@ import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { WizardLayout } from "../../../components/wizard-layout";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 import { useRouter } from "next/router";
 
 export default function OrgVerifyEmail() {

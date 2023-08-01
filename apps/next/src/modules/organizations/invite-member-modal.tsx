@@ -30,7 +30,7 @@ import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { MemberRoleSelect } from "./member-role-select";
 
 export interface InviteMemberModalProps {

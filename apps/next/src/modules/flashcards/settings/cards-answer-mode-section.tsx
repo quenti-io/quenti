@@ -4,7 +4,7 @@ import { Select } from "chakra-react-select";
 import { useSession } from "next-auth/react";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 const options: { label: string; value: LimitedStudySetAnswerMode }[] = [
   {

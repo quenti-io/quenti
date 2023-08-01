@@ -3,7 +3,7 @@ import type { MembershipRole } from "@quenti/prisma/client";
 import React from "react";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { MemberRoleSelect } from "./member-role-select";
 
 export interface EditMemberModalProps {

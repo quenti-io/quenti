@@ -17,7 +17,7 @@ import { IconCheck, IconCopy, IconEdit, IconLock } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
 import { useSet } from "../../hooks/use-set";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export interface ShareSetModalProps {
   isOpen: boolean;

@@ -10,10 +10,10 @@ import {
   Stack,
   useMediaQuery,
 } from "@chakra-ui/react";
+import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 import React from "react";
 import { useFeature } from "../../hooks/use-feature";
 import { useAuthedSet } from "../../hooks/use-set";
-import { EnabledFeature } from "../../server/api/common/constants";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { AnswerModeSection } from "./settings/answer-mode-section";

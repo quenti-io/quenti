@@ -11,7 +11,7 @@ import {
   type ContainerStoreProps,
 } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
-import { api, type RouterOutputs } from "../utils/api";
+import { api, type RouterOutputs } from "@quenti/trpc";
 import { Folder404 } from "./folders/folder-404";
 import { NoPublicSets } from "./folders/no-public-sets";
 

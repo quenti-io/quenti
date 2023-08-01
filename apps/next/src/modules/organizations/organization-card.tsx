@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Link } from "../../components/link";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { getColorFromId } from "../../utils/color";
 import { organizationIcon } from "../../utils/icons";
 import { plural } from "../../utils/string";

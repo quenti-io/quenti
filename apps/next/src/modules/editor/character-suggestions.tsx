@@ -13,7 +13,7 @@ import {
   getSuggestions,
   languageName,
   type Language,
-} from "../../lib/language";
+} from "@quenti/core/language";
 
 interface CharacterSuggestionsProps {
   language: Language;

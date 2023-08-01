@@ -20,7 +20,7 @@ import {
 import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { SelectableStudySet } from "./selectable-study-set";
 
 export interface AddSetsModalProps {

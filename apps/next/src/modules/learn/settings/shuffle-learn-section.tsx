@@ -13,7 +13,7 @@ import React from "react";
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../../stores/use-set-properties-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export const ShuffleLearnSection = () => {
   const { id } = useSet();

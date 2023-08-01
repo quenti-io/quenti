@@ -5,10 +5,10 @@ import levenshtein from "js-levenshtein";
 import React from "react";
 import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useAuthedSet } from "../../../../hooks/use-set";
-import type { Question } from "../../../../interfaces/question";
+import type { Question } from "@quenti/interfaces";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
-import { api } from "../../../../utils/api";
-import { getRandom } from "../../../../utils/array";
+import { api } from "@quenti/trpc";
+import { getRandom } from "@quenti/lib/array";
 import { AnswerCard } from "./answer-card";
 
 export interface IncorrectStateProps {

@@ -4,7 +4,7 @@ import { IconBooks, IconSchool } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { ToggleGroup } from "../../components/toggle-group";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper, useNextStep } from "./present-wrapper";
 

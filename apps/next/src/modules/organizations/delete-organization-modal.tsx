@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 interface DeleteOrganizationModalProps {
   isOpen: boolean;

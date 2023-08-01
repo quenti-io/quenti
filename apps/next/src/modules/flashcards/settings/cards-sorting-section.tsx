@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { menuEventChannel } from "../../../events/menu";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export const CardsSortingSection = () => {
   const authed = useSession().status == "authenticated";

@@ -13,7 +13,7 @@ import {
 import { IconDiscountCheck } from "@tabler/icons-react";
 import { Link } from "../../components/link";
 import { useSet } from "../../hooks/use-set";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { ActionArea } from "./action-area";
 
 export const DescriptionArea = () => {

@@ -17,7 +17,7 @@ import { DangerZone } from "../modules/settings/danger-zone";
 import { DataUsage } from "../modules/settings/data-usage";
 import { GAccountInfo } from "../modules/settings/g-account-info";
 import { ProfileInfo } from "../modules/settings/profile-info";
-import { avatarUrl } from "../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { AccountType } from "../modules/settings/account-type";
 
 const Settings: ComponentWithAuth = () => {

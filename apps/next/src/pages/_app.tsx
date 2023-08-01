@@ -1,6 +1,7 @@
 import { ChakraProvider, DarkMode, GlobalStyle } from "@chakra-ui/react";
 import { ErrorBoundary as HighlightBoundary } from "@highlight-run/react";
 import { env } from "@quenti/env/client";
+import { api } from "@quenti/trpc";
 import { Analytics } from "@vercel/analytics/react";
 import { H } from "highlight.run";
 import type { NextComponentType, NextPageContext } from "next";
@@ -15,7 +16,6 @@ import type { AuthEnabledComponentConfig } from "../components/auth-component";
 import { Navbar } from "../components/navbar";
 import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { theme } from "../lib/chakra-theme";
-import { api } from "../utils/api";
 
 import "../styles/globals.css";
 

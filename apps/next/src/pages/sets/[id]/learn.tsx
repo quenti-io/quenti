@@ -1,7 +1,7 @@
 import { Container, Stack } from "@chakra-ui/react";
 import React from "react";
 import type { ComponentWithAuth } from "../../../components/auth-component";
-import { CORRECT, INCORRECT } from "../../../constants/remarks";
+import { CORRECT, INCORRECT } from "../../../../../../packages/lib/constants/remarks";
 import { useSet } from "../../../hooks/use-set";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
@@ -12,7 +12,7 @@ import { RoundSummary } from "../../../modules/learn/round-summary";
 import { Titlebar } from "../../../modules/learn/titlebar";
 import { useContainerContext } from "../../../stores/use-container-store";
 import { useLearnContext } from "../../../stores/use-learn-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 const Learn: ComponentWithAuth = () => {
   return (

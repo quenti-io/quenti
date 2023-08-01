@@ -22,7 +22,7 @@ import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useSet } from "../../hooks/use-set";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export const HeadingArea = () => {
   const { id, title, tags, terms, visibility } = useSet();

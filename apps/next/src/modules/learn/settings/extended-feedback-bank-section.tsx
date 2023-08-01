@@ -1,7 +1,7 @@
 import { Flex, Stack, Switch, Text, useColorModeValue } from "@chakra-ui/react";
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export const ExtendedFeedbackSection = () => {
   const { id } = useSet();

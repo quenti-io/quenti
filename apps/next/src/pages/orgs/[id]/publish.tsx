@@ -9,7 +9,7 @@ import { IconAirBalloon } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { GlowingButton } from "../../../modules/organizations/glowing-button";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export default function OrgPublish() {
   const router = useRouter();

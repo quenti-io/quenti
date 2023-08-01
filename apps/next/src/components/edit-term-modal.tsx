@@ -13,7 +13,7 @@ import {
 import type { Term } from "@quenti/prisma/client";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import { api } from "../utils/api";
+import { api } from "@quenti/trpc";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface EditTermModalProps {

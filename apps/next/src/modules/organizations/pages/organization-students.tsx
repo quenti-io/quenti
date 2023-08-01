@@ -21,7 +21,7 @@ import React from "react";
 import { ClientOnly } from "../../../components/client-only";
 import { useDebounce } from "../../../hooks/use-debounce";
 import { useOrganization } from "../../../hooks/use-organization";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 import { plural } from "../../../utils/string";
 import { AddStudentModal } from "../add-student-modal";
 import { EmptyStudentsCard } from "../empty-students-card";

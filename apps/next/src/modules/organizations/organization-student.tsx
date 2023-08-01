@@ -23,7 +23,7 @@ import {
 import React from "react";
 import { Link } from "../../components/link";
 import { MenuOptionPure } from "../../components/menu-option";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 
 interface OrganizationStudentProps {
   user: Pick<User, "id" | "name" | "username" | "email" | "image">;

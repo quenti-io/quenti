@@ -7,7 +7,7 @@ import {
   SetEditorStoreContext,
   type SetEditorStore,
 } from "../stores/use-set-editor-store";
-import { api, type RouterOutputs } from "../utils/api";
+import { api, type RouterOutputs } from "@quenti/trpc";
 
 export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
   children,

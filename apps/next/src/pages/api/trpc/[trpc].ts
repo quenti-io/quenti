@@ -1,10 +1,10 @@
-import { createNextApiHandler } from "@trpc/server/adapters/next";
 import { withAxiom } from "next-axiom";
 
 import { env } from "@quenti/env/server";
+import { createNextApiHandler } from "@quenti/trpc/server/adapters/next";
+import { appRouter } from "@quenti/trpc/server/root";
+import { createTRPCContext } from "@quenti/trpc/server/trpc";
 import { withHighlight } from "../../../../highlight.config";
-import { appRouter } from "../../../server/api/root";
-import { createTRPCContext } from "../../../server/api/trpc";
 
 export default withAxiom(
   withHighlight(

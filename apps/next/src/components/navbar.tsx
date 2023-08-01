@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
 import { BASE_PAGES } from "../pages/_app";
-import { avatarUrl } from "../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
 import { Link } from "./link";

@@ -12,7 +12,7 @@ import { IconUser } from "@tabler/icons-react";
 import React from "react";
 import { Link } from "../../components/link";
 import { useAdmin } from "../../hooks/use-admin";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { UserModal } from "./user-modal";
 
 export const AdminUsers = () => {

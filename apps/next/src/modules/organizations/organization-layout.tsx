@@ -29,7 +29,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { WithFooter } from "../../components/with-footer";
-import { api, type RouterOutputs } from "../../utils/api";
+import { api, type RouterOutputs } from "@quenti/trpc";
 import { organizationIcon } from "../../utils/icons";
 import { ConfettiLayer } from "./confetti-layer";
 

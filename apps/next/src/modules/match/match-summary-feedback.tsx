@@ -9,7 +9,7 @@ import { IconClockPlay } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { UsernameLink } from "../../components/username-link";
 import { useMatchContext } from "../../stores/use-match-store";
-import type { RouterOutputs } from "../../utils/api";
+import type { RouterOutputs } from "@quenti/trpc";
 import { formatDeciseconds } from "../../utils/time";
 
 interface MatchSummaryFeedbackProps {

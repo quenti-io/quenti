@@ -15,7 +15,7 @@ import React from "react";
 import { Loading } from "../../components/loading";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useLoading } from "../../hooks/use-loading";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { organizationIcon } from "../../utils/icons";
 
 const computeMap = (

@@ -1,9 +1,9 @@
+import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
 import type { Term } from "@quenti/prisma/client";
 import React from "react";
 import { RootFlashcardContext } from "../components/root-flashcard-wrapper";
 import { queryEventChannel } from "../events/query";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import type { StudiableTerm } from "../interfaces/studiable-term";
 import { useContainerContext } from "../stores/use-container-store";
 import {
   createSortFlashcardsStore,

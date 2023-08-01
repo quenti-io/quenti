@@ -1,12 +1,12 @@
+import { getServerAuthSession } from "@quenti/auth";
+import { stripe } from "@quenti/payments";
+import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
+import { conflictingDomain } from "@quenti/trpc/server/lib/orgs/domains";
+import { bulkJoinOrgStudents } from "@quenti/trpc/server/lib/orgs/students";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type Stripe from "stripe";
 import { z } from "zod";
-import { orgMetadataSchema } from "../../../../../../../packages/prisma/zod-schemas";
-import stripe from "../../../../payments/stripe";
-import { getServerAuthSession } from "../../../../server/auth";
 import { prisma } from "../../../../../../../packages/prisma";
-import { conflictingDomain } from "../../../../server/lib/orgs/domains";
-import { bulkJoinOrgStudents } from "../../../../server/lib/orgs/students";
 
 const querySchema = z.object({
   id: z.string().cuid2(),

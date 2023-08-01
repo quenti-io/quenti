@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import React, { useImperativeHandle } from "react";
-import { USERNAME_REGEXP } from "../constants/characters";
+import { USERNAME_REGEXP } from "../../../../packages/lib/constants/characters";
 import { useDebounce } from "../hooks/use-debounce";
-import { api } from "../utils/api";
+import { api } from "@quenti/trpc";
 import { AnimatedCheckCircle } from "./animated-icons/check";
 import { AnimatedXCircle } from "./animated-icons/x";
 

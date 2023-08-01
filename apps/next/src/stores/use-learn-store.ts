@@ -1,14 +1,16 @@
-import type { LearnMode, StudySetAnswerMode, Term } from "@quenti/prisma/client";
+import type { Question, RoundSummary, StudiableTerm } from "@quenti/interfaces";
+import { SPECIAL_CHAR_REGEXP } from "@quenti/lib/constants/characters";
+import { LEARN_TERMS_IN_ROUND } from "@quenti/lib/constants/learn";
+import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
+import type {
+  LearnMode,
+  StudySetAnswerMode,
+  Term,
+} from "@quenti/prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import { SPECIAL_CHAR_REGEXP } from "../constants/characters";
-import { CORRECT, INCORRECT } from "../constants/remarks";
-import type { Question } from "../interfaces/question";
-import type { RoundSummary } from "../interfaces/round-summary";
-import type { StudiableTerm } from "../interfaces/studiable-term";
-import { LEARN_TERMS_IN_ROUND } from "../constants/learn";
-import { shuffleArray, takeNRandom } from "../utils/array";
+import { shuffleArray, takeNRandom } from "@quenti/lib/array";
 
 export interface LearnStoreProps {
   mode: LearnMode;

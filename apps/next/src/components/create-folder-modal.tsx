@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
-import { api } from "../utils/api";
+import { api } from "@quenti/trpc";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface CreateFolderModalProps {

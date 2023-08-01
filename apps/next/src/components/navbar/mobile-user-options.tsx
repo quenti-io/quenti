@@ -18,7 +18,7 @@ import {
 } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { Link } from "../link";
 
 interface MobileUserOptionsProps {

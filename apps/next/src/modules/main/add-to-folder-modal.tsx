@@ -27,7 +27,7 @@ import React from "react";
 import { Link } from "../../components/link";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export interface AddToFolderModalProps {
   isOpen: boolean;

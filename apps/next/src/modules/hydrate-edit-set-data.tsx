@@ -8,7 +8,7 @@ import {
   createSetEditorStore,
   type SetEditorStore,
 } from "../stores/use-set-editor-store";
-import { api, type RouterOutputs } from "../utils/api";
+import { api, type RouterOutputs } from "@quenti/trpc";
 
 export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   children,

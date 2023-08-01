@@ -9,12 +9,12 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import type { Question } from "@quenti/interfaces";
+import { api } from "@quenti/trpc";
 import { useAuthedSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
-import type { Question } from "../../../../interfaces/question";
 import { useContainerContext } from "../../../../stores/use-container-store";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
-import { api } from "../../../../utils/api";
 
 export interface UnknownPartialStateProps {
   active: Question;

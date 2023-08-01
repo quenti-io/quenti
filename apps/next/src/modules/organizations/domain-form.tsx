@@ -13,9 +13,9 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import { DOMAIN_REGEX } from "../../constants/organizations";
+import { DOMAIN_REGEX } from "../../../../../packages/lib/constants/organizations";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { DomainConflictCard } from "./domain-conflict-card";
 
 interface DomainFormInputs {

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
-import { api, type RouterOutputs } from "../utils/api";
+import { api, type RouterOutputs } from "@quenti/trpc";
 import { Profile404 } from "./profile/profile-404";
 
 type ProfileData = RouterOutputs["profile"]["get"] & { isMe: boolean };

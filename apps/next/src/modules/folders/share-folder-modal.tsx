@@ -13,7 +13,7 @@ import { env } from "@quenti/env/client";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import React from "react";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export interface ShareFolderModalProps {
   isOpen: boolean;

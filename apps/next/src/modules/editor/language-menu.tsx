@@ -15,6 +15,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { Language, languages } from "@quenti/core";
 import {
   IconCheck,
   IconHelpHexagon,
@@ -24,10 +25,6 @@ import {
   IconVariable,
 } from "@tabler/icons-react";
 import React from "react";
-import { Language } from "../../lib/language";
-
-import json from "../../../languages.json";
-const languages = json.languages;
 
 const topLanguages: Language[] = [
   "en",

@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "ESNext",
+    "target": "ES5",
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "index.ts",
+    "client",
+    "server",
+    "next",
+    "server/root.ts",
+    "../types/next-auth.d.ts"
+  ]
+}

@@ -20,8 +20,8 @@ import { useSet } from "../../hooks/use-set";
 import { FlashcardsSettingsModal } from "../flashcards/flashcards-settings-modal";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
-import { api } from "../../utils/api";
-import { shuffleArray } from "../../utils/array";
+import { api } from "@quenti/trpc";
+import { shuffleArray } from "@quenti/lib/array";
 
 export const FlashcardPreview = () => {
   const data = useSet();

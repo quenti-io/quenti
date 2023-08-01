@@ -10,7 +10,7 @@ import {
 import { IconFolder } from "@tabler/icons-react";
 import { Link } from "../../components/link";
 import { useFolder } from "../../hooks/use-folder";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { plural } from "../../utils/string";
 
 export const FolderHeading = () => {

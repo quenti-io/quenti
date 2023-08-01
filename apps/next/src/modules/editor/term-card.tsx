@@ -16,7 +16,7 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 import React from "react";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { languageName } from "../../lib/language";
+import { languageName } from "@quenti/core/language";
 import { CharacterSuggestionsPure } from "./character-suggestions";
 import type { SortableTermCardProps } from "./sortable-term-card";
 

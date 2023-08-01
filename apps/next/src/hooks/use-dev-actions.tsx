@@ -1,6 +1,6 @@
 import { IconSwitchHorizontal } from "@tabler/icons-react";
 import type { MenuOption } from "../components/command-menu";
-import { api } from "../utils/api";
+import { api } from "@quenti/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 

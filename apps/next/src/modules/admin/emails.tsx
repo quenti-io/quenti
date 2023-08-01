@@ -23,8 +23,8 @@ import type { RecentFailedLogin } from "@quenti/prisma/client";
 import { IconPlus, IconTrash, IconUserPlus } from "@tabler/icons-react";
 import React from "react";
 import { useAdmin } from "../../hooks/use-admin";
-import { api } from "../../utils/api";
-import { avatarUrl } from "../../utils/avatar";
+import { api } from "@quenti/trpc";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { dtFormatter } from "../../utils/time";
 import { AllowedRegexes } from "./allowed-regexes";
 

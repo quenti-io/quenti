@@ -1,7 +1,7 @@
 import { Flex, Stack, Switch, Text } from "@chakra-ui/react";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export const StudyStarredSection = () => {
   const { id, type } = useSetFolderUnison();

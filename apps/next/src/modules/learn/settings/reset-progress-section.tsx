@@ -3,7 +3,7 @@ import { IconReload } from "@tabler/icons-react";
 import React from "react";
 import { useSet } from "../../../hooks/use-set";
 import { useSetPropertiesStore } from "../../../stores/use-set-properties-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 import { LearnSettingsModalContext } from "../learn-settings-modal";
 
 export const ResetProgressSection = () => {

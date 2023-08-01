@@ -6,11 +6,11 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import type { SetFolderEntity } from "@quenti/interfaces/set-folder-entity";
+import type { RouterOutputs } from "@quenti/trpc";
 import React from "react";
 import { FolderCard } from "../../components/folder-card";
 import { StudySetCard } from "../../components/study-set-card";
-import type { SetFolderEntity } from "../../interfaces/set-folder-entity";
-import type { RouterOutputs } from "../../utils/api";
 
 export interface SetGridProps {
   heading: string;

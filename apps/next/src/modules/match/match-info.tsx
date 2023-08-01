@@ -18,7 +18,7 @@ import { Link } from "../../components/link";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useMatchContext } from "../../stores/use-match-store";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { formatDeciseconds } from "../../utils/time";
 import { MatchSettingsModal } from "./match-settings-modal";
 

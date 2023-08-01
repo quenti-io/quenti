@@ -14,8 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { QUIZLET_IMPORT_REGEXP } from "../constants/characters";
-import { api } from "../utils/api";
+import { QUIZLET_IMPORT_REGEXP } from "../../../../packages/lib/constants/characters";
+import { api } from "@quenti/trpc";
 
 export interface ImportFromQuizletModalProps {
   isOpen: boolean;

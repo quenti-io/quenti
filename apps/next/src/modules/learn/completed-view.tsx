@@ -6,7 +6,7 @@ import { ConfirmModal } from "../../components/confirm-modal";
 import { Link } from "../../components/link";
 import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { TermMastery } from "./term-mastery";
 
 export const CompletedView = () => {

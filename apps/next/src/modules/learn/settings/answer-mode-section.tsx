@@ -3,7 +3,7 @@ import type { StudySetAnswerMode } from "@quenti/prisma/client";
 import { Select } from "chakra-react-select";
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 const options: { label: string; value: StudySetAnswerMode }[] = [
   {

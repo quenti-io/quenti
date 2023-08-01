@@ -6,7 +6,7 @@ import React from "react";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { DomainForm } from "../../../modules/organizations/domain-form";
 import { OrganizationContext } from "../../../modules/organizations/organization-layout";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export default function OrgDomainSetup() {
   const router = useRouter();

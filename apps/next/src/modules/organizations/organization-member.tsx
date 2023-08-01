@@ -26,7 +26,7 @@ import React from "react";
 import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
 import { useOrganization } from "../../hooks/use-organization";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { OrganizationAdminOnly } from "./organization-admin-only";
 
 export interface OrganizationMemberProps {

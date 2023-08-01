@@ -1,5 +1,5 @@
 import { Stack } from "@chakra-ui/react";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { OrganizationCard } from "../organizations/organization-card";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";

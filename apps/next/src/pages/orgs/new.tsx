@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { WizardLayout } from "../../components/wizard-layout";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { ORGANIZATION_ICONS } from "../../utils/icons";
 
 const schema = z.object({

@@ -13,7 +13,7 @@ import { IconPlus, IconSearch } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";

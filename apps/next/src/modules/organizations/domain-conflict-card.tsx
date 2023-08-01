@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { Link } from "../../components/link";
-import { ORG_SUPPORT_EMAIL } from "../../constants/email";
+import { ORG_SUPPORT_EMAIL } from "../../../../../packages/lib/constants/email";
 
 interface DomainConflictCardProps {
   domain: string;

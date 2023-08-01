@@ -13,7 +13,7 @@ import {
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import React from "react";
 import { ConfirmModal } from "../../components/confirm-modal";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { RegexModal } from "./regex-modal";
 
 export const AllowedRegexes = () => {

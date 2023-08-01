@@ -11,7 +11,7 @@ import {
 import { IconDiscountCheck } from "@tabler/icons-react";
 import React from "react";
 import { useProfile } from "../../hooks/use-profile";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 
 export const ProfileArea = () => {
   const profile = useProfile();

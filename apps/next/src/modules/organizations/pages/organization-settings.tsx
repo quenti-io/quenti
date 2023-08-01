@@ -22,7 +22,7 @@ import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { SkeletonLabel } from "../../../components/skeleton-label";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 import { ORGANIZATION_ICONS } from "../../../utils/icons";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
 import { DomainCard } from "../domain-card";

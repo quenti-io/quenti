@@ -7,7 +7,7 @@ import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
 import { useContainerContext } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
-import { api } from "../utils/api";
+import { api } from "@quenti/trpc";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
 import { EditTermModal } from "./edit-term-modal";
 import { LoadingFlashcard } from "./loading-flashcard";

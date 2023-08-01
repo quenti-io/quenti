@@ -20,7 +20,7 @@ import React from "react";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { InviteMemberModal } from "../../../modules/organizations/invite-member-modal";
 import { OrganizationContext } from "../../../modules/organizations/organization-layout";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export default function OrgMembersOnboarding() {
   const router = useRouter();

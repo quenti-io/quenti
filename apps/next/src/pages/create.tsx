@@ -1,4 +1,5 @@
 import { Container } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import debounce from "lodash.debounce";
 import React from "react";
 import { shallow } from "zustand/shallow";
@@ -10,7 +11,6 @@ import {
   SetEditorStoreContext,
   useSetEditorContext,
 } from "../stores/use-set-editor-store";
-import { api } from "../utils/api";
 
 const Create: ComponentWithAuth = () => {
   return (

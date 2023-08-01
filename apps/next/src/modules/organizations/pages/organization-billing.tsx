@@ -14,8 +14,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Link } from "../../../components/link";
-import { ORG_SUPPORT_EMAIL } from "../../../constants/email";
-import { BASE_URL } from "../../../constants/url";
+import { ORG_SUPPORT_EMAIL } from "../../../../../../packages/lib/constants/email";
+import { BASE_URL } from "../../../../../../packages/lib/constants/url";
 import { useOrganization } from "../../../hooks/use-organization";
 import { SettingsWrapper } from "../settings-wrapper";
 

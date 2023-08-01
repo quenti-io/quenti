@@ -1,13 +1,13 @@
 import { Box } from "@chakra-ui/react";
+import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
+import { api } from "@quenti/trpc";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import throttle from "lodash.throttle";
 import React from "react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import type { StudiableTerm } from "../interfaces/studiable-term";
 import { useContainerContext } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
-import { api } from "../utils/api";
 import { Flashcard } from "./flashcard";
 import { RootFlashcardContext } from "./root-flashcard-wrapper";
 import { SortFlashcardProgress } from "./sort-flashcard-progress";

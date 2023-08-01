@@ -1,7 +1,7 @@
 import { Card, Text, useColorModeValue } from "@chakra-ui/react";
 import { animate, motion, useMotionValue } from "framer-motion";
 import React from "react";
-import { MATCH_SHUFFLE_TIME } from "../constants/match";
+import { MATCH_SHUFFLE_TIME } from "../../../../packages/lib/constants/match";
 import { useMatchContext, type MatchItem } from "../stores/use-match-store";
 import { ScriptFormatter } from "./script-formatter";
 

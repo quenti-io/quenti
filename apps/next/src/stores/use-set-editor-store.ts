@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import type { Language } from "../lib/language";
+import type { Language } from "@quenti/core/language";
 
 interface SetEditorProps {
   mode: "create" | "edit";

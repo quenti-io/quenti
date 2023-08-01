@@ -25,7 +25,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { BASE_PAGES } from "../../pages/_app";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { MenuOption } from "../menu-option";
 import { TeacherOnly } from "../teacher-only";
 

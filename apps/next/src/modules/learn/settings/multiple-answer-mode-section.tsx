@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "../../../utils/api";
+import { api } from "@quenti/trpc";
 
 export const MultipleAnswerModeSection: React.FC = () => {
   const { id } = useSet();

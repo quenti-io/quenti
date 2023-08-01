@@ -8,16 +8,16 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { placeholderLanguage } from "@quenti/core/language";
+import type { Question } from "@quenti/interfaces";
+import { api } from "@quenti/trpc";
 import React from "react";
 import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useEventCallback } from "../../../../hooks/use-event-callback";
 import { useAuthedSet } from "../../../../hooks/use-set";
-import type { Question } from "../../../../interfaces/question";
-import { evaluate, EvaluationResult } from "../../../../lib/evaluator";
-import { placeholderLanguage } from "../../../../lib/language";
+import { EvaluationResult, evaluate } from "../../../../lib/evaluator";
 import { useContainerContext } from "../../../../stores/use-container-store";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
-import { api } from "../../../../utils/api";
 
 export interface InputStateProps {
   active: Question;

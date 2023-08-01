@@ -18,7 +18,7 @@ import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { Modal } from "../../components/modal";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { DomainForm } from "./domain-form";
 
 export interface UpdateDomainModalProps {

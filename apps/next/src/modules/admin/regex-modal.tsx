@@ -12,7 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export interface RegexModalProps {
   isOpen: boolean;

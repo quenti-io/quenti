@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { AutoSaveTerm, Term } from "@quenti/prisma/client";
-import type { Language } from "../../lib/language";
+import type { Language } from "@quenti/core/language";
 import { TermCard } from "./term-card";
 
 export interface SortableTermCardProps {

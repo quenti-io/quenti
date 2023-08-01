@@ -38,8 +38,8 @@ import React from "react";
 import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
 import { useShortcut } from "../hooks/use-shortcut";
-import { api } from "../utils/api";
-import { avatarUrl } from "../utils/avatar";
+import { api } from "@quenti/trpc";
+import { avatarUrl } from "@quenti/lib/avatar";
 
 export interface CommandMenuProps {
   isOpen: boolean;

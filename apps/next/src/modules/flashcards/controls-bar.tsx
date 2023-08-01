@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 interface ControlsBarProps {
   onSettingsClick: () => void;

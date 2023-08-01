@@ -6,9 +6,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { api, type RouterOutputs } from "@quenti/trpc";
+import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 import React from "react";
-import { EnabledFeature } from "../../server/api/common/constants";
-import { api, type RouterOutputs } from "../../utils/api";
 
 export const UserEnabledFlags = ({
   user,

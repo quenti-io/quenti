@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { StudySetCard } from "../../components/study-set-card";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { AddSetsModal } from "./add-sets-modal";
 import { FolderCreatorOnly } from "./folder-creator-only";
 

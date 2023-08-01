@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 
 export interface RemoveMemberModalProps {
   isOpen: boolean;

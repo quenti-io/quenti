@@ -19,7 +19,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import React from "react";
-import { avatarUrl } from "../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { plural } from "../utils/string";
 import { Link } from "./link";
 import { MenuOption } from "./menu-option";

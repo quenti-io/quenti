@@ -1,6 +1,6 @@
+import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
 import React from "react";
 import { useAuthedSet } from "../hooks/use-set";
-import type { StudiableTerm } from "../interfaces/studiable-term";
 import {
   createLearnStore,
   LearnContext,

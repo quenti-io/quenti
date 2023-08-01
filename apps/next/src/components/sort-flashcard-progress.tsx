@@ -28,7 +28,7 @@ import { useRouter } from "next/router";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { AnyKeyPressLayer } from "../modules/learn/any-key-press-layer";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
-import { api } from "../utils/api";
+import { api } from "@quenti/trpc";
 import { plural } from "../utils/string";
 import { CircularTermMastery } from "./circular-term-mastery";
 import { Link } from "./link";

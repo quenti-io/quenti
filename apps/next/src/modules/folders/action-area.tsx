@@ -25,7 +25,7 @@ import { ConfirmModal } from "../../components/confirm-modal";
 import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { EditFolderModal } from "./edit-folder-modal";
 import { FolderCreatorOnly } from "./folder-creator-only";
 import { ShareFolderModal } from "./share-folder-modal";

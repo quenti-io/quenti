@@ -11,7 +11,7 @@ import {
 import type { StudySet } from "@quenti/prisma/client";
 import React from "react";
 import { visibilityIcon } from "../../common/visibility-icon";
-import { avatarUrl } from "../../utils/avatar";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { plural } from "../../utils/string";
 
 export interface SelectableStudySetProps {

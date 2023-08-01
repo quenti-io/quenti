@@ -14,7 +14,7 @@ import { ExportTermsModal } from "../../components/export-terms-modal";
 import { SetPrintComponent } from "../../components/set-print-component";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
-import { api } from "../../utils/api";
+import { api } from "@quenti/trpc";
 import { AddToFolderModal } from "./add-to-folder-modal";
 import { ShareSetModal } from "./share-set-modal";
 

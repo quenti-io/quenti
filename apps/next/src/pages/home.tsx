@@ -1,11 +1,11 @@
 import { Container, Stack } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import type { ComponentWithAuth } from "../components/auth-component";
 import { Loading } from "../components/loading";
 import { WithFooter } from "../components/with-footer";
 import { useLoading } from "../hooks/use-loading";
 import { EmptyDashboard } from "../modules/home/empty-dashboard";
 import { SetGrid } from "../modules/home/set-grid";
-import { api } from "../utils/api";
 
 const Home: ComponentWithAuth = () => {
   const { data, isLoading } = api.recent.get.useQuery();

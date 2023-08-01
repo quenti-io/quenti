@@ -2,7 +2,7 @@ import React from "react";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";
-import { shuffleArray } from "../../utils/array";
+import { shuffleArray } from "@quenti/lib/array";
 
 export const FlashcardArea = () => {
   const { terms } = useSetFolderUnison();

@@ -2,7 +2,7 @@ import type { Term } from "@quenti/prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import type { StudiableTerm } from "../interfaces/studiable-term";
+import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
 
 export interface SortFlashcardsStoreProps {
   studiableTerms: StudiableTerm[];
