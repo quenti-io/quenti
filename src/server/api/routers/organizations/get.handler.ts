@@ -67,7 +67,8 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   if (!org) throw new TRPCError({ code: "NOT_FOUND" });
 
   const conflict =
-    org.domain && (await conflictingDomain(org.id, org.domain.requestedDomain));
+    !!org.domain &&
+    !!(await conflictingDomain(org.id, org.domain.requestedDomain));
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { metadata: _, ...rest } = org;
