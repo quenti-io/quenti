@@ -23,7 +23,6 @@
     "email-dev": "dotenv -- email dev --dir ./packages/emails/templates --port 3001",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts",
     "stripe-webhook": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
-    "upload-sourcemaps": "npx @highlight-run/sourcemap-uploader upload --path=\".next\" -k ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY}"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
