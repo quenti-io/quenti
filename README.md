@@ -1,4 +1,4 @@
-[![og:image](./public/og-image.png)](https://quenti)
+[![og:image](./apps/next/public/og-image.png)](https://quenti)
 
 > Tired of Quizlet showing ads and only giving you a few practice rounds for free? Stop wasting your time getting bombarded by premium offers, and resume studying today.
 
