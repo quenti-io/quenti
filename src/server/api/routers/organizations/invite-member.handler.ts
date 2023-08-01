@@ -1,10 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import { sendOrganizationInviteEmail } from "../../../../emails/resend";
 import { env } from "../../../../env/server.mjs";
+import { getIp } from "../../../lib/get-ip";
 import {
   isOrganizationAdmin,
   isOrganizationOwner,
 } from "../../../lib/queries/organizations";
+import {
+  RateLimitType,
+  rateLimitOrThrowMultiple,
+} from "../../../lib/rate-limit";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TInviteMemberSchema } from "./invite-member.schema";
 
@@ -19,6 +24,14 @@ export const inviteMemberHandler = async ({
 }: InviteMemberOptions) => {
   if (!(await isOrganizationAdmin(ctx.session.user.id, input.orgId)))
     throw new TRPCError({ code: "UNAUTHORIZED" });
+
+  await rateLimitOrThrowMultiple({
+    type: RateLimitType.FanOut,
+    identifiers: [
+      `orgs:invite-member-user-id-${ctx.session.user.id}`,
+      `orgs:invite-member-ip-${getIp(ctx.req)}`,
+    ],
+  });
 
   if (
     input.role == "Owner" &&

@@ -22,13 +22,32 @@ export const genOtp = (email: string, expiresInMinutes = 5) => {
   return { hash: `${base}.${expires}`, otp };
 };
 
-export const verifyOtp = (email: string, otp: string, hash: string) => {
-  if (!hash.match(".")) return false;
+type VerifyResult = {
+  success: boolean;
+  expired?: boolean;
+};
+
+export const verifyOtp = (
+  email: string,
+  otp: string,
+  hash: string
+): VerifyResult => {
+  if (!hash.match("."))
+    return {
+      success: false,
+    };
 
   const [base, expires] = hash.split(".");
-  if (!base || !expires) return false;
+  if (!base || !expires)
+    return {
+      success: false,
+    };
 
-  if (Date.now() > parseInt(expires)) return false;
+  if (Date.now() > parseInt(expires))
+    return {
+      success: false,
+      expired: true,
+    };
 
   const data = `${email}.${otp}.${expires}`;
   const newHash = crypto
@@ -36,5 +55,5 @@ export const verifyOtp = (email: string, otp: string, hash: string) => {
     .update(data)
     .digest("hex");
 
-  return newHash === base;
+  return { success: newHash === base, expired: false };
 };

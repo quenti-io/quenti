@@ -1,9 +1,11 @@
 import { TRPCError } from "@trpc/server";
+import { sendConfirmCodeEmail } from "../../../../emails/resend";
+import { getIp } from "../../../lib/get-ip";
 import { genOtp } from "../../../lib/otp";
 import { isOrganizationAdmin } from "../../../lib/queries/organizations";
+import { RateLimitType, rateLimitOrThrowMultiple } from "../../../lib/rate-limit";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TResendCodeSchema } from "./resend-code.schema";
-import { sendConfirmCodeEmail } from "../../../../emails/resend";
 
 type ResentCodeOptions = {
   ctx: NonNullableUserContext;
@@ -22,8 +24,17 @@ export const resendCodeHandler = async ({ ctx, input }: ResentCodeOptions) => {
     },
   });
 
-  if (!domain || domain.verifiedAt)
+  if (!domain || domain.verifiedAt || !domain.otpHash)
     throw new TRPCError({ code: "BAD_REQUEST" });
+
+  await rateLimitOrThrowMultiple({
+    type: RateLimitType.Strict,
+    identifiers: [
+      `orgs:resend-code-org-id-${domain.orgId}-${domain.requestedDomain}`,
+      `orgs:resend-code-user-id-${ctx.session.user.id}-${domain.requestedDomain}`,
+      `orgs:resend-code-ip-${getIp(ctx.req)}-${domain.requestedDomain}`,
+    ],
+  });
 
   const { hash, otp } = genOtp(domain.verifiedEmail);
 

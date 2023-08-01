@@ -125,14 +125,41 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
         });
       }, 1000);
     },
-    onError: () => {
+    onError: (e) => {
       requestAnimationFrame(() => {
         lastInputRef.current?.focus();
       });
+
+      if (e.message == "too_many_requests")
+        toast({
+          title: "Too many requests, please try again later",
+          status: "error",
+          icon: <AnimatedXCircle />,
+          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        });
     },
   });
 
-  const resendCode = api.organizations.resendCode.useMutation();
+  const resendCode = api.organizations.resendCode.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Sent a new confirmation email",
+        status: "success",
+        icon: <AnimatedCheckCircle />,
+        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+      });
+    },
+    onError: (e) => {
+      if (e.message == "too_many_requests") {
+        toast({
+          title: "Too many requests, please try again later",
+          status: "error",
+          icon: <AnimatedXCircle />,
+          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        });
+      }
+    },
+  });
 
   const loading = (
     <Box

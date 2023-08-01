@@ -32,6 +32,8 @@ export const serverSchema = z.object({
   STRIPE_PRIVATE_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
   STRIPE_ORG_MONTHLY_PRICE_ID: z.string().optional(),
+  UPSTASH_REDIS_REST_URL: z.string().optional(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
   SERVER_NAME: z.enum(["production", "staging"]).optional(),
 });
 

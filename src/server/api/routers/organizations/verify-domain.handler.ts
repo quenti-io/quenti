@@ -1,14 +1,15 @@
+import type { PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { isOrganizationAdmin } from "../../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../../lib/types";
 import type { TVerifyDomainSchema } from "./verify-domain.schema";
-import { isOrganizationAdmin } from "../../../lib/queries/organizations";
-import type { PrismaClient } from "@prisma/client";
 
 import all from "email-providers/all.json" assert { type: "json" };
-import { genOtp } from "../../../lib/otp";
-import { disbandOrgStudentsByDomain } from "../../../lib/orgs/students";
-import { env } from "../../../../env/server.mjs";
 import { sendConfirmCodeEmail } from "../../../../emails/resend";
+import { env } from "../../../../env/server.mjs";
+import { disbandOrgStudentsByDomain } from "../../../lib/orgs/students";
+import { genOtp } from "../../../lib/otp";
+import { RateLimitType, rateLimitOrThrow } from "../../../lib/rate-limit";
 
 type VerifyDomainOptions = {
   ctx: NonNullableUserContext;
@@ -77,6 +78,11 @@ export const verifyDomainHandler = async ({
       });
     }
   }
+
+  await rateLimitOrThrow({
+    type: RateLimitType.FanOut,
+    identifier: `orgs:verify-domain-user-id-${ctx.session.user.id}`,
+  });
 
   const org = (await ctx.prisma.organization.findUnique({
     where: {

@@ -43,6 +43,8 @@
     "@trpc/next": "^10.33.1",
     "@trpc/react-query": "^10.33.1",
     "@trpc/server": "^10.33.1",
+    "@upstash/ratelimit": "^0.4.3",
+    "@upstash/redis": "^1.22.0",
     "@vercel/analytics": "^1.0.1",
     "@vercel/og": "^0.5.8",
     "aos": "^2.3.4",

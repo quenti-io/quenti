@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
@@ -22,6 +23,7 @@ export default function OrgVerifyEmail() {
   const id = router.query.id as string;
 
   const [code, setCode] = React.useState("");
+  const toast = useToast();
   const lastInputRef = React.useRef<HTMLInputElement>(null);
 
   const { data: org } = api.organizations.get.useQuery(
@@ -40,14 +42,44 @@ export default function OrgVerifyEmail() {
         })();
       }, 1000);
     },
-    onError: () => {
+    onError: (e) => {
       requestAnimationFrame(() => {
         lastInputRef.current?.focus();
       });
+
+      if (e.message == "code_expired" || e.message == "too_many_requests")
+        toast({
+          title:
+            e.message == "code_expired"
+              ? "That code has expired, please resend a confirmation email"
+              : "Too many requests, please try again later",
+          status: "error",
+          icon: <AnimatedXCircle />,
+          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        });
     },
   });
 
-  const resendCode = api.organizations.resendCode.useMutation();
+  const resendCode = api.organizations.resendCode.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Sent a new confirmation email",
+        status: "success",
+        icon: <AnimatedCheckCircle />,
+        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+      });
+    },
+    onError: (e) => {
+      if (e.message == "too_many_requests") {
+        toast({
+          title: "Too many requests, please try again later",
+          status: "error",
+          icon: <AnimatedXCircle />,
+          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        });
+      }
+    },
+  });
 
   React.useEffect(() => {
     if (org?.domain?.verifiedAt) {
