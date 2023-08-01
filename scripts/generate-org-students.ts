@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { USERNAME_REGEXP } from "../src/constants/characters";
 import { PrismaClient } from "@prisma/client";
+import { USERNAME_REGEXP } from "../apps/next/src/constants/characters";
 
 const NUM_STUDENTS = 10000;
 const prisma = new PrismaClient();
@@ -57,7 +57,7 @@ const main = async () => {
   }
 
   const chunkSize = 1000;
-  const chunks = [];
+  const chunks: (typeof users)[] = [];
   for (let i = 0; i < users.length; i += chunkSize) {
     const chunk = users.slice(i, i + chunkSize);
     chunks.push(chunk);
