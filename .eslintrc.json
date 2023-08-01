@@ -22,11 +22,7 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": [
-      "./apps/*/tsconfig.json",
-      "./packages/*/tsconfig.json",
-      "./scripts/tsconfig.json"
-    ]
+    "project": ["./apps/*/tsconfig.json", "./packages/*/tsconfig.json"]
   },
   "settings": {
     "next": {

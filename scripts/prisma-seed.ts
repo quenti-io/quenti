@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-import pjson from "./package.json";
+import pjson from "../apps/next/package.json";
 const version = pjson.version;
 
 async function main() {
