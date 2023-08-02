@@ -24,7 +24,12 @@ export const env = createEnv({
     METRICS_API_PASSWORD: z.string(),
     RESEND_API_KEY: z.string().optional(),
     EMAIL_SENDER: z.string().optional(),
-    USE_RESEND_PREVIEWS: z.boolean().optional().default(true),
+    USE_RESEND_PREVIEWS: z
+      .string()
+      .optional()
+      .default("true")
+      .refine((s) => s === "true" || s === "false")
+      .transform((s) => s === "true"),
     GRAFANA_DASHBOARD_URL: z.string().url().optional(),
     STRIPE_PRIVATE_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
