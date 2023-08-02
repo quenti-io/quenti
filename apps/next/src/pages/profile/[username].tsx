@@ -13,13 +13,14 @@ import { WithFooter } from "../../components/with-footer";
 import { HydrateProfileData } from "../../modules/hydrate-profile-data";
 import { FoldersList } from "../../modules/profile/folders-list";
 import { ProfileArea } from "../../modules/profile/profile-area";
+import { ProfileLoading } from "../../modules/profile/profile-loading";
 import { StudySetsList } from "../../modules/profile/study-sets-list";
 
 const UserPage: ComponentWithAuth = () => {
   const borderColor = useColorModeValue("gray.300", "gray.700");
 
   return (
-    <HydrateProfileData>
+    <HydrateProfileData fallback={<ProfileLoading />}>
       <WithFooter>
         <Container maxW="4xl">
           <Stack spacing={12}>

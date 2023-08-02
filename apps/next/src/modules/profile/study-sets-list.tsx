@@ -2,6 +2,8 @@ import {
   Divider,
   Flex,
   Heading,
+  Skeleton,
+  SkeletonText,
   Stack,
   Text,
   useColorModeValue,
@@ -51,6 +53,53 @@ export const StudySetsList = () => {
           <Text color={grayText}>{placeholder}</Text>
         </Stack>
       )}
+    </Stack>
+  );
+};
+
+StudySetsList.Skeleton = function StudySetsListSkeleton() {
+  const dividerColor = useColorModeValue("gray.300", "gray.700");
+
+  const Group = ({
+    heading,
+    numSets,
+  }: {
+    heading: string;
+    numSets: number;
+  }) => (
+    <Stack spacing={6}>
+      <Flex gap={4} alignItems="center">
+        <Flex h="28.8px">
+          <SkeletonText noOfLines={1} skeletonHeight="6">
+            <Heading fontSize="2xl" whiteSpace="nowrap">
+              {heading}
+            </Heading>
+          </SkeletonText>
+        </Flex>
+        <Divider borderColor={dividerColor} />
+      </Flex>
+      <Stack spacing={4}>
+        {Array.from({ length: numSets }, (_, i) => SetSkeleton(i))}
+      </Stack>
+    </Stack>
+  );
+
+  const SetSkeleton = (key: number) => (
+    <Skeleton rounded="md" key={key}>
+      <ProfileLinkable
+        title={"Loading study set"}
+        url={`/${"set"}`}
+        visibility={"Public"}
+        numValues={12}
+        label="term"
+      />
+    </Skeleton>
+  );
+
+  return (
+    <Stack spacing={8}>
+      <Group heading="Today" numSets={3} />
+      <Group heading="Yesterday" numSets={2} />
     </Stack>
   );
 };
