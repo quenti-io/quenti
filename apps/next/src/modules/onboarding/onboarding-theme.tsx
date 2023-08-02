@@ -1,4 +1,9 @@
-import { Text, VStack, useColorMode } from "@chakra-ui/react";
+import {
+  Text,
+  VStack,
+  useBreakpointValue,
+  useColorMode,
+} from "@chakra-ui/react";
 import { ToggleGroup } from "../../components/toggle-group";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";
@@ -6,6 +11,13 @@ import { ThemePreview } from "./theme-preview";
 
 export const OnboardingTheme = () => {
   const { colorMode, setColorMode } = useColorMode();
+
+  const orientation: "vertical" | "horizontal" | undefined = useBreakpointValue(
+    {
+      base: "vertical",
+      md: "horizontal",
+    }
+  );
 
   return (
     <PresentWrapper>
@@ -15,7 +27,7 @@ export const OnboardingTheme = () => {
       >
         <ToggleGroup
           index={colorMode == "light" ? 0 : 1}
-          baseVertical
+          orientation={orientation}
           tabProps={{
             w: 72,
             h: 48,

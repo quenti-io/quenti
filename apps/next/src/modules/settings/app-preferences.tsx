@@ -1,10 +1,14 @@
 import { Text, VStack, useColorMode } from "@chakra-ui/react";
+import React from "react";
 import { ToggleGroup } from "../../components/toggle-group";
+import { SettingsContext } from "../../pages/settings";
 import { ThemePreview } from "../onboarding/theme-preview";
 import { SectionWrapper } from "./section-wrapper";
 
 export const AppPreferences = () => {
   const { colorMode, setColorMode } = useColorMode();
+
+  const layout = React.useContext(SettingsContext)!.layout;
 
   return (
     <SectionWrapper
@@ -14,7 +18,7 @@ export const AppPreferences = () => {
       <VStack>
         <ToggleGroup
           index={colorMode == "light" ? 0 : 1}
-          baseVertical
+          orientation={layout == "mobile" ? "vertical" : "horizontal"}
           tabProps={{
             w: 72,
             h: 48,

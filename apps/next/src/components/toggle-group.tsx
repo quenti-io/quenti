@@ -2,13 +2,12 @@ import {
   TabList,
   Tabs,
   chakra,
+  forwardRef,
   useColorModeValue,
   useTabsStyles,
   type SystemStyleObject,
   type Tab,
   type TabsProps,
-  forwardRef,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import React from "react";
 import { useTab } from "../lib/use-tab";
@@ -17,7 +16,6 @@ interface ToggleGroupProps {
   index: number;
   onChange?: (index: number) => void;
   tabProps?: React.ComponentProps<typeof Tab>;
-  baseVertical?: boolean;
 }
 
 type ComponentProps = Omit<TabsProps, "index" | "onChange"> & ToggleGroupProps;
@@ -35,18 +33,9 @@ export const ToggleGroup = ({
   onChange,
   tabProps,
   children,
-  baseVertical = false,
-  ..._props
+  ...props
 }: React.PropsWithChildren<ComponentProps>) => {
   const borderColor = useColorModeValue("gray.200", "gray.750");
-  const isMobile = useMediaQuery("(max-width: 768px)")[0];
-  const orientation = baseVertical
-    ? isMobile
-      ? "vertical"
-      : "horizontal"
-    : _props.orientation;
-
-  const props = { ..._props, orientation };
 
   return (
     <ToggleGroupContext.Provider
