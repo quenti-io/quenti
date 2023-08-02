@@ -68,9 +68,7 @@ export const HydrateSetData: React.FC<
   );
 
   React.useEffect(() => {
-    void (async () => {
-      if (isDirty) await refetch();
-    })();
+    if (isDirty) void refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDirty]);
 

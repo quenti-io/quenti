@@ -6,27 +6,34 @@ import {
   Skeleton,
   Stack,
 } from "@chakra-ui/react";
+import { shuffleArray } from "@quenti/lib/array";
+import { api } from "@quenti/trpc";
 import {
   IconArrowsShuffle,
   IconMaximize,
   IconPlayerPlay,
   IconSettings,
 } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
 import { Link } from "../../components/link";
 import { LoadingFlashcard } from "../../components/loading-flashcard";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
+import { queryEventChannel } from "../../events/query";
 import { useSet } from "../../hooks/use-set";
-import { FlashcardsSettingsModal } from "../flashcards/flashcards-settings-modal";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
-import { api } from "@quenti/trpc";
-import { shuffleArray } from "@quenti/lib/array";
+import { FlashcardsSettingsModal } from "../flashcards/flashcards-settings-modal";
 
 export const FlashcardPreview = () => {
+  const router = useRouter();
   const data = useSet();
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
-  const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
+  const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
+    s.isDirty,
+    s.setIsDirty,
+  ]);
+  const [transitionDirty, setTransitionDirty] = React.useState(false);
 
   const apiSetShuffle = api.container.setShuffle.useMutation({
     onSuccess: () => {
@@ -55,7 +62,20 @@ export const FlashcardPreview = () => {
   React.useEffect(() => {
     setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shuffle]);
+  }, [shuffle, data.id]);
+
+  React.useEffect(() => {
+    const handleRouteChange = () => setTransitionDirty(true);
+    const handleQueryRefetch = () => setTransitionDirty(false);
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+    queryEventChannel.on("setQueryRefetched", handleQueryRefetch);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+      queryEventChannel.off("setQueryRefetched", handleQueryRefetch);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
@@ -73,7 +93,11 @@ export const FlashcardPreview = () => {
       >
         <Flex maxW="1000px" flex="1">
           <Box w="full">
-            <RootFlashcardWrapper terms={data.terms} termOrder={termOrder} />
+            <RootFlashcardWrapper
+              terms={data.terms}
+              termOrder={termOrder}
+              isDirty={isDirty || transitionDirty}
+            />
           </Box>
         </Flex>
         <Flex flexDir="column" justifyContent="space-between">

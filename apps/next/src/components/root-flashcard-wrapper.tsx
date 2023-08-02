@@ -1,13 +1,12 @@
 import { Box } from "@chakra-ui/react";
 import type { Term } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
 import { useContainerContext } from "../stores/use-container-store";
-import { useSetPropertiesStore } from "../stores/use-set-properties-store";
-import { api } from "@quenti/trpc";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
 import { EditTermModal } from "./edit-term-modal";
 import { LoadingFlashcard } from "./loading-flashcard";
@@ -17,6 +16,7 @@ export interface RootFlashcardWrapperProps {
   terms: Term[];
   termOrder: string[];
   h?: string;
+  isDirty?: boolean;
 }
 
 interface RootFlashcardContextProps {
@@ -39,13 +39,12 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   terms,
   termOrder,
   h = "500px",
+  isDirty = false,
 }) => {
   const authed = useSession().status == "authenticated";
   const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [editTerm, setEditTerm] = React.useState<Term | null>(null);
   const [focusDefinition, setFocusDefinition] = React.useState(false);
-
-  const isDirty = useSetPropertiesStore((s) => s.isDirty);
 
   const setStarMutation = api.container.starTerm.useMutation();
   const folderStarMutation = api.folders.starTerm.useMutation();
