@@ -8,6 +8,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import { placeholderLanguage } from "@quenti/core/language";
 import type { Question } from "@quenti/interfaces";
 import { api } from "@quenti/trpc";
@@ -15,7 +16,6 @@ import React from "react";
 import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useEventCallback } from "../../../../hooks/use-event-callback";
 import { useAuthedSet } from "../../../../hooks/use-set";
-import { EvaluationResult, evaluate } from "../../../../lib/evaluator";
 import { useContainerContext } from "../../../../stores/use-container-store";
 import { useLearnContext, word } from "../../../../stores/use-learn-store";
 

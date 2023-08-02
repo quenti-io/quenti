@@ -1,18 +1,14 @@
-// esliddnt-ignore-file
+/* eslint-disable */
 /**
  * https://stackoverflow.com/a/60118644/9768266
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AllKeys<T> = T extends any ? keyof T : never;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type OptionalKeys<T> = T extends any
-  ? // eslint-disable-next-line @typescript-eslint/ban-types
-    { [K in keyof T]-?: {} extends Pick<T, K> ? K : never }[keyof T]
+  ? { [K in keyof T]-?: {} extends Pick<T, K> ? K : never }[keyof T]
   : never;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Idx<T, K extends PropertyKey, D = never> = T extends any
   ? K extends keyof T
     ? T[K]
@@ -24,7 +20,6 @@ export type PartialKeys<T, K extends keyof T> = Omit<T, K> &
   ? { [P in keyof O]: O[P] }
   : never;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type Widen<T> = [T] extends [Array<infer _E>]
   ? { [K in keyof T]: Widen<T[K]> }
   : [T] extends [object]

@@ -29,7 +29,18 @@ let config = withHighlightConfig(
     images: {
       domains: ["lh3.googleusercontent.com"],
     },
-    transpilePackages: ["@quenti/env", "@quenti/prisma"],
+    transpilePackages: [
+      "@quenti/auth",
+      "@quenti/core",
+      "@quenti/emails",
+      "@quenti/env",
+      "@quenti/interfaces",
+      "@quenti/lib",
+      "@quenti/payments",
+      "@quenti/prisma",
+      "@quenti/trpc",
+      "@quenti/types",
+    ],
     rewrites: async () => [
       {
         source: "/:id(_[a-zA-Z0-9]{10})",

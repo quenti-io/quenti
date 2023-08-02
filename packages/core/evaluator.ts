@@ -1,5 +1,5 @@
 import type { MultipleAnswerMode } from "@quenti/prisma/client";
-import type { Language } from "@quenti/core/language";
+import type { Language } from "./language";
 
 export enum EvaluationResult {
   Correct,

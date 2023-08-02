@@ -12,7 +12,10 @@
     "start": {
       "outputs": ["dist/**", "build/**"]
     },
-    "lint": {}
+    "lint": {},
+    "dev": {
+      "cache": false
+    }
   },
   "globalDependencies": ["**/.env", "yarn.lock"]
 }

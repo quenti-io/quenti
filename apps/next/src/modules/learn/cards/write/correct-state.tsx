@@ -1,9 +1,9 @@
 import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { cleanSpaces } from "@quenti/core/evaluator";
+import { getRandom } from "@quenti/lib/array";
 import { motion } from "framer-motion";
 import React from "react";
-import { cleanSpaces } from "../../../../lib/evaluator";
 import { useLearnContext } from "../../../../stores/use-learn-store";
-import { getRandom } from "@quenti/lib/array";
 import { AnswerCard } from "./answer-card";
 
 export const CorrectState: React.FC<{ guess: string }> = ({ guess }) => {
