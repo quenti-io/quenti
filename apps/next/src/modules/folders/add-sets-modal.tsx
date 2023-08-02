@@ -12,15 +12,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner,
+  Skeleton,
   Text,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "@quenti/trpc";
 import { SelectableStudySet } from "./selectable-study-set";
 
 export interface AddSetsModalProps {
@@ -58,6 +58,8 @@ export const AddSetsModal: React.FC<AddSetsModalProps> = ({
 
   const mainBg = useColorModeValue("gray.100", "gray.750");
   const mainBorder = useColorModeValue("gray.200", "gray.800");
+  const skeletonStartColor = useColorModeValue("white", "gray.600");
+  const skeletonEndColor = useColorModeValue("gray.50", "gray.700");
 
   return (
     <Modal
@@ -79,6 +81,31 @@ export const AddSetsModal: React.FC<AddSetsModalProps> = ({
           borderBottomWidth={2}
         >
           <Grid gridTemplateColumns={{ base: "1fr", sm: "1fr 1fr" }} gap={4}>
+            {recent.isLoading &&
+              Array.from({ length: 10 }).map((_, i) => (
+                <GridItem key={i}>
+                  <Skeleton
+                    rounded="md"
+                    startColor={skeletonStartColor}
+                    endColor={skeletonEndColor}
+                  >
+                    <SelectableStudySet
+                      studySet={{
+                        id: "",
+                        title: "loading",
+                        visibility: "Public",
+                      }}
+                      numTerms={12}
+                      user={{
+                        image: "",
+                        username: "username",
+                      }}
+                      selected={false}
+                      onSelect={() => undefined}
+                    />
+                  </Skeleton>
+                </GridItem>
+              ))}
             {recent.data?.map((set) => (
               <GridItem key={set.id}>
                 <SelectableStudySet
@@ -110,11 +137,6 @@ export const AddSetsModal: React.FC<AddSetsModalProps> = ({
                 </HStack>
                 <Text color="gray.500">That&apos;s kinda sad.</Text>
               </VStack>
-            </Center>
-          )}
-          {recent.isLoading && (
-            <Center>
-              <Spinner color="blue.300" />
             </Center>
           )}
         </ModalBody>
