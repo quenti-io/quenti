@@ -67,7 +67,9 @@ ProfileArea.Skeleton = function ProfileAreaSkeleton() {
       </Skeleton>
       <Flex flexDir="column" justifyContent="space-between" h="16">
         <Skeleton fitContent>
-          <Heading w="max-content">{username || "username"}</Heading>
+          <Heading w="max-content">
+            {username ? username.replace("@", "") : "username"}
+          </Heading>
         </Skeleton>
         <Flex alignItems="center" h="14px">
           <SkeletonText noOfLines={1} skeletonHeight="12px">

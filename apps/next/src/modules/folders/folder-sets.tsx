@@ -1,10 +1,10 @@
-import { Button, Grid, GridItem } from "@chakra-ui/react";
+import { Button, Grid, GridItem, Skeleton } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { IconPlus } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { StudySetCard } from "../../components/study-set-card";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "@quenti/trpc";
 import { AddSetsModal } from "./add-sets-modal";
 import { FolderCreatorOnly } from "./folder-creator-only";
 
@@ -63,5 +63,30 @@ export const FolderSets = () => {
         </FolderCreatorOnly>
       </Grid>
     </>
+  );
+};
+
+FolderSets.Skeleton = function FolderSetsSkeleton() {
+  return (
+    <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <GridItem key={i}>
+          <Skeleton rounded="md">
+            <StudySetCard
+              studySet={{
+                id: "",
+                title: "Study set",
+                visibility: "Public",
+              }}
+              user={{
+                image: "",
+                username: "username",
+              }}
+              numTerms={12}
+            />
+          </Skeleton>
+        </GridItem>
+      ))}
+    </Grid>
   );
 };

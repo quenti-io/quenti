@@ -7,6 +7,7 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Skeleton,
   Text,
   Tooltip,
   useColorModeValue,
@@ -150,5 +151,25 @@ const StudyButton: React.FC<StudyButtonProps> = ({ folder, slug, mode }) => {
         />
       </span>
     </Tooltip>
+  );
+};
+
+ActionArea.Skeleton = function ActionAreaSkeleton() {
+  return (
+    <ButtonGroup size={{ base: "md", sm: "lg" }} gap={2}>
+      <ButtonGroup size={{ base: "md", sm: "lg" }} gap={0}>
+        <Skeleton fitContent rounded="md">
+          <IconButton icon={<IconCards />} aria-label="Flashcards" />
+        </Skeleton>
+        <Skeleton fitContent rounded="md">
+          <IconButton icon={<IconLayersSubtract />} aria-label="Match" />
+        </Skeleton>
+      </ButtonGroup>
+      <Skeleton fitContent rounded="md">
+        <Button leftIcon={<IconShare />} variant="outline" colorScheme="orange">
+          Share
+        </Button>
+      </Skeleton>
+    </ButtonGroup>
   );
 };
