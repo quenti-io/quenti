@@ -4,6 +4,7 @@ import { WithFooter } from "../../../../components/with-footer";
 import { ActionArea } from "../../../../modules/folders/action-area";
 import { FolderDescription } from "../../../../modules/folders/folder-description";
 import { FolderHeading } from "../../../../modules/folders/folder-heading";
+import { FolderLoading } from "../../../../modules/folders/folder-loading";
 import { FolderSets } from "../../../../modules/folders/folder-sets";
 import { HydrateFolderData } from "../../../../modules/hydrate-folder-data";
 
@@ -11,7 +12,7 @@ const FolderPage: ComponentWithAuth = () => {
   const dividerColor = useColorModeValue("gray.400", "gray.600");
 
   return (
-    <HydrateFolderData>
+    <HydrateFolderData fallback={<FolderLoading />}>
       <WithFooter>
         <Container maxW="7xl">
           <Stack spacing={12}>

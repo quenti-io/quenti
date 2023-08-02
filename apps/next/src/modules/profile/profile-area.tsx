@@ -4,6 +4,8 @@ import {
   Flex,
   Heading,
   HStack,
+  Skeleton,
+  SkeletonText,
   Text,
   Tooltip,
   useColorModeValue,
@@ -12,6 +14,7 @@ import { IconDiscountCheck } from "@tabler/icons-react";
 import React from "react";
 import { useProfile } from "../../hooks/use-profile";
 import { avatarUrl } from "@quenti/lib/avatar";
+import { useRouter } from "next/router";
 
 export const ProfileArea = () => {
   const profile = useProfile();
@@ -48,6 +51,33 @@ export const ProfileArea = () => {
             {profile.name}
           </Text>
         )}
+      </Flex>
+    </HStack>
+  );
+};
+
+ProfileArea.Skeleton = function ProfileAreaSkeleton() {
+  const router = useRouter();
+  const username = router.query.username as string | undefined;
+
+  return (
+    <HStack spacing="6">
+      <Skeleton fitContent h="max-content" rounded="full">
+        <Avatar size="lg" />
+      </Skeleton>
+      <Flex flexDir="column" justifyContent="space-between" h="16">
+        <Skeleton fitContent>
+          <Heading w="max-content">
+            {username ? username.replace("@", "") : "username"}
+          </Heading>
+        </Skeleton>
+        <Flex alignItems="center" h="14px">
+          <SkeletonText noOfLines={1} skeletonHeight="12px">
+            <Text lineHeight="none" fontSize="sm" w="max-content">
+              Firstname Lastname
+            </Text>
+          </SkeletonText>
+        </Flex>
       </Flex>
     </HStack>
   );

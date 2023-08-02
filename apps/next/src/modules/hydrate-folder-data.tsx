@@ -1,3 +1,4 @@
+import { api, type RouterOutputs } from "@quenti/trpc";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
@@ -11,7 +12,6 @@ import {
   type ContainerStoreProps,
 } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
-import { api, type RouterOutputs } from "@quenti/trpc";
 import { Folder404 } from "./folders/folder-404";
 import { NoPublicSets } from "./folders/no-public-sets";
 
@@ -48,11 +48,12 @@ export const FolderContext = React.createContext<FolderData>({
 export interface HydrateFolderDataProps {
   withTerms?: boolean;
   disallowDirty?: boolean;
+  fallback?: React.ReactNode;
 }
 
 export const HydrateFolderData: React.FC<
   React.PropsWithChildren<HydrateFolderDataProps>
-> = ({ children, withTerms = false, disallowDirty }) => {
+> = ({ children, withTerms = false, disallowDirty, fallback }) => {
   const router = useRouter();
   const username = router.query.username as string;
   const slug = router.query.slug as string;
@@ -88,7 +89,8 @@ export const HydrateFolderData: React.FC<
 
   if (folder.error?.data?.httpStatus === 404) return <Folder404 />;
   if (folder.error?.data?.httpStatus === 403) return <NoPublicSets />;
-  if (loading || !folder.data || (disallowDirty && isDirty)) return <Loading />;
+  if (loading || !folder.data || (disallowDirty && isDirty))
+    return fallback ?? <Loading />;
 
   return (
     <ContextLayer data={folder.data}>

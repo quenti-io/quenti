@@ -4,11 +4,11 @@
 /* eslint-disable jsx-a11y/alt-text */
 
 import { Pool } from "@neondatabase/serverless";
+import type { DB } from "@quenti/prisma/kysely-types";
 import { getEntityGeneric } from "@quenti/trpc/server/edge/entities";
 import { ImageResponse } from "@vercel/og";
 import { Kysely, PostgresDialect } from "kysely";
 import type { NextRequest } from "next/server";
-import type { DB } from "../../../../../kysely-types";
 
 export const config = {
   runtime: "edge",

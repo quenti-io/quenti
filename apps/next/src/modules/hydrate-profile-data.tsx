@@ -19,9 +19,13 @@ export const ProfileContext = React.createContext<ProfileData>({
   isMe: false,
 });
 
-export const HydrateProfileData: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+interface HydrateProfileDataProps {
+  fallback?: React.ReactNode;
+}
+
+export const HydrateProfileData: React.FC<
+  React.PropsWithChildren<HydrateProfileDataProps>
+> = ({ children, fallback }) => {
   const router = useRouter();
   const session = useSession();
   const username = router.query.username as string;
@@ -32,7 +36,7 @@ export const HydrateProfileData: React.FC<React.PropsWithChildren> = ({
   const { loading } = useLoading();
 
   if (profile.error?.data?.httpStatus === 404) return <Profile404 />;
-  if (loading || !profile.data) return <Loading />;
+  if (loading || !profile.data) return fallback ?? <Loading />;
 
   return (
     <ProfileContext.Provider
