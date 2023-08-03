@@ -14,6 +14,7 @@ import {
   IconChevronDown,
   IconCloudDownload,
   IconFolder,
+  IconSchool,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
@@ -23,15 +24,18 @@ import { Logo } from "../../icons/logo";
 import { BASE_PAGES } from "../../pages/_app";
 import { Link } from "../link";
 import { MenuOption } from "../menu-option";
+import { TeacherOnly } from "../teacher-only";
 
 export interface LeftNavProps {
   onFolderClick: () => void;
   onImportClick: () => void;
+  onClassClick: () => void;
 }
 
 export const LeftNav: React.FC<LeftNavProps> = ({
   onFolderClick,
   onImportClick,
+  onClassClick,
 }) => {
   const router = useRouter();
   const session = useSession()!.data!;
@@ -128,6 +132,13 @@ export const LeftNav: React.FC<LeftNavProps> = ({
                 label="Folder"
                 onClick={onFolderClick}
               />
+              <TeacherOnly>
+                <MenuOption
+                  icon={<IconSchool size={20} />}
+                  label="Class"
+                  onClick={onClassClick}
+                />
+              </TeacherOnly>
             </MenuList>
           </Menu>
         </HStack>

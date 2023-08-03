@@ -16,7 +16,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { env } from "@quenti/env/client";
+import { avatarUrl } from "@quenti/lib/avatar";
 import type { User } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
 import {
   IconBooks,
   IconBuilding,
@@ -37,9 +39,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
+import { useIsTeacher } from "../hooks/use-is-teacher";
 import { useShortcut } from "../hooks/use-shortcut";
-import { api } from "@quenti/trpc";
-import { avatarUrl } from "@quenti/lib/avatar";
 
 export interface CommandMenuProps {
   isOpen: boolean;
@@ -75,6 +76,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const router = useRouter();
   const session = useSession();
   const devActions = useDevActions();
+  const isTeacher = useIsTeacher();
   const { colorMode, toggleColorMode } = useColorMode();
 
   const dismiss = router.pathname == "/onboarding/command-menu";
@@ -241,6 +243,14 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         label: "Create a new folder",
         action: () => menuEventChannel.emit("createFolder"),
       });
+      if (isTeacher) {
+        total.push({
+          icon: <IconPlus />,
+          name: "Create Class",
+          label: "Create a new class",
+          action: () => menuEventChannel.emit("createClass"),
+        });
+      }
 
       total.push({
         icon: colorMode == "dark" ? <IconSun /> : <IconMoon />,
