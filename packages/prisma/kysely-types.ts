@@ -16,6 +16,12 @@ export const MembershipRole = {
 } as const;
 export type MembershipRole =
   (typeof MembershipRole)[keyof typeof MembershipRole];
+export const ClassMembershipType = {
+  Student: "Student",
+  Teacher: "Teacher",
+} as const;
+export type ClassMembershipType =
+  (typeof ClassMembershipType)[keyof typeof ClassMembershipType];
 export const StudySetVisibility = {
   Private: "Private",
   Unlisted: "Unlisted",
@@ -87,12 +93,35 @@ export type AllowedEmailRegex = {
   label: string;
   createdAt: Generated<Timestamp>;
 };
+export type Assignment = {
+  id: string;
+  classId: string;
+  sectionId: string;
+  name: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp;
+  availableAt: Timestamp | null;
+  dueAt: Timestamp | null;
+};
 export type AutoSaveTerm = {
   id: string;
   word: string;
   definition: string;
   rank: number;
   setAutoSaveId: string;
+};
+export type Class = {
+  id: string;
+  name: string;
+  description: string;
+  orgId: string | null;
+};
+export type ClassMembership = {
+  id: string;
+  classId: string;
+  userId: string;
+  type: ClassMembershipType;
+  sectionId: string | null;
 };
 export type Container = {
   id: string;
@@ -126,6 +155,10 @@ export type Folder = {
   title: string;
   slug: string | null;
   description: string;
+};
+export type FoldersOnClasses = {
+  folderId: string;
+  classId: string;
 };
 export type Highscore = {
   leaderboardId: string;
@@ -170,6 +203,11 @@ export type RecentFailedLogin = {
   image: string | null;
   createdAt: Generated<Timestamp>;
 };
+export type Section = {
+  id: string;
+  classId: string;
+  name: string;
+};
 export type Session = {
   id: string;
   sessionToken: string;
@@ -212,6 +250,14 @@ export type StudySet = {
   visibility: Generated<StudySetVisibility>;
   wordLanguage: Generated<string>;
   definitionLanguage: Generated<string>;
+};
+export type StudySetsOnAssignments = {
+  studySetId: string;
+  assignmentId: string;
+};
+export type StudySetsOnClasses = {
+  studySetId: string;
+  classId: string;
 };
 export type StudySetsOnFolders = {
   studySetId: string;
@@ -271,21 +317,28 @@ export type WhitelistedEmail = {
 export type DB = {
   Account: Account;
   AllowedEmailRegex: AllowedEmailRegex;
+  Assignment: Assignment;
   AutoSaveTerm: AutoSaveTerm;
+  Class: Class;
+  ClassMembership: ClassMembership;
   Container: Container;
   EntityShare: EntityShare;
   Folder: Folder;
+  FoldersOnClasses: FoldersOnClasses;
   Highscore: Highscore;
   Leaderboard: Leaderboard;
   Membership: Membership;
   Organization: Organization;
   PendingInvite: PendingInvite;
   RecentFailedLogin: RecentFailedLogin;
+  Section: Section;
   Session: Session;
   SetAutoSave: SetAutoSave;
   StarredTerm: StarredTerm;
   StudiableTerm: StudiableTerm;
   StudySet: StudySet;
+  StudySetsOnAssignments: StudySetsOnAssignments;
+  StudySetsOnClasses: StudySetsOnClasses;
   StudySetsOnFolders: StudySetsOnFolders;
   Term: Term;
   User: User;
