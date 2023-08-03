@@ -7,6 +7,7 @@ import { ZEditSchema } from "./edit.schema";
 import { ZGetShareIdSchema } from "./get-share-id.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZRecentForSetAddSchema } from "./recent-for-set-add.schema";
+import { ZRecentSchema } from "./recent.schema";
 import { ZRemoveSetSchema } from "./remove-set.schema";
 import { ZStarTermSchema } from "./star-term.schema";
 
@@ -35,10 +36,12 @@ export const foldersRouter = createTRPCRouter({
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers["get"]!({ ctx, input });
   }),
-  recent: protectedProcedure.query(async ({ ctx }) => {
-    await loadHandler(HANDLER_CACHE, "recent");
-    return HANDLER_CACHE.handlers["recent"]!({ ctx });
-  }),
+  recent: protectedProcedure
+    .input(ZRecentSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "recent");
+      return HANDLER_CACHE.handlers["recent"]!({ ctx, input });
+    }),
   recentForSetAdd: protectedProcedure
     .input(ZRecentForSetAddSchema)
     .query(async ({ ctx, input }) => {

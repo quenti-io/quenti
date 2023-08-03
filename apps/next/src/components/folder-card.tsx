@@ -10,12 +10,16 @@ export interface FolderCardProps {
     username: string;
     image: string | null;
   };
+  removable?: boolean;
+  onRemove?: () => void;
 }
 
 export const FolderCard: React.FC<FolderCardProps> = ({
   folder,
   numSets,
   user,
+  removable = false,
+  onRemove
 }) => {
   return (
     <GenericCard
@@ -26,6 +30,8 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       user={user}
       leftIcon={<IconFolder size={16} />}
       reverseTitle
+      removable={removable}
+      onRemove={onRemove}
     />
   );
 };

@@ -17,10 +17,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
-import { FolderCard } from "../../../components/folder-card";
 import { WithFooter } from "../../../components/with-footer";
 import { useClass } from "../../../hooks/use-class";
-import { EntityGroup } from "../../../modules/classes/entity-group";
+import { ClassHome } from "../../../modules/classes/class-home";
 import { plural } from "../../../utils/string";
 
 export default function Classes() {
@@ -96,32 +95,7 @@ export default function Classes() {
                 </TabList>
                 <TabPanels mt="6">
                   <TabPanel px="0">
-                    <Stack spacing="6">
-                      {(!data || !!data.folders.length) && (
-                        <EntityGroup heading="Folders" isLoaded={!!data}>
-                          {data?.folders?.map((folder) => (
-                            <FolderCard
-                              key={folder.id}
-                              folder={folder}
-                              numSets={folder._count.studySets}
-                              user={folder.user}
-                            />
-                          ))}
-                        </EntityGroup>
-                      )}
-                      {(!data || !!data.studySets.length) && (
-                        <EntityGroup heading="Study sets" isLoaded={!!data}>
-                          {data?.folders?.map((folder) => (
-                            <FolderCard
-                              key={folder.id}
-                              folder={folder}
-                              numSets={folder._count.studySets}
-                              user={folder.user}
-                            />
-                          ))}
-                        </EntityGroup>
-                      )}
-                    </Stack>
+                    <ClassHome />
                   </TabPanel>
                 </TabPanels>
               </Tabs>

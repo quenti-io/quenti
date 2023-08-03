@@ -23,6 +23,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
             select: {
               id: true,
               title: true,
+              visibility: true,
               user: {
                 select: {
                   id: true,
@@ -85,6 +86,10 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     studySets: group.studySets.map((s) => s.studySet),
     folders: group.folders.map((f) => f.folder),
     ...(group._count.members ? { students: group._count.members } : {}),
+    me: {
+      type: member.type,
+      sectionId: member.sectionId,
+    },
   };
 };
 

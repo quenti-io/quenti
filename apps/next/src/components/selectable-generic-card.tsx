@@ -8,15 +8,18 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { StudySet } from "@quenti/prisma/client";
-import React from "react";
-import { visibilityIcon } from "../../common/visibility-icon";
 import { avatarUrl } from "@quenti/lib/avatar";
-import { plural } from "../../utils/string";
+import type { StudySetVisibility } from "@quenti/prisma/client";
+import { IconFolder } from "@tabler/icons-react";
+import React from "react";
+import { visibilityIcon } from "../common/visibility-icon";
+import { plural } from "../utils/string";
 
-export interface SelectableStudySetProps {
-  studySet: Pick<StudySet, "id" | "title" | "visibility">;
-  numTerms: number;
+export interface SelectableGenericCard {
+  type: "set" | "folder";
+  title: string;
+  visibility?: StudySetVisibility;
+  numItems: number;
   user: {
     username: string;
     image: string | null;
@@ -25,16 +28,20 @@ export interface SelectableStudySetProps {
   onSelect: () => void;
 }
 
-export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
-  studySet,
-  numTerms,
+export const SelectableGenericCard: React.FC<SelectableGenericCard> = ({
+  type,
+  title,
+  visibility,
+  numItems,
   user,
   selected,
   onSelect,
 }) => {
   const termsTextColor = useColorModeValue("gray.600", "gray.400");
-  const linkBg = useColorModeValue("gray.50", "gray.700");
-  const linkBorder = useColorModeValue("gray.200", "gray.800");
+  const linkBg = useColorModeValue("white", "gray.750");
+  const linkBorder = useColorModeValue("gray.200", "gray.700");
+
+  const reverseTitle = type == "folder";
 
   return (
     <Box
@@ -54,7 +61,10 @@ export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
       onClick={onSelect}
     >
       <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
-        <Stack spacing={2}>
+        <Stack
+          spacing={2}
+          direction={reverseTitle ? "column-reverse" : "column"}
+        >
           <Heading
             size="md"
             style={{
@@ -66,12 +76,16 @@ export const SelectableStudySet: React.FC<SelectableStudySetProps> = ({
               WebkitBoxOrient: "vertical",
             }}
           >
-            {studySet.title}
+            {title}
           </Heading>
           <HStack spacing="2" color={termsTextColor}>
-            <Text fontSize="sm">{plural(numTerms, "term")}</Text>
-            {studySet.visibility !== "Public" &&
-              visibilityIcon(studySet.visibility, 16)}
+            {type == "folder" && <IconFolder size={16} />}
+            <Text fontSize="sm">
+              {plural(numItems, type == "folder" ? "set" : "term")}
+            </Text>
+            {visibility &&
+              visibility !== "Public" &&
+              visibilityIcon(visibility, 16)}
           </HStack>
         </Stack>
         <HStack spacing="2">
