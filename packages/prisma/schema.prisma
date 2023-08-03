@@ -219,6 +219,7 @@ model ClassMembership {
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   section Section? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
 
+  @@unique([classId, userId])
   @@index([classId])
   @@index([userId])
   @@index([sectionId])
