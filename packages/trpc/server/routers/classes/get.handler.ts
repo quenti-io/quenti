@@ -12,7 +12,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   const member = await getClassMember(input.id, ctx.session.user.id);
   if (!member) throw new TRPCError({ code: "NOT_FOUND" });
 
-  const group = (await ctx.prisma.class.findUnique({
+  const class_ = (await ctx.prisma.class.findUnique({
     where: {
       id: input.id,
     },
@@ -80,12 +80,13 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   }))!;
 
   return {
-    name: group.name,
-    description: group.description,
-    orgId: group.orgId,
-    studySets: group.studySets.map((s) => s.studySet),
-    folders: group.folders.map((f) => f.folder),
-    ...(group._count.members ? { students: group._count.members } : {}),
+    id: class_.id,
+    name: class_.name,
+    description: class_.description,
+    orgId: class_.orgId,
+    studySets: class_.studySets.map((s) => s.studySet),
+    folders: class_.folders.map((f) => f.folder),
+    ...(class_._count.members ? { students: class_._count.members } : {}),
     me: {
       type: member.type,
       sectionId: member.sectionId,

@@ -9,6 +9,7 @@ import { useIsClassTeacher } from "../../hooks/use-is-class-teacher";
 import { EntityGroup } from "./entity-group";
 
 export const ClassHome = () => {
+  const utils = api.useContext();
   const { data } = useClass();
   const isTeacher = useIsClassTeacher();
 
@@ -32,6 +33,20 @@ export const ClassHome = () => {
     }
   );
 
+  const addEntities = api.classes.addEntities.useMutation({
+    onSuccess: async () => {
+      await utils.classes.get.invalidate();
+      setAddFoldersOpen(false);
+      setAddSetsOpen(false);
+    },
+  });
+
+  const removeEntity = api.classes.removeEntity.useMutation({
+    onSuccess: async () => {
+      await utils.classes.get.invalidate();
+    },
+  });
+
   return (
     <>
       <AddEntitiesModal
@@ -42,9 +57,16 @@ export const ClassHome = () => {
           type: "folder",
           numItems: f._count.studySets,
         }))}
-        onAdd={() => undefined}
+        onAdd={(ids) =>
+          addEntities.mutate({
+            classId: data!.id,
+            entities: ids,
+            type: "Folder",
+          })
+        }
         actionLabel={"Add folders"}
         isEntitiesLoading={recentFolders.isLoading}
+        isAddLoading={addEntities.isLoading}
       />
       <AddEntitiesModal
         isOpen={addSetsOpen}
@@ -55,9 +77,16 @@ export const ClassHome = () => {
           numItems: s._count.terms,
           slug: "",
         }))}
-        onAdd={() => undefined}
+        onAdd={(ids) =>
+          addEntities.mutate({
+            classId: data!.id,
+            entities: ids,
+            type: "StudySet",
+          })
+        }
         actionLabel={"Add sets"}
         isEntitiesLoading={recentSets.isLoading}
+        isAddLoading={addEntities.isLoading}
       />
       <Stack spacing="6">
         {(!data || !!data.folders.length || isTeacher) && (
@@ -73,6 +102,13 @@ export const ClassHome = () => {
                 numSets={folder._count.studySets}
                 user={folder.user}
                 removable={isTeacher}
+                onRemove={() =>
+                  removeEntity.mutate({
+                    classId: data.id,
+                    entityId: folder.id,
+                    type: "Folder",
+                  })
+                }
               />
             ))}
           </EntityGroup>
@@ -90,6 +126,13 @@ export const ClassHome = () => {
                 numTerms={studySet._count.terms}
                 user={studySet.user}
                 removable={isTeacher}
+                onRemove={() =>
+                  removeEntity.mutate({
+                    classId: data.id,
+                    entityId: studySet.id,
+                    type: "StudySet",
+                  })
+                }
               />
             ))}
           </EntityGroup>
