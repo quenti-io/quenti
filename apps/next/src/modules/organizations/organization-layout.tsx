@@ -8,7 +8,6 @@ import {
   Skeleton,
   SkeletonText,
   Stack,
-  Tab,
   TabList,
   TabPanels,
   Tabs,
@@ -17,6 +16,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { api, type RouterOutputs } from "@quenti/trpc";
 import {
   IconAlertCircleFilled,
   IconAt,
@@ -24,12 +24,11 @@ import {
   IconDiscountCheck,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedXCircle } from "../../components/animated-icons/x";
+import { SkeletonTab } from "../../components/skeleton-tab";
 import { WithFooter } from "../../components/with-footer";
-import { api, type RouterOutputs } from "@quenti/trpc";
 import { organizationIcon } from "../../utils/icons";
 import { ConfettiLayer } from "./confetti-layer";
 
@@ -212,28 +211,5 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
         </Container>
       </OrganizationContext.Provider>
     </WithFooter>
-  );
-};
-
-interface SkeletonTabProps {
-  isLoaded: boolean;
-  href: string;
-}
-
-const SkeletonTab: React.FC<React.PropsWithChildren<SkeletonTabProps>> = ({
-  isLoaded,
-  children,
-  href,
-}) => {
-  return (
-    <Link href={href}>
-      <Tab px="0" bg="none" fontWeight={600} pb="3" isSelected>
-        <Flex alignItems="center" h="21px">
-          <SkeletonText isLoaded={isLoaded} noOfLines={1} skeletonHeight="4">
-            {children}
-          </SkeletonText>
-        </Flex>
-      </Tab>
-    </Link>
   );
 };

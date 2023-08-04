@@ -1,12 +1,12 @@
 import { Stack } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
 import React from "react";
-import { AddEntitiesModal } from "../../components/add-entities-modal";
-import { FolderCard } from "../../components/folder-card";
-import { StudySetCard } from "../../components/study-set-card";
-import { useClass } from "../../hooks/use-class";
-import { useIsClassTeacher } from "../../hooks/use-is-class-teacher";
-import { EntityGroup } from "./entity-group";
+import { AddEntitiesModal } from "../../../components/add-entities-modal";
+import { FolderCard } from "../../../components/folder-card";
+import { StudySetCard } from "../../../components/study-set-card";
+import { useClass } from "../../../hooks/use-class";
+import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
+import { EntityGroup } from "../entity-group";
 
 export const ClassHome = () => {
   const utils = api.useContext();
