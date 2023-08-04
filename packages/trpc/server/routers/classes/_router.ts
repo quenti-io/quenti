@@ -5,7 +5,9 @@ import {
   teacherProcedure,
 } from "../../trpc";
 import { ZAddEntitiesSchema } from "./add-entities.schema";
+import { ZCreateSectionSchema } from "./create-section.schema";
 import { ZCreateSchema } from "./create.schema";
+import { ZDeleteSectionSchema } from "./delete-section.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZRemoveEntitySchema } from "./remove-entity.schema";
 
@@ -15,6 +17,8 @@ type ClassesRouterHandlerCache = {
     create?: typeof import("./create.handler").createHandler;
     ["add-entities"]?: typeof import("./add-entities.handler").addEntitiesHandler;
     ["remove-entity"]?: typeof import("./remove-entity.handler").removeEntityHandler;
+    ["create-section"]?: typeof import("./create-section.handler").createSectionHandler;
+    ["delete-section"]?: typeof import("./delete-section.handler").deleteSectionHandler;
   };
 } & { routerPath: string };
 
@@ -45,5 +49,17 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "remove-entity");
       return HANDLER_CACHE.handlers["remove-entity"]!({ ctx, input });
+    }),
+  createSection: teacherProcedure
+    .input(ZCreateSectionSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "create-section");
+      return HANDLER_CACHE.handlers["create-section"]!({ ctx, input });
+    }),
+  deleteSection: teacherProcedure
+    .input(ZDeleteSectionSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "delete-section");
+      return HANDLER_CACHE.handlers["delete-section"]!({ ctx, input });
     }),
 });

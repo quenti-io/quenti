@@ -200,6 +200,7 @@ model Section {
   students    ClassMembership[]
   assignments Assignment[]
 
+  @@unique([classId, name])
   @@index([classId])
 }
 
