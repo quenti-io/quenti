@@ -10,6 +10,7 @@ import {
   Skeleton,
   Stack,
   Table,
+  Tag,
   Td,
   Text,
   Th,
@@ -43,7 +44,7 @@ export const ClassMembers = () => {
   return (
     <Stack spacing="6">
       <Skeleton rounded="md" fitContent isLoaded={!!data} w="full">
-        <InputGroup bg={menuBg} shadow="sm" rounded="md">
+        <InputGroup bg={menuBg} rounded="md" shadow="sm">
           <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
             <IconSearch size={18} />
           </InputLeftElement>
@@ -64,19 +65,18 @@ export const ClassMembers = () => {
         rounded="lg"
         borderColor={borderColor}
         overflow="hidden"
-        shadow="md"
         bg={menuBg}
       >
         <Table overflow="hidden">
           <Thead>
             <Tr>
               <Th {...th}>Name</Th>
-              <Th {...th}>Email</Th>
+              <Th {...th}>Email address</Th>
               <Th {...th}>Section</Th>
               <Th {...th}>Manage</Th>
             </Tr>
           </Thead>
-          {(data?.members || []).map((m) => (
+          {(data?.members || []).map((m, i) => (
             <Tr
               key={m.id}
               py="14px"
@@ -88,17 +88,17 @@ export const ClassMembers = () => {
               borderColor={borderColor}
             >
               <Td py="14px" px="18px" borderColor={borderColor}>
-                <HStack spacing="6">
+                <HStack spacing="4">
                   <Avatar
                     src={m.user.image || undefined}
-                    size="sm"
-                    shadow="lg"
+                    width="36px"
+                    height="36px"
                   />
-                  <Stack spacing="0">
-                    <Text fontWeight={700} fontSize="md">
+                  <Stack spacing="2px">
+                    <Text fontWeight={700} fontSize="sm">
                       {m.user.name}
                     </Text>
-                    <Text color="gray.500" fontSize="sm">
+                    <Text color={mutedColor} fontSize="sm">
                       @{m.user.username}
                     </Text>
                   </Stack>
@@ -110,9 +110,14 @@ export const ClassMembers = () => {
                 </Text>
               </Td>
               <Td borderColor={borderColor}>
-                <Text color={mutedColor} fontSize="sm">
-                  Block A
-                </Text>
+                <Tag
+                  fontSize="xs"
+                  background={borderColor}
+                  variant="subtle"
+                  rounded="full"
+                >
+                  {i % 2 === 0 ? "B Block" : "A Block"}
+                </Tag>
               </Td>
               <Td borderColor={borderColor} pr="0">
                 <ButtonGroup
