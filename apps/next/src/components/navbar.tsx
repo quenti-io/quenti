@@ -15,7 +15,6 @@ import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
 import { BASE_PAGES } from "../pages/_app";
-import { CreateClassModal } from "./create-class-modal";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
 import { Link } from "./link";
@@ -35,7 +34,6 @@ export const Navbar: React.FC = () => {
   const [folderModalOpen, setFolderModalOpen] = React.useState(false);
   const [folderChildSetId, setFolderChildSetId] = React.useState<string>();
   const [importModalOpen, setImportModalOpen] = React.useState(false);
-  const [classModalOpen, setClassModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     const createFolder = (setId?: string) => {
@@ -46,7 +44,7 @@ export const Navbar: React.FC = () => {
       setImportModalOpen(true);
     };
     const createClass = () => {
-      setClassModalOpen(true);
+      void router.push("/classes/new");
     };
 
     menuEventChannel.on("createFolder", createFolder);
@@ -57,6 +55,7 @@ export const Navbar: React.FC = () => {
       menuEventChannel.off("openImportDialog", openImportDialog);
       menuEventChannel.off("createClass", createClass);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -73,12 +72,6 @@ export const Navbar: React.FC = () => {
         isOpen={importModalOpen}
         onClose={() => {
           setImportModalOpen(false);
-        }}
-      />
-      <CreateClassModal
-        isOpen={classModalOpen}
-        onClose={() => {
-          setClassModalOpen(false);
         }}
       />
       <Flex
@@ -100,7 +93,7 @@ export const Navbar: React.FC = () => {
           <LeftNav
             onFolderClick={() => setFolderModalOpen(true)}
             onImportClick={() => setImportModalOpen(true)}
-            onClassClick={() => setClassModalOpen(true)}
+            onClassClick={() => void router.push("/classes/new")}
           />
           <Box display={["block", "block", "none"]}>
             <HStack>

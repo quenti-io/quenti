@@ -84,6 +84,9 @@ export default function Classes() {
                   </SkeletonText>
                 </Flex>
               </Stack>
+              {data?.description && (
+                <Text whiteSpace="pre-wrap">{data?.description}</Text>
+              )}
               <Tabs borderColor={borderColor}>
                 <TabList gap="6">
                   <Tab px="0" bg="none" fontWeight={600}>

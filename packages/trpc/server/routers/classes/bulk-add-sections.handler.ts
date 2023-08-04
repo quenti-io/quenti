@@ -1,17 +1,17 @@
 import { TRPCError } from "@trpc/server";
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
-import type { TCreateSectionSchema } from "./create-section.schema";
+import type { TBulkAddSectionsSchema } from "./bulk-add-sections.schema";
 
-type CreateSectionOptions = {
+type BulkAddSectionsOptions = {
   ctx: NonNullableUserContext;
-  input: TCreateSectionSchema;
+  input: TBulkAddSectionsSchema;
 };
 
-export const createSectionHandler = async ({
+export const bulkAddSectionsHandler = async ({
   ctx,
   input,
-}: CreateSectionOptions) => {
+}: BulkAddSectionsOptions) => {
   await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
 
   const sections = await ctx.prisma.section.findMany({
@@ -23,25 +23,25 @@ export const createSectionHandler = async ({
     },
   });
 
-  if (sections.length >= 10)
+  if (sections.length + input.sections.length >= 10)
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "You can only have up to 10 sections per class",
     });
 
-  if (sections.map((s) => s.name).includes(input.name)) {
+  if (sections.map((s) => s.name).find((s) => input.sections.includes(s))) {
     throw new TRPCError({
       code: "CONFLICT",
       message: "section_already_exists",
     });
   }
 
-  return await ctx.prisma.section.create({
-    data: {
+  await ctx.prisma.section.createMany({
+    data: input.sections.map((section) => ({
       classId: input.classId,
-      name: input.name,
-    },
+      name: section,
+    })),
   });
 };
 
-export default createSectionHandler;
+export default bulkAddSectionsHandler;
