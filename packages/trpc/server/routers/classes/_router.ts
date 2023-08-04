@@ -9,11 +9,13 @@ import { ZBulkAddSectionsSchema } from "./bulk-add-sections.schema";
 import { ZCreateSectionSchema } from "./create-section.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSectionSchema } from "./delete-section.schema";
+import { ZDeleteSchema } from "./delete.schema";
 import { ZGetMembersSchema } from "./get-members.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZInviteTeachersSchema } from "./invite-teachers.schema";
 import { ZJoinSchema } from "./join.schema";
 import { ZRemoveEntitySchema } from "./remove-entity.schema";
+import { ZUpdateSchema } from "./update.schema";
 
 type ClassesRouterHandlerCache = {
   handlers: {
@@ -21,6 +23,8 @@ type ClassesRouterHandlerCache = {
     join?: typeof import("./join.handler").joinHandler;
     ["get-members"]?: typeof import("./get-members.handler").getMembersHandler;
     create?: typeof import("./create.handler").createHandler;
+    update?: typeof import("./update.handler").updateHandler;
+    delete?: typeof import("./delete.handler").deleteHandler;
     ["invite-teachers"]?: typeof import("./invite-teachers.handler").inviteTeachersHandler;
     ["add-entities"]?: typeof import("./add-entities.handler").addEntitiesHandler;
     ["remove-entity"]?: typeof import("./remove-entity.handler").removeEntityHandler;
@@ -57,6 +61,18 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "create");
       return HANDLER_CACHE.handlers.create!({ ctx, input });
+    }),
+  update: teacherProcedure
+    .input(ZUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "update");
+      return HANDLER_CACHE.handlers.update!({ ctx, input });
+    }),
+  delete: teacherProcedure
+    .input(ZDeleteSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "delete");
+      return HANDLER_CACHE.handlers.delete!({ ctx, input });
     }),
   inviteTeachers: teacherProcedure
     .input(ZInviteTeachersSchema)
