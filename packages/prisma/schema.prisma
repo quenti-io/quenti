@@ -91,10 +91,11 @@ model User {
   containers     Container[]
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
-  organization   Organization?     @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  organization   Organization?        @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   highscores     Highscore[]
   organizations  Membership[]
   classes        ClassMembership[]
+  classInvites   PendingClassInvite[]
 
   @@index([organizationId])
 }
@@ -181,12 +182,13 @@ model Class {
   description String
   orgId       String?
 
-  organization Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
-  members      ClassMembership[]
-  sections     Section[]
-  studySets    StudySetsOnClasses[]
-  folders      FoldersOnClasses[]
-  assignments  Assignment[]
+  organization   Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  members        ClassMembership[]
+  sections       Section[]
+  studySets      StudySetsOnClasses[]
+  folders        FoldersOnClasses[]
+  assignments    Assignment[]
+  teacherInvites PendingClassInvite[]
 
   @@index([orgId])
 }
@@ -224,6 +226,19 @@ model ClassMembership {
   @@index([classId])
   @@index([userId])
   @@index([sectionId])
+}
+
+model PendingClassInvite {
+  id      String @id @default(cuid())
+  classId String
+  email   String
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@unique([classId, email])
+  @@index([classId])
+  @@index([email])
 }
 
 model Assignment {

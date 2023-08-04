@@ -9,13 +9,19 @@ import { ZBulkAddSectionsSchema } from "./bulk-add-sections.schema";
 import { ZCreateSectionSchema } from "./create-section.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSectionSchema } from "./delete-section.schema";
+import { ZGetMembersSchema } from "./get-members.schema";
 import { ZGetSchema } from "./get.schema";
+import { ZInviteTeachersSchema } from "./invite-teachers.schema";
+import { ZJoinSchema } from "./join.schema";
 import { ZRemoveEntitySchema } from "./remove-entity.schema";
 
 type ClassesRouterHandlerCache = {
   handlers: {
     get?: typeof import("./get.handler").getHandler;
+    join?: typeof import("./join.handler").joinHandler;
+    ["get-members"]?: typeof import("./get-members.handler").getMembersHandler;
     create?: typeof import("./create.handler").createHandler;
+    ["invite-teachers"]?: typeof import("./invite-teachers.handler").inviteTeachersHandler;
     ["add-entities"]?: typeof import("./add-entities.handler").addEntitiesHandler;
     ["remove-entity"]?: typeof import("./remove-entity.handler").removeEntityHandler;
     ["bulk-add-sections"]?: typeof import("./bulk-add-sections.handler").bulkAddSectionsHandler;
@@ -34,11 +40,29 @@ export const classesRouter = createTRPCRouter({
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers.get!({ ctx, input });
   }),
+  join: protectedProcedure
+    .input(ZJoinSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "join");
+      return HANDLER_CACHE.handlers.join!({ ctx, input });
+    }),
+  getMembers: teacherProcedure
+    .input(ZGetMembersSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-members");
+      return HANDLER_CACHE.handlers["get-members"]!({ ctx, input });
+    }),
   create: teacherProcedure
     .input(ZCreateSchema)
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "create");
       return HANDLER_CACHE.handlers.create!({ ctx, input });
+    }),
+  inviteTeachers: teacherProcedure
+    .input(ZInviteTeachersSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "invite-teachers");
+      return HANDLER_CACHE.handlers["invite-teachers"]!({ ctx, input });
     }),
   addEntities: teacherProcedure
     .input(ZAddEntitiesSchema)

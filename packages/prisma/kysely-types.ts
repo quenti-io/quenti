@@ -190,6 +190,11 @@ export type Organization = {
    */
   metadata: unknown | null;
 };
+export type PendingClassInvite = {
+  id: string;
+  classId: string;
+  email: string;
+};
 export type PendingInvite = {
   id: string;
   orgId: string;
@@ -329,6 +334,7 @@ export type DB = {
   Leaderboard: Leaderboard;
   Membership: Membership;
   Organization: Organization;
+  PendingClassInvite: PendingClassInvite;
   PendingInvite: PendingInvite;
   RecentFailedLogin: RecentFailedLogin;
   Section: Section;
