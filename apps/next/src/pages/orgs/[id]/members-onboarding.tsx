@@ -1,26 +1,28 @@
 import {
-  Avatar,
   Button,
   Card,
   Fade,
   Flex,
   HStack,
   Skeleton,
-  SkeletonText,
   Stack,
-  Tag,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
-import type { MembershipRole } from "@quenti/prisma/client";
-import { IconArrowRight, IconUserPlus } from "@tabler/icons-react";
+import { api } from "@quenti/trpc";
+import {
+  IconArrowRight,
+  IconPointFilled,
+  IconUserPlus,
+  IconUsers,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { OnboardingMember } from "../../../components/onboarding-member";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { InviteMemberModal } from "../../../modules/organizations/invite-member-modal";
 import { OrganizationContext } from "../../../modules/organizations/organization-layout";
-import { api } from "@quenti/trpc";
+import { plural } from "../../../utils/string";
 
 export default function OrgMembersOnboarding() {
   const router = useRouter();
@@ -107,7 +109,7 @@ export default function OrgMembersOnboarding() {
                   isMe
                   nameOrEmail={me?.user.name}
                   image={me?.user.image}
-                  role={me?.role || "Owner"}
+                  label={me?.role || "Owner"}
                 />
                 {others
                   .filter((m) => visible.includes(m.id))
@@ -116,7 +118,7 @@ export default function OrgMembersOnboarding() {
                       key={m.id}
                       nameOrEmail={m.user.name}
                       image={m.user.image}
-                      role={m.role}
+                      label={m.role}
                       pending={!m.accepted}
                     />
                   ))}
@@ -126,89 +128,25 @@ export default function OrgMembersOnboarding() {
                     <OnboardingMember
                       key={m.id}
                       nameOrEmail={m.email}
-                      role={m.role}
+                      label={m.role}
                       pending
                     />
                   ))}
               </Stack>
               {numHidden > 0 && (
-                <Text fontSize="md">
-                  <b style={{ fontFamily: "Outfit" }}>+{numHidden}</b> member
-                  {numHidden !== 1 && "s"} (hidden)
-                </Text>
+                <HStack color="gray.500" ml="2">
+                  <IconUsers size={16} />
+                  <HStack spacing="1">
+                    <Text fontSize="sm">{plural(all.length, "member")}</Text>
+                    <IconPointFilled size={8} />
+                    <Text fontSize="sm">{numHidden} hidden</Text>
+                  </HStack>
+                </HStack>
               )}
             </Stack>
           </Card>
-          <Flex w="full" justifyContent="end"></Flex>
         </Stack>
       </OrganizationContext.Provider>
     </WizardLayout>
   );
 }
-
-interface OnboardingMemberProps {
-  image?: string | null;
-  nameOrEmail?: string | null;
-  isMe?: boolean;
-  pending?: boolean;
-  role: MembershipRole;
-  isLoaded?: boolean;
-}
-
-export const OnboardingMember: React.FC<OnboardingMemberProps> = ({
-  image,
-  nameOrEmail,
-  isMe = false,
-  pending = false,
-  role,
-  isLoaded = true,
-}) => {
-  const hoverBg = useColorModeValue("gray.50", "gray.750");
-  return (
-    <HStack
-      spacing="4"
-      py="2"
-      px="4"
-      rounded="md"
-      transition="background 0.2s ease-in-out"
-      _hover={{
-        bg: hoverBg,
-      }}
-    >
-      <Skeleton isLoaded={isLoaded} fitContent rounded="full">
-        <Avatar size="sm" src={image || undefined} />
-      </Skeleton>
-      <Stack spacing="0">
-        <Skeleton isLoaded={isLoaded} fitContent>
-          <HStack>
-            <Text fontWeight={700} fontFamily="Outfit">
-              {nameOrEmail || "placeholder text"}
-            </Text>
-            {isMe && (
-              <Tag size="sm" colorScheme="blue">
-                You
-              </Tag>
-            )}
-            {pending && (
-              <Tag size="sm" colorScheme="orange">
-                Pending
-              </Tag>
-            )}
-          </HStack>
-        </Skeleton>
-        <Flex h="21px" alignItems="center">
-          <SkeletonText
-            isLoaded={isLoaded}
-            noOfLines={1}
-            fitContent
-            skeletonHeight="3"
-          >
-            <Text fontSize="sm" color="gray.500">
-              {role}
-            </Text>
-          </SkeletonText>
-        </Flex>
-      </Stack>
-    </HStack>
-  );
-};

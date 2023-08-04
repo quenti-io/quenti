@@ -22,6 +22,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { env } from "@quenti/env/client";
 import type { MembershipRole } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
 import { IconLink, IconUpload, IconUser, IconUsers } from "@tabler/icons-react";
 import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
@@ -30,7 +31,6 @@ import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "@quenti/trpc";
 import { MemberRoleSelect } from "./member-role-select";
 
 export interface InviteMemberModalProps {
@@ -381,11 +381,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                 <Button variant="ghost" onClick={onClose}>
                   Cancel
                 </Button>
-                <Button
-                  colorScheme="blue"
-                  type="submit"
-                  isLoading={inviteMember.isLoading}
-                >
+                <Button type="submit" isLoading={inviteMember.isLoading}>
                   Invite
                 </Button>
               </ButtonGroup>

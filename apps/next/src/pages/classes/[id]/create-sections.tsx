@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { WizardLayout } from "../../../components/wizard-layout";
+import { useClass } from "../../../hooks/use-class";
 
 interface CreateSectionsFormInputs {
   sections: string[];
@@ -37,11 +38,12 @@ const schema = z.object({
 });
 
 export default function CreateSections() {
+  const { data } = useClass();
   const router = useRouter();
 
   const bulkAddSections = api.classes.bulkAddSections.useMutation({
     onSuccess: () => {
-      void router.push(`/classes/${router.query.id as string}`);
+      void router.push(`/classes/${data!.id}/done`);
     },
   });
 
@@ -67,7 +69,7 @@ export default function CreateSections() {
       title="Create sections"
       description="With classes, students and assignments are organized into sections. Try creating a section for each individual period or block in your class, for example. You can always update your sections later."
       steps={4}
-      currentStep={1}
+      currentStep={2}
     >
       <form onSubmit={createSectionsMethods.handleSubmit(onSubmit)}>
         <Card p="8" variant="outline" shadow="lg" rounded="lg">
@@ -104,7 +106,7 @@ export default function CreateSections() {
                                 placeholder={`Block ${index + 1}`}
                                 isInvalid={index === 0 && !!errors.sections}
                                 px="14px"
-                                defaultValue={section[index]}
+                                defaultValue={section}
                                 onChange={(e) => {
                                   const sections = [...value];
                                   sections[index] = e.target.value;

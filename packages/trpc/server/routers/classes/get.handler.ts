@@ -72,6 +72,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
                     type: "Student",
                   },
                 },
+                sections: true,
               }
             : {}),
         },
@@ -86,7 +87,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     orgId: class_.orgId,
     studySets: class_.studySets.map((s) => s.studySet),
     folders: class_.folders.map((f) => f.folder),
-    ...(class_._count.members ? { students: class_._count.members } : {}),
+    ...(member.type == "Teacher"
+      ? { students: class_._count.members, sections: class_._count.sections }
+      : {}),
     me: {
       type: member.type,
       sectionId: member.sectionId,

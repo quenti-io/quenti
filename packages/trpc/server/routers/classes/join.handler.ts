@@ -10,11 +10,11 @@ type JoinOptions = {
 export const joinHandler = async ({ ctx, input }: JoinOptions) => {
   if (input.code) {
     throw new Error("Not implemented");
-  } else if (input.classId) {
+  } else if (input.id) {
     const invite = await ctx.prisma.pendingClassInvite.findUnique({
       where: {
         classId_email: {
-          classId: input.classId,
+          classId: input.id,
           email: ctx.session.user.email!,
         },
       },
@@ -30,7 +30,7 @@ export const joinHandler = async ({ ctx, input }: JoinOptions) => {
 
     await ctx.prisma.classMembership.create({
       data: {
-        classId: input.classId,
+        classId: input.id,
         userId: ctx.session.user.id,
         type: "Teacher",
       },

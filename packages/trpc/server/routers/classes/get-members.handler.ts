@@ -1,4 +1,4 @@
-import { isClassTeacherOrThrow } from "../../lib/queries/classes";
+import { TRPCError } from "@trpc/server";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TGetMembersSchema } from "./get-members.schema";
 
@@ -8,11 +8,32 @@ type GetMembersOptions = {
 };
 
 export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  const member = await ctx.prisma.classMembership.findUnique({
+    where: {
+      classId_userId: {
+        classId: input.id,
+        userId: ctx.session.user.id,
+      },
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          image: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  if (!member) throw new TRPCError({ code: "NOT_FOUND" });
+  if (member.type !== "Teacher") throw new TRPCError({ code: "FORBIDDEN" });
 
   const class_ = await ctx.prisma.class.findUniqueOrThrow({
     where: {
-      id: input.classId,
+      id: input.id,
     },
     include: {
       members: {
@@ -34,6 +55,7 @@ export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
       teacherInvites: {
         select: {
           id: true,
+          email: true,
           user: {
             select: {
               id: true,
@@ -51,6 +73,7 @@ export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
   return {
     members: class_.members,
     invites: class_.teacherInvites,
+    me: member,
   };
 };
 

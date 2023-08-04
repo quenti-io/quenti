@@ -37,7 +37,7 @@ export default function NewClass() {
 
   const create = api.classes.create.useMutation({
     onSuccess: (data) => {
-      void router.push(`/classes/${data.id}/create-sections`);
+      void router.push(`/classes/${data.id}/teachers-onboarding`);
     },
   });
 
