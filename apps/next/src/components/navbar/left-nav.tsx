@@ -117,6 +117,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
               overflow="hidden"
               w="max"
               marginTop={2}
+              shadow="lg"
             >
               <NextLink href="/create" passHref>
                 <MenuOption icon={<IconBooks size={20} />} label="Study set" />
