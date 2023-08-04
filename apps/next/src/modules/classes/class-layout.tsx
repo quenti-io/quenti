@@ -16,10 +16,25 @@ import {
 } from "@chakra-ui/react";
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
 import { useRouter } from "next/router";
+import React from "react";
 import { SkeletonTab } from "../../components/skeleton-tab";
 import { WithFooter } from "../../components/with-footer";
 import { useClass } from "../../hooks/use-class";
+import { useIsClassTeacher } from "../../hooks/use-is-class-teacher";
 import { plural } from "../../utils/string";
+
+const useTabIndex = () => {
+  const router = useRouter();
+
+  switch (router.pathname) {
+    case `/classes/[id]`:
+      return 0;
+    case `/classes/[id]/members`:
+      return 1;
+    case `/orgs/[id]/settings`:
+      return 2;
+  }
+};
 
 export const ClassLayout: React.FC<React.PropsWithChildren> = ({
   children,
@@ -30,17 +45,7 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
 
   const bg = useColorModeValue("gray.50", "gray.900");
   const borderColor = useColorModeValue("gray.300", "gray.700");
-
-  const getTabIndex = (route = router.pathname) => {
-    switch (route) {
-      case `/classes/[id]`:
-        return 0;
-      case `/classes/[id]/members`:
-        return 1;
-      case `/orgs/[id]/settings`:
-        return 2;
-    }
-  };
+  const tabIndex = useTabIndex();
 
   return (
     <WithFooter>
@@ -101,17 +106,19 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
               {data?.description && (
                 <Text whiteSpace="pre-wrap">{data?.description}</Text>
               )}
-              <Tabs borderColor={borderColor} isManual index={getTabIndex()}>
+              <Tabs borderColor={borderColor} isManual index={tabIndex}>
                 <TabList gap="6">
                   <SkeletonTab isLoaded={!!data} href={`/classes/${id}`}>
                     Home
                   </SkeletonTab>
-                  <SkeletonTab
-                    isLoaded={!!data}
-                    href={`/classes/${id}/members`}
-                  >
-                    Members
-                  </SkeletonTab>
+                  <HiddenTabWrapper index={1}>
+                    <SkeletonTab
+                      isLoaded={!!data}
+                      href={`/classes/${id}/members`}
+                    >
+                      Members
+                    </SkeletonTab>
+                  </HiddenTabWrapper>
                 </TabList>
                 <TabPanels mt="6">{children}</TabPanels>
               </Tabs>
@@ -121,4 +128,19 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
       </Container>
     </WithFooter>
   );
+};
+
+interface HiddenTabWrapperProps {
+  index: number;
+}
+
+const HiddenTabWrapper: React.FC<
+  React.PropsWithChildren<HiddenTabWrapperProps>
+> = ({ index, children }) => {
+  const tabIndex = useTabIndex();
+  const isTeacher = useIsClassTeacher();
+
+  if (!isTeacher && tabIndex !== index) return null;
+
+  return <>{children}</>;
 };

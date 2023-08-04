@@ -1,9 +1,9 @@
 import { ClassLayout } from "../../../modules/classes/class-layout";
-import { ClassHome } from "../../../modules/classes/pages/class-home";
+import { ClassMembers } from "../../../modules/classes/pages/class-members";
 
 const Page = () => {
-  return <ClassHome />;
+  return <ClassMembers />;
 };
-
 Page.layout = ClassLayout;
+
 export default Page;
