@@ -132,7 +132,6 @@ export default function NewClass() {
                       defaultValue={value}
                       onChange={onChange}
                       allowTab={false}
-                      minH="60px"
                       px="14px"
                     />
                     <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
