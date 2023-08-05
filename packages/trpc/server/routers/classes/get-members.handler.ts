@@ -37,10 +37,11 @@ export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
     },
     include: {
       members: {
+        where: {
+          type: "Teacher",
+        },
         select: {
           id: true,
-          sectionId: true,
-          type: true,
           user: {
             select: {
               id: true,

@@ -120,6 +120,7 @@ export type ClassMembership = {
   id: string;
   classId: string;
   userId: string;
+  email: string;
   type: ClassMembershipType;
   sectionId: string | null;
 };

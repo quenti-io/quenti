@@ -215,6 +215,7 @@ model ClassMembership {
   id        String              @id @default(cuid())
   classId   String
   userId    String
+  email     String
   type      ClassMembershipType
   sectionId String?
 
@@ -223,6 +224,7 @@ model ClassMembership {
   section Section? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
 
   @@unique([classId, userId])
+  @@unique([email, classId])
   @@index([classId])
   @@index([userId])
   @@index([sectionId])

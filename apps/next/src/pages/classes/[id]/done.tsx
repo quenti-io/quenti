@@ -1,13 +1,13 @@
 import {
   Box,
   Flex,
+  HStack,
   Heading,
   LinkBox,
   LinkOverlay,
-  Text,
   Skeleton,
-  HStack,
   Stack,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
@@ -110,7 +110,7 @@ export default function OnboardingDone() {
               <HStack fontSize="sm" color="gray.500" spacing="1">
                 <Text>{plural(data?.students || 0, "student")}</Text>
                 <IconPointFilled size={10} />
-                <Text>{plural(data?.sections || 0, "section")}</Text>
+                <Text>{plural(data?.sections?.length || 0, "section")}</Text>
               </HStack>
             </Stack>
           </Stack>

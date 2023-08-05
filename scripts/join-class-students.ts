@@ -19,6 +19,7 @@ const main = async () => {
       classId,
       userId: user.id,
       type: "Student",
+      email: user.email,
     })),
   });
 };

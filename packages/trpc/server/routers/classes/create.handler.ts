@@ -14,6 +14,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       members: {
         create: {
           type: "Teacher",
+          email: ctx.session.user.email!,
           userId: ctx.session.user.id,
         },
       },

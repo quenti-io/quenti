@@ -11,6 +11,7 @@ import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSectionSchema } from "./delete-section.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZGetMembersSchema } from "./get-members.schema";
+import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZInviteTeachersSchema } from "./invite-teachers.schema";
 import { ZJoinSchema } from "./join.schema";
@@ -22,6 +23,7 @@ type ClassesRouterHandlerCache = {
     get?: typeof import("./get.handler").getHandler;
     join?: typeof import("./join.handler").joinHandler;
     ["get-members"]?: typeof import("./get-members.handler").getMembersHandler;
+    ["get-students"]?: typeof import("./get-students.handler").getStudentsHandler;
     create?: typeof import("./create.handler").createHandler;
     update?: typeof import("./update.handler").updateHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
@@ -55,6 +57,12 @@ export const classesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "get-members");
       return HANDLER_CACHE.handlers["get-members"]!({ ctx, input });
+    }),
+  getStudents: teacherProcedure
+    .input(ZGetStudentsSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-students");
+      return HANDLER_CACHE.handlers["get-students"]!({ ctx, input });
     }),
   create: teacherProcedure
     .input(ZCreateSchema)

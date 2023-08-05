@@ -63,6 +63,21 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
           },
         },
       },
+      ...(member.type == "Teacher"
+        ? {
+            sections: {
+              select: {
+                id: true,
+                name: true,
+                _count: {
+                  select: {
+                    students: true,
+                  },
+                },
+              },
+            },
+          }
+        : undefined),
       _count: {
         select: {
           ...(member.type == "Teacher"
@@ -72,7 +87,6 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
                     type: "Student",
                   },
                 },
-                sections: true,
               }
             : {}),
         },
@@ -88,7 +102,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     studySets: class_.studySets.map((s) => s.studySet),
     folders: class_.folders.map((f) => f.folder),
     ...(member.type == "Teacher"
-      ? { students: class_._count.members, sections: class_._count.sections }
+      ? { students: class_._count.members, sections: class_.sections }
       : {}),
     me: {
       type: member.type,

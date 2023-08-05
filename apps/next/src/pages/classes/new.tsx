@@ -29,7 +29,7 @@ interface CreateClassFormInputs {
 
 const schema = z.object({
   name: z.string().nonempty({ message: "Enter a name" }).min(1),
-  description: z.string().optional(),
+  description: z.string().default(""),
 });
 
 export default function NewClass() {
