@@ -8,15 +8,17 @@ interface SectionSelectProps {
     id: string;
     name: string;
   }[];
+  size?: "md" | "sm";
 }
 
 export const SectionSelect: React.FC<SectionSelectProps> = ({
   value,
   onChange,
   sections,
+  size = "md",
 }) => {
-  const baseBg = useColorModeValue("gray.100", "gray.750");
-  const dropdownBg = useColorModeValue("gray.200", "gray.700");
+  const baseBg = useColorModeValue("white", "gray.800");
+  const dropdownBg = useColorModeValue("gray.100", "gray.750");
   const chevronColor = useColorModeValue("blue.400", "blue.200");
 
   const options = sections.map((x) => ({ value: x.id, label: x.name }));
@@ -29,25 +31,40 @@ export const SectionSelect: React.FC<SectionSelectProps> = ({
       onChange={(e) => {
         onChange(e!.value);
       }}
-      size="sm"
+      size={size}
       chakraStyles={{
         container: (provided) => ({
           ...provided,
           background: baseBg,
           rounded: "6px",
-          width: 200,
         }),
         inputContainer: () => ({
-          width: 200,
           rounded: "6px",
+        }),
+        option: (provided) => ({
+          ...provided,
+          fontSize: "sm",
+          bg: baseBg,
+          whiteSpace: "nowrap",
+          display: "block",
+          maxWidth: "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          _hover: {
+            bg: dropdownBg,
+          },
         }),
         control: (provided) => ({
           ...provided,
           rounded: "6px",
+          fontSize: "sm",
         }),
         menuList: (provided) => ({
           ...provided,
           rounded: "6px",
+          bg: baseBg,
+          shadow: "lg",
+          overflow: "hidden",
         }),
         dropdownIndicator: (provided) => ({
           ...provided,

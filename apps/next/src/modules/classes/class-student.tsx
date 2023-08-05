@@ -48,10 +48,10 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
   return (
     <HStack
       py="14px"
-      mb="-1px"
+      my="-1px"
       px="18px"
       transition="background 0.2s ease-in-out"
-      borderBottomWidth="1px"
+      borderY="solid 1px"
       _hover={{
         background: hoverColor,
       }}

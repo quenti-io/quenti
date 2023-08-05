@@ -21,6 +21,7 @@ import {
   type ChangeSectionModalProps,
 } from "./change-section-modal";
 import { ClassStudent } from "./class-student";
+import { SectionSelect } from "./section-select";
 import { SelectedBar } from "./selected-bar";
 
 export const ClassStudentsRaw = () => {
@@ -28,6 +29,7 @@ export const ClassStudentsRaw = () => {
 
   const [search, setSearch] = React.useState("");
   const debouncedSearch = useDebounce(search.trim(), 500);
+  const [section, setSection] = React.useState<string | undefined>();
 
   const { data, isPreviousData, isFetchingNextPage, fetchNextPage } =
     api.classes.getStudents.useInfiniteQuery(
@@ -35,6 +37,7 @@ export const ClassStudentsRaw = () => {
         classId: class_?.id || "",
         query: debouncedSearch.length ? debouncedSearch : undefined,
         limit: 20,
+        sectionId: section,
       },
       {
         enabled: !!class_,
@@ -94,7 +97,7 @@ export const ClassStudentsRaw = () => {
   return (
     <>
       {class_ && (
-        <ChangeSectionModal
+      <ChangeSectionModal
           isOpen={!!changeSectionUsers.length}
           onClose={() => setChangeSectionUsers([])}
           members={changeSectionUsers}
@@ -105,11 +108,43 @@ export const ClassStudentsRaw = () => {
           <LoadingSearch
             value={search}
             onChange={setSearch}
-            placeholder={`Search ${plural(class_?.students || 0, "student")}`}
+            placeholder={`Search ${plural(
+              section
+                ? class_?.sections?.find((s) => s.id == section)?.students || 0
+                : class_?.students || 0,
+              "student"
+            )} ${
+              section
+                ? `in ${
+                    class_?.sections?.find((s) => s.id == section)?.name ||
+                    "this section"
+                  }`
+                : ""
+            }`}
             debounceInequality={search.trim() != debouncedSearch.trim()}
             isPreviousData={isPreviousData}
             skeleton={!class_}
           />
+          <Skeleton isLoaded={!!class_} rounded="md" fitContent w="250px">
+            <SectionSelect
+              sections={Array.from([
+                {
+                  id: "",
+                  name: "All sections",
+                  classId: class_?.id || "",
+                },
+              ]).concat(class_?.sections || [])}
+              onChange={(s) => {
+                if (s == "") {
+                  setSection(undefined);
+                } else {
+                  setSection(s);
+                }
+                setSelected([]);
+              }}
+              value={section || ""}
+            />
+          </Skeleton>
           <Skeleton isLoaded={!!class_} rounded="md">
             <Button leftIcon={<IconUserPlus size={18} />} px="4">
               Add
@@ -134,7 +169,7 @@ export const ClassStudentsRaw = () => {
             );
           }}
         />
-        {!!debouncedSearch.length &&
+        {(!!debouncedSearch.length || !!section) &&
           data?.pages &&
           !data.pages[0]!.students.length && (
             <ScaleFade
@@ -197,7 +232,8 @@ export const ClassStudentsRaw = () => {
             <div ref={observerTarget} />
           </SlideFade>
         ) : (
-          !debouncedSearch.length && (
+          !debouncedSearch.length &&
+          !section && (
             <Box
               border="1px solid"
               rounded="lg"

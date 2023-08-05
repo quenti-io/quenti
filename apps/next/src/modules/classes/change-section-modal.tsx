@@ -51,6 +51,7 @@ export const ChangeSectionModal: React.FC<ChangeSectionModalProps> = ({
   const updateStudents = api.classes.updateStudents.useMutation({
     onSuccess: async () => {
       await utils.classes.getStudents.invalidate();
+      await utils.classes.get.invalidate();
       onClose();
     },
   });
@@ -73,11 +74,12 @@ export const ChangeSectionModal: React.FC<ChangeSectionModalProps> = ({
     <HStack spacing="2" color={muted}>
       <Text fontSize="sm">{currentSection.name}</Text>
       <IconArrowRight size={18} />
-      <Box color={defaultColor}>
+      <Box color={defaultColor} w="150px">
         <SectionSelect
           value={section || ""}
           onChange={setSection}
           sections={class_!.sections!.filter((s) => s.id !== currentSection.id)}
+          size="sm"
         />
       </Box>
     </HStack>

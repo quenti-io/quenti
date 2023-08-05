@@ -102,7 +102,15 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     studySets: class_.studySets.map((s) => s.studySet),
     folders: class_.folders.map((f) => f.folder),
     ...(member.type == "Teacher"
-      ? { students: class_._count.members, sections: class_.sections }
+      ? {
+          students: class_._count.members,
+          sections: class_.sections!.map((s) => ({
+            ...s,
+            // @ts-expect-error property _count does not exist on type
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            students: s._count.students as number,
+          })),
+        }
       : {}),
     me: {
       type: member.type,

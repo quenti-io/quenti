@@ -12,6 +12,7 @@ export const useClass = () => {
     {
       enabled: !!id && !!session.data?.user,
       retry: false,
+      refetchOnMount: false,
     }
   );
 };
