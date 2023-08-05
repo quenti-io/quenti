@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   ButtonGroup,
   Flex,
   HStack,
@@ -12,12 +13,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { User } from "@quenti/prisma/client";
-import { IconExternalLink } from "@tabler/icons-react";
+import { IconAlertCircle, IconExternalLink } from "@tabler/icons-react";
 import React from "react";
 
 export interface ClassStudentProps {
   user: Pick<User, "id" | "name" | "username" | "image" | "email">;
-  section: string;
+  section?: { id: string; name: string };
   skeleton?: boolean;
 }
 
@@ -72,14 +73,25 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
       </HStack>
       <HStack spacing="6">
         <Skeleton rounded="full" fitContent isLoaded={!skeleton}>
-          <Tag
-            fontSize="xs"
-            background={pillBg}
-            variant="subtle"
-            rounded="full"
-          >
-            {section}
-          </Tag>
+          {section ? (
+            <Tag
+              fontSize="xs"
+              background={pillBg}
+              variant="subtle"
+              rounded="full"
+            >
+              {section.name}
+            </Tag>
+          ) : (
+            <HStack color="gray.500">
+              <Box color="red.300">
+                <IconAlertCircle size={16} />
+              </Box>
+              <Text fontSize="xs" fontWeight={600}>
+                Unassigned
+              </Text>
+            </HStack>
+          )}
         </Skeleton>
         <Skeleton rounded="md" fitContent isLoaded={!skeleton}>
           <ButtonGroup

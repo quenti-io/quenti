@@ -1,4 +1,11 @@
-import { Box, SlideFade, Stack, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  ScaleFade,
+  SlideFade,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
 import React from "react";
 import { LoadingSearch } from "../../components/loading-search";
@@ -66,12 +73,26 @@ export const ClassStudentsRaw = () => {
         isPreviousData={isPreviousData}
         skeleton={!class_}
       />
-      {data?.pages ? (
+      {!!debouncedSearch.length &&
+        data?.pages &&
+        !data.pages[0]!.students.length && (
+          <ScaleFade
+            in={data?.pages && !data.pages[0]!.students.length}
+            style={{
+              width: "max-content",
+              marginLeft: 16,
+            }}
+          >
+            <Text color="gray.500" fontSize="sm">
+              No students found
+            </Text>
+          </ScaleFade>
+        )}
+      {data?.pages && !!data.pages[0]!.students.length ? (
         <SlideFade
           offsetY="20px"
           in={!!data.pages.length && !isPreviousData}
           unmountOnExit={false}
-          // unmountOnExit
         >
           <Box
             border="1px solid"
@@ -86,7 +107,9 @@ export const ClassStudentsRaw = () => {
                   <ClassStudent
                     user={student.user}
                     key={student.id}
-                    section={"Block A"}
+                    section={(class_?.sections || []).find(
+                      (s) => s.id == student.sectionId
+                    )}
                   />
                 ))}
               </>
@@ -100,7 +123,10 @@ export const ClassStudentsRaw = () => {
                   name: "Placeholder",
                   username: "username",
                 }}
-                section="Loading"
+                section={{
+                  id: "",
+                  name: "loading"
+                }}
                 skeleton
               />
             )}
@@ -126,7 +152,10 @@ export const ClassStudentsRaw = () => {
                   name: "Placeholder",
                   username: "username",
                 }}
-                section="Loading"
+                section={{
+                  id: "",
+                  name: "loading"
+                }}
                 skeleton
               />
             ))}
