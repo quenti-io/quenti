@@ -16,6 +16,10 @@ import { LoadingSearch } from "../../components/loading-search";
 import { useClass } from "../../hooks/use-class";
 import { useDebounce } from "../../hooks/use-debounce";
 import { plural } from "../../utils/string";
+import {
+  ChangeSectionModal,
+  type ChangeSectionModalProps,
+} from "./change-section-modal";
 import { ClassStudent } from "./class-student";
 import { SelectedBar } from "./selected-bar";
 
@@ -65,7 +69,14 @@ export const ClassStudentsRaw = () => {
     };
   }, [data?.pageParams, fetchNextPage]);
 
+  const allVisibleIds = data
+    ? data.pages.flatMap((p) => p.students).map((s) => s.user.id)
+    : [];
   const [selected, setSelected] = React.useState<string[]>([]);
+
+  const [changeSectionUsers, setChangeSectionUsers] = React.useState<
+    ChangeSectionModalProps["members"]
+  >([]);
 
   const onSelect = React.useCallback((id: string, selected: boolean) => {
     setSelected((prev) => {
@@ -81,115 +92,141 @@ export const ClassStudentsRaw = () => {
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
-    <Stack spacing="6">
-      <HStack spacing="4">
-        <LoadingSearch
-          value={search}
-          onChange={setSearch}
-          placeholder={`Search ${plural(class_?.students || 0, "student")}`}
-          debounceInequality={search.trim() != debouncedSearch.trim()}
-          isPreviousData={isPreviousData}
-          skeleton={!class_}
+    <>
+      {class_ && (
+        <ChangeSectionModal
+          isOpen={!!changeSectionUsers.length}
+          onClose={() => setChangeSectionUsers([])}
+          members={changeSectionUsers}
         />
-        <Skeleton isLoaded={!!class_} rounded="md">
-          <Button leftIcon={<IconUserPlus size={18} />} px="4">
-            Add
-          </Button>
-        </Skeleton>
-      </HStack>
-      <SelectedBar selected={selected} onDeselectAll={() => setSelected([])} />
-      {!!debouncedSearch.length &&
-        data?.pages &&
-        !data.pages[0]!.students.length && (
-          <ScaleFade
-            in={data?.pages && !data.pages[0]!.students.length}
-            style={{
-              width: "max-content",
-              marginLeft: 16,
-            }}
-          >
-            <Text color="gray.500" fontSize="sm">
-              No students found
-            </Text>
-          </ScaleFade>
-        )}
-      {data?.pages && !!data.pages[0]!.students.length ? (
-        <SlideFade
-          offsetY="20px"
-          in={!!data.pages.length && !isPreviousData}
-          unmountOnExit={false}
-        >
-          <Box
-            border="1px solid"
-            rounded="lg"
-            borderColor={borderColor}
-            overflow="hidden"
-            bg={menuBg}
-          >
-            {data.pages.map((page) => (
-              <>
-                {page.students.map((student) => (
-                  <ClassStudent
-                    user={student.user}
-                    key={student.id}
-                    section={(class_?.sections || []).find(
-                      (s) => s.id == student.sectionId
-                    )}
-                    selected={selected.includes(student.user.id)}
-                    onSelect={onSelect}
-                  />
-                ))}
-              </>
-            ))}
-            {isFetchingNextPage && (
-              <ClassStudent
-                user={{
-                  id: "",
-                  email: "placeholder@example.com",
-                  image: null,
-                  name: "Placeholder",
-                  username: "username",
-                }}
-                section={{
-                  id: "",
-                  name: "loading",
-                }}
-                skeleton
-              />
-            )}
-          </Box>
-          <div ref={observerTarget} />
-        </SlideFade>
-      ) : (
-        !debouncedSearch.length && (
-          <Box
-            border="1px solid"
-            rounded="lg"
-            borderColor={borderColor}
-            overflow="hidden"
-            bg={menuBg}
-          >
-            {Array.from({ length: 20 }).map((_, i) => (
-              <ClassStudent
-                key={i}
-                user={{
-                  id: "",
-                  email: "placeholder@example.com",
-                  image: null,
-                  name: "Placeholder",
-                  username: "username",
-                }}
-                section={{
-                  id: "",
-                  name: "loading",
-                }}
-                skeleton
-              />
-            ))}
-          </Box>
-        )
       )}
-    </Stack>
+      <Stack spacing="6">
+        <HStack spacing="4">
+          <LoadingSearch
+            value={search}
+            onChange={setSearch}
+            placeholder={`Search ${plural(class_?.students || 0, "student")}`}
+            debounceInequality={search.trim() != debouncedSearch.trim()}
+            isPreviousData={isPreviousData}
+            skeleton={!class_}
+          />
+          <Skeleton isLoaded={!!class_} rounded="md">
+            <Button leftIcon={<IconUserPlus size={18} />} px="4">
+              Add
+            </Button>
+          </Skeleton>
+        </HStack>
+        <SelectedBar
+          selected={selected}
+          isAllSelected={selected.length == allVisibleIds.length}
+          onSelectAll={() => setSelected(allVisibleIds)}
+          onDeselectAll={() => setSelected([])}
+          onChangeSectionSelected={() => {
+            setChangeSectionUsers(
+              data!.pages
+                .flatMap((p) => p.students)
+                .filter((s) => selected.includes(s.user.id))
+                .map((s) => ({
+                  id: s.id,
+                  user: s.user,
+                  section: class_?.sections?.find((x) => x.id == s.sectionId),
+                }))
+            );
+          }}
+        />
+        {!!debouncedSearch.length &&
+          data?.pages &&
+          !data.pages[0]!.students.length && (
+            <ScaleFade
+              in={data?.pages && !data.pages[0]!.students.length}
+              style={{
+                width: "max-content",
+                marginLeft: 16,
+              }}
+            >
+              <Text color="gray.500" fontSize="sm">
+                No students found
+              </Text>
+            </ScaleFade>
+          )}
+        {data?.pages && !!data.pages[0]!.students.length ? (
+          <SlideFade
+            offsetY="20px"
+            in={!!data.pages.length && !isPreviousData}
+            unmountOnExit={false}
+          >
+            <Box
+              border="1px solid"
+              rounded="lg"
+              borderColor={borderColor}
+              overflow="hidden"
+              bg={menuBg}
+            >
+              {data.pages.map((page) => (
+                <>
+                  {page.students.map((student) => (
+                    <ClassStudent
+                      user={student.user}
+                      key={student.id}
+                      section={(class_?.sections || []).find(
+                        (s) => s.id == student.sectionId
+                      )}
+                      selected={selected.includes(student.user.id)}
+                      onSelect={onSelect}
+                    />
+                  ))}
+                </>
+              ))}
+              {isFetchingNextPage && (
+                <ClassStudent
+                  user={{
+                    id: "",
+                    email: "placeholder@example.com",
+                    image: null,
+                    name: "Placeholder",
+                    username: "username",
+                  }}
+                  section={{
+                    id: "",
+                    name: "loading",
+                  }}
+                  skeleton
+                />
+              )}
+            </Box>
+            <div ref={observerTarget} />
+          </SlideFade>
+        ) : (
+          !debouncedSearch.length && (
+            <Box
+              border="1px solid"
+              rounded="lg"
+              borderColor={borderColor}
+              overflow="hidden"
+              bg={menuBg}
+            >
+              {Array.from({ length: 20 }).map((_, i) => (
+                <ClassStudent
+                  key={i}
+                  user={{
+                    id: "",
+                    email: "placeholder@example.com",
+                    image: null,
+                    name: "Placeholder",
+                    username: "username",
+                  }}
+                  section={{
+                    id: "",
+                    name: "loading",
+                  }}
+                  skeleton
+                />
+              ))}
+            </Box>
+          )
+        )}
+      </Stack>
+    </>
   );
 };
 

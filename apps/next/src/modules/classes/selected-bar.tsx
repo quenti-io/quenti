@@ -1,46 +1,46 @@
 import {
   Button,
   ButtonGroup,
+  Checkbox,
   Flex,
   HStack,
-  IconButton,
   ScaleFade,
   Text,
 } from "@chakra-ui/react";
-import {
-  IconBan,
-  IconSwitchHorizontal,
-  IconUserX,
-  IconX,
-} from "@tabler/icons-react";
+import { IconBan, IconSwitchHorizontal, IconUserX } from "@tabler/icons-react";
 
 interface SelectedBarProps {
   selected: string[];
+  isAllSelected: boolean;
+  onSelectAll: () => void;
   onDeselectAll: () => void;
+  onChangeSectionSelected: () => void;
 }
 
 export const SelectedBar: React.FC<SelectedBarProps> = ({
   selected,
+  isAllSelected,
+  onSelectAll,
   onDeselectAll,
+  onChangeSectionSelected,
 }) => {
   return (
     <ScaleFade in={selected.length > 0} unmountOnExit>
-      <Flex justifyContent="space-between" px="6" alignItems="center">
-        <HStack>
+      <Flex justifyContent="space-between" px="18px" alignItems="center">
+        <HStack spacing="3">
+          <Checkbox
+            isChecked={isAllSelected}
+            onChange={isAllSelected ? onDeselectAll : onSelectAll}
+          />
           <Text>
             <strong>{selected.length}</strong> selected
           </Text>
-          <IconButton
-            size="xs"
-            icon={<IconX size={16} />}
-            aria-label="Deselect all"
-            colorScheme="gray"
-            variant="ghost"
-            onClick={onDeselectAll}
-          />
         </HStack>
         <ButtonGroup size="sm" colorScheme="gray" variant="outline">
-          <Button leftIcon={<IconSwitchHorizontal size={16} />}>
+          <Button
+            leftIcon={<IconSwitchHorizontal size={16} />}
+            onClick={onChangeSectionSelected}
+          >
             Change section
           </Button>
           <Button leftIcon={<IconUserX size={16} />}>Remove</Button>

@@ -18,7 +18,7 @@ export const updateStudentsHandler = async ({
       classId: input.classId,
       type: "Student",
       id: {
-        in: input.users,
+        in: input.members,
       },
     },
     data: {

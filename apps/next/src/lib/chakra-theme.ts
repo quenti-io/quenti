@@ -100,6 +100,14 @@ const components = {
       icon: { color: "white", padding: "2px" },
     }),
   },
+  Avatar: {
+    baseStyle: ({ colorMode }: StyleFunctionProps) => ({
+      excessLabel: {
+        bg: colorMode == "light" ? "gray.200" : "gray.700",
+        fontWeight: 600,
+      },
+    }),
+  },
 };
 
 const styles = {
