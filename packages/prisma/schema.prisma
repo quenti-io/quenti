@@ -96,6 +96,7 @@ model User {
   organizations  Membership[]
   classes        ClassMembership[]
   classInvites   PendingClassInvite[]
+  classBans      ClassBan[]
 
   @@index([organizationId])
 }
@@ -189,6 +190,7 @@ model Class {
   folders        FoldersOnClasses[]
   assignments    Assignment[]
   teacherInvites PendingClassInvite[]
+  bans           ClassBan[]
 
   @@index([orgId])
 }
@@ -228,6 +230,23 @@ model ClassMembership {
   @@index([classId])
   @@index([userId])
   @@index([sectionId])
+}
+
+model ClassBan {
+  id      String  @id @default(cuid())
+  classId String
+  userId  String?
+  // Preserve the email in case the user deletes their account to evade the ban
+  email   String
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  // The ban still applies even if the user deletes their account
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([classId, userId])
+  @@unique([email, classId])
+  @@index([classId])
+  @@index([userId])
 }
 
 model PendingClassInvite {

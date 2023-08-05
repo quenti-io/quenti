@@ -5,6 +5,7 @@ import {
   teacherProcedure,
 } from "../../trpc";
 import { ZAddEntitiesSchema } from "./add-entities.schema";
+import { ZBanStudentsSchema } from "./ban-students.schema";
 import { ZBulkAddSectionsSchema } from "./bulk-add-sections.schema";
 import { ZCreateSectionSchema } from "./create-section.schema";
 import { ZCreateSchema } from "./create.schema";
@@ -16,6 +17,7 @@ import { ZGetSchema } from "./get.schema";
 import { ZInviteTeachersSchema } from "./invite-teachers.schema";
 import { ZJoinSchema } from "./join.schema";
 import { ZRemoveEntitySchema } from "./remove-entity.schema";
+import { ZRemoveMembersSchema } from "./remove-members.schema";
 import { ZUpdateSchema } from "./update.schema";
 
 type ClassesRouterHandlerCache = {
@@ -33,6 +35,8 @@ type ClassesRouterHandlerCache = {
     ["bulk-add-sections"]?: typeof import("./bulk-add-sections.handler").bulkAddSectionsHandler;
     ["create-section"]?: typeof import("./create-section.handler").createSectionHandler;
     ["delete-section"]?: typeof import("./delete-section.handler").deleteSectionHandler;
+    ["remove-members"]?: typeof import("./remove-members.handler").removeMembersHandler;
+    ["ban-students"]?: typeof import("./ban-students.handler").banStudentsHandler;
   };
 } & { routerPath: string };
 
@@ -117,5 +121,17 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "delete-section");
       return HANDLER_CACHE.handlers["delete-section"]!({ ctx, input });
+    }),
+  removeMembers: teacherProcedure
+    .input(ZRemoveMembersSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "remove-members");
+      return HANDLER_CACHE.handlers["remove-members"]!({ ctx, input });
+    }),
+  banStudents: teacherProcedure
+    .input(ZBanStudentsSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "ban-students");
+      return HANDLER_CACHE.handlers["ban-students"]!({ ctx, input });
     }),
 });

@@ -116,6 +116,12 @@ export type Class = {
   description: string;
   orgId: string | null;
 };
+export type ClassBan = {
+  id: string;
+  classId: string;
+  userId: string | null;
+  email: string;
+};
 export type ClassMembership = {
   id: string;
   classId: string;
@@ -326,6 +332,7 @@ export type DB = {
   Assignment: Assignment;
   AutoSaveTerm: AutoSaveTerm;
   Class: Class;
+  ClassBan: ClassBan;
   ClassMembership: ClassMembership;
   Container: Container;
   EntityShare: EntityShare;
