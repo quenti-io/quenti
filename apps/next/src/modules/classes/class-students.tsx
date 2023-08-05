@@ -15,6 +15,7 @@ import React from "react";
 import { LoadingSearch } from "../../components/loading-search";
 import { useClass } from "../../hooks/use-class";
 import { useDebounce } from "../../hooks/use-debounce";
+import { useEventCallback } from "../../hooks/use-event-callback";
 import { plural } from "../../utils/string";
 import {
   ChangeSectionModal,
@@ -91,13 +92,31 @@ export const ClassStudentsRaw = () => {
     });
   }, []);
 
+  const getUsers = (ids: string[]) => {
+    return (
+      data?.pages
+        .flatMap((p) => p.students)
+        .filter((s) => ids.includes(s.user.id)) || []
+    );
+  };
+
+  const changeSectionCallback = useEventCallback((userId: string) => {
+    setChangeSectionUsers(
+      getUsers([userId]).map((s) => ({
+        id: s.id,
+        user: s.user,
+        section: class_?.sections?.find((x) => x.id == s.sectionId),
+      }))
+    );
+  });
+
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
     <>
       {class_ && (
-      <ChangeSectionModal
+        <ChangeSectionModal
           isOpen={!!changeSectionUsers.length}
           onClose={() => setChangeSectionUsers([])}
           members={changeSectionUsers}
@@ -158,14 +177,11 @@ export const ClassStudentsRaw = () => {
           onDeselectAll={() => setSelected([])}
           onChangeSectionSelected={() => {
             setChangeSectionUsers(
-              data!.pages
-                .flatMap((p) => p.students)
-                .filter((s) => selected.includes(s.user.id))
-                .map((s) => ({
-                  id: s.id,
-                  user: s.user,
-                  section: class_?.sections?.find((x) => x.id == s.sectionId),
-                }))
+              getUsers(selected).map((s) => ({
+                id: s.id,
+                user: s.user,
+                section: class_?.sections?.find((x) => x.id == s.sectionId),
+              }))
             );
           }}
         />
@@ -194,7 +210,6 @@ export const ClassStudentsRaw = () => {
               border="1px solid"
               rounded="lg"
               borderColor={borderColor}
-              overflow="hidden"
               bg={menuBg}
             >
               {data.pages.map((page) => (
@@ -208,6 +223,7 @@ export const ClassStudentsRaw = () => {
                       )}
                       selected={selected.includes(student.user.id)}
                       onSelect={onSelect}
+                      onRequestChangeSection={changeSectionCallback}
                     />
                   ))}
                 </>

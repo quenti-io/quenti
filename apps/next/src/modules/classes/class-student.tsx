@@ -2,10 +2,14 @@ import {
   Avatar,
   Box,
   ButtonGroup,
+  Center,
   Checkbox,
   Flex,
   HStack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
   Skeleton,
   SkeletonText,
   Stack,
@@ -14,8 +18,16 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { User } from "@quenti/prisma/client";
-import { IconAlertCircle, IconExternalLink } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconBan,
+  IconDotsVertical,
+  IconExternalLink,
+  IconSwitchHorizontal,
+  IconUserX,
+} from "@tabler/icons-react";
 import React from "react";
+import { MenuOptionPure } from "../../components/menu-option";
 
 export interface ClassStudentProps {
   user: Pick<User, "id" | "name" | "username" | "image" | "email">;
@@ -23,6 +35,9 @@ export interface ClassStudentProps {
   skeleton?: boolean;
   selected?: boolean;
   onSelect?: (id: string, selected: boolean) => void;
+  onRequestChangeSection?: (id: string) => void;
+  onRequestRemove?: (id: string) => void;
+  onRequestBan?: (id: string) => void;
 }
 
 export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
@@ -31,11 +46,25 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
   skeleton = false,
   selected = false,
   onSelect,
+  onRequestChangeSection,
+  onRequestRemove,
+  onRequestBan,
 }) => {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
+  const menuBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const hoverColor = useColorModeValue("gray.50", "gray.750");
   const mutedColor = useColorModeValue("gray.600", "gray.400");
+  const redMenuColor = useColorModeValue("red.600", "red.200");
   const pillBg = useColorModeValue("gray.100", "gray.700");
+
+  const openCallback = React.useCallback(() => {
+    setMenuOpen(true);
+  }, []);
+  const closeCallback = React.useCallback(() => {
+    setMenuOpen(false);
+  }, []);
 
   const SmSkeleton: React.FC<React.PropsWithChildren> = ({ children }) => (
     <Flex h="20px" alignItems="center">
@@ -54,6 +83,12 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
       borderY="solid 1px"
       _hover={{
         background: hoverColor,
+      }}
+      _first={{
+        roundedTop: "md",
+      }}
+      _last={{
+        roundedBottom: "md",
       }}
       borderColor={borderColor}
       suppressHydrationWarning={true}
@@ -105,21 +140,64 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
           )}
         </Skeleton>
         <Skeleton rounded="md" fitContent isLoaded={!skeleton}>
-          <ButtonGroup
-            size="sm"
-            colorScheme="gray"
-            variant="outline"
-            isAttached
-          >
-            <IconButton
-              aria-label="Go to profile"
-              icon={<IconExternalLink size={16} />}
-            />
-            <IconButton
-              aria-label="Go to profile"
-              icon={<IconExternalLink size={16} />}
-            />
-          </ButtonGroup>
+          <Box position="relative">
+            <Menu
+              placement="bottom-end"
+              isOpen={menuOpen}
+              onOpen={openCallback}
+              onClose={closeCallback}
+              isLazy
+            >
+              <ButtonGroup
+                size="sm"
+                colorScheme="gray"
+                variant="outline"
+                isAttached
+              >
+                <IconButton
+                  aria-label="Go to profile"
+                  icon={<IconExternalLink size={16} />}
+                />
+                <MenuButton as={IconButton} w="8" h="8">
+                  <Center w="8" display="flex" justifyContent="center">
+                    <IconDotsVertical size="18" />
+                  </Center>
+                </MenuButton>
+              </ButtonGroup>
+              <MenuList
+                bg={menuBg}
+                py={0}
+                overflow="hidden"
+                minW="auto"
+                w="40"
+                shadow="lg"
+                display={menuOpen ? "block" : "none"}
+              >
+                <MenuOptionPure
+                  icon={<IconSwitchHorizontal size={16} />}
+                  label="Change section"
+                  fontSize="sm"
+                  py="6px"
+                  onClick={() => onRequestChangeSection?.(user.id)}
+                />
+                <MenuOptionPure
+                  icon={<IconUserX size={16} />}
+                  label="Remove"
+                  fontSize="sm"
+                  py="6px"
+                  onClick={() => onRequestRemove?.(user.id)}
+                />
+                <MenuOptionPure
+                  icon={<IconBan size={16} />}
+                  label="Ban"
+                  fontSize="sm"
+                  py="6px"
+                  color={redMenuColor}
+                  onClick={() => onRequestBan?.(user.id)}
+                />
+              </MenuList>
+            </Menu>
+          </Box>
         </Skeleton>
       </HStack>
     </HStack>
