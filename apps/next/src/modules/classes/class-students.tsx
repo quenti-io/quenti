@@ -22,6 +22,10 @@ import {
   type ChangeSectionModalProps,
 } from "./change-section-modal";
 import { ClassStudent } from "./class-student";
+import {
+  RemoveStudentsModal,
+  type RemoveStudentsModalProps,
+} from "./remove-students-modal";
 import { SectionSelect } from "./section-select";
 import { SelectedBar } from "./selected-bar";
 
@@ -78,8 +82,11 @@ export const ClassStudentsRaw = () => {
     : [];
   const [selected, setSelected] = React.useState<string[]>([]);
 
-  const [changeSectionUsers, setChangeSectionUsers] = React.useState<
+  const [changeSectionMembers, setChangeSectionMembers] = React.useState<
     ChangeSectionModalProps["members"]
+  >([]);
+  const [removeStudents, setRemoveStudents] = React.useState<
+    RemoveStudentsModalProps["users"]
   >([]);
 
   const onSelect = React.useCallback((id: string, selected: boolean) => {
@@ -101,13 +108,16 @@ export const ClassStudentsRaw = () => {
   };
 
   const changeSectionCallback = useEventCallback((userId: string) => {
-    setChangeSectionUsers(
+    setChangeSectionMembers(
       getUsers([userId]).map((s) => ({
         id: s.id,
         user: s.user,
         section: class_?.sections?.find((x) => x.id == s.sectionId),
       }))
     );
+  });
+  const removeStudentCallback = useEventCallback((userId: string) => {
+    setRemoveStudents(getUsers([userId]).map((s) => s.user));
   });
 
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -116,11 +126,23 @@ export const ClassStudentsRaw = () => {
   return (
     <>
       {class_ && (
-        <ChangeSectionModal
-          isOpen={!!changeSectionUsers.length}
-          onClose={() => setChangeSectionUsers([])}
-          members={changeSectionUsers}
-        />
+        <>
+          <ChangeSectionModal
+            isOpen={!!changeSectionMembers.length}
+            onClose={() => setChangeSectionMembers([])}
+            members={changeSectionMembers}
+          />
+          <RemoveStudentsModal
+            isOpen={!!removeStudents.length}
+            onClose={() => setRemoveStudents([])}
+            onSuccess={() => {
+              const removedIds = removeStudents.map((s) => s.id);
+              setSelected((s) => s.filter((i) => !removedIds.includes(i)));
+              setRemoveStudents([]);
+            }}
+            users={removeStudents}
+          />
+        </>
       )}
       <Stack spacing="6">
         <HStack spacing="4">
@@ -176,13 +198,16 @@ export const ClassStudentsRaw = () => {
           onSelectAll={() => setSelected(allVisibleIds)}
           onDeselectAll={() => setSelected([])}
           onChangeSectionSelected={() => {
-            setChangeSectionUsers(
+            setChangeSectionMembers(
               getUsers(selected).map((s) => ({
                 id: s.id,
                 user: s.user,
                 section: class_?.sections?.find((x) => x.id == s.sectionId),
               }))
             );
+          }}
+          onRemoveSelected={() => {
+            setRemoveStudents(getUsers(selected).map((s) => s.user));
           }}
         />
         {(!!debouncedSearch.length || !!section) &&
@@ -224,6 +249,7 @@ export const ClassStudentsRaw = () => {
                       selected={selected.includes(student.user.id)}
                       onSelect={onSelect}
                       onRequestChangeSection={changeSectionCallback}
+                      onRequestRemove={removeStudentCallback}
                     />
                   ))}
                 </>

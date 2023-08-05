@@ -7,7 +7,6 @@ import {
   HStack,
   Stack,
   Text,
-  chakra,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { allEqual } from "@quenti/lib/array";
@@ -19,6 +18,7 @@ import React from "react";
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 import { SectionSelect } from "./section-select";
+import { addressStudents } from "./utils/address-students";
 
 export interface ChangeSectionModalProps {
   isOpen: boolean;
@@ -90,22 +90,12 @@ export const ChangeSectionModal: React.FC<ChangeSectionModalProps> = ({
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
-          <Stack>
-            <Modal.Heading>Change section</Modal.Heading>
-            <Text color={muted}>
-              {multiple ? (
-                "These students"
-              ) : members[0]!.user.name ? (
-                <chakra.strong fontWeight={600}>
-                  {members[0]!.user.name}
-                </chakra.strong>
-              ) : (
-                "This student"
-              )}{" "}
-              will no longer have access to previous assignments and content in
-              their current section.
-            </Text>
-          </Stack>
+          <Modal.Heading>Change section</Modal.Heading>
+          <Text color={muted}>
+            {addressStudents(multiple, members[0]?.user.name)} will no longer
+            have access to previous assignments and content in their current
+            section.
+          </Text>
           {multiple ? (
             <Stack spacing="4">
               <HStack spacing="3">

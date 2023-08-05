@@ -15,6 +15,7 @@ interface SelectedBarProps {
   onSelectAll: () => void;
   onDeselectAll: () => void;
   onChangeSectionSelected: () => void;
+  onRemoveSelected: () => void;
 }
 
 export const SelectedBar: React.FC<SelectedBarProps> = ({
@@ -23,6 +24,7 @@ export const SelectedBar: React.FC<SelectedBarProps> = ({
   onSelectAll,
   onDeselectAll,
   onChangeSectionSelected,
+  onRemoveSelected,
 }) => {
   return (
     <ScaleFade in={selected.length > 0} unmountOnExit>
@@ -43,7 +45,9 @@ export const SelectedBar: React.FC<SelectedBarProps> = ({
           >
             Change section
           </Button>
-          <Button leftIcon={<IconUserX size={16} />}>Remove</Button>
+          <Button leftIcon={<IconUserX size={16} />} onClick={onRemoveSelected}>
+            Remove
+          </Button>
           <Button colorScheme="red" leftIcon={<IconBan size={16} />}>
             Ban
           </Button>
