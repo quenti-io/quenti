@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   ButtonGroup,
+  Checkbox,
   Flex,
   HStack,
   IconButton,
@@ -20,12 +21,16 @@ export interface ClassStudentProps {
   user: Pick<User, "id" | "name" | "username" | "image" | "email">;
   section?: { id: string; name: string };
   skeleton?: boolean;
+  selected?: boolean;
+  onSelect?: (id: string, selected: boolean) => void;
 }
 
 export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
   user,
   section,
   skeleton = false,
+  selected = false,
+  onSelect,
 }) => {
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const hoverColor = useColorModeValue("gray.50", "gray.750");
@@ -55,6 +60,12 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
       justifyContent="space-between"
     >
       <HStack spacing="4">
+        <Skeleton fitContent h="4" rounded="md" isLoaded={!skeleton}>
+          <Checkbox
+            isChecked={selected}
+            onChange={(e) => onSelect?.(user.id, e.target.checked)}
+          />
+        </Skeleton>
         <Skeleton rounded="full" fitContent isLoaded={!skeleton}>
           <Avatar src={user.image || undefined} width="36px" height="36px" />
         </Skeleton>

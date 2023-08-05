@@ -1,18 +1,23 @@
 import {
   Box,
+  Button,
+  HStack,
   ScaleFade,
+  Skeleton,
   SlideFade,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
+import { IconUserPlus } from "@tabler/icons-react";
 import React from "react";
 import { LoadingSearch } from "../../components/loading-search";
 import { useClass } from "../../hooks/use-class";
 import { useDebounce } from "../../hooks/use-debounce";
 import { plural } from "../../utils/string";
 import { ClassStudent } from "./class-student";
+import { SelectedBar } from "./selected-bar";
 
 export const ClassStudentsRaw = () => {
   const { data: class_ } = useClass();
@@ -60,19 +65,39 @@ export const ClassStudentsRaw = () => {
     };
   }, [data?.pageParams, fetchNextPage]);
 
+  const [selected, setSelected] = React.useState<string[]>([]);
+
+  const onSelect = React.useCallback((id: string, selected: boolean) => {
+    setSelected((prev) => {
+      if (selected) {
+        return [...prev, id];
+      } else {
+        return prev.filter((i) => i != id);
+      }
+    });
+  }, []);
+
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
     <Stack spacing="6">
-      <LoadingSearch
-        value={search}
-        onChange={setSearch}
-        placeholder={`Search ${plural(class_?.students || 0, "student")}`}
-        debounceInequality={search != debouncedSearch}
-        isPreviousData={isPreviousData}
-        skeleton={!class_}
-      />
+      <HStack spacing="4">
+        <LoadingSearch
+          value={search}
+          onChange={setSearch}
+          placeholder={`Search ${plural(class_?.students || 0, "student")}`}
+          debounceInequality={search.trim() != debouncedSearch.trim()}
+          isPreviousData={isPreviousData}
+          skeleton={!class_}
+        />
+        <Skeleton isLoaded={!!class_} rounded="md">
+          <Button leftIcon={<IconUserPlus size={18} />} px="4">
+            Add
+          </Button>
+        </Skeleton>
+      </HStack>
+      <SelectedBar selected={selected} onDeselectAll={() => setSelected([])} />
       {!!debouncedSearch.length &&
         data?.pages &&
         !data.pages[0]!.students.length && (
@@ -110,6 +135,8 @@ export const ClassStudentsRaw = () => {
                     section={(class_?.sections || []).find(
                       (s) => s.id == student.sectionId
                     )}
+                    selected={selected.includes(student.user.id)}
+                    onSelect={onSelect}
                   />
                 ))}
               </>
@@ -125,7 +152,7 @@ export const ClassStudentsRaw = () => {
                 }}
                 section={{
                   id: "",
-                  name: "loading"
+                  name: "loading",
                 }}
                 skeleton
               />
@@ -154,7 +181,7 @@ export const ClassStudentsRaw = () => {
                 }}
                 section={{
                   id: "",
-                  name: "loading"
+                  name: "loading",
                 }}
                 skeleton
               />
