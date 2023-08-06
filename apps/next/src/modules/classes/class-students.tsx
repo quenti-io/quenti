@@ -86,7 +86,7 @@ export const ClassStudentsRaw = () => {
     ChangeSectionModalProps["members"]
   >([]);
   const [removeStudents, setRemoveStudents] = React.useState<
-    RemoveStudentsModalProps["users"]
+    RemoveStudentsModalProps["members"]
   >([]);
 
   const onSelect = React.useCallback((id: string, selected: boolean) => {
@@ -117,7 +117,9 @@ export const ClassStudentsRaw = () => {
     );
   });
   const removeStudentCallback = useEventCallback((userId: string) => {
-    setRemoveStudents(getUsers([userId]).map((s) => s.user));
+    setRemoveStudents(
+      getUsers([userId]).map((s) => ({ id: s.id, user: s.user }))
+    );
   });
 
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -140,7 +142,7 @@ export const ClassStudentsRaw = () => {
               setSelected((s) => s.filter((i) => !removedIds.includes(i)));
               setRemoveStudents([]);
             }}
-            users={removeStudents}
+            members={removeStudents}
           />
         </>
       )}
@@ -212,7 +214,9 @@ export const ClassStudentsRaw = () => {
             );
           }}
           onRemoveSelected={() => {
-            setRemoveStudents(getUsers(selected).map((s) => s.user));
+            setRemoveStudents(
+              getUsers(selected).map((s) => ({ id: s.id, user: s.user }))
+            );
           }}
         />
         {(!!debouncedSearch.length || !!section) &&

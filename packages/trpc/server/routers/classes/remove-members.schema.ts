@@ -2,7 +2,8 @@ import { z } from "zod";
 
 export const ZRemoveMembersSchema = z.object({
   id: z.string(),
-  users: z.array(z.string().cuid2()),
+  members: z.array(z.string().cuid2()),
+  type: z.enum(["member", "invite"]),
 });
 
 export type TRemoveMembersSchema = z.infer<typeof ZRemoveMembersSchema>;

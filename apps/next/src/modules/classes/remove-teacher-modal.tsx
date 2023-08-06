@@ -1,44 +1,37 @@
 import {
-  Avatar,
-  AvatarGroup,
   Button,
   ButtonGroup,
   Text,
+  chakra,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
-import type { User } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 import { IconUserX } from "@tabler/icons-react";
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
-import { addressStudents } from "./utils/address-students";
 
-export interface RemoveStudentsModalProps {
+export interface RemoveTeacherModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
-  members: {
+  member?: {
     id: string;
-    user: Pick<User, "id" | "name" | "username" | "image">;
-  }[];
+    nameOrEmail: string;
+    type: "member" | "invite";
+  };
 }
 
-export const RemoveStudentsModal: React.FC<RemoveStudentsModalProps> = ({
+export const RemoveTeacherModal: React.FC<RemoveTeacherModalProps> = ({
   isOpen,
   onClose,
-  onSuccess,
-  members,
+  member,
 }) => {
   const { data: class_ } = useClass();
   const utils = api.useContext();
-  const multiple = !members.length || members.length > 1;
 
   const removeMembers = api.classes.removeMembers.useMutation({
     onSuccess: async () => {
-      await utils.classes.getStudents.invalidate();
       await utils.classes.get.invalidate();
-      onSuccess();
+      onClose();
     },
   });
 
@@ -49,20 +42,14 @@ export const RemoveStudentsModal: React.FC<RemoveStudentsModalProps> = ({
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
-          <Modal.Heading>Remove student{multiple && "s"}</Modal.Heading>
+          <Modal.Heading>Remove teacher</Modal.Heading>
           <Text color={muted}>
-            {addressStudents(multiple, members[0]?.user.name)} will be
-            permanently removed from the class and all of their content will be
-            deleted. They will no longer be able to access the class until they
-            rejoin or are manually readded.
+            <chakra.strong fontWeight={600}>
+              {member?.nameOrEmail}
+            </chakra.strong>{" "}
+            will no longer be able to access or modify this class until they are
+            reinvited.
           </Text>
-          {multiple && (
-            <AvatarGroup size="sm" max={10} spacing="-6px">
-              {members.map((member) => (
-                <Avatar key={member.id} src={avatarUrl(member.user)} />
-              ))}
-            </AvatarGroup>
-          )}
         </Modal.Body>
         <Modal.Divider />
         <Modal.Footer>
@@ -78,14 +65,12 @@ export const RemoveStudentsModal: React.FC<RemoveStudentsModalProps> = ({
               onClick={() =>
                 removeMembers.mutate({
                   id: class_!.id,
-                  members: members.map((m) => m.id),
-                  type: "member",
+                  members: [member!.id],
+                  type: member!.type,
                 })
               }
             >
-              {multiple
-                ? `Remove ${members.length} students`
-                : "Remove student"}
+              Remove teacher
             </Button>
           </ButtonGroup>
         </Modal.Footer>

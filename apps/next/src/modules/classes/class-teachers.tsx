@@ -3,13 +3,19 @@ import {
   Button,
   Flex,
   Skeleton,
+  SkeletonText,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconUserPlus } from "@tabler/icons-react";
+import React from "react";
 import { useClass } from "../../hooks/use-class";
 import { ClassTeacher } from "./class-teacher";
+import {
+  RemoveTeacherModal,
+  type RemoveTeacherModalProps,
+} from "./remove-teacher-modal";
 
 export const ClassTeachers = () => {
   const { data: class_ } = useClass();
@@ -20,59 +26,93 @@ export const ClassTeachers = () => {
   const teachers = class_?.teachers || [];
   const invites = class_?.teacherInvites || [];
 
+  const [removeTeacher, setRemoveTeacher] =
+    React.useState<RemoveTeacherModalProps["member"]>();
+
   return (
-    <Stack spacing="6">
-      <Flex justifyContent="space-between" alignItems="end">
-        <Text fontWeight={600} color="gray.500">
-          Teachers
-        </Text>
-        <Skeleton fitContent rounded="md" isLoaded={!!class_}>
-          <Button
-            leftIcon={<IconUserPlus size={18} />}
-            colorScheme="gray"
-            variant="outline"
-          >
-            Add teachers
-          </Button>
-        </Skeleton>
-      </Flex>
-      <Box
-        border="1px solid"
-        rounded="lg"
-        borderColor={borderColor}
-        bg={menuBg}
-      >
-        {teachers.map((teacher) => (
-          <ClassTeacher
-            key={teacher.id}
-            id={teacher.id}
-            user={teacher.user}
-            email={teacher.user.email}
-            isMe={teacher.id == class_?.me.id}
-          />
-        ))}
-        {invites.map((invite) => (
-          <ClassTeacher
-            key={invite.id}
-            id={invite.id}
-            user={invite.user}
-            email={invite.email}
-            pending
-          />
-        ))}
-        {!class_ && (
-          <ClassTeacher
-            id=""
-            email="placeholder@example.com"
-            user={{
-              image: null,
-              name: "Placeholder",
-              username: "username",
-            }}
-            skeleton
-          />
-        )}
-      </Box>
-    </Stack>
+    <>
+      {class_ && (
+        <RemoveTeacherModal
+          isOpen={!!removeTeacher}
+          onClose={() => setRemoveTeacher(undefined)}
+          member={removeTeacher}
+        />
+      )}
+      <Stack spacing="6">
+        <Flex justifyContent="space-between" alignItems="end">
+          <Flex h="6" alignItems="center">
+            <SkeletonText
+              noOfLines={1}
+              isLoaded={!!class_}
+              skeletonHeight="18px"
+            >
+              <Text fontWeight={600} color="gray.500">
+                Teachers
+              </Text>
+            </SkeletonText>
+          </Flex>
+          <Skeleton fitContent rounded="md" isLoaded={!!class_}>
+            <Button
+              leftIcon={<IconUserPlus size={18} />}
+              colorScheme="gray"
+              variant="outline"
+            >
+              Add teachers
+            </Button>
+          </Skeleton>
+        </Flex>
+        <Box
+          border="1px solid"
+          rounded="lg"
+          borderColor={borderColor}
+          bg={menuBg}
+        >
+          {teachers.map((teacher) => (
+            <ClassTeacher
+              key={teacher.id}
+              id={teacher.id}
+              user={teacher.user}
+              email={teacher.user.email}
+              isMe={teacher.id == class_?.me.id}
+              onRequestRemove={(id) => {
+                setRemoveTeacher({
+                  id,
+                  nameOrEmail: teacher.user.name || teacher.user.email,
+                  type: "member",
+                });
+              }}
+            />
+          ))}
+          {invites.map((invite) => (
+            <ClassTeacher
+              key={invite.id}
+              id={invite.id}
+              user={invite.user}
+              email={invite.email}
+              pending
+              onRequestRemove={(id) => {
+                setRemoveTeacher({
+                  id,
+                  nameOrEmail: invite.email,
+                  type: "invite",
+                });
+              }}
+            />
+          ))}
+          {!class_ && (
+            <ClassTeacher
+              id=""
+              email="placeholder@example.com"
+              user={{
+                image: null,
+                name: "Placeholder",
+                username: "username",
+              }}
+              skeleton
+            />
+          )}
+        </Box>
+      </Stack>
+    </>
   );
 };

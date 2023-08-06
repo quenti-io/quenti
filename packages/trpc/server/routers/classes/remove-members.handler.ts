@@ -16,30 +16,41 @@ export const removeMembersHandler = async ({
   if (!member) throw new TRPCError({ code: "NOT_FOUND" });
   if (member.type !== "Teacher") throw new TRPCError({ code: "FORBIDDEN" });
 
-  const teachers = await ctx.prisma.classMembership.findMany({
-    where: {
-      classId: input.id,
-      type: "Teacher",
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (input.users.includes(ctx.session.user.id) && teachers.length == 1)
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "You cannot remove yourself as the only teacher in a class.",
+  if (input.type == "member") {
+    const teachers = await ctx.prisma.classMembership.findMany({
+      where: {
+        classId: input.id,
+        type: "Teacher",
+      },
+      select: {
+        id: true,
+      },
     });
 
-  await ctx.prisma.classMembership.deleteMany({
-    where: {
-      classId: input.id,
-      userId: {
-        in: input.users,
+    if (input.members.includes(member.id) && teachers.length == 1)
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You cannot remove yourself as the only teacher in a class.",
+      });
+
+    await ctx.prisma.classMembership.deleteMany({
+      where: {
+        classId: input.id,
+        id: {
+          in: input.members,
+        },
       },
-    },
-  });
+    });
+  } else {
+    await ctx.prisma.pendingClassInvite.deleteMany({
+      where: {
+        classId: input.id,
+        id: {
+          in: input.members,
+        },
+      },
+    });
+  }
 };
 
 export default removeMembersHandler;
