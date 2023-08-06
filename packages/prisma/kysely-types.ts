@@ -128,6 +128,7 @@ export type ClassMembership = {
   userId: string;
   email: string;
   type: ClassMembershipType;
+  viewedAt: Timestamp | null;
   sectionId: string | null;
 };
 export type Container = {

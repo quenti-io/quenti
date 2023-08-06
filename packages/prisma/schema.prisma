@@ -219,6 +219,7 @@ model ClassMembership {
   userId    String
   email     String
   type      ClassMembershipType
+  viewedAt  DateTime?
   sectionId String?
 
   class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)

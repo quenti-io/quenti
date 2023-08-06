@@ -34,6 +34,7 @@ export const getBelongingClasses = async (userId: string, type: UserType) => {
   });
 
   return classes.map((membership) => ({
+    viewedAt: membership.viewedAt,
     ...membership.class,
     _count: {
       ...(membership.class._count as {

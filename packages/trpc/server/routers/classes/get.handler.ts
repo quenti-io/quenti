@@ -125,6 +125,15 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     },
   }))!;
 
+  await ctx.prisma.classMembership.update({
+    where: {
+      id: member.id,
+    },
+    data: {
+      viewedAt: new Date(),
+    },
+  });
+
   return {
     id: class_.id,
     name: class_.name,

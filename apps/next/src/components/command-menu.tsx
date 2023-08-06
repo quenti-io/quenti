@@ -29,6 +29,7 @@ import {
   IconLink,
   IconMoon,
   IconPlus,
+  IconSchool,
   IconSettings,
   IconSun,
   IconUser,
@@ -41,6 +42,7 @@ import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
 import { useIsTeacher } from "../hooks/use-is-teacher";
 import { useShortcut } from "../hooks/use-shortcut";
+import { plural } from "../utils/string";
 
 export interface CommandMenuProps {
   isOpen: boolean;
@@ -63,6 +65,7 @@ export interface MenuOption {
   searchableName?: string;
   label?: string;
   action: (ctrl: boolean) => void | Promise<void>;
+  sortableDate?: Date;
   entity?: Entity;
   shouldShow?: () => boolean;
   loadable?: boolean;
@@ -128,6 +131,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, ""),
           action: (ctrl) => openLink(`/${set.id}`, ctrl),
+          sortableDate: set.viewedAt,
           entity: {
             id: set.id,
             name: set.title,
@@ -150,6 +154,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, ""),
           action: (ctrl) => openLink(url, ctrl),
+          sortableDate: folder.viewedAt,
           entity: {
             id: folder.id,
             name: folder.title,
@@ -160,11 +165,34 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           shouldShow: () => !window.location.pathname.startsWith(url),
         });
       }
+      for (const class_ of data.classes) {
+        const url = `/classes/${class_.id}`;
+
+        total.push({
+          icon: <IconSchool />,
+          name: class_.name,
+          label:
+            class_._count.members !== undefined
+              ? `${plural(class_._count.members || 0, "student")} · ${plural(
+                  class_._count.sections || 0,
+                  "section"
+                )}`
+              : `${plural(class_._count.studySets || 0, "set")} · ${plural(
+                  class_._count.folders || 0,
+                  "folder"
+                )}`,
+          sortableDate: class_.viewedAt || undefined,
+          searchableName: class_.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""),
+          action: (ctrl) => openLink(url, ctrl),
+          shouldShow: () => !window.location.pathname.startsWith(url),
+        });
+      }
 
       total = total.sort(
         (a, b) =>
-          (b.entity?.viewedAt.getTime() || 0) -
-          (a.entity?.viewedAt.getTime() || 0)
+          (b.sortableDate?.getTime() || 0) - (a.sortableDate?.getTime() || 0)
       );
 
       if (onSet || onFolder) {
