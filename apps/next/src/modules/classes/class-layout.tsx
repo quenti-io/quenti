@@ -22,6 +22,7 @@ import { WithFooter } from "../../components/with-footer";
 import { useClass } from "../../hooks/use-class";
 import { useIsClassTeacher } from "../../hooks/use-is-class-teacher";
 import { plural } from "../../utils/string";
+import { getColorFromId } from "../../utils/color";
 
 const useTabIndex = () => {
   const router = useRouter();
@@ -55,7 +56,9 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
             <Box
               w="full"
               h="32"
-              bgGradient="linear(to-tr, blue.400, orange.300)"
+              bgGradient={`linear(to-tr, blue.400, ${getColorFromId(
+                id || ""
+              )})`}
               rounded="2xl"
             />
           </Skeleton>

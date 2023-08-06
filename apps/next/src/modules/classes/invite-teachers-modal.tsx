@@ -51,6 +51,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
 
   const inviteTeachers = api.classes.inviteTeachers.useMutation({
     onSuccess: async () => {
+      await utils.classes.getMembers.invalidate();
       await utils.classes.get.invalidate();
       onClose();
     },

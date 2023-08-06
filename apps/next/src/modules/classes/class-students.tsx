@@ -219,21 +219,19 @@ export const ClassStudentsRaw = () => {
             );
           }}
         />
-        {(!!debouncedSearch.length || !!section) &&
-          data?.pages &&
-          !data.pages[0]!.students.length && (
-            <ScaleFade
-              in={data?.pages && !data.pages[0]!.students.length}
-              style={{
-                width: "max-content",
-                marginLeft: 16,
-              }}
-            >
-              <Text color="gray.500" fontSize="sm">
-                No students found
-              </Text>
-            </ScaleFade>
-          )}
+        {data?.pages && !data.pages[0]!.students.length && (
+          <ScaleFade
+            in={data?.pages && !data.pages[0]!.students.length}
+            style={{
+              width: "max-content",
+              marginLeft: 16,
+            }}
+          >
+            <Text color="gray.500" fontSize="sm">
+              No students found
+            </Text>
+          </ScaleFade>
+        )}
         {data?.pages && !!data.pages[0]!.students.length ? (
           <SlideFade
             offsetY="20px"
@@ -283,6 +281,7 @@ export const ClassStudentsRaw = () => {
             <div ref={observerTarget} />
           </SlideFade>
         ) : (
+          !data &&
           !debouncedSearch.length &&
           !section && (
             <Box
