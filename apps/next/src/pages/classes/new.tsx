@@ -28,8 +28,8 @@ interface CreateClassFormInputs {
 }
 
 const schema = z.object({
-  name: z.string().nonempty({ message: "Enter a name" }).min(1),
-  description: z.string().default(""),
+  name: z.string().trim().nonempty({ message: "Enter a name" }),
+  description: z.string().default("").optional(),
 });
 
 export default function NewClass() {
@@ -123,7 +123,7 @@ export default function NewClass() {
                 name="description"
                 control={createMethods.control}
                 render={({ field: { value, onChange } }) => (
-                  <FormControl isInvalid={!!errors.name}>
+                  <FormControl isInvalid={!!errors.description}>
                     <FormLabel fontSize="xs" mb="10px" color={labelColor}>
                       Description (optional)
                     </FormLabel>
@@ -134,7 +134,9 @@ export default function NewClass() {
                       allowTab={false}
                       px="14px"
                     />
-                    <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+                    <FormErrorMessage>
+                      {errors.description?.message}
+                    </FormErrorMessage>
                   </FormControl>
                 )}
               />
