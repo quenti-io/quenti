@@ -172,7 +172,7 @@ export const ClassStudentsRaw = () => {
                 {
                   id: "",
                   name: "All sections",
-                  classId: class_?.id || "",
+                  students: 0,
                 },
               ]).concat(class_?.sections || [])}
               onChange={(s) => {
@@ -187,7 +187,12 @@ export const ClassStudentsRaw = () => {
             />
           </Skeleton>
           <Skeleton isLoaded={!!class_} rounded="md">
-            <Button leftIcon={<IconUserPlus size={18} />} px="4">
+            <Button
+              leftIcon={<IconUserPlus size={18} />}
+              px="4"
+              colorScheme="gray"
+              variant="outline"
+            >
               Add
             </Button>
           </Skeleton>

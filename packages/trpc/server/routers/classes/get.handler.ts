@@ -76,6 +76,37 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
                 },
               },
             },
+            members: {
+              where: {
+                type: "Teacher",
+              },
+              select: {
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    username: true,
+                    email: true,
+                    image: true,
+                  },
+                },
+              },
+            },
+            teacherInvites: {
+              select: {
+                id: true,
+                email: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    username: true,
+                    image: true,
+                  },
+                },
+              },
+            },
           }
         : undefined),
       _count: {
@@ -103,9 +134,32 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     folders: class_.folders.map((f) => f.folder),
     ...(member.type == "Teacher"
       ? {
+          teachers: class_.members!.map((t) => ({
+            id: t.id,
+            // @ts-expect-error property user does not exist on type
+            user: t.user as {
+              id: string;
+              name: string | null;
+              username: string;
+              email: string;
+              image: string | null;
+            },
+          })),
+          teacherInvites: class_.teacherInvites!.map((i) => ({
+            id: i.id,
+            email: i.email,
+            // @ts-expect-error property user does not exist on type
+            user: i.user as {
+              id: string;
+              name: string | null;
+              username: string;
+              image: string | null;
+            },
+          })),
           students: class_._count.members,
           sections: class_.sections!.map((s) => ({
-            ...s,
+            id: s.id,
+            name: s.name,
             // @ts-expect-error property _count does not exist on type
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             students: s._count.students as number,
@@ -113,6 +167,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         }
       : {}),
     me: {
+      id: member.id,
       type: member.type,
       sectionId: member.sectionId,
     },

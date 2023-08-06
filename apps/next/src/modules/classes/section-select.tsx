@@ -43,7 +43,6 @@ export const SectionSelect: React.FC<SectionSelectProps> = ({
         }),
         option: (provided) => ({
           ...provided,
-          fontSize: "sm",
           bg: baseBg,
           whiteSpace: "nowrap",
           display: "block",
@@ -57,7 +56,6 @@ export const SectionSelect: React.FC<SectionSelectProps> = ({
         control: (provided) => ({
           ...provided,
           rounded: "6px",
-          fontSize: "sm",
         }),
         menuList: (provided) => ({
           ...provided,

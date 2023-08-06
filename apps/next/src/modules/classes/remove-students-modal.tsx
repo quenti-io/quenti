@@ -51,7 +51,7 @@ export const RemoveStudentsModal: React.FC<RemoveStudentsModalProps> = ({
             {addressStudents(multiple, users[0]?.name)} will be permanently
             removed from the class and all of their content will be deleted.
             They will no longer be able to access the class until they rejoin or
-            manually added back.
+            are manually readded.
           </Text>
           {multiple && (
             <AvatarGroup size="sm" max={10} spacing="-6px">

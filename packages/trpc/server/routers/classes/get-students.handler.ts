@@ -64,21 +64,9 @@ export const getStudentsHandler = async ({
     nextCursor = nextItem!.email;
   }
 
-  let inSection = 0;
-  if (input.sectionId) {
-    inSection = await ctx.prisma.classMembership.count({
-      where: {
-        classId: input.classId,
-        type: "Student",
-        sectionId: input.sectionId,
-      },
-    });
-  }
-
   return {
     students: users,
     nextCursor,
-    inSection,
   };
 };
 
