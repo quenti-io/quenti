@@ -16,6 +16,7 @@ import {
   RemoveTeacherModal,
   type RemoveTeacherModalProps,
 } from "./remove-teacher-modal";
+import { InviteTeachersModal } from "./invite-teachers-modal";
 
 export const ClassTeachers = () => {
   const { data: class_ } = useClass();
@@ -26,17 +27,24 @@ export const ClassTeachers = () => {
   const teachers = class_?.teachers || [];
   const invites = class_?.teacherInvites || [];
 
+  const [addTeacherModalOpen, setAddTeacherModalOpen] = React.useState(false);
   const [removeTeacher, setRemoveTeacher] =
     React.useState<RemoveTeacherModalProps["member"]>();
 
   return (
     <>
       {class_ && (
-        <RemoveTeacherModal
-          isOpen={!!removeTeacher}
-          onClose={() => setRemoveTeacher(undefined)}
-          member={removeTeacher}
-        />
+        <>
+          <InviteTeachersModal
+            isOpen={addTeacherModalOpen}
+            onClose={() => setAddTeacherModalOpen(false)}
+          />
+          <RemoveTeacherModal
+            isOpen={!!removeTeacher}
+            onClose={() => setRemoveTeacher(undefined)}
+            member={removeTeacher}
+          />
+        </>
       )}
       <Stack spacing="6">
         <Flex justifyContent="space-between" alignItems="end">
@@ -56,6 +64,7 @@ export const ClassTeachers = () => {
               leftIcon={<IconUserPlus size={18} />}
               colorScheme="gray"
               variant="outline"
+              onClick={() => setAddTeacherModalOpen(true)}
             >
               Add teachers
             </Button>

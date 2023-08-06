@@ -13,6 +13,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@quenti/trpc";
 import { useRouter } from "next/router";
+import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Modal } from "../../components/modal";
@@ -50,13 +51,17 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
 
   const inviteTeachers = api.classes.inviteTeachers.useMutation({
     onSuccess: async () => {
-      await utils.classes.getMembers.invalidate();
+      await utils.classes.get.invalidate();
       onClose();
     },
   });
 
   const inviteTeachersMethods = useForm<InviteTeachersFormInputs>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      emails: ["", ""],
+      sendEmail: true,
+    },
   });
   const {
     formState: { errors },
@@ -69,6 +74,21 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
       emails: data.emails.filter((s) => s.length > 0),
     });
   };
+
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isOpen) {
+      setMounted(false);
+      return;
+    }
+    inviteTeachersMethods.reset();
+
+    requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   const labelColor = useColorModeValue("gray.600", "gray.400");
 
@@ -86,12 +106,19 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
               <Controller
                 name="emails"
                 control={inviteTeachersMethods.control}
-                defaultValue={["", ""]}
                 render={({ field: { value, onChange } }) => (
                   <FormControl isInvalid={!!errors.emails}>
                     <Stack spacing="3">
                       {value.map((email, index) => (
-                        <SlideFade in key={index}>
+                        <SlideFade
+                          in
+                          key={index}
+                          transition={{
+                            enter: {
+                              duration: mounted ? 0.15 : 0,
+                            },
+                          }}
+                        >
                           <Stack spacing="0">
                             <Input
                               autoFocus={index === 0}
