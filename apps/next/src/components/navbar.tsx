@@ -8,13 +8,13 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import { avatarUrl } from "@quenti/lib/avatar";
 import { IconMenu, IconX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
 import { BASE_PAGES } from "../pages/_app";
-import { avatarUrl } from "@quenti/lib/avatar";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
 import { Link } from "./link";
@@ -43,13 +43,19 @@ export const Navbar: React.FC = () => {
     const openImportDialog = () => {
       setImportModalOpen(true);
     };
+    const createClass = () => {
+      void router.push("/classes/new");
+    };
 
     menuEventChannel.on("createFolder", createFolder);
     menuEventChannel.on("openImportDialog", openImportDialog);
+    menuEventChannel.on("createClass", createClass);
     return () => {
       menuEventChannel.off("createFolder", createFolder);
       menuEventChannel.off("openImportDialog", openImportDialog);
+      menuEventChannel.off("createClass", createClass);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -87,6 +93,7 @@ export const Navbar: React.FC = () => {
           <LeftNav
             onFolderClick={() => setFolderModalOpen(true)}
             onImportClick={() => setImportModalOpen(true)}
+            onClassClick={() => void router.push("/classes/new")}
           />
           <Box display={["block", "block", "none"]}>
             <HStack>

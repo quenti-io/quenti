@@ -73,7 +73,6 @@ export const MemberRoleSelect: React.FC<MemberRoleSelectProps> = ({
           backgroundColor: option.isDisabled
             ? undefined
             : props.backgroundColor,
-          // color: option.isDisabled ? "gray.500" : props.color,
         }),
         dropdownIndicator: (provided) => ({
           ...provided,

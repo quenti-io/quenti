@@ -2,12 +2,18 @@ import type { PrismaClient } from "@quenti/prisma/client";
 
 export const getRecentFolders = async (
   prisma: PrismaClient,
-  userId: string
+  userId: string,
+  exclude?: string[]
 ) => {
   const recentContainers = await prisma.container.findMany({
     where: {
       userId,
       type: "Folder",
+      NOT: {
+        entityId: {
+          in: exclude ?? [],
+        },
+      },
     },
     orderBy: {
       viewedAt: "desc",

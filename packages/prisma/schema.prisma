@@ -91,9 +91,12 @@ model User {
   containers     Container[]
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
-  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  organization   Organization?        @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   highscores     Highscore[]
   organizations  Membership[]
+  classes        ClassMembership[]
+  classInvites   PendingClassInvite[]
+  classBans      ClassBan[]
 
   @@index([organizationId])
 }
@@ -126,6 +129,7 @@ model Organization {
   users          User[]
   inviteToken    VerificationToken?
   pendingInvites PendingInvite[]
+  classes        Class[]
 }
 
 model VerifiedOrganizationDomain {
@@ -173,6 +177,110 @@ model PendingInvite {
   @@index([email])
 }
 
+model Class {
+  id          String  @id @default(cuid())
+  name        String
+  description String
+  orgId       String?
+
+  organization   Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  members        ClassMembership[]
+  sections       Section[]
+  studySets      StudySetsOnClasses[]
+  folders        FoldersOnClasses[]
+  assignments    Assignment[]
+  teacherInvites PendingClassInvite[]
+  bans           ClassBan[]
+
+  @@index([orgId])
+}
+
+model Section {
+  id      String @id @default(cuid())
+  classId String
+  name    String
+
+  class       Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  students    ClassMembership[]
+  assignments Assignment[]
+
+  @@unique([classId, name])
+  @@index([classId])
+}
+
+enum ClassMembershipType {
+  Student
+  Teacher
+}
+
+model ClassMembership {
+  id        String              @id @default(cuid())
+  classId   String
+  userId    String
+  email     String
+  type      ClassMembershipType
+  viewedAt  DateTime?
+  sectionId String?
+
+  class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  section Section? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+
+  @@unique([classId, userId])
+  @@unique([email, classId])
+  @@index([classId])
+  @@index([userId])
+  @@index([sectionId])
+}
+
+model ClassBan {
+  id      String  @id @default(cuid())
+  classId String
+  userId  String?
+  // Preserve the email in case the user deletes their account to evade the ban
+  email   String
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  // The ban still applies even if the user deletes their account
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([classId, userId])
+  @@unique([email, classId])
+  @@index([classId])
+  @@index([userId])
+}
+
+model PendingClassInvite {
+  id      String @id @default(cuid())
+  classId String
+  email   String
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@unique([classId, email])
+  @@index([classId])
+  @@index([email])
+}
+
+model Assignment {
+  id          String    @id @default(cuid())
+  classId     String
+  sectionId   String
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  availableAt DateTime?
+  dueAt       DateTime?
+
+  class     Class                    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  section   Section                  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  studySets StudySetsOnAssignments[]
+
+  @@index([classId])
+  @@index([sectionId])
+}
+
 model AllowedEmailRegex {
   regex     String   @id @unique
   label     String
@@ -193,21 +301,23 @@ model RecentFailedLogin {
 }
 
 model StudySet {
-  id                 String               @id @default(cuid())
+  id                 String                   @id @default(cuid())
   userId             String
-  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt          DateTime             @default(now())
-  savedAt            DateTime             @default(now()) @updatedAt
-  title              String               @db.VarChar(255)
-  description        String               @db.VarChar(2000)
-  tags               Json                 @default("[]")
-  visibility         StudySetVisibility   @default(Public)
-  wordLanguage       String               @default("en")
-  definitionLanguage String               @default("en")
+  user               User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime                 @default(now())
+  savedAt            DateTime                 @default(now()) @updatedAt
+  title              String                   @db.VarChar(255)
+  description        String                   @db.VarChar(2000)
+  tags               Json                     @default("[]")
+  visibility         StudySetVisibility       @default(Public)
+  wordLanguage       String                   @default("en")
+  definitionLanguage String                   @default("en")
   terms              Term[]
   containers         Container[]
   folders            StudySetsOnFolders[]
   leaderboards       Leaderboard[]
+  classes            StudySetsOnClasses[]
+  assignments        StudySetsOnAssignments[]
 
   @@unique([id, userId])
   @@index([userId])
@@ -230,6 +340,7 @@ model Folder {
   studySets    StudySetsOnFolders[]
   containers   Container[]
   leaderboards Leaderboard[]
+  classes      FoldersOnClasses[]
 
   @@unique([id, userId])
   @@unique([userId, slug])
@@ -244,6 +355,39 @@ model StudySetsOnFolders {
   @@id([studySetId, folderId])
   @@index([studySetId])
   @@index([folderId])
+}
+
+model StudySetsOnClasses {
+  studySetId String
+  classId    String
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, classId])
+  @@index([studySetId])
+  @@index([classId])
+}
+
+model FoldersOnClasses {
+  folderId String
+  classId  String
+  folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  class    Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([folderId, classId])
+  @@index([folderId])
+  @@index([classId])
+}
+
+model StudySetsOnAssignments {
+  studySetId   String
+  assignmentId String
+  studySet     StudySet   @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, assignmentId])
+  @@index([studySetId])
+  @@index([assignmentId])
 }
 
 model SetAutoSave {
@@ -267,7 +411,7 @@ model Term {
   definition String   @db.VarChar(1000)
   rank       Int
   studySetId String
-  StudySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -311,6 +455,8 @@ model Highscore {
   leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id], onDelete: Cascade)
 
   @@id([leaderboardId, userId, eligible])
+  @@index([userId])
+  @@index([leaderboardId])
 }
 
 model EntityShare {

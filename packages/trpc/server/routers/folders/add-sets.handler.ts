@@ -12,6 +12,13 @@ export const addSetsHandler = async ({ ctx, input }: AddSetsOptions) => {
     where: {
       id: input.folderId,
     },
+    include: {
+      studySets: {
+        select: {
+          studySetId: true,
+        },
+      },
+    },
   });
 
   if (!folder || folder.userId !== ctx.session.user.id) {
@@ -24,7 +31,13 @@ export const addSetsHandler = async ({ ctx, input }: AddSetsOptions) => {
     where: {
       id: {
         in: input.studySetIds,
+        notIn: folder.studySets.map((x) => x.studySetId),
       },
+    },
+    select: {
+      id: true,
+      userId: true,
+      visibility: true,
     },
   });
 
@@ -40,9 +53,9 @@ export const addSetsHandler = async ({ ctx, input }: AddSetsOptions) => {
   }
 
   await ctx.prisma.studySetsOnFolders.createMany({
-    data: input.studySetIds.map((studySetId) => ({
+    data: studySets.map((s) => ({
       folderId: input.folderId,
-      studySetId,
+      studySetId: s.id,
     })),
   });
 };

@@ -41,8 +41,8 @@ export const ToggleGroup = ({
     <ToggleGroupContext.Provider
       value={{ index, onChange, tabProps, ...props }}
     >
-      <Tabs variant="unstyled" shadow="sm" rounded="md" isManual {...props}>
-        <TabList border="2px solid" borderColor={borderColor} rounded="md">
+      <Tabs variant="unstyled" shadow="sm" rounded="lg" isManual {...props}>
+        <TabList border="2px solid" borderColor={borderColor} rounded="lg">
           {children}
         </TabList>
       </Tabs>

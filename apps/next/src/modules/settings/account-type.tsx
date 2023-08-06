@@ -26,7 +26,11 @@ export const AccountType = () => {
       heading="Account Type"
       description="Select your account type."
     >
-      <ToggleGroup index={type == "Student" ? 0 : 1} tabProps={{ w: "full" }}>
+      <ToggleGroup
+        index={type == "Student" ? 0 : 1}
+        tabProps={{ w: "full" }}
+        h="max-content"
+      >
         <ToggleGroup.Tab
           onClick={(e) => {
             e.preventDefault();

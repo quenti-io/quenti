@@ -10,7 +10,7 @@ type RecentOptions = {
 export const recentHandler = async ({ ctx, input }: RecentOptions) => {
   return await getRecentStudySets(
     ctx.prisma,
-    ctx.session?.user?.id,
+    ctx.session.user.id,
     input.exclude
   );
 };

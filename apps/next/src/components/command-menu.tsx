@@ -16,7 +16,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { env } from "@quenti/env/client";
+import { avatarUrl } from "@quenti/lib/avatar";
 import type { User } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
 import {
   IconBooks,
   IconBuilding,
@@ -27,6 +29,7 @@ import {
   IconLink,
   IconMoon,
   IconPlus,
+  IconSchool,
   IconSettings,
   IconSun,
   IconUser,
@@ -37,9 +40,9 @@ import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
+import { useIsTeacher } from "../hooks/use-is-teacher";
 import { useShortcut } from "../hooks/use-shortcut";
-import { api } from "@quenti/trpc";
-import { avatarUrl } from "@quenti/lib/avatar";
+import { plural } from "../utils/string";
 
 export interface CommandMenuProps {
   isOpen: boolean;
@@ -62,6 +65,7 @@ export interface MenuOption {
   searchableName?: string;
   label?: string;
   action: (ctrl: boolean) => void | Promise<void>;
+  sortableDate?: Date;
   entity?: Entity;
   shouldShow?: () => boolean;
   loadable?: boolean;
@@ -75,6 +79,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const router = useRouter();
   const session = useSession();
   const devActions = useDevActions();
+  const isTeacher = useIsTeacher();
   const { colorMode, toggleColorMode } = useColorMode();
 
   const dismiss = router.pathname == "/onboarding/command-menu";
@@ -126,6 +131,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, ""),
           action: (ctrl) => openLink(`/${set.id}`, ctrl),
+          sortableDate: set.viewedAt,
           entity: {
             id: set.id,
             name: set.title,
@@ -148,6 +154,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, ""),
           action: (ctrl) => openLink(url, ctrl),
+          sortableDate: folder.viewedAt,
           entity: {
             id: folder.id,
             name: folder.title,
@@ -158,11 +165,34 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           shouldShow: () => !window.location.pathname.startsWith(url),
         });
       }
+      for (const class_ of data.classes) {
+        const url = `/classes/${class_.id}`;
+
+        total.push({
+          icon: <IconSchool />,
+          name: class_.name,
+          label:
+            class_._count.members !== undefined
+              ? `${plural(class_._count.members || 0, "student")} · ${plural(
+                  class_._count.sections || 0,
+                  "section"
+                )}`
+              : `${plural(class_._count.studySets || 0, "set")} · ${plural(
+                  class_._count.folders || 0,
+                  "folder"
+                )}`,
+          sortableDate: class_.viewedAt || undefined,
+          searchableName: class_.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""),
+          action: (ctrl) => openLink(url, ctrl),
+          shouldShow: () => !window.location.pathname.startsWith(url),
+        });
+      }
 
       total = total.sort(
         (a, b) =>
-          (b.entity?.viewedAt.getTime() || 0) -
-          (a.entity?.viewedAt.getTime() || 0)
+          (b.sortableDate?.getTime() || 0) - (a.sortableDate?.getTime() || 0)
       );
 
       if (onSet || onFolder) {
@@ -241,6 +271,14 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         label: "Create a new folder",
         action: () => menuEventChannel.emit("createFolder"),
       });
+      if (isTeacher) {
+        total.push({
+          icon: <IconPlus />,
+          name: "Create Class",
+          label: "Create a new class",
+          action: () => menuEventChannel.emit("createClass"),
+        });
+      }
 
       total.push({
         icon: colorMode == "dark" ? <IconSun /> : <IconMoon />,

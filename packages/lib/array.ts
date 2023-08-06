@@ -27,3 +27,5 @@ export const takeNRandom = <T>(arr: T[], n: number) => {
   const shuffled = shuffleArray(Array.from(arr));
   return shuffled.slice(0, n);
 };
+
+export const allEqual = <T>(arr: T[]) => arr.every((val) => val === arr[0]);

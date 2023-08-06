@@ -1,20 +1,15 @@
 import { Container, Stack } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
 import type { ComponentWithAuth } from "../components/auth-component";
-import { Loading } from "../components/loading";
 import { WithFooter } from "../components/with-footer";
-import { useLoading } from "../hooks/use-loading";
 import { EmptyDashboard } from "../modules/home/empty-dashboard";
 import { SetGrid } from "../modules/home/set-grid";
+import { ClassesGrid } from "../modules/home/classes-grid";
 
 const Home: ComponentWithAuth = () => {
   const { data, isLoading } = api.recent.get.useQuery();
-  const official = api.studySets.getOfficial.useQuery();
 
   const isEmpty = !data?.sets.length && !data?.folders.length;
-
-  const { loading } = useLoading();
-  if (loading) return <Loading />;
 
   return (
     <WithFooter>
@@ -29,12 +24,11 @@ const Home: ComponentWithAuth = () => {
               skeletonCount={16}
             />
           )}
-          <SetGrid
-            data={{ sets: official.data || [], folders: [] }}
-            isLoading={official.isLoading}
-            heading="Example Sets"
-            skeletonCount={8}
-            verified
+          <ClassesGrid
+            heading="Classes"
+            isLoading={isLoading}
+            skeletonCount={4}
+            classes={data?.classes || []}
           />
         </Stack>
       </Container>

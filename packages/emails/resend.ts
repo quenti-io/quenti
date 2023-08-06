@@ -1,11 +1,14 @@
 import { env } from "@quenti/env/server";
 import { Resend } from "resend";
 import type { CreateEmailOptions } from "resend/build/src/emails/interfaces";
+
+import ClasssInviteEmail, {
+  type ClassInviteEmailProps,
+} from "./templates/class-invite";
 import ConfirmCodeEmail, {
   type ConfirmCodeEmailProps,
 } from "./templates/confirm-code";
-import {
-  OrganizationInviteEmail,
+import OrganizationInviteEmail, {
   type OrganizationInviteEmailProps,
 } from "./templates/organization-invite";
 
@@ -22,10 +25,24 @@ export const resend = env.RESEND_API_KEY
 
 export const sendEmail = async (opts: CreateEmailOptions) => {
   if (!resend) {
-    console.warn("Resend not configured, skipping email send");
+    console.warn("Resend not configured, skipping email send", opts);
     return;
   }
   await resend.sendEmail({ ...opts, to: to(opts.to) });
+};
+
+export const sendClassInviteEmail = async (
+  email: string,
+  opts: ClassInviteEmailProps
+) => {
+  await sendEmail({
+    from: NOTIFICATIONS_SENDER,
+    to: email,
+    subject: `${opts.inviter.name ?? opts.inviter.email} invited you to join ${
+      opts.className
+    } on Quenti`,
+    react: ClasssInviteEmail(opts),
+  });
 };
 
 export const sendOrganizationInviteEmail = async (

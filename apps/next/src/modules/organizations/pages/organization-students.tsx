@@ -1,27 +1,20 @@
 import {
-  Box,
   Button,
   HStack,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Progress,
   ScaleFade,
-  Skeleton,
   SlideFade,
   Stack,
   Table,
   TableContainer,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { api } from "@quenti/trpc";
+import { IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { ClientOnly } from "../../../components/client-only";
+import { LoadingSearch } from "../../../components/loading-search";
 import { useDebounce } from "../../../hooks/use-debounce";
 import { useOrganization } from "../../../hooks/use-organization";
-import { api } from "@quenti/trpc";
 import { plural } from "../../../utils/string";
 import { AddStudentModal } from "../add-student-modal";
 import { EmptyStudentsCard } from "../empty-students-card";
@@ -70,6 +63,9 @@ export const OrganizationStudents = () => {
     if (observerTarget.current) {
       observer.observe(observerTarget.current);
     }
+    return () => {
+      observer.disconnect();
+    };
   }, [data?.pageParams, fetchNextPage]);
 
   const [addModalOpen, setAddModalOpen] = React.useState(false);
@@ -80,8 +76,6 @@ export const OrganizationStudents = () => {
   const onRequestRemove = React.useCallback((id: string) => {
     setRemoveStudent(id);
   }, []);
-
-  const menuBg = useColorModeValue("white", "gray.800");
 
   if (org && org._count.users == 0) return <EmptyStudentsCard />;
   const isAdmin = org?.me.role == "Admin" || org?.me.role == "Owner";
@@ -99,86 +93,15 @@ export const OrganizationStudents = () => {
       />
       <Stack spacing="6">
         <HStack>
-          <Skeleton
-            rounded="md"
-            fitContent
-            isLoaded={!!org}
-            w="full"
-            position="relative"
-            overflow="hidden"
-          >
-            <InputGroup
-              bg="transparent"
-              shadow="sm"
-              rounded="md"
-              w="full"
-              position="relative"
-            >
-              <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
-                <IconSearch size={18} />
-              </InputLeftElement>
-              <Input
-                zIndex="20"
-                placeholder={`Search ${plural(
-                  org?._count.users || 0,
-                  "student",
-                  {
-                    toLocaleString: true,
-                  }
-                )}...`}
-                pl="44px"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Box
-                position="absolute"
-                top="0"
-                left="0"
-                width="full"
-                h="full"
-                bg={menuBg}
-              />
-              <AnimatePresence>
-                {(debouncedSearch != search || isPreviousData) && (
-                  <motion.div
-                    style={{
-                      position: "absolute",
-                      top: "0",
-                      left: "0",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    initial={{ opacity: 0.3 }}
-                    animate={{ opacity: 0.3 }}
-                    exit={{
-                      opacity: 0,
-                      transition: { duration: 1, ease: "linear" },
-                    }}
-                  >
-                    <Progress
-                      position="absolute"
-                      height="1px"
-                      top="0"
-                      left="0"
-                      w="full"
-                      h="full"
-                      isIndeterminate
-                      background={menuBg}
-                    />
-                    <Box
-                      position="absolute"
-                      top="0"
-                      left="0"
-                      w="full"
-                      h="full"
-                      bg="transparent"
-                      backdropFilter="blur(100px)"
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </InputGroup>
-          </Skeleton>
+          <LoadingSearch
+            value={search}
+            onChange={setSearch}
+            placeholder={`Search ${plural(org?._count.users || 0, "student", {
+              toLocaleString: true,
+            })}...`}
+            debounceInequality={search != debouncedSearch}
+            isPreviousData={isPreviousData}
+          />
           <OrganizationAdminOnly>
             <Button
               leftIcon={<IconPlus size={18} />}
