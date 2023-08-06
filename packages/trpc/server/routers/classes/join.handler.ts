@@ -11,6 +11,7 @@ export const joinHandler = async ({ ctx, input }: JoinOptions) => {
   if (input.code) {
     throw new Error("Not implemented");
   } else if (input.id) {
+    console.log(ctx.session.user.email);
     const invite = await ctx.prisma.pendingClassInvite.findUnique({
       where: {
         classId_email: {
@@ -27,6 +28,7 @@ export const joinHandler = async ({ ctx, input }: JoinOptions) => {
         id: invite.id,
       },
     });
+    console.log(ctx.session.user.id, ctx.session.user.email!);
 
     await ctx.prisma.classMembership.create({
       data: {
