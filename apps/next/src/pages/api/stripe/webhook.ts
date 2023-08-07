@@ -2,8 +2,8 @@ import { env } from "@quenti/env/server";
 import { getErrorFromUnknown } from "@quenti/lib/error";
 import { HttpError } from "@quenti/lib/http-error";
 import { cancelOrganizationSubscription, stripe } from "@quenti/payments";
-import { deactivateOrgDomain } from "@quenti/trpc/server/lib/orgs/domains";
-import { disbandOrgStudents } from "@quenti/trpc/server/lib/orgs/students";
+import { deactivateOrgDomains } from "@quenti/trpc/server/lib/orgs/domains";
+import { disbandOrgUsers } from "@quenti/trpc/server/lib/orgs/students";
 import { buffer } from "micro";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type Stripe from "stripe";
@@ -44,8 +44,8 @@ const webhookHandlers: Record<string, WebhookHandler | undefined> = {
 
       throw err;
     }
-    await deactivateOrgDomain(metadata.data.orgId);
-    await disbandOrgStudents(metadata.data.orgId);
+    await deactivateOrgDomains(metadata.data.orgId);
+    await disbandOrgUsers(metadata.data.orgId);
   },
 };
 

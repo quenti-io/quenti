@@ -1,5 +1,6 @@
 import { MembershipRole, Prisma } from "@quenti/prisma/client";
 import { TRPCError } from "@trpc/server";
+import { isInOrganizationBase } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAcceptTokenSchema } from "./accept-token.schema";
 
@@ -27,11 +28,20 @@ export const acceptTokenHandler = async ({
   if (!token.organizationId || !token.organization)
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: "Token is not associated with a team",
+      message: "Token is not associated with an organization",
     });
 
+  if (
+    !(await isInOrganizationBase(ctx.session.user.email!, token.organizationId))
+  ) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "user_not_in_domain",
+    });
+  }
+
   try {
-    await ctx.prisma.membership.create({
+    await ctx.prisma.organizationMembership.create({
       data: {
         orgId: token.organizationId,
         userId: ctx.session.user.id,
@@ -44,7 +54,7 @@ export const acceptTokenHandler = async ({
       if (e.code === "P2002") {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "Already a member of this team",
+          message: "Already a member of this organization",
         });
       }
     } else throw e;

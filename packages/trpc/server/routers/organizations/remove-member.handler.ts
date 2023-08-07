@@ -11,7 +11,7 @@ export const removeMemberHandler = async ({
   ctx,
   input,
 }: RemoveMemberOptions) => {
-  const membership = await ctx.prisma.membership.findFirst({
+  const membership = await ctx.prisma.organizationMembership.findFirst({
     where: {
       userId: ctx.session.user.id,
       orgId: input.orgId,
@@ -20,7 +20,7 @@ export const removeMemberHandler = async ({
   });
   if (!membership) throw new TRPCError({ code: "UNAUTHORIZED" });
 
-  const members = await ctx.prisma.membership.findMany({
+  const members = await ctx.prisma.organizationMembership.findMany({
     where: {
       orgId: input.orgId,
     },
@@ -53,16 +53,13 @@ export const removeMemberHandler = async ({
       });
     }
 
-    await ctx.prisma.membership.delete({
+    await ctx.prisma.organizationMembership.delete({
       where: {
-        userId_orgId: {
-          userId: input.genericId,
-          orgId: input.orgId,
-        },
+        userId: input.genericId,
       },
     });
   } else {
-    const targetInvite = await ctx.prisma.pendingInvite.findUnique({
+    const targetInvite = await ctx.prisma.pendingOrganizationInvite.findUnique({
       where: {
         id: input.genericId,
       },
@@ -71,7 +68,7 @@ export const removeMemberHandler = async ({
     if (!targetInvite || targetInvite.orgId !== input.orgId)
       throw new TRPCError({ code: "NOT_FOUND" });
 
-    await ctx.prisma.pendingInvite.delete({
+    await ctx.prisma.pendingOrganizationInvite.delete({
       where: {
         id: input.genericId,
       },

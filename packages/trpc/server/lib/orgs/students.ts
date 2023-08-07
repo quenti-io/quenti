@@ -1,36 +1,25 @@
 import { prisma } from "@quenti/prisma";
+import type { UserType } from "@quenti/prisma/client";
 
-export const getJoiningOrgId = async (email: string) => {
-  const domain = email.split("@")[1];
-
-  const verifiedDomain = await prisma.verifiedOrganizationDomain.findUnique({
-    where: {
-      domain,
-    },
-  });
-
-  return verifiedDomain?.orgId;
-};
-
-export const bulkJoinOrgStudents = async (orgId: string, domain: string) => {
+export const bulkJoinOrgUsers = async (
+  orgId: string,
+  domain: string,
+  as?: UserType
+) => {
   return await prisma.user.updateMany({
     where: {
       email: {
         endsWith: `@${domain}`,
       },
-      organizations: {
-        none: {
-          orgId,
-        },
-      },
     },
     data: {
       organizationId: orgId,
+      type: as,
     },
   });
 };
 
-export const disbandOrgStudentsByDomain = async (domain: string) => {
+export const disbandOrgUsersByDomain = async (domain: string) => {
   return await prisma.user.updateMany({
     where: {
       email: {
@@ -43,7 +32,7 @@ export const disbandOrgStudentsByDomain = async (domain: string) => {
   });
 };
 
-export const disbandOrgStudents = async (orgId: string) => {
+export const disbandOrgUsers = async (orgId: string) => {
   return await prisma.user.updateMany({
     where: {
       organizationId: orgId,

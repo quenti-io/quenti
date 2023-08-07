@@ -22,6 +22,7 @@ export const getStudentsHandler = async ({
     where: input.query
       ? {
           organizationId: input.orgId,
+          type: "Student",
           OR: [
             { username: { contains: input.query } },
             { name: { contains: input.query } },
@@ -30,6 +31,7 @@ export const getStudentsHandler = async ({
         }
       : {
           organizationId: input.orgId,
+          type: "Student",
         },
     take: limit + 1,
     cursor: cursor ? { email: cursor } : undefined,

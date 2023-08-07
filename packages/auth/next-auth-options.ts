@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
         session.user.enableUsageData = user.enableUsageData;
         session.user.changelogVersion = user.changelogVersion;
         session.user.organizationId = user.organizationId;
+        session.user.isOrgEligible = user.isOrgEligible;
 
         session.version = version;
       }

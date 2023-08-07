@@ -18,9 +18,12 @@ export const resendCodeHandler = async ({ ctx, input }: ResentCodeOptions) => {
       code: "UNAUTHORIZED",
     });
 
-  const domain = await ctx.prisma.verifiedOrganizationDomain.findUnique({
+  const domain = await ctx.prisma.organizationDomain.findUnique({
     where: {
-      orgId: input.orgId,
+      orgId_type: {
+        orgId: input.orgId,
+        type: "Student",
+      },
     },
   });
 
@@ -38,9 +41,12 @@ export const resendCodeHandler = async ({ ctx, input }: ResentCodeOptions) => {
 
   const { hash, otp } = genOtp(domain.verifiedEmail);
 
-  await ctx.prisma.verifiedOrganizationDomain.update({
+  await ctx.prisma.organizationDomain.update({
     where: {
-      orgId: input.orgId,
+      orgId_type: {
+        orgId: input.orgId,
+        type: "Student",
+      },
     },
     data: {
       otpHash: hash,

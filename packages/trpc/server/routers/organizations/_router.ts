@@ -2,8 +2,8 @@ import { loadHandler } from "../../lib/load-handler";
 import { createTRPCRouter, teacherProcedure } from "../../trpc";
 import { ZAcceptInviteSchema } from "./accept-invite.schema";
 import { ZAcceptTokenSchema } from "./accept-token.schema";
+import { ZAddStudentDomainSchema } from "./add-student-domain.schema";
 import { ZAddStudentSchema } from "./add-student.schema";
-import { ZConfirmCodeSchema } from "./confirm-code.schema";
 import { ZCreateInviteSchema } from "./create-invite.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
@@ -17,7 +17,7 @@ import { ZRemoveStudentSchema } from "./remove-student.schema";
 import { ZResendCodeSchema } from "./resend-code.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
 import { ZUpdateSchema } from "./update.schema";
-import { ZVerifyDomainSchema } from "./verify-domain.schema";
+import { ZVerifyStudentDomainSchema } from "./verify-student-domain.schema";
 
 type OrganizationsRouterHandlerCache = {
   handlers: {
@@ -35,11 +35,11 @@ type OrganizationsRouterHandlerCache = {
     ["accept-invite"]?: typeof import("./accept-invite.handler").acceptInviteHandler;
     ["edit-member-role"]?: typeof import("./edit-member-role.handler").editMemberRoleHandler;
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
-    ["verify-domain"]?: typeof import("./verify-domain.handler").verifyDomainHandler;
+    ["add-student-domain"]?: typeof import("./add-student-domain.handler").addStudentDomainHandler;
+    ["verify-student-domain"]?: typeof import("./verify-student-domain.handler").verifyStudentDomainHandler;
+    ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
     ["add-student"]?: typeof import("./add-student.handler").addStudentHandler;
     ["remove-student"]?: typeof import("./remove-student.handler").removeStudentHandler;
-    ["confirm-code"]?: typeof import("./confirm-code.handler").confirmCodeHandler;
-    ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
   };
 } & { routerPath: string };
 
@@ -129,11 +129,23 @@ export const organizationsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "remove-member");
       return HANDLER_CACHE.handlers["remove-member"]!({ ctx, input });
     }),
-  verifyDomain: teacherProcedure
-    .input(ZVerifyDomainSchema)
+  addStudentDomain: teacherProcedure
+    .input(ZAddStudentDomainSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "verify-domain");
-      return HANDLER_CACHE.handlers["verify-domain"]!({ ctx, input });
+      await loadHandler(HANDLER_CACHE, "add-student-domain");
+      return HANDLER_CACHE.handlers["add-student-domain"]!({ ctx, input });
+    }),
+  verifyStudentDomain: teacherProcedure
+    .input(ZVerifyStudentDomainSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "verify-student-domain");
+      return HANDLER_CACHE.handlers["verify-student-domain"]!({ ctx, input });
+    }),
+  resendCode: teacherProcedure
+    .input(ZResendCodeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "resend-code");
+      return HANDLER_CACHE.handlers["resend-code"]!({ ctx, input });
     }),
   addStudent: teacherProcedure
     .input(ZAddStudentSchema)
@@ -146,17 +158,5 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "remove-student");
       return HANDLER_CACHE.handlers["remove-student"]!({ ctx, input });
-    }),
-  confirmCode: teacherProcedure
-    .input(ZConfirmCodeSchema)
-    .mutation(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "confirm-code");
-      return HANDLER_CACHE.handlers["confirm-code"]!({ ctx, input });
-    }),
-  resendCode: teacherProcedure
-    .input(ZResendCodeSchema)
-    .mutation(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "resend-code");
-      return HANDLER_CACHE.handlers["resend-code"]!({ ctx, input });
     }),
 });

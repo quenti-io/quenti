@@ -1,8 +1,10 @@
-import { env } from "@quenti/env/client";
-import { TRPCError } from "@trpc/server";
 import { sendOrganizationInviteEmail } from "@quenti/emails";
+import { env } from "@quenti/env/client";
+import { allEqual } from "@quenti/lib/array";
+import { TRPCError } from "@trpc/server";
 import { getIp } from "../../lib/get-ip";
 import {
+  isInOrganizationBase,
   isOrganizationAdmin,
   isOrganizationOwner,
 } from "../../lib/queries/organizations";
@@ -30,6 +32,17 @@ export const inviteMemberHandler = async ({
     ],
   });
 
+  const emailDomains = input.emails.map((e) => e.split("@")[1]!);
+  if (
+    !allEqual(emailDomains) ||
+    (await isInOrganizationBase(`email@${emailDomains[0]!}`, input.orgId))
+  ) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "contains_invalid_emails",
+    });
+  }
+
   if (
     input.role == "Owner" &&
     !(await isOrganizationOwner(ctx.session.user.id, input.orgId))
@@ -48,22 +61,18 @@ export const inviteMemberHandler = async ({
     select: {
       id: true,
       email: true,
-      organizations: {
-        where: {
-          orgId: input.orgId,
-        },
-      },
+      organization: true,
     },
   });
 
-  const existingInvites = await ctx.prisma.pendingInvite.findMany({
+  const existingInvites = await ctx.prisma.pendingOrganizationInvite.findMany({
     where: {
       orgId: input.orgId,
     },
   });
 
   // Filter out users that are already part of the organization
-  existingUsers = existingUsers.filter((u) => u.organizations.length === 0);
+  existingUsers = existingUsers.filter((u) => !u.organization);
 
   const existingIds = existingUsers.map((u) => u.id);
   const existingEmails = existingUsers.map((u) => u.email).filter((e) => !!e);
@@ -73,7 +82,7 @@ export const inviteMemberHandler = async ({
     (e) => !existingEmails.includes(e) && !existingInviteEmails.includes(e)
   );
 
-  await ctx.prisma.membership.createMany({
+  await ctx.prisma.organizationMembership.createMany({
     data: existingIds.map((id) => ({
       orgId: input.orgId,
       userId: id,
@@ -82,7 +91,7 @@ export const inviteMemberHandler = async ({
     })),
   });
 
-  await ctx.prisma.pendingInvite.createMany({
+  await ctx.prisma.pendingOrganizationInvite.createMany({
     data: pendingInvites.map((email) => ({
       email,
       orgId: input.orgId,
@@ -106,7 +115,7 @@ export const inviteMemberHandler = async ({
     for (const email of pendingInvites) {
       await sendOrganizationInviteEmail(email, {
         orgName: org.name,
-        // Onboarding fetches pending invites so we can use the regular signup
+        // Onboarding fetches the pending invite so we can use the regular signup flow
         url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
         inviter,
       });

@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getOrgDomains } from "../../lib/orgs/domains";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAddStudentSchema } from "./add-student.schema";
@@ -15,17 +16,18 @@ export const addStudentHandler = async ({ ctx, input }: AddStudentOptions) => {
   if (input.email == ctx.session.user.email)
     throw new TRPCError({ code: "BAD_REQUEST", message: "cannot_add_self" });
 
-  const domain = await ctx.prisma.verifiedOrganizationDomain.findUnique({
-    where: {
-      orgId: input.orgId,
-    },
-  });
+  const domains = await getOrgDomains(input.orgId);
 
-  if (!domain || !domain.domain) {
+  if (!domains || domains.find((d) => !d.verifiedAt || !d.domain)) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "no_verified_domain",
+      message: "contains_unverified_domains",
     });
+  }
+
+  let domain = domains.find((d) => d.type == "Student");
+  if (!domain) {
+    domain = domains.find((d) => d.type == "Base")!;
   }
 
   const studentDomain = input.email.split("@")[1]!;
@@ -56,10 +58,9 @@ export const addStudentHandler = async ({ ctx, input }: AddStudentOptions) => {
     });
   }
 
-  const membership = await ctx.prisma.membership.findFirst({
+  const membership = await ctx.prisma.organizationMembership.findFirst({
     where: {
       userId: student.id,
-      orgId: input.orgId,
     },
   });
 
@@ -76,6 +77,7 @@ export const addStudentHandler = async ({ ctx, input }: AddStudentOptions) => {
     },
     data: {
       organizationId: input.orgId,
+      type: "Student",
     },
   });
 };

@@ -2,8 +2,8 @@ import { getServerAuthSession } from "@quenti/auth";
 import { IS_PAYMENT_ENABLED } from "@quenti/lib/constants/payments";
 import { purchaseOrganizationSubscription } from "@quenti/payments";
 import {
-  conflictingDomain,
-  getOrgDomain,
+  conflictingDomains,
+  getOrgDomains,
 } from "@quenti/trpc/server/lib/orgs/domains";
 import { isOrganizationAdmin } from "@quenti/trpc/server/lib/queries/organizations";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -34,14 +34,18 @@ export default async function handler(
   if (!(await isOrganizationAdmin(session.user.id, orgId)))
     return res.status(403).json({ error: "Forbidden" });
 
-  const domain = await getOrgDomain(orgId);
-  if (!domain?.verifiedAt)
+  const domains = await getOrgDomains(orgId);
+  if (!domains.length)
     return res
       .status(400)
-      .json({ error: "Must have a verified domain before publishing" });
+      .json({ error: "Organization missing verified domain" });
 
-  if (await conflictingDomain(orgId, domain.requestedDomain))
-    return res.status(409).json({ error: "Domain conflict" });
+  const conflicting = await conflictingDomains(
+    orgId,
+    domains.map((d) => d.requestedDomain)
+  );
+  if (!!conflicting.length)
+    return res.status(409).json({ error: "Conflicting domains" });
 
   const checkoutSession = await purchaseOrganizationSubscription({
     orgId,

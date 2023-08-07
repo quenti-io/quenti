@@ -18,6 +18,7 @@ declare module "next-auth" {
       enableUsageData: boolean;
       changelogVersion: string;
       organizationId: string | null;
+      isOrgEligible: boolean;
     } & DefaultSession["user"];
     version: string;
   }
@@ -34,5 +35,6 @@ declare module "next-auth" {
     enableUsageData: boolean;
     changelogVersion: string;
     organizationId: string | null;
+    isOrgEligible: boolean;
   }
 }
