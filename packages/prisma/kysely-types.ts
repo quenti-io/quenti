@@ -180,13 +180,6 @@ export type Leaderboard = {
   entityId: string;
   type: LeaderboardType;
 };
-export type Membership = {
-  id: string;
-  orgId: string;
-  userId: string;
-  accepted: Generated<number>;
-  role: MembershipRole;
-};
 export type Organization = {
   id: string;
   name: string;
@@ -198,12 +191,19 @@ export type Organization = {
    */
   metadata: unknown | null;
 };
+export type OrganizationMembership = {
+  id: string;
+  orgId: string;
+  userId: string;
+  accepted: Generated<number>;
+  role: MembershipRole;
+};
 export type PendingClassInvite = {
   id: string;
   classId: string;
   email: string;
 };
-export type PendingInvite = {
+export type PendingOrganizationInvite = {
   id: string;
   orgId: string;
   email: string;
@@ -303,6 +303,7 @@ export type User = {
   metadata: unknown | null;
   enableUsageData: Generated<number>;
   changelogVersion: string;
+  isOrgEligible: Generated<number>;
   organizationId: string | null;
 };
 export type VerificationToken = {
@@ -315,6 +316,12 @@ export type VerificationToken = {
   organizationId: string | null;
 };
 export type VerifiedOrganizationDomain = {
+  id: string;
+  orgId: string;
+  requestedDomain: string;
+  domain: string | null;
+};
+export type VerifiedStudentDomain = {
   id: string;
   orgId: string;
   requestedDomain: string;
@@ -341,10 +348,10 @@ export type DB = {
   FoldersOnClasses: FoldersOnClasses;
   Highscore: Highscore;
   Leaderboard: Leaderboard;
-  Membership: Membership;
   Organization: Organization;
+  OrganizationMembership: OrganizationMembership;
   PendingClassInvite: PendingClassInvite;
-  PendingInvite: PendingInvite;
+  PendingOrganizationInvite: PendingOrganizationInvite;
   RecentFailedLogin: RecentFailedLogin;
   Section: Section;
   Session: Session;
@@ -359,5 +366,6 @@ export type DB = {
   User: User;
   VerificationToken: VerificationToken;
   VerifiedOrganizationDomain: VerifiedOrganizationDomain;
+  VerifiedStudentDomain: VerifiedStudentDomain;
   WhitelistedEmail: WhitelistedEmail;
 };
