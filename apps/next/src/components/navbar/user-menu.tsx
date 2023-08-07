@@ -11,8 +11,8 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
+import { avatarUrl } from "@quenti/lib/avatar";
 import {
-  IconBuilding,
   IconChevronDown,
   IconLogout,
   IconMoon,
@@ -25,9 +25,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { BASE_PAGES } from "../../pages/_app";
-import { avatarUrl } from "@quenti/lib/avatar";
 import { MenuOption } from "../menu-option";
-import { TeacherOnly } from "../teacher-only";
 
 export const UserMenu = () => {
   const router = useRouter();
@@ -92,14 +90,6 @@ export const UserMenu = () => {
         <Link href="/settings" passHref>
           <MenuOption icon={<IconSettings size={18} />} label="Settings" />
         </Link>
-        <TeacherOnly>
-          <Link href="/orgs" passHref>
-            <MenuOption
-              icon={<IconBuilding size={18} />}
-              label="Organizations"
-            />
-          </Link>
-        </TeacherOnly>
         {!onStaticPage && (
           <>
             <MenuDivider />

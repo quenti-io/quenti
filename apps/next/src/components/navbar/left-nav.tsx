@@ -15,6 +15,7 @@ import {
   IconCloudDownload,
   IconFolder,
   IconSchool,
+  IconSparkles,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
@@ -25,6 +26,7 @@ import { BASE_PAGES } from "../../pages/_app";
 import { Link } from "../link";
 import { MenuOption } from "../menu-option";
 import { TeacherOnly } from "../teacher-only";
+import { UnboundOnly } from "../unbound-only";
 
 export interface LeftNavProps {
   onFolderClick: () => void;
@@ -76,18 +78,20 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           >
             Home
           </Button>
-          {session?.user?.admin && (
-            <Button
-              as={Link}
-              href="/admin"
-              variant="ghost"
-              colorScheme="gray"
-              fontWeight={700}
-              fontSize="sm"
-            >
-              Admin
-            </Button>
-          )}
+          <TeacherOnly>
+            <UnboundOnly>
+              <Button
+                as={Link}
+                href="/orgs"
+                variant="ghost"
+                fontWeight={700}
+                fontSize="sm"
+                leftIcon={<IconSparkles size={18} />}
+              >
+                Upgrade
+              </Button>
+            </UnboundOnly>
+          </TeacherOnly>
           <Menu
             placement="bottom-start"
             isOpen={menuOpen}

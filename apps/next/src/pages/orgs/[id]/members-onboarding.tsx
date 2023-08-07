@@ -68,6 +68,7 @@ export default function OrgMembersOnboarding() {
             isOpen={inviteModalOpen}
             onClose={() => setInviteModalOpen(false)}
             orgId={org.id}
+            domain={org.domains.find((d) => d.type == "Base")!.requestedDomain}
             token={org.inviteToken?.token}
           />
         )}
