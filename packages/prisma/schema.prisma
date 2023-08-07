@@ -117,16 +117,15 @@ model VerificationToken {
 }
 
 model Organization {
-  id            String                      @id @default(cuid())
-  name          String
-  createdAt     DateTime                    @default(now())
-  icon          Int                         @default(0)
-  published     Boolean                     @default(false)
-  baseDomain    VerifiedOrganizationDomain?
-  studentDomain VerifiedStudentDomain?
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  icon      Int      @default(0)
+  published Boolean  @default(false)
   /// @zod.custom(imports.orgMetadataSchema)
-  metadata      Json?
+  metadata  Json?
 
+  domains        OrganizationDomain[]
   members        OrganizationMembership[]
   users          User[]
   inviteToken    VerificationToken?
@@ -134,25 +133,27 @@ model Organization {
   classes        Class[]
 }
 
-model VerifiedOrganizationDomain {
-  id              String  @id @default(cuid())
-  orgId           String  @unique
-  requestedDomain String
-  domain          String? @unique
-
-  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+enum OrganizationDomainType {
+  Base
+  Student
 }
 
-model VerifiedStudentDomain {
-  id              String    @id @default(cuid())
-  orgId           String    @unique
+model OrganizationDomain {
+  id              String                 @id @default(cuid())
+  orgId           String
+  type            OrganizationDomainType
   requestedDomain String
-  domain          String?   @unique
+  domain          String?                @unique
   verifiedEmail   String
   otpHash         String?
   verifiedAt      DateTime?
+  filter          String?
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, type])
+  @@unique([orgId, requestedDomain])
+  @@index([orgId])
 }
 
 enum MembershipRole {
@@ -177,13 +178,13 @@ model OrganizationMembership {
 model PendingOrganizationInvite {
   id    String         @id @default(cuid())
   orgId String
-  email String
+  email String         @unique
   role  MembershipRole
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
-  @@unique([orgId, email])
   @@index([email])
+  @@index([orgId])
 }
 
 model Class {

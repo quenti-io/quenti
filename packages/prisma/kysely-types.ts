@@ -9,6 +9,12 @@ export const UserType = {
   Teacher: "Teacher",
 } as const;
 export type UserType = (typeof UserType)[keyof typeof UserType];
+export const OrganizationDomainType = {
+  Base: "Base",
+  Student: "Student",
+} as const;
+export type OrganizationDomainType =
+  (typeof OrganizationDomainType)[keyof typeof OrganizationDomainType];
 export const MembershipRole = {
   Member: "Member",
   Admin: "Admin",
@@ -191,6 +197,17 @@ export type Organization = {
    */
   metadata: unknown | null;
 };
+export type OrganizationDomain = {
+  id: string;
+  orgId: string;
+  type: OrganizationDomainType;
+  requestedDomain: string;
+  domain: string | null;
+  verifiedEmail: string;
+  otpHash: string | null;
+  verifiedAt: Timestamp | null;
+  filter: string | null;
+};
 export type OrganizationMembership = {
   id: string;
   orgId: string;
@@ -315,21 +332,6 @@ export type VerificationToken = {
   updatedAt: Timestamp;
   organizationId: string | null;
 };
-export type VerifiedOrganizationDomain = {
-  id: string;
-  orgId: string;
-  requestedDomain: string;
-  domain: string | null;
-};
-export type VerifiedStudentDomain = {
-  id: string;
-  orgId: string;
-  requestedDomain: string;
-  domain: string | null;
-  verifiedEmail: string;
-  otpHash: string | null;
-  verifiedAt: Timestamp | null;
-};
 export type WhitelistedEmail = {
   email: string;
   createdAt: Generated<Timestamp>;
@@ -349,6 +351,7 @@ export type DB = {
   Highscore: Highscore;
   Leaderboard: Leaderboard;
   Organization: Organization;
+  OrganizationDomain: OrganizationDomain;
   OrganizationMembership: OrganizationMembership;
   PendingClassInvite: PendingClassInvite;
   PendingOrganizationInvite: PendingOrganizationInvite;
@@ -365,7 +368,5 @@ export type DB = {
   Term: Term;
   User: User;
   VerificationToken: VerificationToken;
-  VerifiedOrganizationDomain: VerifiedOrganizationDomain;
-  VerifiedStudentDomain: VerifiedStudentDomain;
   WhitelistedEmail: WhitelistedEmail;
 };
