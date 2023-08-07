@@ -30,7 +30,7 @@ import { z } from "zod";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Modal } from "../../components/modal";
-import { useOrganization } from "../../hooks/use-organization";
+import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";
 
 export interface InviteMemberModalProps {
@@ -73,7 +73,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   domain,
   token,
 }) => {
-  const org = useOrganization();
+  const me = useOrganizationMember();
   const utils = api.useContext();
   const toast = useToast();
 
@@ -346,7 +346,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                     <MemberRoleSelect
                       value={value}
                       onChange={onChange}
-                      myRole={org?.me.role || "Admin"}
+                      myRole={me?.role || "Admin"}
                     />
                   </FormControl>
                 )}

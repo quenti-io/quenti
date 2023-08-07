@@ -24,7 +24,7 @@ export const WizardLayout: React.FC<
   React.PropsWithChildren<WizardLayoutProps>
 > = ({
   title,
-  description,
+  description: _description,
   steps,
   currentStep,
   children,
@@ -33,6 +33,12 @@ export const WizardLayout: React.FC<
   cardIn = true,
 }) => {
   const text = useColorModeValue("gray.600", "gray.400");
+
+  const description = (
+    <Text color={text} whiteSpace="pre-wrap">
+      {_description}
+    </Text>
+  );
 
   return (
     <Container maxW="2xl" pb="20">
@@ -48,10 +54,10 @@ export const WizardLayout: React.FC<
             <Heading size="lg">{title}</Heading>
             {enableSkeleton ? (
               <Skeleton isLoaded={isLoaded} fitContent>
-                <Text color={text}>{description}</Text>
+                {description}
               </Skeleton>
             ) : (
-              <Text color={text}>{description}</Text>
+              description
             )}
           </Stack>
         </Stack>
