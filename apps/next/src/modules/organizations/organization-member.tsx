@@ -15,6 +15,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { avatarUrl } from "@quenti/lib/avatar";
 import type { MembershipRole, User } from "@quenti/prisma/client";
 import {
   IconDotsVertical,
@@ -25,8 +26,7 @@ import {
 import React from "react";
 import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
-import { useOrganization } from "../../hooks/use-organization";
-import { avatarUrl } from "@quenti/lib/avatar";
+import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { OrganizationAdminOnly } from "./organization-admin-only";
 
 export interface OrganizationMemberProps {
@@ -50,15 +50,14 @@ export const OrganizationMember: React.FC<OrganizationMemberProps> = ({
   onRequestEdit,
   onRequestRemove,
 }) => {
-  const org = useOrganization();
-  const myRole: MembershipRole = org?.me?.role || "Member";
+  const me = useOrganizationMember();
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   const canManageMember =
-    user.id !== org?.me?.userId &&
-    myRole !== "Member" &&
-    (role !== "Owner" || myRole === "Owner");
+    user.id !== me?.userId &&
+    me?.role !== "Member" &&
+    (role !== "Owner" || me?.role === "Owner");
 
   const borderColor = useColorModeValue("gray.100", "gray.750");
   const bg = useColorModeValue("white", "gray.800");

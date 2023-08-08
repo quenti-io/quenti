@@ -14,11 +14,11 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Link } from "../../components/link";
-import { api } from "@quenti/trpc";
 import { getColorFromId } from "../../utils/color";
 import { organizationIcon } from "../../utils/icons";
 import { plural } from "../../utils/string";
@@ -161,7 +161,14 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
                 </Button>
               </ButtonGroup>
             ) : displayJoined ? (
-              <HStack color="green.400" spacing="1" bg={linkBg} pr="2" pl="4" rounded="full">
+              <HStack
+                color="green.400"
+                spacing="1"
+                bg={linkBg}
+                pr="2"
+                pl="4"
+                rounded="full"
+              >
                 <Text fontSize="xs" fontWeight={700}>
                   Joined
                 </Text>

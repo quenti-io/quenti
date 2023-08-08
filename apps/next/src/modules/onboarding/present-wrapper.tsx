@@ -15,11 +15,11 @@ import React from "react";
 import { Loading } from "../../components/loading";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useLoading } from "../../hooks/use-loading";
-import { api } from "@quenti/trpc";
+import { useMe } from "../../hooks/use-me";
 import { organizationIcon } from "../../utils/icons";
 
 const computeMap = (
-  invites = false,
+  invite = false,
   organizationBound = false,
   isMobile = false
 ) => {
@@ -33,7 +33,7 @@ const computeMap = (
 
   base.push("/account-type");
   if (!isMobile) base.push("/command-menu");
-  if (invites) base.push("/invites");
+  if (invite) base.push("/invite");
   base.push("/subscribe", "/done");
 
   return base;
@@ -44,42 +44,39 @@ interface PresentWrapperContextProps {
 }
 
 const PresentWrapperContext = React.createContext<PresentWrapperContextProps>({
-  nextStep: () => {
-    throw new Error("nextStep not implemented");
-  },
+  nextStep: () => undefined,
 });
 
 export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const router = useRouter();
-  const hasInvites = router.query.orgInvites === "true";
+  const hasInvite = router.query.orgInvite === "true";
   const isMobile = useMediaQuery("(max-width: 768px)")[0];
 
-  const { data: me } = api.user.me.useQuery(undefined, {
-    retry: false,
-  });
+  const { data: me } = useMe();
+
+  const isBound = !!me?.organization && !me.orgMembership;
 
   React.useEffect(() => {
-    if (!me || hasInvites) return;
-    const invites = me.memberships.filter((m) => !m.accepted).length > 0;
-    if (!invites) return;
+    if (!me || hasInvite) return;
+    if (!me.orgMembership || me.orgMembership.accepted) return;
 
     void router.replace({
-      query: { orgInvites: true },
+      query: { orgInvite: true },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [me, hasInvites]);
+  }, [me, hasInvite]);
 
   const muted = useColorModeValue("gray.500", "gray.500");
 
   const { loading } = useLoading();
   if (loading || !me) return <Loading fullHeight />;
 
-  const map = computeMap(hasInvites, !!me.organization, isMobile);
+  const map = computeMap(hasInvite, isBound, isMobile);
 
   const currentStep = router.pathname.replace("/onboarding", "");
-  const query = hasInvites ? `?orgInvites=true` : "";
+  const query = hasInvite ? `?orgInvite=true` : "";
 
   const nextStep = () => {
     const next = map[map.indexOf(currentStep)! + 1];
@@ -99,7 +96,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
               textAlign="center"
               py="2"
               label={`${
-                me.organization.domain?.domain || "example.com"
+                me.email.split("@")[1]! || "example.com"
               } accounts are managed by your organization`}
             >
               <HStack>

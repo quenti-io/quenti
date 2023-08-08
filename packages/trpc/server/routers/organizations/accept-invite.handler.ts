@@ -26,7 +26,7 @@ export const acceptInviteHandler = async ({
 
     await ctx.prisma.organizationMembership.update({
       where: {
-        id: ctx.session.user.id,
+        userId: ctx.session.user.id,
       },
       data: {
         accepted: true,

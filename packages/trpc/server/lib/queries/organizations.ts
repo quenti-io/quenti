@@ -36,7 +36,7 @@ export const isInOrganizationBase = async (email: string, orgId: string) => {
   return !!(await prisma.organizationDomain.findFirst({
     where: {
       orgId,
-      domain: email.split("@")[1]!,
+      requestedDomain: email.split("@")[1]!,
       type: "Base",
     },
   }));

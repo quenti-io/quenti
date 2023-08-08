@@ -35,7 +35,7 @@ export const inviteMemberHandler = async ({
   const emailDomains = input.emails.map((e) => e.split("@")[1]!);
   if (
     !allEqual(emailDomains) ||
-    (await isInOrganizationBase(`email@${emailDomains[0]!}`, input.orgId))
+    !(await isInOrganizationBase(`email@${emailDomains[0]!}`, input.orgId))
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",
@@ -52,7 +52,7 @@ export const inviteMemberHandler = async ({
       message: "Only owners can invite owners",
     });
 
-  let existingUsers = await ctx.prisma.user.findMany({
+  const existingUsers = await ctx.prisma.user.findMany({
     where: {
       email: {
         in: input.emails,
@@ -72,8 +72,6 @@ export const inviteMemberHandler = async ({
   });
 
   // Filter out users that are already part of the organization
-  existingUsers = existingUsers.filter((u) => !u.organization);
-
   const existingIds = existingUsers.map((u) => u.id);
   const existingEmails = existingUsers.map((u) => u.email).filter((e) => !!e);
   const existingInviteEmails = existingInvites.map((i) => i.email);

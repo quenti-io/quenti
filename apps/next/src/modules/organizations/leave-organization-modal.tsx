@@ -1,10 +1,10 @@
 import { Button, ButtonGroup, Text, useToast } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "@quenti/trpc";
 
 export interface RemoveMemberModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export const LeaveOrganizationModal: React.FC<RemoveMemberModalProps> = ({
   const { data: session } = useSession();
   const toast = useToast();
 
-  const org = useOrganization();
+  const { data: org } = useOrganization();
   const removeMember = api.organizations.removeMember.useMutation({
     onSuccess: async () => {
       await router.push("/orgs");
