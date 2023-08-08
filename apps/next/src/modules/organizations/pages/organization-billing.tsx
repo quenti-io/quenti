@@ -10,23 +10,21 @@ import {
 } from "@chakra-ui/react";
 import type { MembershipRole } from "@quenti/prisma/client";
 import { IconExternalLink } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Link } from "../../../components/link";
 import { ORG_SUPPORT_EMAIL } from "../../../../../../packages/lib/constants/email";
 import { BASE_URL } from "../../../../../../packages/lib/constants/url";
+import { Link } from "../../../components/link";
 import { useOrganization } from "../../../hooks/use-organization";
+import { useOrganizationMember } from "../../../hooks/use-organization-member";
 import { SettingsWrapper } from "../settings-wrapper";
 
 export const OrganizationBilling = () => {
   const router = useRouter();
-  const { data: session } = useSession();
-  const org = useOrganization();
+  const { data: org } = useOrganization();
+  const me = useOrganizationMember();
 
-  const role: MembershipRole = org
-    ? org.members.find((x) => x.userId == session?.user?.id)!.role
-    : "Member";
+  const role: MembershipRole = me?.role ?? "Member";
 
   const isOwner = role == "Owner";
   const isAdmin = role == "Admin" || isOwner;
@@ -39,6 +37,8 @@ export const OrganizationBilling = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org, isAdmin]);
+
+  const firstConflicting = org?.domains.find((d) => d.conflicting);
 
   const cardBg = useColorModeValue("white", "gray.750");
   const highlight = useColorModeValue("blue.500", "blue.200");
@@ -61,20 +61,12 @@ export const OrganizationBilling = () => {
     </>
   );
 
-  const missingDomainMessage = (
-    <>
-      In order to unlock the full suite of features and enroll students, you
-      need to purchase a plan. Before continuing, please set up and verify your
-      domain in settings.
-    </>
-  );
-
-  const domainConflictMessage = (
+  const domainConflictMessage = (domain: string) => (
     <>
       In order to unlock the full suite of features and enroll students, you
       need to purchase a plan. It appears as though your domain{" "}
-      <b>{org?.domain?.requestedDomain || ""}</b> has already been verified by
-      another organization. Please reach out to us at{" "}
+      <strong>{domain}</strong> has already been verified by another
+      organization. Please reach out to us at{" "}
       <Link
         href={`mailto:${ORG_SUPPORT_EMAIL}`}
         color="blue.300"
@@ -105,11 +97,9 @@ export const OrganizationBilling = () => {
             <Stack>
               <Heading size="md">Thanks for trying out organizations!</Heading>
               <Text fontSize="sm" color={mutedText}>
-                {org.domain?.conflict
-                  ? domainConflictMessage
-                  : org.domain?.verifiedAt
-                  ? defaultMessage
-                  : missingDomainMessage}
+                {firstConflicting
+                  ? domainConflictMessage(firstConflicting.requestedDomain)
+                  : defaultMessage}
               </Text>
             </Stack>
           </Card>

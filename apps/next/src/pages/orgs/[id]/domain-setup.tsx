@@ -142,6 +142,8 @@ interface FormWrapperProps {
 }
 
 const FormWrapper: React.FC<FormWrapperProps> = ({ onBack }) => {
+  const router = useRouter();
+  const id = router.query.id as string;
   const utils = api.useContext();
 
   const [loading, setLoading] = React.useState(false);
@@ -165,6 +167,7 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ onBack }) => {
           onSuccess={async () => {
             setShouldTransition(true);
             await utils.organizations.get.invalidate();
+            await router.push(`/orgs/${id}/verify-domain`);
           }}
         >
           <ButtonGroup w="full" size="sm">

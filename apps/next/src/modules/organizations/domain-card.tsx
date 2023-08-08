@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   Flex,
   HStack,
@@ -15,74 +14,73 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+import type {
+  MembershipRole,
+  OrganizationDomainType,
+} from "@quenti/prisma/client";
 import {
-  IconAt,
   IconCircleCheck,
   IconCircleDot,
   IconDiscountCheck,
   IconDotsVertical,
   IconEditCircle,
+  IconWorldX,
 } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "../../components/link";
 import { MenuOption } from "../../components/menu-option";
-import { SkeletonLabel } from "../../components/skeleton-label";
 import { useOrganization } from "../../hooks/use-organization";
 import { briefFormatter } from "../../utils/time";
+import { DomainConflictCard } from "./domain-conflict-card";
 import { OrganizationAdminOnly } from "./organization-admin-only";
-import type { MembershipRole } from "@quenti/prisma/client";
 
 interface DomainCardProps {
   role: MembershipRole;
-  onRequestVerify: () => void;
-  onRequestUpdate: () => void;
+  domain: string | null;
+  requestedDomain: string;
+  verifiedAt: Date | null;
+  type: OrganizationDomainType;
+  conflict?: boolean;
+  onRequestVerify?: () => void;
+  onRequestUpdate?: () => void;
+  onRequestRemove?: () => void;
 }
 
 export const DomainCard: React.FC<DomainCardProps> = (props) => {
-  const org = useOrganization();
-  const hasDomain = !!org?.domain;
-
-  const isAdmin = props.role == "Admin" || props.role == "Owner";
+  const { data: org } = useOrganization();
 
   return (
-    <Stack spacing="1">
-      <SkeletonLabel isLoaded={!!org}>Domain</SkeletonLabel>
+    <Stack spacing="3">
       <Skeleton rounded="md" w="full" h="50px" isLoaded={!!org}>
-        {hasDomain ? (
-          <Card variant="outline" py="3" px="4">
-            <InnerDomainCard {...props} />
-          </Card>
-        ) : (
-          <Button
-            variant="outline"
-            leftIcon={<IconAt size={18} />}
-            as={isAdmin ? Link : undefined}
-            isDisabled={!isAdmin}
-            href={isAdmin ? `/orgs/${org?.id || ""}/domain-setup` : undefined}
-          >
-            Set up a domain
-          </Button>
-        )}
+        <Card variant="outline" py="3" px="4">
+          <InnerDomainCard {...props} />
+        </Card>
       </Skeleton>
+      {props.conflict && <DomainConflictCard domain={props.requestedDomain} />}
     </Stack>
   );
 };
 
 const InnerDomainCard: React.FC<DomainCardProps> = ({
+  domain,
+  requestedDomain,
+  verifiedAt,
+  type,
   onRequestVerify,
   onRequestUpdate,
+  onRequestRemove,
 }) => {
-  const org = useOrganization();
-
   const [menuOpen, setMenuOpen] = React.useState(false);
   const menuBg = useColorModeValue("white", "gray.800");
-  const verified = !!org?.domain?.verifiedAt;
-  const verifiedDomain = org?.domain?.requestedDomain == org?.domain?.domain;
+
+  const verified = !!verifiedAt;
+  const verifiedDomain = domain == requestedDomain;
+
+  const red = useColorModeValue("red.600", "red.200");
 
   return (
     <Flex justifyContent="space-between">
       <HStack>
-        <Text>{org?.domain?.requestedDomain || "Loading..."}</Text>
+        <Text>{requestedDomain}</Text>
         {!verified ? (
           <Tag
             size="sm"
@@ -105,58 +103,73 @@ const InnerDomainCard: React.FC<DomainCardProps> = ({
             </Tooltip>
           </Box>
         )}
+        {type == "Student" && (
+          <Tag colorScheme="green" size="sm">
+            Student
+          </Tag>
+        )}
       </HStack>
       <HStack>
         {verified && (
           <Text color="gray.500" fontSize="sm">
-            Added on {briefFormatter.format(org.domain!.verifiedAt!)}
+            Added on {briefFormatter.format(verifiedAt)}
           </Text>
         )}
-        <OrganizationAdminOnly>
-          <Menu
-            placement="bottom-end"
-            isOpen={menuOpen}
-            onOpen={() => setMenuOpen(true)}
-            onClose={() => setMenuOpen(false)}
-          >
-            <MenuButton
-              as={IconButton}
-              size="xs"
-              variant="ghost"
-              colorScheme="gray"
+        {type !== "Base" && (
+          <OrganizationAdminOnly>
+            <Menu
+              placement="bottom-end"
+              isOpen={menuOpen}
+              onOpen={() => setMenuOpen(true)}
+              onClose={() => setMenuOpen(false)}
             >
-              <Box w="6" display="flex" justifyContent="center">
-                <IconDotsVertical size="18" />
-              </Box>
-            </MenuButton>
-            <MenuList
-              bg={menuBg}
-              py={0}
-              overflow="hidden"
-              minW="auto"
-              w="32"
-              shadow="lg"
-              display={menuOpen ? "block" : "none"}
-            >
-              {!verified && (
+              <MenuButton
+                as={IconButton}
+                size="xs"
+                variant="ghost"
+                colorScheme="gray"
+              >
+                <Box w="6" display="flex" justifyContent="center">
+                  <IconDotsVertical size="18" />
+                </Box>
+              </MenuButton>
+              <MenuList
+                bg={menuBg}
+                py={0}
+                overflow="hidden"
+                minW="auto"
+                w="32"
+                shadow="lg"
+                display={menuOpen ? "block" : "none"}
+              >
+                {!verified && (
+                  <MenuOption
+                    icon={<IconDiscountCheck size={16} />}
+                    label="Verify"
+                    fontSize="sm"
+                    py="6px"
+                    onClick={onRequestVerify}
+                  />
+                )}
                 <MenuOption
-                  icon={<IconDiscountCheck size={16} />}
-                  label="Verify"
+                  icon={<IconEditCircle size={16} />}
+                  label="Update"
                   fontSize="sm"
                   py="6px"
-                  onClick={onRequestVerify}
+                  onClick={onRequestUpdate}
                 />
-              )}
-              <MenuOption
-                icon={<IconEditCircle size={16} />}
-                label="Update"
-                fontSize="sm"
-                py="6px"
-                onClick={onRequestUpdate}
-              />
-            </MenuList>
-          </Menu>
-        </OrganizationAdminOnly>
+                <MenuOption
+                  icon={<IconWorldX size={16} />}
+                  label="Remove"
+                  fontSize="sm"
+                  py="6px"
+                  onClick={onRequestRemove}
+                  color={red}
+                />
+              </MenuList>
+            </Menu>
+          </OrganizationAdminOnly>
+        )}
       </HStack>
     </Flex>
   );

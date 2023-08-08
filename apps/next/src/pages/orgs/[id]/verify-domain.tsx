@@ -11,54 +11,51 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
+import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { WizardLayout } from "../../../components/wizard-layout";
-import { api } from "@quenti/trpc";
-import { useRouter } from "next/router";
+import { useOrganization } from "../../../hooks/use-organization";
 
 export default function OrgVerifyEmail() {
   const router = useRouter();
-  const id = router.query.id as string;
 
   const [code, setCode] = React.useState("");
   const toast = useToast();
   const lastInputRef = React.useRef<HTMLInputElement>(null);
 
-  const { data: org } = api.organizations.get.useQuery(
-    { id },
+  const { data: org } = useOrganization();
+  const studentDomain = org?.domains.find((d) => d.type == "Student");
+
+  const verifyStudentDomain = api.organizations.verifyStudentDomain.useMutation(
     {
-      enabled: !!id,
-      retry: false,
+      onSuccess: () => {
+        setTimeout(() => {
+          void (async () => {
+            await router.push(`/orgs/${org!.id}/publish`);
+          })();
+        }, 1000);
+      },
+      onError: (e) => {
+        requestAnimationFrame(() => {
+          lastInputRef.current?.focus();
+        });
+
+        if (e.message == "code_expired" || e.message == "too_many_requests")
+          toast({
+            title:
+              e.message == "code_expired"
+                ? "That code has expired, please resend a confirmation email"
+                : "Too many requests, please try again later",
+            status: "error",
+            icon: <AnimatedXCircle />,
+            containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+          });
+      },
     }
   );
-
-  const confirmCode = api.organizations.confirmCode.useMutation({
-    onSuccess: () => {
-      setTimeout(() => {
-        void (async () => {
-          await router.push(`/orgs/${org!.id}/publish`);
-        })();
-      }, 1000);
-    },
-    onError: (e) => {
-      requestAnimationFrame(() => {
-        lastInputRef.current?.focus();
-      });
-
-      if (e.message == "code_expired" || e.message == "too_many_requests")
-        toast({
-          title:
-            e.message == "code_expired"
-              ? "That code has expired, please resend a confirmation email"
-              : "Too many requests, please try again later",
-          status: "error",
-          icon: <AnimatedXCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
-        });
-    },
-  });
 
   const resendCode = api.organizations.resendCode.useMutation({
     onSuccess: () => {
@@ -80,15 +77,6 @@ export default function OrgVerifyEmail() {
       }
     },
   });
-
-  React.useEffect(() => {
-    if (org?.domain?.verifiedAt) {
-      void (async () => {
-        await router.push(`/orgs/${org.id}/publish`);
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [org]);
 
   const loading = (
     <Box
@@ -119,13 +107,13 @@ export default function OrgVerifyEmail() {
     <WizardLayout
       title="Verify your domain"
       description={`Enter the code we sent to ${
-        org?.domain?.verifiedEmail || "example@example.com"
+        studentDomain?.verifiedEmail || "example@example.com"
       }.`}
       steps={5}
       currentStep={3}
       enableSkeleton
-      isLoaded={!!org?.domain}
-      cardIn={!!org?.domain}
+      isLoaded={!!studentDomain}
+      cardIn={!!studentDomain}
     >
       <Stack spacing="5">
         <Box px="8">
@@ -157,13 +145,14 @@ export default function OrgVerifyEmail() {
                       onChange={(e) => {
                         setCode(e);
                         if (e.length == 6)
-                          confirmCode.mutate({
+                          verifyStudentDomain.mutate({
                             orgId: org!.id,
                             code: e,
                           });
                       }}
                       isDisabled={
-                        confirmCode.isLoading || confirmCode.isSuccess
+                        verifyStudentDomain.isLoading ||
+                        verifyStudentDomain.isSuccess
                       }
                     >
                       <PinInputField autoFocus />
@@ -175,11 +164,11 @@ export default function OrgVerifyEmail() {
                     </PinInput>
                   </HStack>
                   <Box w="6" h="6">
-                    {confirmCode.isLoading
+                    {verifyStudentDomain.isLoading
                       ? loading
-                      : confirmCode.isSuccess
+                      : verifyStudentDomain.isSuccess
                       ? success
-                      : confirmCode.isError
+                      : verifyStudentDomain.isError
                       ? error
                       : null}
                   </Box>

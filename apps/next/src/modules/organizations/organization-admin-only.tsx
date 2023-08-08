@@ -1,12 +1,12 @@
-import { useOrganization } from "../../hooks/use-organization";
+import { useOrganizationMember } from "../../hooks/use-organization-member";
 
 export const OrganizationAdminOnly: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const org = useOrganization();
+  const me = useOrganizationMember();
 
-  if (!org) return null;
-  if (org.me.role !== "Admin" && org.me.role !== "Owner") return null;
+  if (!me) return null;
+  if (me.role !== "Admin" && me.role !== "Owner") return null;
 
   return <>{children}</>;
 };

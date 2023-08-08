@@ -92,6 +92,8 @@ export const verifyStudentDomainHandler = async ({
 
   if (published)
     await bulkJoinOrgUsers(input.orgId, domain.requestedDomain, "Student");
+
+  return { domain: domain.requestedDomain };
 };
 
 export default verifyStudentDomainHandler;

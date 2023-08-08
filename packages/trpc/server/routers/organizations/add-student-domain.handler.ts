@@ -1,14 +1,14 @@
+import { env } from "@quenti/env/server";
 import { TRPCError } from "@trpc/server";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAddStudentDomainSchema } from "./add-student-domain.schema";
-import { env } from "@quenti/env/server";
 
+import { sendConfirmCodeEmail } from "@quenti/emails";
 import all from "email-providers/all.json" assert { type: "json" };
-import { RateLimitType, rateLimitOrThrow } from "../../lib/rate-limit";
 import { disbandOrgUsersByDomain } from "../../lib/orgs/students";
 import { genOtp } from "../../lib/otp";
-import { sendConfirmCodeEmail } from "@quenti/emails";
+import { RateLimitType, rateLimitOrThrow } from "../../lib/rate-limit";
 
 type AddStudentDomainOptions = {
   ctx: NonNullableUserContext;
@@ -54,7 +54,14 @@ export const addStudentDomainHandler = async ({
 
   const existingVerified = await ctx.prisma.organizationDomain.findFirst({
     where: {
-      domain: input.domain,
+      OR: [
+        { domain: input.domain },
+        {
+          requestedDomain: input.domain,
+          orgId: input.orgId,
+          type: "Base",
+        },
+      ],
     },
   });
 

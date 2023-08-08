@@ -15,6 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import type { MembershipRole } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
 import { IconLogout, IconSettings, IconTrash } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -22,7 +23,6 @@ import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { SkeletonLabel } from "../../../components/skeleton-label";
-import { api } from "@quenti/trpc";
 import { ORGANIZATION_ICONS } from "../../../utils/icons";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
 import { DomainCard } from "../domain-card";
@@ -30,7 +30,6 @@ import { LeaveOrganizationModal } from "../leave-organization-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
 import { SettingsWrapper } from "../settings-wrapper";
 import { UpdateDomainModal } from "../update-domain-modal";
-import { DomainConflictCard } from "../domain-conflict-card";
 
 export const OrganizationSettings = () => {
   const router = useRouter();
@@ -87,7 +86,6 @@ export const OrganizationSettings = () => {
       setMounted(true);
       setOrgName(org.name);
       setIcon(org.icon);
-      setDomainVerify(!!org.domain?.verifiedAt);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
@@ -185,21 +183,34 @@ export const OrganizationSettings = () => {
               />
             </Skeleton>
           </Stack>
-          <Stack spacing="3">
-            <DomainCard
-              role={role}
-              onRequestVerify={() => {
-                setDomainVerify(true);
-                setUpdateDomainOpen(true);
-              }}
-              onRequestUpdate={() => {
-                setDomainVerify(false);
-                setUpdateDomainOpen(true);
-              }}
-            />
-            {org?.domain?.conflict && (
-              <DomainConflictCard domain={org.domain.requestedDomain} />
-            )}
+          <Stack spacing="1">
+            <SkeletonLabel isLoaded={!!org}>Domains</SkeletonLabel>
+            <Stack spacing="3">
+              {org?.domains.map((d) => (
+                <DomainCard
+                  key={d.id}
+                  role={role}
+                  {...d}
+                  onRequestVerify={() => {
+                    setDomainVerify(true);
+                    setUpdateDomainOpen(true);
+                  }}
+                  onRequestUpdate={() => {
+                    setDomainVerify(false);
+                    setUpdateDomainOpen(true);
+                  }}
+                />
+              ))}
+              {!org && (
+                <DomainCard
+                  type="Base"
+                  domain="placeholder"
+                  requestedDomain="placeholder"
+                  role="Member"
+                  verifiedAt={null}
+                />
+              )}
+            </Stack>
           </Stack>
         </Stack>
       </SettingsWrapper>
