@@ -13,6 +13,7 @@ import { ZGetSchema } from "./get.schema";
 import { ZInviteMemberSchema } from "./invite-member.schema";
 import { ZPublishSchema } from "./publish.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
+import { ZRemoveStudentDomainSchema } from "./remove-student-domain.schema";
 import { ZRemoveStudentSchema } from "./remove-student.schema";
 import { ZResendCodeSchema } from "./resend-code.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
@@ -37,6 +38,7 @@ type OrganizationsRouterHandlerCache = {
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
     ["add-student-domain"]?: typeof import("./add-student-domain.handler").addStudentDomainHandler;
     ["verify-student-domain"]?: typeof import("./verify-student-domain.handler").verifyStudentDomainHandler;
+    ["remove-student-domain"]?: typeof import("./remove-student-domain.handler").removeStudentDomainHandler;
     ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
     ["add-student"]?: typeof import("./add-student.handler").addStudentHandler;
     ["remove-student"]?: typeof import("./remove-student.handler").removeStudentHandler;
@@ -140,6 +142,12 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "verify-student-domain");
       return HANDLER_CACHE.handlers["verify-student-domain"]!({ ctx, input });
+    }),
+  ZRemoveStudentDomain: teacherProcedure
+    .input(ZRemoveStudentDomainSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "remove-student-domain");
+      return HANDLER_CACHE.handlers["remove-student-domain"]!({ ctx, input });
     }),
   resendCode: teacherProcedure
     .input(ZResendCodeSchema)
