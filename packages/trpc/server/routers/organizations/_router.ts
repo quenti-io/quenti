@@ -143,7 +143,7 @@ export const organizationsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "verify-student-domain");
       return HANDLER_CACHE.handlers["verify-student-domain"]!({ ctx, input });
     }),
-  ZRemoveStudentDomain: teacherProcedure
+  removeStudentDomain: teacherProcedure
     .input(ZRemoveStudentDomainSchema)
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "remove-student-domain");

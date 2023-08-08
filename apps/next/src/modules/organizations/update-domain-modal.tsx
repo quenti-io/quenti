@@ -57,13 +57,17 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
 }) => {
   const utils = api.useContext();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const { data: org } = useOrganization();
+  const studentDomain = org?.domains.find((d) => d.type == "Student");
   const [loading, setLoading] = React.useState(false);
 
   return (
     <Modal.Content>
       <Modal.Body>
         <SegmentedProgress steps={2} currentStep={0} />
-        <Modal.Heading>Update your domain</Modal.Heading>
+        <Modal.Heading>
+          {studentDomain ? "Update your domain" : "Add a student domain"}
+        </Modal.Heading>
         <DomainForm
           formRef={formRef}
           onSuccess={async () => {
@@ -87,7 +91,7 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
             }}
             isLoading={loading}
           >
-            Update domain
+            {`${studentDomain ? "Update" : "Add"} domain`}
           </Button>
         </ButtonGroup>
       </Modal.Footer>
@@ -132,9 +136,12 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
           lastInputRef.current?.focus();
         });
 
-        if (e.message == "too_many_requests")
+        if (e.message == "code_expired" || e.message == "too_many_requests")
           toast({
-            title: "Too many requests, please try again later",
+            title:
+              e.message == "code_expired"
+                ? "That code has expired, please resend a confirmation email"
+                : "Too many requests, please try again later",
             status: "error",
             icon: <AnimatedXCircle />,
             containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
@@ -197,7 +204,7 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
         <Stack spacing="8">
           <Stack>
             <Text>
-              Enter the code we sent to {studentDomain?.requestedDomain}
+              Enter the code we sent to {studentDomain?.verifiedEmail}
             </Text>
             <Text fontSize="sm" color={muted}>
               Not seeing your email?{" "}

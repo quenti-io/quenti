@@ -16,18 +16,23 @@ import {
 } from "@chakra-ui/react";
 import type { MembershipRole } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
-import { IconLogout, IconSettings, IconTrash } from "@tabler/icons-react";
+import {
+  IconLogout,
+  IconSettings,
+  IconTrash,
+  IconWorldPlus,
+} from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
-import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { ORGANIZATION_ICONS } from "../../../utils/icons";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
 import { DomainCard } from "../domain-card";
 import { LeaveOrganizationModal } from "../leave-organization-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
+import { RemoveDomainModal } from "../remove-domain-modal";
 import { SettingsWrapper } from "../settings-wrapper";
 import { UpdateDomainModal } from "../update-domain-modal";
 
@@ -57,6 +62,9 @@ export const OrganizationSettings = () => {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [domainVerify, setDomainVerify] = React.useState(false);
   const [updateDomainOpen, setUpdateDomainOpen] = React.useState(false);
+  const [removeDomain, setRemoveDomain] = React.useState<
+    { id: string; domain: string } | undefined
+  >();
 
   const update = api.organizations.update.useMutation({
     onSuccess: async () => {
@@ -68,16 +76,6 @@ export const OrganizationSettings = () => {
       });
 
       await utils.organizations.get.invalidate();
-    },
-    onError: (err) => {
-      if (err.data?.code == "BAD_REQUEST") {
-        toast({
-          title: "That organization URL is already taken",
-          status: "error",
-          icon: <AnimatedXCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
-        });
-      }
     },
   });
 
@@ -120,6 +118,12 @@ export const OrganizationSettings = () => {
         onUpdate={() => {
           setDomainVerify(true);
         }}
+      />
+      <RemoveDomainModal
+        isOpen={!!removeDomain}
+        onClose={() => setRemoveDomain(undefined)}
+        id={removeDomain?.id || ""}
+        domain={removeDomain?.domain || ""}
       />
       <Flex justifyContent="space-between" alignItems="center" h="40px">
         <HStack spacing="3">
@@ -199,8 +203,26 @@ export const OrganizationSettings = () => {
                     setDomainVerify(false);
                     setUpdateDomainOpen(true);
                   }}
+                  onRequestRemove={() => {
+                    setRemoveDomain({
+                      id: d.id,
+                      domain: d.requestedDomain,
+                    });
+                  }}
                 />
               ))}
+              {!!org && !org.domains.find((d) => d.type == "Student") && (
+                <Button
+                  w="max"
+                  variant="ghost"
+                  leftIcon={<IconWorldPlus size={18} />}
+                  onClick={() => {
+                    setUpdateDomainOpen(true);
+                  }}
+                >
+                  Add a student domain
+                </Button>
+              )}
               {!org && (
                 <DomainCard
                   type="Base"
