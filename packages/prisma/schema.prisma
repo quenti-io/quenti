@@ -92,12 +92,13 @@ model User {
   containers     Container[]
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
-  organization   Organization?           @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  organization   Organization?               @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   orgMembership  OrganizationMembership?
   highscores     Highscore[]
   classes        ClassMembership[]
   classInvites   PendingClassInvite[]
   classBans      ClassBan[]
+  invites        PendingOrganizationInvite[]
 
   @@index([organizationId])
 }
@@ -166,7 +167,6 @@ model OrganizationMembership {
   id       String         @id @default(cuid())
   orgId    String
   userId   String         @unique
-  accepted Boolean        @default(false)
   role     MembershipRole
   /// @zod.custom(imports.orgMembershipMetadata)
   metadata Json?
@@ -178,15 +178,18 @@ model OrganizationMembership {
 }
 
 model PendingOrganizationInvite {
-  id    String         @id @default(cuid())
-  orgId String
-  email String         @unique
-  role  MembershipRole
+  id     String         @id @default(cuid())
+  orgId  String
+  userId String?
+  email  String
+  role   MembershipRole
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([email])
   @@index([orgId])
+  @@index([userId])
 }
 
 model Class {
