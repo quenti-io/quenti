@@ -12,7 +12,7 @@ import { SegmentedProgress } from "./segmented-progress";
 
 export interface WizardLayoutProps {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
   steps: number;
   currentStep: number;
   enableSkeleton?: boolean;

@@ -109,6 +109,9 @@ const OptionsMenu: React.FC<OptionsMenuProps> = ({ onNewDomain }) => {
                 bg: cardHover,
                 transform: "translateY(-8px)",
               }}
+              onClick={async () => {
+                await router.push(`/orgs/${org!.id}/domain-filter`);
+              }}
             >
               <Stack spacing="3">
                 <HStack>
