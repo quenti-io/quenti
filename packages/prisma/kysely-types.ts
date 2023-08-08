@@ -214,6 +214,10 @@ export type OrganizationMembership = {
   userId: string;
   accepted: Generated<number>;
   role: MembershipRole;
+  /**
+   * @zod.custom(imports.orgMembershipMetadata)
+   */
+  metadata: unknown | null;
 };
 export type PendingClassInvite = {
   id: string;

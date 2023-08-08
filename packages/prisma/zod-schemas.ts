@@ -16,3 +16,13 @@ export const orgMetadataSchema = z
   })
   .partial()
   .nullable();
+
+export const orgMembershipMetadata = z.object({
+  onboardingStep: z.enum([
+    "members-onboarding",
+    "domain-setup",
+    "verify-domain",
+    "domain-filter",
+    "publish",
+  ]),
+});

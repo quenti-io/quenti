@@ -168,6 +168,8 @@ model OrganizationMembership {
   userId   String         @unique
   accepted Boolean        @default(false)
   role     MembershipRole
+  /// @zod.custom(imports.orgMembershipMetadata)
+  metadata Json?
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
