@@ -6,7 +6,7 @@ import type { TAddStudentDomainSchema } from "./add-student-domain.schema";
 
 import { sendConfirmCodeEmail } from "@quenti/emails";
 import all from "email-providers/all.json" assert { type: "json" };
-import { disbandOrgUsersByDomain } from "../../lib/orgs/students";
+import { disbandOrgUsersByDomain } from "../../lib/orgs/users";
 import { genOtp } from "../../lib/otp";
 import { RateLimitType, rateLimitOrThrow } from "../../lib/rate-limit";
 

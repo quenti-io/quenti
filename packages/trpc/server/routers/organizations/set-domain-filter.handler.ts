@@ -1,18 +1,18 @@
 import { TRPCError } from "@trpc/server";
-import { disbandOrgUsersByDomain } from "../../lib/orgs/users";
+import { bulkJoinOrgUsersByFilter } from "../../lib/orgs/users";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
-import type { TRemoveStudentDomainSchema } from "./remove-student-domain.schema";
+import type { TSetDomainFilterSchema } from "./set-domain-filter.schema";
 
-type RemoveStudentDomainOptions = {
+type SetDomainFilterOptions = {
   ctx: NonNullableUserContext;
-  input: TRemoveStudentDomainSchema;
+  input: TSetDomainFilterSchema;
 };
 
-export const removeStudentDomainHandler = async ({
+export const setDomainFilterHandler = async ({
   ctx,
   input,
-}: RemoveStudentDomainOptions) => {
+}: SetDomainFilterOptions) => {
   if (!(await isOrganizationAdmin(ctx.session.user.id, input.orgId)))
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
@@ -21,12 +21,13 @@ export const removeStudentDomainHandler = async ({
       id: input.domainId,
     },
   });
+
   if (!domain || domain.orgId !== input.orgId)
     throw new TRPCError({ code: "NOT_FOUND" });
-  if (domain.type !== "Student")
+  if (domain.type !== "Base")
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Can only delete student domains",
+      message: "Can only set filter on base domains",
     });
 
   const org = await ctx.prisma.organization.findUniqueOrThrow({
@@ -38,15 +39,17 @@ export const removeStudentDomainHandler = async ({
     },
   });
 
-  await ctx.prisma.organizationDomain.delete({
+  await ctx.prisma.organizationDomain.update({
     where: {
       id: input.domainId,
     },
+    data: {
+      filter: input.filter,
+    },
   });
 
-  if (org.published && domain.domain) {
-    await disbandOrgUsersByDomain(domain.domain);
-  }
+  if (org.published && domain.domain && input.filter)
+    await bulkJoinOrgUsersByFilter(input.orgId, domain.domain, input.filter);
 };
 
-export default removeStudentDomainHandler;
+export default setDomainFilterHandler;

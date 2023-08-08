@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { getIp } from "../../lib/get-ip";
-import { bulkJoinOrgUsers } from "../../lib/orgs/students";
+import { bulkJoinOrgUsers } from "../../lib/orgs/users";
 import { verifyOtp } from "../../lib/otp";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import { RateLimitType, rateLimitOrThrowMultiple } from "../../lib/rate-limit";

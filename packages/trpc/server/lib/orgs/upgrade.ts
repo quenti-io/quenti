@@ -1,7 +1,7 @@
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
 import { conflictingDomains } from "./domains";
-import { bulkJoinOrgUsers } from "./students";
+import { bulkJoinOrgUsers } from "./users";
 
 export const upgradeOrganization = async (
   id: string,
