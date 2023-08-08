@@ -28,6 +28,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
           id: true,
           accepted: true,
           role: true,
+          metadata: true,
           organization: {
             select: {
               id: true,

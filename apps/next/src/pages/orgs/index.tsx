@@ -12,9 +12,11 @@ import { useSession } from "next-auth/react";
 import { Link } from "../../components/link";
 import { Loading } from "../../components/loading";
 import { WithFooter } from "../../components/with-footer";
+import { useMe } from "../../hooks/use-me";
 
 export default function Organizations() {
   const session = useSession();
+  const { data: me } = useMe();
   if (!session.data?.user) return <Loading />;
 
   const domain = session.data.user.email!.split("@")[1]!;
@@ -63,7 +65,11 @@ export default function Organizations() {
                 px="2rem"
                 leftIcon={<IconPlus />}
                 as={Link}
-                href="/orgs/new"
+                href={
+                  me?.orgMembership
+                    ? `/orgs/${me.orgMembership.organization.id}`
+                    : "/orgs/new"
+                }
               >
                 Get started
               </Button>

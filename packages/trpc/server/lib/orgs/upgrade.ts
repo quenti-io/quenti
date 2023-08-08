@@ -5,6 +5,7 @@ import { bulkJoinOrgUsers } from "./users";
 
 export const upgradeOrganization = async (
   id: string,
+  userId?: string,
   paymentId?: string,
   subscriptionId?: string,
   subscriptionItemId?: string
@@ -47,6 +48,19 @@ export const upgradeOrganization = async (
         result.type == "Student" ? "Student" : undefined
       );
   }
+
+  try {
+    await prisma.organizationMembership.update({
+      where: {
+        userId,
+      },
+      data: {
+        metadata: {
+          onboardingStep: null,
+        },
+      },
+    });
+  } catch {}
 
   return org;
 };

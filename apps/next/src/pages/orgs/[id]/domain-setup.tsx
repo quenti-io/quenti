@@ -23,6 +23,7 @@ import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
 import { DomainForm } from "../../../modules/organizations/domain-form";
 import { getBaseDomain } from "../../../modules/organizations/utils/get-base-domain";
+import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 
 export default function OrgDomainSetup() {
   const [newDomain, setNewDomain] = React.useState(false);
@@ -57,89 +58,91 @@ const OptionsMenu: React.FC<OptionsMenuProps> = ({ onNewDomain }) => {
   const cardHover = useColorModeValue("gray.100", "gray.700");
 
   return (
-    <SlideFade
-      initial={{
-        opacity: 0,
-        transform: "translateY(-20px)",
-      }}
-      animate={{
-        opacity: 1,
-        transform: "translateY(0)",
-      }}
-      in
-    >
-      <Stack spacing="6">
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap="6">
-          <Skeleton rounded="lg" isLoaded={!!org}>
-            <Card
-              p="6"
-              shadow="md"
-              rounded="lg"
-              bg={cardBg}
-              transition="all 0.2s ease-in-out"
-              cursor="pointer"
-              _hover={{
-                bg: cardHover,
-                transform: "translateY(-8px)",
-              }}
-              onClick={onNewDomain}
-            >
-              <Stack spacing="3">
-                <HStack>
-                  <IconWorldPlus />
-                  <Heading fontSize="lg">Separate domain</Heading>
-                </HStack>
-                <Text fontSize="sm" color={muted}>
-                  Students&apos; email addresses end with a domain other than{" "}
-                  <strong>{baseDomain?.requestedDomain || ""}</strong>. Verify a
-                  separate domain for students to be enrolled in your
-                  organization.
-                </Text>
-              </Stack>
-            </Card>
-          </Skeleton>
-          <Skeleton rounded="lg" isLoaded={!!org}>
-            <Card
-              p="6"
-              shadow="md"
-              rounded="lg"
-              bg={cardBg}
-              transition="all 0.2s ease-in-out"
-              cursor="pointer"
-              _hover={{
-                bg: cardHover,
-                transform: "translateY(-8px)",
-              }}
-              onClick={async () => {
-                await router.push(`/orgs/${org!.id}/domain-filter`);
-              }}
-            >
-              <Stack spacing="3">
-                <HStack>
-                  <IconFilterPlus />
-                  <Heading fontSize="lg">
-                    Use {baseDomain?.requestedDomain || ""}
-                  </Heading>
-                </HStack>
-                <Text fontSize="sm" color={muted}>
-                  Set up a filter for your domain to determine if a new or
-                  existing user should be enrolled as a teacher or a student.
-                </Text>
-              </Stack>
-            </Card>
-          </Skeleton>
-        </SimpleGrid>
-        <Button
-          size="sm"
-          w="max"
-          variant="ghost"
-          leftIcon={<IconArrowLeft size={18} />}
-          onClick={() => router.back()}
-        >
-          Back
-        </Button>
-      </Stack>
-    </SlideFade>
+    <OnboardingMetadata step="domain-setup">
+      <SlideFade
+        initial={{
+          opacity: 0,
+          transform: "translateY(-20px)",
+        }}
+        animate={{
+          opacity: 1,
+          transform: "translateY(0)",
+        }}
+        in
+      >
+        <Stack spacing="6">
+          <SimpleGrid columns={{ base: 1, md: 2 }} gap="6">
+            <Skeleton rounded="lg" isLoaded={!!org}>
+              <Card
+                p="6"
+                shadow="md"
+                rounded="lg"
+                bg={cardBg}
+                transition="all 0.2s ease-in-out"
+                cursor="pointer"
+                _hover={{
+                  bg: cardHover,
+                  transform: "translateY(-8px)",
+                }}
+                onClick={onNewDomain}
+              >
+                <Stack spacing="3">
+                  <HStack>
+                    <IconWorldPlus />
+                    <Heading fontSize="lg">Separate domain</Heading>
+                  </HStack>
+                  <Text fontSize="sm" color={muted}>
+                    Students&apos; email addresses end with a domain other than{" "}
+                    <strong>{baseDomain?.requestedDomain || ""}</strong>. Verify
+                    a separate domain for students to be enrolled in your
+                    organization.
+                  </Text>
+                </Stack>
+              </Card>
+            </Skeleton>
+            <Skeleton rounded="lg" isLoaded={!!org}>
+              <Card
+                p="6"
+                shadow="md"
+                rounded="lg"
+                bg={cardBg}
+                transition="all 0.2s ease-in-out"
+                cursor="pointer"
+                _hover={{
+                  bg: cardHover,
+                  transform: "translateY(-8px)",
+                }}
+                onClick={async () => {
+                  await router.push(`/orgs/${org!.id}/domain-filter`);
+                }}
+              >
+                <Stack spacing="3">
+                  <HStack>
+                    <IconFilterPlus />
+                    <Heading fontSize="lg">
+                      Use {baseDomain?.requestedDomain || ""}
+                    </Heading>
+                  </HStack>
+                  <Text fontSize="sm" color={muted}>
+                    Set up a filter for your domain to determine if a new or
+                    existing user should be enrolled as a teacher or a student.
+                  </Text>
+                </Stack>
+              </Card>
+            </Skeleton>
+          </SimpleGrid>
+          <Button
+            size="sm"
+            w="max"
+            variant="ghost"
+            leftIcon={<IconArrowLeft size={18} />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        </Stack>
+      </SlideFade>
+    </OnboardingMetadata>
   );
 };
 

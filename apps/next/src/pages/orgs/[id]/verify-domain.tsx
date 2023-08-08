@@ -18,6 +18,7 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
+import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 
 export default function OrgVerifyEmail() {
   const router = useRouter();
@@ -104,80 +105,82 @@ export default function OrgVerifyEmail() {
   );
 
   return (
-    <WizardLayout
-      title="Verify your domain"
-      description={`Enter the code we sent to ${
-        studentDomain?.verifiedEmail || "example@example.com"
-      }.`}
-      steps={5}
-      currentStep={3}
-      enableSkeleton
-      isLoaded={!!studentDomain}
-      cardIn={!!studentDomain}
-    >
-      <Stack spacing="5">
-        <Box px="8">
-          <Text fontSize="sm">
-            Not seeing your email?{" "}
-            <Button
-              variant="link"
-              fontSize="sm"
-              isLoading={resendCode.isLoading}
-              onClick={() => {
-                resendCode.mutate({ orgId: org!.id });
-              }}
-            >
-              Resend
-            </Button>
-          </Text>
-        </Box>
-        <Card p="8" variant="outline" shadow="lg" rounded="lg">
-          <Stack spacing="10">
-            <VStack spacing="6">
-              <Stack spacing="3">
-                <HStack spacing="4">
-                  <Box w="6" />
-                  <HStack>
-                    <PinInput
-                      type="number"
-                      size="lg"
-                      value={code}
-                      onChange={(e) => {
-                        setCode(e);
-                        if (e.length == 6)
-                          verifyStudentDomain.mutate({
-                            orgId: org!.id,
-                            code: e,
-                          });
-                      }}
-                      isDisabled={
-                        verifyStudentDomain.isLoading ||
-                        verifyStudentDomain.isSuccess
-                      }
-                    >
-                      <PinInputField autoFocus />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField ref={lastInputRef} />
-                    </PinInput>
+    <OnboardingMetadata step="verify-domain">
+      <WizardLayout
+        title="Verify your domain"
+        description={`Enter the code we sent to ${
+          studentDomain?.verifiedEmail || "example@example.com"
+        }.`}
+        steps={5}
+        currentStep={3}
+        enableSkeleton
+        isLoaded={!!studentDomain}
+        cardIn={!!studentDomain}
+      >
+        <Stack spacing="5">
+          <Box px="8">
+            <Text fontSize="sm">
+              Not seeing your email?{" "}
+              <Button
+                variant="link"
+                fontSize="sm"
+                isLoading={resendCode.isLoading}
+                onClick={() => {
+                  resendCode.mutate({ orgId: org!.id });
+                }}
+              >
+                Resend
+              </Button>
+            </Text>
+          </Box>
+          <Card p="8" variant="outline" shadow="lg" rounded="lg">
+            <Stack spacing="10">
+              <VStack spacing="6">
+                <Stack spacing="3">
+                  <HStack spacing="4">
+                    <Box w="6" />
+                    <HStack>
+                      <PinInput
+                        type="number"
+                        size="lg"
+                        value={code}
+                        onChange={(e) => {
+                          setCode(e);
+                          if (e.length == 6)
+                            verifyStudentDomain.mutate({
+                              orgId: org!.id,
+                              code: e,
+                            });
+                        }}
+                        isDisabled={
+                          verifyStudentDomain.isLoading ||
+                          verifyStudentDomain.isSuccess
+                        }
+                      >
+                        <PinInputField autoFocus />
+                        <PinInputField />
+                        <PinInputField />
+                        <PinInputField />
+                        <PinInputField />
+                        <PinInputField ref={lastInputRef} />
+                      </PinInput>
+                    </HStack>
+                    <Box w="6" h="6">
+                      {verifyStudentDomain.isLoading
+                        ? loading
+                        : verifyStudentDomain.isSuccess
+                        ? success
+                        : verifyStudentDomain.isError
+                        ? error
+                        : null}
+                    </Box>
                   </HStack>
-                  <Box w="6" h="6">
-                    {verifyStudentDomain.isLoading
-                      ? loading
-                      : verifyStudentDomain.isSuccess
-                      ? success
-                      : verifyStudentDomain.isError
-                      ? error
-                      : null}
-                  </Box>
-                </HStack>
-              </Stack>
-            </VStack>
-          </Stack>
-        </Card>
-      </Stack>
-    </WizardLayout>
+                </Stack>
+              </VStack>
+            </Stack>
+          </Card>
+        </Stack>
+      </WizardLayout>
+    </OnboardingMetadata>
   );
 }

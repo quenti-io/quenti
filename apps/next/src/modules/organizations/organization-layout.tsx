@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Center,
   Container,
   Flex,
@@ -18,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import {
   IconAlertCircleFilled,
+  IconArrowRight,
   IconAt,
   IconCircleDot,
   IconDiscountCheck,
@@ -31,6 +33,8 @@ import { useOrganization } from "../../hooks/use-organization";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { organizationIcon } from "../../utils/icons";
 import { ConfettiLayer } from "./confetti-layer";
+import { getBaseDomain } from "./utils/get-base-domain";
+import { useOnboardingStep } from "./utils/use-onboarding-step";
 
 export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   children,
@@ -38,9 +42,11 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
   const toast = useToast();
   const id = router.query.id as string;
+  const onboardingStep = useOnboardingStep();
   const isUpgraded = router.query.upgrade === "success";
 
   const { data: org, error } = useOrganization();
+  const domain = getBaseDomain(org);
   const me = useOrganizationMember();
 
   const borderColor = useColorModeValue("gray.300", "gray.700");
@@ -79,21 +85,23 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
     }
   };
 
+  const isLoaded = !!org;
+
   return (
     <WithFooter>
       <Container maxW="6xl" overflow="hidden">
-        {org && isUpgraded && org.published && <ConfettiLayer />}
+        {isLoaded && isUpgraded && org.published && <ConfettiLayer />}
         <Stack spacing="10">
           <HStack spacing="6">
-            <Skeleton isLoaded={!!org} fitContent rounded="full">
+            <Skeleton isLoaded={isLoaded} fitContent rounded="full">
               <Center w="16" h="16" rounded="full" bg="blue.400">
                 <Icon size={32} color="white" />
               </Center>
             </Skeleton>
-            <Stack spacing="0" flex="1" overflow="hidden">
+            <Stack spacing={onboardingStep ? 2 : 0} flex="1" overflow="hidden">
               <Flex h="43.2px" alignItems="center" w="full">
                 <SkeletonText
-                  isLoaded={!!org}
+                  isLoaded={isLoaded}
                   fitContent
                   noOfLines={1}
                   skeletonHeight="36px"
@@ -124,18 +132,30 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                   </HStack>
                 </SkeletonText>
               </Flex>
-              {org?.domain?.domain && (
+              {isLoaded && onboardingStep && (
+                <Button
+                  leftIcon={<IconArrowRight />}
+                  w="max"
+                  size="sm"
+                  onClick={() => {
+                    void router.push(`/orgs/${id}/${onboardingStep}`);
+                  }}
+                >
+                  Continue onboarding
+                </Button>
+              )}
+              {domain?.domain && (
                 <Flex h="21px" alignItems="center">
                   <SkeletonText
                     noOfLines={1}
                     fitContent
                     w="max-content"
-                    isLoaded={!!org}
+                    isLoaded={isLoaded}
                     skeletonHeight="10px"
                   >
                     <HStack spacing="1" color={mutedColor}>
                       <IconAt size="16" />
-                      <Text fontSize="sm">{org?.domain?.domain}</Text>
+                      <Text fontSize="sm">{domain?.domain}</Text>
                     </HStack>
                   </SkeletonText>
                 </Flex>
@@ -149,16 +169,16 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
             isManual
           >
             <TabList gap="10">
-              <SkeletonTab isLoaded={!!org} href={`/orgs/${id}`}>
+              <SkeletonTab isLoaded={isLoaded} href={`/orgs/${id}`}>
                 Members
               </SkeletonTab>
-              <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/students`}>
+              <SkeletonTab isLoaded={isLoaded} href={`/orgs/${id}/students`}>
                 Students
               </SkeletonTab>
-              <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/settings`}>
+              <SkeletonTab isLoaded={isLoaded} href={`/orgs/${id}/settings`}>
                 <Box display="flex" gap="2" alignItems="center">
                   Settings
-                  {org?.domain?.conflict && (
+                  {domain?.conflicting && (
                     <Box display="inline-flex" color="orange.400" w="4" h="4">
                       <IconAlertCircleFilled size={16} />
                     </Box>
@@ -168,10 +188,10 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
               {(getTabIndex() == 3 ||
                 me?.role == "Admin" ||
                 me?.role == "Owner") && (
-                <SkeletonTab isLoaded={!!org} href={`/orgs/${id}/billing`}>
+                <SkeletonTab isLoaded={isLoaded} href={`/orgs/${id}/billing`}>
                   <Box display="flex" gap="2" alignItems="center">
                     Billing
-                    {org && !org.published && (
+                    {isLoaded && !org.published && (
                       <Box display="inline-flex" color="orange.400" w="4" h="4">
                         <IconAlertCircleFilled size={16} />
                       </Box>

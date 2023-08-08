@@ -18,11 +18,13 @@ export const orgMetadataSchema = z
   .nullable();
 
 export const orgMembershipMetadata = z.object({
-  onboardingStep: z.enum([
-    "members-onboarding",
-    "domain-setup",
-    "verify-domain",
-    "domain-filter",
-    "publish",
-  ]),
+  onboardingStep: z
+    .enum([
+      "members-onboarding",
+      "domain-setup",
+      "verify-domain",
+      "domain-filter",
+      "publish",
+    ])
+    .nullable(),
 });

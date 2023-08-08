@@ -1,5 +1,6 @@
 import { getServerAuthSession } from "@quenti/auth";
 import { IS_PAYMENT_ENABLED } from "@quenti/lib/constants/payments";
+import { BASE_URL } from "@quenti/lib/constants/url";
 import { purchaseOrganizationSubscription } from "@quenti/payments";
 import {
   conflictingDomains,
@@ -50,6 +51,7 @@ export default async function handler(
   const checkoutSession = await purchaseOrganizationSubscription({
     orgId,
     userId: session.user.id,
+    cancelUrl: `${BASE_URL}/orgs/${orgId}/billing`,
   });
 
   if (!checkoutSession.callback) {

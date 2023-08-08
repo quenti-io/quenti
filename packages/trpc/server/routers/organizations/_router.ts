@@ -18,6 +18,7 @@ import { ZRemoveStudentSchema } from "./remove-student.schema";
 import { ZResendCodeSchema } from "./resend-code.schema";
 import { ZSetDomainFilterSchema } from "./set-domain-filter.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
+import { ZSetMemberMetadataSchema } from "./set-member-metadata.schema";
 import { ZUpdateSchema } from "./update.schema";
 import { ZVerifyStudentDomainSchema } from "./verify-student-domain.schema";
 
@@ -44,6 +45,7 @@ type OrganizationsRouterHandlerCache = {
     ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
     ["add-student"]?: typeof import("./add-student.handler").addStudentHandler;
     ["remove-student"]?: typeof import("./remove-student.handler").removeStudentHandler;
+    ["set-member-metadata"]?: typeof import("./set-member-metadata.handler").setMemberMetadataHandler;
   };
 } & { routerPath: string };
 
@@ -174,5 +176,11 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "remove-student");
       return HANDLER_CACHE.handlers["remove-student"]!({ ctx, input });
+    }),
+  setMemberMetadata: teacherProcedure
+    .input(ZSetMemberMetadataSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "set-member-metadata");
+      return HANDLER_CACHE.handlers["set-member-metadata"]!({ ctx, input });
     }),
 });

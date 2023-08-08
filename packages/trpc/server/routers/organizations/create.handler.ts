@@ -55,6 +55,9 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
           userId: ctx.session.user.id,
           role: "Owner",
           accepted: true,
+          metadata: {
+            onboardingStep: "members-onboarding",
+          },
         },
       },
       domains: {

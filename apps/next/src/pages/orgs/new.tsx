@@ -13,12 +13,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "@quenti/trpc";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { WizardLayout } from "../../components/wizard-layout";
-import { api } from "@quenti/trpc";
 import { ORGANIZATION_ICONS } from "../../utils/icons";
 
 const schema = z.object({
@@ -35,10 +35,12 @@ interface NewOrganizationFormInput {
 }
 
 export default function NewOrganization() {
+  const utils = api.useContext();
   const router = useRouter();
 
   const create = api.organizations.create.useMutation({
     onSuccess: async (data) => {
+      await utils.user.me.invalidate();
       await router.push(`/orgs/${data.id}/members-onboarding`);
     },
     onError: (error) => {

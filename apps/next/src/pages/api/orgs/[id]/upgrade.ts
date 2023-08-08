@@ -31,9 +31,20 @@ export default async function handler(
     where: { metadata: { path: "$.paymentId", equals: session_id } },
   });
 
+  const member = await prisma.organizationMembership.findFirst({
+    where: {
+      orgId: id,
+      metadata: { path: "$.onboardingStep", equals: "publish" },
+    },
+    select: {
+      userId: true,
+    },
+  });
+
   if (!org) {
     org = await upgradeOrganization(
       id,
+      member?.userId,
       checkoutSession.id,
       subscription.id,
       subscription.items.data[0]?.id

@@ -66,7 +66,7 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
     });
   }
 
-  await upgradeOrganization(org.id);
+  await upgradeOrganization(org.id, ctx.session.user.id);
 
   return {
     callback: `${BASE_URL}/orgs/${org.id}?upgrade=success`,
