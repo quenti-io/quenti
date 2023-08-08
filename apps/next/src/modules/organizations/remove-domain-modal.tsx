@@ -35,9 +35,9 @@ export const RemoveDomainModal: React.FC<RemoveDomainModalProps> = ({
         <Modal.Body>
           <Modal.Heading>Remove {domain}</Modal.Heading>
           <Text>
-            All students associated this domain will be automatically disbanded
-            from the organization. This action cannot be undone, you will have
-            to readd the domain manually.
+            All students associated with this domain will be automatically
+            disbanded from the organization. This action cannot be undone; you
+            will have to readd the domain manually.
           </Text>
         </Modal.Body>
         <Modal.Divider />

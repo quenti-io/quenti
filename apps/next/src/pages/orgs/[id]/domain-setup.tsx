@@ -91,8 +91,9 @@ const OptionsMenu: React.FC<OptionsMenuProps> = ({ onNewDomain }) => {
                 </HStack>
                 <Text fontSize="sm" color={muted}>
                   Students&apos; email addresses end with a domain other than{" "}
-                  <strong>{baseDomain}</strong>. Verify a separate domain for
-                  students to be enrolled in your organization.
+                  <strong>{baseDomain?.requestedDomain || ""}</strong>. Verify a
+                  separate domain for students to be enrolled in your
+                  organization.
                 </Text>
               </Stack>
             </Card>
@@ -116,7 +117,9 @@ const OptionsMenu: React.FC<OptionsMenuProps> = ({ onNewDomain }) => {
               <Stack spacing="3">
                 <HStack>
                   <IconFilterPlus />
-                  <Heading fontSize="lg">Use {baseDomain}</Heading>
+                  <Heading fontSize="lg">
+                    Use {baseDomain?.requestedDomain || ""}
+                  </Heading>
                 </HStack>
                 <Text fontSize="sm" color={muted}>
                   Set up a filter for your domain to determine if a new or

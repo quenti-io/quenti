@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ORG_SUPPORT_EMAIL } from "@quenti/lib/constants/email";
+import { api } from "@quenti/trpc";
 import { refineRegex } from "@quenti/trpc/server/common/validation";
 import {
   IconArrowLeft,
@@ -53,11 +54,6 @@ export default function OrgDomainFilter() {
   const { data: org } = useOrganization();
   const domain = getBaseDomain(org);
 
-  const linkDefault = useColorModeValue("gray.700", "gray.300");
-  const highlight = useColorModeValue("blue.500", "blue.200");
-  const addonBg = useColorModeValue("gray.100", "gray.750");
-  const error = useColorModeValue("red.600", "red.300");
-
   const domainFilterMethods = useForm<DomainFilterFormInputs>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -68,11 +64,20 @@ export default function OrgDomainFilter() {
     formState: { errors },
   } = domainFilterMethods;
 
+  const setDomainFilter = api.organizations.setDomainFilter.useMutation({
+    onSuccess: async () => {
+      await router.push(`/orgs/${org!.id}/publish`);
+    },
+  });
+
   const watchFilter = domainFilterMethods.watch("filter");
   const [testValue, setTestValue] = React.useState("");
 
   const testValid =
-    z.string().email().safeParse(`${testValue}@${domain}`).success ||
+    z
+      .string()
+      .email()
+      .safeParse(`${testValue}@${domain?.requestedDomain || ""}`).success ||
     !testValue.trim().length;
 
   const evaluate = () => {
@@ -84,9 +89,18 @@ export default function OrgDomainFilter() {
   };
   const evaluation = evaluate();
 
-  const onSubmit: SubmitHandler<DomainFilterFormInputs> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<DomainFilterFormInputs> = async (data) => {
+    await setDomainFilter.mutateAsync({
+      orgId: org!.id,
+      domainId: domain!.id,
+      filter: data.filter,
+    });
   };
+
+  const linkDefault = useColorModeValue("gray.700", "gray.300");
+  const highlight = useColorModeValue("blue.500", "blue.200");
+  const addonBg = useColorModeValue("gray.100", "gray.750");
+  const error = useColorModeValue("red.600", "red.300");
 
   return (
     <WizardLayout
@@ -199,7 +213,7 @@ export default function OrgDomainFilter() {
                           onChange={(e) => setTestValue(e.target.value)}
                         />
                         <InputRightAddon bg={addonBg}>
-                          @{domain}
+                          @{domain?.requestedDomain || ""}
                         </InputRightAddon>
                       </InputGroup>
                     </FormControl>
@@ -215,7 +229,7 @@ export default function OrgDomainFilter() {
                       <Text fontSize="sm">
                         {testValue.trim().length && testValid ? (
                           <>
-                            {testValue}@{domain} is a{" "}
+                            {testValue}@{domain?.requestedDomain || ""} is a{" "}
                             <strong>
                               {evaluation ? "teacher" : "student"}
                             </strong>

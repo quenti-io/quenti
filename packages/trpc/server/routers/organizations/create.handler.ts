@@ -21,6 +21,18 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       message: "name_profane",
     });
 
+  const member = await ctx.prisma.organizationMembership.findFirst({
+    where: {
+      userId: ctx.session.user.id,
+      accepted: true,
+    },
+  });
+  if (member)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "User already in an organization",
+    });
+
   const domain = ctx.session.user.email!.split("@")[1]!;
   const existing = await ctx.prisma.organizationDomain.findFirst({
     where: {

@@ -3,7 +3,7 @@ import { getErrorFromUnknown } from "@quenti/lib/error";
 import { HttpError } from "@quenti/lib/http-error";
 import { cancelOrganizationSubscription, stripe } from "@quenti/payments";
 import { deactivateOrgDomains } from "@quenti/trpc/server/lib/orgs/domains";
-import { disbandOrgUsers } from "@quenti/trpc/server/lib/orgs/students";
+import { disbandOrgUsers } from "@quenti/trpc/server/lib/orgs/users";
 import { buffer } from "micro";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type Stripe from "stripe";

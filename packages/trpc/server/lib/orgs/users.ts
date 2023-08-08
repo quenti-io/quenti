@@ -31,6 +31,9 @@ export const bulkJoinOrgUsersByFilter = async (
       email: {
         endsWith: `@${domain}`,
       },
+      orgMembership: {
+        id: { not: orgId },
+      },
     },
     select: {
       id: true,

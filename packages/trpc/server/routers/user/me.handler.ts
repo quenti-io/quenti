@@ -13,16 +13,17 @@ export const meHandler = async ({ ctx }: MeOptions) => {
           id: true,
           name: true,
           icon: true,
-          domain: {
+          domains: {
             select: {
               id: true,
+              type: true,
               requestedDomain: true,
               domain: true,
             },
           },
         },
       },
-      organizations: {
+      orgMembership: {
         select: {
           id: true,
           accepted: true,
@@ -32,19 +33,6 @@ export const meHandler = async ({ ctx }: MeOptions) => {
               id: true,
               name: true,
               icon: true,
-              domain: {
-                select: {
-                  id: true,
-                  requestedDomain: true,
-                  domain: true,
-                },
-              },
-              _count: {
-                select: {
-                  members: true,
-                  users: true,
-                },
-              },
             },
           },
         },
@@ -61,7 +49,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     name: user.name,
     image: user.image,
     organization: user.organization,
-    memberships: user.organizations,
+    orgMembership: user.orgMembership,
     type: user.type,
   };
 };

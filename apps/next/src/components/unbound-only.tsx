@@ -1,10 +1,14 @@
-import { useSession } from "next-auth/react";
+import { useMe } from "../hooks/use-me";
 
-export const UnboundOnly: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
-  const session = useSession();
-  if (!session.data?.user || session.data.user.organizationId) return null;
+export interface UnboundOnlyProps {
+  strict?: boolean;
+}
+
+export const UnboundOnly: React.FC<
+  React.PropsWithChildren<UnboundOnlyProps>
+> = ({ children, strict }) => {
+  const { data: me } = useMe();
+  if (!me || (me.organization && (!me.orgMembership || strict))) return null;
 
   return <>{children}</>;
 };

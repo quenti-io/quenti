@@ -13,11 +13,13 @@ interface DeleteOrganizationModalProps {
 export const DeleteOrganizationModal: React.FC<
   DeleteOrganizationModalProps
 > = ({ isOpen, onClose }) => {
+  const utils = api.useContext();
   const { data: org } = useOrganization();
   const router = useRouter();
 
   const apiDelete = api.organizations.delete.useMutation({
     onSuccess: async () => {
+      await utils.user.me.invalidate();
       await router.push("/orgs");
     },
   });

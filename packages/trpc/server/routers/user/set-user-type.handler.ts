@@ -10,9 +10,17 @@ type SetUserTypeOptions = {
 export async function setUserTypeHandler({ ctx, input }: SetUserTypeOptions) {
   const user = await ctx.prisma.user.findUniqueOrThrow({
     where: { id: ctx.session.user.id },
+    select: {
+      organizationId: true,
+      orgMembership: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
 
-  if (user.organizationId)
+  if (user.organizationId && !user.orgMembership)
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Cannot change account type if bound to an organization",

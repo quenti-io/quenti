@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useMe } from "../../hooks/use-me";
 import { Logo } from "../../icons/logo";
 import { BASE_PAGES } from "../../pages/_app";
 import { Link } from "../link";
@@ -41,6 +42,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
 }) => {
   const router = useRouter();
   const session = useSession()!.data!;
+  const { data: me } = useMe();
   const onStaticPage = BASE_PAGES.includes(router.pathname);
 
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -66,7 +68,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           </Heading>
         </HStack>
       </Flex>
-      {session?.user && (
+      {session?.user && me && (
         <HStack display={["none", "none", "flex"]}>
           <Button
             as={Link}
@@ -79,10 +81,14 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             Home
           </Button>
           <TeacherOnly>
-            <UnboundOnly>
+            <UnboundOnly strict>
               <Button
                 as={Link}
-                href="/orgs"
+                href={
+                  me.orgMembership
+                    ? `/orgs/${me.orgMembership.organization.id}`
+                    : "/orgs"
+                }
                 variant="ghost"
                 fontWeight={700}
                 fontSize="sm"
