@@ -9,7 +9,9 @@ export const OnboardingInvite = () => {
   const utils = api.useContext();
   const { data: me } = useMe();
   const next = useNextStep();
-  const invite = me?.orgInvites[0]?.organization;
+  const invite =
+    me?.orgInvites.find((i) => i.organization.published)?.organization ||
+    me?.orgInvites[0]?.organization;
 
   const acceptInvite = api.organizations.acceptInvite.useMutation({
     onSuccess: async () => {

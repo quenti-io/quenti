@@ -52,7 +52,7 @@ export const inviteMemberHandler = async ({
       message: "Only owners can invite owners",
     });
 
-  let existingUsers = await ctx.prisma.user.findMany({
+  const existingUsers = await ctx.prisma.user.findMany({
     where: {
       email: {
         in: input.emails,
@@ -66,6 +66,11 @@ export const inviteMemberHandler = async ({
           id: true,
         },
       },
+      orgMembership: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -75,19 +80,25 @@ export const inviteMemberHandler = async ({
     },
   });
 
-  // Ignore users that are already in another organization
-  existingUsers = existingUsers.filter(
-    (u) => !u.organization || u.organization.id == input.orgId
-  );
-  const existingEmails = existingUsers.map((u) => u.email);
-  const existingInviteEmails = existingInvites.map((i) => i.email);
-  const pendingInvites = input.emails.filter(
-    (e) => !existingInviteEmails.includes(e) && !existingEmails.includes(e)
-  );
+  // Ignore all emails from existing pending invites
+  // Ignore all emails from existing users that already have a membership in the org
+  const invites: { id: string | null; email: string }[] = [];
+  const signupEmails: string[] = [];
+  const loginEmails: string[] = [];
 
-  const invites = (
-    existingUsers as { email: string; id: string | null }[]
-  ).concat(pendingInvites.map((e) => ({ email: e, id: null })));
+  for (const email of input.emails) {
+    const invite = existingInvites.find((i) => i.email === email);
+    if (invite) continue;
+    const user = existingUsers.find((u) => u.email === email);
+    if (user?.orgMembership) continue;
+
+    invites.push({
+      id: user?.id ?? null,
+      email,
+    });
+    if (user) loginEmails.push(email);
+    else signupEmails.push(email);
+  }
 
   await ctx.prisma.pendingOrganizationInvite.createMany({
     data: invites.map((invite) => ({
@@ -111,7 +122,7 @@ export const inviteMemberHandler = async ({
       email: ctx.session.user.email!,
     };
 
-    for (const email of pendingInvites) {
+    for (const email of signupEmails) {
       await sendOrganizationInviteEmail(email, {
         orgName: org.name,
         // Onboarding fetches the pending invite so we can use the regular signup flow
@@ -119,7 +130,7 @@ export const inviteMemberHandler = async ({
         inviter,
       });
     }
-    for (const email of existingEmails) {
+    for (const email of loginEmails) {
       await sendOrganizationInviteEmail(email, {
         orgName: org.name,
         url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/orgs`,

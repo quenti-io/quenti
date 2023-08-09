@@ -41,13 +41,6 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
     include: { members: true },
   }))!;
 
-  const checkoutSession = await createCheckoutSession(
-    org.id,
-    ctx.session.user.id
-  );
-
-  if (checkoutSession) return checkoutSession;
-
   const domains = await getOrgDomains(org.id);
   if (!domains.length || domains.find((d) => !d.verifiedAt))
     throw new TRPCError({
@@ -65,6 +58,13 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
       message: "Conflicting domains",
     });
   }
+
+  const checkoutSession = await createCheckoutSession(
+    org.id,
+    ctx.session.user.id
+  );
+
+  if (checkoutSession) return checkoutSession;
 
   await upgradeOrganization(org.id, ctx.session.user.id);
 

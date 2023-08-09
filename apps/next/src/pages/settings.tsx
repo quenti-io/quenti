@@ -61,7 +61,7 @@ const Settings: ComponentWithAuth = () => {
             <Stack spacing={8}>
               <GAccountInfo />
               <Divider borderColor={divider} />
-              <UnboundOnly>
+              <UnboundOnly strict>
                 <AccountType />
                 <Divider borderColor={divider} />
               </UnboundOnly>

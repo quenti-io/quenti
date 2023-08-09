@@ -44,6 +44,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
               id: true,
               name: true,
               icon: true,
+              published: true,
               _count: {
                 select: {
                   members: true,

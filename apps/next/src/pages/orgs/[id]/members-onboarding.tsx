@@ -97,7 +97,11 @@ export default function OrgMembersOnboarding() {
                   variant="ghost"
                   rightIcon={<IconArrowRight size={18} />}
                 >
-                  {(org?.members?.length || 1) > 1 ? "Next" : "Skip"}
+                  {(org?.members?.length || 1) +
+                    (org?.pendingInvites.length || 0) >
+                  1
+                    ? "Next"
+                    : "Skip"}
                 </Button>
               </Fade>
             </Skeleton>
@@ -120,7 +124,6 @@ export default function OrgMembersOnboarding() {
                       nameOrEmail={m.user.name}
                       image={m.user.image}
                       label={m.role}
-                      pending={!m.accepted}
                     />
                   ))}
                 {pending
@@ -128,7 +131,8 @@ export default function OrgMembersOnboarding() {
                   .map((m) => (
                     <OnboardingMember
                       key={m.id}
-                      nameOrEmail={m.email}
+                      nameOrEmail={m.user?.name ?? m.email}
+                      image={m.user?.image}
                       label={m.role}
                       pending
                     />

@@ -39,7 +39,7 @@ interface DomainCardProps {
   requestedDomain: string;
   verifiedAt: Date | null;
   type: OrganizationDomainType;
-  conflict?: boolean;
+  conflicting?: boolean;
   onRequestVerify?: () => void;
   onRequestUpdate?: () => void;
   onRequestRemove?: () => void;
@@ -55,7 +55,9 @@ export const DomainCard: React.FC<DomainCardProps> = (props) => {
           <InnerDomainCard {...props} />
         </Card>
       </Skeleton>
-      {props.conflict && <DomainConflictCard domain={props.requestedDomain} />}
+      {props.conflicting && (
+        <DomainConflictCard domain={props.requestedDomain} />
+      )}
     </Stack>
   );
 };

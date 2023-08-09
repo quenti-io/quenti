@@ -4,11 +4,13 @@ import {
   Heading,
   VStack,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
 import { IconAirBalloon } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
+import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { GlowingButton } from "../../../modules/organizations/glowing-button";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
@@ -18,13 +20,20 @@ export default function OrgPublish() {
   const id = router.query.id as string;
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const toast = useToast();
 
   const publish = api.organizations.publish.useMutation({
     onSuccess: async ({ callback }) => {
       await router.push(callback);
     },
-    onError: (error) => {
-      console.error(error);
+    onError: async (error) => {
+      await router.push(`/orgs/${id}/billing`);
+      toast({
+        title: error.message,
+        status: "error",
+        icon: <AnimatedXCircle />,
+        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+      });
     },
   });
 

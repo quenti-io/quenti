@@ -141,7 +141,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
                     void router.push(`/orgs/${id}/${onboardingStep}`);
                   }}
                 >
-                  Continue onboarding
+                  Continue setup
                 </Button>
               )}
               {domain?.domain && (
