@@ -11,31 +11,30 @@ export const acceptInviteHandler = async ({
   ctx,
   input,
 }: AcceptInviteOptions) => {
-  if (input.accept) {
-    if (
-      !(await ctx.prisma.organizationMembership.findUnique({
-        where: {
-          userId: ctx.session.user.id,
-        },
-      }))
-    )
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "not_invited",
-      });
-
-    await ctx.prisma.organizationMembership.update({
-      where: {
-        userId: ctx.session.user.id,
-      },
-      data: {
-        accepted: true,
-      },
+  const invite = await ctx.prisma.pendingOrganizationInvite.findFirst({
+    where: {
+      orgId: input.orgId,
+      email: ctx.session.user.email!,
+    },
+  });
+  if (!invite)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "not_invited",
     });
-  } else {
-    await ctx.prisma.organizationMembership.delete({
-      where: {
+
+  await ctx.prisma.pendingOrganizationInvite.delete({
+    where: {
+      id: invite.id,
+    },
+  });
+
+  if (input.accept) {
+    await ctx.prisma.organizationMembership.create({
+      data: {
+        orgId: input.orgId,
         userId: ctx.session.user.id,
+        role: invite.role,
       },
     });
   }

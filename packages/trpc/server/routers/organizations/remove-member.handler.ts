@@ -15,7 +15,6 @@ export const removeMemberHandler = async ({
     where: {
       userId: ctx.session.user.id,
       orgId: input.orgId,
-      accepted: true,
     },
   });
   if (!membership) throw new TRPCError({ code: "UNAUTHORIZED" });

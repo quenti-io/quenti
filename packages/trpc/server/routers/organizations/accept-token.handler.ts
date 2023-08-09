@@ -46,7 +46,6 @@ export const acceptTokenHandler = async ({
         orgId: token.organizationId,
         userId: ctx.session.user.id,
         role: MembershipRole.Member,
-        accepted: false,
       },
     });
   } catch (e) {

@@ -15,7 +15,6 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       members: {
         some: {
           userId: ctx.session.user.id,
-          accepted: true,
         },
       },
     },

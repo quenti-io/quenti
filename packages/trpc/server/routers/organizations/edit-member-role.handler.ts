@@ -15,7 +15,6 @@ export const editMemberRoleHandler = async ({
     where: {
       userId: ctx.session.user.id,
       orgId: input.orgId,
-      accepted: true,
       OR: [{ role: "Admin" }, { role: "Owner" }],
     },
   });

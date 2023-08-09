@@ -19,9 +19,6 @@ export const getBelongingHandler = async ({ ctx }: GetBeloningOptions) => {
         where: {
           userId: ctx.session.user.id,
         },
-        select: {
-          accepted: true,
-        },
       },
       _count: {
         select: {
@@ -40,7 +37,6 @@ export const getBelongingHandler = async ({ ctx }: GetBeloningOptions) => {
     icon: org.icon,
     members: undefined,
     _count: org._count,
-    accepted: org.members[0]!.accepted,
   };
 };
 
