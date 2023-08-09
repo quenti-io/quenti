@@ -7,19 +7,47 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { IconExternalLink, IconPlus } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
 import { Link } from "../../components/link";
 import { Loading } from "../../components/loading";
 import { WithFooter } from "../../components/with-footer";
 import { useMe } from "../../hooks/use-me";
+import { OrganizationInviteScreen } from "../../modules/organizations/organization-invite-screen";
 
 export default function Organizations() {
+  const utils = api.useContext();
   const session = useSession();
+  const router = useRouter();
   const { data: me } = useMe();
-  if (!session.data?.user) return <Loading />;
+
+  const [tokenChecked, setTokenChecked] = React.useState(false);
+
+  const acceptToken = api.organizations.acceptToken.useMutation({
+    onSuccess: async () => {
+      await utils.user.me.invalidate();
+    },
+    onSettled: () => {
+      setTokenChecked(true);
+    },
+  });
+
+  React.useEffect(() => {
+    if (!router.isReady) return;
+    if (router.query.token)
+      acceptToken.mutate({ token: router.query.token as string });
+    else setTokenChecked(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady]);
+
+  if (!session?.data?.user || !me || !tokenChecked) return <Loading />;
 
   const domain = session.data.user.email!.split("@")[1]!;
+
+  if (!!me?.orgInvites.length) return <OrganizationInviteScreen />;
 
   return (
     <WithFooter>

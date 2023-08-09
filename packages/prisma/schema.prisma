@@ -187,6 +187,8 @@ model PendingOrganizationInvite {
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
   user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  @@unique([orgId, email])
+  @@unique([orgId, userId])
   @@index([email])
   @@index([orgId])
   @@index([userId])

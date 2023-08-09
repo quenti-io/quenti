@@ -1,4 +1,4 @@
-import { MembershipRole, Prisma } from "@quenti/prisma/client";
+import { Prisma } from "@quenti/prisma/client";
 import { TRPCError } from "@trpc/server";
 import { isInOrganizationBase } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
@@ -41,11 +41,12 @@ export const acceptTokenHandler = async ({
   }
 
   try {
-    await ctx.prisma.organizationMembership.create({
+    await ctx.prisma.pendingOrganizationInvite.create({
       data: {
+        email: ctx.session.user.email!,
         orgId: token.organizationId,
         userId: ctx.session.user.id,
-        role: MembershipRole.Member,
+        role: "Member",
       },
     });
   } catch (e) {
