@@ -95,7 +95,7 @@ export const UserMenu = () => {
         <Link href="/settings" passHref>
           <MenuOption icon={<IconSettings size={18} />} label="Settings" />
         </Link>
-        {me?.orgMembership?.accepted && (
+        {me?.orgMembership && (
           <>
             <MenuDivider />
             <Link href={`/orgs/${me.orgMembership.organization.id}`} passHref>

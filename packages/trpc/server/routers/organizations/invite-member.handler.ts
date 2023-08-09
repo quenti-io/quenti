@@ -75,11 +75,14 @@ export const inviteMemberHandler = async ({
     },
   });
 
-  existingUsers = existingUsers.filter((u) => !u.organization);
+  // Ignore users that are already in another organization
+  existingUsers = existingUsers.filter(
+    (u) => !u.organization || u.organization.id == input.orgId
+  );
   const existingEmails = existingUsers.map((u) => u.email);
   const existingInviteEmails = existingInvites.map((i) => i.email);
   const pendingInvites = input.emails.filter(
-    (e) => !existingInviteEmails.includes(e)
+    (e) => !existingInviteEmails.includes(e) && !existingEmails.includes(e)
   );
 
   const invites = (

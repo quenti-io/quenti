@@ -151,7 +151,6 @@ export const OrganizationMembers = () => {
                 key={m.user.id}
                 user={m.user}
                 role={m.role}
-                accepted={m.accepted}
                 onRequestEdit={() => {
                   setEditMemberType("user");
                   setEditMember(m.user.id);
@@ -165,13 +164,15 @@ export const OrganizationMembers = () => {
             {pending.filter(pendingFilterFn).map((m) => (
               <OrganizationMember
                 key={m.id}
-                user={{
-                  id: "",
-                  name: m.email,
-                  username: "",
-                  email: m.email,
-                  image: null,
-                }}
+                user={
+                  m.user ?? {
+                    id: "",
+                    name: m.email,
+                    username: "",
+                    email: m.email,
+                    image: null,
+                  }
+                }
                 role={m.role}
                 accepted={false}
                 isEmpty

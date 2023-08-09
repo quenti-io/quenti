@@ -26,7 +26,6 @@ export const meHandler = async ({ ctx }: MeOptions) => {
       orgMembership: {
         select: {
           id: true,
-          accepted: true,
           role: true,
           metadata: true,
           organization: {

@@ -38,6 +38,15 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
           id: true,
           email: true,
           role: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+              email: true,
+            },
+          },
         },
       },
       inviteToken: {
