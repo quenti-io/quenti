@@ -50,13 +50,17 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
         : undefined;
 
       let userType: UserType = "Student";
-      if (associatedDomain?.type == "Base" && associatedDomain.filter) {
-        try {
-          const regex = new RegExp(associatedDomain.filter);
-          if (regex.test(base!)) {
-            userType = "Teacher";
-          }
-        } catch {}
+      if (associatedDomain?.type == "Base") {
+        if (associatedDomain.filter) {
+          try {
+            const regex = new RegExp(associatedDomain.filter);
+            if (regex.test(base!)) {
+              userType = "Teacher";
+            }
+          } catch {}
+        } else {
+          userType = "Teacher";
+        }
       }
 
       const user = await p.user.create({
@@ -71,29 +75,14 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
       });
 
       if (isOrgEligible) {
-        // Get the pending invite for this email
-        const invite = await p.pendingOrganizationInvite.findUnique({
+        await p.pendingOrganizationInvite.updateMany({
           where: {
             email: data.email,
           },
+          data: {
+            userId: user.id,
+          },
         });
-
-        if (invite) {
-          await p.organizationMembership.create({
-            data: {
-              orgId: invite.orgId,
-              role: invite.role,
-              userId: user.id,
-              accepted: false,
-            },
-          });
-
-          await p.pendingOrganizationInvite.delete({
-            where: {
-              email: data.email,
-            },
-          });
-        }
       }
 
       return user;

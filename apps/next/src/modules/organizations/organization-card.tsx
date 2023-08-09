@@ -1,10 +1,7 @@
 import {
   Box,
-  Button,
-  ButtonGroup,
   Fade,
   Flex,
-  HStack,
   Heading,
   LinkBox,
   LinkOverlay,
@@ -12,12 +9,8 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useToast,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
-import { useRouter } from "next/router";
 import React from "react";
-import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Link } from "../../components/link";
 import { getColorFromId } from "../../utils/color";
 import { organizationIcon } from "../../utils/icons";
@@ -26,10 +19,9 @@ import { plural } from "../../utils/string";
 export interface OrganizationCardProps {
   id: string;
   name: string;
-  accepted?: boolean;
   icon?: number;
   skeleton?: boolean;
-  displayJoined?: boolean;
+  disableLink?: boolean;
   members: number;
   students: number;
 }
@@ -37,40 +29,15 @@ export interface OrganizationCardProps {
 export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   id,
   name,
-  accepted = true,
   icon = 0,
   skeleton,
-  displayJoined = false,
+  disableLink = false,
   members,
   students,
 }) => {
-  const router = useRouter();
-  const utils = api.useContext();
-  const toast = useToast();
-
-  const acceptInvite = api.organizations.acceptInvite.useMutation({
-    onSuccess: async () => {
-      await utils.organizations.getBelonging.invalidate();
-      await utils.user.me.invalidate();
-
-      if (
-        acceptInvite.variables?.accept &&
-        !router.asPath.includes("onboarding")
-      ) {
-        await router.push(`/orgs/${id}`);
-        toast({
-          title: `Successfully joined ${name}`,
-          status: "success",
-          icon: <AnimatedCheckCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
-        });
-      }
-    },
-  });
-
   const Wrapper = skeleton ? Skeleton : React.Fragment;
   const children =
-    skeleton || !accepted ? (
+    skeleton || disableLink ? (
       name
     ) : (
       <LinkOverlay as={Link} href={`/orgs/${id}`}>
@@ -83,8 +50,6 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
   const iconBg = useColorModeValue("gray.700", "whiteAlpha.900");
-  const buttonBg = useColorModeValue("whiteAlpha.500", "blackAlpha.500");
-  const buttonBgHover = useColorModeValue("whiteAlpha.600", "blackAlpha.600");
 
   return (
     <Wrapper rounded="md">
@@ -118,66 +83,7 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
             bgGradient={`linear(to-r, blue.300, ${getColorFromId(id)})`}
             zIndex="50"
             pointerEvents="none"
-          >
-            {!accepted ? (
-              <ButtonGroup size="sm" pointerEvents="all">
-                <Button
-                  variant="unstyled"
-                  px="3"
-                  colorScheme="gray"
-                  bg={buttonBg}
-                  display="flex"
-                  _hover={{
-                    bg: buttonBgHover,
-                  }}
-                  isLoading={
-                    acceptInvite.isLoading &&
-                    acceptInvite.variables?.orgId == id &&
-                    acceptInvite.variables?.accept == false
-                  }
-                  onClick={() => {
-                    acceptInvite.mutate({
-                      accept: false,
-                      orgId: id,
-                    });
-                  }}
-                >
-                  Reject
-                </Button>
-                <Button
-                  isLoading={
-                    acceptInvite.isLoading &&
-                    acceptInvite.variables?.orgId == id &&
-                    acceptInvite.variables?.accept == true
-                  }
-                  onClick={() => {
-                    acceptInvite.mutate({
-                      accept: true,
-                      orgId: id,
-                    });
-                  }}
-                >
-                  Accept
-                </Button>
-              </ButtonGroup>
-            ) : displayJoined ? (
-              <HStack
-                color="green.400"
-                spacing="1"
-                bg={linkBg}
-                pr="2"
-                pl="4"
-                rounded="full"
-              >
-                <Text fontSize="xs" fontWeight={700}>
-                  Joined
-                </Text>
-                <Box transform="scale(0.75)" mr="-1">
-                  <AnimatedCheckCircle />
-                </Box>
-              </HStack>
-            ) : undefined}
-          </Box>
+          />
           <Stack mt="-1" spacing="4">
             <Flex
               alignItems="end"

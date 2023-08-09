@@ -20,7 +20,7 @@ export async function setUserTypeHandler({ ctx, input }: SetUserTypeOptions) {
     },
   });
 
-  if (user.organizationId && !user.orgMembership)
+  if (user.organizationId)
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Cannot change account type if bound to an organization",
