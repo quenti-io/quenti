@@ -52,7 +52,7 @@ export const inviteMemberHandler = async ({
       message: "Only owners can invite owners",
     });
 
-  const existingUsers = await ctx.prisma.user.findMany({
+  let existingUsers = await ctx.prisma.user.findMany({
     where: {
       email: {
         in: input.emails,
@@ -61,7 +61,11 @@ export const inviteMemberHandler = async ({
     select: {
       id: true,
       email: true,
-      organization: true,
+      organization: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -71,29 +75,23 @@ export const inviteMemberHandler = async ({
     },
   });
 
-  // Filter out users that are already part of the organization
-  const existingIds = existingUsers.map((u) => u.id);
-  const existingEmails = existingUsers.map((u) => u.email).filter((e) => !!e);
+  existingUsers = existingUsers.filter((u) => !u.organization);
+  const existingEmails = existingUsers.map((u) => u.email);
   const existingInviteEmails = existingInvites.map((i) => i.email);
-
   const pendingInvites = input.emails.filter(
-    (e) => !existingEmails.includes(e) && !existingInviteEmails.includes(e)
+    (e) => !existingInviteEmails.includes(e)
   );
 
-  await ctx.prisma.organizationMembership.createMany({
-    data: existingIds.map((id) => ({
-      orgId: input.orgId,
-      userId: id,
-      role: input.role,
-      accepted: false,
-    })),
-  });
+  const invites = (
+    existingUsers as { email: string; id: string | null }[]
+  ).concat(pendingInvites.map((e) => ({ email: e, id: null })));
 
   await ctx.prisma.pendingOrganizationInvite.createMany({
-    data: pendingInvites.map((email) => ({
-      email,
+    data: invites.map((invite) => ({
+      email: invite.email,
       orgId: input.orgId,
       role: input.role,
+      userId: invite.id,
     })),
   });
 
