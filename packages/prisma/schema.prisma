@@ -94,11 +94,11 @@ model User {
   studiableTerms StudiableTerm[]
   organization   Organization?               @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   orgMembership  OrganizationMembership?
+  orgInvites     PendingOrganizationInvite[]
   highscores     Highscore[]
   classes        ClassMembership[]
   classInvites   PendingClassInvite[]
   classBans      ClassBan[]
-  invites        PendingOrganizationInvite[]
 
   @@index([organizationId])
 }

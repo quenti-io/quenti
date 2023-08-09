@@ -37,6 +37,27 @@ export const meHandler = async ({ ctx }: MeOptions) => {
           },
         },
       },
+      orgInvites: {
+        select: {
+          organization: {
+            select: {
+              id: true,
+              name: true,
+              icon: true,
+              _count: {
+                select: {
+                  members: true,
+                  users: {
+                    where: {
+                      type: "Student",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -49,6 +70,7 @@ export const meHandler = async ({ ctx }: MeOptions) => {
     name: user.name,
     image: user.image,
     organization: user.organization,
+    orgInvites: user.orgInvites,
     orgMembership: user.orgMembership,
     type: user.type,
   };
