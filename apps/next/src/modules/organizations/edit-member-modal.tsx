@@ -1,9 +1,10 @@
 import { Button, ButtonGroup, FormControl, FormLabel } from "@chakra-ui/react";
 import type { MembershipRole } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
 import React from "react";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "@quenti/trpc";
+import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";
 
 export interface EditMemberModalProps {
@@ -21,9 +22,10 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
   type,
   role: _role,
 }) => {
-  const org = useOrganization();
+  const { data: org } = useOrganization();
+  const me = useOrganizationMember();
   const utils = api.useContext();
-  const myRole = org?.me?.role || "Member";
+  const myRole = me?.role || "Member";
 
   const [role, setRole] = React.useState<MembershipRole>(_role);
   React.useEffect(() => {
