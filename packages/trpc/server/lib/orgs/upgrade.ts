@@ -1,7 +1,7 @@
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
 import { conflictingDomains } from "./domains";
-import { bulkJoinOrgUsers } from "./users";
+import { bulkJoinOrgUsers, bulkJoinOrgUsersByFilter } from "./users";
 
 export const upgradeOrganization = async (
   id: string,
@@ -42,11 +42,15 @@ export const upgradeOrganization = async (
     });
 
     if (result.domain)
-      await bulkJoinOrgUsers(
-        org.id,
-        result.domain,
-        result.type == "Student" ? "Student" : undefined
-      );
+      if (result.filter) {
+        await bulkJoinOrgUsersByFilter(org.id, result.domain, result.filter);
+      } else {
+        await bulkJoinOrgUsers(
+          org.id,
+          result.domain,
+          result.type == "Student" ? "Student" : undefined
+        );
+      }
   }
 
   try {

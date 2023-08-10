@@ -119,7 +119,7 @@ export const OrganizationMembers = () => {
               placeholder={`Search ${plural(
                 org?.members.length || 0,
                 "member"
-              )}...`}
+              )}`}
               pl="44px"
               value={search}
               onChange={(e) => setSearch(e.target.value)}

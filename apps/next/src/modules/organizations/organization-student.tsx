@@ -14,6 +14,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { avatarUrl } from "@quenti/lib/avatar";
 import type { User } from "@quenti/prisma/client";
 import {
   IconDotsVertical,
@@ -23,7 +24,6 @@ import {
 import React from "react";
 import { Link } from "../../components/link";
 import { MenuOptionPure } from "../../components/menu-option";
-import { avatarUrl } from "@quenti/lib/avatar";
 
 interface OrganizationStudentProps {
   user: Pick<User, "id" | "name" | "username" | "email" | "image">;
@@ -128,6 +128,7 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
                 isOpen={menuOpen}
                 onOpen={openCallback}
                 onClose={closeCallback}
+                isLazy
               >
                 <MenuButton roundedLeft="none" as={IconButton} w="8" h="8">
                   <Box w="8" display="flex" justifyContent="center">

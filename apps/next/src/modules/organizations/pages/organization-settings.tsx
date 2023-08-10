@@ -212,16 +212,18 @@ export const OrganizationSettings = () => {
                 />
               ))}
               {!!org && !org.domains.find((d) => d.type == "Student") && (
-                <Button
-                  w="max"
-                  variant="ghost"
-                  leftIcon={<IconWorldPlus size={18} />}
-                  onClick={() => {
-                    setUpdateDomainOpen(true);
-                  }}
-                >
-                  Add a student domain
-                </Button>
+                <OrganizationAdminOnly>
+                  <Button
+                    w="max"
+                    variant="ghost"
+                    leftIcon={<IconWorldPlus size={18} />}
+                    onClick={() => {
+                      setUpdateDomainOpen(true);
+                    }}
+                  >
+                    Add a student domain
+                  </Button>
+                </OrganizationAdminOnly>
               )}
               {!org && (
                 <DomainCard

@@ -69,7 +69,11 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       },
       _count: {
         select: {
-          users: true,
+          users: {
+            where: {
+              type: "Student",
+            },
+          },
         },
       },
     },

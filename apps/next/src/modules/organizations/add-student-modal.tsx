@@ -14,6 +14,7 @@ import { z } from "zod";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 import { api } from "@quenti/trpc";
+import { getBaseDomain } from "./utils/get-base-domain";
 
 export interface AddStudentModalProps {
   isOpen: boolean;
@@ -43,8 +44,11 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const org = useOrganization()!;
   const utils = api.useContext();
+  const { data: org } = useOrganization();
+  const baseDomain = getBaseDomain(org)!;
+  const studentDomain = org?.domains.find((d) => d.type == "Student");
+  const domain = studentDomain || baseDomain;
 
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 
@@ -52,7 +56,7 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
     defaultValues: {
       email: "",
     },
-    resolver: zodResolver(schema(org?.domain?.requestedDomain || "")),
+    resolver: zodResolver(schema(domain.requestedDomain)),
   });
   const {
     formState: { errors },
@@ -95,7 +99,7 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
 
   const onSubmit: SubmitHandler<AddStudentFormInputs> = async (data) => {
     await addStudent.mutateAsync({
-      orgId: org.id,
+      orgId: org!.id,
       email: data.email,
     });
   };
@@ -116,9 +120,7 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
                 <FormControl isInvalid={!!errors.email}>
                   <Input
                     ref={inputRef}
-                    placeholder={`student@${
-                      org.domain?.requestedDomain || "domain.com"
-                    }`}
+                    placeholder={`student@${domain.requestedDomain}`}
                     defaultValue={value}
                     onChange={onChange}
                   />

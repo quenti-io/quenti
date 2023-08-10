@@ -32,7 +32,9 @@ export const bulkJoinOrgUsersByFilter = async (
         endsWith: `@${domain}`,
       },
       orgMembership: {
-        orgId: { not: orgId },
+        isNot: {
+          orgId,
+        },
       },
     },
     select: {
@@ -47,11 +49,14 @@ export const bulkJoinOrgUsersByFilter = async (
   for (const user of users) {
     const base = user.email.split("@")[0]!;
     if (regex.test(base)) {
-      students.push(user.id);
-    } else {
       teachers.push(user.id);
+    } else {
+      students.push(user.id);
     }
   }
+
+  console.log("students", students);
+  console.log("teachers", teachers.slice(0, 20));
 
   await prisma.user.updateMany({
     where: {
