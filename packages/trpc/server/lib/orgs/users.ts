@@ -55,9 +55,6 @@ export const bulkJoinOrgUsersByFilter = async (
     }
   }
 
-  console.log("students", students);
-  console.log("teachers", teachers.slice(0, 20));
-
   await prisma.user.updateMany({
     where: {
       id: { in: students },
