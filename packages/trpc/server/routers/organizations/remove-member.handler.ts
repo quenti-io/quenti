@@ -27,7 +27,7 @@ export const removeMemberHandler = async ({
 
   const owners = members.filter((m) => m.role === "Owner");
 
-  if (membership.userId == input.genericId) {
+  if (membership.id == input.genericId) {
     if (membership.role == "Owner" && owners.length == 1) {
       throw new TRPCError({
         code: "FORBIDDEN",
@@ -42,7 +42,7 @@ export const removeMemberHandler = async ({
   }
 
   if (input.type == "user") {
-    const targetMembership = members.find((m) => m.userId === input.genericId);
+    const targetMembership = members.find((m) => m.id === input.genericId);
     if (!targetMembership) throw new TRPCError({ code: "NOT_FOUND" });
 
     if (membership.role == "Admin" && targetMembership.role == "Owner") {
@@ -54,7 +54,7 @@ export const removeMemberHandler = async ({
 
     await ctx.prisma.organizationMembership.delete({
       where: {
-        userId: input.genericId,
+        id: input.genericId,
       },
     });
   } else {

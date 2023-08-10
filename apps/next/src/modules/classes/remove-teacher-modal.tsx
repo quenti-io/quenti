@@ -42,7 +42,9 @@ export const RemoveTeacherModal: React.FC<RemoveTeacherModalProps> = ({
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
-          <Modal.Heading>Remove teacher</Modal.Heading>
+          <Modal.Heading>
+            Remove {member?.type === "invite" ? "invite" : "teacher"}
+          </Modal.Heading>
           <Text color={muted}>
             <chakra.strong fontWeight={600}>
               {member?.nameOrEmail}
@@ -70,7 +72,7 @@ export const RemoveTeacherModal: React.FC<RemoveTeacherModalProps> = ({
                 })
               }
             >
-              Remove teacher
+              Remove {member?.type === "invite" ? "invite" : "teacher"}
             </Button>
           </ButtonGroup>
         </Modal.Footer>

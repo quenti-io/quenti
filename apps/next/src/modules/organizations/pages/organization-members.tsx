@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   HStack,
   Input,
@@ -7,18 +8,20 @@ import {
   Skeleton,
   SlideFade,
   Stack,
+  Tag,
   useColorModeValue,
 } from "@chakra-ui/react";
+import type { MembershipRole } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconEdit, IconPlus, IconSearch, IconUserX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { MemberComponent } from "../../../components/member-component";
 import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
-import { OrganizationMember } from "../organization-member";
 import { OrganizationWelcome } from "../organization-welcome";
 import { RemoveMemberModal } from "../remove-member-modal";
 import { getBaseDomain } from "../utils/get-base-domain";
@@ -74,6 +77,29 @@ export const OrganizationMembers = () => {
     return m.email?.toLowerCase().includes(refined);
   };
 
+  const canManage = (targetRole: MembershipRole) =>
+    me
+      ? me.role !== "Member" && (targetRole !== "Owner" || me.role === "Owner")
+      : false;
+
+  const editMemberCallback = React.useCallback((id: string) => {
+    setEditMemberType("user");
+    setEditMember(id);
+  }, []);
+  const removeMemberCallback = React.useCallback((id: string) => {
+    setRemoveMemberType("user");
+    setRemoveMember(id);
+  }, []);
+  const editInviteCallback = React.useCallback((id: string) => {
+    setEditMemberType("invite");
+    setEditMember(id);
+  }, []);
+  const removeInviteCallback = React.useCallback((id: string) => {
+    setRemoveMemberType("invite");
+    setRemoveMember(id);
+  }, []);
+
+  const borderColor = useColorModeValue("gray.200", "gray.700");
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
@@ -94,8 +120,7 @@ export const OrganizationMembers = () => {
             id={editMember || ""}
             role={
               editMemberType == "user"
-                ? org.members.find((m) => m.userId == editMember)?.role ||
-                  "Member"
+                ? org.members.find((m) => m.id == editMember)?.role || "Member"
                 : org.pendingInvites.find((m) => m.id == editMember)?.role ||
                   "Member"
             }
@@ -137,74 +162,110 @@ export const OrganizationMembers = () => {
       </HStack>
       {org ? (
         <SlideFade in={!!org} offsetY="20px">
-          <Stack pb="20">
+          <Box
+            border="1px solid"
+            rounded="lg"
+            borderColor={borderColor}
+            bg={menuBg}
+          >
             {me && filterFn(me) && (
-              <OrganizationMember
+              <MemberComponent
+                id={me.id}
+                email={me.user.email}
                 user={me.user}
-                role={me.role}
-                accepted
-                isCurrent
+                isMe
+                additionalTags={
+                  <>
+                    {me.role !== "Member" && (
+                      <Tag
+                        size="sm"
+                        colorScheme={me.role == "Owner" ? "purple" : "gray"}
+                      >
+                        {me.role}
+                      </Tag>
+                    )}
+                  </>
+                }
               />
             )}
             {others.filter(filterFn).map((m) => (
-              <OrganizationMember
+              <MemberComponent
                 key={m.user.id}
+                id={m.id}
+                email={m.user.email}
                 user={m.user}
-                role={m.role}
-                onRequestEdit={() => {
-                  setEditMemberType("user");
-                  setEditMember(m.user.id);
-                }}
-                onRequestRemove={() => {
-                  setRemoveMemberType("user");
-                  setRemoveMember(m.user.id);
-                }}
+                additionalTags={
+                  <>
+                    {m.role !== "Member" && (
+                      <Tag
+                        size="sm"
+                        colorScheme={m.role == "Owner" ? "purple" : "gray"}
+                      >
+                        {m.role}
+                      </Tag>
+                    )}
+                  </>
+                }
+                canManage={canManage(m.role)}
+                actions={[
+                  {
+                    label: "Edit",
+                    icon: IconEdit,
+                    onClick: editMemberCallback,
+                  },
+                  {
+                    label: "Remove",
+                    icon: IconUserX,
+                    onClick: removeMemberCallback,
+                    destructive: true,
+                  },
+                ]}
               />
             ))}
             {pending.filter(pendingFilterFn).map((m) => (
-              <OrganizationMember
+              <MemberComponent
                 key={m.id}
-                user={
-                  m.user ?? {
-                    id: "",
-                    name: m.email,
-                    username: "",
-                    email: m.email,
-                    image: null,
-                  }
-                }
-                role={m.role}
-                accepted={false}
-                isEmpty
-                onRequestEdit={() => {
-                  setEditMemberType("invite");
-                  setEditMember(m.id);
-                }}
-                onRequestRemove={() => {
-                  setRemoveMemberType("invite");
-                  setRemoveMember(m.id);
-                }}
+                id={m.id}
+                email={m.email}
+                canManage={canManage("Member")}
+                pending
+                actions={[
+                  {
+                    label: "Edit",
+                    icon: IconEdit,
+                    onClick: editInviteCallback,
+                  },
+                  {
+                    label: "Remove",
+                    icon: IconUserX,
+                    onClick: removeInviteCallback,
+                  },
+                ]}
               />
             ))}
-          </Stack>
+          </Box>
         </SlideFade>
       ) : (
-        <Stack pb="20">
+        <Box
+          border="1px solid"
+          rounded="lg"
+          borderColor={borderColor}
+          bg={menuBg}
+        >
           {Array.from({ length: 10 }).map((_, i) => (
-            <OrganizationMember
+            <MemberComponent
               key={i}
+              id=""
               skeleton
+              email="placeholder@example.com"
               user={{
-                id: "",
                 name: "Jonathan Doe",
                 username: "johndoe",
-                email: "placeholder@example.com",
                 image: null,
               }}
-              role={"Member"}
             />
           ))}
-        </Stack>
+        </Box>
       )}
     </Stack>
   );

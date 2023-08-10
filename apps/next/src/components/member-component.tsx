@@ -1,11 +1,14 @@
 import {
   Avatar,
   Box,
+  Button,
   ButtonGroup,
   Center,
   Flex,
   HStack,
   IconButton,
+  LinkBox,
+  LinkOverlay,
   Menu,
   MenuButton,
   MenuList,
@@ -20,35 +23,48 @@ import type { User } from "@quenti/prisma/client";
 import {
   IconDotsVertical,
   IconExternalLink,
-  IconUserX,
+  type TablerIconsProps,
 } from "@tabler/icons-react";
 import React from "react";
-import { MenuOptionPure } from "../../components/menu-option";
+import { MenuOptionPure } from "./menu-option";
 
-export interface ClassTeacherProps {
+export interface MemberComponentAction {
+  label: string;
+  icon: React.FC<TablerIconsProps>;
+  destructive?: boolean;
+  onClick: (id: string) => void;
+}
+
+export interface MemberComponentProps {
   id: string;
   email: string;
   user?: Pick<User, "image" | "name" | "username">;
   isMe?: boolean;
   pending?: boolean;
   skeleton?: boolean;
-  selected?: boolean;
-  onSelect?: (id: string, selected: boolean) => void;
-  onRequestRemove?: (id: string) => void;
+  additionalTags?: React.ReactNode;
+  canManage?: boolean;
+  actions?: MemberComponentAction[];
 }
 
-export const ClassTeacherRaw: React.FC<ClassTeacherProps> = ({
+export const MemberComponentRaw: React.FC<MemberComponentProps> = ({
   id,
   email,
   user,
   isMe,
   pending,
   skeleton,
-  selected,
-  onSelect,
-  onRequestRemove,
+  additionalTags,
+  canManage = false,
+  actions = [],
 }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
+
+  const menuBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const hoverColor = useColorModeValue("gray.50", "gray.750");
+  const redMenuColor = useColorModeValue("red.600", "red.200");
+  const mutedColor = useColorModeValue("gray.600", "gray.400");
 
   const SmSkeleton: React.FC<React.PropsWithChildren> = ({ children }) => (
     <Flex h="20px" alignItems="center">
@@ -57,13 +73,6 @@ export const ClassTeacherRaw: React.FC<ClassTeacherProps> = ({
       </SkeletonText>
     </Flex>
   );
-
-  const menuBg = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const hoverColor = useColorModeValue("gray.50", "gray.750");
-  const mutedColor = useColorModeValue("gray.600", "gray.400");
-  const redMenuColor = useColorModeValue("red.600", "red.200");
-  const pillBg = useColorModeValue("gray.100", "gray.700");
 
   const openCallback = React.useCallback(() => {
     setMenuOpen(true);
@@ -112,6 +121,7 @@ export const ClassTeacherRaw: React.FC<ClassTeacherProps> = ({
                   Pending
                 </Tag>
               )}
+              {additionalTags}
             </HStack>
           </SmSkeleton>
           <SmSkeleton>
@@ -136,11 +146,19 @@ export const ClassTeacherRaw: React.FC<ClassTeacherProps> = ({
               variant="outline"
               isAttached
             >
-              <IconButton
-                aria-label="Go to profile"
-                icon={<IconExternalLink size={16} />}
-              />
-              {!isMe && (
+              <LinkBox as={Button} px="0">
+                <LinkOverlay
+                  w="full"
+                  h="full"
+                  href={`/@${user?.username || ""}`}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <IconExternalLink size="16" />
+                </LinkOverlay>
+              </LinkBox>
+              {!isMe && canManage && (
                 <MenuButton as={IconButton} w="8" h="8">
                   <Center w="8" display="flex" justifyContent="center">
                     <IconDotsVertical size="18" />
@@ -148,7 +166,7 @@ export const ClassTeacherRaw: React.FC<ClassTeacherProps> = ({
                 </MenuButton>
               )}
             </ButtonGroup>
-            {!isMe && (
+            {!isMe && canManage && (
               <MenuList
                 bg={menuBg}
                 py={0}
@@ -158,13 +176,17 @@ export const ClassTeacherRaw: React.FC<ClassTeacherProps> = ({
                 shadow="lg"
                 display={menuOpen ? "block" : "none"}
               >
-                <MenuOptionPure
-                  icon={<IconUserX size={16} />}
-                  label="Remove"
-                  fontSize="sm"
-                  py="6px"
-                  onClick={() => onRequestRemove?.(id)}
-                />
+                {actions.map((a, i) => (
+                  <MenuOptionPure
+                    key={i}
+                    icon={<a.icon size={16} />}
+                    label={a.label}
+                    fontSize="sm"
+                    py="6px"
+                    color={a.destructive ? redMenuColor : undefined}
+                    onClick={() => a.onClick?.(id)}
+                  />
+                ))}
               </MenuList>
             )}
           </Menu>
@@ -174,4 +196,4 @@ export const ClassTeacherRaw: React.FC<ClassTeacherProps> = ({
   );
 };
 
-export const ClassTeacher = React.memo(ClassTeacherRaw);
+export const MemberComponent = React.memo(MemberComponentRaw);

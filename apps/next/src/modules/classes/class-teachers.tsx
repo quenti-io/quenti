@@ -8,15 +8,15 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconUserPlus } from "@tabler/icons-react";
+import { IconUserPlus, IconUserX } from "@tabler/icons-react";
 import React from "react";
+import { MemberComponent } from "../../components/member-component";
 import { useClass } from "../../hooks/use-class";
-import { ClassTeacher } from "./class-teacher";
+import { InviteTeachersModal } from "./invite-teachers-modal";
 import {
   RemoveTeacherModal,
   type RemoveTeacherModalProps,
 } from "./remove-teacher-modal";
-import { InviteTeachersModal } from "./invite-teachers-modal";
 
 export const ClassTeachers = () => {
   const { data: class_ } = useClass();
@@ -77,39 +77,51 @@ export const ClassTeachers = () => {
           bg={menuBg}
         >
           {teachers.map((teacher) => (
-            <ClassTeacher
+            <MemberComponent
               key={teacher.id}
               id={teacher.id}
               user={teacher.user}
               email={teacher.user.email}
               isMe={teacher.id == class_?.me.id}
-              onRequestRemove={(id) => {
-                setRemoveTeacher({
-                  id,
-                  nameOrEmail: teacher.user.name || teacher.user.email,
-                  type: "member",
-                });
-              }}
+              canManage
+              actions={[
+                {
+                  label: "Remove",
+                  icon: IconUserX,
+                  onClick: (id) =>
+                    setRemoveTeacher({
+                      id,
+                      nameOrEmail: teacher.user.name || teacher.user.email,
+                      type: "member",
+                    }),
+                },
+              ]}
             />
           ))}
           {invites.map((invite) => (
-            <ClassTeacher
+            <MemberComponent
               key={invite.id}
               id={invite.id}
               user={invite.user}
               email={invite.email}
               pending
-              onRequestRemove={(id) => {
-                setRemoveTeacher({
-                  id,
-                  nameOrEmail: invite.email,
-                  type: "invite",
-                });
-              }}
+              canManage
+              actions={[
+                {
+                  label: "Remove",
+                  icon: IconUserX,
+                  onClick: (id) =>
+                    setRemoveTeacher({
+                      id,
+                      nameOrEmail: invite.email,
+                      type: "invite",
+                    }),
+                },
+              ]}
             />
           ))}
           {!class_ && (
-            <ClassTeacher
+            <MemberComponent
               id=""
               email="placeholder@example.com"
               user={{
@@ -117,6 +129,7 @@ export const ClassTeachers = () => {
                 name: "Placeholder",
                 username: "username",
               }}
+              canManage
               skeleton
             />
           )}

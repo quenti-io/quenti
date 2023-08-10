@@ -26,7 +26,7 @@ export const editMemberRoleHandler = async ({
       message: "Must be an admin to edit member roles",
     });
   }
-  if (input.genericId == ctx.session.user.id) {
+  if (input.genericId == membership.id) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Cannot change your own role",
@@ -47,12 +47,12 @@ export const editMemberRoleHandler = async ({
       },
     });
 
-    const target = members.find((m) => m.userId === input.genericId);
+    const target = members.find((m) => m.id === input.genericId);
     if (!target) throw new TRPCError({ code: "NOT_FOUND" });
 
     await ctx.prisma.organizationMembership.update({
       where: {
-        userId: input.genericId,
+        id: input.genericId,
       },
       data: {
         role: input.role,
