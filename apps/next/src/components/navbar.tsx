@@ -14,7 +14,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { menuEventChannel } from "../events/menu";
-import { useMe } from "../hooks/use-me";
 import { BASE_PAGES } from "../pages/_app";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
