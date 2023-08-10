@@ -1,12 +1,10 @@
 import { getServerAuthSession } from "@quenti/auth";
 import { stripe } from "@quenti/payments";
-import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
-import { conflictingDomain } from "@quenti/trpc/server/lib/orgs/domains";
-import { bulkJoinOrgStudents } from "@quenti/trpc/server/lib/orgs/students";
+import { prisma } from "@quenti/prisma";
+import { upgradeOrganization } from "@quenti/trpc/server/lib/orgs/upgrade";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type Stripe from "stripe";
 import { z } from "zod";
-import { prisma } from "../../../../../../../packages/prisma";
 
 const querySchema = z.object({
   id: z.string().cuid2(),
@@ -33,40 +31,24 @@ export default async function handler(
     where: { metadata: { path: "$.paymentId", equals: session_id } },
   });
 
+  const member = await prisma.organizationMembership.findFirst({
+    where: {
+      orgId: id,
+      metadata: { path: "$.onboardingStep", equals: "publish" },
+    },
+    select: {
+      userId: true,
+    },
+  });
+
   if (!org) {
-    const prevOrg = await prisma.organization.findFirstOrThrow({
-      where: { id },
-      include: { domain: true },
-    });
-    const metadata = orgMetadataSchema.parse(prevOrg.metadata);
-
-    const conflicting =
-      !!prevOrg.domain &&
-      !!(await conflictingDomain(id, prevOrg.domain.requestedDomain));
-
-    org = await prisma.organization.update({
-      where: { id },
-      data: {
-        metadata: {
-          ...metadata,
-          paymentId: checkoutSession.id,
-          subscriptionId: subscription.id || null,
-          subscriptionItemId: subscription.items.data[0]?.id || null,
-        },
-        published: true,
-        domain:
-          prevOrg.domain && !conflicting
-            ? {
-                update: {
-                  domain: prevOrg.domain.requestedDomain,
-                },
-              }
-            : undefined,
-      },
-    });
-
-    if (prevOrg.domain)
-      await bulkJoinOrgStudents(org.id, prevOrg.domain.requestedDomain);
+    org = await upgradeOrganization(
+      id,
+      member?.userId,
+      checkoutSession.id,
+      subscription.id,
+      subscription.items.data[0]?.id
+    );
   }
 
   const session = await getServerAuthSession({ req, res });

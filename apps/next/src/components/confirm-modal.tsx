@@ -1,15 +1,12 @@
 import {
   Button,
   ButtonGroup,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import { Modal } from "./modal";
 
 export interface ConfirmModalProps {
   isOpen: boolean;
@@ -17,6 +14,7 @@ export interface ConfirmModalProps {
   isLoading?: boolean;
   heading?: string;
   actionText?: string;
+  destructive?: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
@@ -25,29 +23,41 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   heading,
   actionText,
+  destructive,
   isLoading,
   body,
   onClose,
   onConfirm,
 }) => {
+  const mutedColor = useColorModeValue("gray.700", "gray.300");
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent>
-        <ModalHeader fontSize="2xl">{heading || "Are you sure?"}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>{body}</ModalBody>
-        <ModalFooter>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Stack spacing="2">
+            <Modal.Heading>{heading || "Are you sure?"}</Modal.Heading>
+            <Text color={mutedColor}>{body}</Text>
+          </Stack>
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
           <ButtonGroup>
             <Button variant="ghost" colorScheme="gray" onClick={onClose}>
               Cancel
             </Button>
-            <Button onClick={onConfirm} isLoading={isLoading}>
+            <Button
+              onClick={onConfirm}
+              isLoading={isLoading}
+              colorScheme={destructive ? "red" : "blue"}
+              variant={destructive ? "outline" : "solid"}
+            >
               {actionText ?? "Confirm"}
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };

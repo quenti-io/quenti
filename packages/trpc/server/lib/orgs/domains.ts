@@ -1,15 +1,28 @@
 import { prisma } from "@quenti/prisma";
 
-export const getOrgDomain = async (orgId: string) => {
-  return await prisma.verifiedOrganizationDomain.findUnique({
+export const getOrgDomains = async (orgId: string) => {
+  return await prisma.organizationDomain.findMany({
     where: {
       orgId,
     },
   });
 };
 
+export const conflictingDomains = async (orgId: string, domains: string[]) => {
+  return await prisma.organizationDomain.findMany({
+    where: {
+      orgId: {
+        not: orgId,
+      },
+      domain: {
+        in: domains,
+      },
+    },
+  });
+};
+
 export const conflictingDomain = async (orgId: string, domain: string) => {
-  return await prisma.verifiedOrganizationDomain.findFirst({
+  return await prisma.organizationDomain.findFirst({
     where: {
       orgId: {
         not: orgId,
@@ -19,8 +32,8 @@ export const conflictingDomain = async (orgId: string, domain: string) => {
   });
 };
 
-export const deactivateOrgDomain = async (orgId: string) => {
-  return await prisma.verifiedOrganizationDomain.update({
+export const deactivateOrgDomains = async (orgId: string) => {
+  return await prisma.organizationDomain.updateMany({
     where: {
       orgId,
     },

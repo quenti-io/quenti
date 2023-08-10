@@ -1,6 +1,6 @@
-import { TRPCError } from "@trpc/server";
 import { cancelOrganizationSubscription } from "@quenti/payments";
-import { disbandOrgStudents } from "../../lib/orgs/students";
+import { TRPCError } from "@trpc/server";
+import { disbandOrgUsers } from "../../lib/orgs/users";
 import { isOrganizationOwner } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TDeleteSchema } from "./delete.schema";
@@ -23,7 +23,7 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
   });
 
   if (deleted.published) {
-    await disbandOrgStudents(deleted.id);
+    await disbandOrgUsers(deleted.id);
   }
 };
 

@@ -22,7 +22,7 @@ export const banStudentsHandler = async ({
     },
   });
 
-  await ctx.prisma.membership.deleteMany({
+  await ctx.prisma.classMembership.deleteMany({
     where: {
       id: {
         in: members.map((member) => member.id),

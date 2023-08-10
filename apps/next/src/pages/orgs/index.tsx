@@ -1,57 +1,39 @@
 import {
   Button,
   Container,
-  HStack,
   Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  SimpleGrid,
+  SlideFade,
   Stack,
-  useColorModeValue,
-  useToast,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
-import type { Organization } from "@quenti/prisma/client";
-import { IconSearch } from "@tabler/icons-react";
+import { api } from "@quenti/trpc";
+import { IconExternalLink, IconPlus } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Link } from "../../components/link";
+import { Loading } from "../../components/loading";
 import { WithFooter } from "../../components/with-footer";
-import { OrganizationCard } from "../../modules/organizations/organization-card";
-import { api } from "@quenti/trpc";
+import { useMe } from "../../hooks/use-me";
+import { OrganizationInviteScreen } from "../../modules/organizations/organization-invite-screen";
 
 export default function Organizations() {
-  const router = useRouter();
   const utils = api.useContext();
-  const toast = useToast();
-
-  const { data } = api.organizations.getBelonging.useQuery(undefined, {
-    retry: false,
-  });
+  const session = useSession();
+  const router = useRouter();
+  const { data: me } = useMe();
 
   const [tokenChecked, setTokenChecked] = React.useState(false);
 
   const acceptToken = api.organizations.acceptToken.useMutation({
-    onSuccess: async (name) => {
-      await utils.organizations.getBelonging.invalidate();
-
-      toast({
-        title: `You have been invited to ${name}`,
-        icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
-      });
+    onSuccess: async () => {
+      await utils.user.me.invalidate();
     },
     onSettled: () => {
       setTokenChecked(true);
     },
   });
-
-  const [search, setSearch] = React.useState("");
-  const filterFn = (org: Pick<Organization, "name">) => {
-    if (!search) return true;
-    return org.name.toLowerCase().includes(search.toLowerCase());
-  };
 
   React.useEffect(() => {
     if (!router.isReady) return;
@@ -61,59 +43,77 @@ export default function Organizations() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
-  const menuBg = useColorModeValue("white", "gray.800");
+  if (!session?.data?.user || !me || !tokenChecked) return <Loading />;
 
-  const isLoading = !data || !tokenChecked;
+  const domain = session.data.user.email!.split("@")[1]!;
+
+  if (!!me?.orgInvites.length) return <OrganizationInviteScreen />;
 
   return (
     <WithFooter>
-      <Container maxW="6xl">
-        <Stack spacing="8">
-          <Heading size="lg">Organizations</Heading>
-          <HStack>
-            <InputGroup bg={menuBg} shadow="sm" rounded="md">
-              <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
-                <IconSearch size={18} />
-              </InputLeftElement>
-              <Input
-                placeholder="Search..."
-                pl="44px"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </InputGroup>
-            <Button px="6" as={Link} href="/orgs/new">
-              Create New
-            </Button>
-          </HStack>
-          <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap="4">
-            {!isLoading
-              ? data
-                  .filter(filterFn)
-                  .map((org) => (
-                    <OrganizationCard
-                      id={org.id}
-                      name={org.name}
-                      icon={org.icon}
-                      key={org.id}
-                      accepted={org.accepted}
-                      members={org._count.members}
-                      students={org._count.users}
-                    />
-                  ))
-              : Array.from({ length: 12 }).map((_, i) => (
-                  <OrganizationCard
-                    id=""
-                    name="loading"
-                    skeleton
-                    key={i}
-                    members={0}
-                    students={0}
-                  />
-                ))}
-          </SimpleGrid>
-        </Stack>
-      </Container>
+      <SlideFade
+        in={true}
+        offsetY="20px"
+        delay={0.2}
+        transition={{
+          enter: {
+            duration: 0.3,
+          },
+        }}
+      >
+        <Container maxW="4xl" mt="20">
+          <VStack spacing="12">
+            <VStack spacing="6">
+              <Heading
+                as="h1"
+                fontSize={["4xl", "4xl", "5xl", "7xl"]}
+                textAlign="center"
+                maxW="1000px"
+                bgGradient="linear(to-r, blue.300, purple.300)"
+                bgClip="text"
+                data-aos="fade-up"
+              >
+                Manage your school with Quenti
+              </Heading>
+              <Text fontSize="xl" textAlign="center">
+                Quenti&apos;s organizations give you a powerful set of tools for
+                managing your school&apos;s classes, teachers and students. Get
+                started by creating an organization for{" "}
+                <strong>{domain}</strong>.
+              </Text>
+            </VStack>
+            <Stack
+              direction={{ base: "column", sm: "row" }}
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <Button
+                size="lg"
+                height="4rem"
+                px="2rem"
+                leftIcon={<IconPlus />}
+                as={Link}
+                href={
+                  me?.orgMembership
+                    ? `/orgs/${me.orgMembership.organization.id}`
+                    : "/orgs/new"
+                }
+              >
+                Get started
+              </Button>
+              <Button
+                variant="ghost"
+                size="lg"
+                height="4rem"
+                px="2rem"
+                rightIcon={<IconExternalLink />}
+              >
+                Learn more
+              </Button>
+            </Stack>
+          </VStack>
+        </Container>
+      </SlideFade>
     </WithFooter>
   );
 }

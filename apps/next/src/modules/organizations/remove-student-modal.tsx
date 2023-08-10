@@ -14,7 +14,7 @@ export const RemoveStudentModal: React.FC<RemoveStudentModalProps> = ({
   onClose,
   id,
 }) => {
-  const org = useOrganization();
+  const { data: org } = useOrganization();
   const utils = api.useContext();
   const removeStudent = api.organizations.removeStudent.useMutation({
     onSuccess: async () => {

@@ -15,6 +15,7 @@ import { ClientOnly } from "../../../components/client-only";
 import { LoadingSearch } from "../../../components/loading-search";
 import { useDebounce } from "../../../hooks/use-debounce";
 import { useOrganization } from "../../../hooks/use-organization";
+import { useOrganizationMember } from "../../../hooks/use-organization-member";
 import { plural } from "../../../utils/string";
 import { AddStudentModal } from "../add-student-modal";
 import { EmptyStudentsCard } from "../empty-students-card";
@@ -23,7 +24,8 @@ import { OrganizationStudent } from "../organization-student";
 import { RemoveStudentModal } from "../remove-student-modal";
 
 export const OrganizationStudents = () => {
-  const org = useOrganization();
+  const { data: org } = useOrganization();
+  const me = useOrganizationMember();
 
   const [search, setSearch] = React.useState("");
   const debouncedSearch = useDebounce(search.trim(), 500);
@@ -78,28 +80,33 @@ export const OrganizationStudents = () => {
   }, []);
 
   if (org && org._count.users == 0) return <EmptyStudentsCard />;
-  const isAdmin = org?.me.role == "Admin" || org?.me.role == "Owner";
+  const isAdmin = me?.role == "Admin" || me?.role == "Owner";
 
   return (
     <>
-      <AddStudentModal
-        isOpen={addModalOpen}
-        onClose={() => setAddModalOpen(false)}
-      />
-      <RemoveStudentModal
-        id={removeStudent || ""}
-        isOpen={!!removeStudent}
-        onClose={() => setRemoveStudent(undefined)}
-      />
-      <Stack spacing="6">
-        <HStack>
+      {org && (
+        <>
+          <AddStudentModal
+            isOpen={addModalOpen}
+            onClose={() => setAddModalOpen(false)}
+          />
+          <RemoveStudentModal
+            id={removeStudent || ""}
+            isOpen={!!removeStudent}
+            onClose={() => setRemoveStudent(undefined)}
+          />
+        </>
+      )}
+      <Stack spacing="4">
+        <HStack pb="2">
           <LoadingSearch
             value={search}
+            skeleton={!org}
             onChange={setSearch}
             placeholder={`Search ${plural(org?._count.users || 0, "student", {
               toLocaleString: true,
-            })}...`}
-            debounceInequality={search != debouncedSearch}
+            })}`}
+            debounceInequality={search.trim() != debouncedSearch.trim()}
             isPreviousData={isPreviousData}
           />
           <OrganizationAdminOnly>
@@ -125,11 +132,7 @@ export const OrganizationStudents = () => {
           </ScaleFade>
         )}
         {data?.pages ? (
-          <SlideFade
-            offsetY="20px"
-            in={!!data.pages.length && !isPreviousData}
-            unmountOnExit
-          >
+          <SlideFade offsetY="20px" in={!!data.pages.length && !isPreviousData}>
             <TableContainer pb="20" px="4">
               <Table size="md">
                 {data.pages.map((page) => (

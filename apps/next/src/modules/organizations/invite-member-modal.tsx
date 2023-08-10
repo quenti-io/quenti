@@ -30,13 +30,14 @@ import { z } from "zod";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Modal } from "../../components/modal";
-import { useOrganization } from "../../hooks/use-organization";
+import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";
 
 export interface InviteMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   orgId: string;
+  domain: string;
   token?: string;
 }
 
@@ -46,27 +47,33 @@ interface InviteMemberFormInputs {
   sendEmails: boolean;
 }
 
-const requiredEmail = z
-  .string()
-  .nonempty({ message: "Email is required" })
-  .email({ message: "Enter a valid email" });
+const requiredEmail = (domain: string) =>
+  z
+    .string()
+    .nonempty({ message: "Email is required" })
+    .email({ message: "Enter a valid email" })
+    .endsWith(`@${domain}`, {
+      message: `You can only invite people from your domain ${domain}`,
+    });
 
-const schema = z.object({
-  emails: z.union([
-    requiredEmail,
-    z.array(requiredEmail).nonempty("Emails are required"),
-  ]),
-  role: z.enum(["Member", "Admin", "Owner"]),
-  sendEmails: z.boolean(),
-});
+const schema = (domain: string) =>
+  z.object({
+    emails: z.union([
+      requiredEmail(domain),
+      z.array(requiredEmail(domain)).nonempty("Emails are required"),
+    ]),
+    role: z.enum(["Member", "Admin", "Owner"]),
+    sendEmails: z.boolean(),
+  });
 
 export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   isOpen,
   onClose,
   orgId,
+  domain,
   token,
 }) => {
-  const org = useOrganization();
+  const me = useOrganizationMember();
   const utils = api.useContext();
   const toast = useToast();
 
@@ -76,7 +83,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
       role: "Member",
       sendEmails: true,
     },
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema(domain)),
   });
   const {
     formState: { errors },
@@ -261,7 +268,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                           <FormControl isInvalid={!!errors.emails}>
                             <FormLabel>Email</FormLabel>
                             <Input
-                              placeholder="email@example.com"
+                              placeholder={`email@${domain}`}
                               defaultValue={value}
                               onChange={(e) => onChange(e.target.value)}
                             />
@@ -282,7 +289,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                               <FormLabel>Invite via email</FormLabel>
                               <AutoResizeTextarea
                                 allowTab={false}
-                                placeholder="email-one@example.com, email-two@example.com"
+                                placeholder={`email-one@${domain}, email-two@${domain}`}
                                 minH="120px"
                                 defaultValue={value}
                                 onChange={(e) => {
@@ -339,7 +346,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
                     <MemberRoleSelect
                       value={value}
                       onChange={onChange}
-                      myRole={org?.me.role || "Admin"}
+                      myRole={me?.role || "Admin"}
                     />
                   </FormControl>
                 )}

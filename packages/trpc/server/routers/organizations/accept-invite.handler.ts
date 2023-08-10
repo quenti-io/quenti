@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAcceptInviteSchema } from "./accept-invite.schema";
 
@@ -10,25 +11,30 @@ export const acceptInviteHandler = async ({
   ctx,
   input,
 }: AcceptInviteOptions) => {
-  if (input.accept) {
-    await ctx.prisma.membership.update({
-      where: {
-        userId_orgId: {
-          userId: ctx.session.user.id,
-          orgId: input.orgId,
-        },
-      },
-      data: {
-        accepted: true,
-      },
+  const invite = await ctx.prisma.pendingOrganizationInvite.findFirst({
+    where: {
+      orgId: input.orgId,
+      email: ctx.session.user.email!,
+    },
+  });
+  if (!invite)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "not_invited",
     });
-  } else {
-    await ctx.prisma.membership.delete({
-      where: {
-        userId_orgId: {
-          userId: ctx.session.user.id,
-          orgId: input.orgId,
-        },
+
+  await ctx.prisma.pendingOrganizationInvite.delete({
+    where: {
+      id: invite.id,
+    },
+  });
+
+  if (input.accept) {
+    await ctx.prisma.organizationMembership.create({
+      data: {
+        orgId: input.orgId,
+        userId: ctx.session.user.id,
+        role: invite.role,
       },
     });
   }

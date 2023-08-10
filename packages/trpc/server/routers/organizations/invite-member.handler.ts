@@ -1,8 +1,10 @@
-import { env } from "@quenti/env/client";
-import { TRPCError } from "@trpc/server";
 import { sendOrganizationInviteEmail } from "@quenti/emails";
+import { env } from "@quenti/env/client";
+import { allEqual } from "@quenti/lib/array";
+import { TRPCError } from "@trpc/server";
 import { getIp } from "../../lib/get-ip";
 import {
+  isInOrganizationBase,
   isOrganizationAdmin,
   isOrganizationOwner,
 } from "../../lib/queries/organizations";
@@ -30,6 +32,17 @@ export const inviteMemberHandler = async ({
     ],
   });
 
+  const emailDomains = input.emails.map((e) => e.split("@")[1]!);
+  if (
+    !allEqual(emailDomains) ||
+    !(await isInOrganizationBase(`email@${emailDomains[0]!}`, input.orgId))
+  ) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "contains_invalid_emails",
+    });
+  }
+
   if (
     input.role == "Owner" &&
     !(await isOrganizationOwner(ctx.session.user.id, input.orgId))
@@ -39,7 +52,7 @@ export const inviteMemberHandler = async ({
       message: "Only owners can invite owners",
     });
 
-  let existingUsers = await ctx.prisma.user.findMany({
+  const existingUsers = await ctx.prisma.user.findMany({
     where: {
       email: {
         in: input.emails,
@@ -48,45 +61,51 @@ export const inviteMemberHandler = async ({
     select: {
       id: true,
       email: true,
-      organizations: {
-        where: {
-          orgId: input.orgId,
+      organization: {
+        select: {
+          id: true,
+        },
+      },
+      orgMembership: {
+        select: {
+          id: true,
         },
       },
     },
   });
 
-  const existingInvites = await ctx.prisma.pendingInvite.findMany({
+  const existingInvites = await ctx.prisma.pendingOrganizationInvite.findMany({
     where: {
       orgId: input.orgId,
     },
   });
 
-  // Filter out users that are already part of the organization
-  existingUsers = existingUsers.filter((u) => u.organizations.length === 0);
+  // Ignore all emails from existing pending invites
+  // Ignore all emails from existing users that already have a membership in the org
+  const invites: { id: string | null; email: string }[] = [];
+  const signupEmails: string[] = [];
+  const loginEmails: string[] = [];
 
-  const existingIds = existingUsers.map((u) => u.id);
-  const existingEmails = existingUsers.map((u) => u.email).filter((e) => !!e);
-  const existingInviteEmails = existingInvites.map((i) => i.email);
+  for (const email of input.emails) {
+    const invite = existingInvites.find((i) => i.email === email);
+    if (invite) continue;
+    const user = existingUsers.find((u) => u.email === email);
+    if (user?.orgMembership) continue;
 
-  const pendingInvites = input.emails.filter(
-    (e) => !existingEmails.includes(e) && !existingInviteEmails.includes(e)
-  );
-
-  await ctx.prisma.membership.createMany({
-    data: existingIds.map((id) => ({
-      orgId: input.orgId,
-      userId: id,
-      role: input.role,
-      accepted: false,
-    })),
-  });
-
-  await ctx.prisma.pendingInvite.createMany({
-    data: pendingInvites.map((email) => ({
+    invites.push({
+      id: user?.id ?? null,
       email,
+    });
+    if (user) loginEmails.push(email);
+    else signupEmails.push(email);
+  }
+
+  await ctx.prisma.pendingOrganizationInvite.createMany({
+    data: invites.map((invite) => ({
+      email: invite.email,
       orgId: input.orgId,
       role: input.role,
+      userId: invite.id,
     })),
   });
 
@@ -103,15 +122,15 @@ export const inviteMemberHandler = async ({
       email: ctx.session.user.email!,
     };
 
-    for (const email of pendingInvites) {
+    for (const email of signupEmails) {
       await sendOrganizationInviteEmail(email, {
         orgName: org.name,
-        // Onboarding fetches pending invites so we can use the regular signup
+        // Onboarding fetches the pending invite so we can use the regular signup flow
         url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
         inviter,
       });
     }
-    for (const email of existingEmails) {
+    for (const email of loginEmails) {
       await sendOrganizationInviteEmail(email, {
         orgName: org.name,
         url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/orgs`,

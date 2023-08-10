@@ -81,6 +81,7 @@ model User {
   metadata         Json?
   enableUsageData  Boolean   @default(true)
   changelogVersion String
+  isOrgEligible    Boolean   @default(false)
   organizationId   String?
 
   accounts       Account[]
@@ -91,9 +92,10 @@ model User {
   containers     Container[]
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
-  organization   Organization?        @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  organization   Organization?               @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  orgMembership  OrganizationMembership?
+  orgInvites     PendingOrganizationInvite[]
   highscores     Highscore[]
-  organizations  Membership[]
   classes        ClassMembership[]
   classInvites   PendingClassInvite[]
   classBans      ClassBan[]
@@ -116,32 +118,43 @@ model VerificationToken {
 }
 
 model Organization {
-  id        String                      @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
-  createdAt DateTime                    @default(now())
-  icon      Int                         @default(0)
-  published Boolean                     @default(false)
-  domain    VerifiedOrganizationDomain?
+  createdAt DateTime @default(now())
+  icon      Int      @default(0)
+  published Boolean  @default(false)
   /// @zod.custom(imports.orgMetadataSchema)
   metadata  Json?
 
-  members        Membership[]
+  domains        OrganizationDomain[]
+  members        OrganizationMembership[]
   users          User[]
   inviteToken    VerificationToken?
-  pendingInvites PendingInvite[]
+  pendingInvites PendingOrganizationInvite[]
   classes        Class[]
 }
 
-model VerifiedOrganizationDomain {
-  id              String    @id @default(cuid())
-  orgId           String    @unique
+enum OrganizationDomainType {
+  Base
+  Student
+}
+
+model OrganizationDomain {
+  id              String                 @id @default(cuid())
+  orgId           String
+  type            OrganizationDomainType
   requestedDomain String
-  domain          String?   @unique
+  domain          String?                @unique
   verifiedEmail   String
   otpHash         String?
   verifiedAt      DateTime?
+  filter          String?
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, type])
+  @@unique([orgId, requestedDomain])
+  @@index([orgId])
 }
 
 enum MembershipRole {
@@ -150,31 +163,35 @@ enum MembershipRole {
   Owner
 }
 
-model Membership {
+model OrganizationMembership {
   id       String         @id @default(cuid())
   orgId    String
-  userId   String
-  accepted Boolean        @default(false)
+  userId   String         @unique
   role     MembershipRole
+  /// @zod.custom(imports.orgMembershipMetadata)
+  metadata Json?
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, orgId])
   @@index([orgId])
-  @@index([userId])
 }
 
-model PendingInvite {
-  id    String         @id @default(cuid())
-  orgId String
-  email String
-  role  MembershipRole
+model PendingOrganizationInvite {
+  id     String         @id @default(cuid())
+  orgId  String
+  userId String?
+  email  String
+  role   MembershipRole
 
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@unique([orgId, email])
+  @@unique([orgId, userId])
   @@index([email])
+  @@index([orgId])
+  @@index([userId])
 }
 
 model Class {

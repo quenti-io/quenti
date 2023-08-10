@@ -11,8 +11,8 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
+import { avatarUrl } from "@quenti/lib/avatar";
 import {
-  IconBuilding,
   IconChevronDown,
   IconLogout,
   IconMoon,
@@ -24,10 +24,10 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useMe } from "../../hooks/use-me";
 import { BASE_PAGES } from "../../pages/_app";
-import { avatarUrl } from "@quenti/lib/avatar";
+import { organizationIcon } from "../../utils/icons";
 import { MenuOption } from "../menu-option";
-import { TeacherOnly } from "../teacher-only";
 
 export const UserMenu = () => {
   const router = useRouter();
@@ -35,12 +35,15 @@ export const UserMenu = () => {
 
   const session = useSession()!.data!;
   const user = session.user!;
+  const { data: me } = useMe();
 
   const menuBg = useColorModeValue("white", "gray.800");
   const color = useColorModeValue("black", "white");
 
   const { colorMode, toggleColorMode } = useColorMode();
   const [menuOpen, setMenuOpen] = React.useState(false);
+
+  const OrgIcon = organizationIcon(me?.orgMembership?.organization.icon || 0);
 
   return (
     <Menu
@@ -92,14 +95,17 @@ export const UserMenu = () => {
         <Link href="/settings" passHref>
           <MenuOption icon={<IconSettings size={18} />} label="Settings" />
         </Link>
-        <TeacherOnly>
-          <Link href="/orgs" passHref>
-            <MenuOption
-              icon={<IconBuilding size={18} />}
-              label="Organizations"
-            />
-          </Link>
-        </TeacherOnly>
+        {me?.orgMembership && (
+          <>
+            <MenuDivider />
+            <Link href={`/orgs/${me.orgMembership.organization.id}`} passHref>
+              <MenuOption
+                icon={<OrgIcon size={18} />}
+                label={me.orgMembership.organization.name}
+              />
+            </Link>
+          </>
+        )}
         {!onStaticPage && (
           <>
             <MenuDivider />

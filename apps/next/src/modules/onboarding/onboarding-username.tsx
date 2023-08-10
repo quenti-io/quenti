@@ -13,7 +13,7 @@ export const OnboardingUsername = () => {
   return (
     <PresentWrapper>
       <DefaultLayout
-        heading="Choose a username to get started"
+        heading="Choose a username"
         description="You can change your username any time in settings."
         onNext={() => inputRef.current?.mutate()}
         nextDisabled={disabled}

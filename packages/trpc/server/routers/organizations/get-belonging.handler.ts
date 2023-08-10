@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import type { NonNullableUserContext } from "../../lib/types";
 
 type GetBeloningOptions = {
@@ -5,7 +6,7 @@ type GetBeloningOptions = {
 };
 
 export const getBelongingHandler = async ({ ctx }: GetBeloningOptions) => {
-  const organizations = await ctx.prisma.organization.findMany({
+  const org = await ctx.prisma.organization.findFirst({
     where: {
       members: {
         some: {
@@ -18,9 +19,6 @@ export const getBelongingHandler = async ({ ctx }: GetBeloningOptions) => {
         where: {
           userId: ctx.session.user.id,
         },
-        select: {
-          accepted: true,
-        },
       },
       _count: {
         select: {
@@ -31,14 +29,15 @@ export const getBelongingHandler = async ({ ctx }: GetBeloningOptions) => {
     },
   });
 
-  return organizations.map((org) => ({
+  if (!org) throw new TRPCError({ code: "NOT_FOUND" });
+
+  return {
     id: org.id,
     name: org.name,
     icon: org.icon,
     members: undefined,
     _count: org._count,
-    accepted: org.members[0]!.accepted,
-  }));
+  };
 };
 
 export default getBelongingHandler;

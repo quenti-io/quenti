@@ -15,16 +15,19 @@ import {
   IconCloudDownload,
   IconFolder,
   IconSchool,
+  IconSparkles,
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useMe } from "../../hooks/use-me";
 import { Logo } from "../../icons/logo";
 import { BASE_PAGES } from "../../pages/_app";
 import { Link } from "../link";
 import { MenuOption } from "../menu-option";
 import { TeacherOnly } from "../teacher-only";
+import { UnboundOnly } from "../unbound-only";
 
 export interface LeftNavProps {
   onFolderClick: () => void;
@@ -39,6 +42,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
 }) => {
   const router = useRouter();
   const session = useSession()!.data!;
+  const { data: me } = useMe();
   const onStaticPage = BASE_PAGES.includes(router.pathname);
 
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -64,7 +68,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           </Heading>
         </HStack>
       </Flex>
-      {session?.user && (
+      {session?.user && me && (
         <HStack display={["none", "none", "flex"]}>
           <Button
             as={Link}
@@ -76,18 +80,24 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           >
             Home
           </Button>
-          {session?.user?.admin && (
-            <Button
-              as={Link}
-              href="/admin"
-              variant="ghost"
-              colorScheme="gray"
-              fontWeight={700}
-              fontSize="sm"
-            >
-              Admin
-            </Button>
-          )}
+          <TeacherOnly>
+            <UnboundOnly strict>
+              <Button
+                as={Link}
+                href={
+                  me.orgMembership
+                    ? `/orgs/${me.orgMembership.organization.id}`
+                    : "/orgs"
+                }
+                variant="ghost"
+                fontWeight={700}
+                fontSize="sm"
+                leftIcon={<IconSparkles size={18} />}
+              >
+                Upgrade
+              </Button>
+            </UnboundOnly>
+          </TeacherOnly>
           <Menu
             placement="bottom-start"
             isOpen={menuOpen}

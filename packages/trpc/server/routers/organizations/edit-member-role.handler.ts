@@ -11,11 +11,10 @@ export const editMemberRoleHandler = async ({
   ctx,
   input,
 }: EditMemebrRoleOptions) => {
-  const membership = await ctx.prisma.membership.findFirst({
+  const membership = await ctx.prisma.organizationMembership.findFirst({
     where: {
       userId: ctx.session.user.id,
       orgId: input.orgId,
-      accepted: true,
       OR: [{ role: "Admin" }, { role: "Owner" }],
     },
   });
@@ -42,7 +41,7 @@ export const editMemberRoleHandler = async ({
   }
 
   if (input.type == "user") {
-    const members = await ctx.prisma.membership.findMany({
+    const members = await ctx.prisma.organizationMembership.findMany({
       where: {
         orgId: input.orgId,
       },
@@ -51,19 +50,16 @@ export const editMemberRoleHandler = async ({
     const target = members.find((m) => m.userId === input.genericId);
     if (!target) throw new TRPCError({ code: "NOT_FOUND" });
 
-    await ctx.prisma.membership.update({
+    await ctx.prisma.organizationMembership.update({
       where: {
-        userId_orgId: {
-          userId: input.genericId,
-          orgId: input.orgId,
-        },
+        userId: input.genericId,
       },
       data: {
         role: input.role,
       },
     });
   } else {
-    const invite = await ctx.prisma.pendingInvite.findUnique({
+    const invite = await ctx.prisma.pendingOrganizationInvite.findUnique({
       where: {
         id: input.genericId,
       },
@@ -72,7 +68,7 @@ export const editMemberRoleHandler = async ({
     if (!invite || invite.orgId !== input.orgId)
       throw new TRPCError({ code: "NOT_FOUND" });
 
-    await ctx.prisma.pendingInvite.update({
+    await ctx.prisma.pendingOrganizationInvite.update({
       where: {
         id: input.genericId,
       },

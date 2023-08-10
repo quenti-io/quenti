@@ -9,6 +9,12 @@ export const UserType = {
   Teacher: "Teacher",
 } as const;
 export type UserType = (typeof UserType)[keyof typeof UserType];
+export const OrganizationDomainType = {
+  Base: "Base",
+  Student: "Student",
+} as const;
+export type OrganizationDomainType =
+  (typeof OrganizationDomainType)[keyof typeof OrganizationDomainType];
 export const MembershipRole = {
   Member: "Member",
   Admin: "Admin",
@@ -180,13 +186,6 @@ export type Leaderboard = {
   entityId: string;
   type: LeaderboardType;
 };
-export type Membership = {
-  id: string;
-  orgId: string;
-  userId: string;
-  accepted: Generated<number>;
-  role: MembershipRole;
-};
 export type Organization = {
   id: string;
   name: string;
@@ -198,14 +197,36 @@ export type Organization = {
    */
   metadata: unknown | null;
 };
+export type OrganizationDomain = {
+  id: string;
+  orgId: string;
+  type: OrganizationDomainType;
+  requestedDomain: string;
+  domain: string | null;
+  verifiedEmail: string;
+  otpHash: string | null;
+  verifiedAt: Timestamp | null;
+  filter: string | null;
+};
+export type OrganizationMembership = {
+  id: string;
+  orgId: string;
+  userId: string;
+  role: MembershipRole;
+  /**
+   * @zod.custom(imports.orgMembershipMetadata)
+   */
+  metadata: unknown | null;
+};
 export type PendingClassInvite = {
   id: string;
   classId: string;
   email: string;
 };
-export type PendingInvite = {
+export type PendingOrganizationInvite = {
   id: string;
   orgId: string;
+  userId: string | null;
   email: string;
   role: MembershipRole;
 };
@@ -303,6 +324,7 @@ export type User = {
   metadata: unknown | null;
   enableUsageData: Generated<number>;
   changelogVersion: string;
+  isOrgEligible: Generated<number>;
   organizationId: string | null;
 };
 export type VerificationToken = {
@@ -313,15 +335,6 @@ export type VerificationToken = {
   createdAt: Generated<Timestamp>;
   updatedAt: Timestamp;
   organizationId: string | null;
-};
-export type VerifiedOrganizationDomain = {
-  id: string;
-  orgId: string;
-  requestedDomain: string;
-  domain: string | null;
-  verifiedEmail: string;
-  otpHash: string | null;
-  verifiedAt: Timestamp | null;
 };
 export type WhitelistedEmail = {
   email: string;
@@ -341,10 +354,11 @@ export type DB = {
   FoldersOnClasses: FoldersOnClasses;
   Highscore: Highscore;
   Leaderboard: Leaderboard;
-  Membership: Membership;
   Organization: Organization;
+  OrganizationDomain: OrganizationDomain;
+  OrganizationMembership: OrganizationMembership;
   PendingClassInvite: PendingClassInvite;
-  PendingInvite: PendingInvite;
+  PendingOrganizationInvite: PendingOrganizationInvite;
   RecentFailedLogin: RecentFailedLogin;
   Section: Section;
   Session: Session;
@@ -358,6 +372,5 @@ export type DB = {
   Term: Term;
   User: User;
   VerificationToken: VerificationToken;
-  VerifiedOrganizationDomain: VerifiedOrganizationDomain;
   WhitelistedEmail: WhitelistedEmail;
 };

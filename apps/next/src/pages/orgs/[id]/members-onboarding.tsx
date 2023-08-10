@@ -21,7 +21,7 @@ import React from "react";
 import { OnboardingMember } from "../../../components/onboarding-member";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { InviteMemberModal } from "../../../modules/organizations/invite-member-modal";
-import { OrganizationContext } from "../../../modules/organizations/organization-layout";
+import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 import { plural } from "../../../utils/string";
 
 export default function OrgMembersOnboarding() {
@@ -56,18 +56,19 @@ export default function OrgMembersOnboarding() {
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
 
   return (
-    <WizardLayout
-      title="Invite members"
-      description="Invite additional members to join your organization."
-      steps={5}
-      currentStep={1}
-    >
-      <OrganizationContext.Provider value={org && me ? { ...org, me } : null}>
+    <OnboardingMetadata step="members-onboarding">
+      <WizardLayout
+        title="Invite members"
+        description="Invite additional members to join your organization."
+        steps={5}
+        currentStep={1}
+      >
         {org && (
           <InviteMemberModal
             isOpen={inviteModalOpen}
             onClose={() => setInviteModalOpen(false)}
             orgId={org.id}
+            domain={org.domains.find((d) => d.type == "Base")!.requestedDomain}
             token={org.inviteToken?.token}
           />
         )}
@@ -96,7 +97,11 @@ export default function OrgMembersOnboarding() {
                   variant="ghost"
                   rightIcon={<IconArrowRight size={18} />}
                 >
-                  {(org?.members?.length || 1) > 1 ? "Next" : "Skip"}
+                  {(org?.members?.length || 1) +
+                    (org?.pendingInvites.length || 0) >
+                  1
+                    ? "Next"
+                    : "Skip"}
                 </Button>
               </Fade>
             </Skeleton>
@@ -119,7 +124,6 @@ export default function OrgMembersOnboarding() {
                       nameOrEmail={m.user.name}
                       image={m.user.image}
                       label={m.role}
-                      pending={!m.accepted}
                     />
                   ))}
                 {pending
@@ -127,7 +131,8 @@ export default function OrgMembersOnboarding() {
                   .map((m) => (
                     <OnboardingMember
                       key={m.id}
-                      nameOrEmail={m.email}
+                      nameOrEmail={m.user?.name ?? m.email}
+                      image={m.user?.image}
                       label={m.role}
                       pending
                     />
@@ -146,7 +151,7 @@ export default function OrgMembersOnboarding() {
             </Stack>
           </Card>
         </Stack>
-      </OrganizationContext.Provider>
-    </WizardLayout>
+      </WizardLayout>
+    </OnboardingMetadata>
   );
 }

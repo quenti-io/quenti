@@ -15,26 +15,32 @@ import React from "react";
 import { Loading } from "../../components/loading";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useLoading } from "../../hooks/use-loading";
-import { api } from "@quenti/trpc";
+import { useMe } from "../../hooks/use-me";
 import { organizationIcon } from "../../utils/icons";
 
 const computeMap = (
-  invites = false,
+  invite = false,
   organizationBound = false,
   isMobile = false
 ) => {
-  const base = ["", "/theme", "/username"];
+  const base = [
+    "",
+    "/theme",
+    "/username",
+    "/account-type",
+    "/command-menu",
+    "/invite",
+    "/subscribe",
+    "/done",
+  ];
+  const remove = (index: string) => base.splice(base.indexOf(index), 1);
 
+  if (isMobile) remove("/command-menu");
+  if (!invite) remove("/invite");
   if (organizationBound) {
-    if (!isMobile) base.push("/command-menu");
-    base.push("/done");
-    return base;
+    remove("/subscribe");
+    remove("/account-type");
   }
-
-  base.push("/account-type");
-  if (!isMobile) base.push("/command-menu");
-  if (invites) base.push("/invites");
-  base.push("/subscribe", "/done");
 
   return base;
 };
@@ -44,62 +50,48 @@ interface PresentWrapperContextProps {
 }
 
 const PresentWrapperContext = React.createContext<PresentWrapperContextProps>({
-  nextStep: () => {
-    throw new Error("nextStep not implemented");
-  },
+  nextStep: () => undefined,
 });
 
 export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const router = useRouter();
-  const hasInvites = router.query.orgInvites === "true";
   const isMobile = useMediaQuery("(max-width: 768px)")[0];
 
-  const { data: me } = api.user.me.useQuery(undefined, {
-    retry: false,
-  });
+  const { data: me } = useMe();
 
-  React.useEffect(() => {
-    if (!me || hasInvites) return;
-    const invites = me.memberships.filter((m) => !m.accepted).length > 0;
-    if (!invites) return;
+  const isBound = !!me?.organization;
 
-    void router.replace({
-      query: { orgInvites: true },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [me, hasInvites]);
+  const hasInvite = !!me?.orgInvites.length;
+  const map = computeMap(hasInvite, isBound, isMobile);
+
+  const currentStep = router.pathname.replace("/onboarding", "");
+
+  const nextStep = () => {
+    const next = map[map.indexOf(currentStep)! + 1];
+    void router.push(next ? `/onboarding${next}` : "/home");
+  };
+
+  const Icon = me?.organization
+    ? organizationIcon(me.organization.icon)
+    : React.Fragment;
 
   const muted = useColorModeValue("gray.500", "gray.500");
 
   const { loading } = useLoading();
   if (loading || !me) return <Loading fullHeight />;
 
-  const map = computeMap(hasInvites, !!me.organization, isMobile);
-
-  const currentStep = router.pathname.replace("/onboarding", "");
-  const query = hasInvites ? `?orgInvites=true` : "";
-
-  const nextStep = () => {
-    const next = map[map.indexOf(currentStep)! + 1];
-    void router.push(next ? `/onboarding${next}${query}` : "/home");
-  };
-
-  const Icon = me.organization
-    ? organizationIcon(me.organization.icon)
-    : React.Fragment;
-
   return (
     <PresentWrapperContext.Provider value={{ nextStep }}>
       <Center minH="100vh" position="relative">
         {me.organization && (
-          <VStack position="absolute" left="0" top="4" w="full">
+          <VStack position="absolute" left="0" top="6" w="full">
             <Tooltip
               textAlign="center"
               py="2"
               label={`${
-                me.organization.domain?.domain || "example.com"
+                me.email.split("@")[1]! || "example.com"
               } accounts are managed by your organization`}
             >
               <HStack>
@@ -145,7 +137,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
               currentStep={map.indexOf(currentStep)}
               clickable
               onClick={async (i) => {
-                await router.push(`/onboarding${map[i]!}${query}`);
+                await router.push(`/onboarding${map[i]!}`);
               }}
             />
           </Box>

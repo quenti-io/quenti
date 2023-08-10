@@ -16,7 +16,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
   id,
   type,
 }) => {
-  const org = useOrganization();
+  const { data: org } = useOrganization();
   const utils = api.useContext();
   const removeMember = api.organizations.removeMember.useMutation({
     onSuccess: async () => {

@@ -1,10 +1,9 @@
 import { IS_PAYMENT_ENABLED } from "@quenti/lib/constants/payments";
 import { BASE_URL } from "@quenti/lib/constants/url";
 import { purchaseOrganizationSubscription } from "@quenti/payments";
-import { prisma } from "@quenti/prisma";
 import { TRPCError } from "@trpc/server";
-import { conflictingDomain } from "../../lib/orgs/domains";
-import { bulkJoinOrgStudents } from "../../lib/orgs/students";
+import { conflictingDomains, getOrgDomains } from "../../lib/orgs/domains";
+import { upgradeOrganization } from "../../lib/orgs/upgrade";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TPublishSchema } from "./publish.schema";
@@ -42,6 +41,24 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
     include: { members: true },
   }))!;
 
+  const domains = await getOrgDomains(org.id);
+  if (!domains.length || domains.find((d) => !d.verifiedAt))
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "All domains must be verified before publishing",
+    });
+
+  const conflicting = await conflictingDomains(
+    org.id,
+    domains.map((d) => d.requestedDomain)
+  );
+  if (!!conflicting.length) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: "Conflicting domains",
+    });
+  }
+
   const checkoutSession = await createCheckoutSession(
     org.id,
     ctx.session.user.id
@@ -49,41 +66,10 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
 
   if (checkoutSession) return checkoutSession;
 
-  const domain = await prisma.verifiedOrganizationDomain.findUnique({
-    where: {
-      orgId: org.id,
-    },
-  });
-
-  if (!domain || !domain.verifiedAt)
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "Must have a verified domain before publishing",
-    });
-
-  if (await conflictingDomain(org.id, domain.requestedDomain)) {
-    throw new TRPCError({
-      code: "CONFLICT",
-      message: "Domain conflict",
-    });
-  }
-
-  await prisma.organization.update({
-    where: { id: org.id },
-    data: {
-      published: true,
-      domain: {
-        update: {
-          domain: domain.requestedDomain,
-        },
-      },
-    },
-  });
-
-  await bulkJoinOrgStudents(org.id, domain.requestedDomain);
+  await upgradeOrganization(org.id, ctx.session.user.id);
 
   return {
-    callback: `${BASE_URL}/orgs/${org.id}`,
+    callback: `${BASE_URL}/orgs/${org.id}?upgrade=success`,
   };
 };
 

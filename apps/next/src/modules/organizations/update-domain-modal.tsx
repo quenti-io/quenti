@@ -12,13 +12,13 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import React from "react";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { Modal } from "../../components/modal";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "@quenti/trpc";
 import { DomainForm } from "./domain-form";
 
 export interface UpdateDomainModalProps {
@@ -57,13 +57,17 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
 }) => {
   const utils = api.useContext();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const { data: org } = useOrganization();
+  const studentDomain = org?.domains.find((d) => d.type == "Student");
   const [loading, setLoading] = React.useState(false);
 
   return (
     <Modal.Content>
       <Modal.Body>
         <SegmentedProgress steps={2} currentStep={0} />
-        <Modal.Heading>Update your domain</Modal.Heading>
+        <Modal.Heading>
+          {studentDomain ? "Update your domain" : "Add a student domain"}
+        </Modal.Heading>
         <DomainForm
           formRef={formRef}
           onSuccess={async () => {
@@ -87,7 +91,7 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
             }}
             isLoading={loading}
           >
-            Update domain
+            {`${studentDomain ? "Update" : "Add"} domain`}
           </Button>
         </ButtonGroup>
       </Modal.Footer>
@@ -103,42 +107,48 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
   onClose,
 }) => {
   const utils = api.useContext();
-  const org = useOrganization()!;
+  const { data: org } = useOrganization();
+  const studentDomain = org?.domains.find((d) => d.type == "Student");
   const muted = useColorModeValue("gray.700", "gray.300");
   const toast = useToast();
 
   const [code, setCode] = React.useState("");
   const lastInputRef = React.useRef<HTMLInputElement>(null);
 
-  const confirmCode = api.organizations.confirmCode.useMutation({
-    onSuccess: async () => {
-      await utils.organizations.get.invalidate();
+  const verifyStudentDomain = api.organizations.verifyStudentDomain.useMutation(
+    {
+      onSuccess: async ({ domain }) => {
+        await utils.organizations.get.invalidate();
 
-      setTimeout(() => {
-        onClose();
+        setTimeout(() => {
+          onClose();
 
-        toast({
-          title: `Added ${org.domain!.requestedDomain}`,
-          status: "success",
-          icon: <AnimatedCheckCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+          toast({
+            title: `Added ${domain}`,
+            status: "success",
+            icon: <AnimatedCheckCircle />,
+            containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+          });
+        }, 1000);
+      },
+      onError: (e) => {
+        requestAnimationFrame(() => {
+          lastInputRef.current?.focus();
         });
-      }, 1000);
-    },
-    onError: (e) => {
-      requestAnimationFrame(() => {
-        lastInputRef.current?.focus();
-      });
 
-      if (e.message == "too_many_requests")
-        toast({
-          title: "Too many requests, please try again later",
-          status: "error",
-          icon: <AnimatedXCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
-        });
-    },
-  });
+        if (e.message == "code_expired" || e.message == "too_many_requests")
+          toast({
+            title:
+              e.message == "code_expired"
+                ? "That code has expired, please resend a confirmation email"
+                : "Too many requests, please try again later",
+            status: "error",
+            icon: <AnimatedXCircle />,
+            containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+          });
+      },
+    }
+  );
 
   const resendCode = api.organizations.resendCode.useMutation({
     onSuccess: () => {
@@ -193,7 +203,9 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
         <Modal.Heading>Verify your domain</Modal.Heading>
         <Stack spacing="8">
           <Stack>
-            <Text>Enter the code we sent to {org.domain!.verifiedEmail}</Text>
+            <Text>
+              Enter the code we sent to {studentDomain?.verifiedEmail}
+            </Text>
             <Text fontSize="sm" color={muted}>
               Not seeing your email?{" "}
               <Button
@@ -201,7 +213,7 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
                 fontSize="sm"
                 isLoading={resendCode.isLoading}
                 onClick={() => {
-                  resendCode.mutate({ orgId: org.id });
+                  resendCode.mutate({ orgId: org!.id });
                 }}
               >
                 Resend
@@ -219,12 +231,15 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
                   onChange={(e) => {
                     setCode(e);
                     if (e.length == 6)
-                      confirmCode.mutate({
-                        orgId: org.id,
+                      verifyStudentDomain.mutate({
+                        orgId: org!.id,
                         code: e,
                       });
                   }}
-                  isDisabled={confirmCode.isLoading || confirmCode.isSuccess}
+                  isDisabled={
+                    verifyStudentDomain.isLoading ||
+                    verifyStudentDomain.isSuccess
+                  }
                 >
                   <PinInputField autoFocus />
                   <PinInputField />
@@ -235,11 +250,11 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
                 </PinInput>
               </HStack>
               <Box w="6" h="6">
-                {confirmCode.isLoading
+                {verifyStudentDomain.isLoading
                   ? loading
-                  : confirmCode.isSuccess
+                  : verifyStudentDomain.isSuccess
                   ? success
-                  : confirmCode.isError
+                  : verifyStudentDomain.isError
                   ? error
                   : null}
               </Box>

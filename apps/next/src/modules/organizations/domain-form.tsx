@@ -50,7 +50,7 @@ export const DomainForm: React.FC<React.PropsWithChildren<DomainFormProps>> = ({
     string | undefined
   >();
 
-  const org = useOrganization();
+  const { data: org } = useOrganization();
   const domainFormMethods = useForm<DomainFormInputs>({
     defaultValues: {
       domain: "",
@@ -64,7 +64,7 @@ export const DomainForm: React.FC<React.PropsWithChildren<DomainFormProps>> = ({
 
   const watchDomain = domainFormMethods.watch("domain");
 
-  const verifyDomain = api.organizations.verifyDomain.useMutation({
+  const addStudentDomain = api.organizations.addStudentDomain.useMutation({
     onSuccess,
     onError: (data) => {
       if (data.message == "email_domain_mismatch") {
@@ -78,7 +78,7 @@ export const DomainForm: React.FC<React.PropsWithChildren<DomainFormProps>> = ({
           message: "We can't use this domain for your organization",
         });
       } else if (data.message == "domain_already_verified") {
-        setDomainConflict(verifyDomain.variables?.domain);
+        setDomainConflict(addStudentDomain.variables?.domain);
       } else if (data.message == "already_verified_for_organization") {
         domainFormMethods.setError("domain", {
           type: "custom",
@@ -95,7 +95,7 @@ export const DomainForm: React.FC<React.PropsWithChildren<DomainFormProps>> = ({
 
   const onSubmit: SubmitHandler<DomainFormInputs> = async (data) => {
     setDomainConflict(undefined);
-    await verifyDomain.mutateAsync({
+    await addStudentDomain.mutateAsync({
       orgId: org!.id,
       domain: data.domain,
       email: data.email,
@@ -103,9 +103,9 @@ export const DomainForm: React.FC<React.PropsWithChildren<DomainFormProps>> = ({
   };
 
   React.useEffect(() => {
-    onChangeLoading?.(verifyDomain.isLoading);
+    onChangeLoading?.(addStudentDomain.isLoading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [verifyDomain.isLoading]);
+  }, [addStudentDomain.isLoading]);
 
   return (
     <form onSubmit={domainFormMethods.handleSubmit(onSubmit)} ref={formRef}>

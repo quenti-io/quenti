@@ -1,9 +1,9 @@
 import { Button, ButtonGroup, Text, useColorModeValue } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { useRouter } from "next/router";
 import React from "react";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "@quenti/trpc";
 
 interface DeleteOrganizationModalProps {
   isOpen: boolean;
@@ -13,11 +13,13 @@ interface DeleteOrganizationModalProps {
 export const DeleteOrganizationModal: React.FC<
   DeleteOrganizationModalProps
 > = ({ isOpen, onClose }) => {
-  const org = useOrganization();
+  const utils = api.useContext();
+  const { data: org } = useOrganization();
   const router = useRouter();
 
   const apiDelete = api.organizations.delete.useMutation({
     onSuccess: async () => {
+      await utils.user.me.invalidate();
       await router.push("/orgs");
     },
   });
@@ -26,7 +28,7 @@ export const DeleteOrganizationModal: React.FC<
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={cancelRef}>
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body spacing="2">

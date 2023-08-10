@@ -10,6 +10,7 @@ import { stripe } from "./stripe";
 interface OrganizationSubscriptionOptions {
   orgId: string;
   userId: string;
+  cancelUrl?: string;
 }
 
 export const checkRequiresPayment = async (orgId: string) => {
@@ -32,6 +33,7 @@ export const checkRequiresPayment = async (orgId: string) => {
 export const purchaseOrganizationSubscription = async ({
   orgId,
   userId,
+  cancelUrl = `${BASE_URL}/orgs/${orgId}/publish`,
 }: OrganizationSubscriptionOptions) => {
   const { callback } = await checkRequiresPayment(orgId);
   if (callback) return { callback };
@@ -41,7 +43,7 @@ export const purchaseOrganizationSubscription = async ({
     customer: customerId,
     mode: "subscription",
     success_url: `${BASE_URL}/api/orgs/${orgId}/upgrade?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${BASE_URL}/orgs/${orgId}`,
+    cancel_url: cancelUrl,
     line_items: [
       {
         price: env.STRIPE_ORG_MONTHLY_PRICE_ID,

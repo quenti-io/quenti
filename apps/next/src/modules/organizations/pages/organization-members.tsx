@@ -9,11 +9,11 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { api } from "@quenti/trpc";
 import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
@@ -21,6 +21,7 @@ import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationMember } from "../organization-member";
 import { OrganizationWelcome } from "../organization-welcome";
 import { RemoveMemberModal } from "../remove-member-modal";
+import { getBaseDomain } from "../utils/get-base-domain";
 
 export const OrganizationMembers = () => {
   const router = useRouter();
@@ -85,6 +86,7 @@ export const OrganizationMembers = () => {
             onClose={() => setInviteModalOpen(false)}
             orgId={org.id}
             token={org.inviteToken?.token}
+            domain={getBaseDomain(org)!.requestedDomain}
           />
           <EditMemberModal
             isOpen={!!editMember}
@@ -117,7 +119,7 @@ export const OrganizationMembers = () => {
               placeholder={`Search ${plural(
                 org?.members.length || 0,
                 "member"
-              )}...`}
+              )}`}
               pl="44px"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -149,7 +151,6 @@ export const OrganizationMembers = () => {
                 key={m.user.id}
                 user={m.user}
                 role={m.role}
-                accepted={m.accepted}
                 onRequestEdit={() => {
                   setEditMemberType("user");
                   setEditMember(m.user.id);
@@ -163,13 +164,15 @@ export const OrganizationMembers = () => {
             {pending.filter(pendingFilterFn).map((m) => (
               <OrganizationMember
                 key={m.id}
-                user={{
-                  id: "",
-                  name: m.email,
-                  username: "",
-                  email: m.email,
-                  image: null,
-                }}
+                user={
+                  m.user ?? {
+                    id: "",
+                    name: m.email,
+                    username: "",
+                    email: m.email,
+                    image: null,
+                  }
+                }
                 role={m.role}
                 accepted={false}
                 isEmpty
