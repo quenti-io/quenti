@@ -3,105 +3,37 @@ import {
   Button,
   ButtonGroup,
   Card,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   HStack,
   Heading,
-  Input,
-  InputGroup,
-  InputRightAddon,
   SimpleGrid,
   Skeleton,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ORG_SUPPORT_EMAIL } from "@quenti/lib/constants/email";
-import { api } from "@quenti/trpc";
-import { refineRegex } from "@quenti/trpc/server/common/validation";
-import {
-  IconArrowLeft,
-  IconHash,
-  IconSchool,
-  IconUnderline,
-  IconUser,
-} from "@tabler/icons-react";
+import { IconArrowLeft, IconHash, IconUnderline } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { Link } from "../../../components/link";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
+import { DomainFilterForm } from "../../../modules/organizations/domain-filter-form";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 import { getBaseDomain } from "../../../modules/organizations/utils/get-base-domain";
 
-const schema = z.object({
-  filter: z
-    .string()
-    .nonempty({ message: "Enter a regular expression" })
-    .refine(...refineRegex),
-});
-
-interface DomainFilterFormInputs {
-  filter: string;
-}
-
 export default function OrgDomainFilter() {
   const router = useRouter();
-
   const { data: org } = useOrganization();
   const domain = getBaseDomain(org);
 
-  const domainFilterMethods = useForm<DomainFilterFormInputs>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      filter: "^[^0-9]",
-    },
-  });
-  const {
-    formState: { errors },
-  } = domainFilterMethods;
-
-  const setDomainFilter = api.organizations.setDomainFilter.useMutation({
-    onSuccess: async () => {
-      await router.push(`/orgs/${org!.id}/publish`);
-    },
-  });
-
-  const watchFilter = domainFilterMethods.watch("filter");
-  const [testValue, setTestValue] = React.useState("");
-
-  const testValid =
-    z
-      .string()
-      .email()
-      .safeParse(`${testValue}@${domain?.requestedDomain || ""}`).success ||
-    !testValue.trim().length;
-
-  const evaluate = () => {
-    try {
-      return new RegExp(watchFilter).test(testValue);
-    } catch {
-      return false;
-    }
-  };
-  const evaluation = evaluate();
-
-  const onSubmit: SubmitHandler<DomainFilterFormInputs> = async (data) => {
-    await setDomainFilter.mutateAsync({
-      orgId: org!.id,
-      domainId: domain!.id,
-      filter: data.filter,
-    });
-  };
+  const ref = React.useRef<{ setFilter: (filter: string) => void }>();
+  const formRef = React.useRef<HTMLFormElement | null>(null);
+  const [filter, setFilter] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const linkDefault = useColorModeValue("gray.700", "gray.300");
   const highlight = useColorModeValue("blue.500", "blue.200");
-  const addonBg = useColorModeValue("gray.100", "gray.750");
-  const error = useColorModeValue("red.600", "red.300");
 
   return (
     <OnboardingMetadata step="domain-filter">
@@ -141,133 +73,62 @@ export default function OrgDomainFilter() {
         steps={5}
         currentStep={3}
       >
-        <form onSubmit={domainFilterMethods.handleSubmit(onSubmit)}>
-          <Stack spacing="5">
-            <Box px="8">
-              <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                <Skeleton rounded="md" isLoaded={!!domain}>
-                  <ExampleCard
-                    title="Doesn't start with a number"
-                    description="For example, students' emails start with their year of graduation"
-                    isSelected={watchFilter === "^[^0-9]"}
-                    icon={<IconHash size={18} />}
-                    onClick={() =>
-                      domainFilterMethods.setValue("filter", "^[^0-9]")
-                    }
-                  />
-                </Skeleton>
-                <Skeleton rounded="md" isLoaded={!!domain}>
-                  <ExampleCard
-                    title="Contains an underscore"
-                    description="Teachers have a separate convention for emails with an underscore"
-                    isSelected={watchFilter === ".*_.*"}
-                    icon={<IconUnderline size={18} />}
-                    onClick={() =>
-                      domainFilterMethods.setValue("filter", ".*_.*")
-                    }
-                  />
-                </Skeleton>
-              </SimpleGrid>
-            </Box>
-            <Skeleton rounded="lg" isLoaded={!!domain}>
-              <Card p="8" variant="outline" shadow="lg" rounded="lg">
-                <Stack spacing="8">
-                  <Stack spacing="6">
-                    <Stack spacing="6">
-                      <Controller
-                        name="filter"
-                        control={domainFilterMethods.control}
-                        render={({ field: { value, onChange } }) => (
-                          <FormControl isInvalid={!!errors.filter}>
-                            <FormLabel fontSize="sm" mb="10px" color="gray.500">
-                              Regular expression •{" "}
-                              <Link
-                                href="https://www.janmeppe.com/blog/regex-for-noobs/"
-                                transition="color 0.2s ease-in-out"
-                                _hover={{ color: highlight }}
-                                target="_blank"
-                              >
-                                learn more
-                              </Link>
-                            </FormLabel>
-                            <Input
-                              placeholder="^[^0-9]"
-                              fontFamily="mono"
-                              value={value}
-                              onChange={onChange}
-                            />
-                            <FormErrorMessage>
-                              {errors.filter?.message}
-                            </FormErrorMessage>
-                          </FormControl>
-                        )}
-                      />
-                    </Stack>
-                    <Stack spacing="3">
-                      <FormControl>
-                        <FormLabel fontSize="sm" mb="10px" color="gray.500">
-                          Test your filter
-                        </FormLabel>
-                        <InputGroup>
-                          <Input
-                            placeholder="email"
-                            value={testValue}
-                            onChange={(e) => setTestValue(e.target.value)}
-                          />
-                          <InputRightAddon bg={addonBg}>
-                            @{domain?.requestedDomain || ""}
-                          </InputRightAddon>
-                        </InputGroup>
-                      </FormControl>
-                      <HStack
-                        color={testValid ? undefined : error}
-                        transition="color 0.15s ease-in-out"
-                      >
-                        {evaluation && testValue.trim().length ? (
-                          <IconSchool size={16} />
-                        ) : (
-                          <IconUser size={16} />
-                        )}
-                        <Text fontSize="sm">
-                          {testValue.trim().length && testValid ? (
-                            <>
-                              {testValue}@{domain?.requestedDomain || ""} is a{" "}
-                              <strong>
-                                {evaluation ? "teacher" : "student"}
-                              </strong>
-                            </>
-                          ) : testValid ? (
-                            "Enter an email to test your filter"
-                          ) : (
-                            "Enter a valid email"
-                          )}
-                        </Text>
-                      </HStack>
-                    </Stack>
-                  </Stack>
-                  <ButtonGroup w="full" size="sm">
-                    <Button
-                      w="full"
-                      variant="outline"
-                      leftIcon={<IconArrowLeft size={18} />}
-                      colorScheme="gray"
-                      onClick={() => router.back()}
-                    >
-                      Go back
-                    </Button>
-                    <Button
-                      w="full"
-                      type="submit"
-                      isLoading={setDomainFilter.isLoading}
-                    >
-                      Create filter
-                    </Button>
-                  </ButtonGroup>
-                </Stack>
-              </Card>
-            </Skeleton>
-          </Stack>
-        </form>
+        <Stack spacing="5">
+          <Box px="8">
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+              <Skeleton rounded="md" isLoaded={!!domain}>
+                <ExampleCard
+                  title="Doesn't start with a number"
+                  description="For example, students' emails start with their year of graduation"
+                  isSelected={filter === "^[^0-9]"}
+                  icon={<IconHash size={18} />}
+                  onClick={() => {
+                    ref.current!.setFilter("^[^0-9]");
+                  }}
+                />
+              </Skeleton>
+              <Skeleton rounded="md" isLoaded={!!domain}>
+                <ExampleCard
+                  title="Contains an underscore"
+                  description="Teachers have a separate convention for emails with an underscore"
+                  isSelected={filter === ".*_.*"}
+                  icon={<IconUnderline size={18} />}
+                  onClick={() => {
+                    ref.current!.setFilter(".*_.*");
+                  }}
+                />
+              </Skeleton>
+            </SimpleGrid>
+          </Box>
+          <Skeleton rounded="lg" isLoaded={!!domain}>
+            <Card p="8" variant="outline" shadow="lg" rounded="lg">
+              <DomainFilterForm
+                ref={ref}
+                formRef={formRef}
+                onSuccess={async () => {
+                  await router.push(`/orgs/${org!.id}/publish`);
+                }}
+                onChangeFilter={setFilter}
+                onChangeLoading={setLoading}
+              >
+                <ButtonGroup w="full" size="sm">
+                  <Button
+                    w="full"
+                    variant="outline"
+                    leftIcon={<IconArrowLeft size={18} />}
+                    colorScheme="gray"
+                    onClick={() => router.back()}
+                  >
+                    Go back
+                  </Button>
+                  <Button w="full" type="submit" isLoading={loading}>
+                    Create filter
+                  </Button>
+                </ButtonGroup>
+              </DomainFilterForm>
+            </Card>
+          </Skeleton>
+        </Stack>
       </WizardLayout>
     </OnboardingMetadata>
   );
