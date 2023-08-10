@@ -75,6 +75,29 @@ export const bulkJoinOrgUsersByFilter = async (
   });
 };
 
+export const bulkJoinOrgMembersAsTeachers = async (orgId: string) => {
+  const members = await prisma.organizationMembership.findMany({
+    where: {
+      orgId,
+    },
+    select: {
+      userId: true,
+    },
+  });
+
+  await prisma.user.updateMany({
+    where: {
+      id: {
+        in: members.map((m) => m.userId),
+      },
+    },
+    data: {
+      organizationId: orgId,
+      type: "Teacher",
+    },
+  });
+};
+
 export const disbandOrgUsersByDomain = async (domain: string) => {
   return await prisma.user.updateMany({
     where: {

@@ -1,7 +1,11 @@
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
 import { conflictingDomains } from "./domains";
-import { bulkJoinOrgUsers, bulkJoinOrgUsersByFilter } from "./users";
+import {
+  bulkJoinOrgMembersAsTeachers,
+  bulkJoinOrgUsers,
+  bulkJoinOrgUsersByFilter,
+} from "./users";
 
 export const upgradeOrganization = async (
   id: string,
@@ -52,6 +56,8 @@ export const upgradeOrganization = async (
         );
       }
   }
+
+  await bulkJoinOrgMembersAsTeachers(org.id);
 
   try {
     await prisma.organizationMembership.update({
