@@ -160,7 +160,7 @@ export const OrganizationSettings = () => {
           </Flex>
         </HStack>
         <OrganizationAdminOnly>
-          <ButtonGroup>
+          <ButtonGroup size={{ base: "sm", md: "md" }}>
             <Button
               variant="ghost"
               onClick={() => {
@@ -316,7 +316,10 @@ export const OrganizationSettings = () => {
               />
             )}
             {student && (
-              <HStack>
+              <HStack
+                flexDir={{ base: "column", md: "row" }}
+                alignItems={{ base: "start", md: "center" }}
+              >
                 <Box color="blue.300">
                   <IconWorldCheck size={18} />
                 </Box>

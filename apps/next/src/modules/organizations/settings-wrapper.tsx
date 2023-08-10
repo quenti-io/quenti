@@ -32,7 +32,7 @@ export const SettingsWrapper: React.FC<
             <Heading size="md">{heading}</Heading>
           </SkeletonText>
         </Flex>
-        <Flex h={`${21 * noOfLines}px`} alignItems="center">
+        <Flex alignItems="center" pb="2">
           <SkeletonText
             noOfLines={noOfLines}
             skeletonHeight={3}

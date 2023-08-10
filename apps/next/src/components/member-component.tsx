@@ -101,13 +101,23 @@ export const MemberComponentRaw: React.FC<MemberComponentProps> = ({
       suppressHydrationWarning={true}
       justifyContent="space-between"
     >
-      <HStack spacing="4">
-        <Skeleton rounded="full" fitContent isLoaded={!skeleton}>
-          <Avatar src={user?.image || undefined} width="36px" height="36px" />
-        </Skeleton>
-        <Stack spacing="2px">
+      <HStack
+        spacing="4"
+        w={{ base: "calc(100% - 60px)", md: "inherit" }}
+        flexDir={{ base: "column", md: "row" }}
+        alignItems={{ base: "start", md: "center" }}
+      >
+        <HStack
+          justifyContent="space-between"
+          w={{ base: "full", md: "inherit " }}
+        >
+          <Skeleton rounded="full" fitContent isLoaded={!skeleton}>
+            <Avatar src={user?.image || undefined} width="36px" height="36px" />
+          </Skeleton>
+        </HStack>
+        <Stack spacing="2px" overflow="hidden" maxW="full">
           <SmSkeleton>
-            <HStack>
+            <HStack overflow="hidden" whiteSpace="nowrap">
               <Text fontWeight={700} fontSize="sm">
                 {user?.name || email}
               </Text>
@@ -146,18 +156,20 @@ export const MemberComponentRaw: React.FC<MemberComponentProps> = ({
               variant="outline"
               isAttached
             >
-              <LinkBox as={Button} px="0">
-                <LinkOverlay
-                  w="full"
-                  h="full"
-                  href={`/@${user?.username || ""}`}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <IconExternalLink size="16" />
-                </LinkOverlay>
-              </LinkBox>
+              {user && (
+                <LinkBox as={Button} px="0">
+                  <LinkOverlay
+                    w="full"
+                    h="full"
+                    href={`/@${user?.username || ""}`}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <IconExternalLink size="16" />
+                  </LinkOverlay>
+                </LinkBox>
+              )}
               {!isMe && canManage && (
                 <MenuButton as={IconButton} w="8" h="8">
                   <Center w="8" display="flex" justifyContent="center">

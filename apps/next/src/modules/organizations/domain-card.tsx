@@ -50,7 +50,7 @@ export const DomainCard: React.FC<DomainCardProps> = (props) => {
 
   return (
     <Stack spacing="3">
-      <Skeleton rounded="md" w="full" h="50px" isLoaded={!!org}>
+      <Skeleton rounded="md" w="full" isLoaded={!!org}>
         <Card variant="outline" py="3" px="4">
           <InnerDomainCard {...props} />
         </Card>
@@ -80,7 +80,10 @@ const InnerDomainCard: React.FC<DomainCardProps> = ({
   const red = useColorModeValue("red.600", "red.200");
 
   return (
-    <Flex justifyContent="space-between">
+    <Flex
+      justifyContent="space-between"
+      flexDir={{ base: "column", md: "row" }}
+    >
       <HStack>
         <Text>{requestedDomain}</Text>
         {!verified ? (

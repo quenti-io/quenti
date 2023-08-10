@@ -103,7 +103,7 @@ export const OrganizationMembers = () => {
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
-    <Stack spacing="6">
+    <Stack spacing="6" pb="20">
       {org && isUpgraded && org.published && <OrganizationWelcome />}
       {org && (
         <>
@@ -227,6 +227,7 @@ export const OrganizationMembers = () => {
                 key={m.id}
                 id={m.id}
                 email={m.email}
+                user={m.user ?? undefined}
                 canManage={canManage("Member")}
                 pending
                 actions={[
