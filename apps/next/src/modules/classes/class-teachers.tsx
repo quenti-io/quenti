@@ -102,7 +102,7 @@ export const ClassTeachers = () => {
             <MemberComponent
               key={invite.id}
               id={invite.id}
-              user={invite.user}
+              user={invite.user ?? undefined}
               email={invite.email}
               pending
               canManage

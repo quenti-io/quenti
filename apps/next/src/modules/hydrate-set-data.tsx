@@ -1,3 +1,4 @@
+import type { Widen } from "@quenti/lib/widen";
 import { api, type RouterOutputs } from "@quenti/trpc";
 import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 import { useSession } from "next-auth/react";
@@ -14,7 +15,6 @@ import {
   type ContainerStoreProps,
 } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
-import type { Widen } from "../utils/widen";
 import { Set404 } from "./main/set-404";
 import { SetPrivate } from "./main/set-private";
 

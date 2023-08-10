@@ -1,9 +1,9 @@
+import type { Widen } from "@quenti/lib/widen";
+import type { RouterOutputs } from "@quenti/trpc";
 import React from "react";
 import { FolderContext } from "../modules/hydrate-folder-data";
-import { SetContext } from "../modules/hydrate-set-data";
-import type { RouterOutputs } from "@quenti/trpc";
 import type { AuthedData } from "../modules/hydrate-set-data";
-import type { Widen } from "../utils/widen";
+import { SetContext } from "../modules/hydrate-set-data";
 
 type SetData = RouterOutputs["studySets"]["byId"];
 type FolderData = RouterOutputs["folders"]["get"];

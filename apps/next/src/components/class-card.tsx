@@ -9,12 +9,12 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import type { Widen } from "@quenti/lib/widen";
 import type { UserType } from "@quenti/prisma/client";
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
-import { plural } from "../utils/string";
-import type { Widen } from "../utils/widen";
-import { Link } from "./link";
 import { getColorFromId } from "../utils/color";
+import { plural } from "../utils/string";
+import { Link } from "./link";
 
 interface ClassCardProps {
   id: string;
