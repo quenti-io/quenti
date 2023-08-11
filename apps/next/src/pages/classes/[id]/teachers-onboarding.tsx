@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { OnboardingMember } from "../../../components/onboarding-member";
 import { WizardLayout } from "../../../components/wizard-layout";
+import { useClass } from "../../../hooks/use-class";
 import { useClassMembers } from "../../../hooks/use-class-members";
 import { InviteTeachersModal } from "../../../modules/classes/invite-teachers-modal";
 import { plural } from "../../../utils/string";
@@ -25,7 +26,10 @@ import { plural } from "../../../utils/string";
 export default function TeachersOnboarding() {
   const router = useRouter();
   const id = router.query.id as string;
+  const { data: class_ } = useClass();
   const { data } = useClassMembers();
+
+  const isLoaded = !!data && !!class_;
 
   const others = data
     ? data.members.filter((m) => m.user.id != data.me.userId)
@@ -50,7 +54,7 @@ export default function TeachersOnboarding() {
       currentStep={1}
     >
       <>
-        {data && (
+        {isLoaded && (
           <InviteTeachersModal
             isOpen={inviteModalOpen}
             onClose={() => setInviteModalOpen(false)}
@@ -58,7 +62,12 @@ export default function TeachersOnboarding() {
         )}
         <Stack spacing="6">
           <Flex px="8" justifyContent="space-between">
-            <Skeleton fitContent w="max-content" rounded="md" isLoaded={!!data}>
+            <Skeleton
+              fitContent
+              w="max-content"
+              rounded="md"
+              isLoaded={isLoaded}
+            >
               <Fade in={!!data}>
                 <Button
                   w="full"
@@ -70,8 +79,8 @@ export default function TeachersOnboarding() {
                 </Button>
               </Fade>
             </Skeleton>
-            <Skeleton fitContent rounded="md" isLoaded={!!data}>
-              <Fade in={!!data}>
+            <Skeleton fitContent rounded="md" isLoaded={isLoaded}>
+              <Fade in={isLoaded}>
                 <Button
                   w="full"
                   size="sm"
@@ -92,7 +101,7 @@ export default function TeachersOnboarding() {
             <Stack spacing="4">
               <Stack spacing="0" ml="-4" mt="-4">
                 <OnboardingMember
-                  isLoaded={!!data}
+                  isLoaded={isLoaded}
                   isMe
                   nameOrEmail={data?.me?.user.name}
                   image={data?.me?.user.image}

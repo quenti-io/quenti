@@ -1,7 +1,7 @@
-import type { OrganizationDomain } from "@quenti/prisma/client";
+import type { OrganizationDomainType } from "@quenti/prisma/client";
 
-export const getBaseDomain = (
-  org: { domains: Partial<OrganizationDomain>[] } | undefined
+export const getBaseDomain = <T extends { type: OrganizationDomainType }>(
+  org: { domains: T[] } | undefined
 ) => {
   return org?.domains.find((domain) => domain.type == "Base");
 };

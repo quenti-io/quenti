@@ -122,11 +122,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
           <Modal.Body>
             <Modal.Heading>Invite teachers</Modal.Heading>
             <Stack spacing="4">
-              <HStack
-                fontSize="sm"
-                color={labelColor}
-                justifyContent="space-between"
-              >
+              <HStack justifyContent="space-between">
                 <FormLabel m="0">Invite teachers to join this class</FormLabel>
                 <FormLabel m="0" color="gray.500">
                   {plural(remaining, "slot")} remaining
@@ -155,7 +151,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
                                 domain ? domain.domain ?? "" : "example.com"
                               }`}
                               isInvalid={!!errors.emails?.[index]}
-                              px="14px"
+                              // px="14px"
                               defaultValue={email}
                               onChange={(e) => {
                                 const emails = [...value];

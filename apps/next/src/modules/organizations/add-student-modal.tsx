@@ -8,12 +8,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "@quenti/trpc";
 import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "@quenti/trpc";
 import { getBaseDomain } from "./utils/get-base-domain";
 
 export interface AddStudentModalProps {
@@ -56,7 +56,7 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
     defaultValues: {
       email: "",
     },
-    resolver: zodResolver(schema(domain.requestedDomain)),
+    resolver: zodResolver(schema(domain.requestedDomain || "")),
   });
   const {
     formState: { errors },
@@ -120,7 +120,7 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
                 <FormControl isInvalid={!!errors.email}>
                   <Input
                     ref={inputRef}
-                    placeholder={`student@${domain.requestedDomain}`}
+                    placeholder={`student@${domain.requestedDomain || ""}`}
                     defaultValue={value}
                     onChange={onChange}
                   />
