@@ -48,8 +48,28 @@ export const inviteTeachersHandler = async ({
           },
         },
       },
+      _count: {
+        select: {
+          teacherInvites: true,
+          members: {
+            where: {
+              type: "Teacher",
+            },
+          },
+        },
+      },
     },
   });
+
+  if (
+    class_._count.members + class_._count.teacherInvites + input.emails.length >
+    10
+  ) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Cannot invite more than 10 teachers",
+    });
+  }
 
   if (class_.organization) {
     const domain = class_.organization.domains[0]!.domain;

@@ -28,7 +28,6 @@ export const joinHandler = async ({ ctx, input }: JoinOptions) => {
         id: invite.id,
       },
     });
-    console.log(ctx.session.user.id, ctx.session.user.email!);
 
     await ctx.prisma.classMembership.create({
       data: {

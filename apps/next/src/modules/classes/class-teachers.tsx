@@ -2,13 +2,14 @@ import {
   Box,
   Button,
   Flex,
+  HStack,
   Skeleton,
   SkeletonText,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { IconUserPlus, IconUserX } from "@tabler/icons-react";
+import { IconUserPlus, IconUserX, IconUsers } from "@tabler/icons-react";
 import React from "react";
 import { MemberComponent } from "../../components/member-component";
 import { useClass } from "../../hooks/use-class";
@@ -54,9 +55,10 @@ export const ClassTeachers = () => {
               isLoaded={!!class_}
               skeletonHeight="18px"
             >
-              <Text fontWeight={600} color="gray.500">
-                Teachers
-              </Text>
+              <HStack color="gray.500" spacing="2" fontWeight={600}>
+                <IconUsers size={18} />
+                <Text>Teachers</Text>
+              </HStack>
             </SkeletonText>
           </Flex>
           <Skeleton fitContent rounded="md" isLoaded={!!class_}>
