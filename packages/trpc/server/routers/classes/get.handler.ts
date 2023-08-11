@@ -191,6 +191,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     studySets: class_.studySets.map((s) => s.studySet),
     folders: class_.folders.map((f) => f.folder),
     ...strip({
+      organization: class_.organization,
       teachers: class_.members,
       students: class_._count?.members,
       sections: class_.sections?.map((s) => ({
