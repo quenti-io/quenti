@@ -32,7 +32,7 @@ const useTabIndex = () => {
       return 0;
     case `/classes/[id]/members`:
       return 1;
-    case `/orgs/[id]/settings`:
+    case `/classes/[id]/settings`:
       return 2;
   }
 };
@@ -120,6 +120,14 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
                       href={`/classes/${id}/members`}
                     >
                       Members
+                    </SkeletonTab>
+                  </HiddenTabWrapper>
+                  <HiddenTabWrapper index={2}>
+                    <SkeletonTab
+                      isLoaded={!!data}
+                      href={`/classes/${id}/settings`}
+                    >
+                      Settings
                     </SkeletonTab>
                   </HiddenTabWrapper>
                 </TabList>

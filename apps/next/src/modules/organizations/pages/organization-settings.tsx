@@ -31,6 +31,7 @@ import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { Link } from "../../../components/link";
 import { SkeletonLabel } from "../../../components/skeleton-label";
+import { Toast } from "../../../components/toast";
 import { useOrganization } from "../../../hooks/use-organization";
 import { ORGANIZATION_ICONS } from "../../../utils/icons";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
@@ -79,8 +80,9 @@ export const OrganizationSettings = () => {
       toast({
         title: "Organization updated successfully",
         status: "success",
+        colorScheme: "green",
         icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        render: Toast,
       });
 
       await utils.organizations.get.invalidate();

@@ -20,6 +20,7 @@ import { Modal } from "../../components/modal";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useOrganization } from "../../hooks/use-organization";
 import { DomainForm } from "./domain-form";
+import { Toast } from "../../components/toast";
 
 export interface UpdateDomainModalProps {
   isOpen: boolean;
@@ -126,8 +127,9 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
           toast({
             title: `Added ${domain}`,
             status: "success",
+            colorScheme: "green",
             icon: <AnimatedCheckCircle />,
-            containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+            render: Toast,
           });
         }, 1000);
       },
@@ -143,8 +145,9 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
                 ? "That code has expired, please resend a confirmation email"
                 : "Too many requests, please try again later",
             status: "error",
+            colorScheme: "red",
             icon: <AnimatedXCircle />,
-            containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+            render: Toast,
           });
       },
     }
@@ -155,8 +158,9 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
       toast({
         title: "Sent a new confirmation email",
         status: "success",
+        colorScheme: "green",
         icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        render: Toast,
       });
     },
     onError: (e) => {
@@ -164,8 +168,9 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
         toast({
           title: "Too many requests, please try again later",
           status: "error",
+          colorScheme: "red",
           icon: <AnimatedXCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+          render: Toast,
         });
       }
     },

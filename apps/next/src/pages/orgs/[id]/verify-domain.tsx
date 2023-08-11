@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
+import { Toast } from "../../../components/toast";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
@@ -51,8 +52,9 @@ export default function OrgVerifyEmail() {
                 ? "That code has expired, please resend a confirmation email"
                 : "Too many requests, please try again later",
             status: "error",
+            colorScheme: "red",
             icon: <AnimatedXCircle />,
-            containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+            render: Toast,
           });
       },
     }
@@ -63,8 +65,9 @@ export default function OrgVerifyEmail() {
       toast({
         title: "Sent a new confirmation email",
         status: "success",
+        colorScheme: "green",
         icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        render: Toast,
       });
     },
     onError: (e) => {
@@ -72,8 +75,9 @@ export default function OrgVerifyEmail() {
         toast({
           title: "Too many requests, please try again later",
           status: "error",
+          colorScheme: "red",
           icon: <AnimatedXCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+          render: Toast,
         });
       }
     },

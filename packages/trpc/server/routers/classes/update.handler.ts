@@ -8,7 +8,7 @@ type UpdateOptions = {
 };
 
 export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
-  await isClassTeacherOrThrow(ctx.session.user.id, input.id);
+  await isClassTeacherOrThrow(input.id, ctx.session.user.id);
 
   return await ctx.prisma.class.update({
     where: {

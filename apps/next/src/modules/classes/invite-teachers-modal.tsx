@@ -5,6 +5,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   SlideFade,
   Stack,
@@ -17,6 +18,9 @@ import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Modal } from "../../components/modal";
+import { useClass } from "../../hooks/use-class";
+import { plural } from "../../utils/string";
+import { getBaseDomain } from "../organizations/utils/get-base-domain";
 
 export interface InviteTeachersModalProps {
   isOpen: boolean;
@@ -24,23 +28,26 @@ export interface InviteTeachersModalProps {
 }
 
 interface InviteTeachersFormInputs {
-  emails: string[];
+  emails: (string | undefined)[];
   sendEmail: boolean;
 }
 
-const schema = z.object({
-  emails: z
-    .array(z.string().trim())
-    .min(1)
-    .max(10)
-    .refine(
-      (sections) => {
-        return !!sections.find((s) => s.length > 0);
-      },
-      { message: "Enter at least one email" }
-    ),
-  sendEmail: z.boolean().default(true),
-});
+const email = (domain?: string) =>
+  z
+    .string()
+    .email({ message: "Enter a valid email" })
+    .endsWith(domain ? `@${domain}` : "", {
+      message: `You can only invite people from your organization's domain ${
+        domain || ""
+      }`,
+    })
+    .optional();
+
+const schema = (domain?: string, max = 10) =>
+  z.object({
+    emails: z.array(email(domain)).min(1).max(max),
+    sendEmail: z.boolean().default(true),
+  });
 
 export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   isOpen,
@@ -48,6 +55,12 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
 }) => {
   const router = useRouter();
   const utils = api.useContext();
+  const { data: class_ } = useClass();
+  const domain = getBaseDomain(class_?.organization ?? undefined);
+
+  const remaining =
+    10 -
+    ((class_?.teachers?.length ?? 0) + (class_?.teacherInvites?.length ?? 0));
 
   const inviteTeachers = api.classes.inviteTeachers.useMutation({
     onSuccess: async () => {
@@ -58,9 +71,11 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   });
 
   const inviteTeachersMethods = useForm<InviteTeachersFormInputs>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema(domain?.domain ?? undefined, remaining)),
     defaultValues: {
-      emails: ["", ""],
+      emails: Array.from({ length: Math.min(2, remaining) }).map(
+        () => undefined
+      ),
       sendEmail: true,
     },
   });
@@ -72,7 +87,9 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
     await inviteTeachers.mutateAsync({
       ...data,
       classId: router.query.id as string,
-      emails: data.emails.filter((s) => s.length > 0),
+      emails: data.emails.filter(
+        (s) => s !== undefined && s.trim().length > 0
+      ) as string[],
     });
   };
 
@@ -83,7 +100,11 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
       setMounted(false);
       return;
     }
-    inviteTeachersMethods.reset();
+    inviteTeachersMethods.reset({
+      emails: Array.from({ length: Math.min(2, remaining) }).map(
+        () => undefined
+      ),
+    });
 
     requestAnimationFrame(() => {
       setMounted(true);
@@ -99,11 +120,14 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
       <Modal.Content>
         <form onSubmit={inviteTeachersMethods.handleSubmit(onSubmit)}>
           <Modal.Body>
-            <Modal.Heading>Invite teaachers</Modal.Heading>
+            <Modal.Heading>Invite teachers</Modal.Heading>
             <Stack spacing="4">
-              <FormLabel m="0" fontSize="xs" color={labelColor}>
-                Invite teachers to join this class
-              </FormLabel>
+              <HStack justifyContent="space-between">
+                <FormLabel m="0">Invite teachers to join this class</FormLabel>
+                <FormLabel m="0" color="gray.500">
+                  {plural(remaining, "slot")} remaining
+                </FormLabel>
+              </HStack>
               <Controller
                 name="emails"
                 control={inviteTeachersMethods.control}
@@ -123,28 +147,30 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
                           <Stack spacing="0">
                             <Input
                               autoFocus={index === 0}
-                              // TODO: handle org domain placeholder
-                              placeholder={`email@example.com`}
-                              isInvalid={index === 0 && !!errors.emails}
-                              px="14px"
+                              placeholder={`email@${
+                                domain ? domain.domain ?? "" : "example.com"
+                              }`}
+                              isInvalid={!!errors.emails?.[index]}
+                              // px="14px"
                               defaultValue={email}
                               onChange={(e) => {
                                 const emails = [...value];
-                                emails[index] = e.target.value;
+                                const v = e.target.value.trim();
+                                emails[index] = v.length ? v : undefined;
                                 onChange(emails);
                               }}
                               onFocus={() => {
                                 if (
                                   value.length - 1 === index &&
-                                  value.length < 10
+                                  value.length < remaining
                                 ) {
-                                  onChange([...value, ""]);
+                                  onChange([...value, undefined]);
                                 }
                               }}
                             />
-                            {index === 0 && (
+                            {errors.emails?.[index] && (
                               <FormErrorMessage>
-                                {errors.emails?.message}
+                                {errors.emails?.[index]?.message}
                               </FormErrorMessage>
                             )}
                           </Stack>

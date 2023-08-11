@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
+import { Toast } from "../../components/toast";
 
 export interface RemoveMemberModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const LeaveOrganizationModal: React.FC<RemoveMemberModalProps> = ({
       toast({
         title: "Left organization",
         icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        render: Toast,
       });
     },
   });

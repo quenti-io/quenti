@@ -1,12 +1,15 @@
+import { useRouter } from "next/router";
 import { AuthLayout } from "../../components/auth-layout";
 
 export default function Signup() {
+  const router = useRouter();
+
   return (
     <AuthLayout
       mode="signup"
-      onUserExists={() => {
-        // void router.push("/home");
+      onUserExists={(callback) => {
+        void router.push(callback);
       }}
     />
-  )
+  );
 }

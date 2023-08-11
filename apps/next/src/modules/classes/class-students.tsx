@@ -28,6 +28,7 @@ import {
 } from "./remove-students-modal";
 import { SectionSelect } from "./section-select";
 import { SelectedBar } from "./selected-bar";
+import { AddStudentsModal } from "./add-students-modal";
 
 export const ClassStudentsRaw = () => {
   const { data: class_ } = useClass();
@@ -85,6 +86,7 @@ export const ClassStudentsRaw = () => {
   const [changeSectionMembers, setChangeSectionMembers] = React.useState<
     ChangeSectionModalProps["members"]
   >([]);
+  const [addStudentsOpen, setAddStudentsOpen] = React.useState(false);
   const [removeStudents, setRemoveStudents] = React.useState<
     RemoveStudentsModalProps["members"]
   >([]);
@@ -129,6 +131,10 @@ export const ClassStudentsRaw = () => {
     <>
       {class_ && (
         <>
+          <AddStudentsModal
+            isOpen={addStudentsOpen}
+            onClose={() => setAddStudentsOpen(false)}
+          />
           <ChangeSectionModal
             isOpen={!!changeSectionMembers.length}
             onClose={() => setChangeSectionMembers([])}
@@ -194,6 +200,7 @@ export const ClassStudentsRaw = () => {
               px="4"
               colorScheme="gray"
               variant="outline"
+              onClick={() => setAddStudentsOpen(true)}
             >
               Add
             </Button>

@@ -7,7 +7,7 @@
   "dependencies": {
     "@react-email/components": "^0.0.7",
     "@react-email/tailwind": "^0.0.8",
-    "resend": "^0.17.2",
-    "react-email": "1.9.4"
+    "react-email": "1.9.4",
+    "resend": "^0.17.2"
   }
 }

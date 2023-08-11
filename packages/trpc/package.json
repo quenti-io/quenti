@@ -3,20 +3,20 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@2toad/profanity": "^2.2.0",
     "@quenti/auth": "*",
-    "@quenti/interfaces": "*",
     "@quenti/core": "*",
-    "@quenti/lib": "*",
-    "@quenti/prisma": "*",
-    "@quenti/payments": "*",
     "@quenti/emails": "*",
+    "@quenti/interfaces": "*",
+    "@quenti/lib": "*",
+    "@quenti/payments": "*",
+    "@quenti/prisma": "*",
     "@trpc/client": "^10.36.0",
     "@trpc/next": "^10.36.0",
     "@trpc/react-query": "^10.36.0",
     "@trpc/server": "^10.36.0",
-    "@2toad/profanity": "^2.2.0",
-    "superjson": "^1.13.1",
     "email-providers": "^2.0.1",
+    "superjson": "^1.13.1",
     "zod": "^3.21.4"
   }
 }

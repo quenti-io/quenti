@@ -102,21 +102,23 @@ const membersSelect = Prisma.validator<Prisma.Class$membersArgs>()({
   },
 });
 
-const teacherInvitesSelect =
-  Prisma.validator<Prisma.Class$teacherInvitesArgs>()({
-    select: {
-      id: true,
-      email: true,
-      user: {
-        select: {
-          id: true,
-          name: true,
-          username: true,
-          image: true,
-        },
+const teacherInvitesSelect = Prisma.validator<Prisma.Class$invitesArgs>()({
+  where: {
+    type: "Teacher",
+  },
+  select: {
+    id: true,
+    email: true,
+    user: {
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        image: true,
       },
     },
-  });
+  },
+});
 
 const getTeacher = async (id: string, prisma: PrismaClient) => {
   return await prisma.class.findUniqueOrThrow({
@@ -132,7 +134,7 @@ const getTeacher = async (id: string, prisma: PrismaClient) => {
       folders: foldersSelect,
       sections: sectionsSelect,
       members: membersSelect,
-      teacherInvites: teacherInvitesSelect,
+      invites: teacherInvitesSelect,
       _count: {
         select: {
           members: {
@@ -191,6 +193,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     studySets: class_.studySets.map((s) => s.studySet),
     folders: class_.folders.map((f) => f.folder),
     ...strip({
+      organization: class_.organization,
       teachers: class_.members,
       students: class_._count?.members,
       sections: class_.sections?.map((s) => ({
@@ -198,7 +201,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         name: s.name,
         students: s._count.students,
       })),
-      teacherInvites: class_.teacherInvites,
+      teacherInvites: class_.invites,
     }),
     me: {
       id: member.id,

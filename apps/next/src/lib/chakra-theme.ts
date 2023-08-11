@@ -79,6 +79,40 @@ const components = {
       },
     },
   },
+  Input: {
+    baseStyle: {
+      field: {
+        _placeholder: {
+          color: "gray.500",
+        },
+      },
+    },
+    sizes: {
+      md: {
+        field: {
+          px: "14px",
+        },
+      },
+    },
+  },
+  FormLabel: {
+    baseStyle: ({ colorMode }: StyleFunctionProps) => ({
+      fontSize: "sm",
+      color: colorMode == "light" ? "gray.600" : "gray.400",
+    }),
+  },
+  Textarea: {
+    baseStyle: {
+      _placeholder: {
+        color: "gray.500",
+      },
+    },
+    sizes: {
+      md: {
+        px: "14px",
+      },
+    },
+  },
   Tooltip: {
     baseStyle: ({ colorMode }: StyleFunctionProps) => ({
       borderRadius: "md",
