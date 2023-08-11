@@ -53,7 +53,10 @@ export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
           },
         },
       },
-      teacherInvites: {
+      invites: {
+        where: {
+          type: "Teacher",
+        },
         select: {
           id: true,
           email: true,
@@ -73,7 +76,7 @@ export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
 
   return {
     members: class_.members,
-    invites: class_.teacherInvites,
+    invites: class_.invites,
     me: member,
   };
 };

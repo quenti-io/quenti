@@ -5,6 +5,7 @@ import {
   teacherProcedure,
 } from "../../trpc";
 import { ZAddEntitiesSchema } from "./add-entities.schema";
+import { ZAddStudentsSchema } from "./add-students.schema";
 import { ZBanStudentsSchema } from "./ban-students.schema";
 import { ZBulkAddSectionsSchema } from "./bulk-add-sections.schema";
 import { ZCreateSectionSchema } from "./create-section.schema";
@@ -31,6 +32,7 @@ type ClassesRouterHandlerCache = {
     update?: typeof import("./update.handler").updateHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
     ["invite-teachers"]?: typeof import("./invite-teachers.handler").inviteTeachersHandler;
+    ["add-students"]?: typeof import("./add-students.handler").addStudentsHandler;
     ["add-entities"]?: typeof import("./add-entities.handler").addEntitiesHandler;
     ["remove-entity"]?: typeof import("./remove-entity.handler").removeEntityHandler;
     ["bulk-add-sections"]?: typeof import("./bulk-add-sections.handler").bulkAddSectionsHandler;
@@ -93,6 +95,12 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "invite-teachers");
       return HANDLER_CACHE.handlers["invite-teachers"]!({ ctx, input });
+    }),
+  addStudents: teacherProcedure
+    .input(ZAddStudentsSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "add-students");
+      return HANDLER_CACHE.handlers["add-students"]!({ ctx, input });
     }),
   addEntities: teacherProcedure
     .input(ZAddEntitiesSchema)

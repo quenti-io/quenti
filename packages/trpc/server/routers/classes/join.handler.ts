@@ -34,7 +34,8 @@ export const joinHandler = async ({ ctx, input }: JoinOptions) => {
         classId: input.id,
         userId: ctx.session.user.id,
         email: ctx.session.user.email!,
-        type: "Teacher",
+        type: invite.type,
+        sectionId: invite.sectionId,
       },
     });
   }

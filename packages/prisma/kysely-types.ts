@@ -222,6 +222,8 @@ export type PendingClassInvite = {
   id: string;
   classId: string;
   email: string;
+  type: ClassMembershipType;
+  sectionId: string | null;
 };
 export type PendingOrganizationInvite = {
   id: string;

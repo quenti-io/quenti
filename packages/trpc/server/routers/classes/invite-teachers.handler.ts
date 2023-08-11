@@ -50,7 +50,11 @@ export const inviteTeachersHandler = async ({
       },
       _count: {
         select: {
-          teacherInvites: true,
+          invites: {
+            where: {
+              type: "Teacher",
+            },
+          },
           members: {
             where: {
               type: "Teacher",
@@ -62,7 +66,7 @@ export const inviteTeachersHandler = async ({
   });
 
   if (
-    class_._count.members + class_._count.teacherInvites + input.emails.length >
+    class_._count.members + class_._count.invites + input.emails.length >
     10
   ) {
     throw new TRPCError({
@@ -99,7 +103,7 @@ export const inviteTeachersHandler = async ({
       email: true,
       classes: {
         select: {
-          id: true,
+          classId: true,
         },
       },
     },
@@ -108,6 +112,9 @@ export const inviteTeachersHandler = async ({
   const existingInvites = await ctx.prisma.pendingClassInvite.findMany({
     where: {
       classId: input.classId,
+      email: {
+        in: input.emails,
+      },
     },
   });
 
@@ -119,7 +126,7 @@ export const inviteTeachersHandler = async ({
     const invite = existingInvites.find((i) => i.email === email);
     if (invite) continue;
     const user = existingUsers.find((u) => u.email === email);
-    if (user?.classes.find((c) => c.id === input.classId)) continue;
+    if (user?.classes.find((c) => c.classId === input.classId)) continue;
 
     invites.push({
       id: user?.id ?? null,
@@ -129,14 +136,12 @@ export const inviteTeachersHandler = async ({
     else signupEmails.push(email);
   }
 
-  const pendingInvites = input.emails.filter(
-    (e) => !existingInvites.find((i) => i.email === e)
-  );
-
   await ctx.prisma.pendingClassInvite.createMany({
-    data: pendingInvites.map((email) => ({
+    data: invites.map(({ id, email }) => ({
       email,
+      userId: id,
       classId: input.classId,
+      type: "Teacher",
     })),
   });
 

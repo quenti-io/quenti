@@ -200,14 +200,14 @@ model Class {
   description String
   orgId       String?
 
-  organization   Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
-  members        ClassMembership[]
-  sections       Section[]
-  studySets      StudySetsOnClasses[]
-  folders        FoldersOnClasses[]
-  assignments    Assignment[]
-  teacherInvites PendingClassInvite[]
-  bans           ClassBan[]
+  organization Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  members      ClassMembership[]
+  invites      PendingClassInvite[]
+  sections     Section[]
+  studySets    StudySetsOnClasses[]
+  folders      FoldersOnClasses[]
+  assignments  Assignment[]
+  bans         ClassBan[]
 
   @@index([orgId])
 }
@@ -268,9 +268,11 @@ model ClassBan {
 }
 
 model PendingClassInvite {
-  id      String @id @default(cuid())
-  classId String
-  email   String
+  id        String              @id @default(cuid())
+  classId   String
+  email     String
+  type      ClassMembershipType
+  sectionId String?
 
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
   user  User? @relation(fields: [email], references: [email], onDelete: Cascade)
