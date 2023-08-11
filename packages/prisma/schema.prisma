@@ -270,15 +270,17 @@ model ClassBan {
 model PendingClassInvite {
   id        String              @id @default(cuid())
   classId   String
+  userId    String?
   email     String
   type      ClassMembershipType
   sectionId String?
 
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
-  user  User? @relation(fields: [email], references: [email], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([classId, email])
   @@index([classId])
+  @@index([userId])
   @@index([email])
 }
 
