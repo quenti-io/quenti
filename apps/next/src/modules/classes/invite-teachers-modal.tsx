@@ -17,6 +17,8 @@ import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Modal } from "../../components/modal";
+import { useClass } from "../../hooks/use-class";
+import { getBaseDomain } from "../organizations/utils/get-base-domain";
 
 export interface InviteTeachersModalProps {
   isOpen: boolean;
@@ -24,23 +26,26 @@ export interface InviteTeachersModalProps {
 }
 
 interface InviteTeachersFormInputs {
-  emails: string[];
+  emails: (string | undefined)[];
   sendEmail: boolean;
 }
 
-const schema = z.object({
-  emails: z
-    .array(z.string().trim())
-    .min(1)
-    .max(10)
-    .refine(
-      (sections) => {
-        return !!sections.find((s) => s.length > 0);
-      },
-      { message: "Enter at least one email" }
-    ),
-  sendEmail: z.boolean().default(true),
-});
+const email = (domain?: string) =>
+  z
+    .string()
+    .email({ message: "Enter a valid email" })
+    .endsWith(domain ? `@${domain}` : "", {
+      message: `You can only invite people from your organization's domain ${
+        domain || ""
+      }`,
+    })
+    .optional();
+
+const schema = (domain?: string) =>
+  z.object({
+    emails: z.array(email(domain)).min(1).max(10),
+    sendEmail: z.boolean().default(true),
+  });
 
 export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   isOpen,
@@ -48,6 +53,8 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
 }) => {
   const router = useRouter();
   const utils = api.useContext();
+  const { data: class_ } = useClass();
+  const domain = getBaseDomain(class_?.organization ?? undefined);
 
   const inviteTeachers = api.classes.inviteTeachers.useMutation({
     onSuccess: async () => {
@@ -58,9 +65,9 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   });
 
   const inviteTeachersMethods = useForm<InviteTeachersFormInputs>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema(domain?.domain ?? undefined)),
     defaultValues: {
-      emails: ["", ""],
+      emails: [undefined, undefined],
       sendEmail: true,
     },
   });
@@ -72,7 +79,9 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
     await inviteTeachers.mutateAsync({
       ...data,
       classId: router.query.id as string,
-      emails: data.emails.filter((s) => s.length > 0),
+      emails: data.emails.filter(
+        (s) => s !== undefined && s.trim().length > 0
+      ) as string[],
     });
   };
 
@@ -123,14 +132,16 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
                           <Stack spacing="0">
                             <Input
                               autoFocus={index === 0}
-                              // TODO: handle org domain placeholder
-                              placeholder={`email@example.com`}
-                              isInvalid={index === 0 && !!errors.emails}
+                              placeholder={`email@${
+                                domain ? domain.domain ?? "" : "example.com"
+                              }`}
+                              isInvalid={!!errors.emails?.[index]}
                               px="14px"
                               defaultValue={email}
                               onChange={(e) => {
                                 const emails = [...value];
-                                emails[index] = e.target.value;
+                                const v = e.target.value.trim();
+                                emails[index] = v.length ? v : undefined;
                                 onChange(emails);
                               }}
                               onFocus={() => {
@@ -138,13 +149,18 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
                                   value.length - 1 === index &&
                                   value.length < 10
                                 ) {
-                                  onChange([...value, ""]);
+                                  onChange([...value, undefined]);
                                 }
                               }}
                             />
-                            {index === 0 && (
-                              <FormErrorMessage>
+                            {/* {index === 0 && errors.emails && (
+                              <FormErrorMessage mt="0">
                                 {errors.emails?.message}
+                              </FormErrorMessage>
+                            )} */}
+                            {errors.emails?.[index] && (
+                              <FormErrorMessage>
+                                {errors.emails?.[index]?.message}
                               </FormErrorMessage>
                             )}
                           </Stack>
