@@ -13,7 +13,7 @@ const teacherCountSelect =
       sections: true,
       members: {
         where: {
-          type: "Teacher",
+          type: "Student",
         },
       },
     },
