@@ -5,6 +5,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   SlideFade,
   Stack,
@@ -18,6 +19,7 @@ import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
+import { plural } from "../../utils/string";
 import { getBaseDomain } from "../organizations/utils/get-base-domain";
 
 export interface InviteTeachersModalProps {
@@ -41,9 +43,9 @@ const email = (domain?: string) =>
     })
     .optional();
 
-const schema = (domain?: string) =>
+const schema = (domain?: string, max = 10) =>
   z.object({
-    emails: z.array(email(domain)).min(1).max(10),
+    emails: z.array(email(domain)).min(1).max(max),
     sendEmail: z.boolean().default(true),
   });
 
@@ -56,6 +58,10 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   const { data: class_ } = useClass();
   const domain = getBaseDomain(class_?.organization ?? undefined);
 
+  const remaining =
+    10 -
+    ((class_?.teachers?.length ?? 0) + (class_?.teacherInvites?.length ?? 0));
+
   const inviteTeachers = api.classes.inviteTeachers.useMutation({
     onSuccess: async () => {
       await utils.classes.getMembers.invalidate();
@@ -65,9 +71,11 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   });
 
   const inviteTeachersMethods = useForm<InviteTeachersFormInputs>({
-    resolver: zodResolver(schema(domain?.domain ?? undefined)),
+    resolver: zodResolver(schema(domain?.domain ?? undefined, remaining)),
     defaultValues: {
-      emails: [undefined, undefined],
+      emails: Array.from({ length: Math.min(2, remaining) }).map(
+        () => undefined
+      ),
       sendEmail: true,
     },
   });
@@ -92,7 +100,11 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
       setMounted(false);
       return;
     }
-    inviteTeachersMethods.reset();
+    inviteTeachersMethods.reset({
+      emails: Array.from({ length: Math.min(2, remaining) }).map(
+        () => undefined
+      ),
+    });
 
     requestAnimationFrame(() => {
       setMounted(true);
@@ -108,11 +120,18 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
       <Modal.Content>
         <form onSubmit={inviteTeachersMethods.handleSubmit(onSubmit)}>
           <Modal.Body>
-            <Modal.Heading>Invite teaachers</Modal.Heading>
+            <Modal.Heading>Invite teachers</Modal.Heading>
             <Stack spacing="4">
-              <FormLabel m="0" fontSize="xs" color={labelColor}>
-                Invite teachers to join this class
-              </FormLabel>
+              <HStack
+                fontSize="sm"
+                color={labelColor}
+                justifyContent="space-between"
+              >
+                <FormLabel m="0">Invite teachers to join this class</FormLabel>
+                <FormLabel m="0" color="gray.500">
+                  {plural(remaining, "slot")} remaining
+                </FormLabel>
+              </HStack>
               <Controller
                 name="emails"
                 control={inviteTeachersMethods.control}
@@ -147,17 +166,12 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
                               onFocus={() => {
                                 if (
                                   value.length - 1 === index &&
-                                  value.length < 10
+                                  value.length < remaining
                                 ) {
                                   onChange([...value, undefined]);
                                 }
                               }}
                             />
-                            {/* {index === 0 && errors.emails && (
-                              <FormErrorMessage mt="0">
-                                {errors.emails?.message}
-                              </FormErrorMessage>
-                            )} */}
                             {errors.emails?.[index] && (
                               <FormErrorMessage>
                                 {errors.emails?.[index]?.message}
