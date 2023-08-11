@@ -15,13 +15,14 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^5.1.1",
     "@quenti/env": "*",
-    "@prisma/client": "^4.16.2",
+    "prisma-kysely": "^1.5.0",
     "zod": "^3.21.4",
     "zod-prisma": "^0.5.4"
   },
   "devDependencies": {
-    "prisma": "^4.16.2"
+    "prisma": "^5.1.1"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma-seed.ts"

@@ -78,8 +78,8 @@ export const ClassCard: React.FC<ClassCardProps> = ({
             bg={linkBg}
             zIndex="100"
             position="relative"
-            rounded="2xl"
-            p="8px"
+            rounded="18px"
+            p="6px"
           >
             <Box
               w="full"

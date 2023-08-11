@@ -7,8 +7,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import type { RouterOutputs } from "@quenti/trpc";
-import { ClassCard } from "../../components/class-card";
 import { useSession } from "next-auth/react";
+import { ClassCard } from "../../components/class-card";
 
 interface ClassesGridProps {
   heading: string;
@@ -54,7 +54,7 @@ export const ClassesGrid: React.FC<ClassesGridProps> = ({
               folders: class_._count.folders || 0,
               studySets: class_._count.studySets || 0,
             }}
-            for={session?.data?.user?.type || "Student"}
+            for={class_.as}
           />
         ))}
       </Grid>

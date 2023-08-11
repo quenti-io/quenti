@@ -5,7 +5,6 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
     "theme": "chakra-cli tokens src/lib/chakra-theme.ts",
@@ -52,11 +51,10 @@
     "lodash.throttle": "^4.1.1",
     "micro": "^10.0.1",
     "nanoid": "^4.0.2",
-    "next": "^13.4.8",
-    "next-auth": "^4.22.1",
+    "next": "^13.4.13",
+    "next-auth": "^4.23.0",
     "next-axiom": "^0.18.0",
     "otp-generator": "^4.0.1",
-    "prisma-kysely": "^1.5.0",
     "prom-client": "^14.2.0",
     "react": "^18.2.0",
     "react-canvas-confetti": "^1.4.0",
@@ -66,10 +64,10 @@
     "sharp": "^0.32.1",
     "short-unique-id": "^4.4.4",
     "slugify": "^1.6.6",
-    "stripe": "^12.13.0",
+    "stripe": "^12.18.0",
     "use-fit-text": "^2.4.0",
     "zod": "^3.21.4",
-    "zustand": "^4.3.9"
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
