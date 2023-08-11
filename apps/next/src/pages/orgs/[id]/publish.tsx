@@ -11,6 +11,7 @@ import { IconAirBalloon } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
+import { Toast } from "../../../components/toast";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { GlowingButton } from "../../../modules/organizations/glowing-button";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
@@ -31,8 +32,9 @@ export default function OrgPublish() {
       toast({
         title: error.message,
         status: "error",
+        colorScheme: "red",
         icon: <AnimatedXCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        render: Toast,
       });
     },
   });

@@ -18,6 +18,7 @@ import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../../components/auto-resize-textarea";
 import { ConfirmModal } from "../../../components/confirm-modal";
+import { Toast } from "../../../components/toast";
 import { useClass } from "../../../hooks/use-class";
 import { SettingsWrapper } from "../../organizations/settings-wrapper";
 
@@ -48,8 +49,9 @@ export const ClassSettings = () => {
       toast({
         title: "Class updated successfully",
         status: "success",
+        colorScheme: "green",
         icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        render: Toast,
       });
     },
   });
@@ -59,7 +61,7 @@ export const ClassSettings = () => {
       toast({
         title: "Class deleted",
         icon: <AnimatedCheckCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        render: Toast,
       });
     },
   });

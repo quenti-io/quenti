@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { useMe } from "../../hooks/use-me";
 import { OrganizationCard } from "./organization-card";
+import { Toast } from "../../components/toast";
 
 export const OrganizationInviteScreen = () => {
   const utils = api.useContext();
@@ -34,8 +35,9 @@ export const OrganizationInviteScreen = () => {
         toast({
           title: `Successfully joined ${invite!.name}`,
           status: "success",
+          colorScheme: "green",
           icon: <AnimatedCheckCircle />,
-          containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+          render: Toast,
         });
       } else {
         await router.push(`/home`);

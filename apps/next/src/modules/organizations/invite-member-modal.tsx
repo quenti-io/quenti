@@ -32,6 +32,7 @@ import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Modal } from "../../components/modal";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";
+import { Toast } from "../../components/toast";
 
 export interface InviteMemberModalProps {
   isOpen: boolean;
@@ -111,7 +112,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
       title: "Invite link copied to clipboard",
       status: "success",
       icon: <AnimatedCheckCircle />,
-      containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+      render: Toast,
     });
   };
 

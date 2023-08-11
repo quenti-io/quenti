@@ -35,6 +35,7 @@ import { organizationIcon } from "../../utils/icons";
 import { ConfettiLayer } from "./confetti-layer";
 import { getBaseDomain } from "./utils/get-base-domain";
 import { useOnboardingStep } from "./utils/use-onboarding-step";
+import { Toast } from "../../components/toast";
 
 export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   children,
@@ -64,7 +65,8 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
         title: "That organization does not exist",
         status: "error",
         icon: <AnimatedXCircle />,
-        containerStyle: { marginBottom: "2rem", marginTop: "-1rem" },
+        colorScheme: "red",
+        render: Toast,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

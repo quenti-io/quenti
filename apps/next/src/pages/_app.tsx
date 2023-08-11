@@ -157,7 +157,17 @@ const App: AppType<
         <meta property="twitter:image" content={ogImageUrl()} />
         <meta name="robots" content="noindex" />
       </Head>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider
+        theme={theme}
+        toastOptions={{
+          defaultOptions: {
+            containerStyle: {
+              marginBottom: "2rem",
+              marginTop: "-1rem",
+            },
+          },
+        }}
+      >
         <HistoryProvider>
           <LoadingProvider>
             <SessionProvider session={session}>
