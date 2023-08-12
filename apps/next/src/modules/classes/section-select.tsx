@@ -62,7 +62,7 @@ export const SectionSelect: React.FC<SectionSelectProps> = ({
           rounded: "6px",
           bg: baseBg,
           shadow: "lg",
-          overflow: "hidden",
+          overflowY: "auto",
         }),
         dropdownIndicator: (provided) => ({
           ...provided,
