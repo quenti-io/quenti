@@ -59,7 +59,7 @@ export const FolderSets = () => {
           });
         }}
       />
-      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
+      <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
         {folder.sets.map((studySet) => (
           <GridItem key={studySet.id}>
             <StudySetCard
@@ -99,7 +99,7 @@ export const FolderSets = () => {
 
 FolderSets.Skeleton = function FolderSetsSkeleton() {
   return (
-    <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
+    <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
       {Array.from({ length: 6 }).map((_, i) => (
         <GridItem key={i}>
           <Skeleton rounded="md">

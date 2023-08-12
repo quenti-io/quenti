@@ -8,7 +8,9 @@ export const SetGrid = () => {
 
   return (
     <Stack spacing={6}>
-      <Heading size="lg">Recent</Heading>
+      <Skeleton isLoaded={!!data} rounded="md" fitContent>
+        <Heading size="lg">Recent</Heading>
+      </Skeleton>
       <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
         {isLoading &&
           Array.from({ length: 16 }).map((_, i) => (

@@ -7,7 +7,9 @@ export const ClassesGrid = () => {
 
   return (
     <Stack spacing={6}>
-      <Heading size="lg">Your classes</Heading>
+      <Skeleton isLoaded={!!data} rounded="md" fitContent>
+        <Heading size="lg">Your classes</Heading>
+      </Skeleton>
       <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
         {isLoading &&
           Array.from({ length: 4 }).map((_, i) => (

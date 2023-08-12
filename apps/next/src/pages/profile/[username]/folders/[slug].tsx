@@ -1,4 +1,4 @@
-import { Container, Divider, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 import type { ComponentWithAuth } from "../../../../components/auth-component";
 import { WithFooter } from "../../../../components/with-footer";
 import { ActionArea } from "../../../../modules/folders/action-area";
@@ -9,8 +9,6 @@ import { FolderSets } from "../../../../modules/folders/folder-sets";
 import { HydrateFolderData } from "../../../../modules/hydrate-folder-data";
 
 const FolderPage: ComponentWithAuth = () => {
-  const dividerColor = useColorModeValue("gray.400", "gray.600");
-
   return (
     <HydrateFolderData fallback={<FolderLoading />}>
       <WithFooter>
@@ -22,7 +20,6 @@ const FolderPage: ComponentWithAuth = () => {
             </Stack>
             <Stack spacing={6}>
               <FolderDescription />
-              <Divider borderColor={dividerColor} />
               <FolderSets />
             </Stack>
           </Stack>
