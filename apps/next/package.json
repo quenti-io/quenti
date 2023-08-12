@@ -26,6 +26,7 @@
     "@next-auth/prisma-adapter": "^1.0.7",
     "@quenti/auth": "*",
     "@quenti/env": "*",
+    "@quenti/inngest": "*",
     "@quenti/interfaces": "*",
     "@quenti/lib": "*",
     "@quenti/payments": "*",

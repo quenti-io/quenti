@@ -1,5 +1,4 @@
-import { sendClassInviteEmail } from "@quenti/emails";
-import { env } from "@quenti/env/client";
+import { inngest } from "@quenti/inngest";
 import { TRPCError } from "@trpc/server";
 import { getIp } from "../../lib/get-ip";
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
@@ -147,25 +146,24 @@ export const inviteTeachersHandler = async ({
 
   if (input.sendEmail) {
     const inviter = {
+      id: ctx.session.user.id,
       image: ctx.session.user.image!,
       name: ctx.session.user.name,
       email: ctx.session.user.email!,
     };
 
-    for (const email of signupEmails) {
-      await sendClassInviteEmail(email, {
-        className: class_.name,
-        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup?callbackUrl=/classes/${class_.id}/join`,
+    await inngest.send({
+      name: "classes/invite-teachers",
+      data: {
+        class: {
+          id: class_.id,
+          name: class_.name,
+        },
         inviter,
-      });
-    }
-    for (const email of loginEmails) {
-      await sendClassInviteEmail(email, {
-        className: class_.name,
-        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/classes/${class_.id}/join`,
-        inviter,
-      });
-    }
+        signupEmails,
+        loginEmails,
+      },
+    });
   }
 };
 

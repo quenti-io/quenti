@@ -1,5 +1,4 @@
-import { sendOrganizationInviteEmail } from "@quenti/emails";
-import { env } from "@quenti/env/client";
+import { inngest } from "@quenti/inngest";
 import { allEqual } from "@quenti/lib/array";
 import { TRPCError } from "@trpc/server";
 import { getIp } from "../../lib/get-ip";
@@ -117,26 +116,21 @@ export const inviteMemberHandler = async ({
     });
 
     const inviter = {
+      id: ctx.session.user.id,
       image: ctx.session.user.image!,
       name: ctx.session.user.name,
       email: ctx.session.user.email!,
     };
 
-    for (const email of signupEmails) {
-      await sendOrganizationInviteEmail(email, {
-        orgName: org.name,
-        // Onboarding fetches the pending invite so we can use the regular signup flow
-        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
+    await inngest.send({
+      name: "orgs/invite-members",
+      data: {
         inviter,
-      });
-    }
-    for (const email of loginEmails) {
-      await sendOrganizationInviteEmail(email, {
-        orgName: org.name,
-        url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/orgs`,
-        inviter,
-      });
-    }
+        org,
+        signupEmails,
+        loginEmails,
+      },
+    });
   }
 };
 

@@ -1,0 +1,10 @@
+{
+  "name": "@quenti/inngest",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@quenti/emails": "*",
+    "@quenti/env": "*",
+    "inngest": "^2.4.1"
+  }
+}

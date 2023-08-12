@@ -7,6 +7,7 @@
     "@quenti/auth": "*",
     "@quenti/core": "*",
     "@quenti/emails": "*",
+    "@quenti/inngest": "*",
     "@quenti/interfaces": "*",
     "@quenti/lib": "*",
     "@quenti/payments": "*",
