@@ -144,7 +144,7 @@ export const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 const enforceEnabledFeatures = (features: EnabledFeature[]) =>
   enforceUserIsAuthed.unstable_pipe(({ ctx, next }) => {
     const flags = ctx.session.user.flags;
-    if (!features.find((f) => (flags & f) == f)) {
+    if (!features.find((f) => (flags & (f as number)) == (f as number))) {
       throw new TRPCError({ code: "FORBIDDEN" });
     }
 

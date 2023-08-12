@@ -33,7 +33,7 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
       }
 
       const [base, domain] = data.email.split("@");
-      const all = await import("email-providers/all.json");
+      const all = Array.from(await import("email-providers/all.json"));
       const isOrgEligible = !all.find((d) => d == domain);
 
       const associatedDomain = isOrgEligible
