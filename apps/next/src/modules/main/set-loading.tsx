@@ -1,9 +1,9 @@
-import { Container, Divider, Stack } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 import { WithFooter } from "../../components/with-footer";
+import { DescriptionArea } from "./description-area";
 import { FlashcardPreview } from "./flashcard-preview";
 import { HeadingArea } from "./heading-area";
 import { LinkArea } from "./link-area";
-import { DescriptionArea } from "./description-area";
 
 export const SetLoading = () => {
   return (
@@ -12,12 +12,11 @@ export const SetLoading = () => {
         <Stack spacing="10">
           <HeadingArea.Skeleton />
           <LinkArea.Skeleton />
-          <Divider maxW="1000px" />
         </Stack>
       </Container>
-      <Container maxW="full" overflow="hidden" p="0" py="8">
-        <Container maxW="7xl">
-          <Stack spacing={10}>
+      <Container maxW="full" overflow="hidden" px="0" py="6">
+        <Container maxW="7xl" p="4">
+          <Stack spacing={10} w="full">
             <FlashcardPreview.Skeleton />
             <DescriptionArea.Skeleton />
           </Stack>

@@ -170,7 +170,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
             index={getTabIndex()}
             isManual
           >
-            <TabList gap="10">
+            <TabList gap="6">
               <SkeletonTab isLoaded={isLoaded} href={`/orgs/${id}`}>
                 Members
               </SkeletonTab>

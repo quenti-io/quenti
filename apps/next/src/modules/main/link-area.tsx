@@ -136,11 +136,11 @@ const Linkable: React.FC<LinkableProps> = ({
         rounded="lg"
         py="5"
         px="6"
-        borderWidth="2px"
-        borderBottomWidth="4px"
+        borderWidth="1px"
+        borderBottomWidth="2px"
         h="full"
         borderColor={!disabled ? borderColor : disabledBorder}
-        shadow={!disabled ? "xl" : "sm"}
+        shadow={!disabled ? "md" : "sm"}
         transition="all ease-in-out 150ms"
         _hover={{
           transform: "translateY(-2px)",

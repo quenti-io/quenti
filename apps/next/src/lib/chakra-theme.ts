@@ -120,6 +120,11 @@ const components = {
       textColor: colorMode == "light" ? "black" : "white",
     }),
   },
+  Container: {
+    baseStyle: {
+      px: { base: 4, sm: 8 },
+    },
+  },
   Link: {
     baseStyle: {
       _hover: { textDecoration: "none" },

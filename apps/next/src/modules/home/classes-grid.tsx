@@ -1,39 +1,16 @@
-import {
-  Grid,
-  GridItem,
-  Heading,
-  Skeleton,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import type { RouterOutputs } from "@quenti/trpc";
-import { useSession } from "next-auth/react";
+import { Grid, GridItem, Heading, Skeleton, Stack } from "@chakra-ui/react";
+import { api } from "@quenti/trpc";
 import { ClassCard } from "../../components/class-card";
 
-interface ClassesGridProps {
-  heading: string;
-  isLoading: boolean;
-  skeletonCount: number;
-  classes: RouterOutputs["recent"]["get"]["classes"];
-}
-
-export const ClassesGrid: React.FC<ClassesGridProps> = ({
-  heading,
-  isLoading,
-  skeletonCount,
-  classes,
-}) => {
-  const session = useSession();
-  const headingColor = useColorModeValue("gray.600", "gray.400");
+export const ClassesGrid = () => {
+  const { data, isLoading } = api.recent.get.useQuery();
 
   return (
     <Stack spacing={6}>
-      <Heading color={headingColor} size="md">
-        {heading}
-      </Heading>
-      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
+      <Heading size="lg">Your classes</Heading>
+      <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
         {isLoading &&
-          Array.from({ length: skeletonCount }).map((_, i) => (
+          Array.from({ length: 4 }).map((_, i) => (
             <GridItem h="156px" key={i}>
               <Skeleton
                 rounded="md"
@@ -43,7 +20,7 @@ export const ClassesGrid: React.FC<ClassesGridProps> = ({
               />
             </GridItem>
           ))}
-        {classes.map((class_) => (
+        {(data?.classes || []).map((class_) => (
           <ClassCard
             key={class_.id}
             id={class_.id}
