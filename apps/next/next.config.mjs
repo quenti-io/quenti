@@ -10,7 +10,7 @@ import pjson from "./package.json" assert { type: "json" };
 const appVersion = pjson.version;
 
 // @ts-check
-/**
+/*
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
  */
@@ -39,6 +39,7 @@ let config = withHighlightConfig(
       "@quenti/payments",
       "@quenti/prisma",
       "@quenti/trpc",
+      "@quenti/inngest",
       "@quenti/types",
     ],
     rewrites: async () => [
