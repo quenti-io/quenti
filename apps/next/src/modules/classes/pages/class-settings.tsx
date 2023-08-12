@@ -21,6 +21,7 @@ import { ConfirmModal } from "../../../components/confirm-modal";
 import { Toast } from "../../../components/toast";
 import { useClass } from "../../../hooks/use-class";
 import { SettingsWrapper } from "../../organizations/settings-wrapper";
+import { ClassSections } from "../class-sections";
 
 export const ClassSettings = () => {
   const utils = api.useContext();
@@ -90,7 +91,7 @@ export const ClassSettings = () => {
               <Heading size="lg">Settings</Heading>
             </HStack>
           </Skeleton>
-          <ButtonGroup>
+          <ButtonGroup size={{ base: "sm", md: "md" }}>
             <Skeleton rounded="md" isLoaded={!!data}>
               <Button
                 variant="ghost"
@@ -118,7 +119,7 @@ export const ClassSettings = () => {
             </Skeleton>
           </ButtonGroup>
         </Flex>
-        <Divider />
+        <Divider borderColor={inputBorder} />
         <SettingsWrapper
           heading="General"
           description="Public class settings"
@@ -148,7 +149,9 @@ export const ClassSettings = () => {
             </Stack>
           </Stack>
         </SettingsWrapper>
-        <Divider />
+        <Divider borderColor={inputBorder} />
+        <ClassSections />
+        <Divider borderColor={inputBorder} />
         <SettingsWrapper
           heading="Danger zone"
           description="Actions in this area are irreversible"
