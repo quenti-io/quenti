@@ -20,7 +20,7 @@
     "dev": "dotenv -- turbo dev --scope \"@quenti/next\"",
     "start": "dotenv -- turbo start --scope \"@quenti/next\"",
     "next": "yarn workspace @quenti/next",
-    "install-vercel": "sh ./install-vercel.sh && yarn install",
+    "install-vercel": "sh ./install-vercel.sh",
     "email-dev": "dotenv -- email dev --dir ./packages/emails/templates --port 3001",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts",
     "join-class-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/join-class-students.ts",
