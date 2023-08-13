@@ -22,7 +22,7 @@ import {
   IconUserX,
 } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { MenuOptionPure } from "../../components/menu-option";
 
 interface OrganizationStudentProps {

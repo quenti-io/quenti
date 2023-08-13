@@ -18,7 +18,7 @@ import { signIn, useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { Link } from "../link";
+import { Link } from "@quenti/components";
 import { MenuOption } from "../menu-option";
 import { MobileUserOptions } from "./mobile-user-options";
 

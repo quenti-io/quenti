@@ -15,7 +15,7 @@ import {
 import { env } from "@quenti/env/client";
 import { IconCheck, IconCopy, IconEdit, IconLock } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useSet } from "../../hooks/use-set";
 import { api } from "@quenti/trpc";
 

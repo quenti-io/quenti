@@ -7,7 +7,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  Stack
+  Stack,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { Authed } from "../../components/authed";

@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react";
 import { mode, type StyleFunctionProps } from "@chakra-ui/theme-tools";
 
-const config = { initialColorMode: "dark", useSystemColorMode: false };
+const config = { initialColorMode: "light", useSystemColorMode: false };
 
 const fonts = {
   heading: "Outfit",

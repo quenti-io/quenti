@@ -14,7 +14,7 @@ import type { UserType } from "@quenti/prisma/client";
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
 import { getColorFromId } from "../utils/color";
 import { plural } from "../utils/string";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 
 interface ClassCardProps {
   id: string;

@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { IconBrandTwitterFilled } from "@tabler/icons-react";
 
 export const OnboardingSubscribe = () => {
@@ -22,7 +22,13 @@ export const OnboardingSubscribe = () => {
         heading="Subscribe to updates"
         description="We're always adding new features and improvements. Want to stay in the loop?"
       >
-        <Card bg={cardBg} shadow="lg" p="6" w={{ base: "full", md: "md" }} mx="4">
+        <Card
+          bg={cardBg}
+          shadow="lg"
+          p="6"
+          w={{ base: "full", md: "md" }}
+          mx="4"
+        >
           <Flex
             justifyContent="space-between"
             alignItems="center"

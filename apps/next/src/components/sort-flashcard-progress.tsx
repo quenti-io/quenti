@@ -31,7 +31,7 @@ import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
 import { api } from "@quenti/trpc";
 import { plural } from "../utils/string";
 import { CircularTermMastery } from "./circular-term-mastery";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 
 export interface SortFlashcardProgressProps {
   h?: string;

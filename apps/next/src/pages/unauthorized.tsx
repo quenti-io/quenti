@@ -2,7 +2,7 @@ import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import Head from "next/head";
-import { Link } from "../components/link";
+import { Link } from "@quenti/components";
 import { StaticWrapper } from "../components/static-wrapper";
 
 export default function Unauthorized() {
@@ -67,8 +67,8 @@ export default function Unauthorized() {
                 color="whiteAlpha.900"
                 fontWeight={600}
               >
-                Sorry, you don&apos;t have access to Quenti without a
-                verified email.
+                Sorry, you don&apos;t have access to Quenti without a verified
+                email.
               </Text>
             </motion.div>
             <motion.div variants={text}>

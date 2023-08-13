@@ -3,7 +3,7 @@ import { IconReload } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { ConfirmModal } from "../../components/confirm-modal";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
 import { api } from "@quenti/trpc";

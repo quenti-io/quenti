@@ -1,6 +1,8 @@
 import { Card, useColorModeValue } from "@chakra-ui/react";
 import type {
-  Highscore, Leaderboard as LeaderboardType, User
+  Highscore,
+  Leaderboard as LeaderboardType,
+  User,
 } from "@quenti/prisma/client";
 import React from "react";
 import { LeaderboardEntry } from "./leaderboard-entry";

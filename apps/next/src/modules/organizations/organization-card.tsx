@@ -11,7 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { getColorFromId } from "../../utils/color";
 import { organizationIcon } from "../../utils/icons";
 import { plural } from "../../utils/string";

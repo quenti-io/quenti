@@ -10,7 +10,7 @@ import { api } from "@quenti/trpc";
 import { MATCH_MIN_TIME } from "@quenti/trpc/server/common/constants";
 import { IconArrowBack } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";

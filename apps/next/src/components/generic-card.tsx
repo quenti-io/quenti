@@ -21,7 +21,7 @@ import {
 import React from "react";
 import { avatarUrl } from "@quenti/lib/avatar";
 import { plural } from "../utils/string";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 import { MenuOption } from "./menu-option";
 
 export interface GenericCardProps {

@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { visibilityIcon } from "../../common/visibility-icon";
 import { ConfirmModal } from "../../components/confirm-modal";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { MenuOption } from "../../components/menu-option";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useSet } from "../../hooks/use-set";

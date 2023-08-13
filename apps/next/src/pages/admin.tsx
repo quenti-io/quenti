@@ -13,9 +13,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Link } from "@quenti/components";
 import { IconAdjustments, IconUserCircle } from "@tabler/icons-react";
 import type { ComponentWithAuth } from "../components/auth-component";
-import { Link } from "../components/link";
 import { WithFooter } from "../components/with-footer";
 import { useAdmin } from "../hooks/use-admin";
 import { AdminDashboard } from "../modules/admin/dashboard";

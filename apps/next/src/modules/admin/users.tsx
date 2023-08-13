@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IconUser } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useAdmin } from "../../hooks/use-admin";
 import { avatarUrl } from "@quenti/lib/avatar";
 import { UserModal } from "./user-modal";

@@ -17,7 +17,7 @@ import { IconSchool, IconUser } from "@tabler/icons-react";
 import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useOrganization } from "../../hooks/use-organization";
 import { getBaseDomain } from "./utils/get-base-domain";
 

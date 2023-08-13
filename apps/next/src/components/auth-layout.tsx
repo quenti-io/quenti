@@ -15,9 +15,9 @@ import { IconBrandGoogle } from "@tabler/icons-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Logo } from "../icons/logo";
+import { Logo } from "../../../../packages/components/logo";
 import { getSafeRedirectUrl } from "../lib/urls";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 import { Loading } from "./loading";
 
 export interface AuthLayoutProps {

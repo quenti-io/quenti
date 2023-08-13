@@ -33,8 +33,8 @@ export const ComingSoon = () => {
             fontSize={{ base: "lg", xl: "xl" }}
             data-aos="fade"
           >
-            Quenti is still under active development, and currently lacks
-            quite a few things. Here&apos;s what you can expect to arrive in the
+            Quenti is still under active development, and currently lacks quite
+            a few things. Here&apos;s what you can expect to arrive in the
             following months:
           </Text>
         </VStack>

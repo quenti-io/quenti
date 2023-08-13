@@ -11,7 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IconDiscountCheck } from "@tabler/icons-react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useSet } from "../../hooks/use-set";
 import { avatarUrl } from "@quenti/lib/avatar";
 import { ActionArea } from "./action-area";

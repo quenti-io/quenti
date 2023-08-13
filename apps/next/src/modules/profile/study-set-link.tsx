@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import type { StudySetVisibility } from "@quenti/prisma/client";
 import { visibilityIcon } from "../../common/visibility-icon";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { plural } from "../../utils/string";
 
 interface ProfileLinkableProps {

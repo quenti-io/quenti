@@ -6,6 +6,13 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "../../packages/types/next-auth.d.ts"
-, "../../packages/core/language.ts", "../../packages/lib/avatar.ts", "../../packages/lib/array.ts", "../../packages/lib/error.ts", "../../packages/core/evaluator.ts"  ]
+    "../../packages/types/next-auth.d.ts",
+    "../../packages/core/language.ts",
+    "../../packages/lib/avatar.ts",
+    "../../packages/lib/array.ts",
+    "../../packages/lib/error.ts",
+    "../../packages/core/evaluator.ts",
+    "../../packages/components/logo.tsx",
+    "../../packages/components/link.tsx"
+  ]
 }

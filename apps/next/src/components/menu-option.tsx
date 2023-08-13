@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import type { TablerIconsProps } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 
 export interface MenuOptionProps {
   icon: React.ReactElement<TablerIconsProps, string>;
