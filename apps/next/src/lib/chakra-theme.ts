@@ -113,6 +113,13 @@ const components = {
       },
     },
   },
+  Menu: {
+    baseStyle: {
+      list: {
+        shadow: "lg",
+      },
+    },
+  },
   Tooltip: {
     baseStyle: ({ colorMode }: StyleFunctionProps) => ({
       borderRadius: "md",
