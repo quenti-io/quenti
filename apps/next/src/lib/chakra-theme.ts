@@ -131,7 +131,7 @@ const components = {
     baseStyle: {
       list: {
         shadow: "lg",
-        borderRadius: "xl",
+        borderRadius: "lg",
       },
     },
   },
