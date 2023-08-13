@@ -65,7 +65,7 @@ export const GenericCard: React.FC<GenericCardProps> = ({
     <LinkBox
       as="article"
       h="full"
-      rounded="md"
+      rounded="lg"
       p="5"
       bg={linkBg}
       borderColor={linkBorder}

@@ -39,7 +39,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
     <LinkBox
       as="article"
       h="full"
-      rounded="md"
+      rounded="lg"
       p="5"
       bg={linkBg}
       borderColor={linkBorder}

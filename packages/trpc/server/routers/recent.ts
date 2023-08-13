@@ -23,7 +23,6 @@ export const recentRouter = createTRPCRouter({
       entities.push({
         ...folder,
         type: "folder",
-        slug: null,
         numItems: folder._count.studySets,
       });
     }

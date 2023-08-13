@@ -85,7 +85,7 @@ StudySetsList.Skeleton = function StudySetsListSkeleton() {
   );
 
   const SetSkeleton = (key: number) => (
-    <Skeleton rounded="md" key={key}>
+    <Skeleton rounded="lg" key={key}>
       <ProfileLinkable
         title={"Loading study set"}
         url={`/${"set"}`}

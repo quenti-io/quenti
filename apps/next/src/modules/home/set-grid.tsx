@@ -16,7 +16,7 @@ export const SetGrid = () => {
           Array.from({ length: 16 }).map((_, i) => (
             <GridItem h="156px" key={i}>
               <Skeleton
-                rounded="md"
+                rounded="lg"
                 height="full"
                 border="2px"
                 borderColor="gray.700"
@@ -33,7 +33,7 @@ export const SetGrid = () => {
               />
             ) : (
               <FolderCard
-                folder={item}
+                folder={{ ...item }}
                 numSets={item.numItems}
                 user={item.user}
               />

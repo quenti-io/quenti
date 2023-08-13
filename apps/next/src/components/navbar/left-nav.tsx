@@ -58,10 +58,10 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         color="white"
       >
         <HStack as={Link} href={onStaticPage ? "/" : "/home"} rel="home" ml="2">
-          <Logo boxSize="35px" />
+          <Logo boxSize="28px" />
           <Heading
             as="p"
-            fontSize="lg"
+            fontSize="2xl"
             color={useColorModeValue("black", "white")}
           >
             Quenti

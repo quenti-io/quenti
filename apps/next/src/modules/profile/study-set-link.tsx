@@ -38,7 +38,7 @@ export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
     <LinkBox
       as="article"
       h="full"
-      rounded="md"
+      rounded="lg"
       p="4"
       bg={linkBg}
       borderColor={linkBorder}

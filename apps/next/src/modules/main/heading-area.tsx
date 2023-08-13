@@ -55,6 +55,7 @@ export const HeadingArea = () => {
         onConfirm={() => {
           deleteSet.mutate({ studySetId: id });
         }}
+        destructive
       />
       <Stack spacing={4} maxW="1000px">
         {tags.length && (
@@ -99,7 +100,13 @@ export const HeadingArea = () => {
                     as="div"
                   />
                 </MenuButton>
-                <MenuList bg={menuBg} py={0} overflow="hidden">
+                <MenuList
+                  bg={menuBg}
+                  py={0}
+                  overflow="hidden"
+                  minW="auto"
+                  w="40"
+                >
                   <MenuOption
                     icon={<IconTrash size={20} />}
                     label="Delete"

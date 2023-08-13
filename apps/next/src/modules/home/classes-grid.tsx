@@ -15,7 +15,7 @@ export const ClassesGrid = () => {
           Array.from({ length: 4 }).map((_, i) => (
             <GridItem h="156px" key={i}>
               <Skeleton
-                rounded="md"
+                rounded="lg"
                 height="full"
                 border="2px"
                 borderColor="gray.700"

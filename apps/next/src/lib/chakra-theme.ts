@@ -61,8 +61,21 @@ const components = {
       colorScheme: "blue",
     },
     variants: {
+      outline: ({ colorMode, colorScheme }: StyleFunctionProps) => ({
+        borderRadius: "lg",
+        borderColor:
+          colorScheme !== "red"
+            ? colorMode == "light"
+              ? "gray.300"
+              : "gray.600"
+            : undefined,
+      }),
+      ghost: () => ({
+        borderRadius: "lg",
+      }),
       solid: () => ({
         bg: "blue.400",
+        borderRadius: "lg",
         color: "white",
         shadow: "inset 0 1px 0 0 rgb(255 255 255/.2)",
         _hover: {
@@ -85,6 +98,7 @@ const components = {
         _placeholder: {
           color: "gray.500",
         },
+        borderRadius: "lg",
       },
     },
     sizes: {
@@ -117,6 +131,7 @@ const components = {
     baseStyle: {
       list: {
         shadow: "lg",
+        borderRadius: "xl",
       },
     },
   },

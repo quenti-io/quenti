@@ -102,7 +102,7 @@ FolderSets.Skeleton = function FolderSetsSkeleton() {
     <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
       {Array.from({ length: 6 }).map((_, i) => (
         <GridItem key={i}>
-          <Skeleton rounded="md">
+          <Skeleton rounded="lg">
             <StudySetCard
               studySet={{
                 id: "",

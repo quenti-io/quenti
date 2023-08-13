@@ -82,7 +82,7 @@ export const ActionArea = () => {
             leftIcon={<IconShare />}
             variant="outline"
             onClick={() => setShareOpen(true)}
-            colorScheme="orange"
+            colorScheme="gray"
           >
             Share
           </Button>
