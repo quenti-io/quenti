@@ -41,6 +41,7 @@ let config = withHighlightConfig(
       "@quenti/trpc",
       "@quenti/inngest",
       "@quenti/types",
+      "@quenti/website",
     ],
     rewrites: async () => [
       {

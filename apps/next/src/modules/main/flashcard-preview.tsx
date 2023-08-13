@@ -16,7 +16,7 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { LoadingFlashcard } from "../../components/loading-flashcard";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { queryEventChannel } from "../../events/query";

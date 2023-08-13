@@ -1,6 +1,6 @@
 import { Flex, Heading, IconButton, Tag } from "@chakra-ui/react";
 import { IconX } from "@tabler/icons-react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 

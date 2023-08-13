@@ -1,6 +1,9 @@
 import { chakra } from "@chakra-ui/react";
 
-export const addressStudents = (multiple: boolean, individual?: string | null) => {
+export const addressStudents = (
+  multiple: boolean,
+  individual?: string | null
+) => {
   return (
     <>
       {multiple ? (

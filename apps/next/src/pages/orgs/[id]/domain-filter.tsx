@@ -15,7 +15,7 @@ import { ORG_SUPPORT_EMAIL } from "@quenti/lib/constants/email";
 import { IconArrowLeft, IconHash, IconUnderline } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Link } from "../../../components/link";
+import { Link } from "@quenti/components";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
 import { DomainFilterForm } from "../../../modules/organizations/domain-filter-form";

@@ -13,7 +13,7 @@ import {
 import { avatarUrl } from "@quenti/lib/avatar";
 import { IconFolder } from "@tabler/icons-react";
 import { useRouter } from "next/router";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useFolder } from "../../hooks/use-folder";
 import { plural } from "../../utils/string";
 

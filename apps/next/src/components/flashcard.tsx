@@ -64,6 +64,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   const genericColor = useColorModeValue("gray.900", "whiteAlpha.900");
   const leftColor = useColorModeValue("red.500", "red.200");
   const rightColor = useColorModeValue("green.500", "green.200");
+  const buttonBorder = useColorModeValue("gray.300", "gray.500");
 
   return (
     <Card w="full" h={h} rounded="xl" shadow="xl" overflow="hidden">
@@ -145,6 +146,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             size="lg"
             variant="outline"
             colorScheme={variant == "sortable" ? "red" : "blue"}
+            borderColor={buttonBorder}
             isDisabled={variant == "default" && index === 0}
             onClick={(e) => {
               e.stopPropagation();
@@ -160,6 +162,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             size="lg"
             variant="outline"
             colorScheme={variant == "sortable" ? "green" : "blue"}
+            borderColor={buttonBorder}
             isDisabled={variant == "default" && index === numTerms - 1}
             onClick={(e) => {
               e.stopPropagation();

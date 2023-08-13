@@ -12,7 +12,7 @@ import { IconExternalLink, IconPlus } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { Loading } from "../../components/loading";
 import { WithFooter } from "../../components/with-footer";
 import { useMe } from "../../hooks/use-me";
@@ -43,8 +43,7 @@ export default function Organizations() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
-  if (!session?.data?.user || !me || !tokenChecked)
-    return <Loading />;
+  if (!session?.data?.user || !me || !tokenChecked) return <Loading />;
 
   const domain = session.data.user.email!.split("@")[1]!;
 

@@ -91,6 +91,10 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
         px={{ base: 0, sm: 4 }}
         py={{ base: 0, sm: 5 }}
         overflow="hidden"
+        shadow="sm"
+        _dark={{
+          bg: "gray.750",
+        }}
       >
         <Flex
           flexDir={["column-reverse", "row", "row"]}
@@ -157,7 +161,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                   <IconButton
                     size={{ base: "sm", sm: undefined }}
                     transform={{ base: "scale(0.8)", sm: "scale(1)" }}
-                    icon={<IconEdit />}
+                    icon={<IconEdit size={18} />}
                     variant={isEditing ? "solid" : "ghost"}
                     aria-label="Edit"
                     rounded="full"
@@ -177,7 +181,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 <IconButton
                   size={{ base: "sm", sm: undefined }}
                   transform={{ base: "scale(0.8)", sm: "scale(1)" }}
-                  icon={<Star />}
+                  icon={<Star size={18} />}
                   variant="ghost"
                   aria-label="Edit"
                   rounded="full"

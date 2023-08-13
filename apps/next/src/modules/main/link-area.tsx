@@ -17,7 +17,7 @@ import {
 } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 

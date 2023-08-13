@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 
 export const MainButton = () => {
   return (

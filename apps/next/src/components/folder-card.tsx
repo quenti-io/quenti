@@ -19,7 +19,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   numSets,
   user,
   removable = false,
-  onRemove
+  onRemove,
 }) => {
   return (
     <GenericCard

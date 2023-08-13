@@ -9,4 +9,3 @@ Page.title = "Quenti | Onboarding";
 Page.authenticationEnabled = true;
 
 export default Page;
-

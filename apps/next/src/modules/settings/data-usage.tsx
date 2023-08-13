@@ -8,7 +8,7 @@ import {
 import { H } from "highlight.run";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { api } from "@quenti/trpc";
 import { SectionWrapper } from "./section-wrapper";
 

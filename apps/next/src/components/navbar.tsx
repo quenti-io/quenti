@@ -17,7 +17,7 @@ import { menuEventChannel } from "../events/menu";
 import { BASE_PAGES } from "../pages/_app";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 import { LeftNav } from "./navbar/left-nav";
 import { MobileMenu } from "./navbar/mobile-menu";
 import { UserMenu } from "./navbar/user-menu";

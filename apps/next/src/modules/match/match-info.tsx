@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { IconArrowBack, IconSettings } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useMatchContext } from "../../stores/use-match-store";

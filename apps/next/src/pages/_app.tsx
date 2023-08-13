@@ -1,4 +1,4 @@
-import { ChakraProvider, DarkMode, GlobalStyle } from "@chakra-ui/react";
+import { ChakraProvider, GlobalStyle, LightMode } from "@chakra-ui/react";
 import { ErrorBoundary as HighlightBoundary } from "@highlight-run/react";
 import { env } from "@quenti/env/client";
 import { api } from "@quenti/trpc";
@@ -72,7 +72,7 @@ const App: AppType<
   const router = useRouter();
   const base = env.NEXT_PUBLIC_BASE_URL;
   const pathname = router.pathname;
-  const staticPage = BASE_PAGES.includes(pathname);
+  const landingPage = pathname === "/";
   const authPage = AUTH_PAGES.includes(pathname);
   const isOnboarding = pathname.startsWith("/onboarding");
 
@@ -80,7 +80,7 @@ const App: AppType<
 
   const children = (
     <>
-      {!authPage && !isOnboarding && <Navbar />}
+      {!landingPage && !authPage && !isOnboarding && <Navbar />}
       <GlobalShortcutLayer />
       <SignupModal />
       <ChangelogContainer />
@@ -171,11 +171,11 @@ const App: AppType<
         <HistoryProvider>
           <LoadingProvider>
             <SessionProvider session={session}>
-              {staticPage ? (
-                <DarkMode>
+              {landingPage ? (
+                <LightMode>
                   <GlobalStyle />
                   {children}
-                </DarkMode>
+                </LightMode>
               ) : (
                 children
               )}

@@ -1,6 +1,6 @@
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { IconHelpHexagon } from "@tabler/icons-react";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 
 export const Generic404 = () => {
   return (

@@ -1,6 +1,6 @@
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { IconLock } from "@tabler/icons-react";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 
 export const SetPrivate = () => {
   return (

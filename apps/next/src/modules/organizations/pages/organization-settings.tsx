@@ -29,7 +29,7 @@ import {
 import { useSession } from "next-auth/react";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
-import { Link } from "../../../components/link";
+import { Link } from "@quenti/components";
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { Toast } from "../../../components/toast";
 import { useOrganization } from "../../../hooks/use-organization";

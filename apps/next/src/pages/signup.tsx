@@ -14,7 +14,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import deviceframesSrc from "public/assets/signup/deviceframes.png";
 import React from "react";
-import { Link } from "../components/link";
+import { Link } from "@quenti/components";
 import { Loading } from "../components/loading";
 import { StaticWrapper } from "../components/static-wrapper";
 

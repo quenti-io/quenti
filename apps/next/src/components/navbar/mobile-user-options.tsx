@@ -19,7 +19,7 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { avatarUrl } from "@quenti/lib/avatar";
-import { Link } from "../link";
+import { Link } from "@quenti/components";
 
 interface MobileUserOptionsProps {
   closeMenu: () => void;

@@ -47,7 +47,7 @@ export const SelectableGenericCard: React.FC<SelectableGenericCard> = ({
     <Box
       as="article"
       h="full"
-      rounded="md"
+      rounded="lg"
       p="5"
       bg={linkBg}
       borderColor={selected ? "green.300" : linkBorder}

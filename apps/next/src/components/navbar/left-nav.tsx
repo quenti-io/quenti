@@ -22,9 +22,9 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMe } from "../../hooks/use-me";
-import { Logo } from "../../icons/logo";
+import { Logo } from "../../../../../packages/components/logo";
 import { BASE_PAGES } from "../../pages/_app";
-import { Link } from "../link";
+import { Link } from "@quenti/components";
 import { MenuOption } from "../menu-option";
 import { TeacherOnly } from "../teacher-only";
 import { UnboundOnly } from "../unbound-only";
@@ -58,10 +58,10 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         color="white"
       >
         <HStack as={Link} href={onStaticPage ? "/" : "/home"} rel="home" ml="2">
-          <Logo boxSize="35px" />
+          <Logo boxSize="28px" />
           <Heading
             as="p"
-            fontSize="lg"
+            fontSize="2xl"
             color={useColorModeValue("black", "white")}
           >
             Quenti

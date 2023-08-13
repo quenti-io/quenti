@@ -6,7 +6,10 @@ type SetDisplayNameOptions = {
   input: TSetDisplayNameSchema;
 };
 
-export const setDisplayNameHandler = async ({ ctx, input }: SetDisplayNameOptions) => {
+export const setDisplayNameHandler = async ({
+  ctx,
+  input,
+}: SetDisplayNameOptions) => {
   await ctx.prisma.user.update({
     where: {
       id: ctx.session.user.id,

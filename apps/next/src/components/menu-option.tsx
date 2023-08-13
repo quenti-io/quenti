@@ -6,9 +6,9 @@ import {
   useColorModeValue,
   type MenuItemProps,
 } from "@chakra-ui/react";
+import { Link } from "@quenti/components";
 import type { TablerIconsProps } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "./link";
 
 export interface MenuOptionProps {
   icon: React.ReactElement<TablerIconsProps, string>;

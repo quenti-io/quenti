@@ -50,7 +50,7 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
             {isEntitiesLoading &&
               Array.from({ length: 10 }).map((_, i) => (
                 <GridItem key={i}>
-                  <Skeleton rounded="md">
+                  <Skeleton rounded="lg">
                     <SelectableGenericCard
                       type="set"
                       title="loading"

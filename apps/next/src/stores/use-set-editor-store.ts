@@ -1,4 +1,8 @@
-import type { AutoSaveTerm, StudySetVisibility, Term } from "@quenti/prisma/client";
+import type {
+  AutoSaveTerm,
+  StudySetVisibility,
+  Term,
+} from "@quenti/prisma/client";
 import { nanoid } from "nanoid";
 import React from "react";
 import { createStore, useStore } from "zustand";

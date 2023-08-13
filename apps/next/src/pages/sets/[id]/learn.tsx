@@ -1,7 +1,10 @@
 import { Container, Stack } from "@chakra-ui/react";
 import React from "react";
 import type { ComponentWithAuth } from "../../../components/auth-component";
-import { CORRECT, INCORRECT } from "../../../../../../packages/lib/constants/remarks";
+import {
+  CORRECT,
+  INCORRECT,
+} from "../../../../../../packages/lib/constants/remarks";
 import { useSet } from "../../../hooks/use-set";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";

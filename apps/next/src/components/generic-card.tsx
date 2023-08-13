@@ -21,7 +21,7 @@ import {
 import React from "react";
 import { avatarUrl } from "@quenti/lib/avatar";
 import { plural } from "../utils/string";
-import { Link } from "./link";
+import { Link } from "@quenti/components";
 import { MenuOption } from "./menu-option";
 
 export interface GenericCardProps {
@@ -65,7 +65,7 @@ export const GenericCard: React.FC<GenericCardProps> = ({
     <LinkBox
       as="article"
       h="full"
-      rounded="md"
+      rounded="lg"
       p="5"
       bg={linkBg}
       borderColor={linkBorder}

@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
   Tooltip,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import type { User } from "@quenti/prisma/client";
 import { IconDiscountCheck, IconRosetteFilled } from "@tabler/icons-react";

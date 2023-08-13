@@ -23,7 +23,7 @@ import {
 import { useRouter } from "next/router";
 import React from "react";
 import { ConfirmModal } from "../../components/confirm-modal";
-import { Link } from "../../components/link";
+import { Link } from "@quenti/components";
 import { MenuOption } from "../../components/menu-option";
 import { useFolder } from "../../hooks/use-folder";
 import { api } from "@quenti/trpc";
@@ -82,7 +82,7 @@ export const ActionArea = () => {
             leftIcon={<IconShare />}
             variant="outline"
             onClick={() => setShareOpen(true)}
-            colorScheme="orange"
+            colorScheme="gray"
           >
             Share
           </Button>
