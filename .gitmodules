@@ -1,0 +1,3 @@
+[submodule "website"]
+	path = packages/website
+	url = git@github.com:quenti-io/website.git
