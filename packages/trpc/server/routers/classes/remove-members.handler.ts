@@ -27,7 +27,9 @@ export const removeMembersHandler = async ({
       },
     });
 
-    if (input.members.includes(member.id) && teachers.length == 1)
+    const teachersLeft = teachers.filter((t) => !input.members.includes(t.id));
+
+    if (input.members.includes(member.id) && teachersLeft.length == 0)
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "You cannot remove yourself as the only teacher in a class.",
