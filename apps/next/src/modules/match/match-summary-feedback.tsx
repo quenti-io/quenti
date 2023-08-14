@@ -41,7 +41,7 @@ export const MatchSummaryFeedback: React.FC<MatchSummaryFeedbackProps> = ({
         <IconClockPlay />
         <Heading>{`${formatDeciseconds(elapsed)}s`}</Heading>
       </HStack>
-      <Text color={textColor}>{text}</Text>
+      <Text fontWeight={600} color={textColor}>{text}</Text>
     </Stack>
   );
 };

@@ -6,11 +6,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { Link } from "@quenti/components";
 import { api } from "@quenti/trpc";
 import { MATCH_MIN_TIME } from "@quenti/trpc/server/common/constants";
 import { IconArrowBack } from "@tabler/icons-react";
 import React from "react";
-import { Link } from "@quenti/components";
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
@@ -43,16 +43,13 @@ export const MatchSummary = () => {
   const isStorable = elapsed > MATCH_MIN_TIME;
 
   React.useEffect(() => {
-    if (isStorable) {
-      void (async () => {
-        await add.mutateAsync({
-          entityId: id,
-          mode: "Match",
-          time: elapsed,
-          eligible: isEligibleForLeaderboard,
-        });
-      })();
-    }
+    if (isStorable)
+      void add.mutateAsync({
+        entityId: id,
+        mode: "Match",
+        time: elapsed,
+        eligible: isEligibleForLeaderboard,
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isStorable]);
 
@@ -99,7 +96,7 @@ export const MatchSummary = () => {
         )}
         <ButtonGroup w="full" justifyContent="end">
           <Button
-            variant="ghost"
+            variant="outline"
             leftIcon={<IconArrowBack />}
             as={Link}
             href={rootUrl}

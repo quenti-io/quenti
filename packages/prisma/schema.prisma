@@ -461,7 +461,7 @@ model Leaderboard {
   folder     Folder?     @relation(fields: [entityId], references: [id], map: "leaderboard_folder", onDelete: Cascade)
   highscores Highscore[]
 
-  @@unique([id, entityId, type])
+  @@unique([entityId, type])
   @@index([entityId])
 }
 

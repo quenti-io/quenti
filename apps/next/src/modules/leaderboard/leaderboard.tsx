@@ -16,7 +16,7 @@ export interface LeaderboardProps {
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
-  const bg = useColorModeValue("white", "gray.800");
+  const bg = useColorModeValue("white", "gray.750");
 
   return (
     <Card
@@ -24,7 +24,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
       bg={bg}
       px="0"
       py="3"
-      shadow="lg"
+      shadow="sm"
       rounded="xl"
       overflow="hidden"
     >
