@@ -37,9 +37,9 @@ export const ClassHome = () => {
 
   const addEntities = api.classes.addEntities.useMutation({
     onSuccess: async () => {
-      await utils.classes.get.invalidate();
       setAddFoldersOpen(false);
       setAddSetsOpen(false);
+      await utils.classes.get.invalidate();
     },
   });
 

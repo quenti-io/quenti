@@ -28,8 +28,8 @@ export const FolderSets = () => {
 
   const addSets = api.folders.addSets.useMutation({
     onSuccess: async () => {
-      await utils.folders.get.invalidate();
       setAddSetsModalOpen(false);
+      await utils.folders.get.invalidate();
     },
   });
 
