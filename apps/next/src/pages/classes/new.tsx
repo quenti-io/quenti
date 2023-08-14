@@ -29,7 +29,10 @@ interface CreateClassFormInputs {
 }
 
 const schema = z.object({
-  name: z.string().trim().nonempty({ message: "Enter a name" }),
+  name: z
+    .string({ required_error: "Enter a name" })
+    .trim()
+    .nonempty({ message: "Enter a name" }),
   description: z.string().default("").optional(),
 });
 
@@ -158,6 +161,7 @@ export default function NewClass() {
                 w="full"
                 rightIcon={<IconArrowRight size="18" />}
                 type="submit"
+                fontSize="sm"
                 isLoading={create.isLoading}
               >
                 Continue
