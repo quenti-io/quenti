@@ -13,7 +13,9 @@ export const ClassHome = () => {
   const { data } = useClass();
   const isTeacher = useIsClassTeacher();
 
+  const [hasOpenedFolders, setHasOpenedFolders] = React.useState(false);
   const [addFoldersOpen, setAddFoldersOpen] = React.useState(false);
+  const [hasOpenedSets, setHasOpenedSets] = React.useState(false);
   const [addSetsOpen, setAddSetsOpen] = React.useState(false);
 
   const recentFolders = api.folders.recent.useQuery(
@@ -21,7 +23,7 @@ export const ClassHome = () => {
       exclude: data?.folders.map((x) => x.id),
     },
     {
-      enabled: addFoldersOpen,
+      enabled: hasOpenedFolders,
     }
   );
   const recentSets = api.studySets.recent.useQuery(
@@ -29,7 +31,7 @@ export const ClassHome = () => {
       exclude: data?.studySets.map((x) => x.id),
     },
     {
-      enabled: addSetsOpen,
+      enabled: hasOpenedSets,
     }
   );
 
@@ -93,7 +95,10 @@ export const ClassHome = () => {
           <EntityGroup
             heading="Folders"
             isLoaded={!!data}
-            onRequestAdd={() => setAddFoldersOpen(true)}
+            onRequestAdd={() => {
+              setAddFoldersOpen(true);
+              setHasOpenedFolders(true);
+            }}
           >
             {data?.folders?.map((folder) => (
               <FolderCard
@@ -117,7 +122,10 @@ export const ClassHome = () => {
           <EntityGroup
             heading="Study sets"
             isLoaded={!!data}
-            onRequestAdd={() => setAddSetsOpen(true)}
+            onRequestAdd={() => {
+              setAddSetsOpen(true);
+              setHasOpenedSets(true);
+            }}
           >
             {data?.studySets?.map((studySet) => (
               <StudySetCard
