@@ -5788,7 +5788,7 @@ __metadata:
     "@quenti/payments": "*"
     "@quenti/prisma": "*"
     "@quenti/trpc": "*"
-    "@tabler/icons-react": ^2.23.0
+    "@tabler/icons-react": ^2.30.0
     "@tanstack/react-query": ^4.29.19
     "@tanstack/react-virtual": ^3.0.0-alpha.0
     "@types/aos": ^3.0.4
@@ -5906,7 +5906,7 @@ __metadata:
   dependencies:
     "@chakra-ui/react": ^2.7.1
     "@quenti/components": "*"
-    "@tabler/icons-react": ^2.23.0
+    "@tabler/icons-react": ^2.30.0
   languageName: unknown
   linkType: soft
 
@@ -6256,22 +6256,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tabler/icons-react@npm:^2.23.0":
-  version: 2.23.0
-  resolution: "@tabler/icons-react@npm:2.23.0"
+"@tabler/icons-react@npm:^2.30.0":
+  version: 2.30.0
+  resolution: "@tabler/icons-react@npm:2.30.0"
   dependencies:
-    "@tabler/icons": 2.23.0
+    "@tabler/icons": 2.30.0
     prop-types: ^15.7.2
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: 9e40f615e20cd2a4f7a9f079fb076c8b53af7420b59b9cd80abc470c2cc39440012c0ede1779b5bca67a2f587d475571fd0c9b228e7e0071e069e90ccddc1828
+  checksum: 2d137865d24b2034820e5edcb99d938a899b29d31613671d9b574823a614f460d90cdd4efd39c1571b7244225e339a722daddc58921569079b4ed530162354b6
   languageName: node
   linkType: hard
 
-"@tabler/icons@npm:2.23.0":
-  version: 2.23.0
-  resolution: "@tabler/icons@npm:2.23.0"
-  checksum: aceeebf5ea526e7cc00b128ae018f8501d78e4f5c91b4e0a1d4d5f2b6b9c67457f892b7f054e4f7f074b1189b4ea515455d130b8cf274265b5a12b67e1ee4d92
+"@tabler/icons@npm:2.30.0":
+  version: 2.30.0
+  resolution: "@tabler/icons@npm:2.30.0"
+  checksum: d89255ea6bb0a5280f9d23ab85005ef0f7c7c0198904db7d7d6cbc0289c7ba108c433c6f9fb6531fc127619ed61452c6c5832e7c7cc49a5889faad412636e618
   languageName: node
   linkType: hard
 

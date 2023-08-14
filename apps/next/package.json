@@ -32,7 +32,7 @@
     "@quenti/payments": "*",
     "@quenti/prisma": "*",
     "@quenti/trpc": "*",
-    "@tabler/icons-react": "^2.23.0",
+    "@tabler/icons-react": "^2.30.0",
     "@tanstack/react-query": "^4.29.19",
     "@tanstack/react-virtual": "^3.0.0-alpha.0",
     "@upstash/ratelimit": "^0.4.3",
