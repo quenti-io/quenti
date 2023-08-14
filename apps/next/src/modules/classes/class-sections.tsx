@@ -42,10 +42,14 @@ export const ClassSections = () => {
             isOpen={!!deleteId}
             onClose={() => setDeleteId(undefined)}
             heading={`Delete ${toDelete?.name || "section"}`}
-            body={`Are you sure you want to delete this section? ${plural(
-              toDelete?.students || 0,
-              "student"
-            )} will be unassigned.`}
+            body={`Are you sure you want to delete this section? ${
+              !!toDelete?.students
+                ? `${plural(
+                    toDelete?.students || 0,
+                    "student"
+                  )} will be unassigned.`
+                : ""
+            }`}
             actionText="Delete section"
             onConfirm={() =>
               deleteSection.mutate({ classId: data!.id, sectionId: deleteId! })

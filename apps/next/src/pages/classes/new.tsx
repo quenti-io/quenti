@@ -11,7 +11,6 @@ import {
   Input,
   Stack,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@quenti/trpc";
@@ -41,8 +40,8 @@ export default function NewClass() {
   useStudentRedirect("/home");
 
   const create = api.classes.create.useMutation({
-    onSuccess: (data) => {
-      void router.push(`/classes/${data.id}/teachers-onboarding`);
+    onSuccess: async (data) => {
+      await router.push(`/classes/${data.id}/teachers-onboarding`);
     },
   });
 
@@ -56,8 +55,6 @@ export default function NewClass() {
   const onSubmit: SubmitHandler<CreateClassFormInputs> = async (data) => {
     await create.mutateAsync(data);
   };
-
-  const labelColor = useColorModeValue("gray.600", "gray.400");
 
   return (
     <WizardLayout
@@ -110,7 +107,7 @@ export default function NewClass() {
                 control={createMethods.control}
                 render={({ field: { value, onChange } }) => (
                   <FormControl isInvalid={!!errors.name}>
-                    <FormLabel fontSize="xs" mb="10px" color={labelColor}>
+                    <FormLabel fontSize="sm" mb="10px">
                       Class name
                     </FormLabel>
                     <Input
@@ -129,7 +126,7 @@ export default function NewClass() {
                 control={createMethods.control}
                 render={({ field: { value, onChange } }) => (
                   <FormControl isInvalid={!!errors.description}>
-                    <FormLabel fontSize="xs" mb="10px" color={labelColor}>
+                    <FormLabel fontSize="sm" mb="10px">
                       Description (optional)
                     </FormLabel>
                     <AutoResizeTextarea
