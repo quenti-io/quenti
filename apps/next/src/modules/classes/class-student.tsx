@@ -1,12 +1,15 @@
 import {
   Avatar,
   Box,
+  Button,
   ButtonGroup,
   Center,
   Checkbox,
   Flex,
   HStack,
   IconButton,
+  LinkBox,
+  LinkOverlay,
   Menu,
   MenuButton,
   MenuList,
@@ -250,10 +253,18 @@ const Options: React.FC<
             variant="outline"
             isAttached
           >
-            <IconButton
-              aria-label="Go to profile"
-              icon={<IconExternalLink size={16} />}
-            />
+            <LinkBox as={Button} px="0">
+              <LinkOverlay
+                w="full"
+                h="full"
+                href={`/@${user?.username || ""}`}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <IconExternalLink size="16" />
+              </LinkOverlay>
+            </LinkBox>
             <MenuButton as={IconButton} w="8" h="8">
               <Center w="8" display="flex" justifyContent="center">
                 <IconDotsVertical size="18" />
