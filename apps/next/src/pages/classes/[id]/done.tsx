@@ -15,7 +15,7 @@ export default function OnboardingDone() {
       steps={4}
       currentStep={3}
     >
-      <Skeleton isLoaded={isLoaded} rounded="md">
+      <Skeleton isLoaded={isLoaded} rounded="lg">
         <ClassCard
           id={data?.id || ""}
           name={data?.name || ""}

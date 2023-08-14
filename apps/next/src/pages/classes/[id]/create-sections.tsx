@@ -39,13 +39,15 @@ const schema = z.object({
 });
 
 export default function CreateSections() {
+  const utils = api.useContext();
   const { data } = useClass();
   const router = useRouter();
   useProtectedRedirect();
 
   const bulkAddSections = api.classes.bulkAddSections.useMutation({
-    onSuccess: () => {
-      void router.push(`/classes/${data!.id}/done`);
+    onSuccess: async () => {
+      await utils.classes.get.invalidate();
+      await router.push(`/classes/${data!.id}/done`);
     },
   });
 
@@ -77,7 +79,7 @@ export default function CreateSections() {
         <Card p="8" variant="outline" shadow="lg" rounded="lg">
           <Stack spacing="10">
             <Stack spacing="4">
-              <FormLabel m="0" fontSize="xs" color={labelColor}>
+              <FormLabel m="0" fontSize="sm" color={labelColor}>
                 Add up to 10 sections
               </FormLabel>
               <Controller
