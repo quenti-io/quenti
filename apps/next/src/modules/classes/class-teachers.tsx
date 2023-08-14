@@ -61,7 +61,7 @@ export const ClassTeachers = () => {
               </HStack>
             </SkeletonText>
           </Flex>
-          <Skeleton fitContent rounded="md" isLoaded={!!class_}>
+          <Skeleton fitContent rounded="lg" isLoaded={!!class_}>
             <Button
               leftIcon={<IconUserPlus size={18} />}
               colorScheme="gray"
