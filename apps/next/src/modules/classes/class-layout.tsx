@@ -21,8 +21,8 @@ import { SkeletonTab } from "../../components/skeleton-tab";
 import { WithFooter } from "../../components/with-footer";
 import { useClass } from "../../hooks/use-class";
 import { useIsClassTeacher } from "../../hooks/use-is-class-teacher";
-import { plural } from "../../utils/string";
 import { getColorFromId } from "../../utils/color";
+import { plural } from "../../utils/string";
 
 const useTabIndex = () => {
   const router = useRouter();
@@ -79,13 +79,13 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
             </Center>
             <Stack spacing="6">
               <Stack spacing="0">
-                <Flex alignItems="center" h="48px">
+                <Flex alignItems="center" minH="48px">
                   <SkeletonText
                     noOfLines={1}
                     isLoaded={!!data}
                     skeletonHeight="30px"
                   >
-                    <Heading>{data?.name || "Classroom name"}</Heading>
+                    <Heading>{data?.name || "Placeholder class name"}</Heading>
                   </SkeletonText>
                 </Flex>
                 <Flex alignItems="center" h="21px">
