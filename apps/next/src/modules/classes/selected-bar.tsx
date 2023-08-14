@@ -28,8 +28,14 @@ export const SelectedBar: React.FC<SelectedBarProps> = ({
 }) => {
   return (
     <ScaleFade in={selected.length > 0} unmountOnExit>
-      <Flex justifyContent="space-between" px="18px" alignItems="center">
-        <HStack spacing="3">
+      <Flex
+        justifyContent="space-between"
+        px="18px"
+        alignItems="center"
+        flexDir={{ base: "column", md: "row" }}
+        gap="4"
+      >
+        <HStack spacing="3" w="full">
           <Checkbox
             isChecked={isAllSelected}
             onChange={isAllSelected ? onDeselectAll : onSelectAll}
@@ -38,7 +44,15 @@ export const SelectedBar: React.FC<SelectedBarProps> = ({
             <strong>{selected.length}</strong> selected
           </Text>
         </HStack>
-        <ButtonGroup size="sm" colorScheme="gray" variant="outline">
+        <ButtonGroup
+          size="sm"
+          colorScheme="gray"
+          variant="outline"
+          w={{ base: "full", md: "auto" }}
+          spacing={{ base: 0, sm: 2 }}
+          gap={{ base: 2, sm: 0 }}
+          flexDir={{ base: "column", sm: "row" }}
+        >
           <Button
             leftIcon={<IconSwitchHorizontal size={16} />}
             onClick={onChangeSectionSelected}
