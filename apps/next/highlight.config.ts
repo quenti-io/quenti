@@ -1,4 +1,4 @@
-import { Highlight } from "@highlight-run/next";
+import { Highlight } from "@highlight-run/next/server";
 import type { NextApiHandler } from "next";
 import { env } from "@quenti/env/client";
 

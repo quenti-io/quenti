@@ -1,7 +1,10 @@
 const shouldAnalyzeBundles = process.env.ANALYZE === "true";
 
-import { withHighlightConfig } from "@highlight-run/next";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { withHighlightConfig } from "@highlight-run/next/server";
 import { withAxiom } from "next-axiom";
+import nextBuildId from "next-build-id";
 const withBundleAnalyzer = shouldAnalyzeBundles
   ? (await import("@next/bundle-analyzer")).default
   : () => undefined;
@@ -17,9 +20,16 @@ const appVersion = pjson.version;
 import "@quenti/env/client/client.mjs";
 import "@quenti/env/server/server.mjs";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /** @type {import("next").NextConfig} */
 let config = withHighlightConfig(
   withAxiom({
+    generateBuildId: () => nextBuildId({ dir: __dirname }),
+    experimental: {
+      instrumentationHook: true,
+    },
     reactStrictMode: true,
     swcMinify: true,
     i18n: {
