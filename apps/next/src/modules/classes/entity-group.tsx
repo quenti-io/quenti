@@ -55,7 +55,7 @@ export const EntityGroup: React.FC<
         {isLoaded
           ? children
           : Array.from({ length: numSkeletons }).map((_, i) => (
-              <Skeleton rounded="md" key={i}>
+              <Skeleton rounded="lg" key={i}>
                 <StudySetCard
                   studySet={{
                     id: "",

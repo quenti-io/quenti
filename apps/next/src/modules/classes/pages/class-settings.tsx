@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
-import { IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconLogout, IconSettings, IconTrash } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
@@ -30,6 +30,7 @@ export const ClassSettings = () => {
   const toast = useToast();
 
   const [mounted, setMounted] = React.useState(false);
+  const [leaveOpen, setLeaveOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -66,11 +67,37 @@ export const ClassSettings = () => {
       });
     },
   });
+  const removeMembers = api.classes.removeMembers.useMutation({
+    onSuccess: async () => {
+      await router.push("/home");
+      toast({
+        title: "Left class successfully",
+        icon: <AnimatedCheckCircle />,
+        render: Toast,
+      });
+    },
+  });
 
   const inputBorder = useColorModeValue("gray.300", "gray.600");
 
   return (
     <>
+      <ConfirmModal
+        isOpen={leaveOpen}
+        onClose={() => setLeaveOpen(false)}
+        heading="Leave class"
+        body="Are you sure you want to leave this class? You will not be able to access it again unless you are re-invited."
+        isLoading={removeMembers.isLoading}
+        onConfirm={() => {
+          removeMembers.mutate({
+            id: data!.id,
+            members: [data!.me.id],
+            type: "member",
+          });
+        }}
+        actionText="Leave class"
+        destructive
+      />
       <ConfirmModal
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
@@ -92,7 +119,7 @@ export const ClassSettings = () => {
             </HStack>
           </Skeleton>
           <ButtonGroup size={{ base: "sm", md: "md" }}>
-            <Skeleton rounded="md" isLoaded={!!data}>
+            <Skeleton rounded="lg" isLoaded={!!data}>
               <Button
                 variant="ghost"
                 onClick={() => {
@@ -103,7 +130,7 @@ export const ClassSettings = () => {
                 Reset
               </Button>
             </Skeleton>
-            <Skeleton rounded="md" isLoaded={!!data}>
+            <Skeleton rounded="lg" isLoaded={!!data}>
               <Button
                 isLoading={update.isLoading}
                 onClick={() => {
@@ -157,17 +184,30 @@ export const ClassSettings = () => {
           description="Actions in this area are irreversible"
           isLoaded={!!data}
         >
-          <Skeleton rounded="md" isLoaded={!!data} fitContent>
-            <Button
-              w="max"
-              colorScheme="red"
-              variant="outline"
-              leftIcon={<IconTrash size={18} />}
-              onClick={() => setDeleteOpen(true)}
-            >
-              Delete class
-            </Button>
-          </Skeleton>
+          <ButtonGroup spacing="2">
+            {(data?.teachers?.length || 0) > 1 ? (
+              <Button
+                w="max"
+                variant="outline"
+                colorScheme="gray"
+                leftIcon={<IconLogout size={18} />}
+                onClick={() => setLeaveOpen(true)}
+              >
+                Leave class
+              </Button>
+            ) : undefined}
+            <Skeleton rounded="lg" isLoaded={!!data} fitContent>
+              <Button
+                w="max"
+                colorScheme="red"
+                variant="outline"
+                leftIcon={<IconTrash size={18} />}
+                onClick={() => setDeleteOpen(true)}
+              >
+                Delete class
+              </Button>
+            </Skeleton>
+          </ButtonGroup>
         </SettingsWrapper>
       </Stack>
     </>
