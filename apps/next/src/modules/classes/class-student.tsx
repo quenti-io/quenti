@@ -133,7 +133,7 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
           w={{ base: "full", md: "inherit" }}
         >
           <HStack
-            spacing="4"
+            spacing={{ base: 4, md: 0 }}
             justifyContent={{
               base: "space-between",
               md: "inherit",
