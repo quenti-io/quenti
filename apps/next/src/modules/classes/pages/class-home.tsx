@@ -6,6 +6,7 @@ import { FolderCard } from "../../../components/folder-card";
 import { StudySetCard } from "../../../components/study-set-card";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
+import { ClassEmpty } from "../class-empty";
 import { EntityGroup } from "../entity-group";
 
 export const ClassHome = () => {
@@ -147,6 +148,10 @@ export const ClassHome = () => {
             ))}
           </EntityGroup>
         )}
+        {data &&
+          !isTeacher &&
+          !data.folders.length &&
+          !data.studySets.length && <ClassEmpty />}
       </Stack>
     </>
   );
