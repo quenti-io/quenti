@@ -9,10 +9,12 @@ import { SettingsWrapper } from "../organizations/settings-wrapper";
 import { AddSectionModal } from "./add-section-modal";
 import { EditSectionModal } from "./edit-section-modal";
 import { SectionCard } from "./section-card";
+import { useProtectedRedirect } from "./use-protected-redirect";
 
 export const ClassSections = () => {
   const utils = api.useContext();
   const { data } = useClass();
+  const isLoaded = useProtectedRedirect();
 
   const [addOpen, setAddOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | undefined>();
@@ -28,7 +30,7 @@ export const ClassSections = () => {
 
   return (
     <>
-      {data && (
+      {isLoaded && (
         <>
           <AddSectionModal isOpen={addOpen} onClose={() => setAddOpen(false)} />
           <EditSectionModal
@@ -46,7 +48,7 @@ export const ClassSections = () => {
             )} will be unassigned.`}
             actionText="Delete section"
             onConfirm={() =>
-              deleteSection.mutate({ classId: data.id, sectionId: deleteId! })
+              deleteSection.mutate({ classId: data!.id, sectionId: deleteId! })
             }
             isLoading={deleteSection.isLoading}
             destructive
@@ -56,14 +58,14 @@ export const ClassSections = () => {
       <SettingsWrapper
         heading="Sections"
         description="Manage up to ten sections for your class"
-        isLoaded={!!data}
+        isLoaded={!!isLoaded}
       >
         <Stack spacing="2" maxW="sm">
-          {!data
+          {!isLoaded
             ? Array.from({ length: 2 }).map((_, i) => (
                 <SectionCard key={i} name="placeholder" students={0} skeleton />
               ))
-            : data.sections!.map((section) => (
+            : data!.sections!.map((section) => (
                 <SectionCard
                   key={section.id}
                   name={section.name}
@@ -73,7 +75,7 @@ export const ClassSections = () => {
                 />
               ))}
           {(data?.sections?.length || 0) < 10 && (
-            <Skeleton w="full" mt="2" rounded="md" isLoaded={!!data}>
+            <Skeleton w="full" mt="2" rounded="md" isLoaded={isLoaded}>
               <Button
                 variant="outline"
                 w="full"

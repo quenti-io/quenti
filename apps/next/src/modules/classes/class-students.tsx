@@ -17,6 +17,7 @@ import { useClass } from "../../hooks/use-class";
 import { useDebounce } from "../../hooks/use-debounce";
 import { useEventCallback } from "../../hooks/use-event-callback";
 import { plural } from "../../utils/string";
+import { AddStudentsModal } from "./add-students-modal";
 import {
   ChangeSectionModal,
   type ChangeSectionModalProps,
@@ -28,10 +29,11 @@ import {
 } from "./remove-students-modal";
 import { SectionSelect } from "./section-select";
 import { SelectedBar } from "./selected-bar";
-import { AddStudentsModal } from "./add-students-modal";
+import { useProtectedRedirect } from "./use-protected-redirect";
 
 export const ClassStudentsRaw = () => {
   const { data: class_ } = useClass();
+  const isLoaded = useProtectedRedirect();
 
   const [search, setSearch] = React.useState("");
   const debouncedSearch = useDebounce(search.trim(), 500);
@@ -46,7 +48,7 @@ export const ClassStudentsRaw = () => {
         sectionId: section,
       },
       {
-        enabled: !!class_,
+        enabled: isLoaded,
         retry: false,
         keepPreviousData: true,
         cacheTime: 0,
@@ -129,7 +131,7 @@ export const ClassStudentsRaw = () => {
 
   return (
     <>
-      {class_ && (
+      {isLoaded && (
         <>
           <AddStudentsModal
             isOpen={addStudentsOpen}
@@ -179,7 +181,7 @@ export const ClassStudentsRaw = () => {
             w={{ base: "full", md: "auto" }}
             justifyContent={{ base: "space-between", md: "auto" }}
           >
-            <Skeleton isLoaded={!!class_} rounded="md" fitContent w="250px">
+            <Skeleton isLoaded={isLoaded} rounded="md" fitContent w="250px">
               <SectionSelect
                 sections={Array.from([
                   {
@@ -199,7 +201,7 @@ export const ClassStudentsRaw = () => {
                 value={section || ""}
               />
             </Skeleton>
-            <Skeleton isLoaded={!!class_} rounded="lg">
+            <Skeleton isLoaded={isLoaded} rounded="lg">
               <Button
                 leftIcon={<IconUserPlus size={18} />}
                 px="4"

@@ -2,9 +2,11 @@ import { Skeleton } from "@chakra-ui/react";
 import { ClassCard } from "../../../components/class-card";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";
+import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
 
 export default function OnboardingDone() {
   const { data } = useClass();
+  const isLoaded = useProtectedRedirect();
 
   return (
     <WizardLayout
@@ -13,7 +15,7 @@ export default function OnboardingDone() {
       steps={4}
       currentStep={3}
     >
-      <Skeleton isLoaded={!!data} rounded="md">
+      <Skeleton isLoaded={isLoaded} rounded="md">
         <ClassCard
           id={data?.id || ""}
           name={data?.name || ""}

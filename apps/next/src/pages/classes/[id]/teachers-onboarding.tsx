@@ -22,14 +22,16 @@ import { useClass } from "../../../hooks/use-class";
 import { useClassMembers } from "../../../hooks/use-class-members";
 import { InviteTeachersModal } from "../../../modules/classes/invite-teachers-modal";
 import { plural } from "../../../utils/string";
+import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
 
 export default function TeachersOnboarding() {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: class_ } = useClass();
   const { data } = useClassMembers();
+  const isReady = useProtectedRedirect();
 
-  const isLoaded = !!data && !!class_;
+  const isLoaded = isReady && !!data && !!class_;
 
   const others = data
     ? data.members.filter((m) => m.user.id != data.me.userId)

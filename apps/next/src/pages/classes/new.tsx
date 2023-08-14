@@ -21,6 +21,7 @@ import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { WizardLayout } from "../../components/wizard-layout";
+import { useStudentRedirect } from "../../hooks/use-student-redirect";
 
 interface CreateClassFormInputs {
   name: string;
@@ -34,6 +35,7 @@ const schema = z.object({
 
 export default function NewClass() {
   const router = useRouter();
+  useStudentRedirect("/home");
 
   const create = api.classes.create.useMutation({
     onSuccess: (data) => {

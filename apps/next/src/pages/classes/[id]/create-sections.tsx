@@ -19,6 +19,7 @@ import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";
+import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
 
 interface CreateSectionsFormInputs {
   sections: string[];
@@ -40,6 +41,7 @@ const schema = z.object({
 export default function CreateSections() {
   const { data } = useClass();
   const router = useRouter();
+  useProtectedRedirect();
 
   const bulkAddSections = api.classes.bulkAddSections.useMutation({
     onSuccess: () => {
