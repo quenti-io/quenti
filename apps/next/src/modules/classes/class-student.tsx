@@ -114,7 +114,6 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
         roundedBottom: "md",
       }}
       borderColor={borderColor}
-      suppressHydrationWarning={true}
       justifyContent="space-between"
       maxW="full"
       spacing={{ base: 0, md: 2 }}
