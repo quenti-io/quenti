@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import type { NonNullableUserContext } from "../../lib/types";
 import { MATCH_MIN_TIME } from "../../common/constants";
+import type { NonNullableUserContext } from "../../lib/types";
 import type { TAddSchema } from "./add.schema";
 import { validateLeaderboardAccess } from "./utils/access";
 
@@ -10,46 +10,46 @@ type AddOptions = {
 };
 
 export const addHandler = async ({ ctx, input }: AddOptions) => {
-  let leaderboard = await ctx.prisma.leaderboard.findFirst({
+  const leaderboard = await ctx.prisma.leaderboard.upsert({
     where: {
+      entityId_type: {
+        entityId: input.entityId,
+        type: input.mode,
+      },
+    },
+    create: {
       entityId: input.entityId,
       type: input.mode,
     },
-    include: {
-      studySet: true,
+    update: {},
+    select: {
+      id: true,
+      entityId: true,
+      studySet: {
+        select: {
+          id: true,
+          visibility: true,
+          userId: true,
+        },
+      },
       folder: {
-        include: {
+        select: {
+          userId: true,
           studySets: {
-            include: {
-              studySet: true,
+            select: {
+              studySet: {
+                select: {
+                  id: true,
+                  userId: true,
+                  visibility: true,
+                },
+              },
             },
           },
         },
       },
     },
   });
-
-  if (!leaderboard) {
-    leaderboard = await ctx.prisma.leaderboard.create({
-      data: {
-        entityId: input.entityId,
-        type: input.mode,
-      },
-      include: {
-        studySet: true,
-        folder: {
-          include: {
-            studySets: {
-              include: {
-                studySet: true,
-              },
-            },
-          },
-        },
-      },
-    });
-  }
-
   validateLeaderboardAccess(leaderboard, ctx.session.user.id);
 
   if (input.time < MATCH_MIN_TIME) {

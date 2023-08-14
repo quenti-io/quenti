@@ -1,10 +1,15 @@
-import type { Folder, Leaderboard, StudySet } from "@quenti/prisma/client";
+import type { StudySet } from "@quenti/prisma/client";
 import { TRPCError } from "@trpc/server";
 
+type LimitedStudySet = Pick<StudySet, "userId" | "visibility">;
+
 export const validateLeaderboardAccess = (
-  leaderboard: Leaderboard & {
-    studySet: StudySet | null;
-    folder: (Folder & { studySets: { studySet: StudySet }[] }) | null;
+  leaderboard: {
+    studySet: LimitedStudySet | null;
+    folder: {
+      userId: string;
+      studySets: { studySet: LimitedStudySet }[];
+    } | null;
   },
   userId: string
 ) => {
