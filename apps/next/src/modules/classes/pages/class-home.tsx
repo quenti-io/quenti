@@ -99,6 +99,7 @@ export const ClassHome = () => {
               setAddFoldersOpen(true);
               setHasOpenedFolders(true);
             }}
+            type="folder"
           >
             {data?.folders?.map((folder) => (
               <FolderCard
@@ -126,6 +127,7 @@ export const ClassHome = () => {
               setAddSetsOpen(true);
               setHasOpenedSets(true);
             }}
+            type="studySet"
           >
             {data?.studySets?.map((studySet) => (
               <StudySetCard
