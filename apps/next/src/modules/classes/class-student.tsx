@@ -20,6 +20,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Link } from "@quenti/components";
 import type { User } from "@quenti/prisma/client";
 import {
   IconAlertCircle,
@@ -258,6 +259,7 @@ const Options: React.FC<
                 w="full"
                 h="full"
                 href={`/@${user?.username || ""}`}
+                as={Link}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"

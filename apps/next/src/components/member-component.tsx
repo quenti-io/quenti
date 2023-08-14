@@ -27,6 +27,7 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { MenuOptionPure } from "./menu-option";
+import { Link } from "@quenti/components";
 
 export interface MemberComponentAction {
   label: string;
@@ -243,6 +244,7 @@ const Options: React.FC<
                 <LinkOverlay
                   w="full"
                   h="full"
+                  as={Link}
                   href={`/@${user?.username || ""}`}
                   display="flex"
                   alignItems="center"
