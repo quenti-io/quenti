@@ -27,7 +27,7 @@ export const ProfileLoading = () => {
               <Tab px="0" bg="none" fontWeight={600} h="42px">
                 <Flex alignItems="center" h="21px">
                   <SkeletonText noOfLines={1} skeletonHeight="4">
-                    Study Sets
+                    Study sets
                   </SkeletonText>
                 </Flex>
               </Tab>

@@ -28,7 +28,7 @@ const UserPage: ComponentWithAuth = () => {
             <Tabs borderColor={borderColor}>
               <TabList gap="6">
                 <Tab px="0" bg="none" fontWeight={600}>
-                  Study Sets
+                  Study sets
                 </Tab>
                 <Tab px="0" bg="none" fontWeight={600}>
                   Folders

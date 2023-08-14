@@ -13,6 +13,7 @@ export const FolderSets = () => {
   const session = useSession();
   const folder = useFolder();
 
+  const [hasOpenedSets, setHasOpenedSets] = React.useState(false);
   const [addSetsModalOpen, setAddSetsModalOpen] = React.useState(false);
   const amCreator = folder.user.id === session.data?.user?.id;
 
@@ -21,7 +22,7 @@ export const FolderSets = () => {
       exclude: folder.sets.map((x) => x.id),
     },
     {
-      enabled: addSetsModalOpen,
+      enabled: hasOpenedSets,
     }
   );
 
@@ -86,6 +87,7 @@ export const FolderSets = () => {
               w="full"
               onClick={() => {
                 setAddSetsModalOpen(true);
+                setHasOpenedSets(true);
               }}
             >
               Add Sets

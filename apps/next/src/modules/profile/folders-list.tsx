@@ -48,7 +48,7 @@ export const FoldersList = () => {
       ))}
       {!grouped.length && (
         <Stack>
-          <Heading size="lg">Nothing Yet</Heading>
+          <Heading size="lg">Nothing yet</Heading>
           <Text color={grayText}>{placeholder}</Text>
         </Stack>
       )}

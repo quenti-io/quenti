@@ -12,6 +12,8 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
 import {
   IconCards,
   IconDotsVertical,
@@ -23,10 +25,8 @@ import {
 import { useRouter } from "next/router";
 import React from "react";
 import { ConfirmModal } from "../../components/confirm-modal";
-import { Link } from "@quenti/components";
 import { MenuOption } from "../../components/menu-option";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "@quenti/trpc";
 import { EditFolderModal } from "./edit-folder-modal";
 import { FolderCreatorOnly } from "./folder-creator-only";
 import { ShareFolderModal } from "./share-folder-modal";
@@ -66,6 +66,7 @@ export const ActionArea = () => {
         onConfirm={() => {
           deleteFolder.mutate({ folderId: id });
         }}
+        destructive
       />
       <EditFolderModal isOpen={editOpen} onClose={() => setEditOpen(false)} />
       <ShareFolderModal
@@ -109,7 +110,7 @@ export const ActionArea = () => {
                   as="div"
                 />
               </MenuButton>
-              <MenuList bg={menuBg} py={0} overflow="hidden">
+              <MenuList bg={menuBg} py={0} overflow="hidden" minW="0" w="40">
                 <MenuOption
                   icon={<IconTrash size={20} />}
                   label="Delete"
