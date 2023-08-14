@@ -153,7 +153,7 @@ export const ClassStudentsRaw = () => {
         </>
       )}
       <Stack spacing="6">
-        <HStack spacing="4">
+        <HStack spacing="4" flexDir={{ base: "column", md: "row" }}>
           <LoadingSearch
             value={search}
             onChange={setSearch}
@@ -174,37 +174,43 @@ export const ClassStudentsRaw = () => {
             isPreviousData={isPreviousData}
             skeleton={!class_}
           />
-          <Skeleton isLoaded={!!class_} rounded="md" fitContent w="250px">
-            <SectionSelect
-              sections={Array.from([
-                {
-                  id: "",
-                  name: "All sections",
-                  students: 0,
-                },
-              ]).concat(class_?.sections || [])}
-              onChange={(s) => {
-                if (s == "") {
-                  setSection(undefined);
-                } else {
-                  setSection(s);
-                }
-                setSelected([]);
-              }}
-              value={section || ""}
-            />
-          </Skeleton>
-          <Skeleton isLoaded={!!class_} rounded="md">
-            <Button
-              leftIcon={<IconUserPlus size={18} />}
-              px="4"
-              colorScheme="gray"
-              variant="outline"
-              onClick={() => setAddStudentsOpen(true)}
-            >
-              Add
-            </Button>
-          </Skeleton>
+          <HStack
+            spacing="4"
+            w={{ base: "full", md: "auto" }}
+            justifyContent={{ base: "space-between", md: "auto" }}
+          >
+            <Skeleton isLoaded={!!class_} rounded="md" fitContent w="250px">
+              <SectionSelect
+                sections={Array.from([
+                  {
+                    id: "",
+                    name: "All sections",
+                    students: 0,
+                  },
+                ]).concat(class_?.sections || [])}
+                onChange={(s) => {
+                  if (s == "") {
+                    setSection(undefined);
+                  } else {
+                    setSection(s);
+                  }
+                  setSelected([]);
+                }}
+                value={section || ""}
+              />
+            </Skeleton>
+            <Skeleton isLoaded={!!class_} rounded="lg">
+              <Button
+                leftIcon={<IconUserPlus size={18} />}
+                px="4"
+                colorScheme="gray"
+                variant="outline"
+                onClick={() => setAddStudentsOpen(true)}
+              >
+                Add
+              </Button>
+            </Skeleton>
+          </HStack>
         </HStack>
         <SelectedBar
           selected={selected}
