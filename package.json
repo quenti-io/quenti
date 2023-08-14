@@ -19,7 +19,8 @@
     "type-check": "turbo type-check",
     "dev": "dotenv -- turbo dev --scope \"@quenti/next\"",
     "start": "dotenv -- turbo start --scope \"@quenti/next\"",
-    "next": "yarn workspace @quenti/next",
+    "next": "dotenv -- yarn workspace @quenti/next",
+    "prisma": "dotenv -- yarn workspace @quenti/prisma",
     "install-vercel": "sh ./install-vercel.sh",
     "email-dev": "dotenv -- email dev --dir ./packages/emails/templates --port 3001",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts",
@@ -38,6 +39,10 @@
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
+  },
+  "prisma": {
+    "schema": "packages/prisma/schema.prisma",
+    "seed": "ts-node --transpile-only ./scripts/prisma-seed.ts"
   },
   "engines": {
     "node": ">=18.x",

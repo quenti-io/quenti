@@ -18,9 +18,11 @@ import {
   RemoveTeacherModal,
   type RemoveTeacherModalProps,
 } from "./remove-teacher-modal";
+import { useProtectedRedirect } from "./use-protected-redirect";
 
 export const ClassTeachers = () => {
   const { data: class_ } = useClass();
+  const isLoaded = useProtectedRedirect();
 
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const menuBg = useColorModeValue("white", "gray.800");
@@ -34,7 +36,7 @@ export const ClassTeachers = () => {
 
   return (
     <>
-      {class_ && (
+      {isLoaded && (
         <>
           <InviteTeachersModal
             isOpen={addTeacherModalOpen}
@@ -52,7 +54,7 @@ export const ClassTeachers = () => {
           <Flex h="6" alignItems="center">
             <SkeletonText
               noOfLines={1}
-              isLoaded={!!class_}
+              isLoaded={isLoaded}
               skeletonHeight="18px"
             >
               <HStack color="gray.500" spacing="2" fontWeight={600}>
@@ -61,7 +63,7 @@ export const ClassTeachers = () => {
               </HStack>
             </SkeletonText>
           </Flex>
-          <Skeleton fitContent rounded="lg" isLoaded={!!class_}>
+          <Skeleton fitContent rounded="lg" isLoaded={isLoaded}>
             <Button
               leftIcon={<IconUserPlus size={18} />}
               colorScheme="gray"
@@ -122,7 +124,7 @@ export const ClassTeachers = () => {
               ]}
             />
           ))}
-          {!class_ && (
+          {!isLoaded && (
             <MemberComponent
               id=""
               email="placeholder@example.com"

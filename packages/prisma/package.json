@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "clean": "rm -rf .turbo && rm -rf node_modules",
+    "db:push": "yarn prisma db push",
     "db:seed": "yarn prisma db seed",
     "db:studio": "yarn prisma studio",
     "postinstall": "prisma generate"

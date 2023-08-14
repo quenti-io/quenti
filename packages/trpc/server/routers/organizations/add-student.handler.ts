@@ -51,7 +51,7 @@ export const addStudentHandler = async ({ ctx, input }: AddStudentOptions) => {
     });
   }
 
-  if (student.organizationId) {
+  if (student.organizationId && student.type == "Student") {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "student_already_in_org",

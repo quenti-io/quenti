@@ -22,12 +22,14 @@ import { Toast } from "../../../components/toast";
 import { useClass } from "../../../hooks/use-class";
 import { SettingsWrapper } from "../../organizations/settings-wrapper";
 import { ClassSections } from "../class-sections";
+import { useProtectedRedirect } from "../use-protected-redirect";
 
 export const ClassSettings = () => {
   const utils = api.useContext();
   const { data } = useClass();
   const router = useRouter();
   const toast = useToast();
+  const isLoaded = useProtectedRedirect();
 
   const [mounted, setMounted] = React.useState(false);
   const [leaveOpen, setLeaveOpen] = React.useState(false);
@@ -112,14 +114,14 @@ export const ClassSettings = () => {
       />
       <Stack spacing="8" mt="8">
         <Flex justifyContent="space-between">
-          <Skeleton rounded="md" isLoaded={!!data}>
+          <Skeleton rounded="md" isLoaded={isLoaded}>
             <HStack>
               <IconSettings />
               <Heading size="lg">Settings</Heading>
             </HStack>
           </Skeleton>
           <ButtonGroup size={{ base: "sm", md: "md" }}>
-            <Skeleton rounded="lg" isLoaded={!!data}>
+            <Skeleton rounded="lg" isLoaded={isLoaded}>
               <Button
                 variant="ghost"
                 onClick={() => {
@@ -130,7 +132,7 @@ export const ClassSettings = () => {
                 Reset
               </Button>
             </Skeleton>
-            <Skeleton rounded="lg" isLoaded={!!data}>
+            <Skeleton rounded="lg" isLoaded={isLoaded}>
               <Button
                 isLoading={update.isLoading}
                 onClick={() => {
@@ -150,11 +152,11 @@ export const ClassSettings = () => {
         <SettingsWrapper
           heading="General"
           description="Public class settings"
-          isLoaded={!!data}
+          isLoaded={isLoaded}
         >
           <Stack spacing="4" maxW="sm">
             <Stack spacing="1">
-              <Skeleton rounded="md" w="full" isLoaded={!!data}>
+              <Skeleton rounded="md" w="full" isLoaded={isLoaded}>
                 <Input
                   borderColor={inputBorder}
                   value={name}
@@ -164,7 +166,7 @@ export const ClassSettings = () => {
               </Skeleton>
             </Stack>
             <Stack spacing="1">
-              <Skeleton rounded="md" w="full" isLoaded={!!data}>
+              <Skeleton rounded="md" w="full" isLoaded={isLoaded}>
                 <AutoResizeTextarea
                   borderColor={inputBorder}
                   value={description}
@@ -182,7 +184,7 @@ export const ClassSettings = () => {
         <SettingsWrapper
           heading="Danger zone"
           description="Actions in this area are irreversible"
-          isLoaded={!!data}
+          isLoaded={isLoaded}
         >
           <ButtonGroup spacing="2">
             {(data?.teachers?.length || 0) > 1 ? (
@@ -196,7 +198,7 @@ export const ClassSettings = () => {
                 Leave class
               </Button>
             ) : undefined}
-            <Skeleton rounded="lg" isLoaded={!!data} fitContent>
+            <Skeleton rounded="lg" isLoaded={isLoaded} fitContent>
               <Button
                 w="max"
                 colorScheme="red"
