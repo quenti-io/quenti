@@ -1,11 +1,12 @@
-import { Textarea, type TextareaProps } from "@chakra-ui/react";
 import omit from "lodash.omit";
 import React from "react";
 import ResizeTextArea from "react-textarea-autosize";
 
+import { Textarea, type TextareaProps } from "@chakra-ui/react";
+
 export const AutoResizeTextarea = React.forwardRef(function AutoResizeInternal(
   props: TextareaProps & { allowTab: boolean },
-  ref
+  ref,
 ) {
   const spaces = 4;
   const [text, setText] = React.useState<{
@@ -25,7 +26,7 @@ export const AutoResizeTextarea = React.forwardRef(function AutoResizeInternal(
 
   const handleTab = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
-      React.ChangeEvent<HTMLTextAreaElement>
+      React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const content = e.target.value;
     const caret = e.target.selectionStart;

@@ -1,6 +1,9 @@
-import { Button, Center } from "@chakra-ui/react";
-import { IconPlus } from "@tabler/icons-react";
 import React from "react";
+
+import { Button, Center } from "@chakra-ui/react";
+
+import { IconPlus } from "@tabler/icons-react";
+
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 
 export interface TermCardGapProps {

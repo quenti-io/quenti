@@ -1,7 +1,10 @@
-import { Button, ButtonGroup, FormControl, FormLabel } from "@chakra-ui/react";
+import React from "react";
+
 import type { MembershipRole } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
-import React from "react";
+
+import { Button, ButtonGroup, FormControl, FormLabel } from "@chakra-ui/react";
+
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 import { useOrganizationMember } from "../../hooks/use-organization-member";

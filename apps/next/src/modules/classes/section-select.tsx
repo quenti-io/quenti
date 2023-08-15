@@ -1,5 +1,6 @@
-import { useColorModeValue } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
+
+import { useColorModeValue } from "@chakra-ui/react";
 
 interface SectionSelectProps {
   value: string;

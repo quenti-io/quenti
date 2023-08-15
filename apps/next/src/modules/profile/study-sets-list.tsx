@@ -8,6 +8,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { useProfile } from "../../hooks/use-profile";
 import { groupIntoTimeline } from "../../utils/groupings";
 import { ProfileLinkable } from "./study-set-link";

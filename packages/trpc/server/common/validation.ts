@@ -2,7 +2,7 @@ import type z from "zod";
 
 export const refineRegex: [
   (r: string) => void,
-  (r: string) => Partial<z.util.Omit<z.ZodCustomIssue, "code">>
+  (r: string) => Partial<z.util.Omit<z.ZodCustomIssue, "code">>,
 ] = [
   (r) => {
     try {

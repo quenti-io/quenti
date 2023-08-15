@@ -1,10 +1,12 @@
-import { env } from "@quenti/env/server";
-import { prisma } from "@quenti/prisma";
 import { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { CustomPrismaAdapter } from "./prisma-adapter";
+
+import { env } from "@quenti/env/server";
+import { prisma } from "@quenti/prisma";
 
 import pjson from "../../apps/next/package.json";
+import { CustomPrismaAdapter } from "./prisma-adapter";
+
 const version = pjson.version;
 
 export const authOptions: NextAuthOptions = {

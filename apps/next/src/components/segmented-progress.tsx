@@ -1,6 +1,7 @@
-import { Box, Flex, HStack, useColorModeValue } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React from "react";
+
+import { Box, Flex, HStack, useColorModeValue } from "@chakra-ui/react";
 
 interface SegmentedProgressProps {
   steps: number;

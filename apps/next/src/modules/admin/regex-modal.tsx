@@ -1,3 +1,7 @@
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -11,8 +15,6 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
-import { api } from "@quenti/trpc";
 
 export interface RegexModalProps {
   isOpen: boolean;

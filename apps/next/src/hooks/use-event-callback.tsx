@@ -1,7 +1,7 @@
 import React from "react";
 
 export function useEventCallback<T, K>(
-  handler?: (value: T, event: K) => void
+  handler?: (value: T, event: K) => void,
 ): (value?: T, event?: K) => void {
   const callbackRef = React.useRef(handler);
 
@@ -12,6 +12,6 @@ export function useEventCallback<T, K>(
   return React.useCallback(
     (value?: T, event?: K) =>
       callbackRef.current && callbackRef.current(value as T, event as K),
-    []
+    [],
   );
 }

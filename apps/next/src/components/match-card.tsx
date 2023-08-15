@@ -1,8 +1,10 @@
-import { Card, Text, useColorModeValue } from "@chakra-ui/react";
 import { animate, motion, useMotionValue } from "framer-motion";
 import React from "react";
+
+import { Card, Text, useColorModeValue } from "@chakra-ui/react";
+
 import { MATCH_SHUFFLE_TIME } from "../../../../packages/lib/constants/match";
-import { useMatchContext, type MatchItem } from "../stores/use-match-store";
+import { type MatchItem, useMatchContext } from "../stores/use-match-store";
 import { ScriptFormatter } from "./script-formatter";
 
 export interface MatchCardProps {
@@ -22,7 +24,7 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
 }) => {
   const setCard = useMatchContext((state) => state.setCard);
   const isHighlighted = useMatchContext((state) =>
-    state.highlightedIndices.includes(index)
+    state.highlightedIndices.includes(index),
   );
 
   const [isInMotion, setIsInMotion] = React.useState(false);

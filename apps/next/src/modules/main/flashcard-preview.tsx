@@ -1,3 +1,10 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { shuffleArray } from "@quenti/lib/array";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -6,17 +13,14 @@ import {
   Skeleton,
   Stack,
 } from "@chakra-ui/react";
-import { shuffleArray } from "@quenti/lib/array";
-import { api } from "@quenti/trpc";
+
 import {
   IconArrowsShuffle,
   IconMaximize,
   IconPlayerPlay,
   IconSettings,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { LoadingFlashcard } from "../../components/loading-flashcard";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { queryEventChannel } from "../../events/query";
@@ -56,7 +60,7 @@ export const FlashcardPreview = () => {
     .sort((a, b) => a.rank - b.rank)
     .map((t) => t.id);
   const [termOrder, setTermOrder] = React.useState<string[]>(
-    shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder
+    shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder,
   );
 
   React.useEffect(() => {

@@ -1,3 +1,7 @@
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
 import {
   Button,
   Heading,
@@ -9,10 +13,9 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+
 import { IconBrandGoogle } from "@tabler/icons-react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { menuEventChannel } from "../events/menu";
 
 export default function SignupModal() {

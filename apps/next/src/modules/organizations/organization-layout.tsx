@@ -1,3 +1,6 @@
+import { useRouter } from "next/router";
+import React from "react";
+
 import {
   Box,
   Button,
@@ -17,6 +20,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+
 import {
   IconAlertCircleFilled,
   IconArrowRight,
@@ -24,10 +28,10 @@ import {
   IconCircleDot,
   IconDiscountCheck,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { SkeletonTab } from "../../components/skeleton-tab";
+import { Toast } from "../../components/toast";
 import { WithFooter } from "../../components/with-footer";
 import { useOrganization } from "../../hooks/use-organization";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
@@ -35,7 +39,6 @@ import { organizationIcon } from "../../utils/icons";
 import { ConfettiLayer } from "./confetti-layer";
 import { getBaseDomain } from "./utils/get-base-domain";
 import { useOnboardingStep } from "./utils/use-onboarding-step";
-import { Toast } from "../../components/toast";
 
 export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   children,

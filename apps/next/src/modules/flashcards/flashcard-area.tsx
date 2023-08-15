@@ -1,8 +1,10 @@
 import React from "react";
+
+import { shuffleArray } from "@quenti/lib/array";
+
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";
-import { shuffleArray } from "@quenti/lib/array";
 
 export const FlashcardArea = () => {
   const { terms } = useSetFolderUnison();
@@ -12,7 +14,7 @@ export const FlashcardArea = () => {
 
   const shuffle = useContainerContext((s) => s.shuffleFlashcards);
   const [termOrder, setTermOrder] = React.useState<string[]>(
-    shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder
+    shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder,
   );
 
   React.useEffect(() => {

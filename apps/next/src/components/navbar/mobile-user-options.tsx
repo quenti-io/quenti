@@ -1,14 +1,21 @@
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+
+import { Link } from "@quenti/components";
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   AvatarBadge,
   Button,
   Stack,
   Text,
-  useColorMode,
-  useColorModeValue,
   Wrap,
   WrapItem,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconLogout,
   IconMoon,
@@ -16,10 +23,6 @@ import {
   IconSun,
   IconUserCircle,
 } from "@tabler/icons-react";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { avatarUrl } from "@quenti/lib/avatar";
-import { Link } from "@quenti/components";
 
 interface MobileUserOptionsProps {
   closeMenu: () => void;

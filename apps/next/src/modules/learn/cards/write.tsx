@@ -1,5 +1,7 @@
-import type { Question } from "@quenti/interfaces";
 import React from "react";
+
+import type { Question } from "@quenti/interfaces";
+
 import { useLearnContext } from "../../../stores/use-learn-store";
 import { CorrectState } from "./write/correct-state";
 import { IncorrectState } from "./write/incorrect-state";

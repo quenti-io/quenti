@@ -1,6 +1,8 @@
 import { inngest } from "@quenti/inngest";
 import { allEqual } from "@quenti/lib/array";
+
 import { TRPCError } from "@trpc/server";
+
 import { getIp } from "../../lib/get-ip";
 import {
   isInOrganizationBase,

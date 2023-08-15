@@ -1,8 +1,11 @@
-import { Box } from "@chakra-ui/react";
-import type { Term } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
 import { useSession } from "next-auth/react";
 import React from "react";
+
+import type { Term } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
+import { Box } from "@chakra-ui/react";
+
 import { menuEventChannel } from "../events/menu";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";

@@ -1,8 +1,11 @@
-import { IconSwitchHorizontal } from "@tabler/icons-react";
-import type { MenuOption } from "../components/command-menu";
-import { api } from "@quenti/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+
+import { api } from "@quenti/trpc";
+
+import { IconSwitchHorizontal } from "@tabler/icons-react";
+
+import type { MenuOption } from "../components/command-menu";
 
 export const useDevActions = (): MenuOption[] => {
   const router = useRouter();

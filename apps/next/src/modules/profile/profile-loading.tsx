@@ -10,6 +10,7 @@ import {
   Tabs,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { WithFooter } from "../../components/with-footer";
 import { ProfileArea } from "./profile-area";
 import { StudySetsList } from "./study-sets-list";

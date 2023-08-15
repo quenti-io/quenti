@@ -1,14 +1,16 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { type RouterOutputs, api } from "@quenti/trpc";
+
 import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
 import {
+  type SetEditorStore,
   SetEditorStoreContext,
   createSetEditorStore,
-  type SetEditorStore,
 } from "../stores/use-set-editor-store";
-import { api, type RouterOutputs } from "@quenti/trpc";
 
 export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -37,7 +39,7 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
           })();
         }
       },
-    }
+    },
   );
 
   if (loading || !data || data.userId !== session.data?.user?.id)
@@ -63,7 +65,7 @@ const ContextLayer: React.FC<
 
       state.changeTermId(
         state.terms.find((x) => !state.serverTerms.includes(x.id))!.id,
-        data.id
+        data.id,
       );
       state.addServerTerms([data.id]);
     },
@@ -144,7 +146,7 @@ const ContextLayer: React.FC<
                 definition,
                 rank: state.terms
                   .filter(
-                    (x) => state.serverTerms.includes(x.id) || x.id === termId
+                    (x) => state.serverTerms.includes(x.id) || x.id === termId,
                   )
                   .sort((a, b) => a.rank - b.rank)
                   .findIndex((x) => x.id === termId),
@@ -212,7 +214,7 @@ const ContextLayer: React.FC<
             await router.push(`/${data.id}`);
           })();
         },
-      }
+      },
     );
   }
 

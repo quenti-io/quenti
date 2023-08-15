@@ -1,16 +1,19 @@
-import { Flex, Stack, Switch, Text, useColorModeValue } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+
+import { api } from "@quenti/trpc";
+
+import { Flex, Stack, Switch, Text, useColorModeValue } from "@chakra-ui/react";
+
 import { menuEventChannel } from "../../../events/menu";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "@quenti/trpc";
 
 export const CardsSortingSection = () => {
   const authed = useSession().status == "authenticated";
   const { id, type } = useSetFolderUnison();
 
   const [enableCardsSorting, setEnableCardsSorting] = useContainerContext(
-    (s) => [s.enableCardsSorting, s.setEnableCardsSorting]
+    (s) => [s.enableCardsSorting, s.setEnableCardsSorting],
   );
 
   const apiEnableCardsSorting =

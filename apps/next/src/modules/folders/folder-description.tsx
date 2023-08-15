@@ -1,4 +1,5 @@
 import { Text } from "@chakra-ui/react";
+
 import { useFolder } from "../../hooks/use-folder";
 
 export const FolderDescription = () => {

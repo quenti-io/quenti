@@ -1,9 +1,12 @@
-import { Box } from "@chakra-ui/react";
-import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
-import { api } from "@quenti/trpc";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import throttle from "lodash.throttle";
 import React from "react";
+
+import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
+import { api } from "@quenti/trpc";
+
+import { Box } from "@chakra-ui/react";
+
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { useContainerContext } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
@@ -28,7 +31,7 @@ export const SortFlashcardWrapper = () => {
   const currentRound = useSortFlashcardsContext((s) => s.currentRound);
   const progressView = useSortFlashcardsContext((s) => s.progressView);
   const stateMarkStillLearning = useSortFlashcardsContext(
-    (s) => s.markStillLearning
+    (s) => s.markStillLearning,
   );
   const stateMarkKnown = useSortFlashcardsContext((s) => s.markKnown);
   const stateNextRound = useSortFlashcardsContext((s) => s.nextRound);
@@ -51,7 +54,7 @@ export const SortFlashcardWrapper = () => {
 
   type Flashcard = StudiableTerm & { isFlipped: boolean; index: number };
   const [visibleFlashcards, setVisibleFlashcards] = React.useState<Flashcard[]>(
-    !progressView ? [{ ...term!, isFlipped: shouldFlip, index }] : []
+    !progressView ? [{ ...term!, isFlipped: shouldFlip, index }] : [],
   );
 
   const [hasUserEngaged, setHasUserEngaged] = React.useState(false);
@@ -113,7 +116,7 @@ export const SortFlashcardWrapper = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const markCardCallback = React.useCallback(
     throttle(markCard, 200, { trailing: false }),
-    [currentRound]
+    [currentRound],
   );
 
   const goBack = () => {

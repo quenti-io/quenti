@@ -1,6 +1,8 @@
 import { z } from "zod";
-import { createTRPCRouter, devProcedure } from "../trpc";
+
 import { UserType } from "@quenti/prisma/client";
+
+import { createTRPCRouter, devProcedure } from "../trpc";
 
 export const devRouter = createTRPCRouter({
   setAccountType: devProcedure

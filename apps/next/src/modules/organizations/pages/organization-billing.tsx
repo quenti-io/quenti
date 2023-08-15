@@ -1,3 +1,9 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import type { MembershipRole } from "@quenti/prisma/client";
+
 import {
   Button,
   Card,
@@ -8,13 +14,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { MembershipRole } from "@quenti/prisma/client";
+
 import { IconExternalLink } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { ORG_SUPPORT_EMAIL } from "../../../../../../packages/lib/constants/email";
 import { BASE_URL } from "../../../../../../packages/lib/constants/url";
-import { Link } from "@quenti/components";
 import { useOrganization } from "../../../hooks/use-organization";
 import { useOrganizationMember } from "../../../hooks/use-organization-member";
 import { SettingsWrapper } from "../settings-wrapper";

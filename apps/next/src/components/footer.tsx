@@ -1,15 +1,18 @@
+import { signIn } from "next-auth/react";
+
 import {
   Button,
   Container,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Kbd,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconBrandGoogle, IconSpeakerphone } from "@tabler/icons-react";
-import { signIn } from "next-auth/react";
+
 import { menuEventChannel } from "../events/menu";
 import { MOD } from "../lib/tinykeys";
 import { Authed } from "./authed";
@@ -55,7 +58,7 @@ export const Footer = () => {
                       ctrlKey: MOD == "Control",
                       metaKey: MOD == "Meta",
                       shiftKey: false,
-                    })
+                    }),
                   );
                 }}
               >

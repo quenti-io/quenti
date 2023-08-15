@@ -1,9 +1,11 @@
-import type { EntityType } from "@quenti/prisma/client";
 import { useRouter } from "next/router";
 import React from "react";
+
+import type { EntityType } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import { useLoading } from "../hooks/use-loading";
 import { Folder404 } from "../modules/folders/folder-404";
-import { api } from "@quenti/trpc";
 import { Generic404 } from "./generic-404";
 import { Loading } from "./loading";
 

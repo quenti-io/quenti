@@ -1,11 +1,17 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
   Card,
   Center,
   Flex,
-  Heading,
   HStack,
+  Heading,
   IconButton,
   Modal,
   ModalBody,
@@ -16,18 +22,16 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconFolder,
   IconFolderPlus,
   IconMinus,
   IconPlus,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
-import { api } from "@quenti/trpc";
 
 export interface AddToFolderModalProps {
   isOpen: boolean;
@@ -44,7 +48,7 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
     { studySetId: id },
     {
       enabled: isOpen,
-    }
+    },
   );
 
   React.useEffect(() => {

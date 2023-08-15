@@ -1,3 +1,8 @@
+import React from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -5,9 +10,7 @@ import {
   FormErrorMessage,
   Input,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
-import React from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 

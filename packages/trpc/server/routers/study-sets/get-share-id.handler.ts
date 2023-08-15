@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import type { DefaultContext } from "../../lib/types";
+
 import { shortId } from "../../common/generator";
+import type { DefaultContext } from "../../lib/types";
 import type { TGetShareIdSchema } from "./get-share-id.schema";
 
 type GetShareIdOptions = {

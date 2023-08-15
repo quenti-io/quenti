@@ -21,7 +21,7 @@ interface EventBusConfig {
 }
 
 export function eventBus<E extends EventMap>(
-  config?: EventBusConfig
+  config?: EventBusConfig,
 ): EventBus<E> {
   const bus: Partial<Bus<E>> = {};
 

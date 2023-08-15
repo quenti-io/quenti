@@ -1,7 +1,9 @@
-import { env } from "@quenti/env/server";
-import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+
+import { env } from "@quenti/env/server";
+
+import { TRPCError } from "@trpc/server";
 
 export interface RateLimiterOptions {
   type?: RateLimitType;
@@ -32,7 +34,7 @@ export const rateLimiter = () => {
         limit: 10,
         remaining: 999,
         reset: 0,
-      } as RateLimitResponse);
+      }) as RateLimitResponse;
   }
 
   const redis = Redis.fromEnv();
@@ -98,7 +100,7 @@ export const rateLimitOrThrowMultiple = async ({
   identifiers,
 }: Omit<RateLimiterOptions, "identifier"> & { identifiers: string[] }) => {
   const limiters = identifiers.map((identifier) =>
-    rateLimitOrThrow({ type, identifier })
+    rateLimitOrThrow({ type, identifier }),
   );
 
   const result = await Promise.allSettled(limiters);

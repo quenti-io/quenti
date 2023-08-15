@@ -1,7 +1,9 @@
+import { nanoid } from "nanoid";
+
 import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBulkAddSchema } from "./bulk-add.schema";
-import { nanoid } from "nanoid";
 
 type BulkAddOptions = {
   ctx: NonNullableUserContext;

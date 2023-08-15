@@ -1,3 +1,9 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   Heading,
@@ -11,10 +17,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
-import { api } from "@quenti/trpc";
 
 export interface DeleteAccountModalProps {
   isOpen: boolean;

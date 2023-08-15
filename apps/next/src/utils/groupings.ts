@@ -1,12 +1,12 @@
 import { relevantLabel } from "./time";
 
 export const groupIntoTimeline = <T extends { createdAt: Date }>(
-  data: T[]
+  data: T[],
 ): { label: string; items: T[] }[] => {
   const groups = new Array<{ label: string; items: T[] }>();
 
   for (const item of data.sort(
-    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
   )) {
     const label = relevantLabel(item.createdAt);
     const group = groups.find((group) => group.label === label);

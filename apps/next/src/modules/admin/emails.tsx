@@ -1,10 +1,16 @@
+import React from "react";
+
+import { avatarUrl } from "@quenti/lib/avatar";
+import type { RecentFailedLogin } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Avatar,
   Button,
   ButtonGroup,
   Center,
-  Heading,
   HStack,
+  Heading,
   IconButton,
   Input,
   InputGroup,
@@ -19,12 +25,10 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import type { RecentFailedLogin } from "@quenti/prisma/client";
+
 import { IconPlus, IconTrash, IconUserPlus } from "@tabler/icons-react";
-import React from "react";
+
 import { useAdmin } from "../../hooks/use-admin";
-import { api } from "@quenti/trpc";
-import { avatarUrl } from "@quenti/lib/avatar";
 import { dtFormatter } from "../../utils/time";
 import { AllowedRegexes } from "./allowed-regexes";
 

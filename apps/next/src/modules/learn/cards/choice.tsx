@@ -1,3 +1,10 @@
+import React from "react";
+
+import type { Question } from "@quenti/interfaces";
+import { getRandom } from "@quenti/lib/array";
+import type { Term } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   Flex,
@@ -6,17 +13,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { Question } from "@quenti/interfaces";
-import type { Term } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
-import React from "react";
+
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { ScriptFormatter } from "../../../components/script-formatter";
 import { useAuthedSet } from "../../../hooks/use-set";
 import { useLearnContext, word } from "../../../stores/use-learn-store";
-import { getRandom } from "@quenti/lib/array";
 
 interface ChoiceCardProps {
   active: Question;

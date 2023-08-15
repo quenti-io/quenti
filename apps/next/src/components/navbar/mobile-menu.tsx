@@ -1,3 +1,10 @@
+import { signIn, useSession } from "next-auth/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+
 import {
   Button,
   Collapse,
@@ -8,17 +15,14 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconBooks,
   IconChevronDown,
   IconCloudDownload,
   IconFolder,
 } from "@tabler/icons-react";
-import { signIn, useSession } from "next-auth/react";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { MenuOption } from "../menu-option";
 import { MobileUserOptions } from "./mobile-user-options";
 
@@ -44,7 +48,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   const { data: session, status } = useSession()!;
   const bgGradient = useColorModeValue(
     "linear(to-b, gray.50, white)",
-    "linear(to-b, gray.900, gray.800)"
+    "linear(to-b, gray.900, gray.800)",
   );
   const menuBg = useColorModeValue("white", "gray.800");
 

@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 import {
   Box,
   Card,
@@ -6,7 +8,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+
 import { ScriptFormatter } from "../../components/script-formatter";
 import { useLearnContext, word } from "../../stores/use-learn-store";
 import { ChoiceCard } from "./cards/choice";
@@ -41,7 +43,7 @@ export const InteractionCard = () => {
           initial={{
             width: `calc(100% * ${Math.max(
               roundProgress - (prevTermWasIncorrect ? 0 : 1),
-              0
+              0,
             )} / ${termsThisRound})`,
           }}
           animate={{

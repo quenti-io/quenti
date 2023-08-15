@@ -1,16 +1,19 @@
+import { Link } from "@quenti/components";
+
 import {
+  Button,
   Card,
   Flex,
-  Stack,
-  useColorModeValue,
-  Text,
   Heading,
-  Button,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
+
+import { IconBrandTwitterFilled } from "@tabler/icons-react";
+
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";
-import { Link } from "@quenti/components";
-import { IconBrandTwitterFilled } from "@tabler/icons-react";
 
 export const OnboardingSubscribe = () => {
   const cardBg = useColorModeValue("white", "gray.750");

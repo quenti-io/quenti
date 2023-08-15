@@ -30,7 +30,7 @@ const subMap = {
 
 // Returns a string with <sub> and <sup> tags in place of super and subscripts
 export const formatScripts = (
-  text: string
+  text: string,
 ): { value: string; super: boolean; sub: boolean }[] => {
   // Split the string by sub and super characters
   const split = text.split(/([₀₁₂₃₄₅₆₇₈₉₋₊⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺])/);

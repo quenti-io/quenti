@@ -1,3 +1,6 @@
+import { Link } from "@quenti/components";
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   Box,
@@ -10,10 +13,10 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconDiscountCheck } from "@tabler/icons-react";
-import { Link } from "@quenti/components";
+
 import { useSet } from "../../hooks/use-set";
-import { avatarUrl } from "@quenti/lib/avatar";
 import { ActionArea } from "./action-area";
 
 export const DescriptionArea = () => {

@@ -1,7 +1,4 @@
-import { ChakraProvider, GlobalStyle, LightMode } from "@chakra-ui/react";
 import { ErrorBoundary as HighlightBoundary } from "@highlight-run/react";
-import { env } from "@quenti/env/client";
-import { api } from "@quenti/trpc";
 import { Analytics } from "@vercel/analytics/react";
 import { H } from "highlight.run";
 import type { NextComponentType, NextPageContext } from "next";
@@ -12,27 +9,32 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { env } from "@quenti/env/client";
+import { api } from "@quenti/trpc";
+
+import { ChakraProvider, GlobalStyle, LightMode } from "@chakra-ui/react";
+
+import pjson from "../../package.json";
 import type { AuthEnabledComponentConfig } from "../components/auth-component";
+import { ErrorBoundary } from "../components/error-bounary";
 import { Navbar } from "../components/navbar";
 import { LoadingProvider, useLoading } from "../hooks/use-loading";
 import { theme } from "../lib/chakra-theme";
-
+import { HistoryProvider } from "../modules/history-provider";
 import "../styles/globals.css";
 
-import pjson from "../../package.json";
-import { ErrorBoundary } from "../components/error-bounary";
-import { HistoryProvider } from "../modules/history-provider";
 const version = pjson.version;
 
 export { reportWebVitals } from "next-axiom";
 
 const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
-  { ssr: false }
+  { ssr: false },
 );
 const ChangelogContainer = dynamic(
   () => import("../modules/changelog/changelog-container"),
-  { ssr: false }
+  { ssr: false },
 );
 const SignupModal = dynamic(() => import("../components/signup-modal"), {
   ssr: false,
@@ -200,7 +202,7 @@ const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
       if (status == "loading") return;
       if (!isUser)
         await router.push(
-          `/auth/login?callbackUrl=${encodeURIComponent(router.asPath)}`
+          `/auth/login?callbackUrl=${encodeURIComponent(router.asPath)}`,
         );
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,3 +1,9 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -11,12 +17,9 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "@quenti/trpc";
 
 export interface EditFolderModalProps {
   isOpen: boolean;
@@ -41,7 +44,7 @@ export const EditFolderModal: React.FC<EditFolderModalProps> = ({
   const editFolder = api.folders.edit.useMutation({
     onSuccess: async (data) => {
       await router.push(
-        `/@${session.data!.user!.username}/folders/${data.slug ?? data.id}`
+        `/@${session.data!.user!.username}/folders/${data.slug ?? data.id}`,
       );
 
       onClose();

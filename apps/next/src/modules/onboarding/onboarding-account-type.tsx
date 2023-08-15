@@ -1,10 +1,14 @@
-import { HStack, Text, useColorModeValue } from "@chakra-ui/react";
-import type { UserType } from "@quenti/prisma/client";
-import { IconBooks, IconSchool } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { ToggleGroup } from "../../components/toggle-group";
+
+import type { UserType } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
+
+import { HStack, Text, useColorModeValue } from "@chakra-ui/react";
+
+import { IconBooks, IconSchool } from "@tabler/icons-react";
+
+import { ToggleGroup } from "../../components/toggle-group";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper, useNextStep } from "./present-wrapper";
 
@@ -33,7 +37,7 @@ const AccountType = () => {
   });
 
   const [type, setType] = React.useState<UserType>(
-    hasOrgInvites ? "Teacher" : "Student"
+    hasOrgInvites ? "Teacher" : "Student",
   );
 
   return (

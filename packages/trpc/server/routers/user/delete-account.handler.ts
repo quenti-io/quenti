@@ -1,5 +1,7 @@
 import { env } from "@quenti/env/server";
+
 import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 
 type DeleteAccountOptions = {

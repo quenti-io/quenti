@@ -1,3 +1,6 @@
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+
 import {
   Box,
   Flex,
@@ -11,8 +14,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
 
 interface ChangelogModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({
   const session = useSession();
   const imageSrc = `/assets/changelog/flashcards-upgrade-${useColorModeValue(
     "light",
-    "dark"
+    "dark",
   )}.png`;
   const mutedColor = useColorModeValue("gray.600", "gray.400");
 

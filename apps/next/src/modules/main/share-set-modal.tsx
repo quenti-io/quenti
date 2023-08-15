@@ -1,9 +1,15 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { env } from "@quenti/env/client";
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   Divider,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Input,
   Modal,
   ModalContent,
@@ -12,12 +18,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { env } from "@quenti/env/client";
+
 import { IconCheck, IconCopy, IconEdit, IconLock } from "@tabler/icons-react";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { useSet } from "../../hooks/use-set";
-import { api } from "@quenti/trpc";
 
 export interface ShareSetModalProps {
   isOpen: boolean;
@@ -36,7 +40,7 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
     { studySetId: id },
     {
       enabled: isOpen && visibility !== "Private",
-    }
+    },
   );
   const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
 

@@ -1,4 +1,5 @@
 import { Container, Stack } from "@chakra-ui/react";
+
 import type { ComponentWithAuth } from "../../components/auth-component";
 import { WithFooter } from "../../components/with-footer";
 import { HydrateSetData } from "../../modules/hydrate-set-data";

@@ -1,13 +1,14 @@
+import React from "react";
+
 import {
   Center,
   CircularProgress,
   CircularProgressLabel,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
 
 interface CircularTermMasteryProps {
   known: number;

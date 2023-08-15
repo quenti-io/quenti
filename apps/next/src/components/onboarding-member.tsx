@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Avatar,
   Flex,
@@ -9,7 +11,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
 
 interface OnboardingMemberProps {
   image?: string | null;

@@ -1,20 +1,24 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   Box,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Skeleton,
   SkeletonText,
   Text,
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconDiscountCheck } from "@tabler/icons-react";
-import React from "react";
+
 import { useProfile } from "../../hooks/use-profile";
-import { avatarUrl } from "@quenti/lib/avatar";
-import { useRouter } from "next/router";
 
 export const ProfileArea = () => {
   const profile = useProfile();

@@ -1,3 +1,9 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   Card,
@@ -8,16 +14,14 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
+
 import {
   IconArrowRight,
   IconPointFilled,
   IconUserPlus,
   IconUsers,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { OnboardingMember } from "../../../components/onboarding-member";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { InviteMemberModal } from "../../../modules/organizations/invite-member-modal";
@@ -34,7 +38,7 @@ export default function OrgMembersOnboarding() {
     {
       enabled: !!id && !!session?.user?.id,
       retry: false,
-    }
+    },
   );
 
   const me = org

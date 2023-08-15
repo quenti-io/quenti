@@ -1,14 +1,16 @@
+import React from "react";
+
+import { type RouterOutputs, api } from "@quenti/trpc";
+import { EnabledFeature } from "@quenti/trpc/server/common/constants";
+
 import {
-  Heading,
   HStack,
+  Heading,
   Stack,
   Switch,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { api, type RouterOutputs } from "@quenti/trpc";
-import { EnabledFeature } from "@quenti/trpc/server/common/constants";
-import React from "react";
 
 export const UserEnabledFlags = ({
   user,
@@ -34,7 +36,7 @@ export const UserEnabledFlags = ({
           <HStack key={i} spacing={4}>
             <Text color={featureColor}>{EnabledFeature[f]}</Text>
             <Switch
-              isChecked={(flags & f) == f}
+              isChecked={(flags & (f as number)) == (f as number)}
               onChange={(e) => {
                 let newFlags;
                 if (e.target.checked) {

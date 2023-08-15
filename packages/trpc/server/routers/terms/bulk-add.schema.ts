@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { MAX_TERM } from "../../common/constants";
 import { profanity } from "../../common/profanity";
 
@@ -9,7 +10,7 @@ export const ZBulkAddSchema = z
       z.object({
         word: z.string(),
         definition: z.string(),
-      })
+      }),
     ),
   })
   .transform((z) => ({

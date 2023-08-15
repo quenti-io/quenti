@@ -1,3 +1,8 @@
+import { useSession } from "next-auth/react";
+import React, { useImperativeHandle } from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -9,11 +14,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
-import React, { useImperativeHandle } from "react";
+
 import { USERNAME_REGEXP } from "../../../../packages/lib/constants/characters";
 import { useDebounce } from "../hooks/use-debounce";
-import { api } from "@quenti/trpc";
 import { AnimatedCheckCircle } from "./animated-icons/check";
 import { AnimatedXCircle } from "./animated-icons/x";
 
@@ -39,7 +42,7 @@ export const ChangeUsernameInput = React.forwardRef<
       onActionStateChange,
       onLoadingChange,
     },
-    ref
+    ref,
   ) => {
     const session = useSession();
 
@@ -48,7 +51,7 @@ export const ChangeUsernameInput = React.forwardRef<
     const borderColor = useColorModeValue("gray.300", "gray.600");
 
     const [usernameValue, setUsernameValue] = React.useState(
-      session.data!.user!.username
+      session.data!.user!.username,
     );
     const debouncedUsername = useDebounce(usernameValue, 500);
 
@@ -56,7 +59,7 @@ export const ChangeUsernameInput = React.forwardRef<
       { username: debouncedUsername },
       {
         enabled: !!debouncedUsername.length,
-      }
+      },
     );
     const changeUsername = api.user.changeUsername.useMutation({
       onSuccess: () => onChange?.(),
@@ -81,7 +84,7 @@ export const ChangeUsernameInput = React.forwardRef<
           },
         };
       },
-      [changeUsername, usernameValue]
+      [changeUsername, usernameValue],
     );
 
     const isDisabled =
@@ -187,7 +190,7 @@ export const ChangeUsernameInput = React.forwardRef<
         </Text>
       </Stack>
     );
-  }
+  },
 );
 
 ChangeUsernameInput.displayName = "ChangeUsernameInput";

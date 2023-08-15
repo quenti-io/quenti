@@ -1,3 +1,9 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -11,11 +17,8 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { menuEventChannel } from "../events/menu";
-import { api } from "@quenti/trpc";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface CreateFolderModalProps {
@@ -44,7 +47,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
       if (!childSetId) {
         onClose();
         await router.push(
-          `/@${session.data!.user!.username}/folders/${data.slug ?? data.id}`
+          `/@${session.data!.user!.username}/folders/${data.slug ?? data.id}`,
         );
       } else {
         menuEventChannel.emit("folderWithSetCreated", childSetId);

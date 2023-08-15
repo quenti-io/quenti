@@ -1,10 +1,13 @@
-import { Card, useColorModeValue } from "@chakra-ui/react";
+import React from "react";
+
 import type {
   Highscore,
   Leaderboard as LeaderboardType,
   User,
 } from "@quenti/prisma/client";
-import React from "react";
+
+import { Card, useColorModeValue } from "@chakra-ui/react";
+
 import { LeaderboardEntry } from "./leaderboard-entry";
 
 export interface LeaderboardProps {

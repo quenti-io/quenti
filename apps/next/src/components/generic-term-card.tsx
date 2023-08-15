@@ -1,6 +1,9 @@
 import React from "react";
+
 import type { Term } from "@quenti/prisma/client";
+
 import { Box, Card, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+
 import { ScriptFormatter } from "./script-formatter";
 
 export interface GenericTermCardProps {

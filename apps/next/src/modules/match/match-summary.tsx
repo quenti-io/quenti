@@ -1,3 +1,9 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+import { MATCH_MIN_TIME } from "@quenti/trpc/server/common/constants";
+
 import {
   Button,
   ButtonGroup,
@@ -6,11 +12,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Link } from "@quenti/components";
-import { api } from "@quenti/trpc";
-import { MATCH_MIN_TIME } from "@quenti/trpc/server/common/constants";
+
 import { IconArrowBack } from "@tabler/icons-react";
-import React from "react";
+
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
@@ -24,7 +28,7 @@ export const MatchSummary = () => {
   const startTime = useMatchContext((s) => s.roundStartTime);
   const summary = useMatchContext((s) => s.roundSummary)!;
   const isEligibleForLeaderboard = useMatchContext(
-    (s) => s.isEligibleForLeaderboard
+    (s) => s.isEligibleForLeaderboard,
   );
   const elapsed = Math.floor((summary.endTime - startTime) / 100);
   const nextRound = useMatchContext((s) => s.nextRound);
@@ -37,7 +41,7 @@ export const MatchSummary = () => {
     },
     {
       enabled: add.isSuccess,
-    }
+    },
   );
 
   const isStorable = elapsed > MATCH_MIN_TIME;
@@ -63,7 +67,7 @@ export const MatchSummary = () => {
       {
         refetchOnMount: "always",
         enabled: add.isSuccess || !isStorable,
-      }
+      },
     );
 
   if (!summary || !leaderboard.data || !highscore || !isFetchedAfterMount)

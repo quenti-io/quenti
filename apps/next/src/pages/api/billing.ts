@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { BASE_URL } from "../../../../../packages/lib/constants/url";
-import { stripe, getStripeCustomerIdFromUserId } from "@quenti/payments";
+
 import { getServerAuthSession } from "@quenti/auth";
+import { getStripeCustomerIdFromUserId, stripe } from "@quenti/payments";
+
+import { BASE_URL } from "../../../../../packages/lib/constants/url";
 
 const querySchema = z.object({
   orgId: z.string().cuid2(),
@@ -10,7 +12,7 @@ const querySchema = z.object({
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const session = await getServerAuthSession({ req, res });
 

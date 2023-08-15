@@ -6,6 +6,7 @@ import {
   Preview,
   Tailwind,
 } from "@react-email/components";
+
 import { BodyContainer } from "../components/body-container";
 import { Content } from "../components/content";
 import { Footer } from "../components/footer";

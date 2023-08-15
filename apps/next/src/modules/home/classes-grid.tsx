@@ -1,5 +1,7 @@
-import { Grid, GridItem, Heading, Skeleton, Stack } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
+
+import { Grid, GridItem, Heading, Skeleton, Stack } from "@chakra-ui/react";
+
 import { ClassCard } from "../../components/class-card";
 
 export const ClassesGrid = () => {

@@ -1,11 +1,12 @@
 import {
   Card,
   Heading,
-  Stack,
-  useColorModeValue,
-  Text,
   ScaleFade,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconConfetti } from "@tabler/icons-react";
 
 export const OrganizationWelcome = () => {

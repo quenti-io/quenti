@@ -149,7 +149,7 @@ function match(event: KeyboardEvent, press: KeyBindingPress): boolean {
 export default function keybindings(
   target: Window | HTMLElement,
   keyBindingMap: KeyBindingMap,
-  options: KeyBindingOptions = {}
+  options: KeyBindingOptions = {},
 ): () => void {
   const timeout = options.timeout ?? DEFAULT_TIMEOUT;
   const event = options.event ?? DEFAULT_EVENT;

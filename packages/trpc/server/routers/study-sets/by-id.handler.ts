@@ -1,6 +1,8 @@
 import type { Language } from "@quenti/core";
 import type { StarredTerm, StudiableTerm } from "@quenti/prisma/client";
+
 import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TByIdSchema } from "./by-id.schema";
 

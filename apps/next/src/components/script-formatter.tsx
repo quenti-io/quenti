@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+
 import { formatScripts } from "../utils/text";
 
 export const ScriptFormatter = ({ children }: { children: string }) => {

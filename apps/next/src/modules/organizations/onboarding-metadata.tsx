@@ -1,5 +1,6 @@
-import { api, type RouterInputs } from "@quenti/trpc";
 import React from "react";
+
+import { type RouterInputs, api } from "@quenti/trpc";
 
 export interface OnboardingMetadataProps {
   step: RouterInputs["organizations"]["setMemberMetadata"]["metadata"]["onboardingStep"];

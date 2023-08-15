@@ -1,4 +1,5 @@
 import type { StudySet } from "@quenti/prisma/client";
+
 import { TRPCError } from "@trpc/server";
 
 type LimitedStudySet = Pick<StudySet, "userId" | "visibility">;
@@ -11,7 +12,7 @@ export const validateLeaderboardAccess = (
       studySets: { studySet: LimitedStudySet }[];
     } | null;
   },
-  userId: string
+  userId: string,
 ) => {
   if (
     leaderboard.studySet &&

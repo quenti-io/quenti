@@ -1,6 +1,7 @@
-import React from "react";
-import { useClass } from "../../hooks/use-class";
 import { useRouter } from "next/router";
+import React from "react";
+
+import { useClass } from "../../hooks/use-class";
 
 export const useProtectedRedirect = () => {
   const router = useRouter();

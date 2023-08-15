@@ -1,7 +1,11 @@
-import { Button, Skeleton, Stack } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
-import { IconNewSection } from "@tabler/icons-react";
 import React from "react";
+
+import { api } from "@quenti/trpc";
+
+import { Button, Skeleton, Stack } from "@chakra-ui/react";
+
+import { IconNewSection } from "@tabler/icons-react";
+
 import { ConfirmModal } from "../../components/confirm-modal";
 import { useClass } from "../../hooks/use-class";
 import { plural } from "../../utils/string";
@@ -46,7 +50,7 @@ export const ClassSections = () => {
               !!toDelete?.students
                 ? `${plural(
                     toDelete?.students || 0,
-                    "student"
+                    "student",
                   )} will be unassigned.`
                 : ""
             }`}

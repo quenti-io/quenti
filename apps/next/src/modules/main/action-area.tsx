@@ -1,20 +1,24 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+import { useReactToPrint } from "react-to-print";
+
+import { api } from "@quenti/trpc";
+
 import { ButtonGroup, IconButton, Skeleton, Tooltip } from "@chakra-ui/react";
+
 import {
+  IconHexagon,
   IconPlus,
   IconPrinter,
-  IconHexagon,
   IconShare,
   IconTableExport,
   type TablerIconsProps,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import React from "react";
-import { useReactToPrint } from "react-to-print";
+
 import { ExportTermsModal } from "../../components/export-terms-modal";
 import { SetPrintComponent } from "../../components/set-print-component";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
-import { api } from "@quenti/trpc";
 import { AddToFolderModal } from "./add-to-folder-modal";
 import { ShareSetModal } from "./share-set-modal";
 

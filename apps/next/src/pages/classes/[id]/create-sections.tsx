@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   Card,
@@ -11,12 +18,9 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "@quenti/trpc";
+
 import { IconArrowRight, IconNewSection, IconUsers } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";
 import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
@@ -34,7 +38,7 @@ const schema = z.object({
       (sections) => {
         return !!sections.find((s) => s.length > 0);
       },
-      { message: "Enter at least one section" }
+      { message: "Enter at least one section" },
     ),
 });
 

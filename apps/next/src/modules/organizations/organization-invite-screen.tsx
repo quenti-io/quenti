@@ -1,3 +1,7 @@
+import { useRouter } from "next/router";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -10,12 +14,11 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
-import { useRouter } from "next/router";
+
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
+import { Toast } from "../../components/toast";
 import { useMe } from "../../hooks/use-me";
 import { OrganizationCard } from "./organization-card";
-import { Toast } from "../../components/toast";
 
 export const OrganizationInviteScreen = () => {
   const utils = api.useContext();

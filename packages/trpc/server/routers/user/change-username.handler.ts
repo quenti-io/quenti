@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
+
+import { usernameProfanity } from "../../common/profanity";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TChangeUsernameSchema } from "./change-username.schema";
-import { usernameProfanity } from "../../common/profanity";
 
 type ChangeUsernameOptions = {
   ctx: NonNullableUserContext;

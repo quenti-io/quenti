@@ -1,12 +1,14 @@
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
+
 import json from "./languages.json";
+
 export const languages = json.languages;
 export const suggestions = json.suggestions;
 
 export type Language = keyof typeof languages;
 
 export const LANGUAGE_VALUES: [string, ...string[]] = Object.keys(
-  languages
+  languages,
 ) as [Language, ...Language[]];
 
 interface Suggestions {
@@ -20,7 +22,7 @@ export const getSuggestions = (l: Language) =>
 export const placeholderLanguage = (
   wordLanguage: Language,
   definitionLanguage: Language,
-  answerMode: StudySetAnswerMode
+  answerMode: StudySetAnswerMode,
 ) => {
   if (wordLanguage == definitionLanguage) return "answer";
   const language =

@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Button,
   ButtonGroup,
@@ -5,7 +7,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
+
 import { Modal } from "./modal";
 
 export interface ConfirmModalProps {

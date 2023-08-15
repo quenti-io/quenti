@@ -1,3 +1,8 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+import type { User } from "@quenti/prisma/client";
+
 import {
   Avatar,
   Box,
@@ -19,15 +24,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { User } from "@quenti/prisma/client";
+
 import {
   IconDotsVertical,
   IconExternalLink,
   type TablerIconsProps,
 } from "@tabler/icons-react";
-import React from "react";
+
 import { MenuOptionPure } from "./menu-option";
-import { Link } from "@quenti/components";
 
 export interface MemberComponentAction {
   label: string;

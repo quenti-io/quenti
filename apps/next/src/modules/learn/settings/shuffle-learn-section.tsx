@@ -1,3 +1,7 @@
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Flex,
   HStack,
@@ -8,12 +12,12 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconDice5 } from "@tabler/icons-react";
-import React from "react";
+
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../../stores/use-set-properties-store";
-import { api } from "@quenti/trpc";
 
 export const ShuffleLearnSection = () => {
   const { id } = useSet();

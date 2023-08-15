@@ -1,3 +1,9 @@
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+
 import {
   Box,
   Button,
@@ -11,13 +17,11 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconBrandGoogle } from "@tabler/icons-react";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { Logo } from "../../../../packages/components/logo";
 import { getSafeRedirectUrl } from "../lib/urls";
-import { Link } from "@quenti/components";
 import { Loading } from "./loading";
 
 export interface AuthLayoutProps {
@@ -47,7 +51,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
   const verb = mode == "signup" ? "up" : "in";
   const gradient = useColorModeValue(
     "linear(to-t, gray.50, blue.300)",
-    "linear(to-t, gray.1000, blue.300)"
+    "linear(to-t, gray.1000, blue.300)",
   );
   const gradientOpacity = useColorModeValue("0.3", "0.1");
   const termsColor = useColorModeValue("gray.400", "gray.600");

@@ -1,15 +1,17 @@
+import React from "react";
+
 import {
+  type SystemStyleObject,
+  type Tab,
   TabList,
   Tabs,
+  type TabsProps,
   chakra,
   forwardRef,
   useColorModeValue,
   useTabsStyles,
-  type SystemStyleObject,
-  type Tab,
-  type TabsProps,
 } from "@chakra-ui/react";
-import React from "react";
+
 import { useTab } from "../lib/use-tab";
 
 interface ToggleGroupProps {
@@ -64,7 +66,7 @@ export const ToggleGroup = ({
 
 ToggleGroup.Tab = forwardRef(function ToggleGroupTab(
   props: React.ComponentProps<typeof Tab>,
-  ref
+  ref,
 ) {
   const {
     index: selectedIndex,

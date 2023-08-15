@@ -1,16 +1,18 @@
+import { Link } from "@quenti/components";
+import type { StudySetVisibility } from "@quenti/prisma/client";
+
 import {
   Box,
-  Heading,
   HStack,
+  Heading,
   LinkBox,
   LinkOverlay,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { StudySetVisibility } from "@quenti/prisma/client";
+
 import { visibilityIcon } from "../../common/visibility-icon";
-import { Link } from "@quenti/components";
 import { plural } from "../../utils/string";
 
 interface ProfileLinkableProps {

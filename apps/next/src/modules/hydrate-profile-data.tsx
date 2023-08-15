@@ -2,9 +2,11 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { type RouterOutputs, api } from "@quenti/trpc";
+
 import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
-import { api, type RouterOutputs } from "@quenti/trpc";
 import { Profile404 } from "./profile/profile-404";
 
 type ProfileData = RouterOutputs["profile"]["get"] & { isMe: boolean };

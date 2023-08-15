@@ -1,4 +1,9 @@
+import React from "react";
+import { createStore, useStore } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
+
 import type { Question, RoundSummary, StudiableTerm } from "@quenti/interfaces";
+import { shuffleArray, takeNRandom } from "@quenti/lib/array";
 import { SPECIAL_CHAR_REGEXP } from "@quenti/lib/constants/characters";
 import { LEARN_TERMS_IN_ROUND } from "@quenti/lib/constants/learn";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
@@ -7,10 +12,6 @@ import type {
   StudySetAnswerMode,
   Term,
 } from "@quenti/prisma/client";
-import React from "react";
-import { createStore, useStore } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
-import { shuffleArray, takeNRandom } from "@quenti/lib/array";
 
 export interface LearnStoreProps {
   mode: LearnMode;
@@ -38,7 +39,7 @@ interface LearnState extends LearnStoreProps {
     answerMode: StudySetAnswerMode,
     studiableTerms: StudiableTerm[],
     allTerms: Term[],
-    round: number
+    round: number,
   ) => void;
   answerCorrectly: (termId: string) => void;
   answerIncorrectly: (termId: string) => void;
@@ -57,7 +58,7 @@ export type LearnStore = ReturnType<typeof createLearnStore>;
 export const word = (
   mode: StudySetAnswerMode,
   term: Term,
-  type: "prompt" | "answer"
+  type: "prompt" | "answer",
 ) => {
   if (mode == "Definition")
     return type == "prompt" ? term.word : term.definition;
@@ -92,12 +93,12 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               .map((x) =>
                 [...word(answerMode, x, "answer").matchAll(SPECIAL_CHAR_REGEXP)]
                   .map((x) => Array.from(x))
-                  .flat()
+                  .flat(),
               )
               .flat()
               .map((x) => x.split(""))
-              .flat()
-          )
+              .flat(),
+          ),
         );
 
         set({
@@ -180,7 +181,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       endQuestionCallback: (correct) => {
         set((state) => {
           const masteredCount = state.studiableTerms.filter(
-            (x) => x.correctness == 2
+            (x) => x.correctness == 2,
           ).length;
           if (masteredCount == state.numTerms) return { completed: true };
 
@@ -189,7 +190,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               roundSummary: {
                 round: state.currentRound,
                 termsThisRound: Array.from(
-                  new Set(state.roundTimeline.map((q) => q.term))
+                  new Set(state.roundTimeline.map((q) => q.term)),
                 ),
                 progress: state.studiableTerms.filter((x) => x.correctness != 0)
                   .length,
@@ -251,14 +252,14 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           const currentRound = state.currentRound + (!start ? 1 : 0);
 
           const incorrectTerms = state.studiableTerms.filter(
-            (x) => x.correctness == -1
+            (x) => x.correctness == -1,
           );
           const unstudied = state.studiableTerms.filter(
-            (x) => x.correctness == 0
+            (x) => x.correctness == 0,
           );
 
           const familiarTerms = state.studiableTerms.filter(
-            (x) => x.correctness == 1
+            (x) => x.correctness == 1,
           );
           const familiarTermsWithRound = familiarTerms.map((x) => {
             if (x.appearedInRound === undefined)
@@ -270,8 +271,8 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             .concat(
               // Add the familiar terms that haven't been seen at least 2 rounds ago
               familiarTermsWithRound.filter(
-                (x) => currentRound - x.appearedInRound! >= 2
-              )
+                (x) => currentRound - x.appearedInRound! >= 2,
+              ),
             )
             .concat(unstudied)
             .concat(familiarTerms) // Add the rest of the familar terms if there's nothing else left
@@ -289,10 +290,10 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
                 .concat(
                   takeNRandom(
                     state.allTerms,
-                    Math.max(termsThisRound.length, 4)
-                  )
-                )
-            )
+                    Math.max(termsThisRound.length, 4),
+                  ),
+                ),
+            ),
           );
 
           const roundTimeline: Question[] = termsThisRound.map((term) => {
@@ -308,8 +309,8 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               const choices = shuffleArray(
                 takeNRandom(
                   allChoices.filter((choice) => choice.id !== term.id),
-                  Math.min(3, state.allTerms.length)
-                ).concat(term)
+                  Math.min(3, state.allTerms.length),
+                ).concat(term),
               );
 
               return {
@@ -346,7 +347,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           feedbackBank: { correct, incorrect },
         });
       },
-    }))
+    })),
   );
 };
 
@@ -354,7 +355,7 @@ export const LearnContext = React.createContext<LearnStore | null>(null);
 
 export const useLearnContext = <T>(
   selector: (state: LearnState) => T,
-  equalityFn?: (left: T, right: T) => boolean
+  equalityFn?: (left: T, right: T) => boolean,
 ): T => {
   const store = React.useContext(LearnContext);
   if (!store) throw new Error("Missing LearnContext.Provider in the tree");

@@ -1,7 +1,12 @@
+import React from "react";
+
+import { env } from "@quenti/env/client";
+import { api } from "@quenti/trpc";
+
 import {
   Button,
-  Heading,
   HStack,
+  Heading,
   Input,
   Modal,
   ModalContent,
@@ -9,11 +14,10 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { env } from "@quenti/env/client";
+
 import { IconCheck, IconCopy } from "@tabler/icons-react";
-import React from "react";
+
 import { useFolder } from "../../hooks/use-folder";
-import { api } from "@quenti/trpc";
 
 export interface ShareFolderModalProps {
   isOpen: boolean;
@@ -32,7 +36,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
     { folderId: id },
     {
       enabled: isOpen,
-    }
+    },
   );
   const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
 

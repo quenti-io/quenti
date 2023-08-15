@@ -1,3 +1,12 @@
+import { motion } from "framer-motion";
+import React from "react";
+
+import {
+  type Language,
+  getSuggestions,
+  languageName,
+} from "@quenti/core/language";
+
 import {
   Box,
   Button,
@@ -6,14 +15,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconArrowBarUp, IconLanguage } from "@tabler/icons-react";
-import { motion } from "framer-motion";
-import React from "react";
-import {
-  getSuggestions,
-  languageName,
-  type Language,
-} from "@quenti/core/language";
 
 interface CharacterSuggestionsProps {
   language: Language;

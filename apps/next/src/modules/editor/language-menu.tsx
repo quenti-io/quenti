@@ -1,3 +1,7 @@
+import React from "react";
+
+import { type Language, languages } from "@quenti/core";
+
 import {
   Box,
   Center,
@@ -11,11 +15,11 @@ import {
   PopoverContent,
   Stack,
   Text,
+  VStack,
   useColorMode,
   useColorModeValue,
-  VStack,
 } from "@chakra-ui/react";
-import { Language, languages } from "@quenti/core";
+
 import {
   IconCheck,
   IconHelpHexagon,
@@ -24,7 +28,6 @@ import {
   IconSearch,
   IconVariable,
 } from "@tabler/icons-react";
-import React from "react";
 
 const topLanguages: Language[] = [
   "en",
@@ -166,17 +169,17 @@ export const LanguageMenuWrapper: React.FC<
             <Box height={400} overflowY="scroll" ref={containerRef}>
               <LanguageGroupPure
                 name="Top Languages"
-                languages={topLanguagesGroup}
+                languagesProps={topLanguagesGroup}
                 onSelect={onSelect}
               />
               <LanguageGroupPure
                 name="Special Languages"
-                languages={specialLanguagesGroup}
+                languagesProps={specialLanguagesGroup}
                 onSelect={onSelect}
               />
               <LanguageGroupPure
                 name="All Languages"
-                languages={allLanguagesGroup}
+                languagesProps={allLanguagesGroup}
                 onSelect={onSelect}
               />
               {!allFiltered.length && (
@@ -197,16 +200,16 @@ export const LanguageMenuWrapper: React.FC<
 
 interface LanguageGroup {
   name: string;
-  languages: LanguageProps[];
+  languagesProps: LanguageItemProps[];
   onSelect?: (l: Language) => void;
 }
 
 const LanguageGroup: React.FC<LanguageGroup> = ({
   name,
-  languages,
+  languagesProps,
   onSelect,
 }) => {
-  if (!languages.length) return null;
+  if (!languagesProps.length) return null;
 
   return (
     <React.Fragment>
@@ -216,8 +219,8 @@ const LanguageGroup: React.FC<LanguageGroup> = ({
             {name}
           </Text>
         </Box>
-        {languages.map((l) => (
-          <LanguagePure
+        {languagesProps.map((l) => (
+          <LanguageItemPure
             {...l}
             key={l.value}
             onClick={() => {
@@ -233,7 +236,7 @@ const LanguageGroup: React.FC<LanguageGroup> = ({
 
 const LanguageGroupPure = React.memo(LanguageGroup);
 
-interface LanguageProps {
+interface LanguageItemProps {
   isSelected: boolean;
   name: string;
   value: Language;
@@ -241,7 +244,7 @@ interface LanguageProps {
   onClick?: () => void;
 }
 
-const Language: React.FC<LanguageProps> = ({
+const LanguageItem: React.FC<LanguageItemProps> = ({
   isSelected,
   name,
   value,
@@ -278,8 +281,8 @@ const Language: React.FC<LanguageProps> = ({
       </Box>
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isSelected, name, value, colorMode]
+    [isSelected, name, value, colorMode],
   );
 };
 
-const LanguagePure = React.memo(Language);
+const LanguageItemPure = React.memo(LanguageItem);

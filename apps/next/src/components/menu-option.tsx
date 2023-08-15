@@ -1,14 +1,17 @@
 // eslint-disable-next-line no-restricted-imports
+import React from "react";
+
+import { Link } from "@quenti/components";
+
 import {
   MenuItem,
+  type MenuItemProps,
   Text,
   forwardRef,
   useColorModeValue,
-  type MenuItemProps,
 } from "@chakra-ui/react";
-import { Link } from "@quenti/components";
+
 import type { TablerIconsProps } from "@tabler/icons-react";
-import React from "react";
 
 export interface MenuOptionProps {
   icon: React.ReactElement<TablerIconsProps, string>;
@@ -39,7 +42,7 @@ export const MenuOption = forwardRef<MenuItemProps & MenuOptionProps, "div">(
         <Text>{label}</Text>
       </MenuItem>
     );
-  }
+  },
 );
 
 export const MenuOptionPure = React.memo(MenuOption);

@@ -1,3 +1,5 @@
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -6,9 +8,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "@quenti/trpc";
 
 export const MultipleAnswerModeSection: React.FC = () => {
   const { id } = useSet();
@@ -16,7 +18,7 @@ export const MultipleAnswerModeSection: React.FC = () => {
 
   const multipleAnswerMode = useContainerContext((s) => s.multipleAnswerMode);
   const setMultipleAnswerMode = useContainerContext(
-    (s) => s.setMultipleAnswerMode
+    (s) => s.setMultipleAnswerMode,
   );
 
   const apiSetMultipleAnswerMode =

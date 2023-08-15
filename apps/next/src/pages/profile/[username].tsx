@@ -8,6 +8,7 @@ import {
   Tabs,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import type { ComponentWithAuth } from "../../components/auth-component";
 import { WithFooter } from "../../components/with-footer";
 import { HydrateProfileData } from "../../modules/hydrate-profile-data";

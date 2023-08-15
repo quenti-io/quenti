@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Container,
   Heading,
@@ -7,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
+
 import { SegmentedProgress } from "./segmented-progress";
 
 export interface WizardLayoutProps {

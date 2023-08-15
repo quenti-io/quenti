@@ -1,8 +1,11 @@
-import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import { cleanSpaces } from "@quenti/core/evaluator";
-import { getRandom } from "@quenti/lib/array";
 import { motion } from "framer-motion";
 import React from "react";
+
+import { cleanSpaces } from "@quenti/core/evaluator";
+import { getRandom } from "@quenti/lib/array";
+
+import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
+
 import { useLearnContext } from "../../../../stores/use-learn-store";
 import { AnswerCard } from "./answer-card";
 

@@ -1,8 +1,11 @@
-import { Container } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
 import debounce from "lodash.debounce";
 import React from "react";
 import { shallow } from "zustand/shallow";
+
+import { api } from "@quenti/trpc";
+
+import { Container } from "@chakra-ui/react";
+
 import type { ComponentWithAuth } from "../components/auth-component";
 import { WithFooter } from "../components/with-footer";
 import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
@@ -66,7 +69,7 @@ const PropertiesListener = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const autoSaveCallback = React.useCallback(
     debounce(autoSaveHandler, 100),
-    []
+    [],
   );
   const wrappedCallback = () => {
     void (async () => {
@@ -88,7 +91,7 @@ const PropertiesListener = () => {
       wrappedCallback,
       {
         equalityFn: shallow,
-      }
+      },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

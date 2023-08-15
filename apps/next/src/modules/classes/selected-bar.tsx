@@ -7,6 +7,7 @@ import {
   ScaleFade,
   Text,
 } from "@chakra-ui/react";
+
 import { IconBan, IconSwitchHorizontal, IconUserX } from "@tabler/icons-react";
 
 interface SelectedBarProps {

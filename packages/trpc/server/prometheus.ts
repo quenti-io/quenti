@@ -1,8 +1,10 @@
-import { env } from "@quenti/env/server";
-import { prisma } from "@quenti/prisma";
 import client from "prom-client";
 
+import { env } from "@quenti/env/server";
+import { prisma } from "@quenti/prisma";
+
 import pjson from "../../../apps/next/package.json";
+
 const version = pjson.version;
 const versionSegments = version.split(".");
 
@@ -36,7 +38,7 @@ export const register =
                 gte: new Date(Date.now() - 10 * 60 * 1000),
               },
             },
-          })
+          }),
         );
       },
     });
@@ -113,7 +115,7 @@ export const register =
           `v${version}`,
           versionSegments[0] || "0",
           versionSegments[1] || "0",
-          versionSegments[2] || "0"
+          versionSegments[2] || "0",
         ).set(1);
       },
     });

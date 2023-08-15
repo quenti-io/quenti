@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import type { NonNullableUserContext } from "../../lib/types";
-import { profanity } from "../../common/profanity";
+
 import {
   MAX_CHARS_TAGS,
   MAX_DESC,
@@ -8,6 +7,8 @@ import {
   MAX_TERM,
   MAX_TITLE,
 } from "../../common/constants";
+import { profanity } from "../../common/profanity";
+import type { NonNullableUserContext } from "../../lib/types";
 
 type CreateFromAutosaveOptions = {
   ctx: NonNullableUserContext;

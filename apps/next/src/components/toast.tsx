@@ -3,9 +3,9 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  type ToastProps,
   chakra,
   useColorModeValue,
-  type ToastProps,
 } from "@chakra-ui/react";
 
 export const Toast: React.FC<ToastProps> = (props) => {

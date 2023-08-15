@@ -1,3 +1,11 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
+import React from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -9,14 +17,8 @@ import {
   Input,
   SlideFade,
   Stack,
-  useColorModeValue,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "@quenti/trpc";
-import { useRouter } from "next/router";
-import React from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 import { plural } from "../../utils/string";
@@ -74,7 +76,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
     resolver: zodResolver(schema(domain?.domain ?? undefined, remaining)),
     defaultValues: {
       emails: Array.from({ length: Math.min(2, remaining) }).map(
-        () => undefined
+        () => undefined,
       ),
       sendEmail: true,
     },
@@ -88,7 +90,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
       ...data,
       classId: router.query.id as string,
       emails: data.emails.filter(
-        (s) => s !== undefined && s.trim().length > 0
+        (s) => s !== undefined && s.trim().length > 0,
       ) as string[],
     });
   };
@@ -102,7 +104,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
     }
     inviteTeachersMethods.reset({
       emails: Array.from({ length: Math.min(2, remaining) }).map(
-        () => undefined
+        () => undefined,
       ),
     });
 
@@ -111,8 +113,6 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
-
-  const labelColor = useColorModeValue("gray.600", "gray.400");
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

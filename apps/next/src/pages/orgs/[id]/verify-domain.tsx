@@ -1,3 +1,8 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -11,9 +16,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { Toast } from "../../../components/toast";
@@ -57,7 +60,7 @@ export default function OrgVerifyEmail() {
             render: Toast,
           });
       },
-    }
+    },
   );
 
   const resendCode = api.organizations.resendCode.useMutation({

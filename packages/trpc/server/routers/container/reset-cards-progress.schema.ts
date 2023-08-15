@@ -1,5 +1,6 @@
-import { ContainerType } from "@quenti/prisma/client";
 import { z } from "zod";
+
+import { ContainerType } from "@quenti/prisma/client";
 
 export const ZResetCardsProgressSchema = z.object({
   entityId: z.string(),

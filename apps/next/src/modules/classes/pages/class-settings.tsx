@@ -1,3 +1,8 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -11,10 +16,9 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
+
 import { IconLogout, IconSettings, IconTrash } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../../components/auto-resize-textarea";
 import { ConfirmModal } from "../../../components/confirm-modal";

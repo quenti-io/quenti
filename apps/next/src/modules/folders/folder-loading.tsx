@@ -1,4 +1,5 @@
 import { Container, Stack, Text } from "@chakra-ui/react";
+
 import { WithFooter } from "../../components/with-footer";
 import { ActionArea } from "./action-area";
 import { FolderHeading } from "./folder-heading";

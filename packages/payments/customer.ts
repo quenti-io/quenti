@@ -2,6 +2,7 @@ import { HttpError } from "@quenti/lib/http-error";
 import { prisma } from "@quenti/prisma";
 import { Prisma } from "@quenti/prisma/client";
 import { userMetadataSchema } from "@quenti/prisma/zod-schemas";
+
 import { stripe } from "./stripe";
 
 const selectedUser = Prisma.validator<Prisma.UserArgs>()({
@@ -52,7 +53,7 @@ export const getStripeCustomerId = async (user: SelectedUser) => {
 
 export const updateUserWithCustomerId = async (
   user: SelectedUser,
-  customerId: string
+  customerId: string,
 ) => {
   await prisma.user.update({
     where: { id: user.id },

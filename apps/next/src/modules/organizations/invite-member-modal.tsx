@@ -1,3 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { env } from "@quenti/env/client";
+import type { MembershipRole } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -19,20 +28,15 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { env } from "@quenti/env/client";
-import type { MembershipRole } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
+
 import { IconLink, IconUpload, IconUser, IconUsers } from "@tabler/icons-react";
-import React from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Modal } from "../../components/modal";
+import { Toast } from "../../components/toast";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";
-import { Toast } from "../../components/toast";
 
 export interface InviteMemberModalProps {
   isOpen: boolean;
@@ -106,7 +110,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
 
   const copyInviteLink = async (providedToken?: string) => {
     await navigator.clipboard.writeText(
-      `${env.NEXT_PUBLIC_BASE_URL}/orgs?token=${providedToken || token || ""}`
+      `${env.NEXT_PUBLIC_BASE_URL}/orgs?token=${providedToken || token || ""}`,
     );
     toast({
       title: "Invite link copied to clipboard",

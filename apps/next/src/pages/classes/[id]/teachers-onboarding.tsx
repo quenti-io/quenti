@@ -1,3 +1,6 @@
+import { useRouter } from "next/router";
+import React from "react";
+
 import {
   Button,
   Card,
@@ -8,21 +11,21 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+
 import {
   IconArrowRight,
   IconPointFilled,
   IconUserPlus,
   IconUsers,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { OnboardingMember } from "../../../components/onboarding-member";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";
 import { useClassMembers } from "../../../hooks/use-class-members";
 import { InviteTeachersModal } from "../../../modules/classes/invite-teachers-modal";
-import { plural } from "../../../utils/string";
 import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
+import { plural } from "../../../utils/string";
 
 export default function TeachersOnboarding() {
   const router = useRouter();

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+
 import { AuthLayout } from "../../components/auth-layout";
 
 export default function Signup() {

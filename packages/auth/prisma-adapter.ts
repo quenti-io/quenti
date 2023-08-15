@@ -1,9 +1,11 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { USERNAME_REPLACE_REGEXP } from "@quenti/lib/constants/characters";
-import type { PrismaClient, UserType } from "@quenti/prisma/client";
 import type { Adapter } from "next-auth/adapters";
 
+import { USERNAME_REPLACE_REGEXP } from "@quenti/lib/constants/characters";
+import type { PrismaClient, UserType } from "@quenti/prisma/client";
+
 import pjson from "../../apps/next/package.json";
+
 const version = pjson.version;
 
 export function CustomPrismaAdapter(p: PrismaClient): Adapter {

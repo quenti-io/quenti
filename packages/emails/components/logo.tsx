@@ -1,5 +1,6 @@
-import { env } from "@quenti/env/client";
 import { Img } from "@react-email/components";
+
+import { env } from "@quenti/env/client";
 
 interface LogoProps {
   width?: number;

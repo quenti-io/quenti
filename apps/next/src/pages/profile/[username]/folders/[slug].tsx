@@ -1,4 +1,5 @@
 import { Container, Stack } from "@chakra-ui/react";
+
 import type { ComponentWithAuth } from "../../../../components/auth-component";
 import { WithFooter } from "../../../../components/with-footer";
 import { ActionArea } from "../../../../modules/folders/action-area";

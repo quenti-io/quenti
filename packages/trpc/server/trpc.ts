@@ -16,12 +16,26 @@
  * processing a request
  *
  */
-import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
 import type { Session } from "next-auth";
 import type { AxiomAPIRequest } from "next-axiom";
+import type { Counter } from "prom-client";
+import superjson from "superjson";
 
 import { getServerAuthSession } from "@quenti/auth";
+
+/**
+ * 2. INITIALIZATION
+ *
+ * This is where the trpc api is initialized, connecting the context and
+ * transformer
+ */
+import { env } from "@quenti/env/server";
 import { prisma } from "@quenti/prisma";
+
+import { TRPCError, initTRPC } from "@trpc/server";
+import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
+
+import type { EnabledFeature } from "./common/constants";
 import { register } from "./prometheus";
 
 type CreateContextOptions = {
@@ -62,18 +76,6 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     session,
   });
 };
-
-/**
- * 2. INITIALIZATION
- *
- * This is where the trpc api is initialized, connecting the context and
- * transformer
- */
-import { env } from "@quenti/env/server";
-import { initTRPC, TRPCError } from "@trpc/server";
-import type { Counter } from "prom-client";
-import superjson from "superjson";
-import type { EnabledFeature } from "./common/constants";
 
 const t = initTRPC
   .context<Awaited<ReturnType<typeof createTRPCContext>>>()
@@ -169,7 +171,7 @@ const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(
     }
 
     return next();
-  }
+  },
 );
 
 export const adminProcedure = protectedProcedure.use(enforceUserIsAdmin);
@@ -181,7 +183,7 @@ export const enforceUserIsTeacher = enforceUserIsAuthed.unstable_pipe(
     }
 
     return next();
-  }
+  },
 );
 
 export const teacherProcedure = protectedProcedure.use(enforceUserIsTeacher);

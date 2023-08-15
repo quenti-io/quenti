@@ -1,3 +1,5 @@
+import React, { useMemo } from "react";
+
 import {
   Button,
   Flex,
@@ -13,8 +15,9 @@ import {
   Textarea,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconCheck, IconCopy } from "@tabler/icons-react";
-import React, { useMemo } from "react";
+
 import { useSet } from "../hooks/use-set";
 
 export interface ExportTermsModalProps {

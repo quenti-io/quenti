@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAddStudentsSchema } from "./add-students.schema";
@@ -40,6 +41,8 @@ export const addStudentsHandler = async ({
         "Cannot manually add students to a class not bound to an organization",
     });
   }
+
+  const x = 2;
 
   const domains = class_.organization.domains.map((d) => d.domain);
   if (!input.emails.every((e) => domains.includes(e.split("@")[1]!))) {

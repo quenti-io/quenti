@@ -1,24 +1,27 @@
-const shouldAnalyzeBundles = process.env.ANALYZE === "true";
-
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import { withHighlightConfig } from "@highlight-run/next/server";
 import { withAxiom } from "next-axiom";
 import nextBuildId from "next-build-id";
-const withBundleAnalyzer = shouldAnalyzeBundles
-  ? (await import("@next/bundle-analyzer")).default
-  : () => undefined;
-
-import pjson from "./package.json" assert { type: "json" };
-const appVersion = pjson.version;
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 
 // @ts-check
+
 /*
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
  */
 import "@quenti/env/client/client.mjs";
 import "@quenti/env/server/server.mjs";
+
+import pjson from "./package.json" assert { type: "json" };
+
+const shouldAnalyzeBundles = process.env.ANALYZE === "true";
+
+const withBundleAnalyzer = shouldAnalyzeBundles
+  ? (await import("@next/bundle-analyzer")).default
+  : () => undefined;
+
+const appVersion = pjson.version;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -101,7 +104,7 @@ let config = withHighlightConfig(
     appVersion,
     configureHighlightProxy: true,
     uploadSourceMaps: false,
-  }
+  },
 );
 
 if (shouldAnalyzeBundles) {

@@ -3,7 +3,8 @@
   "pipeline": {
     "@quenti/next#build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["DATABASE_URL"]
     },
     "build": {
       "dependsOn": ["^build"],

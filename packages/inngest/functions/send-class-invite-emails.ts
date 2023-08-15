@@ -1,5 +1,6 @@
 import { sendClassInviteEmail } from "@quenti/emails";
 import { env } from "@quenti/env/client";
+
 import { inngest } from "..";
 
 export const sendClassInviteEmails = inngest.createFunction(
@@ -15,9 +16,9 @@ export const sendClassInviteEmails = inngest.createFunction(
               className: event.data.class.name,
               inviter: event.data.inviter,
               url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup?callbackUrl=/classes/${event.data.class.id}/join`,
-            })
-        )
-      )
+            }),
+        ),
+      ),
     );
 
     const sendLoginEmails = Promise.all(
@@ -29,11 +30,11 @@ export const sendClassInviteEmails = inngest.createFunction(
               className: event.data.class.name,
               inviter: event.data.inviter,
               url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/classes/${event.data.class.id}/join`,
-            })
-        )
-      )
+            }),
+        ),
+      ),
     );
 
     await Promise.all([sendSignupEmails, sendLoginEmails]);
-  }
+  },
 );

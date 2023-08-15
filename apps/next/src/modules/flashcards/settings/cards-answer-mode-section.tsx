@@ -1,10 +1,13 @@
-import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import type { LimitedStudySetAnswerMode } from "@quenti/prisma/client";
 import { Select } from "chakra-react-select";
 import { useSession } from "next-auth/react";
+
+import type { LimitedStudySetAnswerMode } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
+import { Box, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "@quenti/trpc";
 
 const options: { label: string; value: LimitedStudySetAnswerMode }[] = [
   {

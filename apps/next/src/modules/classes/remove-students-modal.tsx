@@ -1,3 +1,7 @@
+import { avatarUrl } from "@quenti/lib/avatar";
+import type { User } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Avatar,
   AvatarGroup,
@@ -6,10 +10,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
-import type { User } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
+
 import { IconUserX } from "@tabler/icons-react";
+
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 import { addressStudents } from "./utils/address-students";

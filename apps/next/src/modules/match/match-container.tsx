@@ -1,9 +1,11 @@
-import { Box } from "@chakra-ui/react";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
+
+import { Box } from "@chakra-ui/react";
+
 import { MatchCard } from "../../components/match-card";
 import { useHistory } from "../../hooks/use-history";
-import { useMatchContext, type MatchItem } from "../../stores/use-match-store";
+import { type MatchItem, useMatchContext } from "../../stores/use-match-store";
 import { EventListener } from "./event-listener";
 import MatchInfo from "./match-info";
 import { MatchStartModal } from "./match-start-modal";
@@ -22,10 +24,10 @@ export const MatchContainer = () => {
 
   const getIndicesUnder = useMatchContext((state) => state.getIndicesUnder);
   const setHighlightedIndices = useMatchContext(
-    (state) => state.setHighlightedIndices
+    (state) => state.setHighlightedIndices,
   );
   const validateUnderIndices = useMatchContext(
-    (state) => state.validateUnderIndices
+    (state) => state.validateUnderIndices,
   );
 
   const wrapper = React.useRef<HTMLDivElement>(null);
@@ -44,7 +46,7 @@ export const MatchContainer = () => {
       setHighlightedIndices(getIndicesUnder(index, updated));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   const onDragEnd = React.useCallback(
@@ -57,7 +59,7 @@ export const MatchContainer = () => {
       validateUnderIndices(index, wrapper.current!);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   React.useEffect(() => {
@@ -86,7 +88,7 @@ export const MatchContainer = () => {
                 onDrag={onDrag}
                 onDragEnd={onDragEnd}
               />
-            )
+            ),
           )}
         </AnimatePresence>
       )}

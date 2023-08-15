@@ -1,7 +1,9 @@
-import { Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { Center, Heading, Text, VStack } from "@chakra-ui/react";
+
 import type { ComponentWithAuth } from "../components/auth-component";
 import { Loading } from "../components/loading";
 

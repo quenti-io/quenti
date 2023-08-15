@@ -1,6 +1,7 @@
-import { env } from "@quenti/env/server";
 import { Resend } from "resend";
 import type { CreateEmailOptions } from "resend/build/src/emails/interfaces";
+
+import { env } from "@quenti/env/server";
 
 import ClasssInviteEmail, {
   type ClassInviteEmailProps,
@@ -33,7 +34,7 @@ export const sendEmail = async (opts: CreateEmailOptions) => {
 
 export const sendClassInviteEmail = async (
   email: string,
-  opts: ClassInviteEmailProps
+  opts: ClassInviteEmailProps,
 ) => {
   await sendEmail({
     from: NOTIFICATIONS_SENDER,
@@ -47,7 +48,7 @@ export const sendClassInviteEmail = async (
 
 export const sendOrganizationInviteEmail = async (
   email: string,
-  opts: OrganizationInviteEmailProps
+  opts: OrganizationInviteEmailProps,
 ) => {
   await sendEmail({
     from: NOTIFICATIONS_SENDER,
@@ -61,7 +62,7 @@ export const sendOrganizationInviteEmail = async (
 
 export const sendConfirmCodeEmail = async (
   email: string,
-  opts: ConfirmCodeEmailProps
+  opts: ConfirmCodeEmailProps,
 ) => {
   await sendEmail({
     from: NOTIFICATIONS_SENDER,

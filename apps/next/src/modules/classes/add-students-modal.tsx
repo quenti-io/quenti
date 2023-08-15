@@ -1,3 +1,15 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import {
+  Controller,
+  type SubmitHandler,
+  type UseFormReturn,
+  useForm,
+} from "react-hook-form";
+import { z } from "zod";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -10,17 +22,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "@quenti/trpc";
+
 import { IconUpload, IconUser, IconUsers } from "@tabler/icons-react";
-import React from "react";
-import {
-  Controller,
-  useForm,
-  type SubmitHandler,
-  type UseFormReturn,
-} from "react-hook-form";
-import { z } from "zod";
+
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Modal } from "../../components/modal";
 import { ToggleGroup } from "../../components/toggle-group";
@@ -67,7 +71,7 @@ export const AddStudentsModal: React.FC<AddStudentsModalProps> = ({
   const { data: class_ } = useClass();
   const base = getBaseDomain(class_?.organization ?? undefined);
   const student = class_?.organization?.domains.find(
-    (x) => x.type == "Student"
+    (x) => x.type == "Student",
   );
   const domain = student?.domain ?? base?.domain ?? "";
 
@@ -207,7 +211,7 @@ const Individual = React.forwardRef<HTMLInputElement, PanelProps>(
         )}
       />
     );
-  }
+  },
 );
 
 export const BulkImport: React.FC<PanelProps> = ({ domain, methods }) => {

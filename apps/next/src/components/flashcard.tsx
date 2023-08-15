@@ -1,3 +1,8 @@
+import React from "react";
+import useFitText from "use-fit-text";
+
+import type { Term } from "@quenti/prisma/client";
+
 import {
   Box,
   Button,
@@ -10,7 +15,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { Term } from "@quenti/prisma/client";
+
 import {
   IconArrowBackUp,
   IconCheck,
@@ -21,8 +26,7 @@ import {
   IconStarFilled,
   IconX,
 } from "@tabler/icons-react";
-import React from "react";
-import useFitText from "use-fit-text";
+
 import { ScriptFormatter } from "./script-formatter";
 import { SetCreatorOnly } from "./set-creator-only";
 

@@ -1,6 +1,7 @@
-import { api } from "@quenti/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+
+import { api } from "@quenti/trpc";
 
 export const useClass = () => {
   const router = useRouter();
@@ -13,6 +14,6 @@ export const useClass = () => {
       enabled: !!id && !!session.data?.user,
       retry: false,
       refetchOnMount: false,
-    }
+    },
   );
 };

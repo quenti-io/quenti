@@ -1,3 +1,10 @@
+import React from "react";
+
+import type {
+  MembershipRole,
+  OrganizationDomainType,
+} from "@quenti/prisma/client";
+
 import {
   Box,
   Card,
@@ -14,10 +21,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type {
-  MembershipRole,
-  OrganizationDomainType,
-} from "@quenti/prisma/client";
+
 import {
   IconCircleCheck,
   IconCircleDot,
@@ -26,7 +30,7 @@ import {
   IconEditCircle,
   IconWorldX,
 } from "@tabler/icons-react";
-import React from "react";
+
 import { MenuOption } from "../../components/menu-option";
 import { useOrganization } from "../../hooks/use-organization";
 import { briefFormatter } from "../../utils/time";

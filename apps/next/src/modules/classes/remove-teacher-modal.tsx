@@ -1,3 +1,5 @@
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -5,8 +7,9 @@ import {
   chakra,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
+
 import { IconUserX } from "@tabler/icons-react";
+
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 

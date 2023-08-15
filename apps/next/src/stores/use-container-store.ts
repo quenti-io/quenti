@@ -1,11 +1,12 @@
+import React from "react";
+import { createStore, useStore } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
+
 import type {
   LimitedStudySetAnswerMode,
   MultipleAnswerMode,
   StudySetAnswerMode,
 } from "@quenti/prisma/client";
-import React from "react";
-import { createStore, useStore } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
 
 export interface ContainerStoreProps {
   shuffleFlashcards: boolean;
@@ -41,7 +42,7 @@ interface ContainerState extends ContainerStoreProps {
 export type ContainerStore = ReturnType<typeof createContainerStore>;
 
 export const createContainerStore = (
-  initProps?: Partial<ContainerStoreProps>
+  initProps?: Partial<ContainerStoreProps>,
 ) => {
   const DEFAULT_PROPS: ContainerStoreProps = {
     shuffleFlashcards: false,
@@ -105,17 +106,17 @@ export const createContainerStore = (
           };
         });
       },
-    }))
+    })),
   );
 };
 
 export const ContainerContext = React.createContext<ContainerStore | null>(
-  null
+  null,
 );
 
 export const useContainerContext = <T>(
   selector: (state: ContainerState) => T,
-  equalityFn?: (left: T, right: T) => boolean
+  equalityFn?: (left: T, right: T) => boolean,
 ): T => {
   const store = React.useContext(ContainerContext);
   if (!store) throw new Error("Missing ContainerContext.Provider in the tree");

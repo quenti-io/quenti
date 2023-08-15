@@ -1,14 +1,16 @@
+import React from "react";
+
 import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
 import type { Term } from "@quenti/prisma/client";
-import React from "react";
+
 import { RootFlashcardContext } from "../components/root-flashcard-wrapper";
 import { queryEventChannel } from "../events/query";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { useContainerContext } from "../stores/use-container-store";
 import {
-  createSortFlashcardsStore,
   SortFlashcardsContext,
   type SortFlashcardsStore,
+  createSortFlashcardsStore,
 } from "../stores/use-sort-flashcards-store";
 import type { FolderData } from "./hydrate-folder-data";
 import type { SetData } from "./hydrate-set-data";
@@ -29,7 +31,7 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
     >[],
     terms: Term[],
     termOrder: string[],
-    studyStarred: boolean
+    studyStarred: boolean,
   ) => {
     let flashcardTerms: StudiableTerm[] = termOrder.map((id) => {
       const term = terms.find((t) => t.id === id)!;
@@ -44,7 +46,7 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
 
     if (studyStarred) {
       flashcardTerms = flashcardTerms.filter((x) =>
-        starredTerms.includes(x.id)
+        starredTerms.includes(x.id),
       );
     }
 
@@ -58,7 +60,7 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
       container.studiableTerms.filter((x) => x.mode == "Flashcards"),
       terms,
       termOrder,
-      container.cardsStudyStarred
+      container.cardsStudyStarred,
     );
   }
 
@@ -69,7 +71,7 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
         data.container!.studiableTerms.filter((x) => x.mode == "Flashcards"),
         data.terms,
         termOrder,
-        data.container!.cardsStudyStarred
+        data.container!.cardsStudyStarred,
       );
 
     queryEventChannel.on("setQueryRefetched", trigger);

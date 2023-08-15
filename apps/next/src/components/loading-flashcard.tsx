@@ -1,5 +1,6 @@
-import { Box, Card, Progress, Skeleton } from "@chakra-ui/react";
 import React from "react";
+
+import { Box, Card, Progress, Skeleton } from "@chakra-ui/react";
 
 export const LoadingFlashcard: React.FC<{ h?: string }> = ({ h }) => {
   return (

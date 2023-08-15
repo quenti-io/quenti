@@ -1,3 +1,7 @@
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -12,15 +16,14 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
-import React from "react";
+
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { Modal } from "../../components/modal";
 import { SegmentedProgress } from "../../components/segmented-progress";
+import { Toast } from "../../components/toast";
 import { useOrganization } from "../../hooks/use-organization";
 import { DomainForm } from "./domain-form";
-import { Toast } from "../../components/toast";
 
 export interface UpdateDomainModalProps {
   isOpen: boolean;
@@ -87,7 +90,7 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
           <Button
             onClick={() => {
               formRef.current?.dispatchEvent(
-                new Event("submit", { cancelable: true, bubbles: true })
+                new Event("submit", { cancelable: true, bubbles: true }),
               );
             }}
             isLoading={loading}
@@ -150,7 +153,7 @@ const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
             render: Toast,
           });
       },
-    }
+    },
   );
 
   const resendCode = api.organizations.resendCode.useMutation({

@@ -1,16 +1,19 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   Container,
   Divider,
-  Heading,
   HStack,
+  Heading,
   Stack,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
-import { useSession } from "next-auth/react";
-import React from "react";
+
 import type { ComponentWithAuth } from "../components/auth-component";
 import { Loading } from "../components/loading";
 import { UnboundOnly } from "../components/unbound-only";

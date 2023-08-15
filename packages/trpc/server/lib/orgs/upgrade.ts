@@ -1,5 +1,6 @@
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
+
 import { conflictingDomains } from "./domains";
 import {
   bulkJoinOrgMembersAsTeachers,
@@ -12,7 +13,7 @@ export const upgradeOrganization = async (
   userId?: string,
   paymentId?: string,
   subscriptionId?: string,
-  subscriptionItemId?: string
+  subscriptionItemId?: string,
 ) => {
   const prevOrg = await prisma.organization.findFirstOrThrow({
     where: { id },
@@ -35,7 +36,7 @@ export const upgradeOrganization = async (
 
   const conflicting = await conflictingDomains(
     id,
-    prevOrg.domains.map((d) => d.requestedDomain)
+    prevOrg.domains.map((d) => d.requestedDomain),
   );
 
   for (const domain of prevOrg.domains) {
@@ -52,7 +53,7 @@ export const upgradeOrganization = async (
         await bulkJoinOrgUsers(
           org.id,
           result.domain,
-          result.type == "Student" ? "Student" : undefined
+          result.type == "Student" ? "Student" : undefined,
         );
       }
   }

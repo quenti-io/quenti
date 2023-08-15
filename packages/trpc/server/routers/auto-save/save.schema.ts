@@ -1,6 +1,7 @@
+import { z } from "zod";
+
 import { LANGUAGE_VALUES } from "@quenti/core";
 import { StudySetVisibility } from "@quenti/prisma/client";
-import { z } from "zod";
 
 export const ZSaveSchema = z.object({
   title: z.string(),
@@ -13,7 +14,7 @@ export const ZSaveSchema = z.object({
     z.object({
       word: z.string(),
       definition: z.string(),
-    })
+    }),
   ),
 });
 

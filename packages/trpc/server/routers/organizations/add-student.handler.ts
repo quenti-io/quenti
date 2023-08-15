@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+
 import { getOrgDomains } from "../../lib/orgs/domains";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";

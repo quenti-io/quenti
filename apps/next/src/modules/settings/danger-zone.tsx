@@ -1,6 +1,9 @@
-import { Button } from "@chakra-ui/react";
-import { IconUserX } from "@tabler/icons-react";
 import React from "react";
+
+import { Button } from "@chakra-ui/react";
+
+import { IconUserX } from "@tabler/icons-react";
+
 import { DeleteAccountModal } from "./delete-account-modal";
 import { SectionWrapper } from "./section-wrapper";
 

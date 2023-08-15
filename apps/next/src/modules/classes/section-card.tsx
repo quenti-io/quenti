@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Box,
   Card,
@@ -9,12 +11,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconDotsVertical,
   IconEditCircle,
   IconTrashX,
 } from "@tabler/icons-react";
-import React from "react";
+
 import { MenuOption } from "../../components/menu-option";
 import { plural } from "../../utils/string";
 

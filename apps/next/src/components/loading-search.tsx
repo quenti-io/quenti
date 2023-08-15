@@ -1,3 +1,5 @@
+import { AnimatePresence, motion } from "framer-motion";
+
 import {
   Box,
   Input,
@@ -7,8 +9,8 @@ import {
   Skeleton,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconSearch } from "@tabler/icons-react";
-import { AnimatePresence, motion } from "framer-motion";
 
 export interface LoadingSearchProps {
   value: string;

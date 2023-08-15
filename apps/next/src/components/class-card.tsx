@@ -1,3 +1,7 @@
+import { Link } from "@quenti/components";
+import type { Widen } from "@quenti/lib/widen";
+import type { UserType } from "@quenti/prisma/client";
+
 import {
   Box,
   Flex,
@@ -9,12 +13,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { Widen } from "@quenti/lib/widen";
-import type { UserType } from "@quenti/prisma/client";
+
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
+
 import { getColorFromId } from "../utils/color";
 import { plural } from "../utils/string";
-import { Link } from "@quenti/components";
 
 interface ClassCardProps {
   id: string;

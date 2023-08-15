@@ -1,3 +1,9 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import type { Term } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Card,
@@ -8,10 +14,9 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { Term } from "@quenti/prisma/client";
+
 import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import React from "react";
+
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { ScriptFormatter } from "../../components/script-formatter";
 import { SetCreatorOnly } from "../../components/set-creator-only";
@@ -19,7 +24,6 @@ import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
-import { api } from "@quenti/trpc";
 
 export interface DisplayableTermProps {
   term: Term;
@@ -215,7 +219,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
       </Card>
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [term, starred, isEditing, editWord, editDefinition, colorMode]
+    [term, starred, isEditing, editWord, editDefinition, colorMode],
   );
 };
 

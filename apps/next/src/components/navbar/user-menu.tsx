@@ -1,3 +1,10 @@
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   AvatarBadge,
@@ -6,12 +13,12 @@ import {
   MenuDivider,
   MenuList,
   Text,
-  useColorMode,
-  useColorModeValue,
   Wrap,
   WrapItem,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   IconChevronDown,
   IconLogout,
@@ -20,10 +27,7 @@ import {
   IconSun,
   IconUser,
 } from "@tabler/icons-react";
-import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { useMe } from "../../hooks/use-me";
 import { BASE_PAGES } from "../../pages/_app";
 import { organizationIcon } from "../../utils/icons";

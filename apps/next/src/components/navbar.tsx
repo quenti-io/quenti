@@ -1,3 +1,10 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   AvatarBadge,
@@ -8,16 +15,13 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
+
 import { IconMenu, IconX } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { menuEventChannel } from "../events/menu";
 import { BASE_PAGES } from "../pages/_app";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
-import { Link } from "@quenti/components";
 import { LeftNav } from "./navbar/left-nav";
 import { MobileMenu } from "./navbar/mobile-menu";
 import { UserMenu } from "./navbar/user-menu";

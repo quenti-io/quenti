@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TByEntityIdSchema } from "./by-entity-id.schema";
 import { validateLeaderboardAccess } from "./utils/access";

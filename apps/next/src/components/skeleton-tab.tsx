@@ -1,6 +1,7 @@
-import { Flex, SkeletonText, Tab } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
+
+import { Flex, SkeletonText, Tab } from "@chakra-ui/react";
 
 interface SkeletonTabProps {
   isLoaded: boolean;

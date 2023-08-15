@@ -1,6 +1,8 @@
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
-import { IconHelpHexagon } from "@tabler/icons-react";
 import { Link } from "@quenti/components";
+
+import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+
+import { IconHelpHexagon } from "@tabler/icons-react";
 
 export const Profile404 = () => {
   return (

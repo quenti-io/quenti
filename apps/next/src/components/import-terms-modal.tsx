@@ -1,3 +1,5 @@
+import React, { useMemo } from "react";
+
 import {
   Button,
   ButtonGroup,
@@ -14,7 +16,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+
 import { plural } from "../utils/string";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 import { GenericTermCard } from "./generic-term-card";
@@ -55,7 +57,7 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
   const parseTerms = (
     value: string,
     td: string,
-    cd: string
+    cd: string,
   ): { word: string; definition: string }[] => {
     return value
       .split(cd)
@@ -69,7 +71,7 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
 
   const previewTerms = useMemo(
     () => parseTerms(value, td, cd),
-    [value, td, cd]
+    [value, td, cd],
   );
 
   const textareaBg = useColorModeValue("gray.100", "gray.750");

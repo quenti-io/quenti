@@ -1,3 +1,10 @@
+import React from "react";
+
+import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
+import { placeholderLanguage } from "@quenti/core/language";
+import type { Question } from "@quenti/interfaces";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -8,11 +15,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
-import { placeholderLanguage } from "@quenti/core/language";
-import type { Question } from "@quenti/interfaces";
-import { api } from "@quenti/trpc";
-import React from "react";
+
 import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useEventCallback } from "../../../../hooks/use-event-callback";
 import { useAuthedSet } from "../../../../hooks/use-set";
@@ -56,7 +59,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
       active.answerMode == "Definition" ? definitionLanguage : wordLanguage,
       mutlipleAnswerMode,
       answer,
-      word(active.answerMode, active.term, "answer")
+      word(active.answerMode, active.term, "answer"),
     );
 
     if (evaluation === EvaluationResult.Correct) {
@@ -88,7 +91,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
     requestAnimationFrame(() => {
       inputRef.current?.setSelectionRange(
         cursorPosition + 1,
-        cursorPosition + 1
+        cursorPosition + 1,
       );
     });
   };
@@ -117,7 +120,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
           placeholder={`Type the ${placeholderLanguage(
             wordLanguage,
             definitionLanguage,
-            active.answerMode
+            active.answerMode,
           )}`}
           py="6"
           px="4"

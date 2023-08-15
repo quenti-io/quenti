@@ -1,7 +1,9 @@
+import type { StudySetVisibility } from "@quenti/prisma/client";
+
 import {
   Button,
-  Heading,
   HStack,
+  Heading,
   Modal,
   ModalBody,
   ModalContent,
@@ -10,7 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { StudySetVisibility } from "@quenti/prisma/client";
+
 import { IconLink, IconLock, IconWorld } from "@tabler/icons-react";
 
 export interface VisibilityModalProps {

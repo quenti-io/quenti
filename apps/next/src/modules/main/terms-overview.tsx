@@ -1,16 +1,19 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import type { Term } from "@quenti/prisma/client";
+
 import {
   Button,
   ButtonGroup,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { Term } from "@quenti/prisma/client";
-import { useSession } from "next-auth/react";
-import React from "react";
+
 import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { DisplayableTermPure } from "./displayable-term";
@@ -32,7 +35,7 @@ export const TermsOverview = () => {
   const studiable =
     status == "authenticated" && !!injected!.studiableLearnTerms.length;
   const [sortType, setSortType] = React.useState(
-    studiable ? "stats" : "original"
+    studiable ? "stats" : "original",
   );
   const [starredOnly, setStarredOnly] = React.useState(false);
 
@@ -100,7 +103,7 @@ const TermsByStats = () => {
 
   let unstudiedTerms = terms.filter((x) => {
     const studiableTerm = injected.studiableLearnTerms.find(
-      (s) => s.id === x.id
+      (s) => s.id === x.id,
     );
     return !studiableTerm || studiableTerm.correctness === 0;
   });
@@ -217,7 +220,7 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
       <Stack spacing={4}>
         {internalTerms
           .sort(
-            (a, b) => internalSort.indexOf(a.id) - internalSort.indexOf(b.id)
+            (a, b) => internalSort.indexOf(a.id) - internalSort.indexOf(b.id),
           )
           .slice(0, showSlice || terms.length)
           .map((term) => (

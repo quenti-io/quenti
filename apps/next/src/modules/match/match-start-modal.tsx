@@ -1,3 +1,6 @@
+import { useRouter } from "next/router";
+import React from "react";
+
 import {
   Button,
   Flex,
@@ -9,9 +12,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+
 import { IconArrowBack, IconPlayerPlay } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { useMatchContext } from "../../stores/use-match-store";
 
 export interface MatchStartModalProps {

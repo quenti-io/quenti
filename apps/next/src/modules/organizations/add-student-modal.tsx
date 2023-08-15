@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -7,11 +14,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "@quenti/trpc";
-import React from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+
 import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 import { getBaseDomain } from "./utils/get-base-domain";
@@ -36,7 +39,7 @@ const schema = (domain: string) =>
           const emailDomain = email.split("@")[1];
           return domain == emailDomain;
         },
-        { message: "Email must end in your organization's domain" }
+        { message: "Email must end in your organization's domain" },
       ),
   });
 

@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+
 import { getClassMember } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TRemoveEntitySchema } from "./remove-entity.schema";

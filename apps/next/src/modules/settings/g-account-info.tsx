@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+
 import {
   HStack,
   Stack,
@@ -5,8 +7,9 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconInfoCircle } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
+
 import { SectionWrapper } from "./section-wrapper";
 
 export const GAccountInfo = () => {

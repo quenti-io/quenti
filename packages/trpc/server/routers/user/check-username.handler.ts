@@ -1,5 +1,5 @@
-import type { NonNullableUserContext } from "../../lib/types";
 import { usernameProfanity } from "../../common/profanity";
+import type { NonNullableUserContext } from "../../lib/types";
 import type { TCheckUsernameSchema } from "./check-username.schema";
 
 type CheckUsernameOptions = {

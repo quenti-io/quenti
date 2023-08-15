@@ -1,9 +1,13 @@
-import { Button, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import { IconReload } from "@tabler/icons-react";
 import React from "react";
+
+import { api } from "@quenti/trpc";
+
+import { Button, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+
+import { IconReload } from "@tabler/icons-react";
+
 import { useSet } from "../../../hooks/use-set";
 import { useSetPropertiesStore } from "../../../stores/use-set-properties-store";
-import { api } from "@quenti/trpc";
 import { LearnSettingsModalContext } from "../learn-settings-modal";
 
 export const ResetProgressSection = () => {

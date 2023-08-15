@@ -1,7 +1,9 @@
 import { strip } from "@quenti/lib/strip";
 import type { Widen } from "@quenti/lib/widen";
 import { Prisma, type PrismaClient } from "@quenti/prisma/client";
+
 import { TRPCError } from "@trpc/server";
+
 import { getClassMember } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TGetSchema } from "./get.schema";

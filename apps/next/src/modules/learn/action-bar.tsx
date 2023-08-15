@@ -1,3 +1,7 @@
+import { AnimatePresence, motion } from "framer-motion";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -6,10 +10,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
+
 import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
-import { api } from "@quenti/trpc";
 import { AnyKeyPressLayer } from "./any-key-press-layer";
 
 export const ActionBar = () => {

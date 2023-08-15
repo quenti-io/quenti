@@ -1,3 +1,10 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import type { MembershipRole } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -11,12 +18,9 @@ import {
   Tag,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { MembershipRole } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
+
 import { IconEdit, IconPlus, IconSearch, IconUserX } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { MemberComponent } from "../../../components/member-component";
 import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
@@ -37,7 +41,7 @@ export const OrganizationMembers = () => {
     {
       enabled: !!id && !!session?.user,
       retry: false,
-    }
+    },
   );
 
   const me = org
@@ -51,7 +55,7 @@ export const OrganizationMembers = () => {
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [editMember, setEditMember] = React.useState<string | undefined>();
   const [editMemberType, setEditMemberType] = React.useState<"user" | "invite">(
-    "user"
+    "user",
   );
   const [removeMember, setRemoveMember] = React.useState<string | undefined>();
   const [removeMemberType, setRemoveMemberType] = React.useState<
@@ -143,7 +147,7 @@ export const OrganizationMembers = () => {
             <Input
               placeholder={`Search ${plural(
                 org?.members.length || 0,
-                "member"
+                "member",
               )}`}
               pl="44px"
               value={search}

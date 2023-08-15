@@ -1,5 +1,7 @@
-import { Box, Heading, Table, Td, Text, Tr } from "@chakra-ui/react";
 import React from "react";
+
+import { Box, Heading, Table, Td, Text, Tr } from "@chakra-ui/react";
+
 import { useSet } from "../hooks/use-set";
 import { plural } from "../utils/string";
 
@@ -51,5 +53,5 @@ export const SetPrintComponent = React.forwardRef<HTMLDivElement>(
         </Box>
       </Box>
     );
-  }
+  },
 );

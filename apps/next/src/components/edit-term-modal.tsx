@@ -1,3 +1,8 @@
+import React from "react";
+
+import type { Term } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -10,10 +15,8 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
-import type { Term } from "@quenti/prisma/client";
-import React from "react";
+
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import { api } from "@quenti/trpc";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface EditTermModalProps {

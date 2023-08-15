@@ -1,3 +1,5 @@
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -6,9 +8,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
-import { api } from "@quenti/trpc";
 
 export const StudyStarredSection = () => {
   const { id } = useSet();

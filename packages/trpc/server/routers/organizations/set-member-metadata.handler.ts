@@ -1,5 +1,7 @@
 import { orgMembershipMetadata } from "@quenti/prisma/zod-schemas";
+
 import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TSetMemberMetadataSchema } from "./set-member-metadata.schema";
 

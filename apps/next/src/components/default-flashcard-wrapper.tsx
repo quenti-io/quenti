@@ -1,5 +1,6 @@
 import { motion, useAnimationControls } from "framer-motion";
 import React from "react";
+
 import { useContainerContext } from "../stores/use-container-store";
 import { Flashcard } from "./flashcard";
 import { FlashcardShorcutLayer } from "./flashcard-shortcut-layer";

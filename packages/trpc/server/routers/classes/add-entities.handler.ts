@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+
 import { getClassMember } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAddEntitiesSchema } from "./add-entities.schema";
@@ -70,7 +71,7 @@ export const addEntitiesHandler = async ({
 
     if (
       studySets.find(
-        (x) => x.visibility == "Private" && x.userId !== ctx.session.user.id
+        (x) => x.visibility == "Private" && x.userId !== ctx.session.user.id,
       )
     ) {
       throw new TRPCError({

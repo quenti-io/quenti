@@ -1,10 +1,11 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import type Stripe from "stripe";
+import { z } from "zod";
+
 import { getServerAuthSession } from "@quenti/auth";
 import { stripe } from "@quenti/payments";
 import { prisma } from "@quenti/prisma";
 import { upgradeOrganization } from "@quenti/trpc/server/lib/orgs/upgrade";
-import type { NextApiRequest, NextApiResponse } from "next";
-import type Stripe from "stripe";
-import { z } from "zod";
 
 const querySchema = z.object({
   id: z.string().cuid2(),
@@ -13,7 +14,7 @@ const querySchema = z.object({
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { id, session_id } = querySchema.parse(req.query);
 
@@ -47,7 +48,7 @@ export default async function handler(
       member?.userId,
       checkoutSession.id,
       subscription.id,
-      subscription.items.data[0]?.id
+      subscription.items.data[0]?.id,
     );
   }
 

@@ -1,4 +1,5 @@
 import type { SetFolderEntity } from "@quenti/interfaces";
+
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getBelongingClasses } from "./classes/utils/get-belonging";
 import { getRecentFolders } from "./folders/utils/recent";

@@ -1,12 +1,16 @@
-import { Button, Center, Heading, Stack, Text, VStack } from "@chakra-ui/react";
-import { IconReload } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { ConfirmModal } from "../../components/confirm-modal";
+
 import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+
+import { Button, Center, Heading, Stack, Text, VStack } from "@chakra-ui/react";
+
+import { IconReload } from "@tabler/icons-react";
+
+import { ConfirmModal } from "../../components/confirm-modal";
 import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
-import { api } from "@quenti/trpc";
 import { TermMastery } from "./term-mastery";
 
 export const CompletedView = () => {

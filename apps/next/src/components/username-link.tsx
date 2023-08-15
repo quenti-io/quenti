@@ -1,5 +1,6 @@
-import { useColorModeValue } from "@chakra-ui/react";
 import { Link } from "@quenti/components";
+
+import { useColorModeValue } from "@chakra-ui/react";
 
 export const UsernameLink: React.FC<
   Omit<React.ComponentProps<typeof Link>, "href"> & { username: string }

@@ -1,3 +1,12 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { env } from "@quenti/env/client";
+import { avatarUrl } from "@quenti/lib/avatar";
+import type { User } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Avatar,
   Box,
@@ -15,10 +24,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { env } from "@quenti/env/client";
-import { avatarUrl } from "@quenti/lib/avatar";
-import type { User } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
+
 import {
   IconBooks,
   IconBuilding,
@@ -35,9 +41,7 @@ import {
   IconUser,
   IconUserCircle,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
 import { useIsTeacher } from "../hooks/use-is-teacher";
@@ -100,7 +104,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
       enabled: false,
       refetchOnWindowFocus: false,
       onSuccess,
-    }
+    },
   );
 
   const getFolderShareId = api.folders.getShareId.useQuery(
@@ -112,7 +116,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
       enabled: false,
       refetchOnWindowFocus: false,
       onSuccess,
-    }
+    },
   );
 
   const [options, setOptions] = React.useState<MenuOption[]>([]);
@@ -175,11 +179,11 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
             class_._count.members !== undefined
               ? `${plural(class_._count.members || 0, "student")} · ${plural(
                   class_._count.sections || 0,
-                  "section"
+                  "section",
                 )}`
               : `${plural(class_._count.studySets || 0, "set")} · ${plural(
                   class_._count.folders || 0,
-                  "folder"
+                  "folder",
                 )}`,
           sortableDate: class_.viewedAt || undefined,
           searchableName: class_.name
@@ -192,7 +196,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 
       total = total.sort(
         (a, b) =>
-          (b.sortableDate?.getTime() || 0) - (a.sortableDate?.getTime() || 0)
+          (b.sortableDate?.getTime() || 0) - (a.sortableDate?.getTime() || 0),
       );
 
       if (onSet || onFolder) {
@@ -300,7 +304,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const filteredOptions: MenuOption[] = options
     .filter((o) => (!!o.shouldShow ? o.shouldShow() : true))
     .filter((e) =>
-      (e.searchableName ?? e.name).toLowerCase().includes(query.toLowerCase())
+      (e.searchableName ?? e.name).toLowerCase().includes(query.toLowerCase()),
     );
 
   const openLink = (link: string, ctrl: boolean) => {
@@ -351,7 +355,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const borderColor = useColorModeValue("gray.200", "gray.750");
   const cursorBg = useColorModeValue(
     "rgba(226, 232, 240, 50%)",
-    "rgba(45, 55, 72, 50%)"
+    "rgba(45, 55, 72, 50%)",
   );
 
   return (
@@ -360,13 +364,13 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         backdropFilter="blur(12px)"
         backgroundColor={useColorModeValue(
           "rgba(247, 250, 252, 75%)",
-          "rgba(23, 25, 35, 40%)"
+          "rgba(23, 25, 35, 40%)",
         )}
       />
       <ModalContent
         background={useColorModeValue(
           "rgba(247, 250, 252, 40%)",
-          "rgba(23, 25, 35, 60%)"
+          "rgba(23, 25, 35, 60%)",
         )}
         backdropFilter="blur(12px)"
         borderWidth="2px"
@@ -625,7 +629,7 @@ const ShortcutsManager: React.FC<ShortcutsManagerProps> = ({
     {
       ctrlKey: false,
       shiftKey: false,
-    }
+    },
   );
 
   const up = () => {
@@ -661,7 +665,7 @@ const ShortcutsManager: React.FC<ShortcutsManagerProps> = ({
     },
     {
       ctrlKey: false,
-    }
+    },
   );
   useShortcut(
     ["Enter"],
@@ -670,7 +674,7 @@ const ShortcutsManager: React.FC<ShortcutsManagerProps> = ({
     },
     {
       ctrlKey: true,
-    }
+    },
   );
 
   return <></>;

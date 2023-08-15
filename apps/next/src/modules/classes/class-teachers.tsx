@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Box,
   Button,
@@ -9,8 +11,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconUserPlus, IconUserX, IconUsers } from "@tabler/icons-react";
-import React from "react";
+
 import { MemberComponent } from "../../components/member-component";
 import { useClass } from "../../hooks/use-class";
 import { InviteTeachersModal } from "./invite-teachers-modal";

@@ -1,3 +1,9 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   HStack,
@@ -6,12 +12,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconUser } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import React from "react";
+
 import { ChangeUsernameInput } from "../../components/change-username-input";
-import { Link } from "@quenti/components";
-import { api } from "@quenti/trpc";
 import { SectionWrapper } from "./section-wrapper";
 
 export const ProfileInfo = () => {

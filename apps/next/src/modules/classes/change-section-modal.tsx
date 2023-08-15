@@ -1,3 +1,10 @@
+import React from "react";
+
+import { allEqual } from "@quenti/lib/array";
+import { avatarUrl } from "@quenti/lib/avatar";
+import type { User } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Avatar,
   AvatarGroup,
@@ -9,12 +16,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { allEqual } from "@quenti/lib/array";
-import { avatarUrl } from "@quenti/lib/avatar";
-import type { User } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
+
 import { IconArrowRight } from "@tabler/icons-react";
-import React from "react";
+
 import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 import { SectionSelect } from "./section-select";
@@ -64,7 +68,7 @@ export const ChangeSectionModal: React.FC<ChangeSectionModalProps> = ({
   React.useEffect(() => {
     if (!isOpen) return;
     const firstOtherSection = class_!.sections!.find(
-      (s) => s.id !== currentSection.id
+      (s) => s.id !== currentSection.id,
     )!;
     setSection(firstOtherSection?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps

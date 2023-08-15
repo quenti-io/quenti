@@ -1,5 +1,7 @@
-import { Container, Stack } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
+
+import { Container, Stack } from "@chakra-ui/react";
+
 import type { ComponentWithAuth } from "../components/auth-component";
 import { WithFooter } from "../components/with-footer";
 import { ClassesGrid } from "../modules/home/classes-grid";

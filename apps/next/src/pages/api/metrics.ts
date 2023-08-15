@@ -1,10 +1,11 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
 import { env } from "@quenti/env/server";
 import { register } from "@quenti/trpc/server/prometheus";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const auth = req.headers.authorization;
   // Get username and password from auth

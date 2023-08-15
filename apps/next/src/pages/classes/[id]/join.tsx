@@ -1,6 +1,8 @@
-import { api } from "@quenti/trpc";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import { Loading } from "../../../components/loading";
 
 export default function JoinClass() {

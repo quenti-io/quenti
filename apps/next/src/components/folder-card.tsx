@@ -1,6 +1,9 @@
-import type { Folder } from "@quenti/prisma/client";
-import { IconFolder } from "@tabler/icons-react";
 import React from "react";
+
+import type { Folder } from "@quenti/prisma/client";
+
+import { IconFolder } from "@tabler/icons-react";
+
 import { GenericCard } from "./generic-card";
 
 export interface FolderCardProps {

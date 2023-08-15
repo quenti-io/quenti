@@ -1,3 +1,7 @@
+import React from "react";
+
+import { EnabledFeature } from "@quenti/trpc/server/common/constants";
+
 import {
   Divider,
   Flex,
@@ -10,8 +14,7 @@ import {
   Stack,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { EnabledFeature } from "@quenti/trpc/server/common/constants";
-import React from "react";
+
 import { useFeature } from "../../hooks/use-feature";
 import { useAuthedSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
@@ -46,7 +49,7 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
   dirtyOnReset,
 }) => {
   const useExtendedFeedbackBank = useFeature(
-    EnabledFeature.ExtendedFeedbackBank
+    EnabledFeature.ExtendedFeedbackBank,
   );
 
   const { container } = useAuthedSet();

@@ -6,10 +6,10 @@
  * We also create a few inference helpers for input and output types
  */
 import superjson from "superjson";
+
 import { httpBatchLink, loggerLink } from "./client";
 import { createTRPCNext } from "./next";
 import { type inferRouterInputs, type inferRouterOutputs } from "./server";
-
 import { type AppRouter } from "./server/root";
 
 const getBaseUrl = () => {

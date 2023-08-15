@@ -1,3 +1,7 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+
 import {
   Box,
   Fade,
@@ -10,8 +14,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { getColorFromId } from "../../utils/color";
 import { organizationIcon } from "../../utils/icons";
 import { plural } from "../../utils/string";

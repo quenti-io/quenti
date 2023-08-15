@@ -1,14 +1,18 @@
+import { useSession } from "next-auth/react";
+
+import { api } from "@quenti/trpc";
+
 import { Flex, HStack, IconButton, Tooltip } from "@chakra-ui/react";
+
 import {
   IconArrowsShuffle,
   IconPlayerPlay,
   IconSettings,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
+
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
-import { api } from "@quenti/trpc";
 
 interface ControlsBarProps {
   onSettingsClick: () => void;

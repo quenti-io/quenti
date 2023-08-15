@@ -1,4 +1,5 @@
 import type { MultipleAnswerMode } from "@quenti/prisma/client";
+
 import type { Language } from "./language";
 
 export enum EvaluationResult {
@@ -19,7 +20,7 @@ export const evaluate = (
   language: Language,
   multipleAnswerMode: MultipleAnswerMode,
   input: string,
-  answer: string
+  answer: string,
 ): EvaluationResult => {
   const strictEquality = language == "chem" || language == "math";
 
@@ -61,10 +62,10 @@ export const evaluate = (
     const answerAnswers = answer.split(/[,;\/]/).map((a) => a.trim());
 
     const fullEquality = answerAnswers.every(
-      (a) => !!inputAnswers.find((i) => answerEvaluator(i, a))
+      (a) => !!inputAnswers.find((i) => answerEvaluator(i, a)),
     );
     const partialEquality = answerAnswers.some(
-      (a) => !!inputAnswers.find((i) => answerEvaluator(i, a))
+      (a) => !!inputAnswers.find((i) => answerEvaluator(i, a)),
     );
 
     if (fullEquality) return EvaluationResult.Correct;

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { type MatchItem, useMatchContext } from "../../stores/use-match-store";
 import { isRectInBounds } from "../../utils/area";
 
@@ -56,7 +57,7 @@ export const EventListener: React.FC<{
         const { x, y } = pickNewSpot(
           index,
           { ...term, width, height },
-          wrapper.current!
+          wrapper.current!,
         );
 
         setCard(index, {

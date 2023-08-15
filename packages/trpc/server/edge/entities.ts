@@ -1,6 +1,7 @@
+import type { Kysely } from "kysely";
+
 import { avatarUrl } from "@quenti/lib/avatar";
 import type { DB, EntityShare } from "@quenti/prisma/kysely-types";
-import type { Kysely } from "kysely";
 
 export interface ReturnedEntity {
   title: string;
@@ -13,7 +14,7 @@ export interface ReturnedEntity {
 
 export const getSharedEntity = async (
   db: Kysely<DB>,
-  id: string
+  id: string,
 ): Promise<ReturnedEntity | null> => {
   const entityShare = await db
     .selectFrom("EntityShare")
@@ -46,7 +47,7 @@ export const getSharedEntity = async (
           .selectFrom("Term")
           .where("Term.studySetId", "=", entityShare.entityId)
           .select((e) => e.fn.countAll<number>().as("entities"))
-          .as("entities")
+          .as("entities"),
       )
       .executeTakeFirst();
 
@@ -75,12 +76,12 @@ export const getSharedEntity = async (
           .innerJoin(
             "StudySetsOnFolders",
             "Folder.id",
-            "StudySetsOnFolders.folderId"
+            "StudySetsOnFolders.folderId",
           )
           .innerJoin("StudySet", "StudySetsOnFolders.studySetId", "StudySet.id")
           .where("StudySet.visibility", "=", "Public")
           .select((e) => e.fn.countAll<number>("StudySet").as("entities"))
-          .as("entities")
+          .as("entities"),
       )
       .executeTakeFirst();
 
@@ -106,7 +107,7 @@ export const getSharedEntity = async (
 export const getEntityGeneric = async (
   db: Kysely<DB>,
   id: string | null,
-  folderArgs?: { username: string; idOrSlug: string }
+  folderArgs?: { username: string; idOrSlug: string },
 ): Promise<ReturnedEntity | null> => {
   if (id) {
     if (id.startsWith("_")) return await getSharedEntity(db, id.slice(1));
@@ -127,7 +128,7 @@ export const getEntityGeneric = async (
             .selectFrom("Term")
             .where("Term.studySetId", "=", id)
             .select((e) => e.fn.countAll<number>().as("entities"))
-            .as("entities")
+            .as("entities"),
         )
         .executeTakeFirst();
 
@@ -163,7 +164,7 @@ export const getEntityGeneric = async (
             cmpr("Folder.userId", "=", user.id),
             cmpr("Folder.slug", "=", folderArgs.idOrSlug),
           ]),
-        ])
+        ]),
       )
       .select(["Folder.title", "Folder.description"])
       .select((eb) =>
@@ -179,17 +180,17 @@ export const getEntityGeneric = async (
                 cmpr("Folder.userId", "=", user.id),
                 cmpr("Folder.slug", "=", folderArgs.idOrSlug),
               ]),
-            ])
+            ]),
           )
           .innerJoin(
             "StudySetsOnFolders",
             "Folder.id",
-            "StudySetsOnFolders.folderId"
+            "StudySetsOnFolders.folderId",
           )
           .innerJoin("StudySet", "StudySetsOnFolders.studySetId", "StudySet.id")
           .where("StudySet.visibility", "=", "Public")
           .select((e) => e.fn.countAll<number>("StudySet").as("entities"))
-          .as("entities")
+          .as("entities"),
       )
       .executeTakeFirst();
 

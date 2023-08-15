@@ -7,6 +7,7 @@ import {
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { useAdmin } from "../../hooks/use-admin";
 
 export const AdminDashboard = () => {

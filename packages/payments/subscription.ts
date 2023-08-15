@@ -1,9 +1,11 @@
+import { log } from "next-axiom";
+
 import { env } from "@quenti/env/server";
 import { BASE_URL } from "@quenti/lib/constants/url";
 import { getErrorFromUnknown } from "@quenti/lib/error";
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
-import { log } from "next-axiom";
+
 import { getStripeCustomerIdFromUserId } from "./customer";
 import { stripe } from "./stripe";
 
@@ -77,7 +79,7 @@ export const cancelOrganizationSubscription = async (orgId: string) => {
 
   try {
     const subscription = await stripe.subscriptions.retrieve(
-      metadata.subscriptionId
+      metadata.subscriptionId,
     );
     if (subscription && subscription.status !== "canceled")
       await stripe.subscriptions.cancel(metadata.subscriptionId);

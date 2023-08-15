@@ -1,5 +1,5 @@
-import { loadHandler } from "../../lib/load-handler";
 import { EnabledFeature } from "../../common/constants";
+import { loadHandler } from "../../lib/load-handler";
 import {
   createTRPCRouter,
   lockedProcedure,

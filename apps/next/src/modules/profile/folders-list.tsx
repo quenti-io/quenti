@@ -6,7 +6,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconFolder } from "@tabler/icons-react";
+
 import { useProfile } from "../../hooks/use-profile";
 import { groupIntoTimeline } from "../../utils/groupings";
 import { ProfileLinkable } from "./study-set-link";

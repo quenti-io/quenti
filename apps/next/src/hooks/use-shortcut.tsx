@@ -18,7 +18,7 @@ export const useShortcut = (
     allowInput: false,
     anyKey: false,
     node: null,
-  }
+  },
 ) => {
   // implement the callback ref pattern
   const callbackRef = React.useRef(callback);
@@ -60,7 +60,7 @@ export const useShortcut = (
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [keys]
+    [keys],
   );
 
   React.useEffect(() => {

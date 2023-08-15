@@ -1,6 +1,9 @@
-import { Stack } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
 import React from "react";
+
+import { api } from "@quenti/trpc";
+
+import { Stack } from "@chakra-ui/react";
+
 import { AddEntitiesModal } from "../../../components/add-entities-modal";
 import { FolderCard } from "../../../components/folder-card";
 import { StudySetCard } from "../../../components/study-set-card";
@@ -25,7 +28,7 @@ export const ClassHome = () => {
     },
     {
       enabled: hasOpenedFolders,
-    }
+    },
   );
   const recentSets = api.studySets.recent.useQuery(
     {
@@ -33,7 +36,7 @@ export const ClassHome = () => {
     },
     {
       enabled: hasOpenedSets,
-    }
+    },
   );
 
   const addEntities = api.classes.addEntities.useMutation({

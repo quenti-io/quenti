@@ -1,3 +1,8 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   ButtonGroup,
@@ -12,13 +17,12 @@ import {
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconArrowBack, IconSettings } from "@tabler/icons-react";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useMatchContext } from "../../stores/use-match-store";
-import { api } from "@quenti/trpc";
 import { formatDeciseconds } from "../../utils/time";
 import { MatchSettingsModal } from "./match-settings-modal";
 
@@ -53,7 +57,7 @@ const MatchInfo = () => {
   const completed = useMatchContext((s) => s.completed);
   const roundSum = useMatchContext((s) => s.roundSummary);
   const isEligibleForLeaderboard = useMatchContext(
-    (s) => s.isEligibleForLeaderboard
+    (s) => s.isEligibleForLeaderboard,
   );
 
   const highscore = api.leaderboard.highscore.useQuery({

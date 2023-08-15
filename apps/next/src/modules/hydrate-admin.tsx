@@ -1,8 +1,10 @@
 import { useRouter } from "next/router";
 import React from "react";
+
+import { type RouterOutputs, api } from "@quenti/trpc";
+
 import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
-import { api, type RouterOutputs } from "@quenti/trpc";
 
 type LandingData = RouterOutputs["admin"]["landing"] &
   RouterOutputs["admin"]["getUsers"];

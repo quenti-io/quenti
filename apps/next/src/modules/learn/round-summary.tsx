@@ -1,5 +1,7 @@
-import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+
+import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
+
 import { GenericTermCard } from "../../components/generic-term-card";
 import { useLearnContext } from "../../stores/use-learn-store";
 import { TermMastery } from "./term-mastery";

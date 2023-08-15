@@ -1,5 +1,7 @@
-import { Stack } from "@chakra-ui/react";
 import { api } from "@quenti/trpc";
+
+import { Stack } from "@chakra-ui/react";
+
 import { useMe } from "../../hooks/use-me";
 import { OrganizationCard } from "../organizations/organization-card";
 import { DefaultLayout } from "./default-layout";

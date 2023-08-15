@@ -1,3 +1,8 @@
+import React from "react";
+
+import { avatarUrl } from "@quenti/lib/avatar";
+import { api } from "@quenti/trpc";
+
 import {
   Avatar,
   Box,
@@ -5,8 +10,8 @@ import {
   ButtonGroup,
   Divider,
   Flex,
-  Heading,
   HStack,
+  Heading,
   IconButton,
   Modal,
   ModalBody,
@@ -16,6 +21,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconCalendar,
   IconCheck,
@@ -24,10 +30,8 @@ import {
   IconDiscountCheck,
   IconGavel,
 } from "@tabler/icons-react";
-import React from "react";
+
 import { useAdmin } from "../../hooks/use-admin";
-import { api } from "@quenti/trpc";
-import { avatarUrl } from "@quenti/lib/avatar";
 import { dtFormatter } from "../../utils/time";
 import { UserEnabledFlags } from "./user-enabled-flags";
 

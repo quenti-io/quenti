@@ -1,3 +1,7 @@
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   HStack,
@@ -8,9 +12,9 @@ import {
   TableContainer,
   Text,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
+
 import { IconPlus } from "@tabler/icons-react";
-import React from "react";
+
 import { ClientOnly } from "../../../components/client-only";
 import { LoadingSearch } from "../../../components/loading-search";
 import { useDebounce } from "../../../hooks/use-debounce";
@@ -43,7 +47,7 @@ export const OrganizationStudents = () => {
         keepPreviousData: true,
         cacheTime: 0,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
+      },
     );
 
   const observerTarget = React.useRef<HTMLDivElement>(null);
@@ -59,7 +63,7 @@ export const OrganizationStudents = () => {
           }
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     if (observerTarget.current) {

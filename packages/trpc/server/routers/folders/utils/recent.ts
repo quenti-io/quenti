@@ -3,7 +3,7 @@ import type { PrismaClient } from "@quenti/prisma/client";
 export const getRecentFolders = async (
   prisma: PrismaClient,
   userId: string,
-  exclude?: string[]
+  exclude?: string[],
 ) => {
   const recentContainers = await prisma.container.findMany({
     where: {

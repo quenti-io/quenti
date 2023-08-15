@@ -1,7 +1,9 @@
 import { IS_PAYMENT_ENABLED } from "@quenti/lib/constants/payments";
 import { BASE_URL } from "@quenti/lib/constants/url";
 import { purchaseOrganizationSubscription } from "@quenti/payments";
+
 import { TRPCError } from "@trpc/server";
+
 import { conflictingDomains, getOrgDomains } from "../../lib/orgs/domains";
 import { upgradeOrganization } from "../../lib/orgs/upgrade";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
@@ -50,7 +52,7 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
 
   const conflicting = await conflictingDomains(
     org.id,
-    domains.map((d) => d.requestedDomain)
+    domains.map((d) => d.requestedDomain),
   );
   if (!!conflicting.length) {
     throw new TRPCError({
@@ -61,7 +63,7 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
 
   const checkoutSession = await createCheckoutSession(
     org.id,
-    ctx.session.user.id
+    ctx.session.user.id,
   );
 
   if (checkoutSession) return checkoutSession;

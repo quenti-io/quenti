@@ -1,16 +1,18 @@
+import React from "react";
+
 import {
   Box,
   Center,
   Flex,
-  Heading,
   HStack,
+  Heading,
   IconButton,
   Text,
-  useColorModeValue,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import React from "react";
 
 const features = [
   {

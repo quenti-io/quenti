@@ -1,3 +1,8 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+import type { User } from "@quenti/prisma/client";
+
 import {
   Avatar,
   Box,
@@ -20,8 +25,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link } from "@quenti/components";
-import type { User } from "@quenti/prisma/client";
+
 import {
   IconAlertCircle,
   IconBan,
@@ -30,7 +34,7 @@ import {
   IconSwitchHorizontal,
   IconUserX,
 } from "@tabler/icons-react";
-import React from "react";
+
 import { MenuOptionPure } from "../../components/menu-option";
 
 export interface ClassStudentProps {

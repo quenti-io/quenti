@@ -1,3 +1,8 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Fade,
@@ -6,10 +11,9 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
+
 import { IconAirBalloon } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { Toast } from "../../../components/toast";
 import { WizardLayout } from "../../../components/wizard-layout";
@@ -48,12 +52,12 @@ export default function OrgPublish() {
     {
       enabled: !!id,
       retry: false,
-    }
+    },
   );
 
   const gradient = useColorModeValue(
     "linear(to-t, gray.50, transparent)",
-    "linear(to-t, gray.800, transparent)"
+    "linear(to-t, gray.800, transparent)",
   );
   const balloon = useColorModeValue("gray.200", "gray.700");
   const balloonFill = useColorModeValue("#E2E8F0", "#2D3748");

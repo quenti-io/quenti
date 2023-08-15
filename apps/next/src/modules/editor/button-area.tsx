@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Button,
   ButtonGroup,
@@ -6,13 +8,14 @@ import {
   Menu,
   Tooltip,
 } from "@chakra-ui/react";
+
 import {
   IconChevronDown,
   IconKeyboard,
   IconPlus,
   IconSwitchHorizontal,
 } from "@tabler/icons-react";
-import React from "react";
+
 import { visibilityIcon } from "../../common/visibility-icon";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { ShortcutModal } from "./shortcut-modal";

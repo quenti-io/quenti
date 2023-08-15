@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
+
 import { USERNAME_REGEXP } from "@quenti/lib/constants/characters";
 
 const NUM_STUDENTS = 10000;

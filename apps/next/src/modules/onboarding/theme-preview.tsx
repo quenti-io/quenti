@@ -1,5 +1,7 @@
-import { Box, Flex, HStack, Stack } from "@chakra-ui/react";
 import React from "react";
+
+import { Box, Flex, HStack, Stack } from "@chakra-ui/react";
+
 import { Logo } from "../../../../../packages/components/logo";
 
 export interface ThemePreviewProps {

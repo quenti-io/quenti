@@ -1,3 +1,7 @@
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -9,9 +13,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
+
 import { IconUserPlus } from "@tabler/icons-react";
-import React from "react";
+
 import { LoadingSearch } from "../../components/loading-search";
 import { useClass } from "../../hooks/use-class";
 import { useDebounce } from "../../hooks/use-debounce";
@@ -53,7 +57,7 @@ export const ClassStudentsRaw = () => {
         keepPreviousData: true,
         cacheTime: 0,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
+      },
     );
 
   const observerTarget = React.useRef<HTMLDivElement>(null);
@@ -69,7 +73,7 @@ export const ClassStudentsRaw = () => {
           }
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     if (observerTarget.current) {
@@ -117,12 +121,12 @@ export const ClassStudentsRaw = () => {
         id: s.id,
         user: s.user,
         section: class_?.sections?.find((x) => x.id == s.sectionId),
-      }))
+      })),
     );
   });
   const removeStudentCallback = useEventCallback((userId: string) => {
     setRemoveStudents(
-      getUsers([userId]).map((s) => ({ id: s.id, user: s.user }))
+      getUsers([userId]).map((s) => ({ id: s.id, user: s.user })),
     );
   });
 
@@ -163,7 +167,7 @@ export const ClassStudentsRaw = () => {
               section
                 ? class_?.sections?.find((s) => s.id == section)?.students || 0
                 : class_?.students || 0,
-              "student"
+              "student",
             )} ${
               section
                 ? `in ${
@@ -225,12 +229,12 @@ export const ClassStudentsRaw = () => {
                 id: s.id,
                 user: s.user,
                 section: class_?.sections?.find((x) => x.id == s.sectionId),
-              }))
+              })),
             );
           }}
           onRemoveSelected={() => {
             setRemoveStudents(
-              getUsers(selected).map((s) => ({ id: s.id, user: s.user }))
+              getUsers(selected).map((s) => ({ id: s.id, user: s.user })),
             );
           }}
         />
@@ -266,7 +270,7 @@ export const ClassStudentsRaw = () => {
                       user={student.user}
                       key={student.id}
                       section={(class_?.sections || []).find(
-                        (s) => s.id == student.sectionId
+                        (s) => s.id == student.sectionId,
                       )}
                       selected={selected.includes(student.user.id)}
                       onSelect={onSelect}

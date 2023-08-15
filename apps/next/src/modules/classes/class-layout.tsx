@@ -1,3 +1,6 @@
+import { useRouter } from "next/router";
+import React from "react";
+
 import {
   Box,
   Center,
@@ -14,9 +17,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { SkeletonTab } from "../../components/skeleton-tab";
 import { WithFooter } from "../../components/with-footer";
 import { useClass } from "../../hooks/use-class";
@@ -57,7 +60,7 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
               w="full"
               h="32"
               bgGradient={`linear(to-tr, blue.400, ${getColorFromId(
-                id || ""
+                id || "",
               )})`}
               rounded="2xl"
             />

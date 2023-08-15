@@ -1,5 +1,7 @@
 import { inngest } from "@quenti/inngest";
+
 import { TRPCError } from "@trpc/server";
+
 import { getIp } from "../../lib/get-ip";
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import { RateLimitType, rateLimitOrThrowMultiple } from "../../lib/rate-limit";

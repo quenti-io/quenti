@@ -1,11 +1,14 @@
-import type { ApiStudiableItem } from "@quenti/interfaces";
-import { QUIZLET_IMPORT_REGEXP } from "@quenti/lib/constants/characters";
-import { StudySetVisibility } from "@quenti/prisma/client";
-import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import { nanoid } from "nanoid";
 import type { Counter } from "prom-client";
 import { z } from "zod";
+
+import type { ApiStudiableItem } from "@quenti/interfaces";
+import { QUIZLET_IMPORT_REGEXP } from "@quenti/lib/constants/characters";
+import { StudySetVisibility } from "@quenti/prisma/client";
+
+import { TRPCError } from "@trpc/server";
+
 import { register } from "../prometheus";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -28,7 +31,7 @@ export const importRouter = createTRPCRouter({
     .input(
       z.object({
         url: z.string().url().regex(QUIZLET_IMPORT_REGEXP),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const url = new URL(input.url);
@@ -49,7 +52,7 @@ export const importRouter = createTRPCRouter({
           headers: {
             "User-Agent": AGENT,
           },
-        }
+        },
       );
       if (!response.data) {
         throw new TRPCError({

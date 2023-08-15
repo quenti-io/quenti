@@ -1,3 +1,8 @@
+import { useRouter } from "next/router";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -6,14 +11,15 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
   HStack,
+  Heading,
   LinkBox,
   LinkOverlay,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -24,14 +30,12 @@ import {
   IconRotateClockwise,
   type TablerIconsProps,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
+
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { AnyKeyPressLayer } from "../modules/learn/any-key-press-layer";
 import { useSortFlashcardsContext } from "../stores/use-sort-flashcards-store";
-import { api } from "@quenti/trpc";
 import { plural } from "../utils/string";
 import { CircularTermMastery } from "./circular-term-mastery";
-import { Link } from "@quenti/components";
 
 export interface SortFlashcardProgressProps {
   h?: string;
@@ -52,7 +56,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   const apiDelete = api.studiableTerms.delete.useMutation();
 
   const [termsThisRound, index, studiableTerms] = useSortFlashcardsContext(
-    (s) => [s.termsThisRound, s.index, s.studiableTerms]
+    (s) => [s.termsThisRound, s.index, s.studiableTerms],
   );
   const stateGoBack = useSortFlashcardsContext((s) => s.goBack);
   const known = studiableTerms.filter((t) => t.correctness === 1).length;
@@ -114,7 +118,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
                     name="Keep reviewing"
                     description={`Continue reviewing flashcards with the ${plural(
                       stillLearning,
-                      "term"
+                      "term",
                     )} you're still learning.`}
                     icon={IconCards}
                     onClick={onNextRound}
@@ -131,7 +135,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
                   name="Restart flashcards"
                   description={`Reset your progress and study all ${plural(
                     studiableTerms.length,
-                    "term"
+                    "term",
                   )} from the beginning.`}
                   icon={IconRotateClockwise}
                   onClick={onResetProgress}

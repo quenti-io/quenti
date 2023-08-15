@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Card,
   Heading,
@@ -6,7 +8,7 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
+
 import { menuEventChannel } from "../../events/menu";
 import { MOD } from "../../lib/tinykeys";
 import { DefaultLayout } from "./default-layout";

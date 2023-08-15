@@ -1,8 +1,14 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   Flex,
-  Heading,
   HStack,
+  Heading,
   IconButton,
   Menu,
   MenuButton,
@@ -13,16 +19,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { visibilityIcon } from "../../common/visibility-icon";
 import { ConfirmModal } from "../../components/confirm-modal";
-import { Link } from "@quenti/components";
 import { MenuOption } from "../../components/menu-option";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useSet } from "../../hooks/use-set";
-import { api } from "@quenti/trpc";
 
 export const HeadingArea = () => {
   const { id, title, tags, terms, visibility } = useSet();

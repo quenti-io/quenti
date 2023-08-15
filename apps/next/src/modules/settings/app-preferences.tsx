@@ -1,5 +1,7 @@
-import { Text, VStack, useColorMode } from "@chakra-ui/react";
 import React from "react";
+
+import { Text, VStack, useColorMode } from "@chakra-ui/react";
+
 import { ToggleGroup } from "../../components/toggle-group";
 import { SettingsContext } from "../../pages/settings";
 import { ThemePreview } from "../onboarding/theme-preview";

@@ -1,5 +1,6 @@
-import type { UserType } from "@quenti/prisma/client";
 import type { DefaultSession } from "next-auth";
+
+import type { UserType } from "@quenti/prisma/client";
 
 declare module "next-auth" {
   /**

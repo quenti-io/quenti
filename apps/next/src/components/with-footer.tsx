@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Footer } from "./footer";
 
 export const WithFooter: React.FC<React.PropsWithChildren> = ({ children }) => {

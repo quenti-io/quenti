@@ -1,3 +1,11 @@
+import { signIn, useSession } from "next-auth/react";
+import Image, { type StaticImageData } from "next/image";
+import { useRouter } from "next/router";
+import deviceframesSrc from "public/assets/signup/deviceframes.png";
+import React from "react";
+
+import { Link } from "@quenti/components";
+
 import {
   Box,
   Button,
@@ -8,13 +16,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+
 import { IconArrowLeft, IconBrandGoogle } from "@tabler/icons-react";
-import { signIn, useSession } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import deviceframesSrc from "public/assets/signup/deviceframes.png";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { Loading } from "../components/loading";
 import { StaticWrapper } from "../components/static-wrapper";
 
@@ -90,7 +94,10 @@ export default function Signup() {
             overflow="hidden"
             mt={{ base: "-24", md: 0 }}
           >
-            <Image src={deviceframesSrc} alt="device frames" />
+            <Image
+              src={deviceframesSrc as StaticImageData}
+              alt="device frames"
+            />
           </Box>
         </Flex>
       </Container>

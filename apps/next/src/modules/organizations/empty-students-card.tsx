@@ -1,10 +1,11 @@
 import {
-  Text,
   HStack,
   Heading,
   Stack,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconUsers } from "@tabler/icons-react";
 
 export const EmptyStudentsCard = () => {

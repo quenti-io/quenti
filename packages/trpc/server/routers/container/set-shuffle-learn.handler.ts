@@ -1,6 +1,8 @@
 import { shuffleArray } from "@quenti/lib/array";
 import { Prisma } from "@quenti/prisma/client";
+
 import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TSetShuffleLearnSchema } from "./set-shuffle-learn.schema";
 

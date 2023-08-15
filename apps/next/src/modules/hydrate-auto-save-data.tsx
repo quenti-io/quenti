@@ -1,13 +1,15 @@
 import { useRouter } from "next/router";
 import React from "react";
+
+import { type RouterOutputs, api } from "@quenti/trpc";
+
 import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
 import {
-  createSetEditorStore,
-  SetEditorStoreContext,
   type SetEditorStore,
+  SetEditorStoreContext,
+  createSetEditorStore,
 } from "../stores/use-set-editor-store";
-import { api, type RouterOutputs } from "@quenti/trpc";
 
 export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -55,7 +57,7 @@ const ContextLayer: React.FC<
             await create.mutateAsync();
           })();
         },
-      }
+      },
     );
   }
 

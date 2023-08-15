@@ -1,7 +1,7 @@
-import type { NonNullableUserContext } from "../../lib/types";
-
 // TODO: fix versioning chaos
 import pjson from "../../../../../apps/next/package.json";
+import type { NonNullableUserContext } from "../../lib/types";
+
 const version = pjson.version;
 
 type ViewChangelogOptions = {

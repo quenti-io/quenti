@@ -1,5 +1,6 @@
 import { sendOrganizationInviteEmail } from "@quenti/emails";
 import { env } from "@quenti/env/client";
+
 import { inngest } from "..";
 
 export const sendOrgInviteEmails = inngest.createFunction(
@@ -16,9 +17,9 @@ export const sendOrgInviteEmails = inngest.createFunction(
               inviter: event.data.inviter,
               // Onboarding fetches the pending invite so we can use the regular signup flow
               url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
-            })
-        )
-      )
+            }),
+        ),
+      ),
     );
 
     const sendLoginEmails = Promise.all(
@@ -30,11 +31,11 @@ export const sendOrgInviteEmails = inngest.createFunction(
               orgName: event.data.org.name,
               inviter: event.data.inviter,
               url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/orgs`,
-            })
-        )
-      )
+            }),
+        ),
+      ),
     );
 
     await Promise.all([sendSignupEmails, sendLoginEmails]);
-  }
+  },
 );

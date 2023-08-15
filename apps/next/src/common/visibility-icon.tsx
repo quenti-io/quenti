@@ -1,4 +1,5 @@
 import type { StudySetVisibility } from "@quenti/prisma/client";
+
 import { IconLink, IconLock, IconWorld } from "@tabler/icons-react";
 
 export const visibilityIcon = (visibility: StudySetVisibility, size = 24) => {

@@ -1,18 +1,20 @@
-import type { Widen } from "@quenti/lib/widen";
-import { api, type RouterOutputs } from "@quenti/trpc";
-import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+
+import type { Widen } from "@quenti/lib/widen";
+import { type RouterOutputs, api } from "@quenti/trpc";
+import { EnabledFeature } from "@quenti/trpc/server/common/constants";
+
 import { Loading } from "../components/loading";
 import { queryEventChannel } from "../events/query";
 import { useFeature } from "../hooks/use-feature";
 import {
   ContainerContext,
-  createContainerStore,
   type ContainerStore,
   type ContainerStoreProps,
+  createContainerStore,
 } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { Set404 } from "./main/set-404";
@@ -64,7 +66,7 @@ export const HydrateSetData: React.FC<
         if (isDirty) setIsDirty(false);
         queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
       },
-    }
+    },
   );
 
   React.useEffect(() => {
@@ -76,10 +78,10 @@ export const HydrateSetData: React.FC<
     if (!data.container) return { ...data, authed: false };
 
     const studiableLearnTerms = data.container.studiableTerms.filter(
-      (t) => t.mode == "Learn"
+      (t) => t.mode == "Learn",
     );
     const studiableFlashcardTerms = data.container.studiableTerms.filter(
-      (t) => t.mode == "Flashcards"
+      (t) => t.mode == "Flashcards",
     );
     return {
       ...data,
@@ -119,7 +121,7 @@ interface SetContextProps {
 }
 
 export const SetContext = React.createContext<SetContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
@@ -147,7 +149,7 @@ const ContextLayer: React.FC<React.PropsWithChildren<ContextLayerProps>> = ({
   const storeRef = React.useRef<ContainerStore>();
   if (!storeRef.current) {
     storeRef.current = createContainerStore(
-      status == "authenticated" ? getVal(data as AuthedData) : undefined
+      status == "authenticated" ? getVal(data as AuthedData) : undefined,
     );
   }
 

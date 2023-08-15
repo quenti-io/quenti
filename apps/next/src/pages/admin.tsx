@@ -1,9 +1,11 @@
+import { Link } from "@quenti/components";
+
 import {
   Button,
   Container,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Tab,
   TabList,
@@ -13,8 +15,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link } from "@quenti/components";
+
 import { IconAdjustments, IconUserCircle } from "@tabler/icons-react";
+
 import type { ComponentWithAuth } from "../components/auth-component";
 import { WithFooter } from "../components/with-footer";
 import { useAdmin } from "../hooks/use-admin";

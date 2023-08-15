@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Box,
   Card,
@@ -11,6 +13,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconCircleCheck,
   IconCircleDot,
@@ -18,7 +21,7 @@ import {
   IconEditCircle,
   IconFilterX,
 } from "@tabler/icons-react";
-import React from "react";
+
 import { MenuOption } from "../../components/menu-option";
 import { OrganizationAdminOnly } from "./organization-admin-only";
 

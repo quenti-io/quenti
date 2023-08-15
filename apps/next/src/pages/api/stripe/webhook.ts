@@ -1,13 +1,14 @@
+import { buffer } from "micro";
+import type { NextApiRequest, NextApiResponse } from "next";
+import type Stripe from "stripe";
+import { z } from "zod";
+
 import { env } from "@quenti/env/server";
 import { getErrorFromUnknown } from "@quenti/lib/error";
 import { HttpError } from "@quenti/lib/http-error";
 import { cancelOrganizationSubscription, stripe } from "@quenti/payments";
 import { deactivateOrgDomains } from "@quenti/trpc/server/lib/orgs/domains";
 import { disbandOrgUsers } from "@quenti/trpc/server/lib/orgs/users";
-import { buffer } from "micro";
-import type { NextApiRequest, NextApiResponse } from "next";
-import type Stripe from "stripe";
-import { z } from "zod";
 
 export const config = {
   api: {
@@ -51,7 +52,7 @@ const webhookHandlers: Record<string, WebhookHandler | undefined> = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "POST")
@@ -76,7 +77,7 @@ export default async function handler(
     const event = stripe.webhooks.constructEvent(
       payload,
       signature,
-      env.STRIPE_WEBHOOK_SECRET
+      env.STRIPE_WEBHOOK_SECRET,
     );
 
     const handler = webhookHandlers[event.type];

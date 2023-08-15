@@ -1,5 +1,7 @@
-import { TRPCError } from "@trpc/server";
 import { env } from "@quenti/env/server";
+
+import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBanUserSchema } from "./ban-user.schema";
 

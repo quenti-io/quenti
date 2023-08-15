@@ -1,8 +1,12 @@
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
-import { IconArrowLeft } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import Head from "next/head";
+
 import { Link } from "@quenti/components";
+
+import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+
+import { IconArrowLeft } from "@tabler/icons-react";
+
 import { StaticWrapper } from "../components/static-wrapper";
 
 export default function Unauthorized() {

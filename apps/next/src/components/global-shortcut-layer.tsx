@@ -1,8 +1,9 @@
 import { useSession } from "next-auth/react";
 import React from "react";
+
+import { menuEventChannel } from "../events/menu";
 import tinykeys from "../lib/tinykeys";
 import { CommandMenu } from "./command-menu";
-import { menuEventChannel } from "../events/menu";
 
 export default function GlobalShortcutLayer() {
   const [open, setOpen] = React.useState(false);

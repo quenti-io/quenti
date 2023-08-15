@@ -1,3 +1,8 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import { Link } from "@quenti/components";
+
 import {
   Box,
   Flex,
@@ -9,15 +14,14 @@ import {
   Skeleton,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconBrain,
   IconCards,
   IconLayersSubtract,
   IconReport,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 

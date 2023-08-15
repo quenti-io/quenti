@@ -1,6 +1,7 @@
-import { Box, useColorModeValue } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import React from "react";
+
+import { Box, useColorModeValue } from "@chakra-ui/react";
 
 const allOptions = [
   {

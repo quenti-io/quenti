@@ -63,5 +63,5 @@ usernameProfanity.removeWords(
     "cock",
     "cox",
     "spac", // e.g. space, spacious, etc.
-  ])
+  ]),
 );

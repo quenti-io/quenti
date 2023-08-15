@@ -1,8 +1,8 @@
 import { useClickable } from "@chakra-ui/clickable";
 import {
+  type UseTabProps,
   useTabsContext,
   useTabsDescendant,
-  type UseTabProps,
 } from "@chakra-ui/react";
 import { mergeRefs } from "@chakra-ui/react-use-merge-refs";
 import { callAllHandlers } from "@chakra-ui/shared-utils";

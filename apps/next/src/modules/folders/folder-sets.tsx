@@ -1,8 +1,12 @@
-import { Button, Grid, GridItem, Skeleton } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
-import { IconPlus } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import React from "react";
+
+import { api } from "@quenti/trpc";
+
+import { Button, Grid, GridItem, Skeleton } from "@chakra-ui/react";
+
+import { IconPlus } from "@tabler/icons-react";
+
 import { AddEntitiesModal } from "../../components/add-entities-modal";
 import { StudySetCard } from "../../components/study-set-card";
 import { useFolder } from "../../hooks/use-folder";
@@ -23,7 +27,7 @@ export const FolderSets = () => {
     },
     {
       enabled: hasOpenedSets,
-    }
+    },
   );
 
   const addSets = api.folders.addSets.useMutation({

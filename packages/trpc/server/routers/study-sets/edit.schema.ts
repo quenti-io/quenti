@@ -1,5 +1,7 @@
-import { LANGUAGE_VALUES } from "@quenti/core";
 import { z } from "zod";
+
+import { LANGUAGE_VALUES } from "@quenti/core";
+
 import { MAX_CHARS_TAGS, MAX_DESC, MAX_NUM_TAGS } from "../../common/constants";
 import { profanity } from "../../common/profanity";
 

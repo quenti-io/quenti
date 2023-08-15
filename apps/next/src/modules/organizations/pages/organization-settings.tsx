@@ -1,3 +1,11 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { ORG_SUPPORT_EMAIL } from "@quenti/lib/constants/email";
+import type { MembershipRole } from "@quenti/prisma/client";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -15,9 +23,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { ORG_SUPPORT_EMAIL } from "@quenti/lib/constants/email";
-import type { MembershipRole } from "@quenti/prisma/client";
-import { api } from "@quenti/trpc";
+
 import {
   IconFilterPlus,
   IconLogout,
@@ -26,10 +32,8 @@ import {
   IconWorldCheck,
   IconWorldPlus,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import React from "react";
+
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
-import { Link } from "@quenti/components";
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { Toast } from "../../../components/toast";
 import { useOrganization } from "../../../hooks/use-organization";

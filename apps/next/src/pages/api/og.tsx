@@ -1,24 +1,27 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable jsx-a11y/alt-text */
 
+/* eslint-disable @next/next/no-img-element */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable jsx-a11y/alt-text */
 import { Pool } from "@neondatabase/serverless";
-import type { DB } from "@quenti/prisma/kysely-types";
-import { getEntityGeneric } from "@quenti/trpc/server/edge/entities";
 import { ImageResponse } from "@vercel/og";
 import { Kysely, PostgresDialect } from "kysely";
 import type { NextRequest } from "next/server";
+
+import type { DB } from "@quenti/prisma/kysely-types";
+import { getEntityGeneric } from "@quenti/trpc/server/edge/entities";
 
 export const config = {
   runtime: "edge",
 };
 
 const ogBackground = fetch(
-  new URL("../../../public/og-background.png", import.meta.url)
+  new URL("../../../public/og-background.png", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const ogLine = fetch(
-  new URL("../../../public/og-line.png", import.meta.url)
+  new URL("../../../public/og-line.png", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 const ogAvatarUrl = (image: string) =>
@@ -27,10 +30,10 @@ const ogAvatarUrl = (image: string) =>
     : image;
 
 const outfit = fetch(
-  new URL("../../../public/assets/fonts/Outfit-Bold.ttf", import.meta.url)
+  new URL("../../../public/assets/fonts/Outfit-Bold.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const openSansRegular = fetch(
-  new URL("../../../public/assets/fonts/OpenSans-Regular.ttf", import.meta.url)
+  new URL("../../../public/assets/fonts/OpenSans-Regular.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 export default async function handler(request: NextRequest, ctx: any) {
@@ -55,7 +58,7 @@ export default async function handler(request: NextRequest, ctx: any) {
     id,
     inputUsername && idOrSlug
       ? { username: inputUsername, idOrSlug }
-      : undefined
+      : undefined,
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
@@ -63,10 +66,10 @@ export default async function handler(request: NextRequest, ctx: any) {
   if (!entity) return new ImageResponse(<></>);
 
   const avatarBuf = await fetch(ogAvatarUrl(entity.image)).then((res) =>
-    res.arrayBuffer()
+    res.arrayBuffer(),
   );
   const logoBuf = await fetch(ogAvatarUrl("/")).then((res) =>
-    res.arrayBuffer()
+    res.arrayBuffer(),
   );
   const backgroundBuf = await ogBackground;
   const lineBuf = await ogLine;
@@ -192,6 +195,6 @@ export default async function handler(request: NextRequest, ctx: any) {
           style: "normal",
         },
       ],
-    }
+    },
   );
 }

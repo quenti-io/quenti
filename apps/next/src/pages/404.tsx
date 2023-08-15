@@ -1,5 +1,7 @@
-import { Center, Heading, Text, VStack } from "@chakra-ui/react";
 import Head from "next/head";
+
+import { Center, Heading, Text, VStack } from "@chakra-ui/react";
+
 import { StaticWrapper } from "../components/static-wrapper";
 
 export default function NotFound() {

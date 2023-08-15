@@ -4,7 +4,7 @@ import type { UserType } from "@quenti/prisma/client";
 export const bulkJoinOrgUsers = async (
   orgId: string,
   domain: string,
-  as?: UserType
+  as?: UserType,
 ) => {
   return await prisma.user.updateMany({
     where: {
@@ -22,7 +22,7 @@ export const bulkJoinOrgUsers = async (
 export const bulkJoinOrgUsersByFilter = async (
   orgId: string,
   domain: string,
-  filter: string
+  filter: string,
 ) => {
   const regex = new RegExp(filter);
 

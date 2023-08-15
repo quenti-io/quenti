@@ -1,5 +1,7 @@
-import type { StudySet } from "@quenti/prisma/client";
 import React from "react";
+
+import type { StudySet } from "@quenti/prisma/client";
+
 import { visibilityIcon } from "../common/visibility-icon";
 import { GenericCard } from "./generic-card";
 

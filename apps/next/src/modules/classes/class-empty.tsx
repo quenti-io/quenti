@@ -1,6 +1,8 @@
-import { Box, HStack, Heading, Text, VStack } from "@chakra-ui/react";
-import { IconGhost3 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
+
+import { Box, HStack, Heading, Text, VStack } from "@chakra-ui/react";
+
+import { IconGhost3 } from "@tabler/icons-react";
 
 const mainGhost = {
   transition: {

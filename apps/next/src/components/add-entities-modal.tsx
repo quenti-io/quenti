@@ -1,18 +1,22 @@
+import React from "react";
+
+import type { SetFolderEntity } from "@quenti/interfaces";
+
 import {
   Button,
   ButtonGroup,
   Center,
   Grid,
   GridItem,
-  Heading,
   HStack,
+  Heading,
   Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import type { SetFolderEntity } from "@quenti/interfaces";
+
 import { IconPlus } from "@tabler/icons-react";
-import React from "react";
+
 import { Modal } from "./modal";
 import { SelectableGenericCard } from "./selectable-generic-card";
 

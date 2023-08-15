@@ -1,15 +1,17 @@
-import { api, type RouterOutputs } from "@quenti/trpc";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { type RouterOutputs, api } from "@quenti/trpc";
+
 import { Loading } from "../components/loading";
 import { queryEventChannel } from "../events/query";
 import { useLoading } from "../hooks/use-loading";
 import {
   ContainerContext,
-  createContainerStore,
   type ContainerStore,
   type ContainerStoreProps,
+  createContainerStore,
 } from "../stores/use-container-store";
 import { useSetPropertiesStore } from "../stores/use-set-properties-store";
 import { Folder404 } from "./folders/folder-404";
@@ -77,7 +79,7 @@ export const HydrateFolderData: React.FC<
         if (isDirty) setIsDirty(false);
         queryEventChannel.emit("folderQueryRefetched", data);
       },
-    }
+    },
   );
 
   React.useEffect(() => {

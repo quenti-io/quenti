@@ -1,12 +1,11 @@
-import { Button, Stack } from "@chakra-ui/react";
 import {
-  closestCenter,
   DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
   type DragEndEvent,
   type DragStartEvent,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import {
   restrictToParentElement,
@@ -16,8 +15,12 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { IconPlus } from "@tabler/icons-react";
 import React from "react";
+
+import { Button, Stack } from "@chakra-ui/react";
+
+import { IconPlus } from "@tabler/icons-react";
+
 import { useShortcut } from "../../hooks/use-shortcut";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { LanguageMenuWrapper } from "./language-menu";
@@ -31,7 +34,7 @@ export const TermsList = () => {
   const definitionLanguage = useSetEditorContext((s) => s.definitionLanguage);
   const setWordLanguage = useSetEditorContext((s) => s.setWordLanguage);
   const setDefinitionLanguage = useSetEditorContext(
-    (s) => s.setDefinitionLanguage
+    (s) => s.setDefinitionLanguage,
   );
   const addTerm = useSetEditorContext((s) => s.addTerm);
   const editTerm = useSetEditorContext((s) => s.editTerm);
@@ -56,7 +59,7 @@ export const TermsList = () => {
     },
     {
       altKey: true,
-    }
+    },
   );
 
   useShortcut(
@@ -68,7 +71,7 @@ export const TermsList = () => {
     },
     {
       altKey: true,
-    }
+    },
   );
 
   useShortcut(
@@ -81,7 +84,7 @@ export const TermsList = () => {
     {
       ctrlKey: true,
       shiftKey: "R",
-    }
+    },
   );
 
   const handleDragStart = (event: DragStartEvent) => {

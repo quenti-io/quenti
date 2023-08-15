@@ -1,7 +1,9 @@
-import { Container } from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
 import { shallow } from "zustand/shallow";
+
+import { Container } from "@chakra-ui/react";
+
 import type { ComponentWithAuth } from "../../../components/auth-component";
 import { WithFooter } from "../../../components/with-footer";
 import { HydrateEditSetData } from "../../../modules/hydrate-edit-set-data";
@@ -64,7 +66,7 @@ const PropertiesListener = () => {
       propertiesSaveHandler,
       {
         equalityFn: shallow,
-      }
+      },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

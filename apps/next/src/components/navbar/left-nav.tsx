@@ -1,14 +1,22 @@
+import { useSession } from "next-auth/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+
 import {
   Button,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Menu,
   MenuButton,
   MenuDivider,
   MenuList,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconBooks,
   IconChevronDown,
@@ -17,14 +25,10 @@ import {
   IconSchool,
   IconSparkles,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-import React from "react";
-import { useMe } from "../../hooks/use-me";
+
 import { Logo } from "../../../../../packages/components/logo";
+import { useMe } from "../../hooks/use-me";
 import { BASE_PAGES } from "../../pages/_app";
-import { Link } from "@quenti/components";
 import { MenuOption } from "../menu-option";
 import { TeacherOnly } from "../teacher-only";
 import { UnboundOnly } from "../unbound-only";

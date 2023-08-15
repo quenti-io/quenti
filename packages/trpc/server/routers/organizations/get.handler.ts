@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+
 import { conflictingDomains } from "../../lib/orgs/domains";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TGetSchema } from "./get.schema";
@@ -83,7 +84,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   const conflicting = await conflictingDomains(
     org.id,
-    org.domains.map((d) => d.requestedDomain)
+    org.domains.map((d) => d.requestedDomain),
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

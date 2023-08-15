@@ -19,7 +19,7 @@ export const getRelativeTime = (d1: Date, d2 = new Date()) => {
       return rtf
         .format(
           Math.round(elapsed / units[u as keyof typeof units]),
-          u as Parameters<typeof rtf.format>[1]
+          u as Parameters<typeof rtf.format>[1],
         )
         .replace(/now/g, "just now");
 };

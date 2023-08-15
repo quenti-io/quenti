@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+
 import { EnabledFeature } from "../common/constants";
 import { createTRPCRouter, lockedProcedure } from "../trpc";
 
@@ -20,6 +21,6 @@ export const discoverableRouter = createTRPCRouter({
   fetchInsults: lockedProcedure([EnabledFeature.ExtendedFeedbackBank]).query(
     () => {
       return { correct, incorrect };
-    }
+    },
   ),
 });

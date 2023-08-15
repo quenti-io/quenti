@@ -1,10 +1,12 @@
-import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
 import React from "react";
+
+import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
+
 import { useAuthedSet } from "../hooks/use-set";
 import {
-  createLearnStore,
   LearnContext,
   type LearnStore,
+  createLearnStore,
 } from "../stores/use-learn-store";
 
 export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
@@ -32,12 +34,12 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
       .sort((a, b) =>
         a.studiableRank && b.studiableRank
           ? a.studiableRank - b.studiableRank
-          : a.rank - b.rank
+          : a.rank - b.rank,
       );
 
     if (container.studyStarred) {
       learnTerms = learnTerms.filter((x) =>
-        container.starredTerms.includes(x.id)
+        container.starredTerms.includes(x.id),
       );
     }
     if (container.learnMode == "Review") {
@@ -53,7 +55,7 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
         container.answerWith,
         learnTerms,
         terms,
-        container.learnRound
+        container.learnRound,
       );
   }
 

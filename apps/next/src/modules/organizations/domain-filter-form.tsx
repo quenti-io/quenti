@@ -1,3 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+import { refineRegex } from "@quenti/trpc/server/common/validation";
+
 import {
   FormControl,
   FormErrorMessage,
@@ -10,14 +19,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "@quenti/trpc";
-import { refineRegex } from "@quenti/trpc/server/common/validation";
+
 import { IconSchool, IconUser } from "@tabler/icons-react";
-import React from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
-import { Link } from "@quenti/components";
+
 import { useOrganization } from "../../hooks/use-organization";
 import { getBaseDomain } from "./utils/get-base-domain";
 
@@ -49,7 +53,7 @@ export const DomainFilterForm = React.forwardRef(function DomainFilterForm(
     onChangeLoading,
     children,
   }: React.PropsWithChildren<DomainFilterFormProps>,
-  ref
+  ref,
 ) {
   const { data: org } = useOrganization();
   const domain = getBaseDomain(org);
@@ -114,7 +118,7 @@ export const DomainFilterForm = React.forwardRef(function DomainFilterForm(
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   const highlight = useColorModeValue("blue.500", "blue.200");

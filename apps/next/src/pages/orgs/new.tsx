@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -12,12 +19,9 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "@quenti/trpc";
+
 import { IconArrowRight } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+
 import { WizardLayout } from "../../components/wizard-layout";
 import { ORGANIZATION_ICONS } from "../../utils/icons";
 

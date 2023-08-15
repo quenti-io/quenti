@@ -1,3 +1,8 @@
+import { useRouter } from "next/router";
+
+import { Link } from "@quenti/components";
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   Box,
@@ -10,10 +15,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
+
 import { IconFolder } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { Link } from "@quenti/components";
+
 import { useFolder } from "../../hooks/use-folder";
 import { plural } from "../../utils/string";
 

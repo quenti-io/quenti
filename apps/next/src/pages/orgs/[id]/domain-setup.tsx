@@ -1,3 +1,8 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -11,19 +16,18 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
+
 import {
   IconArrowLeft,
   IconFilterPlus,
   IconWorldPlus,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
 import { DomainForm } from "../../../modules/organizations/domain-form";
-import { getBaseDomain } from "../../../modules/organizations/utils/get-base-domain";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
+import { getBaseDomain } from "../../../modules/organizations/utils/get-base-domain";
 
 export default function OrgDomainSetup() {
   const [newDomain, setNewDomain] = React.useState(false);

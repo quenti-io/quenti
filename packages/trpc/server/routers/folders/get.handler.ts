@@ -1,7 +1,9 @@
+import type { StudiableTerm, Term } from "@quenti/prisma/client";
+
 import { TRPCError } from "@trpc/server";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TGetSchema } from "./get.schema";
-import type { StudiableTerm, Term } from "@quenti/prisma/client";
 
 type GetOptions = {
   ctx: NonNullableUserContext;
@@ -142,7 +144,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       terms = terms.concat(
         raw
           .filter((t) => t.studySetId === set.id)
-          .sort((a, b) => a.rank - b.rank)
+          .sort((a, b) => a.rank - b.rank),
       );
     }
     terms = terms.map((x, i) => ({ ...x, rank: i }));

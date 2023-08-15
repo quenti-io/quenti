@@ -1,6 +1,7 @@
-import { env } from "@quenti/env/server";
 import crypto from "crypto";
 import generator from "otp-generator";
+
+import { env } from "@quenti/env/server";
 
 export const genOtp = (email: string, expiresInMinutes = 5) => {
   const ttl = expiresInMinutes * 60 * 1000;
@@ -30,7 +31,7 @@ type VerifyResult = {
 export const verifyOtp = (
   email: string,
   otp: string,
-  hash: string
+  hash: string,
 ): VerifyResult => {
   if (!hash.match("."))
     return {

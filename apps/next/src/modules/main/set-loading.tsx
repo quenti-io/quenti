@@ -1,4 +1,5 @@
 import { Container, Stack } from "@chakra-ui/react";
+
 import { WithFooter } from "../../components/with-footer";
 import { DescriptionArea } from "./description-area";
 import { FlashcardPreview } from "./flashcard-preview";

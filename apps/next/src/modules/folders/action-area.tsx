@@ -1,3 +1,9 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -12,8 +18,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link } from "@quenti/components";
-import { api } from "@quenti/trpc";
+
 import {
   IconCards,
   IconDotsVertical,
@@ -22,8 +27,7 @@ import {
   IconShare,
   IconTrash,
 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { ConfirmModal } from "../../components/confirm-modal";
 import { MenuOption } from "../../components/menu-option";
 import { useFolder } from "../../hooks/use-folder";

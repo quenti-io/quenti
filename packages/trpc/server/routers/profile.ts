@@ -1,6 +1,9 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
 import { USERNAME_REGEXP } from "@quenti/lib/constants/characters";
+
+import { TRPCError } from "@trpc/server";
+
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const profileRouter = createTRPCRouter({

@@ -1,3 +1,6 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
+
 import { getServerAuthSession } from "@quenti/auth";
 import { IS_PAYMENT_ENABLED } from "@quenti/lib/constants/payments";
 import { BASE_URL } from "@quenti/lib/constants/url";
@@ -7,8 +10,6 @@ import {
   getOrgDomains,
 } from "@quenti/trpc/server/lib/orgs/domains";
 import { isOrganizationAdmin } from "@quenti/trpc/server/lib/queries/organizations";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
 
 const querySchema = z.object({
   id: z.string().cuid2(),
@@ -16,7 +17,7 @@ const querySchema = z.object({
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (!IS_PAYMENT_ENABLED) return;
 
@@ -43,7 +44,7 @@ export default async function handler(
 
   const conflicting = await conflictingDomains(
     orgId,
-    domains.map((d) => d.requestedDomain)
+    domains.map((d) => d.requestedDomain),
   );
   if (!!conflicting.length)
     return res.status(409).json({ error: "Conflicting domains" });

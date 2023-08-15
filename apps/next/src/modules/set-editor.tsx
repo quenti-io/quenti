@@ -1,5 +1,7 @@
-import { Stack } from "@chakra-ui/react";
 import React from "react";
+
+import { Stack } from "@chakra-ui/react";
+
 import { ImportTermsModal } from "../components/import-terms-modal";
 import { useSetEditorContext } from "../stores/use-set-editor-store";
 import { ButtonArea } from "./editor/button-area";

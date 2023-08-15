@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { profanity } from "../../common/profanity";
+
 import { MAX_TERM } from "../../common/constants";
+import { profanity } from "../../common/profanity";
 
 export const ZAddSchema = z
   .object({

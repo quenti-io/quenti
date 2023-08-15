@@ -1,6 +1,14 @@
 node_modules/
 .next/
 .turbo/
+public
+**/**/node_modules
+**/**/.next
+**/**/public
 
-pnpm-lock.yaml
-yarn.lock
+*.lock
+*.log
+
+.gitignore
+.eslintignore
+.yarn

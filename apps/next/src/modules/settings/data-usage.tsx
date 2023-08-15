@@ -1,15 +1,18 @@
-import {
-  HStack,
-  Switch,
-  useColorModeValue,
-  Text,
-  Stack,
-} from "@chakra-ui/react";
 import { H } from "highlight.run";
 import { useSession } from "next-auth/react";
 import React from "react";
+
 import { Link } from "@quenti/components";
 import { api } from "@quenti/trpc";
+
+import {
+  HStack,
+  Stack,
+  Switch,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+
 import { SectionWrapper } from "./section-wrapper";
 
 export const DataUsage = () => {
@@ -17,7 +20,7 @@ export const DataUsage = () => {
   const grayText = useColorModeValue("gray.600", "gray.400");
 
   const [enabled, setEnabled] = React.useState(
-    Boolean(session?.user?.enableUsageData)
+    Boolean(session?.user?.enableUsageData),
   );
 
   const setEnabledUsageData = api.user.setEnableUsageData.useMutation({

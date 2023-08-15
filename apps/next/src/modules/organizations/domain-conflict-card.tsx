@@ -1,3 +1,5 @@
+import { Link } from "@quenti/components";
+
 import {
   Box,
   Card,
@@ -8,8 +10,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconAlertCircleFilled } from "@tabler/icons-react";
-import { Link } from "@quenti/components";
+
 import { ORG_SUPPORT_EMAIL } from "../../../../../packages/lib/constants/email";
 
 interface DomainConflictCardProps {

@@ -1,6 +1,7 @@
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
+
+import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 
 export const ErrorBoundary: React.FC = () => {
   return (

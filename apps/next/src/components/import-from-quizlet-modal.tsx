@@ -1,3 +1,8 @@
+import { useRouter } from "next/router";
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -12,10 +17,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import React from "react";
+
 import { QUIZLET_IMPORT_REGEXP } from "../../../../packages/lib/constants/characters";
-import { api } from "@quenti/trpc";
 
 export interface ImportFromQuizletModalProps {
   isOpen: boolean;
@@ -66,7 +69,7 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
         err.message == `Unexpected token 'A', "An error o"... is not valid JSON`
       ) {
         setError(
-          "Our web crawler seems to be currently down. Please try again later."
+          "Our web crawler seems to be currently down. Please try again later.",
         );
       } else setError(err.message);
     },

@@ -1,15 +1,19 @@
+import { useSession } from "next-auth/react";
+
+import type { RouterOutputs } from "@quenti/trpc";
+
 import {
-  Heading,
   HStack,
+  Heading,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconClockPlay } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
+
 import { UsernameLink } from "../../components/username-link";
 import { useMatchContext } from "../../stores/use-match-store";
-import type { RouterOutputs } from "@quenti/trpc";
 import { formatDeciseconds } from "../../utils/time";
 
 interface MatchSummaryFeedbackProps {
@@ -26,7 +30,7 @@ export const MatchSummaryFeedback: React.FC<MatchSummaryFeedbackProps> = ({
   const session = useSession();
   const userId = session.data!.user!.id;
   const isEligibleForLeaderboard = useMatchContext(
-    (s) => s.isEligibleForLeaderboard
+    (s) => s.isEligibleForLeaderboard,
   );
 
   const text = isEligibleForLeaderboard
@@ -41,7 +45,9 @@ export const MatchSummaryFeedback: React.FC<MatchSummaryFeedbackProps> = ({
         <IconClockPlay />
         <Heading>{`${formatDeciseconds(elapsed)}s`}</Heading>
       </HStack>
-      <Text fontWeight={600} color={textColor}>{text}</Text>
+      <Text fontWeight={600} color={textColor}>
+        {text}
+      </Text>
     </Stack>
   );
 };
@@ -49,7 +55,7 @@ export const MatchSummaryFeedback: React.FC<MatchSummaryFeedbackProps> = ({
 const leaderboardSummary = (
   elapsed: number,
   userId: string,
-  highscores: MatchSummaryFeedbackProps["highscores"]
+  highscores: MatchSummaryFeedbackProps["highscores"],
 ): React.ReactNode => {
   const selfIndex = highscores.findIndex((h) => h.userId == userId);
   const personal = highscores[selfIndex]!;
@@ -58,7 +64,7 @@ const leaderboardSummary = (
 
   if (!isPr) {
     return `See if you can beat your personal record of ${formatDeciseconds(
-      personal.time
+      personal.time,
     )} seconds.`;
   } else if (successor.userId != userId) {
     return (
@@ -78,17 +84,17 @@ const leaderboardSummary = (
 
 const personalSummary = (
   elapsed: number,
-  highscore: MatchSummaryFeedbackProps["highscore"]
+  highscore: MatchSummaryFeedbackProps["highscore"],
 ) => {
   const isPr = elapsed == highscore.bestTime;
 
   if (!isPr) {
     return `See if you can beat your personal record of ${formatDeciseconds(
-      highscore.bestTime!
+      highscore.bestTime!,
     )} seconds.`;
   } else {
     return `Think you can beat ${formatDeciseconds(
-      highscore.bestTime!
+      highscore.bestTime!,
     )} seconds now?`;
   }
 };

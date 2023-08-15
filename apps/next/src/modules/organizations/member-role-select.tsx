@@ -1,6 +1,8 @@
-import { useColorModeValue } from "@chakra-ui/react";
-import type { MembershipRole } from "@quenti/prisma/client";
 import { Select } from "chakra-react-select";
+
+import type { MembershipRole } from "@quenti/prisma/client";
+
+import { useColorModeValue } from "@chakra-ui/react";
 
 export interface MemberRoleSelectProps {
   value: MembershipRole;
@@ -41,7 +43,7 @@ export const MemberRoleSelect: React.FC<MemberRoleSelectProps> = ({
   const hydrateOptions = () => {
     if (myRole === "Admin") {
       return options.map((x) =>
-        x.value === "Owner" ? { ...x, isDisabled: true } : x
+        x.value === "Owner" ? { ...x, isDisabled: true } : x,
       );
     }
 
@@ -82,7 +84,7 @@ export const MemberRoleSelect: React.FC<MemberRoleSelectProps> = ({
         }),
       }}
       options={hydrateOptions().sort(
-        (a, b) => (a.isDisabled ? 1 : 0) - (b.isDisabled ? 1 : 0)
+        (a, b) => (a.isDisabled ? 1 : 0) - (b.isDisabled ? 1 : 0),
       )}
     />
   );

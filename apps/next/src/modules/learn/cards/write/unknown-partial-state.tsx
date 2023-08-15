@@ -1,3 +1,6 @@
+import type { Question } from "@quenti/interfaces";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -9,8 +12,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { Question } from "@quenti/interfaces";
-import { api } from "@quenti/trpc";
+
 import { useAuthedSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
 import { useContainerContext } from "../../../../stores/use-container-store";
@@ -27,7 +29,7 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
 }) => {
   const { id, container } = useAuthedSet();
   const setMultipleAnswerMode = useContainerContext(
-    (s) => s.setMultipleAnswerMode
+    (s) => s.setMultipleAnswerMode,
   );
   const correctFromUnknown = useLearnContext((s) => s.correctFromUnknown);
   const incorrectFromUnknown = useLearnContext((s) => s.incorrectFromUnknown);

@@ -1,3 +1,9 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { avatarUrl } from "@quenti/lib/avatar";
+import type { User } from "@quenti/prisma/client";
+
 import {
   Avatar,
   Box,
@@ -14,15 +20,13 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
-import type { User } from "@quenti/prisma/client";
+
 import {
   IconDotsVertical,
   IconExternalLink,
   IconUserX,
 } from "@tabler/icons-react";
-import React from "react";
-import { Link } from "@quenti/components";
+
 import { MenuOptionPure } from "../../components/menu-option";
 
 interface OrganizationStudentProps {

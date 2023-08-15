@@ -1,19 +1,23 @@
+import { useSession } from "next-auth/react";
+import React from "react";
+
+import { avatarUrl } from "@quenti/lib/avatar";
+import type { User } from "@quenti/prisma/client";
+
 import {
   Avatar,
   Box,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Text,
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { User } from "@quenti/prisma/client";
+
 import { IconDiscountCheck, IconRosetteFilled } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import React from "react";
+
 import { UsernameLink } from "../../components/username-link";
-import { avatarUrl } from "@quenti/lib/avatar";
 import { formatDeciseconds, getRelativeTime } from "../../utils/time";
 
 export interface LeaderboardEntryProps {

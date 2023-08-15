@@ -61,7 +61,7 @@ export const getBelongingClasses = async (userId: string) => {
     (typeof teacherClasses)[number] | (typeof studentClasses)[number]
   >;
   const classes = (teacherClasses as Unified[]).concat(
-    studentClasses as Unified[]
+    studentClasses as Unified[],
   );
 
   return classes.map((membership) => ({

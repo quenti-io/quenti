@@ -1,8 +1,9 @@
+import { z } from "zod";
+
 import {
   ContainerType,
   LimitedStudySetAnswerMode,
 } from "@quenti/prisma/client";
-import { z } from "zod";
 
 export const ZSetCardsAnswerWithSchema = z.object({
   entityId: z.string(),

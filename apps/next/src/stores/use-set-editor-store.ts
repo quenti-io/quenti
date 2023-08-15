@@ -1,13 +1,14 @@
+import { nanoid } from "nanoid";
+import React from "react";
+import { createStore, useStore } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
+
+import type { Language } from "@quenti/core/language";
 import type {
   AutoSaveTerm,
   StudySetVisibility,
   Term,
 } from "@quenti/prisma/client";
-import { nanoid } from "nanoid";
-import React from "react";
-import { createStore, useStore } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
-import type { Language } from "@quenti/core/language";
 
 interface SetEditorProps {
   mode: "create" | "edit";
@@ -55,7 +56,7 @@ export type SetEditorStore = ReturnType<typeof createSetEditorStore>;
 
 export const createSetEditorStore = (
   initProps?: Partial<SetEditorProps>,
-  behaviors?: Partial<SetEditorState>
+  behaviors?: Partial<SetEditorState>,
 ) => {
   const DEFAULT_PROPS: SetEditorProps = {
     mode: "create",
@@ -100,7 +101,7 @@ export const createSetEditorStore = (
           return {
             terms: [
               ...state.terms.map((t) =>
-                t.rank >= rank ? { ...t, rank: t.rank + 1 } : t
+                t.rank >= rank ? { ...t, rank: t.rank + 1 } : t,
               ),
               term,
             ],
@@ -139,7 +140,7 @@ export const createSetEditorStore = (
               .map((term) =>
                 term.rank > active.rank
                   ? { ...term, rank: term.rank - 1 }
-                  : term
+                  : term,
               )
               .filter((term) => term.id !== id),
           };
@@ -150,7 +151,7 @@ export const createSetEditorStore = (
         set((state) => {
           return {
             terms: state.terms.map((t) =>
-              t.id === id ? { ...t, word, definition } : t
+              t.id === id ? { ...t, word, definition } : t,
             ),
           };
         });
@@ -160,7 +161,7 @@ export const createSetEditorStore = (
         set((state) => {
           return {
             terms: state.terms.map((t) =>
-              t.id === oldId ? { ...t, id: newId } : t
+              t.id === oldId ? { ...t, id: newId } : t,
             ),
           };
         });
@@ -219,17 +220,17 @@ export const createSetEditorStore = (
       onComplete: () => {
         behaviors?.onComplete?.();
       },
-    }))
+    })),
   );
 };
 
 export const SetEditorStoreContext = React.createContext<SetEditorStore | null>(
-  null
+  null,
 );
 
 export const useSetEditorContext = <T>(
   selector: (state: SetEditorState) => T,
-  equalityFn?: (left: T, right: T) => boolean
+  equalityFn?: (left: T, right: T) => boolean,
 ): T => {
   const store = React.useContext(SetEditorStoreContext);
   if (!store) throw new Error("Missing SetEditorContext.Provider in the tree");

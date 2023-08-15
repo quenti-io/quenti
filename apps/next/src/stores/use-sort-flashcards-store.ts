@@ -1,8 +1,9 @@
-import type { Term } from "@quenti/prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+
 import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
+import type { Term } from "@quenti/prisma/client";
 
 export interface SortFlashcardsStoreProps {
   studiableTerms: StudiableTerm[];
@@ -17,7 +18,7 @@ interface SortFlashcardsState extends SortFlashcardsStoreProps {
   initialize: (
     round: number,
     studiableTerms: StudiableTerm[],
-    allTerms: Term[]
+    allTerms: Term[],
   ) => void;
   markStillLearning: (termId: string) => void;
   markKnown: (termId: string) => void;
@@ -30,7 +31,7 @@ interface SortFlashcardsState extends SortFlashcardsStoreProps {
 export type SortFlashcardsStore = ReturnType<typeof createSortFlashcardsStore>;
 
 export const createSortFlashcardsStore = (
-  initProps?: Partial<SortFlashcardsStoreProps>
+  initProps?: Partial<SortFlashcardsStoreProps>,
 ) => {
   const DEFAULT_PROPS: SortFlashcardsStoreProps = {
     studiableTerms: [],
@@ -87,7 +88,7 @@ export const createSortFlashcardsStore = (
             progressView: false,
             index: Math.min(
               state.index - (!fromProgress ? 1 : 0),
-              state.termsThisRound.length - 1
+              state.termsThisRound.length - 1,
             ),
           };
         });
@@ -110,13 +111,13 @@ export const createSortFlashcardsStore = (
 
           // Terms that show up as previously answered are marked with set correctness and with the current round
           const tailTerms = state.studiableTerms.filter(
-            (t) => t.correctness != 0 && t.appearedInRound == currentRound
+            (t) => t.correctness != 0 && t.appearedInRound == currentRound,
           );
           // The rest are terms that are unknown, or incorrect but haven't been shown yet (appearedInRound is one less than currentRound)
           const headTerms = state.studiableTerms.filter(
             (t) =>
               t.correctness == 0 ||
-              (t.correctness == -1 && t.appearedInRound == currentRound - 1)
+              (t.correctness == -1 && t.appearedInRound == currentRound - 1),
           );
           const termsThisRound = [...tailTerms, ...headTerms];
           // Start the index at the first head term
@@ -133,13 +134,14 @@ export const createSortFlashcardsStore = (
       evaluateTerms: (newStudiable) => {
         set((state) => {
           const tailTerms = newStudiable.filter(
-            (t) => t.correctness != 0 && t.appearedInRound == state.currentRound
+            (t) =>
+              t.correctness != 0 && t.appearedInRound == state.currentRound,
           );
           const headTerms = newStudiable.filter(
             (t) =>
               t.correctness == 0 ||
               (t.correctness == -1 &&
-                t.appearedInRound == state.currentRound - 1)
+                t.appearedInRound == state.currentRound - 1),
           );
           const termsThisRound = [...tailTerms, ...headTerms];
           const index = tailTerms.length;
@@ -151,7 +153,7 @@ export const createSortFlashcardsStore = (
           };
         });
       },
-    }))
+    })),
   );
 };
 
@@ -160,7 +162,7 @@ export const SortFlashcardsContext =
 
 export const useSortFlashcardsContext = <T>(
   selector: (state: SortFlashcardsState) => T,
-  equalityFn?: (left: T, right: T) => boolean
+  equalityFn?: (left: T, right: T) => boolean,
 ): T => {
   const store = React.useContext(SortFlashcardsContext);
   if (!store)

@@ -1,6 +1,8 @@
+import React from "react";
+
 import type { Widen } from "@quenti/lib/widen";
 import type { RouterOutputs } from "@quenti/trpc";
-import React from "react";
+
 import { FolderContext } from "../modules/hydrate-folder-data";
 import type { AuthedData } from "../modules/hydrate-set-data";
 import { SetContext } from "../modules/hydrate-set-data";

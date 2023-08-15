@@ -1,13 +1,15 @@
-import type { Term } from "@quenti/prisma/client";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+
+import { takeNRandom } from "@quenti/lib/array";
+import type { Term } from "@quenti/prisma/client";
+
 import {
   MATCH_SHUFFLE_TIME,
   MATCH_TERMS_IN_ROUND,
 } from "../../../../packages/lib/constants/match";
-import { areRectanglesOverlapping, pad, type Rect } from "../utils/area";
-import { takeNRandom } from "@quenti/lib/array";
+import { type Rect, areRectanglesOverlapping, pad } from "../utils/area";
 
 interface RoundSummary {
   endTime: number;
@@ -54,7 +56,7 @@ const MATCH_TIMER_BOUNDS = { x: 300, y: 150 };
 interface MatchState extends MatchStoreProps {
   initialize: (
     studiableTerms: Term[],
-    isEligibleForLeaderboard: boolean
+    isEligibleForLeaderboard: boolean,
   ) => void;
   // Maybe this shouldn't use ids because it's pretty easy to cheat this way
   // But the code is open source and the easiest method of cheating
@@ -69,7 +71,7 @@ interface MatchState extends MatchStoreProps {
   pickNewSpot: (
     index: number,
     term: MatchItem,
-    elem: HTMLDivElement
+    elem: HTMLDivElement,
   ) => { x: number; y: number };
   requestZIndex: () => number;
   setZIndex: (zIndex: number) => void;
@@ -82,7 +84,7 @@ interface MatchBehaviors {
 
 export const createMatchStore = (
   initProps?: Partial<MatchStoreProps>,
-  behaviors?: Partial<MatchBehaviors>
+  behaviors?: Partial<MatchBehaviors>,
 ) => {
   const DEFAULT_PROPS: MatchStoreProps = {
     roundStartTime: 0,
@@ -113,7 +115,7 @@ export const createMatchStore = (
         set((state) => {
           state.answerCallback();
           state.roundQuestions.find(
-            (question) => question.id == termId
+            (question) => question.id == termId,
           )!.completed = true;
           return {
             roundProgress: state.roundProgress + 1,
@@ -154,7 +156,7 @@ export const createMatchStore = (
           incorrectGuesses: 0,
           roundQuestions: takeNRandom(
             state.studiableTerms,
-            state.termsThisRound
+            state.termsThisRound,
           ).map((term) => ({
             ...term,
             completed: false,
@@ -198,7 +200,7 @@ export const createMatchStore = (
         for (let i = 1; i < MATCH_MAX_OVERLAP_TRIES; i++) {
           x = pad(
             Math.random() * (elem.clientWidth - term.width),
-            MATCH_SIDE_WALL_PADDING
+            MATCH_SIDE_WALL_PADDING,
           );
           y = Math.random() * (elem.clientHeight - term.height);
 
@@ -289,7 +291,7 @@ export const createMatchStore = (
       setZIndex: (zIndex: number) => set({ zIndex }),
       setHighlightedIndices: (highlightedIndices: number[]) =>
         set({ highlightedIndices }),
-    }))
+    })),
   );
 };
 
@@ -299,7 +301,7 @@ export const MatchContext = React.createContext<MatchStore | null>(null);
 
 export const useMatchContext = <T>(
   selector: (state: MatchState) => T,
-  equalityFn?: (left: T, right: T) => boolean
+  equalityFn?: (left: T, right: T) => boolean,
 ): T => {
   const store = React.useContext(MatchContext);
   if (!store) throw new Error("Missing MatchContext.Provider in the tree");

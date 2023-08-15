@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+
 import {
   Divider,
   Flex,
@@ -9,7 +11,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+
 import { Authed } from "../../components/authed";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";

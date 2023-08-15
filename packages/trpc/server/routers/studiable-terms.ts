@@ -1,5 +1,7 @@
-import { StudiableMode } from "@quenti/prisma/client";
 import { z } from "zod";
+
+import { StudiableMode } from "@quenti/prisma/client";
+
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const studiableTermsRouter = createTRPCRouter({
@@ -12,7 +14,7 @@ export const studiableTermsRouter = createTRPCRouter({
         correctness: z.number(),
         appearedInRound: z.number(),
         incorrectCount: z.number(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.studiableTerm.upsert({
@@ -47,7 +49,7 @@ export const studiableTermsRouter = createTRPCRouter({
         id: z.string(),
         containerId: z.string(),
         mode: z.nativeEnum(StudiableMode),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {

@@ -1,4 +1,5 @@
 import { Skeleton } from "@chakra-ui/react";
+
 import { ClassCard } from "../../../components/class-card";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";

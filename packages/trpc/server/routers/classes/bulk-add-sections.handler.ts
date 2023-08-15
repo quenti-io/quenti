@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBulkAddSectionsSchema } from "./bulk-add-sections.schema";

@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Grid,
   Heading,
@@ -5,7 +7,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
 
 export interface SectionWrapperProps {
   heading: string;

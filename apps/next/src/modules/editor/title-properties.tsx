@@ -1,14 +1,16 @@
+import React from "react";
+
 import {
   Flex,
-  Heading,
   HStack,
+  Heading,
   Input,
   Stack,
   Tag,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
+
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";

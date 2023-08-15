@@ -1,6 +1,9 @@
-import { ColorModeScript } from "@chakra-ui/react";
-import { env } from "@quenti/env/client";
 import { Head, Html, Main, NextScript } from "next/document";
+
+import { env } from "@quenti/env/client";
+
+import { ColorModeScript } from "@chakra-ui/react";
+
 import { theme } from "../lib/chakra-theme";
 
 const Document = () => {

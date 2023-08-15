@@ -1,5 +1,7 @@
-import { VStack } from "@chakra-ui/react";
 import React from "react";
+
+import { VStack } from "@chakra-ui/react";
+
 import { ChangeUsernameInput } from "../../components/change-username-input";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";

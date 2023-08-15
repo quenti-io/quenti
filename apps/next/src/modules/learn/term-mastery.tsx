@@ -1,6 +1,7 @@
 import { Grid } from "@chakra-ui/react";
-import { useTermMastery } from "../../hooks/use-term-mastery";
+
 import { GridStat } from "../../components/grid-stat";
+import { useTermMastery } from "../../hooks/use-term-mastery";
 
 export const TermMastery = () => {
   const [unstudied, familiar, mastered] = useTermMastery();

@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { api } from "@quenti/trpc";
+
 import {
   Alert,
   AlertDescription,
@@ -8,14 +15,11 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import { IconExclamationCircle } from "@tabler/icons-react";
-import React from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+
 import { DOMAIN_REGEX } from "../../../../../packages/lib/constants/organizations";
 import { useOrganization } from "../../hooks/use-organization";
-import { api } from "@quenti/trpc";
 import { DomainConflictCard } from "./domain-conflict-card";
 
 interface DomainFormInputs {

@@ -3,7 +3,7 @@ export const strip = <T extends object>(input: T): T => {
   return Object.fromEntries(
     Object.entries(input).filter(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ([_, value]) => value !== undefined && value !== null
-    )
+      ([_, value]) => value !== undefined && value !== null,
+    ),
   ) as T;
 };

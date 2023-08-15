@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Button,
   Flex,
@@ -7,8 +9,9 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconPencil } from "@tabler/icons-react";
-import React from "react";
+
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 import { getRelativeTime } from "../../utils/time";

@@ -1,9 +1,14 @@
+import React from "react";
+
+import { Link } from "@quenti/components";
+import { avatarUrl } from "@quenti/lib/avatar";
+
 import {
   Avatar,
   Box,
   Flex,
-  Heading,
   HStack,
+  Heading,
   LinkBox,
   LinkOverlay,
   Menu,
@@ -13,15 +18,14 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import {
   IconDiscountCheck,
   IconDotsVertical,
   IconTrash,
 } from "@tabler/icons-react";
-import React from "react";
-import { avatarUrl } from "@quenti/lib/avatar";
+
 import { plural } from "../utils/string";
-import { Link } from "@quenti/components";
 import { MenuOption } from "./menu-option";
 
 export interface GenericCardProps {

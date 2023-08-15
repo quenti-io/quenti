@@ -1,6 +1,9 @@
-import { Button, ButtonGroup, Text } from "@chakra-ui/react";
-import { api } from "@quenti/trpc";
 import React from "react";
+
+import { api } from "@quenti/trpc";
+
+import { Button, ButtonGroup, Text } from "@chakra-ui/react";
+
 import { Modal } from "../../components/modal";
 import { DomainFilterForm } from "./domain-filter-form";
 
@@ -54,7 +57,7 @@ export const DomainFilterModal: React.FC<DomainFilterModalProps> = ({
               isLoading={loading}
               onClick={() =>
                 formRef.current?.dispatchEvent(
-                  new Event("submit", { cancelable: true, bubbles: true })
+                  new Event("submit", { cancelable: true, bubbles: true }),
                 )
               }
             >

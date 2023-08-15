@@ -1,4 +1,5 @@
 import { prisma } from "@quenti/prisma";
+
 import { TRPCError } from "@trpc/server";
 
 export const getClassMember = async (classId: string, userId: string) => {
@@ -14,7 +15,7 @@ export const getClassMember = async (classId: string, userId: string) => {
 
 export const isClassTeacherOrThrow = async (
   classId: string,
-  userId: string
+  userId: string,
 ) => {
   const member = await getClassMember(classId, userId);
   if (!member) throw new TRPCError({ code: "NOT_FOUND" });

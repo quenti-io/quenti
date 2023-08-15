@@ -1,5 +1,7 @@
-import { env } from "@quenti/env/client";
 import { Hr, Link } from "@react-email/components";
+
+import { env } from "@quenti/env/client";
+
 import { Logo } from "./logo";
 
 interface FooterProps {

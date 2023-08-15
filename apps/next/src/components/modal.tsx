@@ -6,13 +6,13 @@ import {
   ModalContent as ChakraModalContent,
   ModalFooter as ChakraModalFooter,
   ModalOverlay as ChakraModalOverlay,
-  Stack,
-  forwardRef,
-  useColorModeValue,
   type ComponentWithAs,
   type HeadingProps,
   type ModalProps,
+  Stack,
   type StackProps,
+  forwardRef,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
 const Content = function ModalBody({
@@ -78,7 +78,7 @@ export const Modal = forwardRef<ModalProps, "div">(
         {children}
       </ChakraModal>
     );
-  }
+  },
 ) as ComponentWithAs<"div", ModalProps> & {
   Overlay: typeof Overlay;
   Content: typeof Content;

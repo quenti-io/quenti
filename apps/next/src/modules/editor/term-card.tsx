@@ -1,3 +1,9 @@
+import type { DraggableAttributes } from "@dnd-kit/core";
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+import React from "react";
+
+import { languageName } from "@quenti/core/language";
+
 import {
   Box,
   Button,
@@ -11,12 +17,10 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import type { DraggableAttributes } from "@dnd-kit/core";
-import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
-import React from "react";
+
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { languageName } from "@quenti/core/language";
 import { CharacterSuggestionsPure } from "./character-suggestions";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
@@ -46,7 +50,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
       attributes,
       listeners,
     },
-    ref
+    ref,
   ) {
     const { colorMode } = useColorMode();
     const wordRef = React.useRef<HTMLTextAreaElement>(null);
@@ -114,7 +118,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
 
     const handleInsert = (
       c: string,
-      ref: React.RefObject<HTMLTextAreaElement>
+      ref: React.RefObject<HTMLTextAreaElement>,
     ) => {
       const el = ref.current;
       if (!el) return;
@@ -136,11 +140,11 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
 
     const insertWord = React.useCallback(
       (c: string) => handleInsert(c, wordRef),
-      []
+      [],
     );
     const insertDefinition = React.useCallback(
       (c: string) => handleInsert(c, definitionRef),
-      []
+      [],
     );
 
     return (
@@ -279,11 +283,11 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
             wordLanguage,
             definitionLanguage,
             colorMode, // Theme changes should update the card
-          ]
+          ],
         )}
       </Card>
     );
-  }
+  },
 );
 
 export const TermCardPure = React.memo(TermCard);

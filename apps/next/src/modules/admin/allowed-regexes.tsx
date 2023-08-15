@@ -1,19 +1,23 @@
+import React from "react";
+
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   Flex,
   Grid,
   GridItem,
-  Heading,
   HStack,
+  Heading,
   IconButton,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
-import React from "react";
+
 import { ConfirmModal } from "../../components/confirm-modal";
-import { api } from "@quenti/trpc";
 import { RegexModal } from "./regex-modal";
 
 export const AllowedRegexes = () => {

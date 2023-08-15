@@ -1,17 +1,21 @@
+import React from "react";
+
+import { avatarUrl } from "@quenti/lib/avatar";
+import type { StudySetVisibility } from "@quenti/prisma/client";
+
 import {
   Avatar,
   Box,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { avatarUrl } from "@quenti/lib/avatar";
-import type { StudySetVisibility } from "@quenti/prisma/client";
+
 import { IconFolder } from "@tabler/icons-react";
-import React from "react";
+
 import { visibilityIcon } from "../common/visibility-icon";
 import { plural } from "../utils/string";
 
