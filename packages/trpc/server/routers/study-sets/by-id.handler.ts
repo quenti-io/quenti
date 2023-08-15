@@ -105,6 +105,7 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
       username: studySet.user.username,
       image: studySet.user.image!,
       verified: studySet.user.verified,
+      name: studySet.user.displayName ? studySet.user.name : undefined,
     },
     container: {
       ...container,

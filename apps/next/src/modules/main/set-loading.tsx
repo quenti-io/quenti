@@ -4,7 +4,6 @@ import { WithFooter } from "../../components/with-footer";
 import { DescriptionArea } from "./description-area";
 import { FlashcardPreview } from "./flashcard-preview";
 import { HeadingArea } from "./heading-area";
-import { LinkArea } from "./link-area";
 
 export const SetLoading = () => {
   return (
@@ -12,7 +11,6 @@ export const SetLoading = () => {
       <Container maxW="7xl">
         <Stack spacing="10">
           <HeadingArea.Skeleton />
-          <LinkArea.Skeleton />
         </Stack>
       </Container>
       <Container maxW="full" overflow="hidden" px="0" py="6">

@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-import { Link } from "@quenti/components";
 import { shuffleArray } from "@quenti/lib/array";
 import { api } from "@quenti/trpc";
 
@@ -16,7 +15,6 @@ import {
 
 import {
   IconArrowsShuffle,
-  IconMaximize,
   IconPlayerPlay,
   IconSettings,
 } from "@tabler/icons-react";
@@ -28,6 +26,7 @@ import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
 import { FlashcardsSettingsModal } from "../flashcards/flashcards-settings-modal";
+import { LinkArea } from "./link-area";
 
 export const FlashcardPreview = () => {
   const router = useRouter();
@@ -91,12 +90,13 @@ export const FlashcardPreview = () => {
       />
       <Flex
         gap={8}
-        flexDir={{ base: "column", md: "row" }}
+        flexDir={{ base: "column", lg: "row" }}
         alignItems="stretch"
         w="full"
       >
-        <Flex maxW="1000px" flex="1">
-          <Box w="full">
+        <LinkArea />
+        <Flex flex="1">
+          <Box w="full" zIndex={10}>
             <RootFlashcardWrapper
               terms={data.terms}
               termOrder={termOrder}
@@ -104,12 +104,16 @@ export const FlashcardPreview = () => {
             />
           </Box>
         </Flex>
-        <Flex flexDir="column" justifyContent="space-between">
-          <Stack spacing={4}>
+        <Flex
+          flexDir="column"
+          justifyContent="space-between"
+          w={{ base: "full", lg: "160px" }}
+        >
+          <Stack spacing={4} direction={{ base: "row", lg: "column" }}>
             <Stack
-              direction={{ base: "row", md: "column" }}
+              direction={{ base: "row", lg: "column" }}
               w="full"
-              spacing={4}
+              spacing="3"
             >
               <Button
                 w="full"
@@ -143,33 +147,22 @@ export const FlashcardPreview = () => {
             <Button
               leftIcon={<IconSettings />}
               variant="ghost"
-              display={{ base: "none", md: "flex" }}
+              display={{ base: "none", lg: "flex" }}
               onClick={() => setSettingsOpen(true)}
             >
               Settings
             </Button>
           </Stack>
-          <Flex justifyContent={{ base: "end", md: "start" }} marginTop="4">
+          <Flex justifyContent={{ base: "end", lg: "start" }} marginTop="4">
             <IconButton
               w="max"
               icon={<IconSettings />}
               rounded="full"
               variant="ghost"
-              display={{ base: "flex", md: "none" }}
+              display={{ base: "flex", lg: "none" }}
               aria-label="Settings"
               colorScheme="gray"
               onClick={() => setSettingsOpen(true)}
-            />
-
-            <IconButton
-              w="max"
-              rounded="full"
-              variant="ghost"
-              as={Link}
-              href={`/${data.id}/flashcards`}
-              icon={<IconMaximize />}
-              aria-label="Full screen"
-              colorScheme="gray"
             />
           </Flex>
         </Flex>
@@ -182,30 +175,46 @@ FlashcardPreview.Skeleton = function FlashcardPreviewSkeleton() {
   return (
     <Flex
       gap={8}
-      flexDir={{ base: "column", md: "row" }}
+      flexDir={{ base: "column", lg: "row" }}
       alignItems="stretch"
       w="full"
     >
+      <LinkArea.Skeleton />
       <Flex maxW="1000px" flex="1">
         <Box w="full">
           <LoadingFlashcard h="500px" />
         </Box>
       </Flex>
-      <Flex flexDir="column" justifyContent="space-between">
-        <Stack spacing={4}>
-          <Stack direction={{ base: "row", md: "column" }} w="full" spacing={4}>
-            <Skeleton w="full" rounded="md">
+      <Flex
+        flexDir="column"
+        justifyContent="space-between"
+        w={{ base: "full", lg: "160px" }}
+      >
+        <Stack spacing={4} direction={{ base: "row", lg: "column" }}>
+          <Stack direction={{ base: "row", lg: "column" }} w="full" spacing="3">
+            <Skeleton w="full" rounded="lg">
               <Button w="full" leftIcon={<IconArrowsShuffle />}>
                 Shuffle
               </Button>
             </Skeleton>
-            <Skeleton w="full" rounded="md">
+            <Skeleton w="full" rounded="lg">
               <Button w="full" leftIcon={<IconPlayerPlay />}>
                 Autoplay
               </Button>
             </Skeleton>
           </Stack>
         </Stack>
+        <Flex justifyContent={{ base: "end", lg: "start" }} marginTop="4">
+          <Skeleton rounded="full">
+            <IconButton
+              w="max"
+              icon={<IconSettings />}
+              rounded="full"
+              display={{ base: "flex", lg: "none" }}
+              aria-label="Settings"
+            />
+          </Skeleton>
+        </Flex>
       </Flex>
     </Flex>
   );

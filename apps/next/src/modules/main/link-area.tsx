@@ -5,12 +5,11 @@ import { Link } from "@quenti/components";
 
 import {
   Box,
-  Flex,
-  Grid,
-  GridItem,
+  HStack,
   Heading,
   LinkBox,
   LinkOverlay,
+  SimpleGrid,
   Skeleton,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -18,7 +17,9 @@ import {
 import {
   IconBrain,
   IconCards,
+  IconGridDots,
   IconLayersSubtract,
+  IconMeteor,
   IconReport,
 } from "@tabler/icons-react";
 
@@ -29,70 +30,65 @@ export const LinkArea = () => {
   const { id } = useSet();
 
   return (
-    <Grid
-      w="full"
-      maxW="1000px"
-      gridTemplateColumns={{
-        base: "1fr",
-        sm: "1fr 1fr",
-        md: "1fr 1fr 1fr 1fr",
-      }}
-      gap={4}
+    <SimpleGrid
+      spacing="4"
+      w={{ base: "full", lg: "160px" }}
+      h="max-content"
+      columns={{ base: 2, md: 3, lg: 1 }}
     >
-      <GridItem>
-        <Linkable
-          name="Learn"
-          icon={<IconBrain />}
-          href={`/${id}/learn`}
-          requireAuth
-        />
-      </GridItem>
-      <GridItem>
-        <Linkable
-          name="Flashcards"
-          icon={<IconCards />}
-          href={`/${id}/flashcards`}
-        />
-      </GridItem>
-      <GridItem>
-        <Linkable
-          name="Test"
-          icon={<IconReport />}
-          href="/#coming-soon"
-          disabled
-          requireAuth
-        />
-      </GridItem>
-      <GridItem>
-        <Linkable
-          name="Match"
-          icon={<IconLayersSubtract />}
-          href={`/${id}/match`}
-          requireAuth
-        />
-      </GridItem>
-    </Grid>
+      <Linkable
+        name="Learn"
+        icon={<IconBrain />}
+        href={`/${id}/learn`}
+        requireAuth
+      />
+      <Linkable
+        name="Flashcards"
+        icon={<IconCards />}
+        href={`/${id}/flashcards`}
+      />
+      <Linkable
+        name="Test"
+        icon={<IconReport />}
+        href="/#coming-soon"
+        requireAuth
+      />
+      <Linkable
+        name="Match"
+        icon={<IconLayersSubtract />}
+        href={`/${id}/match`}
+        requireAuth
+      />
+      <Linkable
+        name="Crossword"
+        icon={<IconGridDots />}
+        href="/#coming-soon"
+        requireAuth
+      />
+      <Linkable
+        name="Gravity"
+        icon={<IconMeteor />}
+        href="/#coming-soon"
+        requireAuth
+      />
+    </SimpleGrid>
   );
 };
 
 LinkArea.Skeleton = function LinkAreaSkeleton() {
   return (
-    <Grid
-      w="full"
-      maxW="1000px"
-      gridTemplateColumns={{
-        base: "1fr",
-        sm: "1fr 1fr",
-        md: "1fr 1fr 1fr 1fr",
-      }}
-      gap={4}
+    <SimpleGrid
+      spacing="4"
+      w={{ base: "full", lg: "160px" }}
+      h="max-content"
+      columns={{ base: 2, md: 3, lg: 1 }}
     >
-      {["Learn", "Flashcards", "Test", "Match"].map((name, i) => (
-        <GridItem key={i}>
-          <Linkable name={name} href="" icon={<IconCards />} skeleton />
-        </GridItem>
-      ))}
-    </Grid>
+      {["Learn", "Flashcards", "Test", "Match", "Crossword", "Gravity"].map(
+        (name, i) => (
+          <Linkable key={i} name={name} href="" icon={<IconCards />} skeleton />
+        ),
+      )}
+    </SimpleGrid>
   );
 };
 
@@ -118,13 +114,13 @@ const Linkable: React.FC<LinkableProps> = ({
 
   const bg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.700");
+  const focusColor = useColorModeValue("gray.50", "gray.700");
 
   const disabledHeading = useColorModeValue("gray.600", "gray.400");
-  const disabledBorder = useColorModeValue("white", "gray.750");
   const disabledHover = useColorModeValue("gray.200", "gray.600");
 
   const overlay = !authEnabled ? (
-    <LinkOverlay as={Link} href={href}>
+    <LinkOverlay as={Link} href={href} _focus={{ outline: "none" }}>
       {name}
     </LinkOverlay>
   ) : (
@@ -134,21 +130,27 @@ const Linkable: React.FC<LinkableProps> = ({
   const Wrapper = skeleton ? Skeleton : React.Fragment;
 
   return (
-    <Wrapper rounded="lg">
+    <Wrapper rounded="xl">
       <LinkBox
         bg={bg}
-        rounded="lg"
-        py="5"
-        px="6"
-        borderWidth="1px"
-        borderBottomWidth="2px"
-        h="full"
-        borderColor={!disabled ? borderColor : disabledBorder}
-        shadow={!disabled ? "md" : "sm"}
+        py="4"
+        px="5"
+        borderBottomWidth="3px"
+        rounded="xl"
+        borderColor={borderColor}
+        shadow="md"
         transition="all ease-in-out 150ms"
+        role="group"
+        outline="2px solid"
+        outlineColor="transparent"
         _hover={{
           transform: "translateY(-2px)",
-          borderBottomColor: !disabled ? "blue.300" : disabledHover,
+          borderBottomColor: !disabled ? "blue.200" : disabledHover,
+          shadow: "lg",
+        }}
+        _focusWithin={{
+          outlineColor: "blue.300",
+          bg: focusColor,
         }}
         cursor="pointer"
         onClick={() => {
@@ -159,12 +161,43 @@ const Linkable: React.FC<LinkableProps> = ({
             });
         }}
       >
-        <Flex gap={4}>
-          <Box color="blue.300">{icon}</Box>
-          <Heading size="md" color={disabled ? disabledHeading : undefined}>
+        <HStack spacing="3">
+          <Box w="6" h="6" position="relative">
+            <Box
+              color="blue.400"
+              position="absolute"
+              filter="blur(2px)"
+              top="1"
+              left="-1"
+              opacity="0.3"
+              transition="all ease-in-out 300ms"
+              _groupHover={{
+                transform: "translateX(-3px)",
+              }}
+              _groupFocusWithin={{
+                transform: "translateX(-3px)",
+              }}
+            >
+              {icon}
+            </Box>
+            <Box
+              color="blue.300"
+              position="relative"
+              transition="all ease-in-out 300ms"
+              _groupHover={{
+                transform: "translateY(-2px)",
+              }}
+              _groupFocusWithin={{
+                transform: "translateY(-2px)",
+              }}
+            >
+              {icon}
+            </Box>
+          </Box>
+          <Heading size="sm" color={disabled ? disabledHeading : undefined}>
             {overlay}
           </Heading>
-        </Flex>
+        </HStack>
       </LinkBox>
     </Wrapper>
   );

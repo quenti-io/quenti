@@ -56,7 +56,7 @@ export const ActionArea = () => {
         isOpen={exportOpen}
         onClose={() => setExportOpen(false)}
       />
-      <ButtonGroup spacing={4}>
+      <ButtonGroup isAttached colorScheme="gray" size="lg" rounded="xl">
         <ActionButton
           label="Add to folder"
           icon={IconPlus}
@@ -96,17 +96,18 @@ export const ActionArea = () => {
 
 ActionArea.Skeleton = function ActionAreaSkeleton() {
   return (
-    <ButtonGroup spacing={4}>
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Skeleton rounded="full" fitContent h="max-content" key={i}>
+    <Skeleton fitContent rounded="xl">
+      <ButtonGroup isAttached colorScheme="gray" size="lg" rounded="xl">
+        {Array.from({ length: 4 }).map((_, i) => (
           <IconButton
-            rounded="full"
+            key={i}
+            rounded="xl"
             aria-label="loading"
             icon={<IconHexagon size={18} />}
           />
-        </Skeleton>
-      ))}
-    </ButtonGroup>
+        ))}
+      </ButtonGroup>
+    </Skeleton>
   );
 };
 
@@ -140,12 +141,10 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   return (
     <Tooltip label={label}>
       <IconButton
+        rounded="xl"
         icon={<Icon size={18} />}
-        rounded="full"
         variant="outline"
-        colorScheme="blue"
         aria-label={label}
-        outline="solid 1px"
         onClick={authed || !unauthedMessage ? onClick : unauthedHandler}
         isLoading={isLoading}
       />

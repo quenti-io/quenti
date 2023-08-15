@@ -33,11 +33,11 @@ export const DescriptionArea = () => {
         <HStack spacing={4}>
           <Avatar src={avatarUrl(user)} size="md" className="highlight-block" />
           <Stack spacing={0}>
-            <Text fontSize="xs">Created by</Text>
             <HStack spacing="2">
               <Link
                 fontWeight={700}
                 href={`/@${user.username}`}
+                transition="color 0.2s ease-in-out"
                 _hover={{ color: highlight }}
                 className="highlight-block"
               >
@@ -51,6 +51,11 @@ export const DescriptionArea = () => {
                 </Box>
               )}
             </HStack>
+            {user.name && (
+              <Text fontSize="sm" color="gray.500" fontWeight={600}>
+                {user.name}
+              </Text>
+            )}
           </Stack>
         </HStack>
         <ActionArea />
