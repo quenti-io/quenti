@@ -19,5 +19,9 @@
     "email-providers": "^2.0.1",
     "superjson": "^1.13.1",
     "zod": "^3.21.4"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
   }
 }

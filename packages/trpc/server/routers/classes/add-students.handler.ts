@@ -42,8 +42,6 @@ export const addStudentsHandler = async ({
     });
   }
 
-  const x = 2;
-
   const domains = class_.organization.domains.map((d) => d.domain);
   if (!input.emails.every((e) => domains.includes(e.split("@")[1]!))) {
     throw new TRPCError({

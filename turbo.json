@@ -7,7 +7,7 @@
       "env": ["DATABASE_URL"]
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["lint", "^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "start": {
@@ -18,5 +18,6 @@
       "cache": false
     }
   },
-  "globalDependencies": ["**/.env", "yarn.lock"]
+  "globalDependencies": ["**/.env", "yarn.lock"],
+  "globalEnv": ["NODE_ENV", "PORT", "VERCEL_URL", "STRIPE_PRIVATE_KEY"]
 }

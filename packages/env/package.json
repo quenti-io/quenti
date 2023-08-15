@@ -5,5 +5,9 @@
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.6.0",
     "zod": "^3.21.4"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
   }
 }

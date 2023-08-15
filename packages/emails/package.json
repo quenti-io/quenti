@@ -9,5 +9,9 @@
     "@react-email/tailwind": "^0.0.8",
     "react-email": "1.9.4",
     "resend": "^0.17.2"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
   }
 }

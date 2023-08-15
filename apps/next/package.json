@@ -6,6 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
+    "lint:report": "eslint . --format json --output-file ../../lint-results/next.json",
     "start": "next start",
     "theme": "chakra-cli tokens src/lib/chakra-theme.ts",
     "upload-sourcemaps": "npx @highlight-run/sourcemap-uploader upload --path=\".next\" -k ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY}"

@@ -7,23 +7,30 @@ module.exports = {
     "turbo",
     "plugin:prettier/recommended",
   ],
+  plugins: ["@typescript-eslint", "unused-imports"],
   overrides: [
     {
       files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
       extends: [
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
       ],
     },
     {
       files: [
-        "src/server/**/*",
-        "src/payments/**/*",
+        "packages/trpc/**/*",
+        "packages/payments/**/*",
         "packages/prisma/**/*",
         "scripts/**/*",
-        "prisma-seed.ts",
       ],
       rules: {
         "no-restricted-syntax": "off",
+      },
+    },
+    {
+      files: ["packages/**/*"],
+      rules: {
+        "@next/next/no-html-link-for-pages": "off",
       },
     },
   ],
@@ -36,7 +43,6 @@ module.exports = {
       rootDir: ["apps/*/", "packages/*/"],
     },
   },
-  plugins: ["@typescript-eslint", "unused-imports"],
   rules: {
     "@typescript-eslint/consistent-type-imports": [
       "warn",
@@ -57,9 +63,9 @@ module.exports = {
       "error",
       {
         selector:
-          "ImportDeclaration[importKind!='type'][source.value=/@prisma\\u002Fclient/]",
+          "ImportDeclaration[importKind!='type'][source.value=/@quenti\\u002Fprisma\\u002Fclient/]",
         message:
-          "Must use 'import type' when importing from @prisma/client. Database schemas are exposed to the client!",
+          "Must use 'import type' when importing from @quenti/prisma/client. Database schemas are exposed to the client!",
       },
     ],
     "no-restricted-imports": [
@@ -74,8 +80,8 @@ module.exports = {
         ],
       },
     ],
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
+    "no-unused-vars": [
+      "error",
       {
         vars: "all",
         varsIgnorePattern: "^_",

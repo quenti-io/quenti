@@ -7,5 +7,9 @@
   "dependencies": {
     "@quenti/lib": "*",
     "@quenti/prisma": "*"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
   }
 }

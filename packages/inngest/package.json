@@ -6,5 +6,9 @@
     "@quenti/emails": "*",
     "@quenti/env": "*",
     "inngest": "^2.4.1"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
   }
 }

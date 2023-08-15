@@ -4,5 +4,9 @@
   "private": true,
   "dependencies": {
     "@quenti/env": "*"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
   }
 }
