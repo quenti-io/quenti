@@ -13,7 +13,9 @@
     "start": {
       "outputs": ["dist/**", "build/**"]
     },
-    "lint": {},
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
     "dev": {
       "cache": false
     }
