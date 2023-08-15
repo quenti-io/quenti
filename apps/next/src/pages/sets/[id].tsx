@@ -6,7 +6,6 @@ import { HydrateSetData } from "../../modules/hydrate-set-data";
 import { DescriptionArea } from "../../modules/main/description-area";
 import { FlashcardPreview } from "../../modules/main/flashcard-preview";
 import { HeadingArea } from "../../modules/main/heading-area";
-import { LinkArea } from "../../modules/main/link-area";
 import { SetLoading } from "../../modules/main/set-loading";
 import { TermsOverview } from "../../modules/main/terms-overview";
 
@@ -17,7 +16,6 @@ const Set: ComponentWithAuth = () => {
         <Container maxW="7xl">
           <Stack spacing={10}>
             <HeadingArea />
-            <LinkArea />
           </Stack>
         </Container>
         <Container maxW="full" overflow="hidden" px="0" py="6">

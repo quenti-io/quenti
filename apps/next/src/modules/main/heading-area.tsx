@@ -6,10 +6,14 @@ import { api } from "@quenti/trpc";
 
 import {
   Button,
+  ButtonGroup,
+  Center,
   Flex,
   HStack,
   Heading,
   IconButton,
+  LinkBox,
+  LinkOverlay,
   Menu,
   MenuButton,
   MenuList,
@@ -17,10 +21,15 @@ import {
   Stack,
   Tag,
   Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconEditCircle,
+  IconTrash,
+} from "@tabler/icons-react";
 
 import { visibilityIcon } from "../../common/visibility-icon";
 import { ConfirmModal } from "../../components/confirm-modal";
@@ -61,7 +70,7 @@ export const HeadingArea = () => {
         }}
         destructive
       />
-      <Stack spacing={4} maxW="1000px">
+      <Stack spacing={4}>
         {tags.length && (
           <HStack spacing={3}>
             {tags.map((t, i) => (
@@ -72,7 +81,7 @@ export const HeadingArea = () => {
           </HStack>
         )}
         <Heading size="2xl">{title}</Heading>
-        <Flex justifyContent="space-between" maxW="1000px" h="32px">
+        <Flex justifyContent="space-between" h="32px">
           <HStack color={text} fontWeight={600} spacing={2}>
             <HStack>
               {visibilityIcon(visibility, 18)}
@@ -84,25 +93,37 @@ export const HeadingArea = () => {
             </Text>
           </HStack>
           <SetCreatorOnly>
-            <HStack>
-              <Button
-                leftIcon={<IconEdit />}
-                size="sm"
-                variant="ghost"
-                as={Link}
-                href={`/${id}/edit`}
+            <Menu placement="bottom-end">
+              <ButtonGroup
+                isAttached
+                variant="outline"
+                colorScheme="blue"
+                role="group"
+                tabIndex={-1}
               >
-                Edit
-              </Button>
-              <Menu placement="bottom-end">
-                <MenuButton>
-                  <IconButton
-                    icon={<IconDotsVertical />}
-                    aria-label="Options"
-                    size="xs"
-                    variant="ghost"
-                    as="div"
-                  />
+                <Tooltip label="Edit">
+                  <LinkBox as={Button} w="8" h="8" p="0" tabIndex={-1}>
+                    <LinkOverlay
+                      w="full"
+                      h="full"
+                      as={Link}
+                      href={`/${id}/edit`}
+                      _focus={{
+                        outline: "none",
+                      }}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      fontSize="sm"
+                    >
+                      <IconEditCircle size="18" />
+                    </LinkOverlay>
+                  </LinkBox>
+                </Tooltip>
+                <MenuButton as={IconButton} w="8" h="8" p="0">
+                  <Center h="8">
+                    <IconDotsVertical size={18} />
+                  </Center>
                 </MenuButton>
                 <MenuList
                   bg={menuBg}
@@ -117,8 +138,8 @@ export const HeadingArea = () => {
                     onClick={() => setDeleteModalOpen(true)}
                   />
                 </MenuList>
-              </Menu>
-            </HStack>
+              </ButtonGroup>
+            </Menu>
           </SetCreatorOnly>
         </Flex>
       </Stack>
@@ -128,7 +149,7 @@ export const HeadingArea = () => {
 
 HeadingArea.Skeleton = function HeadingAreaSkeleton() {
   return (
-    <Stack spacing={4} maxW="1000px">
+    <Stack spacing={4}>
       <Skeleton>
         <Heading size="2xl">Loading...</Heading>
       </Skeleton>
