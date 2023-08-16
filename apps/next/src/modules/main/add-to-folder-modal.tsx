@@ -8,12 +8,11 @@ import {
   Box,
   Button,
   Card,
-  Center,
   Flex,
   HStack,
   Heading,
   IconButton,
-  Spinner,
+  Skeleton,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -71,9 +70,9 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
             <Modal.Heading>Add to folder</Modal.Heading>
             <Stack spacing={3}>
               {isLoading ? (
-                <Center w="full" py="3">
-                  <Spinner color="blue.200" />
-                </Center>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} h="60px" w="full" rounded="lg" />
+                ))
               ) : (
                 <Button
                   w="full"
@@ -131,12 +130,12 @@ const FolderCard: React.FC<FolderCardProps> = ({
   const addSets = api.folders.addSets.useMutation();
   const removeSet = api.folders.removeSet.useMutation();
 
-  const cardBg = useColorModeValue("gray.50", "gray.750");
-
   const adding =
     addSets.isLoading && addSets.variables?.studySetIds.includes(id);
   const removing =
     removeSet.isLoading && removeSet.variables?.studySetId === id;
+
+  const cardBg = useColorModeValue("gray.50", "gray.750");
 
   return (
     <Card
@@ -144,13 +143,22 @@ const FolderCard: React.FC<FolderCardProps> = ({
       px="4"
       py="3"
       borderColor="gray.100"
-      _dark={{
-        borderColor: "gray.700",
-      }}
       borderWidth="2px"
       rounded="lg"
       shadow="sm"
+      transition="border-color 0.2s ease-in-out"
       role="group"
+      sx={{
+        "&:has(:focus-visible)": {
+          borderColor: "blue.300",
+        },
+        _dark: {
+          borderColor: "gray.700",
+          "&:has(:focus-visible)": {
+            borderColor: "blue.300",
+          },
+        },
+      }}
     >
       <Flex justifyContent="space-between" gap={4}>
         <HStack spacing={4} overflow="hidden">
@@ -159,11 +167,14 @@ const FolderCard: React.FC<FolderCardProps> = ({
           </Box>
           <Link
             href={`/@${user.username}/folders/${slug ?? folderId}`}
-            transition="color ease-in-out 150ms"
+            transition="color 0.2s ease-in-out"
             _hover={{
               color: "blue.200",
             }}
             minWidth={0}
+            _focusVisible={{
+              outline: "none",
+            }}
           >
             <Heading
               size="md"
