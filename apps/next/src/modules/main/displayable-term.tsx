@@ -85,8 +85,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const { colorMode } = useColorMode();
   const divider = useColorModeValue("gray.200", "gray.600");
-  const verticalDivider = useColorModeValue("gray.200", "gray.800");
-  const secondary = useColorModeValue("gray.100", "gray.750");
+  const horizontalDivider = useColorModeValue("gray.100", "gray.700");
 
   return React.useMemo(
     () => (
@@ -96,8 +95,12 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
         py={{ base: 0, sm: 5 }}
         overflow="hidden"
         shadow="sm"
+        borderWidth="1px"
+        borderColor="gray.100"
+        rounded="xl"
         _dark={{
           bg: "gray.750",
+          borderColor: "gray.700",
         }}
       >
         <Flex
@@ -128,7 +131,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 <ScriptFormatter>{editWord}</ScriptFormatter>
               </Text>
             )}
-            <Box bg={divider} h="full" w="3px" />
+            <Box bg={divider} h="full" rounded="full" w="4px" />
             {isEditing ? (
               <AutoResizeTextarea
                 allowTab={false}
@@ -148,11 +151,10 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           </Flex>
           <Box
             h="full"
-            bg={{ base: secondary, sm: "none" }}
             px={{ base: 1, sm: 0 }}
             py={{ base: 2, sm: 0 }}
-            borderBottomWidth={{ base: 3, sm: 0 }}
-            borderBottomColor={{ base: verticalDivider, sm: "none" }}
+            borderBottomWidth={{ base: 2, sm: 0 }}
+            borderBottomColor={{ base: horizontalDivider, sm: "none" }}
           >
             <Flex w="full" justifyContent="end">
               <HStack

@@ -87,7 +87,7 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
       }}
       animate={controls}
     >
-      <Stack spacing={6} marginTop="0" ref={fullStackRef}>
+      <Stack spacing={6} marginTop="0" ref={fullStackRef} pb="2">
         <Stack spacing={4} ref={stackRef} marginTop="0">
           <Flex
             justifyContent="space-between"

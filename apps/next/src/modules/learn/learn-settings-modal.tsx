@@ -2,19 +2,9 @@ import React from "react";
 
 import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 
-import {
-  Divider,
-  Flex,
-  Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalOverlay,
-  Stack,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { useMediaQuery } from "@chakra-ui/react";
 
+import { Modal } from "../../components/modal";
 import { useFeature } from "../../hooks/use-feature";
 import { useAuthedSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
@@ -76,39 +66,33 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
           onClose();
         }}
         isCentered={sm}
-        size="xl"
         scrollBehavior="outside"
       >
-        <ModalOverlay backdropFilter="blur(6px)" />
-        <ModalContent p="4" pb="8" rounded="xl">
-          <ModalBody>
-            <Stack spacing={6}>
-              <Flex justifyContent="space-between">
-                <Heading>Settings</Heading>
-                <ModalCloseButton mr="4" mt="4" />
-              </Flex>
-              <StudyStarredSection />
-              <Divider />
-              <ShuffleLearnSection />
-              <Divider />
-              <AnswerModeSection />
-              {multipleAnswerMode !== "Unknown" && (
-                <>
-                  <Divider />
-                  <MultipleAnswerModeSection />
-                </>
-              )}
-              <Divider />
-              <ResetProgressSection />
-              {useExtendedFeedbackBank && (
-                <>
-                  <Divider />
-                  <ExtendedFeedbackSection />
-                </>
-              )}
-            </Stack>
-          </ModalBody>
-        </ModalContent>
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Body>
+            <Modal.Heading>Settings</Modal.Heading>
+            <StudyStarredSection />
+            <Modal.BodySeparator />
+            <ShuffleLearnSection />
+            <Modal.BodySeparator />
+            <AnswerModeSection />
+            {multipleAnswerMode !== "Unknown" && (
+              <>
+                <Modal.BodySeparator />
+                <MultipleAnswerModeSection />
+              </>
+            )}
+            <Modal.BodySeparator />
+            <ResetProgressSection />
+            {useExtendedFeedbackBank && (
+              <>
+                <Modal.BodySeparator />
+                <ExtendedFeedbackSection />
+              </>
+            )}
+          </Modal.Body>
+        </Modal.Content>
       </Modal>
     </LearnSettingsModalContext.Provider>
   );

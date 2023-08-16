@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import React from "react";
 
 import { shuffleArray } from "@quenti/lib/array";
@@ -21,7 +20,6 @@ import {
 
 import { LoadingFlashcard } from "../../components/loading-flashcard";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
-import { queryEventChannel } from "../../events/query";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";
@@ -29,14 +27,12 @@ import { FlashcardsSettingsModal } from "../flashcards/flashcards-settings-modal
 import { LinkArea } from "./link-area";
 
 export const FlashcardPreview = () => {
-  const router = useRouter();
   const data = useSet();
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
   const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
     s.isDirty,
     s.setIsDirty,
   ]);
-  const [transitionDirty, setTransitionDirty] = React.useState(false);
 
   const apiSetShuffle = api.container.setShuffle.useMutation({
     onSuccess: () => {
@@ -67,19 +63,6 @@ export const FlashcardPreview = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shuffle, data.id]);
 
-  React.useEffect(() => {
-    const handleRouteChange = () => setTransitionDirty(true);
-    const handleQueryRefetch = () => setTransitionDirty(false);
-
-    router.events.on("routeChangeComplete", handleRouteChange);
-    queryEventChannel.on("setQueryRefetched", handleQueryRefetch);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-      queryEventChannel.off("setQueryRefetched", handleQueryRefetch);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
   return (
@@ -100,7 +83,7 @@ export const FlashcardPreview = () => {
             <RootFlashcardWrapper
               terms={data.terms}
               termOrder={termOrder}
-              isDirty={isDirty || transitionDirty}
+              isDirty={isDirty}
             />
           </Box>
         </Flex>

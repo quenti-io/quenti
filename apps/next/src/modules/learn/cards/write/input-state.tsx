@@ -35,7 +35,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
   const answerUnknownPartial = useLearnContext((s) => s.answerUnknownPartial);
   const specialCharacters = useLearnContext((s) => s.specialCharacters);
 
-  const inputBg = useColorModeValue("gray.100", "gray.900");
+  const inputBg = useColorModeValue("gray.100", "gray.800");
   const placeholderColor = useColorModeValue("gray.600", "gray.200");
 
   const [answer, setAnswer] = React.useState("");

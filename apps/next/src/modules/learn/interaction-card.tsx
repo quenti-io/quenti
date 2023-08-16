@@ -21,7 +21,7 @@ export const InteractionCard = () => {
   const roundProgress = useLearnContext((s) => s.roundProgress);
   const prevTermWasIncorrect = useLearnContext((s) => s.prevTermWasIncorrect);
 
-  const chipBg = useColorModeValue("gray.200", "gray.800");
+  const chipBg = useColorModeValue("gray.200", "gray.600");
 
   const active = timeline[roundCounter];
   if (!active) return null;
@@ -35,7 +35,15 @@ export const InteractionCard = () => {
         marginBottom: 100,
       }}
     >
-      <Card overflow="hidden" shadow="2xl">
+      <Card
+        overflow="hidden"
+        shadow="xl"
+        bg="white"
+        _dark={{
+          bg: "gray.750",
+        }}
+        rounded="2xl"
+      >
         <motion.div
           style={{
             overflow: "hidden",

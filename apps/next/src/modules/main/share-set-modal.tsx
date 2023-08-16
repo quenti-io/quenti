@@ -6,21 +6,19 @@ import { api } from "@quenti/trpc";
 
 import {
   Button,
-  Divider,
-  Flex,
   HStack,
-  Heading,
   Input,
-  Modal,
-  ModalContent,
-  ModalOverlay,
-  Stack,
+  Skeleton,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 
-import { IconCheck, IconCopy, IconEdit, IconLock } from "@tabler/icons-react";
+import { IconEditCircle, IconLock } from "@tabler/icons-react";
 
+import { AnimatedCheckCircle } from "../../components/animated-icons/check";
+import { Modal } from "../../components/modal";
+import { Toast } from "../../components/toast";
 import { useSet } from "../../hooks/use-set";
 
 export interface ShareSetModalProps {
@@ -33,8 +31,7 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
   onClose,
 }) => {
   const { id, visibility } = useSet();
-  const primaryBg = useColorModeValue("gray.200", "gray.800");
-  const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const toast = useToast();
 
   const getShareId = api.studySets.getShareId.useQuery(
     { studySetId: id },
@@ -44,75 +41,73 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
   );
   const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
 
-  const [copied, setCopied] = React.useState(false);
   const copy = async () => {
     await navigator.clipboard.writeText(url);
+    onClose();
 
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
+    toast({
+      title: "Copied link to clipboard",
+      status: "success",
+      icon: <AnimatedCheckCircle />,
+      colorScheme: "green",
+      render: Toast,
+    });
   };
 
   const mutedColor = useColorModeValue("gray.700", "gray.300");
-  const dividerColor = useColorModeValue("gray.300", "gray.700");
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="xl"
-      isCentered
-      autoFocus={false}
-    >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="8" rounded="xl">
-        <Stack spacing={8}>
-          {visibility !== "Private" ? (
-            <Heading fontSize="4xl">Share this set</Heading>
-          ) : (
-            <HStack spacing={4}>
-              <IconLock size={32} />
-              <Heading fontSize="4xl">This set is private</Heading>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>
+            <HStack>
+              {visibility == "Private" && <IconLock size={32} />}
+              <>
+                {visibility == "Private"
+                  ? "This set is private"
+                  : "Share this set"}
+              </>
             </HStack>
-          )}
+          </Modal.Heading>
           {visibility !== "Private" ? (
-            <HStack spacing={4}>
-              <Input
-                placeholder="Title"
-                variant="flushed"
-                spellCheck={false}
-                fontWeight={700}
-                bg={primaryBg}
-                color={inputColor}
-                rounded="md"
-                px="4"
-                size="lg"
-                value={getShareId.isLoading ? "Loading..." : url}
-              />
+            <HStack spacing="3" pb="4">
+              <Skeleton width="full" rounded="lg" isLoaded={!!getShareId.data}>
+                <Input
+                  spellCheck={false}
+                  fontWeight={600}
+                  value={getShareId.isLoading ? "Loading..." : url}
+                />
+              </Skeleton>
+              <Skeleton rounded="lg" isLoaded={!!getShareId.data}>
+                <Button onClick={copy}>Copy</Button>
+              </Skeleton>
+            </HStack>
+          ) : (
+            <Text color={mutedColor}>
+              You need to edit and un-private this set before you can share it
+              with anyone.
+            </Text>
+          )}
+        </Modal.Body>
+        {visibility == "Private" ? (
+          <>
+            <Modal.Divider />
+            <Modal.Footer>
               <Button
-                size="lg"
-                leftIcon={copied ? <IconCheck /> : <IconCopy />}
-                onClick={copy}
-                isLoading={getShareId.isLoading}
+                leftIcon={<IconEditCircle size={18} />}
+                as={Link}
+                href={`/${id}/edit`}
               >
-                Copy
+                Edit set
               </Button>
-            </HStack>
-          ) : (
-            <Stack spacing={6}>
-              <Text color={mutedColor}>
-                You need to unprivate this set before you can share it with
-                anyone.
-              </Text>
-              <Divider bg={dividerColor} />
-              <Flex justifyContent="end">
-                <Button leftIcon={<IconEdit />} as={Link} href={`/${id}/edit`}>
-                  Edit Set
-                </Button>
-              </Flex>
-            </Stack>
-          )}
-        </Stack>
-      </ModalContent>
+            </Modal.Footer>
+          </>
+        ) : (
+          <></>
+        )}
+      </Modal.Content>
     </Modal>
   );
 };

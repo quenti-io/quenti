@@ -4,22 +4,11 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
-import {
-  Button,
-  ButtonGroup,
-  Heading,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, ButtonGroup, Input, Stack } from "@chakra-ui/react";
 
 import { menuEventChannel } from "../events/menu";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
+import { Modal } from "./modal";
 
 export interface CreateFolderModalProps {
   isOpen: boolean;
@@ -34,10 +23,6 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
 }) => {
   const router = useRouter();
   const session = useSession();
-  const primaryBg = useColorModeValue("gray.200", "gray.800");
-  const secondaryBg = useColorModeValue("gray.100", "gray.750");
-  const headingColor = useColorModeValue("gray.800", "whiteAlpha.900");
-  const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -53,46 +38,52 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
         menuEventChannel.emit("folderWithSetCreated", childSetId);
         onClose();
       }
+
+      setTitle("");
+      setDescription("");
     },
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" pb="4" rounded="xl">
-        <ModalBody>
-          <Stack spacing={8}>
-            <Heading fontSize="4xl" color={headingColor}>
-              Create Folder
-            </Heading>
-            <Stack spacing={4}>
-              <Input
-                placeholder="Title"
-                variant="flushed"
-                fontWeight={700}
-                bg={primaryBg}
-                color={inputColor}
-                rounded="md"
-                px="4"
-                size="lg"
-                value={title}
-                isInvalid={createFolder.isError}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <AutoResizeTextarea
-                allowTab={false}
-                placeholder="Description (optional)"
-                bg={secondaryBg}
-                color={inputColor}
-                py="3"
-                border="none"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Stack>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={false}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Create Folder</Modal.Heading>
+          <Stack spacing={4}>
+            <Input
+              placeholder="Title"
+              variant="flushed"
+              fontWeight={700}
+              bg="gray.100"
+              px="14px"
+              _dark={{
+                bg: "gray.700",
+              }}
+              rounded="lg"
+              value={title}
+              isInvalid={createFolder.isError}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <AutoResizeTextarea
+              allowTab={false}
+              placeholder="Description (optional)"
+              py="3"
+              border="none"
+              bg="gray.50"
+              _dark={{
+                bg: "gray.750",
+              }}
+              minH="100px"
+              value={description}
+              size="sm"
+              rounded="lg"
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </Stack>
-        </ModalBody>
-        <ModalFooter>
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
           <ButtonGroup gap={2}>
             <Button variant="ghost" colorScheme="gray" onClick={onClose}>
               Cancel
@@ -110,8 +101,8 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
               Create
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };

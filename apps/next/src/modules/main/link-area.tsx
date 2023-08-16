@@ -120,7 +120,7 @@ const Linkable: React.FC<LinkableProps> = ({
   const disabledHover = useColorModeValue("gray.200", "gray.600");
 
   const overlay = !authEnabled ? (
-    <LinkOverlay as={Link} href={href} _focus={{ outline: "none" }}>
+    <LinkOverlay as={Link} href={href} _focusVisible={{ outline: "none" }}>
       {name}
     </LinkOverlay>
   ) : (
@@ -148,9 +148,12 @@ const Linkable: React.FC<LinkableProps> = ({
           borderBottomColor: !disabled ? "blue.200" : disabledHover,
           shadow: "lg",
         }}
-        _focusWithin={{
-          outlineColor: "blue.300",
-          bg: focusColor,
+        sx={{
+          // https://larsmagnus.co/blog/focus-visible-within-the-missing-pseudo-class
+          "&:has(:focus-visible)": {
+            outlineColor: "blue.300",
+            bg: focusColor,
+          },
         }}
         cursor="pointer"
         onClick={() => {

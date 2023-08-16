@@ -5,7 +5,7 @@ import { Box, useColorModeValue } from "@chakra-ui/react";
 
 const allOptions = [
   {
-    label: "Your Stats",
+    label: "Your stats",
     value: "stats",
   },
   {
@@ -30,8 +30,8 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
   const options = studiable ? allOptions : allOptions.slice(1);
   const [sortMethod, setSortMethod] = React.useState(options[0]!);
 
-  const baseBg = useColorModeValue("white", "gray.700");
-  const dropdownBg = useColorModeValue("gray.100", "gray.600");
+  const baseBg = useColorModeValue("white", "gray.800");
+  const dropdownBg = useColorModeValue("gray.100", "gray.750");
   const chevronColor = useColorModeValue("blue.400", "blue.200");
 
   return (
@@ -48,11 +48,34 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
           container: (provided) => ({
             ...provided,
             background: baseBg,
-            rounded: "lg",
+            rounded: "xl",
           }),
           inputContainer: () => ({
             width: 100,
-            rounded: "lg",
+            rounded: "xl",
+          }),
+          option: (provided) => ({
+            ...provided,
+            bg: baseBg,
+            whiteSpace: "nowrap",
+            display: "block",
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            _hover: {
+              bg: dropdownBg,
+            },
+          }),
+          control: (provided) => ({
+            ...provided,
+            rounded: "xl",
+          }),
+          menuList: (provided) => ({
+            ...provided,
+            rounded: "xl",
+            bg: baseBg,
+            shadow: "lg",
+            overflowY: "auto",
           }),
           dropdownIndicator: (provided) => ({
             ...provided,
