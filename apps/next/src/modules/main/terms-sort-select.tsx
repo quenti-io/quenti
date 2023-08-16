@@ -30,8 +30,8 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
   const options = studiable ? allOptions : allOptions.slice(1);
   const [sortMethod, setSortMethod] = React.useState(options[0]!);
 
-  const baseBg = useColorModeValue("white", "gray.700");
-  const dropdownBg = useColorModeValue("gray.100", "gray.600");
+  const baseBg = useColorModeValue("white", "gray.800");
+  const dropdownBg = useColorModeValue("gray.100", "gray.750");
   const chevronColor = useColorModeValue("blue.400", "blue.200");
 
   return (
@@ -53,6 +53,29 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
           inputContainer: () => ({
             width: 100,
             rounded: "lg",
+          }),
+          option: (provided) => ({
+            ...provided,
+            bg: baseBg,
+            whiteSpace: "nowrap",
+            display: "block",
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            _hover: {
+              bg: dropdownBg,
+            },
+          }),
+          control: (provided) => ({
+            ...provided,
+            rounded: "6px",
+          }),
+          menuList: (provided) => ({
+            ...provided,
+            rounded: "lg",
+            bg: baseBg,
+            shadow: "lg",
+            overflowY: "auto",
           }),
           dropdownIndicator: (provided) => ({
             ...provided,

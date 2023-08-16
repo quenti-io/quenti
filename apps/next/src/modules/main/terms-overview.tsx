@@ -5,7 +5,6 @@ import type { Term } from "@quenti/prisma/client";
 
 import {
   Button,
-  ButtonGroup,
   Flex,
   HStack,
   Heading,
@@ -14,6 +13,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { IconPointFilled } from "@tabler/icons-react";
+
+import { ToggleGroup } from "../../components/toggle-group";
 import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { DisplayableTermPure } from "./displayable-term";
@@ -65,25 +67,27 @@ export const TermsOverview = () => {
           <Heading size="lg">Terms in this set ({terms.length})</Heading>
           <HStack spacing={4}>
             {!!starredTerms.length && (
-              <ButtonGroup
-                size="md"
-                isAttached
-                variant="outline"
-                colorScheme="gray"
+              <ToggleGroup
+                index={starredOnly ? 1 : 0}
+                tabProps={{
+                  fontWeight: 600,
+                  transition: "all 0.2s ease-in-out",
+                }}
               >
-                <Button
-                  variant={!starredOnly ? "solid" : "outline"}
-                  onClick={() => setStarredOnly(false)}
-                >
-                  All
-                </Button>
-                <Button
-                  variant={starredOnly ? "solid" : "outline"}
+                <ToggleGroup.Tab onClick={() => setStarredOnly(false)}>
+                  <Text color={!starredOnly ? "blue.300" : undefined}>All</Text>
+                </ToggleGroup.Tab>
+                <ToggleGroup.Tab
+                  color={starredOnly ? "blue.300" : undefined}
                   onClick={() => setStarredOnly(true)}
                 >
-                  Starred ({starredTerms.length})
-                </Button>
-              </ButtonGroup>
+                  <HStack spacing="1">
+                    <Text>Starred</Text>
+                    <IconPointFilled size={10} />
+                    <Text>{starredTerms.length}</Text>
+                  </HStack>
+                </ToggleGroup.Tab>
+              </ToggleGroup>
             )}
             <TermsSortSelect studiable={studiable} onChange={setSortType} />
           </HStack>
