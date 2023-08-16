@@ -264,7 +264,7 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
 
   return (
     <>
-      <Stack spacing="3">
+      <Stack spacing="14px">
         {internalTerms
           .sort(
             (a, b) => internalSort.indexOf(a.id) - internalSort.indexOf(b.id),

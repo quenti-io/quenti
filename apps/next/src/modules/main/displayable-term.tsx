@@ -86,7 +86,6 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const { colorMode } = useColorMode();
   const divider = useColorModeValue("gray.200", "gray.600");
   const horizontalDivider = useColorModeValue("gray.100", "gray.700");
-  const secondary = useColorModeValue("gray.100", "gray.750");
 
   return React.useMemo(
     () => (
@@ -96,7 +95,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
         py={{ base: 0, sm: 5 }}
         overflow="hidden"
         shadow="sm"
-        borderWidth="2px"
+        borderWidth="1px"
         borderColor="gray.100"
         rounded="xl"
         _dark={{
@@ -152,7 +151,6 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           </Flex>
           <Box
             h="full"
-            bg={{ base: secondary, sm: "none" }}
             px={{ base: 1, sm: 0 }}
             py={{ base: 2, sm: 0 }}
             borderBottomWidth={{ base: 2, sm: 0 }}
