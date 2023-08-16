@@ -53,6 +53,19 @@ const Divider = function ModalDivider() {
   return <ChakraDivider borderColor={dividerColor} borderBottomWidth="2px" />;
 };
 
+const BodySeparator = function ModalBodySeparator() {
+  const dividerColor = useColorModeValue("gray.200", "gray.700");
+
+  return (
+    <ChakraDivider
+      borderColor={dividerColor}
+      borderBottomWidth="2px"
+      w="calc(100% + 80px)"
+      ml="-40px"
+    />
+  );
+};
+
 const Footer = function ModalFooter({
   children,
 }: {
@@ -85,6 +98,7 @@ export const Modal = forwardRef<ModalProps, "div">(
   Body: typeof Body;
   Heading: typeof Heading;
   Divider: typeof Divider;
+  BodySeparator: typeof BodySeparator;
   Footer: typeof Footer;
 };
 
@@ -101,4 +115,5 @@ Modal.Content = Content;
 Modal.Body = Body;
 Modal.Heading = Heading;
 Modal.Divider = Divider;
+Modal.BodySeparator = BodySeparator;
 Modal.Footer = Footer;
