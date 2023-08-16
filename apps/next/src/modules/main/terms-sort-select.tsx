@@ -5,7 +5,7 @@ import { Box, useColorModeValue } from "@chakra-ui/react";
 
 const allOptions = [
   {
-    label: "Your Stats",
+    label: "Your stats",
     value: "stats",
   },
   {

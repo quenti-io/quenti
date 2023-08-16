@@ -96,8 +96,12 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
         py={{ base: 0, sm: 5 }}
         overflow="hidden"
         shadow="sm"
+        borderWidth="2px"
+        borderColor="gray.100"
+        rounded="xl"
         _dark={{
           bg: "gray.750",
+          borderColor: "gray.700",
         }}
       >
         <Flex
@@ -128,7 +132,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 <ScriptFormatter>{editWord}</ScriptFormatter>
               </Text>
             )}
-            <Box bg={divider} h="full" w="3px" />
+            <Box bg={divider} h="full" w="4px" />
             {isEditing ? (
               <AutoResizeTextarea
                 allowTab={false}

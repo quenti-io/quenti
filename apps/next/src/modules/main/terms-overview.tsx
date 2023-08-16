@@ -4,6 +4,7 @@ import React from "react";
 import type { Term } from "@quenti/prisma/client";
 
 import {
+  Box,
   Button,
   Flex,
   HStack,
@@ -13,7 +14,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconPointFilled } from "@tabler/icons-react";
+import {
+  IconKeyframes,
+  IconProgress,
+  IconProgressBolt,
+  IconProgressCheck,
+  IconStar,
+  type TablerIconsProps,
+} from "@tabler/icons-react";
 
 import { ToggleGroup } from "../../components/toggle-group";
 import { useAuthedSet, useSet } from "../../hooks/use-set";
@@ -64,7 +72,15 @@ export const TermsOverview = () => {
           flexDir={{ base: "column", md: "row" }}
           gap="6"
         >
-          <Heading size="lg">Terms in this set ({terms.length})</Heading>
+          <Heading size="md">
+            <HStack spacing="2">
+              <HStack spacing="1" fontSize="3xl">
+                <IconKeyframes size={28} />
+                <>{terms.length}</>
+              </HStack>
+              <>{terms.length != 1 ? "terms" : "term"} in this set</>
+            </HStack>
+          </Heading>
           <HStack spacing={4}>
             {!!starredTerms.length && (
               <ToggleGroup
@@ -81,10 +97,19 @@ export const TermsOverview = () => {
                   color={starredOnly ? "blue.300" : undefined}
                   onClick={() => setStarredOnly(true)}
                 >
-                  <HStack spacing="1">
+                  <HStack spacing="2">
                     <Text>Starred</Text>
-                    <IconPointFilled size={10} />
-                    <Text>{starredTerms.length}</Text>
+                    <HStack spacing="1">
+                      <IconStar
+                        size={14}
+                        style={{
+                          transition: "fill-opacity 0.2s ease-in-out",
+                          fill: "#4b83ff",
+                          fillOpacity: starredOnly ? 1 : 0,
+                        }}
+                      />
+                      <Text>{starredTerms.length}</Text>
+                    </HStack>
                   </HStack>
                 </ToggleGroup.Tab>
               </ToggleGroup>
@@ -124,15 +149,17 @@ const TermsByStats = () => {
     <>
       {!!familiarTerms.length && (
         <TermsCategory
-          heading="Still studying"
-          subheading="You've started learning these terms. Keep it up!"
+          heading="still studying"
+          icon={IconProgressBolt}
+          subheading="You're still learning these terms. Keep it up!"
           terms={familiarTerms}
           color="orange"
         />
       )}
       {!!unstudiedTerms.length && (
         <TermsCategory
-          heading="Not studied"
+          heading="not studied"
+          icon={IconProgress}
           subheading="You haven't studied these terms yet."
           terms={unstudiedTerms}
           color="gray"
@@ -140,7 +167,8 @@ const TermsByStats = () => {
       )}
       {!!masteredTerms.length && (
         <TermsCategory
-          heading="Mastered"
+          heading="mastered"
+          icon={IconProgressCheck}
           subheading="You've mastered these terms. Great job!"
           terms={masteredTerms}
           color="blue"
@@ -169,6 +197,7 @@ interface TermsCategoryProps {
   heading: string;
   subheading: string;
   terms: Term[];
+  icon: React.FC<TablerIconsProps>;
   color: string;
 }
 
@@ -176,6 +205,7 @@ const TermsCategory: React.FC<TermsCategoryProps> = ({
   heading,
   subheading,
   terms,
+  icon: Icon,
   color,
 }) => {
   const headingColor = useColorModeValue(`${color}.500`, `${color}.300`);
@@ -190,12 +220,23 @@ const TermsCategory: React.FC<TermsCategoryProps> = ({
 
   return (
     <Stack spacing={6}>
-      <Stack spacing={2}>
-        <Heading color={headingColor} size="md">
-          {heading} ({terms.length})
-        </Heading>
-        <Text fontSize="sm">{subheading}</Text>
-      </Stack>
+      <HStack spacing="4">
+        <Box h="64px" w="3px" bg={headingColor} rounded="full" opacity="0.3" />
+        <Stack spacing="1">
+          <Heading size="md">
+            <HStack spacing="2">
+              <HStack spacing="1" color={headingColor} fontSize="2xl">
+                <Icon size={20} />
+                <>{terms.length}</>
+              </HStack>
+              <>{heading}</>
+            </HStack>
+          </Heading>
+          <Text color="gray.500" fontWeight={500}>
+            {subheading}
+          </Text>
+        </Stack>
+      </HStack>
       <TermsList terms={terms} />
     </Stack>
   );
@@ -221,7 +262,7 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
 
   return (
     <>
-      <Stack spacing={4}>
+      <Stack spacing="3">
         {internalTerms
           .sort(
             (a, b) => internalSort.indexOf(a.id) - internalSort.indexOf(b.id),
