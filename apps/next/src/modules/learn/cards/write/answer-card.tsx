@@ -20,10 +20,10 @@ export const AnswerCard: React.FC<AnswerCardProps> = ({
   showIcon = true,
 }) => {
   const correctBg = useColorModeValue("green.200", "green.600");
-  const correctColor = useColorModeValue("green.600", "green.200");
-  const incorrectColor = useColorModeValue("red.600", "red.200");
+  const correctColor = useColorModeValue("green.500", "green.200");
+  const incorrectColor = useColorModeValue("red.500", "red.200");
 
-  const grayColor = useColorModeValue("gray.600", "gray.400");
+  const grayColor = useColorModeValue("gray.500", "gray.400");
   const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
 
   return (
@@ -37,7 +37,7 @@ export const AnswerCard: React.FC<AnswerCardProps> = ({
         correct ? correctColor : !skipped ? incorrectColor : grayColor
       }
       color={correct ? correctColor : !skipped ? incorrectColor : grayColor}
-      rounded="lg"
+      rounded="xl"
     >
       <Flex alignItems="center" w="full" gap={4}>
         {showIcon ? (

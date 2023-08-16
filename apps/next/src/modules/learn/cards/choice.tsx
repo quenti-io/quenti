@@ -86,20 +86,22 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
     isCorrectTerm(id) || isIncorrectTerm(id);
 
   const colorForTerm = (id: string) => {
-    if (!answered) return "blue";
+    if (!answered) return "gray";
 
     if (isCorrectTerm(id)) return "green";
     else if (isIncorrectTerm(id)) return "red";
 
-    return "blue";
+    return "gray";
   };
 
   const questionNumText = useColorModeValue("gray.800", "gray.200");
-  const defaultBorder = useColorModeValue("blue.600", "blue.200");
+  const defaultBorder = useColorModeValue("gray.300", "gray.500");
+  const buttonBorder = useColorModeValue("gray.200", "gray.600");
   const correctBg = useColorModeValue("green.200", "green.600");
   const greenText = useColorModeValue("green.600", "green.200");
   const redText = useColorModeValue("red.600", "red.200");
   const textColor = useColorModeValue("black", "white");
+  const highlightWeight = useColorModeValue("500", "200");
 
   const text =
     status == "correct"
@@ -135,9 +137,15 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
             <Button
               w="full"
               variant="outline"
+              rounded="xl"
               pointerEvents={answered ? "none" : "auto"}
               bg={isCorrectTerm(choice.id) ? correctBg : "transparent"}
-              border="2px"
+              borderWidth="2px"
+              borderColor={
+                colorForTerm(choice.id) !== "gray"
+                  ? `${colorForTerm(choice.id)}.${highlightWeight}`
+                  : buttonBorder
+              }
               px="8"
               py="5"
               h="full"

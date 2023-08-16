@@ -49,7 +49,7 @@ export const ActionBar = () => {
     status == "incorrect" ? handleAcknowledgeIncorrect() : nextRound();
   };
 
-  const backgroundColor = useColorModeValue("gray.200", "gray.800");
+  const backgroundColor = useColorModeValue("gray.100", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.400");
 
   return (
@@ -67,14 +67,14 @@ export const ActionBar = () => {
               <Container maxW="4xl" py="4">
                 <Flex alignItems="center" justifyContent="space-between">
                   <Text
-                    fontSize="lg"
+                    fontSize="md"
                     color={textColor}
+                    fontWeight={600}
                     display={{ base: "none", md: "flex" }}
                   >
                     Press any key to continue
                   </Text>
                   <Button
-                    size="lg"
                     w={{ base: "full", md: "auto" }}
                     onClick={handleAction}
                   >

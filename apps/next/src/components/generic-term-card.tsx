@@ -18,7 +18,17 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({
   const setBg = useColorModeValue("gray.100", "gray.750");
 
   return (
-    <Card px="4" py="5" bg={variantBg ? setBg : undefined}>
+    <Card
+      px="4"
+      py="5"
+      bg={variantBg ? setBg : undefined}
+      rounded="xl"
+      borderWidth="1px"
+      borderColor="gray.100"
+      _dark={{
+        borderColor: "gray.700",
+      }}
+    >
       <Flex
         flexDir={["column-reverse", "row", "row"]}
         alignItems="stretch"
@@ -31,7 +41,8 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({
           <Box
             bg={useColorModeValue("gray.200", "gray.600")}
             h="full"
-            w="3px"
+            rounded="full"
+            w="4px"
           />
           <Text w="full" whiteSpace="pre-wrap">
             <ScriptFormatter>{term.definition}</ScriptFormatter>

@@ -39,7 +39,7 @@ export const RoundSummary = () => {
       <TermMastery />
       <Stack spacing={6} pb="32">
         <Heading size="lg">Terms studied this round</Heading>
-        <Stack spacing={4}>
+        <Stack spacing="14px">
           {roundSummary?.termsThisRound.map((term) => (
             <GenericTermCard term={term} key={term.id} />
           ))}
