@@ -48,11 +48,11 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
           container: (provided) => ({
             ...provided,
             background: baseBg,
-            rounded: "lg",
+            rounded: "xl",
           }),
           inputContainer: () => ({
             width: 100,
-            rounded: "lg",
+            rounded: "xl",
           }),
           option: (provided) => ({
             ...provided,
@@ -68,11 +68,11 @@ export const TermsSortSelect: React.FC<TermsSortSelectProps> = ({
           }),
           control: (provided) => ({
             ...provided,
-            rounded: "6px",
+            rounded: "xl",
           }),
           menuList: (provided) => ({
             ...provided,
-            rounded: "lg",
+            rounded: "xl",
             bg: baseBg,
             shadow: "lg",
             overflowY: "auto",
