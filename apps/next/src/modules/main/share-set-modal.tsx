@@ -44,6 +44,7 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
   const copy = async () => {
     await navigator.clipboard.writeText(url);
     onClose();
+
     toast({
       title: "Copied link to clipboard",
       status: "success",

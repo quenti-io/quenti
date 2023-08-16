@@ -13,11 +13,6 @@ import {
   HStack,
   Heading,
   IconButton,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
   Spinner,
   Stack,
   useColorModeValue,
@@ -30,6 +25,7 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 
+import { Modal } from "../../components/modal";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 
@@ -66,22 +62,13 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const borderColor = useColorModeValue("gray.200", "gray.800");
-  const secondaryBg = useColorModeValue("gray.50", "gray.750");
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="xl"
-      isCentered
-      scrollBehavior="inside"
-    >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent rounded="xl" overflow="hidden">
-        <ModalBody p="6" px="8">
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
           <Stack spacing={8}>
-            <Heading fontSize="4xl">Add to Folder</Heading>
+            <Modal.Heading>Add to folder</Modal.Heading>
             <Stack spacing={3}>
               {isLoading ? (
                 <Center w="full" py="3">
@@ -91,13 +78,14 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
                 <Button
                   w="full"
                   variant="outline"
-                  leftIcon={<IconPlus />}
-                  size="lg"
+                  h="14"
+                  colorScheme="gray"
+                  leftIcon={<IconPlus size={18} />}
                   onClick={() => {
                     menuEventChannel.emit("createFolder", id);
                   }}
                 >
-                  Add to new Folder
+                  Add to new folder
                 </Button>
               )}
               {data?.map((folder) => (
@@ -111,15 +99,12 @@ export const AddToFolderModal: React.FC<AddToFolderModalProps> = ({
               ))}
             </Stack>
           </Stack>
-        </ModalBody>
-        <ModalFooter
-          bg={secondaryBg}
-          borderTopColor={borderColor}
-          borderTopWidth="2px"
-        >
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
           <Button onClick={onClose}>Done</Button>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };
@@ -146,8 +131,7 @@ const FolderCard: React.FC<FolderCardProps> = ({
   const addSets = api.folders.addSets.useMutation();
   const removeSet = api.folders.removeSet.useMutation();
 
-  const cardBg = useColorModeValue("gray.100", "gray.750");
-  const highlight = useColorModeValue("blue.400", "blue.200");
+  const cardBg = useColorModeValue("gray.50", "gray.750");
 
   const adding =
     addSets.isLoading && addSets.variables?.studySetIds.includes(id);
@@ -159,27 +143,25 @@ const FolderCard: React.FC<FolderCardProps> = ({
       bg={cardBg}
       px="4"
       py="3"
-      borderBottomWidth="2px"
-      borderBottomColor={cardBg}
-      transition="border-bottom-color ease-in-out 150ms"
-      _hover={{
-        borderBottomColor: "blue.300",
+      borderColor="gray.100"
+      _dark={{
+        borderColor: "gray.700",
       }}
+      borderWidth="2px"
+      rounded="lg"
+      shadow="sm"
       role="group"
     >
       <Flex justifyContent="space-between" gap={4}>
         <HStack spacing={4} overflow="hidden">
-          <Box
-            _groupHover={{ transform: "translateX(2px)" }}
-            transition="transform ease-in-out 150ms"
-          >
+          <Box color="gray.500">
             <IconFolder size={18} />
           </Box>
           <Link
             href={`/@${user.username}/folders/${slug ?? folderId}`}
             transition="color ease-in-out 150ms"
             _hover={{
-              color: highlight,
+              color: "blue.200",
             }}
             minWidth={0}
           >
