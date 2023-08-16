@@ -74,7 +74,7 @@ export const HeadingArea = () => {
         {tags.length && (
           <HStack spacing={3}>
             {tags.map((t, i) => (
-              <Tag bg={tagBg} key={i}>
+              <Tag bg={tagBg} key={i} fontWeight={600}>
                 {t}
               </Tag>
             ))}

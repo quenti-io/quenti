@@ -67,6 +67,14 @@ export const CardsAnswerModeSection = () => {
               width: 100,
               rounded: "lg",
             }),
+            control: (provided) => ({
+              ...provided,
+              rounded: "lg",
+            }),
+            menuList: (provided) => ({
+              ...provided,
+              rounded: "lg",
+            }),
             dropdownIndicator: (provided) => ({
               ...provided,
               paddingX: 2,

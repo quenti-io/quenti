@@ -1,14 +1,8 @@
 import { api } from "@quenti/trpc";
 
-import {
-  Button,
-  ButtonGroup,
-  Flex,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 
+import { ToggleGroup } from "../../../components/toggle-group";
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
 
@@ -31,9 +25,16 @@ export const StudyStarredSection = () => {
           Select which terms to study
         </Text>
       </Stack>
-      <ButtonGroup isAttached isDisabled={!starredTerms.length}>
-        <Button
-          variant={!studyStarred ? "solid" : "outline"}
+      <ToggleGroup
+        index={studyStarred ? 1 : 0}
+        tabProps={{
+          transition: "all 0.2s ease-in-out",
+          fontWeight: 600,
+        }}
+        h="full"
+      >
+        <ToggleGroup.Tab
+          color={!studyStarred ? "blue.300" : undefined}
           onClick={() => {
             setStudyStarred(false);
             apiStudyStarred.mutate({
@@ -41,11 +42,12 @@ export const StudyStarredSection = () => {
               studyStarred: false,
             });
           }}
+          isDisabled={!starredTerms.length}
         >
           All
-        </Button>
-        <Button
-          variant={studyStarred ? "solid" : "outline"}
+        </ToggleGroup.Tab>
+        <ToggleGroup.Tab
+          color={studyStarred ? "blue.300" : undefined}
           onClick={() => {
             setStudyStarred(true);
             apiStudyStarred.mutate({
@@ -53,10 +55,11 @@ export const StudyStarredSection = () => {
               studyStarred: true,
             });
           }}
+          isDisabled={!starredTerms.length}
         >
           Starred
-        </Button>
-      </ButtonGroup>
+        </ToggleGroup.Tab>
+      </ToggleGroup>
     </Flex>
   );
 };
