@@ -152,6 +152,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           </Flex>
           <Box
             h="full"
+            rounded="full"
             bg={{ base: secondary, sm: "none" }}
             px={{ base: 1, sm: 0 }}
             py={{ base: 2, sm: 0 }}

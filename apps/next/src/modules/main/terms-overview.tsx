@@ -85,7 +85,9 @@ export const TermsOverview = () => {
             {!!starredTerms.length && (
               <ToggleGroup
                 index={starredOnly ? 1 : 0}
+                size="sm"
                 tabProps={{
+                  h: "9",
                   fontWeight: 600,
                   transition: "all 0.2s ease-in-out",
                 }}
