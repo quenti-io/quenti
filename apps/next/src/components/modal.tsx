@@ -23,7 +23,7 @@ const Content = function ModalBody({
   const modalBg = useColorModeValue("white", "gray.800");
 
   return (
-    <ChakraModalContent rounded="lg" bg={modalBg} shadow="xl">
+    <ChakraModalContent rounded="xl" bg={modalBg} shadow="xl">
       {children}
     </ChakraModalContent>
   );
