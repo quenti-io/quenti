@@ -102,13 +102,24 @@ export const HeadingArea = () => {
                 tabIndex={-1}
               >
                 <Tooltip label="Edit">
-                  <LinkBox as={Button} w="8" h="8" p="0" tabIndex={-1}>
+                  <LinkBox
+                    as={Button}
+                    w="8"
+                    h="8"
+                    p="0"
+                    tabIndex={-1}
+                    sx={{
+                      "&:has(:focus-visible)": {
+                        boxShadow: "outline",
+                      },
+                    }}
+                  >
                     <LinkOverlay
                       w="full"
                       h="full"
                       as={Link}
                       href={`/${id}/edit`}
-                      _focus={{
+                      _focusVisible={{
                         outline: "none",
                       }}
                       display="flex"
