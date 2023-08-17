@@ -1,7 +1,8 @@
 import { Container, Stack } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../../../../components/auth-component";
+import { PageWrapper } from "../../../../common/page-wrapper";
 import { WithFooter } from "../../../../components/with-footer";
+import { getLayout } from "../../../../layouts/main-layout";
 import { ActionArea } from "../../../../modules/folders/action-area";
 import { FolderDescription } from "../../../../modules/folders/folder-description";
 import { FolderHeading } from "../../../../modules/folders/folder-heading";
@@ -9,7 +10,7 @@ import { FolderLoading } from "../../../../modules/folders/folder-loading";
 import { FolderSets } from "../../../../modules/folders/folder-sets";
 import { HydrateFolderData } from "../../../../modules/hydrate-folder-data";
 
-const FolderPage: ComponentWithAuth = () => {
+const FolderPage = () => {
   return (
     <HydrateFolderData fallback={<FolderLoading />}>
       <WithFooter>
@@ -30,6 +31,7 @@ const FolderPage: ComponentWithAuth = () => {
   );
 };
 
-FolderPage.authenticationEnabled = true;
+FolderPage.PageWrapper = PageWrapper;
+FolderPage.getLayout = getLayout;
 
 export default FolderPage;

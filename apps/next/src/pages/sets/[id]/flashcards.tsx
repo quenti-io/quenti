@@ -2,14 +2,15 @@ import React from "react";
 
 import { Container, Stack } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../../../components/auth-component";
+import { PageWrapper } from "../../../common/page-wrapper";
+import { getLayout } from "../../../layouts/main-layout";
 import { ControlsBar } from "../../../modules/flashcards/controls-bar";
 import { FlashcardArea } from "../../../modules/flashcards/flashcard-area";
 import { FlashcardsSettingsModal } from "../../../modules/flashcards/flashcards-settings-modal";
 import { TitleBar } from "../../../modules/flashcards/titlebar";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
 
-const Flashcards: ComponentWithAuth = () => {
+const Flashcards = () => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
   return (
@@ -37,6 +38,7 @@ const Flashcards: ComponentWithAuth = () => {
   );
 };
 
-Flashcards.authenticationEnabled = false;
+Flashcards.PageWrapper = PageWrapper;
+Flashcards.getLayout = getLayout;
 
 export default Flashcards;

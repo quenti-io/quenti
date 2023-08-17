@@ -3,7 +3,9 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { Loading } from "../../../components/loading";
+import { getLayout } from "../../../layouts/main-layout";
 
 export default function JoinClass() {
   const router = useRouter();
@@ -25,3 +27,6 @@ export default function JoinClass() {
 
   return <Loading />;
 }
+
+JoinClass.PageWrapper = PageWrapper;
+JoinClass.getLayout = getLayout;

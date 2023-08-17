@@ -9,15 +9,16 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../../components/auth-component";
+import { PageWrapper } from "../../common/page-wrapper";
 import { WithFooter } from "../../components/with-footer";
+import { getLayout } from "../../layouts/main-layout";
 import { HydrateProfileData } from "../../modules/hydrate-profile-data";
 import { FoldersList } from "../../modules/profile/folders-list";
 import { ProfileArea } from "../../modules/profile/profile-area";
 import { ProfileLoading } from "../../modules/profile/profile-loading";
 import { StudySetsList } from "../../modules/profile/study-sets-list";
 
-const UserPage: ComponentWithAuth = () => {
+const UserPage = () => {
   const borderColor = useColorModeValue("gray.300", "gray.700");
 
   return (
@@ -51,6 +52,7 @@ const UserPage: ComponentWithAuth = () => {
   );
 };
 
-UserPage.authenticationEnabled = true;
+UserPage.PageWrapper = PageWrapper;
+UserPage.getLayout = getLayout;
 
 export default UserPage;

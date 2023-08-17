@@ -1,15 +1,13 @@
 import React from "react";
 
+import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import { api } from "@quenti/trpc";
 
 import { Container, Stack } from "@chakra-ui/react";
 
-import {
-  CORRECT,
-  INCORRECT,
-} from "../../../../../../packages/lib/constants/remarks";
-import type { ComponentWithAuth } from "../../../components/auth-component";
+import { PageWrapper } from "../../../common/page-wrapper";
 import { useSet } from "../../../hooks/use-set";
+import { getLayout } from "../../../layouts/main-layout";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
 import { ActionBar } from "../../../modules/learn/action-bar";
@@ -20,7 +18,7 @@ import { Titlebar } from "../../../modules/learn/titlebar";
 import { useContainerContext } from "../../../stores/use-container-store";
 import { useLearnContext } from "../../../stores/use-learn-store";
 
-const Learn: ComponentWithAuth = () => {
+const Learn = () => {
   return (
     <HydrateSetData disallowDirty>
       <CreateLearnData>
@@ -77,6 +75,7 @@ const LearnContainer = () => {
   return <InteractionCard />;
 };
 
-Learn.authenticationEnabled = true;
+Learn.PageWrapper = PageWrapper;
+Learn.getLayout = getLayout;
 
 export default Learn;

@@ -1,12 +1,12 @@
+import { PageWrapper } from "../../common/page-wrapper";
 import { singleIdServerSideProps as getServerSideProps } from "../../common/server-side-props";
-import type { ComponentWithAuth } from "../../components/auth-component";
 import { ShareResolver as InternalShareResolver } from "../../components/share-resolver";
 
-const ShareResolver: ComponentWithAuth = () => {
+const ShareResolver = () => {
   return <InternalShareResolver />;
 };
 
-ShareResolver.authenticationEnabled = true;
+ShareResolver.PageWrapper = PageWrapper;
 
 export default ShareResolver;
 export { getServerSideProps };

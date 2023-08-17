@@ -23,8 +23,10 @@ import {
   IconWorldPlus,
 } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
+import { getLayout } from "../../../layouts/main-layout";
 import { DomainForm } from "../../../modules/organizations/domain-form";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 import { getBaseDomain } from "../../../modules/organizations/utils/get-base-domain";
@@ -205,3 +207,6 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ onBack }) => {
     </SlideFade>
   );
 };
+
+OrgDomainSetup.PageWrapper = PageWrapper;
+OrgDomainSetup.getLayout = getLayout;

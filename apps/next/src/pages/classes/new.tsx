@@ -22,9 +22,11 @@ import {
 
 import { IconArrowRight, IconSchool, IconUpload } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../common/page-wrapper";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { WizardLayout } from "../../components/wizard-layout";
 import { useStudentRedirect } from "../../hooks/use-student-redirect";
+import { getLayout } from "../../layouts/main-layout";
 
 interface CreateClassFormInputs {
   name: string;
@@ -174,3 +176,6 @@ export default function NewClass() {
     </WizardLayout>
   );
 }
+
+NewClass.PageWrapper = PageWrapper;
+NewClass.getLayout = getLayout;

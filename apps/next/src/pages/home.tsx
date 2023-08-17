@@ -2,13 +2,14 @@ import { api } from "@quenti/trpc";
 
 import { Container, Stack } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../components/auth-component";
+import { PageWrapper } from "../common/page-wrapper";
 import { WithFooter } from "../components/with-footer";
+import { getLayout } from "../layouts/main-layout";
 import { ClassesGrid } from "../modules/home/classes-grid";
 import { EmptyDashboard } from "../modules/home/empty-dashboard";
 import { SetGrid } from "../modules/home/set-grid";
 
-const Home: ComponentWithAuth = () => {
+const Home = () => {
   const { data, isLoading } = api.recent.get.useQuery();
   const isEmpty = !data?.sets.length && !data?.folders.length;
 
@@ -25,7 +26,7 @@ const Home: ComponentWithAuth = () => {
   );
 };
 
-Home.title = "Your Sets";
-Home.authenticationEnabled = true;
+Home.getLayout = getLayout;
+Home.PageWrapper = PageWrapper;
 
 export default Home;

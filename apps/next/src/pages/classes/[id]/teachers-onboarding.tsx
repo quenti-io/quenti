@@ -19,10 +19,12 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { OnboardingMember } from "../../../components/onboarding-member";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";
 import { useClassMembers } from "../../../hooks/use-class-members";
+import { getLayout } from "../../../layouts/main-layout";
 import { InviteTeachersModal } from "../../../modules/classes/invite-teachers-modal";
 import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
 import { plural } from "../../../utils/string";
@@ -151,3 +153,6 @@ export default function TeachersOnboarding() {
     </WizardLayout>
   );
 }
+
+TeachersOnboarding.PageWrapper = PageWrapper;
+TeachersOnboarding.getLayout = getLayout;

@@ -1,11 +1,10 @@
-import type { ComponentWithAuth } from "../../components/auth-component";
+import { PageWrapper } from "../../common/page-wrapper";
 import { OnboardingInvite } from "../../modules/onboarding/onboarding-invite";
 
-const Page: ComponentWithAuth = () => {
+const Page = () => {
   return <OnboardingInvite />;
 };
 
-Page.title = "Quenti | Join organization";
-Page.authenticationEnabled = true;
+Page.PageWrapper = PageWrapper;
 
 export default Page;

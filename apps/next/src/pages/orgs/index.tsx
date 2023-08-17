@@ -17,9 +17,11 @@ import {
 
 import { IconExternalLink, IconPlus } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../common/page-wrapper";
 import { Loading } from "../../components/loading";
 import { WithFooter } from "../../components/with-footer";
 import { useMe } from "../../hooks/use-me";
+import { getLayout } from "../../layouts/main-layout";
 import { OrganizationInviteScreen } from "../../modules/organizations/organization-invite-screen";
 
 export default function Organizations() {
@@ -121,3 +123,6 @@ export default function Organizations() {
     </WithFooter>
   );
 }
+
+Organizations.PageWrapper = PageWrapper;
+Organizations.getLayout = getLayout;

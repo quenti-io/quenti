@@ -1,20 +1,20 @@
+import dynamic from "next/dynamic";
+
 import { HeadSeo } from "@quenti/components";
 import type { GetServerSidePropsContext } from "@quenti/types";
 
-import { Container, Stack } from "@chakra-ui/react";
-
-import type { ComponentWithAuth } from "../../components/auth-component";
-import { WithFooter } from "../../components/with-footer";
+import { PageWrapper } from "../../common/page-wrapper";
+import { getLayout } from "../../layouts/main-layout";
 import type { inferSSRProps } from "../../lib/infer-ssr-props";
 import { HydrateSetData } from "../../modules/hydrate-set-data";
-import { DescriptionArea } from "../../modules/main/description-area";
-import { FlashcardPreview } from "../../modules/main/flashcard-preview";
-import { HeadingArea } from "../../modules/main/heading-area";
 import { SetLoading } from "../../modules/main/set-loading";
-import { TermsOverview } from "../../modules/main/terms-overview";
 import { ssrInit } from "../../server/ssr";
 
-const Set: ComponentWithAuth = ({
+const InternalSet = dynamic(() => import("../../components/internal-set"), {
+  ssr: false,
+});
+
+const Set = ({
   title,
   description,
 }: inferSSRProps<typeof getServerSideProps>) => {
@@ -22,26 +22,7 @@ const Set: ComponentWithAuth = ({
     <>
       <HeadSeo title={`${title} | Quenti`} description={description} />
       <HydrateSetData placeholder={<SetLoading />}>
-        <WithFooter>
-          <Container maxW="7xl">
-            <Stack spacing={10}>
-              <HeadingArea />
-            </Stack>
-          </Container>
-          <Container maxW="full" overflow="hidden" px="0" py="6">
-            <Container maxW="7xl" p="4">
-              <Stack spacing={10} w="full">
-                <FlashcardPreview />
-                <DescriptionArea />
-              </Stack>
-            </Container>
-          </Container>
-          <Container maxW="7xl">
-            <Stack spacing={10}>
-              <TermsOverview />
-            </Stack>
-          </Container>
-        </WithFooter>
+        <InternalSet />
       </HydrateSetData>
     </>
   );
@@ -64,6 +45,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   };
 };
 
-Set.authenticationEnabled = false;
+Set.PageWrapper = PageWrapper;
+Set.getLayout = getLayout;
 
 export default Set;

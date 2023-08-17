@@ -19,7 +19,6 @@ import {
 import { IconMenu, IconX } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
-import { BASE_PAGES } from "../pages/_app";
 import { CreateFolderModal } from "./create-folder-modal";
 import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
 import { LeftNav } from "./navbar/left-nav";
@@ -28,7 +27,6 @@ import { UserMenu } from "./navbar/user-menu";
 
 export const Navbar: React.FC = () => {
   const router = useRouter();
-  const onStaticPage = BASE_PAGES.includes(router.pathname);
 
   const { data: session, status } = useSession();
   const { isOpen: isMobileMenuOpen, onToggle: onMobileMenuToggle } =
@@ -78,16 +76,10 @@ export const Navbar: React.FC = () => {
           setImportModalOpen(false);
         }}
       />
-      <Flex
-        pos="relative"
-        zIndex={1000}
-        w="full"
-        bg={onStaticPage ? "gray.900" : undefined}
-      >
+      <Flex pos="relative" zIndex={1000} w="full">
         <HStack
           as="header"
           aria-label="Main navigation"
-          maxW={onStaticPage ? "7xl" : undefined}
           w="full"
           mx="auto"
           px={{ base: "6", md: "8" }}

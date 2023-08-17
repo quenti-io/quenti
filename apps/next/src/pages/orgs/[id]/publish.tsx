@@ -14,9 +14,11 @@ import {
 
 import { IconAirBalloon } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { Toast } from "../../../components/toast";
 import { WizardLayout } from "../../../components/wizard-layout";
+import { getLayout } from "../../../layouts/main-layout";
 import { GlowingButton } from "../../../modules/organizations/glowing-button";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 
@@ -170,3 +172,6 @@ export default function OrgPublish() {
     </OnboardingMetadata>
   );
 }
+
+OrgPublish.PageWrapper = PageWrapper;
+OrgPublish.getLayout = getLayout;
