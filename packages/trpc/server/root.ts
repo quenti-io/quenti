@@ -1,4 +1,3 @@
-import { register } from "./prometheus";
 import { adminRouter } from "./routers/admin/_router";
 import { autoSaveRouter } from "./routers/auto-save/_router";
 import { classesRouter } from "./routers/classes/_router";
@@ -17,11 +16,6 @@ import { studySetsRouter } from "./routers/study-sets/_router";
 import { termsRouter } from "./routers/terms/_router";
 import { userRouter } from "./routers/user/_router";
 import { createTRPCRouter } from "./trpc";
-
-// Call register.metrics() to ensure the context is properly initialized on startup
-void (async () => {
-  await register.metrics();
-})();
 
 /**
  * This is the primary router for your server.

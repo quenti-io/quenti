@@ -28,7 +28,7 @@
     "stripe-webhook": "stripe listen --forward-to localhost:3000/api/stripe/webhook"
   },
   "dependencies": {
-    "eslint-config-next": "^13.4.16",
+    "eslint-config-next": "^13.4.17",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-turbo": "^1.10.12",
     "eslint-plugin-prettier": "^5.0.0",

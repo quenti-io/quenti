@@ -123,6 +123,4 @@ export const register =
     return r;
   })();
 
-if (env.NODE_ENV !== "production") {
-  global.register = register;
-}
+global.register = register;

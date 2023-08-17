@@ -1,39 +1,67 @@
+import { HeadSeo } from "@quenti/components";
+import type { GetServerSidePropsContext } from "@quenti/types";
+
 import { Container, Stack } from "@chakra-ui/react";
 
 import type { ComponentWithAuth } from "../../components/auth-component";
 import { WithFooter } from "../../components/with-footer";
+import type { inferSSRProps } from "../../lib/infer-ssr-props";
 import { HydrateSetData } from "../../modules/hydrate-set-data";
 import { DescriptionArea } from "../../modules/main/description-area";
 import { FlashcardPreview } from "../../modules/main/flashcard-preview";
 import { HeadingArea } from "../../modules/main/heading-area";
 import { SetLoading } from "../../modules/main/set-loading";
 import { TermsOverview } from "../../modules/main/terms-overview";
+import { ssrInit } from "../../server/ssr";
 
-const Set: ComponentWithAuth = () => {
+const Set: ComponentWithAuth = ({
+  title,
+  description,
+}: inferSSRProps<typeof getServerSideProps>) => {
   return (
-    <HydrateSetData placeholder={<SetLoading />}>
-      <WithFooter>
-        <Container maxW="7xl">
-          <Stack spacing={10}>
-            <HeadingArea />
-          </Stack>
-        </Container>
-        <Container maxW="full" overflow="hidden" px="0" py="6">
-          <Container maxW="7xl" p="4">
-            <Stack spacing={10} w="full">
-              <FlashcardPreview />
-              <DescriptionArea />
+    <>
+      <HeadSeo title={`${title} | Quenti`} description={description} />
+      <HydrateSetData placeholder={<SetLoading />}>
+        <WithFooter>
+          <Container maxW="7xl">
+            <Stack spacing={10}>
+              <HeadingArea />
             </Stack>
           </Container>
-        </Container>
-        <Container maxW="7xl">
-          <Stack spacing={10}>
-            <TermsOverview />
-          </Stack>
-        </Container>
-      </WithFooter>
-    </HydrateSetData>
+          <Container maxW="full" overflow="hidden" px="0" py="6">
+            <Container maxW="7xl" p="4">
+              <Stack spacing={10} w="full">
+                <FlashcardPreview />
+                <DescriptionArea />
+              </Stack>
+            </Container>
+          </Container>
+          <Container maxW="7xl">
+            <Stack spacing={10}>
+              <TermsOverview />
+            </Stack>
+          </Container>
+        </WithFooter>
+      </HydrateSetData>
+    </>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const ssr = await ssrInit(ctx);
+  const set = await ssr.studySets.byId.fetch({
+    studySetId: ctx.query?.id as string,
+  });
+
+  return {
+    props: {
+      id: set.id,
+      title: set.title,
+      description: set.description,
+      user: set.user,
+      trpcState: ssr.dehydrate(),
+    },
+  };
 };
 
 Set.authenticationEnabled = false;

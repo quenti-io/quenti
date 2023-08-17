@@ -7,9 +7,9 @@
  */
 import superjson from "superjson";
 
-import { httpBatchLink, loggerLink } from "./client";
+import { type TRPCClientErrorLike, httpBatchLink, loggerLink } from "./client";
 import { createTRPCNext } from "./next";
-import { type inferRouterInputs, type inferRouterOutputs } from "./server";
+import type { Maybe, inferRouterInputs, inferRouterOutputs } from "./server";
 import { type AppRouter } from "./server/root";
 
 const getBaseUrl = () => {
@@ -44,6 +44,29 @@ export const api = createTRPCNext<AppRouter>({
           url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            retry(failureCount, _err) {
+              const err = _err as never as Maybe<
+                TRPCClientErrorLike<AppRouter>
+              >;
+              const code = err?.data?.code;
+
+              if (
+                code === "BAD_REQUEST" ||
+                code === "FORBIDDEN" ||
+                code === "UNAUTHORIZED"
+              ) {
+                return false;
+              }
+
+              const MAX_QUERY_RETRIES = 3;
+              return failureCount < MAX_QUERY_RETRIES;
+            },
+          },
+        },
+      },
     };
   },
   /**

@@ -9,8 +9,9 @@
   "include": [
     "index.ts",
     "client",
-    "server",
     "next",
+    "react",
+    "server",
     "server/root.ts",
     "../types/next-auth.d.ts"
   ]
