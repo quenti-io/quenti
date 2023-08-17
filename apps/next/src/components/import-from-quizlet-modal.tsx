@@ -148,3 +148,5 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
     </Modal>
   );
 };
+
+export default ImportFromQuizletModal;

@@ -14,12 +14,19 @@
       "outputs": ["dist/**", "build/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "passThroughEnv": ["ANALYZE"]
     },
     "dev": {
       "cache": false
     }
   },
   "globalDependencies": ["**/.env", "yarn.lock"],
-  "globalEnv": ["NODE_ENV", "PORT", "VERCEL_URL", "STRIPE_PRIVATE_KEY"]
+  "globalEnv": [
+    "NODE_ENV",
+    "PORT",
+    "VERCEL_URL",
+    "STRIPE_PRIVATE_KEY",
+    "ANALYZE"
+  ]
 }

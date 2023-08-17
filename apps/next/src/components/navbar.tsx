@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -19,11 +20,20 @@ import {
 import { IconMenu, IconX } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
-import { CreateFolderModal } from "./create-folder-modal";
-import { ImportFromQuizletModal } from "./import-from-quizlet-modal";
-import { LeftNav } from "./navbar/left-nav";
-import { MobileMenu } from "./navbar/mobile-menu";
-import { UserMenu } from "./navbar/user-menu";
+
+const ImportFromQuizletModal = dynamic(
+  () => import("./import-from-quizlet-modal"),
+  { ssr: false },
+);
+const LeftNav = dynamic(() => import("./navbar/left-nav"), { ssr: false });
+const MobileMenu = dynamic(() => import("./navbar/mobile-menu"), {
+  ssr: false,
+});
+const UserMenu = dynamic(() => import("./navbar/user-menu"), { ssr: false });
+
+const CreateFolderModal = dynamic(() => import("./create-folder-modal"), {
+  ssr: false,
+});
 
 export const Navbar: React.FC = () => {
   const router = useRouter();
@@ -154,3 +164,5 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
+
+export default Navbar;

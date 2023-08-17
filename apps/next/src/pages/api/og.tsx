@@ -5,9 +5,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable jsx-a11y/alt-text */
-import { Pool } from "@neondatabase/serverless";
 import { ImageResponse } from "@vercel/og";
-import { Kysely, PostgresDialect } from "kysely";
+import { Kysely } from "kysely";
+import { PlanetScaleDialect } from "kysely-planetscale";
 import type { NextRequest } from "next/server";
 
 import type { DB } from "@quenti/prisma/kysely-types";
@@ -36,7 +36,7 @@ const openSansRegular = fetch(
   new URL("../../../public/assets/fonts/OpenSans-Regular.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
-export default async function handler(request: NextRequest, ctx: any) {
+export default async function handler(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const folderData = searchParams.get("folderData");
@@ -50,8 +50,9 @@ export default async function handler(request: NextRequest, ctx: any) {
     idOrSlug = idOrSlugString;
   }
 
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const db = new Kysely<DB>({ dialect: new PostgresDialect({ pool }) });
+  const db = new Kysely<DB>({
+    dialect: new PlanetScaleDialect({ url: process.env.DATABASE_URL }),
+  });
 
   const entity = await getEntityGeneric(
     db,
@@ -62,7 +63,6 @@ export default async function handler(request: NextRequest, ctx: any) {
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  ctx.waitUntil(pool.end());
   if (!entity) return new ImageResponse(<></>);
 
   const avatarBuf = await fetch(ogAvatarUrl(entity.image)).then((res) =>

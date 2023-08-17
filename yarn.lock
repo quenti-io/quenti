@@ -504,7 +504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.20.7":
+"@babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0":
   version: 7.22.10
   resolution: "@babel/runtime@npm:7.22.10"
   dependencies:
@@ -4307,15 +4307,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@neondatabase/serverless@npm:^0.4.24":
-  version: 0.4.24
-  resolution: "@neondatabase/serverless@npm:0.4.24"
-  dependencies:
-    "@types/pg": 8.6.6
-  checksum: ad41d1bc63d0c3e1659a6789b7062ab6a2bab7ac00a7aab7f3219f4104fa7fd92b0c817995023f0ad6201cfc7c9362208a7ce3d3fa94ae2ec22a49b44f4ad6fb
-  languageName: node
-  linkType: hard
-
 "@next-auth/prisma-adapter@npm:^1.0.7":
   version: 1.0.7
   resolution: "@next-auth/prisma-adapter@npm:1.0.7"
@@ -5907,6 +5898,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@planetscale/database@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "@planetscale/database@npm:1.10.0"
+  checksum: 36a6a56b337d4b23536e0598abcf58a7c3d5bb55fcfc01807bc18c5f1648accede973148aae7db166f75d0b957e0724c865306baf75c786357a9b5d33ca0bc63
+  languageName: node
+  linkType: hard
+
 "@polka/url@npm:^1.0.0-next.20":
   version: 1.0.0-next.21
   resolution: "@polka/url@npm:1.0.0-next.21"
@@ -6296,9 +6294,9 @@ __metadata:
     "@highlight-run/next": ^4.0.0
     "@highlight-run/react": ^3.2.1
     "@hookform/resolvers": ^3.1.1
-    "@neondatabase/serverless": ^0.4.24
     "@next-auth/prisma-adapter": ^1.0.7
     "@next/bundle-analyzer": ^13.4.8
+    "@planetscale/database": ^1.10.0
     "@quenti/auth": "*"
     "@quenti/env": "*"
     "@quenti/inngest": "*"
@@ -6333,7 +6331,8 @@ __metadata:
     framer-motion: ^10.12.18
     highlight.run: ^7.4.0
     js-levenshtein: ^1.1.6
-    kysely: ^0.25.0
+    kysely: ^0.26.1
+    kysely-planetscale: ^1.4.0
     lodash.debounce: ^4.0.8
     lodash.omit: ^4.5.0
     lodash.throttle: ^4.1.1
@@ -7453,7 +7452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:*, @types/pg@npm:8.6.6":
+"@types/pg@npm:*":
   version: 8.6.6
   resolution: "@types/pg@npm:8.6.6"
   dependencies:
@@ -9482,6 +9481,15 @@ __metadata:
   version: 1.0.8
   resolution: "damerau-levenshtein@npm:1.0.8"
   checksum: d240b7757544460ae0586a341a53110ab0a61126570ef2d8c731e3eab3f0cb6e488e2609e6a69b46727635de49be20b071688698744417ff1b6c1d7ccd03e0de
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.30.0":
+  version: 2.30.0
+  resolution: "date-fns@npm:2.30.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -13129,10 +13137,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "kysely@npm:0.25.0"
-  checksum: 78a9a9704d42ddc90dafba2f3f089b8796be725684af3aeefca95ccafa886010f9ba0323acc62d5b8913e52ad8c8f26fe023e927c332d59084bbbf5447942366
+"kysely-planetscale@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "kysely-planetscale@npm:1.4.0"
+  dependencies:
+    date-fns: ^2.30.0
+  peerDependencies:
+    "@planetscale/database": "*"
+    kysely: "*"
+  checksum: 27bccc32bf9bad67acd19107f4b982a5fd0f62f44fd716d5a65adab7a9bd304be54cc1d9b6e307337a2392cc71191e56b6e3ee726810085af132a22c0a01ee76
+  languageName: node
+  linkType: hard
+
+"kysely@npm:^0.26.1":
+  version: 0.26.1
+  resolution: "kysely@npm:0.26.1"
+  checksum: 4803313e58dd3a572de6bba88fdf8e0b7ed27ec180948104818ab4dca509ef6aa9f740383656ebc72b94d5605340219e1733c8939f29475a17e7d6050b247d78
   languageName: node
   linkType: hard
 
