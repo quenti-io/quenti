@@ -21,12 +21,12 @@ export interface HeadSeoProps {
 }
 
 const buildSeo = (props: {
-  title?: string;
-  description?: string;
-  image?: string;
+  title: string;
+  description: string;
+  image: string;
   canonical?: string;
 }): NextSeoProps => {
-  const { title = "", description = "", image = "", canonical } = props;
+  const { title, description, image, canonical } = props;
   return {
     title,
     canonical,
@@ -84,12 +84,12 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
 
   if (entity) {
     const ogImage = SEO_IMAGE_OG + buildEntityImage(entity);
-    seoObject = merge(
-      seoObject,
-      buildSeo({
-        image: ogImage,
-      }),
-    );
+    seoObject = buildSeo({
+      title,
+      description: truncated,
+      image: ogImage,
+      canonical: canonical ?? defaultCanonical,
+    });
   }
 
   const seoProps: NextSeoProps = merge(nextSeoProps, seoObject);
