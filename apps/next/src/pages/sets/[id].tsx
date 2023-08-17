@@ -12,6 +12,7 @@ import { ssrInit } from "../../server/ssr";
 
 const InternalSet = dynamic(() => import("../../components/internal-set"), {
   ssr: false,
+  loading: SetLoading,
 });
 
 const Set = ({
@@ -30,7 +31,7 @@ const Set = ({
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const ssr = await ssrInit(ctx);
-  const set = await ssr.studySets.byId.fetch({
+  const set = await ssr.studySets.getPublic.fetch({
     studySetId: ctx.query?.id as string,
   });
 

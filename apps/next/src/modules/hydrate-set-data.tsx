@@ -60,7 +60,6 @@ export const HydrateSetData: React.FC<
   ).useQuery(
     { studySetId: id },
     {
-      retry: false,
       enabled: status !== "loading" && !!id && !isDirty,
       onSuccess: (data) => {
         if (isDirty) setIsDirty(false);
@@ -96,6 +95,7 @@ export const HydrateSetData: React.FC<
   if (error?.data?.httpStatus == 404) return <Set404 />;
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (
+    status == "loading" ||
     !data ||
     (disallowDirty && isDirty) ||
     (!isFetchedAfterMount && requireFresh)
