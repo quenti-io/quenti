@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.8.0",
-    "next": "^13.4.13"
+    "@quenti/env": "*",
+    "next": "^13.4.17",
+    "next-seo": "^6.1.0"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",

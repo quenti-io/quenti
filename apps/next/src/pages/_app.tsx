@@ -72,7 +72,6 @@ const App: AppType<
     layout?: React.ComponentType;
   };
   const router = useRouter();
-  const base = env.NEXT_PUBLIC_BASE_URL;
   const pathname = router.pathname;
   const landingPage = pathname === "/";
   const authPage = AUTH_PAGES.includes(pathname);
@@ -107,19 +106,6 @@ const App: AppType<
     </>
   );
 
-  const title = "Quenti - A batteries included Quizlet alternative";
-  const desc =
-    "Tired of Quizlet showing ads and only giving you a few practice rounds for free? Stop wasting your time getting bombarded by premium offers, and resume studying today.";
-
-  const ogImageUrl = (): string => {
-    if (pageProps.id) {
-      return `${base}/api/og?id=${pageProps.id}`;
-    } else if (pageProps.folderData) {
-      return `${base}/api/og?folderData=${pageProps.folderData.username}+${pageProps.folderData.idOrSlug}`;
-    }
-    return `${base}/api/og-image.png`;
-  };
-
   return (
     <>
       <Head>
@@ -143,20 +129,7 @@ const App: AppType<
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1a5fff" />
         <meta name="msapplication-TileColor" content="#1a5fff" />
-        <meta name="theme-color" content="#171923" />
-        <meta name="title" content={title} />
-        <meta name="description" content={desc} />
-        <meta property="og:site_name" content="Quenti" />
-        <meta property="og:url" content={base} />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={desc} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content={ogImageUrl()} />
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={base} />
-        <meta property="twitter:title" content={title} />
-        <meta property="twitter:description" content={desc} />
-        <meta property="twitter:image" content={ogImageUrl()} />
         <meta name="robots" content="noindex" />
       </Head>
       <ChakraProvider
