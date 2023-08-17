@@ -74,7 +74,7 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
     origin: env.NEXT_PUBLIC_BASE_URL,
   });
 
-  const truncated = truncateOnWord(description, 10);
+  const truncated = truncateOnWord(description);
   let seoObject = buildSeo({
     title,
     description: truncated,
