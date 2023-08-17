@@ -7,7 +7,7 @@
       "env": ["DATABASE_URL"]
     },
     "build": {
-      "dependsOn": ["lint", "^build"],
+      "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "start": {
