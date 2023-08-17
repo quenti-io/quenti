@@ -22,11 +22,14 @@ export const MainLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const router = useRouter();
 
   React.useEffect(() => {
-    router.events.on("routeChangeStart", () => {
-      barRef.current?.continuousStart(20, 750);
+    const setPageRegexp = /^\/c([a-zA-Z0-9_-]{24})$/;
+
+    router.events.on("routeChangeStart", (url) => {
+      if (setPageRegexp.test(url as string))
+        barRef.current?.continuousStart(20, 750);
     });
-    router.events.on("routeChangeComplete", () => {
-      barRef.current?.complete();
+    router.events.on("routeChangeComplete", (url) => {
+      if (setPageRegexp.test(url as string)) barRef.current?.complete();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
