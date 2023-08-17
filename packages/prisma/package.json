@@ -13,6 +13,7 @@
     "db:push": "yarn prisma db push",
     "db:seed": "yarn prisma db seed",
     "db:studio": "yarn prisma studio",
+    "generate": "prisma generate",
     "postinstall": "prisma generate"
   },
   "dependencies": {
