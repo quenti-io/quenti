@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@quenti/lib": "*",
-    "@quenti/env": "*",
     "@chakra-ui/react": "^2.8.0",
+    "@quenti/env": "*",
+    "@quenti/lib": "*",
     "lodash.merge": "^4.6.2",
     "next": "^13.4.17",
     "next-seo": "^6.1.0"

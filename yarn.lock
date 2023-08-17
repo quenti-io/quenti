@@ -6221,6 +6221,7 @@ __metadata:
   dependencies:
     "@chakra-ui/react": ^2.8.0
     "@quenti/env": "*"
+    "@quenti/lib": "*"
     "@types/lodash.merge": ^4.6.7
     lodash.merge: ^4.6.2
     next: ^13.4.17
