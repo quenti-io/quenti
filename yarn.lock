@@ -6352,6 +6352,7 @@ __metadata:
     react-hook-form: ^7.45.2
     react-textarea-autosize: ^8.5.2
     react-to-print: ^2.14.13
+    react-top-loading-bar: ^2.3.1
     sharp: ^0.32.1
     short-unique-id: ^4.4.4
     slugify: ^1.6.6
@@ -15543,6 +15544,15 @@ __metadata:
     react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
   checksum: b233eda519f34ee030529e41c1421bdfb40c454562439f5c3af8a8052cb4a285c30066aebf0cb34b9733be7d7afc250927fa27cb7c52e2fc5ff9f2eddee47e88
+  languageName: node
+  linkType: hard
+
+"react-top-loading-bar@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "react-top-loading-bar@npm:2.3.1"
+  peerDependencies:
+    react: ^16 || ^17 || ^18
+  checksum: 29c2c357fe5349db2c3f676ca222b5ec3ac3f9eea27d3015540fc42a1c96f2e7b06728f4ee862b41fcbe9f2e4d2eefcf76e3576d1148fe039c1c0f275fb4b8e2
   languageName: node
   linkType: hard
 
