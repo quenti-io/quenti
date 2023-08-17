@@ -504,7 +504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0":
+"@babel/runtime@npm:^7.20.7":
   version: 7.22.10
   resolution: "@babel/runtime@npm:7.22.10"
   dependencies:
@@ -6221,6 +6221,8 @@ __metadata:
   dependencies:
     "@chakra-ui/react": ^2.8.0
     "@quenti/env": "*"
+    "@types/lodash.merge": ^4.6.7
+    lodash.merge: ^4.6.2
     next: ^13.4.17
     next-seo: ^6.1.0
   languageName: unknown
@@ -6331,8 +6333,6 @@ __metadata:
     framer-motion: ^10.12.18
     highlight.run: ^7.4.0
     js-levenshtein: ^1.1.6
-    kysely: ^0.26.1
-    kysely-planetscale: ^1.4.0
     lodash.debounce: ^4.0.8
     lodash.omit: ^4.5.0
     lodash.throttle: ^4.1.1
@@ -7312,6 +7312,15 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: e873b2d77f89010876baba3437ef826b17221b98948e00b5590828334a481dea1c8f9d28543210e564adc53199584f42c3cb171f8b6c3614fefc0b4e0888679c
+  languageName: node
+  linkType: hard
+
+"@types/lodash.merge@npm:^4.6.7":
+  version: 4.6.7
+  resolution: "@types/lodash.merge@npm:4.6.7"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 94cd6fb8e606756a28f45d63c658aacfbce11a151f7fa322c4a3e87aa50d8bf26e0ae8cba0250070a7c5a6792fc51f79abf4c648bbb1850692be386cd76cd0ca
   languageName: node
   linkType: hard
 
@@ -9482,15 +9491,6 @@ __metadata:
   version: 1.0.8
   resolution: "damerau-levenshtein@npm:1.0.8"
   checksum: d240b7757544460ae0586a341a53110ab0a61126570ef2d8c731e3eab3f0cb6e488e2609e6a69b46727635de49be20b071688698744417ff1b6c1d7ccd03e0de
-  languageName: node
-  linkType: hard
-
-"date-fns@npm:^2.30.0":
-  version: 2.30.0
-  resolution: "date-fns@npm:2.30.0"
-  dependencies:
-    "@babel/runtime": ^7.21.0
-  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -13135,25 +13135,6 @@ __metadata:
   version: 3.0.3
   resolution: "kleur@npm:3.0.3"
   checksum: df82cd1e172f957bae9c536286265a5cdbd5eeca487cb0a3b2a7b41ef959fc61f8e7c0e9aeea9c114ccf2c166b6a8dd45a46fd619c1c569d210ecd2765ad5169
-  languageName: node
-  linkType: hard
-
-"kysely-planetscale@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "kysely-planetscale@npm:1.4.0"
-  dependencies:
-    date-fns: ^2.30.0
-  peerDependencies:
-    "@planetscale/database": "*"
-    kysely: "*"
-  checksum: 27bccc32bf9bad67acd19107f4b982a5fd0f62f44fd716d5a65adab7a9bd304be54cc1d9b6e307337a2392cc71191e56b6e3ee726810085af132a22c0a01ee76
-  languageName: node
-  linkType: hard
-
-"kysely@npm:^0.26.1":
-  version: 0.26.1
-  resolution: "kysely@npm:0.26.1"
-  checksum: 4803313e58dd3a572de6bba88fdf8e0b7ed27ec180948104818ab4dca509ef6aa9f740383656ebc72b94d5605340219e1733c8939f29475a17e7d6050b247d78
   languageName: node
   linkType: hard
 

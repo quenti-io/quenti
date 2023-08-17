@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@chakra-ui/react": "^2.8.0",
+    "@quenti/lib": "*",
     "@quenti/env": "*",
+    "@chakra-ui/react": "^2.8.0",
+    "lodash.merge": "^4.6.2",
     "next": "^13.4.17",
     "next-seo": "^6.1.0"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  },
+  "devDependencies": {
+    "@types/lodash.merge": "^4.6.7"
   }
 }

@@ -1,7 +1,14 @@
+import merge from "lodash.merge";
 import { NextSeo, type NextSeoProps } from "next-seo";
 import { usePathname } from "next/navigation";
 
 import { env } from "@quenti/env/client";
+import {
+  type EntityImageProps,
+  SEO_IMAGE_DEFAULT,
+  SEO_IMAGE_OG,
+  buildEntityImage,
+} from "@quenti/lib/seo";
 import { truncateOnWord } from "@quenti/lib/text";
 import { canonicalUrl } from "@quenti/lib/url";
 
@@ -10,15 +17,16 @@ export interface HeadSeoProps {
   description: string;
   canonical?: string;
   nextSeoProps?: NextSeoProps;
+  entity?: EntityImageProps;
 }
 
 const buildSeo = (props: {
-  title: string;
-  description: string;
-  image: string;
+  title?: string;
+  description?: string;
+  image?: string;
   canonical?: string;
 }): NextSeoProps => {
-  const { title, description, image, canonical } = props;
+  const { title = "", description = "", image = "", canonical } = props;
   return {
     title,
     canonical,
@@ -28,6 +36,9 @@ const buildSeo = (props: {
       title,
       description,
       images: [{ url: image }],
+    },
+    twitter: {
+      cardType: "summary_large_image",
     },
     additionalMetaTags: [
       {
@@ -54,6 +65,8 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
   title,
   description,
   canonical,
+  nextSeoProps = {},
+  entity,
 }) => {
   const path = usePathname();
   const defaultCanonical = canonicalUrl({
@@ -61,13 +74,25 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
     origin: env.NEXT_PUBLIC_BASE_URL,
   });
 
-  const truncated = truncateOnWord(description);
-  const seoObject = buildSeo({
+  const truncated = truncateOnWord(description, 10);
+  let seoObject = buildSeo({
     title,
     description: truncated,
-    image: `${env.NEXT_PUBLIC_BASE_URL}/og-image.png`,
+    image: SEO_IMAGE_DEFAULT,
     canonical: canonical ?? defaultCanonical,
   });
 
-  return <NextSeo {...seoObject} />;
+  if (entity) {
+    const ogImage = SEO_IMAGE_OG + buildEntityImage(entity);
+    seoObject = merge(
+      seoObject,
+      buildSeo({
+        image: ogImage,
+      }),
+    );
+  }
+
+  const seoProps: NextSeoProps = merge(nextSeoProps, seoObject);
+
+  return <NextSeo {...seoProps} />;
 };

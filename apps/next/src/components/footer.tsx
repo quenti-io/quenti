@@ -24,8 +24,7 @@ export const Footer = () => {
     <Container
       maxW="100vw"
       as="footer"
-      bg={useColorModeValue("white", "gray.800")}
-      borderTop="2px"
+      borderTop="1px"
       borderTopColor={useColorModeValue("gray.200", "gray.750")}
     >
       <Container maxW="7xl" py="10">

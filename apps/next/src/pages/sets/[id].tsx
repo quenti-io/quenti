@@ -18,10 +18,25 @@ const InternalSet = dynamic(() => import("../../components/internal-set"), {
 const Set = ({
   title,
   description,
+  terms,
+  user,
 }: inferSSRProps<typeof getServerSideProps>) => {
   return (
     <>
-      <HeadSeo title={`${title} | Quenti`} description={description} />
+      <HeadSeo
+        title={`${title} | Quenti`}
+        description={description}
+        entity={{
+          type: "StudySet",
+          title,
+          description,
+          numItems: terms,
+          user: {
+            image: user.image,
+            username: user.username,
+          },
+        }}
+      />
       <HydrateSetData placeholder={<SetLoading />}>
         <InternalSet />
       </HydrateSetData>
@@ -41,6 +56,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       title: set.title,
       description: set.description,
       user: set.user,
+      terms: set.terms.length,
       trpcState: ssr.dehydrate(),
     },
   };

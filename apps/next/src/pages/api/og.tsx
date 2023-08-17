@@ -1,33 +1,15 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 /* eslint-disable @next/next/no-img-element */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable jsx-a11y/alt-text */
 import { ImageResponse } from "@vercel/og";
-import { Kysely } from "kysely";
-import { PlanetScaleDialect } from "kysely-planetscale";
 import type { NextRequest } from "next/server";
+import { z } from "zod";
 
-import type { DB } from "@quenti/prisma/kysely-types";
-import { getEntityGeneric } from "@quenti/trpc/server/edge/entities";
+import { env } from "@quenti/env/client";
 
 export const config = {
   runtime: "edge",
 };
-
-const ogBackground = fetch(
-  new URL("../../../public/og-background.png", import.meta.url),
-).then((res) => res.arrayBuffer());
-const ogLine = fetch(
-  new URL("../../../public/og-line.png", import.meta.url),
-).then((res) => res.arrayBuffer());
-
-const ogAvatarUrl = (image: string) =>
-  image.startsWith("/")
-    ? new URL(`../../../public/avatars/quenti.png`, import.meta.url)
-    : image;
 
 const outfit = fetch(
   new URL("../../../public/assets/fonts/Outfit-Bold.ttf", import.meta.url),
@@ -36,48 +18,37 @@ const openSansRegular = fetch(
   new URL("../../../public/assets/fonts/OpenSans-Regular.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
+const entitySchema = z.object({
+  type: z.enum(["StudySet", "Folder"]),
+  title: z.string(),
+  description: z.string(),
+  numItems: z.number(),
+  user: z.object({
+    image: z.string(),
+    username: z.string(),
+  }),
+});
+
 export default async function handler(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  const folderData = searchParams.get("folderData");
 
-  let inputUsername, idOrSlug;
-  if (folderData) {
-    const [username, ...rawIdOrSlug] = folderData.split("+");
-    const idOrSlugString = rawIdOrSlug.join("+");
-
-    inputUsername = username;
-    idOrSlug = idOrSlugString;
-  }
-
-  const db = new Kysely<DB>({
-    dialect: new PlanetScaleDialect({ url: process.env.DATABASE_URL }),
+  const { type, title, description, numItems, user } = entitySchema.parse({
+    type: searchParams.get("type"),
+    title: searchParams.get("title"),
+    description: searchParams.get("description"),
+    numItems: parseInt(searchParams.get("numItems")!),
+    user: {
+      image: searchParams.get("userImage"),
+      username: searchParams.get("username"),
+    },
   });
 
-  const entity = await getEntityGeneric(
-    db,
-    id,
-    inputUsername && idOrSlug
-      ? { username: inputUsername, idOrSlug }
-      : undefined,
-  );
+  const [openSansRegularData, outfitData] = await Promise.all([
+    openSansRegular,
+    outfit,
+  ]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  if (!entity) return new ImageResponse(<></>);
-
-  const avatarBuf = await fetch(ogAvatarUrl(entity.image)).then((res) =>
-    res.arrayBuffer(),
-  );
-  const logoBuf = await fetch(ogAvatarUrl("/")).then((res) =>
-    res.arrayBuffer(),
-  );
-  const backgroundBuf = await ogBackground;
-  const lineBuf = await ogLine;
-
-  const openSansRegularData = await openSansRegular;
-  const outfitData = await outfit;
-
-  const entityLabel = entity.type == "Folder" ? "set" : "term";
+  const entityLabel = type == "Folder" ? "set" : "term";
 
   return new ImageResponse(
     (
@@ -100,10 +71,9 @@ export default async function handler(request: NextRequest) {
             top: 0,
             left: 0,
           }}
-          // @ts-ignore
-          src={backgroundBuf}
+          src={`${env.NEXT_PUBLIC_BASE_URL}/og-background.png`}
         />
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div tw="flex justify-between">
             <div
               style={{
@@ -111,37 +81,35 @@ export default async function handler(request: NextRequest) {
                 width: "80%",
                 overflow: "hidden",
                 flexDirection: "column",
+                minWidth: 0,
               }}
             >
               <div
-                tw="uppercase text-gray-500 text-xl font-bold"
+                tw="text-gray-500 text-xl font-bold"
                 style={{ fontFamily: "Open Sans" }}
               >
-                {entity.type == "Folder" ? "Folder" : "Study Set"}
+                {type == "Folder" ? "Folder" : "Study set"}
               </div>
               <h2
-                tw="font-bold text-white text-7xl"
+                tw="font-bold text-white text-7xl overflow-hidden pb-4"
                 style={{
                   fontFamily: "Outfit",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                 }}
               >
-                {entity.title}
+                {title}
               </h2>
             </div>
-            {/* @ts-ignore */}
-            <img width="80" height="80" src={avatarBuf} tw="rounded-full" />
+            <img width="80" height="80" src={user.image} tw="rounded-full" />
           </div>
           <p
-            tw="text-gray-400 text-2xl h-46 overflow-hidden"
+            tw="text-gray-400 text-2xl h-46 overflow-hidden -mt-2"
             style={{
               whiteSpace: "pre-wrap",
             }}
           >
-            {entity.description.length
-              ? entity.description
-              : `Created by ${entity.username}`}
+            {description.length ? description : `Created by ${user.username}`}
           </p>
         </div>
         <div tw="flex w-full justify-between items-end">
@@ -153,18 +121,22 @@ export default async function handler(request: NextRequest) {
               }}
               tw="text-white text-5xl"
             >
-              {entity.entities}
+              {numItems}
             </h3>
             <div
               tw="text-xl text-gray-100 ml-2"
               style={{ fontFamily: "Open Sans" }}
             >
-              {entity.entities != 1 ? `${entityLabel}s` : entityLabel}
+              {numItems != 1 ? `${entityLabel}s` : entityLabel}
             </div>
           </div>
           <div tw="flex items-center">
-            {/* @ts-ignore */}
-            <img width="44" height="44" src={logoBuf} tw="rounded-full" />
+            <img
+              width="44"
+              height="44"
+              src={`${env.NEXT_PUBLIC_BASE_URL}/avatars/quenti.png`}
+              tw="rounded-full"
+            />
             <div
               style={{
                 fontFamily: "Outfit",
@@ -175,8 +147,12 @@ export default async function handler(request: NextRequest) {
             </div>
           </div>
         </div>
-        {/* @ts-ignore */}
-        <img tw="absolute bottom-0" width={1200} height={8} src={lineBuf} />
+        <img
+          tw="absolute bottom-0"
+          width={1200}
+          height={8}
+          src={`${env.NEXT_PUBLIC_BASE_URL}/og-line.png`}
+        />
       </div>
     ),
     {
