@@ -75,23 +75,6 @@ export const LinkArea = () => {
   );
 };
 
-LinkArea.Skeleton = function LinkAreaSkeleton() {
-  return (
-    <SimpleGrid
-      spacing="4"
-      w={{ base: "full", lg: "160px" }}
-      h="max-content"
-      columns={{ base: 2, md: 3, lg: 1 }}
-    >
-      {["Learn", "Flashcards", "Test", "Match", "Crossword", "Gravity"].map(
-        (name, i) => (
-          <Linkable key={i} name={name} href="" icon={<IconCards />} skeleton />
-        ),
-      )}
-    </SimpleGrid>
-  );
-};
-
 interface LinkableProps {
   name: string;
   icon: React.ReactNode;
@@ -101,7 +84,7 @@ interface LinkableProps {
   skeleton?: boolean;
 }
 
-const Linkable: React.FC<LinkableProps> = ({
+export const Linkable: React.FC<LinkableProps> = ({
   name,
   icon,
   href,

@@ -7,9 +7,11 @@ import { PageWrapper } from "../../common/page-wrapper";
 import { getLayout } from "../../layouts/main-layout";
 import type { inferSSRProps } from "../../lib/infer-ssr-props";
 import { HydrateSetData } from "../../modules/hydrate-set-data";
-import { SetLoading } from "../../modules/main/set-loading";
 import { ssrInit } from "../../server/ssr";
 
+const SetLoading = dynamic(() => import("../../modules/main/set-loading"), {
+  ssr: false,
+});
 const InternalSet = dynamic(() => import("../../components/internal-set"), {
   ssr: false,
 });

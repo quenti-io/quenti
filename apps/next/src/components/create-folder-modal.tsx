@@ -106,3 +106,5 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
     </Modal>
   );
 };
+
+export default CreateFolderModal;

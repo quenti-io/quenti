@@ -172,3 +172,5 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     </Collapse>
   );
 };
+
+export default MobileMenu;

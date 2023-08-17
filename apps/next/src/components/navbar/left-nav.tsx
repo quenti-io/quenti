@@ -157,3 +157,5 @@ export const LeftNav: React.FC<LeftNavProps> = ({
     </HStack>
   );
 };
+
+export default LeftNav;

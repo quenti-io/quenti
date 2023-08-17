@@ -4,10 +4,9 @@ import { useReactToPrint } from "react-to-print";
 
 import { api } from "@quenti/trpc";
 
-import { ButtonGroup, IconButton, Skeleton, Tooltip } from "@chakra-ui/react";
+import { ButtonGroup, IconButton, Tooltip } from "@chakra-ui/react";
 
 import {
-  IconHexagon,
   IconPlus,
   IconPrinter,
   IconShare,
@@ -91,23 +90,6 @@ export const ActionArea = () => {
         </div>
       )}
     </>
-  );
-};
-
-ActionArea.Skeleton = function ActionAreaSkeleton() {
-  return (
-    <Skeleton fitContent rounded="xl">
-      <ButtonGroup isAttached colorScheme="gray" size="lg" rounded="xl">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <IconButton
-            key={i}
-            rounded="xl"
-            aria-label="loading"
-            icon={<IconHexagon size={18} />}
-          />
-        ))}
-      </ButtonGroup>
-    </Skeleton>
   );
 };
 

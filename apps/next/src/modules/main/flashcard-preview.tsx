@@ -3,14 +3,7 @@ import React from "react";
 import { shuffleArray } from "@quenti/lib/array";
 import { api } from "@quenti/trpc";
 
-import {
-  Box,
-  Button,
-  Flex,
-  IconButton,
-  Skeleton,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, IconButton, Stack } from "@chakra-ui/react";
 
 import {
   IconArrowsShuffle,
@@ -18,7 +11,6 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-import { LoadingFlashcard } from "../../components/loading-flashcard";
 import { RootFlashcardWrapper } from "../../components/root-flashcard-wrapper";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
@@ -151,54 +143,5 @@ export const FlashcardPreview = () => {
         </Flex>
       </Flex>
     </>
-  );
-};
-
-FlashcardPreview.Skeleton = function FlashcardPreviewSkeleton() {
-  return (
-    <Flex
-      gap={8}
-      flexDir={{ base: "column", lg: "row" }}
-      alignItems="stretch"
-      w="full"
-    >
-      <LinkArea.Skeleton />
-      <Flex maxW="1000px" flex="1">
-        <Box w="full">
-          <LoadingFlashcard h="500px" />
-        </Box>
-      </Flex>
-      <Flex
-        flexDir="column"
-        justifyContent="space-between"
-        w={{ base: "full", lg: "160px" }}
-      >
-        <Stack spacing={4} direction={{ base: "row", lg: "column" }}>
-          <Stack direction={{ base: "row", lg: "column" }} w="full" spacing="3">
-            <Skeleton w="full" rounded="lg">
-              <Button w="full" leftIcon={<IconArrowsShuffle />}>
-                Shuffle
-              </Button>
-            </Skeleton>
-            <Skeleton w="full" rounded="lg">
-              <Button w="full" leftIcon={<IconPlayerPlay />}>
-                Autoplay
-              </Button>
-            </Skeleton>
-          </Stack>
-        </Stack>
-        <Flex justifyContent={{ base: "end", lg: "start" }} marginTop="4">
-          <Skeleton rounded="full">
-            <IconButton
-              w="max"
-              icon={<IconSettings />}
-              rounded="full"
-              display={{ base: "flex", lg: "none" }}
-              aria-label="Settings"
-            />
-          </Skeleton>
-        </Flex>
-      </Flex>
-    </Flex>
   );
 };
