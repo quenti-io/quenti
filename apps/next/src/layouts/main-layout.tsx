@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 
-const Navbar = dynamic(() => import("../components/navbar"), { ssr: false });
+import { Navbar } from "../components/navbar";
+
 const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
   { ssr: false },
