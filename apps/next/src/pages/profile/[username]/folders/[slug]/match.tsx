@@ -1,9 +1,10 @@
-import type { ComponentWithAuth } from "../../../../../components/auth-component";
+import { PageWrapper } from "../../../../../common/page-wrapper";
+import { getLayout } from "../../../../../layouts/main-layout";
 import { CreateMatchData } from "../../../../../modules/create-match-data";
 import { HydrateFolderData } from "../../../../../modules/hydrate-folder-data";
 import { MatchContainer } from "../../../../../modules/match/match-container";
 
-const Match: ComponentWithAuth = () => {
+const Match = () => {
   return (
     <HydrateFolderData withTerms disallowDirty>
       <CreateMatchData>
@@ -13,6 +14,7 @@ const Match: ComponentWithAuth = () => {
   );
 };
 
-Match.authenticationEnabled = true;
+Match.PageWrapper = PageWrapper;
+Match.getLayout = getLayout;
 
 export default Match;

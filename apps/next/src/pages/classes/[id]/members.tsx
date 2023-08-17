@@ -1,9 +1,12 @@
-import { ClassLayout } from "../../../modules/classes/class-layout";
+import { PageWrapper } from "../../../common/page-wrapper";
+import { getLayout } from "../../../layouts/class-layout";
 import { ClassMembers } from "../../../modules/classes/pages/class-members";
 
 const Page = () => {
   return <ClassMembers />;
 };
-Page.layout = ClassLayout;
+
+Page.PageWrapper = PageWrapper;
+Page.getLayout = getLayout;
 
 export default Page;

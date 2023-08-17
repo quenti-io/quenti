@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 
+import { PageWrapper } from "../../common/page-wrapper";
 import { AuthLayout } from "../../components/auth-layout";
 
 export default function Signup() {
@@ -14,3 +15,5 @@ export default function Signup() {
     />
   );
 }
+
+Signup.PageWrapper = PageWrapper;

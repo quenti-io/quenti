@@ -1,6 +1,5 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 
 import { avatarUrl } from "@quenti/lib/avatar";
@@ -29,14 +28,10 @@ import {
 } from "@tabler/icons-react";
 
 import { useMe } from "../../hooks/use-me";
-import { BASE_PAGES } from "../../pages/_app";
 import { organizationIcon } from "../../utils/icons";
 import { MenuOption } from "../menu-option";
 
 export const UserMenu = () => {
-  const router = useRouter();
-  const onStaticPage = BASE_PAGES.includes(router.pathname);
-
   const session = useSession()!.data!;
   const user = session.user!;
   const { data: me } = useMe();
@@ -110,22 +105,14 @@ export const UserMenu = () => {
             </Link>
           </>
         )}
-        {!onStaticPage && (
-          <>
-            <MenuDivider />
-            <MenuOption
-              icon={
-                colorMode == "dark" ? (
-                  <IconSun size={18} />
-                ) : (
-                  <IconMoon size={18} />
-                )
-              }
-              label={colorMode == "dark" ? "Light mode" : "Dark mode"}
-              onClick={toggleColorMode}
-            />
-          </>
-        )}
+        <MenuDivider />
+        <MenuOption
+          icon={
+            colorMode == "dark" ? <IconSun size={18} /> : <IconMoon size={18} />
+          }
+          label={colorMode == "dark" ? "Light mode" : "Dark mode"}
+          onClick={toggleColorMode}
+        />
         <MenuOption
           icon={<IconLogout size={18} />}
           label="Sign out"

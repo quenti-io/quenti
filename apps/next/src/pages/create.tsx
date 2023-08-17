@@ -6,8 +6,9 @@ import { api } from "@quenti/trpc";
 
 import { Container } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../components/auth-component";
+import { PageWrapper } from "../common/page-wrapper";
 import { WithFooter } from "../components/with-footer";
+import { getLayout } from "../layouts/main-layout";
 import { HydrateAutoSaveData } from "../modules/hydrate-auto-save-data";
 import { SetEditor } from "../modules/set-editor";
 import {
@@ -15,7 +16,7 @@ import {
   useSetEditorContext,
 } from "../stores/use-set-editor-store";
 
-const Create: ComponentWithAuth = () => {
+const Create = () => {
   return (
     <HydrateAutoSaveData>
       <WithFooter>
@@ -103,7 +104,7 @@ const PropertiesListener = () => {
   return <></>;
 };
 
-Create.title = "Create a new set";
-Create.authenticationEnabled = true;
+Create.PageWrapper = PageWrapper;
+Create.getLayout = getLayout;
 
 export default Create;

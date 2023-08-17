@@ -22,7 +22,9 @@ import {
 
 import { IconArrowRight } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../common/page-wrapper";
 import { WizardLayout } from "../../components/wizard-layout";
+import { getLayout } from "../../layouts/main-layout";
 import { ORGANIZATION_ICONS } from "../../utils/icons";
 
 const schema = z.object({
@@ -156,3 +158,6 @@ export default function NewOrganization() {
     </WizardLayout>
   );
 }
+
+NewOrganization.PageWrapper = PageWrapper;
+NewOrganization.getLayout = getLayout;

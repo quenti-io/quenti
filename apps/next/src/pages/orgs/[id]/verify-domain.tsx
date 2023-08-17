@@ -17,11 +17,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { Toast } from "../../../components/toast";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
+import { getLayout } from "../../../layouts/main-layout";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 
 export default function OrgVerifyEmail() {
@@ -191,3 +193,6 @@ export default function OrgVerifyEmail() {
     </OnboardingMetadata>
   );
 }
+
+OrgVerifyEmail.PageWrapper = PageWrapper;
+OrgVerifyEmail.getLayout = getLayout;

@@ -4,8 +4,9 @@ import { shallow } from "zustand/shallow";
 
 import { Container } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../../../components/auth-component";
+import { PageWrapper } from "../../../common/page-wrapper";
 import { WithFooter } from "../../../components/with-footer";
+import { getLayout } from "../../../layouts/main-layout";
 import { HydrateEditSetData } from "../../../modules/hydrate-edit-set-data";
 import { SetEditorPure } from "../../../modules/set-editor";
 import {
@@ -13,7 +14,7 @@ import {
   useSetEditorContext,
 } from "../../../stores/use-set-editor-store";
 
-const Edit: ComponentWithAuth = () => {
+const Edit = () => {
   return (
     <HydrateEditSetData>
       <WithFooter>
@@ -74,6 +75,7 @@ const PropertiesListener = () => {
   return <></>;
 };
 
-Edit.authenticationEnabled = true;
+Edit.PageWrapper = PageWrapper;
+Edit.getLayout = getLayout;
 
 export default Edit;

@@ -2,6 +2,8 @@ import Head from "next/head";
 
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 
+import { PageWrapper } from "../common/page-wrapper";
+
 export default function Error() {
   return (
     <>
@@ -38,3 +40,5 @@ export default function Error() {
     </>
   );
 }
+
+Error.PageWrapper = PageWrapper;

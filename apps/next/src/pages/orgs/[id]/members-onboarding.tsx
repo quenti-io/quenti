@@ -22,8 +22,10 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { OnboardingMember } from "../../../components/onboarding-member";
 import { WizardLayout } from "../../../components/wizard-layout";
+import { getLayout } from "../../../layouts/main-layout";
 import { InviteMemberModal } from "../../../modules/organizations/invite-member-modal";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 import { plural } from "../../../utils/string";
@@ -159,3 +161,6 @@ export default function OrgMembersOnboarding() {
     </OnboardingMetadata>
   );
 }
+
+OrgMembersOnboarding.PageWrapper = PageWrapper;
+OrgMembersOnboarding.getLayout = getLayout;

@@ -14,12 +14,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../components/auth-component";
+import { PageWrapper } from "../common/page-wrapper";
 import { Loading } from "../components/loading";
 import { UnboundOnly } from "../components/unbound-only";
 import { WithFooter } from "../components/with-footer";
 import { useLoading } from "../hooks/use-loading";
 import { useMe } from "../hooks/use-me";
+import { getLayout } from "../layouts/main-layout";
 import { AccountType } from "../modules/settings/account-type";
 import { AppPreferences } from "../modules/settings/app-preferences";
 import { DangerZone } from "../modules/settings/danger-zone";
@@ -31,7 +32,7 @@ export const SettingsContext = React.createContext<{
   layout?: "mobile" | "desktop";
 }>({});
 
-const Settings: ComponentWithAuth = () => {
+const Settings = () => {
   const session = useSession()!.data!;
   const { data: me } = useMe();
   const { loading } = useLoading();
@@ -83,7 +84,7 @@ const Settings: ComponentWithAuth = () => {
   );
 };
 
-Settings.title = "Settings";
-Settings.authenticationEnabled = true;
+Settings.PageWrapper = PageWrapper;
+Settings.getLayout = getLayout;
 
 export default Settings;

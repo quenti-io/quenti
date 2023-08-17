@@ -21,8 +21,10 @@ import {
 
 import { IconArrowRight, IconNewSection, IconUsers } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";
+import { getLayout } from "../../../layouts/main-layout";
 import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
 
 interface CreateSectionsFormInputs {
@@ -157,3 +159,6 @@ export default function CreateSections() {
     </WizardLayout>
   );
 }
+
+CreateSections.PageWrapper = PageWrapper;
+CreateSections.getLayout = getLayout;

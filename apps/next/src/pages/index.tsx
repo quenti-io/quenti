@@ -1,9 +1,11 @@
-import type { NextPage } from "next";
-
 import { Landing } from "@quenti/website";
 
-const Home: NextPage = () => {
+import { PageWrapper } from "../common/page-wrapper";
+
+const Home = () => {
   return <Landing />;
 };
+
+Home.PageWrapper = PageWrapper;
 
 export default Home;

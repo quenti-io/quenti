@@ -2,14 +2,15 @@ import React from "react";
 
 import { Container, Stack } from "@chakra-ui/react";
 
-import type { ComponentWithAuth } from "../../../../../components/auth-component";
+import { PageWrapper } from "../../../../../common/page-wrapper";
+import { getLayout } from "../../../../../layouts/main-layout";
 import { ControlsBar } from "../../../../../modules/flashcards/controls-bar";
 import { FlashcardArea } from "../../../../../modules/flashcards/flashcard-area";
 import { FlashcardsSettingsModal } from "../../../../../modules/flashcards/flashcards-settings-modal";
 import { TitleBar } from "../../../../../modules/flashcards/titlebar";
 import { HydrateFolderData } from "../../../../../modules/hydrate-folder-data";
 
-const FolderStudyFlashcards: ComponentWithAuth = () => {
+const FolderStudyFlashcards = () => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
   return (
@@ -31,6 +32,7 @@ const FolderStudyFlashcards: ComponentWithAuth = () => {
   );
 };
 
-FolderStudyFlashcards.authenticationEnabled = true;
+FolderStudyFlashcards.PageWrapper = PageWrapper;
+FolderStudyFlashcards.getLayout = getLayout;
 
 export default FolderStudyFlashcards;

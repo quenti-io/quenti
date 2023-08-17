@@ -1,8 +1,10 @@
 import { Skeleton } from "@chakra-ui/react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { ClassCard } from "../../../components/class-card";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useClass } from "../../../hooks/use-class";
+import { getLayout } from "../../../layouts/main-layout";
 import { useProtectedRedirect } from "../../../modules/classes/use-protected-redirect";
 
 export default function OnboardingDone() {
@@ -27,3 +29,6 @@ export default function OnboardingDone() {
     </WizardLayout>
   );
 }
+
+OnboardingDone.PageWrapper = PageWrapper;
+OnboardingDone.getLayout = getLayout;

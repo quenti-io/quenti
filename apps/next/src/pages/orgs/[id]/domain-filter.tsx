@@ -20,8 +20,10 @@ import {
 
 import { IconArrowLeft, IconHash, IconUnderline } from "@tabler/icons-react";
 
+import { PageWrapper } from "../../../common/page-wrapper";
 import { WizardLayout } from "../../../components/wizard-layout";
 import { useOrganization } from "../../../hooks/use-organization";
+import { getLayout } from "../../../layouts/main-layout";
 import { DomainFilterForm } from "../../../modules/organizations/domain-filter-form";
 import { OnboardingMetadata } from "../../../modules/organizations/onboarding-metadata";
 import { getBaseDomain } from "../../../modules/organizations/utils/get-base-domain";
@@ -183,3 +185,6 @@ const ExampleCard = ({
     </Card>
   );
 };
+
+OrgDomainFilter.PageWrapper = PageWrapper;
+OrgDomainFilter.getLayout = getLayout;

@@ -2,6 +2,7 @@ import Head from "next/head";
 
 import { Center, Heading, Text, VStack } from "@chakra-ui/react";
 
+import { PageWrapper } from "../common/page-wrapper";
 import { StaticWrapper } from "../components/static-wrapper";
 
 export default function NotFound() {
@@ -31,3 +32,5 @@ export default function NotFound() {
     </StaticWrapper>
   );
 }
+
+NotFound.PageWrapper = PageWrapper;

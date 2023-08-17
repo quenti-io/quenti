@@ -1,6 +1,5 @@
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 
 import { Link } from "@quenti/components";
@@ -28,7 +27,6 @@ import {
 
 import { Logo } from "../../../../../packages/components/logo";
 import { useMe } from "../../hooks/use-me";
-import { BASE_PAGES } from "../../pages/_app";
 import { MenuOption } from "../menu-option";
 import { TeacherOnly } from "../teacher-only";
 import { UnboundOnly } from "../unbound-only";
@@ -44,10 +42,8 @@ export const LeftNav: React.FC<LeftNavProps> = ({
   onImportClick,
   onClassClick,
 }) => {
-  const router = useRouter();
   const session = useSession()!.data!;
   const { data: me } = useMe();
-  const onStaticPage = BASE_PAGES.includes(router.pathname);
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -61,7 +57,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         className="nav-content__mobile"
         color="white"
       >
-        <HStack as={Link} href={onStaticPage ? "/" : "/home"} rel="home" ml="2">
+        <HStack as={Link} href="/home" rel="home" ml="2">
           <Logo boxSize="28px" />
           <Heading
             as="p"
