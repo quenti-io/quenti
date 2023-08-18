@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 
 import { HeadSeo } from "@quenti/components";
+import { prisma } from "@quenti/prisma";
 import type { GetServerSidePropsContext } from "@quenti/types";
 
 import { PageWrapper } from "../../common/page-wrapper";
@@ -8,33 +9,35 @@ import { getLayout } from "../../layouts/main-layout";
 import type { inferSSRProps } from "../../lib/infer-ssr-props";
 import { HydrateSetData } from "../../modules/hydrate-set-data";
 import SetLoading from "../../modules/main/set-loading";
-import { ssrInit } from "../../server/ssr";
 
 const InternalSet = dynamic(() => import("../../components/internal-set"), {
   ssr: false,
   loading: SetLoading,
 });
 
-const Set = ({
-  title,
-  description,
-  terms,
-  user,
-}: inferSSRProps<typeof getServerSideProps>) => {
+const Set = ({ set }: inferSSRProps<typeof getServerSideProps>) => {
   return (
     <>
       <HeadSeo
-        title={title}
-        description={description}
-        entity={{
-          type: "StudySet",
-          title,
-          description,
-          numItems: terms,
-          user: {
-            image: user.image,
-            username: user.username,
-          },
+        title={set?.title ?? "Not found"}
+        description={set?.description ?? undefined}
+        entity={
+          set
+            ? {
+                type: "StudySet",
+                title: set.title,
+                description: set.description,
+                numItems: set._count.terms,
+                user: {
+                  username: set.user.username,
+                  image: set.user.image || "",
+                },
+              }
+            : undefined
+        }
+        nextSeoProps={{
+          noindex: !set,
+          nofollow: !set,
         }}
       />
       <HydrateSetData placeholder={<SetLoading />}>
@@ -45,19 +48,31 @@ const Set = ({
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const ssr = await ssrInit(ctx);
-  const set = await ssr.studySets.getPublic.fetch({
-    studySetId: ctx.query?.id as string,
+  const set = await prisma.studySet.findUnique({
+    where: {
+      id: ctx.query?.id as string,
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      user: {
+        select: {
+          username: true,
+          image: true,
+        },
+      },
+      _count: {
+        select: {
+          terms: true,
+        },
+      },
+    },
   });
 
   return {
     props: {
-      id: set.id,
-      title: set.title,
-      description: set.description,
-      user: set.user,
-      terms: set.terms.length,
-      trpcState: ssr.dehydrate(),
+      set,
     },
   };
 };
