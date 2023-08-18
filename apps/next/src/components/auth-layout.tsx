@@ -2,7 +2,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
-import { Link } from "@quenti/components";
+import { HeadSeo, Link } from "@quenti/components";
 
 import {
   Box,
@@ -57,98 +57,101 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
   const termsColor = useColorModeValue("gray.400", "gray.600");
 
   return (
-    <Center h="100vh" w="full" position="relative">
-      <Fade
-        in
-        transition={{
-          enter: {
-            duration: 1.5,
-            delay: 0.2,
-            ease: "easeOut",
-          },
-        }}
-      >
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          w="full"
-          h="50vh"
-          opacity={gradientOpacity}
-          bgGradient={gradient}
-        />
-      </Fade>
-      {!loading ? (
-        <Container w="sm" zIndex={10}>
-          <Fade
-            in
-            initial={{
-              opacity: -1,
-              transform: "translateY(-16px)",
-            }}
-            animate={{
-              opacity: 1,
-              transform: "translateY(0)",
-              transition: {
-                delay: 0.1,
-                duration: 0.3,
-                ease: "easeOut",
-              },
-            }}
-          >
-            <VStack spacing="8">
-              <Logo width={20} height={20} />
-              <Heading fontSize="24px" textAlign="center">
-                {mode == "signup"
-                  ? "Create your Quenti account"
-                  : "Welcome back"}
-              </Heading>
-              <Stack spacing="3" w="full">
-                <Button
-                  size="lg"
-                  fontSize="sm"
-                  leftIcon={<IconBrandGoogle size={18} strokeWidth={4} />}
-                  onClick={async () => {
-                    await signIn("google", {
-                      callbackUrl: safeCallbackUrl,
-                      redirect: false,
-                    });
-                  }}
-                >
-                  Sign {verb} with Google
-                </Button>
-                <Tooltip label="Coming soon">
+    <>
+      <HeadSeo title={mode == "login" ? "Log in" : "Sign up"} />
+      <Center h="100vh" w="full" position="relative">
+        <Fade
+          in
+          transition={{
+            enter: {
+              duration: 1.5,
+              delay: 0.2,
+              ease: "easeOut",
+            },
+          }}
+        >
+          <Box
+            position="absolute"
+            top="0"
+            left="0"
+            w="full"
+            h="50vh"
+            opacity={gradientOpacity}
+            bgGradient={gradient}
+          />
+        </Fade>
+        {!loading ? (
+          <Container w="sm" zIndex={10}>
+            <Fade
+              in
+              initial={{
+                opacity: -1,
+                transform: "translateY(-16px)",
+              }}
+              animate={{
+                opacity: 1,
+                transform: "translateY(0)",
+                transition: {
+                  delay: 0.1,
+                  duration: 0.3,
+                  ease: "easeOut",
+                },
+              }}
+            >
+              <VStack spacing="8">
+                <Logo width={20} height={20} />
+                <Heading fontSize="24px" textAlign="center">
+                  {mode == "signup"
+                    ? "Create your Quenti account"
+                    : "Welcome back"}
+                </Heading>
+                <Stack spacing="3" w="full">
                   <Button
                     size="lg"
                     fontSize="sm"
-                    variant="outline"
-                    colorScheme="gray"
-                    cursor="not-allowed"
-                  >
-                    Sign {verb} with email
-                  </Button>
-                </Tooltip>
-              </Stack>
-              {mode == "signup" && (
-                <Text textAlign="center" fontSize="sm" color={termsColor}>
-                  By signing up, you agree to the{" "}
-                  <Link
-                    href="/terms"
-                    _hover={{
-                      textDecoration: "underline",
+                    leftIcon={<IconBrandGoogle size={18} strokeWidth={4} />}
+                    onClick={async () => {
+                      await signIn("google", {
+                        callbackUrl: safeCallbackUrl,
+                        redirect: false,
+                      });
                     }}
                   >
-                    Terms of Service
-                  </Link>
-                  .
-                </Text>
-              )}
-            </VStack>
-          </Fade>
-        </Container>
-      ) : (
-        <Loading />
-      )}
-    </Center>
+                    Sign {verb} with Google
+                  </Button>
+                  <Tooltip label="Coming soon">
+                    <Button
+                      size="lg"
+                      fontSize="sm"
+                      variant="outline"
+                      colorScheme="gray"
+                      cursor="not-allowed"
+                    >
+                      Sign {verb} with email
+                    </Button>
+                  </Tooltip>
+                </Stack>
+                {mode == "signup" && (
+                  <Text textAlign="center" fontSize="sm" color={termsColor}>
+                    By signing up, you agree to the{" "}
+                    <Link
+                      href="/terms"
+                      _hover={{
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Terms of Service
+                    </Link>
+                    .
+                  </Text>
+                )}
+              </VStack>
+            </Fade>
+          </Container>
+        ) : (
+          <Loading />
+        )}
+      </Center>
+    </>
   );
 };

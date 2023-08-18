@@ -56,6 +56,7 @@ export default function TeachersOnboarding() {
   return (
     <WizardLayout
       title="Invite teachers"
+      seoTitle="Invite Teachers"
       description="Invite additional teachers to join your class."
       steps={4}
       currentStep={1}

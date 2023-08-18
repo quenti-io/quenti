@@ -14,6 +14,7 @@ export default function OnboardingDone() {
   return (
     <WizardLayout
       title="You're all set!"
+      seoTitle="You're all set!"
       description="Your class is now ready to go."
       steps={4}
       currentStep={3}
