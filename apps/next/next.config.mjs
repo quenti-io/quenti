@@ -50,6 +50,7 @@ let config = withHighlightConfig(
       "@quenti/interfaces",
       "@quenti/lib",
       "@quenti/components",
+      "@quenti/branding",
       "@quenti/payments",
       "@quenti/prisma",
       "@quenti/trpc",

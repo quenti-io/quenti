@@ -39,7 +39,6 @@ export default function OrgMembersOnboarding() {
     { id },
     {
       enabled: !!id && !!session?.user?.id,
-      retry: false,
     },
   );
 

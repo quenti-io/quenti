@@ -2,22 +2,27 @@ import merge from "lodash.merge";
 import { NextSeo, type NextSeoProps } from "next-seo";
 import { usePathname } from "next/navigation";
 
+import { BODY_COPY_SEO } from "@quenti/branding";
 import { env } from "@quenti/env/client";
 import {
   type EntityImageProps,
+  type ProfileImageProps,
   SEO_IMAGE_DEFAULT,
   SEO_IMAGE_OG,
   buildEntityImage,
+  buildProfileImage,
 } from "@quenti/lib/seo";
 import { truncateOnWord } from "@quenti/lib/text";
 import { canonicalUrl } from "@quenti/lib/url";
 
 export interface HeadSeoProps {
   title: string;
-  description: string;
+  description?: string;
   canonical?: string;
+  hideTitleSuffix?: boolean;
   nextSeoProps?: NextSeoProps;
   entity?: EntityImageProps;
+  profile?: ProfileImageProps;
 }
 
 const buildSeo = (props: {
@@ -62,11 +67,13 @@ const buildSeo = (props: {
 };
 
 export const HeadSeo: React.FC<HeadSeoProps> = ({
-  title,
-  description,
+  title: _title,
+  description: _description = BODY_COPY_SEO,
   canonical,
+  hideTitleSuffix = false,
   nextSeoProps = {},
   entity,
+  profile,
 }) => {
   const path = usePathname();
   const defaultCanonical = canonicalUrl({
@@ -74,10 +81,12 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
     origin: env.NEXT_PUBLIC_BASE_URL,
   });
 
-  const truncated = truncateOnWord(description);
+  const title = `${_title}${!hideTitleSuffix ? " | Quenti" : ""}`;
+  const description = truncateOnWord(_description);
+
   let seoObject = buildSeo({
     title,
-    description: truncated,
+    description: description,
     image: SEO_IMAGE_DEFAULT,
     canonical: canonical ?? defaultCanonical,
   });
@@ -86,7 +95,16 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
     const ogImage = SEO_IMAGE_OG + buildEntityImage(entity);
     seoObject = buildSeo({
       title,
-      description: truncated,
+      description,
+      image: ogImage,
+      canonical: canonical ?? defaultCanonical,
+    });
+  }
+  if (profile) {
+    const ogImage = SEO_IMAGE_OG + buildProfileImage(profile);
+    seoObject = buildSeo({
+      title,
+      description,
       image: ogImage,
       canonical: canonical ?? defaultCanonical,
     });

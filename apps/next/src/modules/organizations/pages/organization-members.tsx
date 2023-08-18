@@ -40,7 +40,6 @@ export const OrganizationMembers = () => {
     { id },
     {
       enabled: !!id && !!session?.user,
-      retry: false,
     },
   );
 

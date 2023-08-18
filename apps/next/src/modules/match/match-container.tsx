@@ -1,10 +1,13 @@
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 
+import { HeadSeo } from "@quenti/components";
+
 import { Box } from "@chakra-ui/react";
 
 import { MatchCard } from "../../components/match-card";
 import { useHistory } from "../../hooks/use-history";
+import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { type MatchItem, useMatchContext } from "../../stores/use-match-store";
 import { EventListener } from "./event-listener";
 import MatchInfo from "./match-info";
@@ -13,6 +16,7 @@ import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
   const history = useHistory();
+  const { title } = useSetFolderUnison();
   const terms = useMatchContext((state) => state.terms);
   const summary = useMatchContext((state) => state.roundSummary);
   const completed = useMatchContext((state) => state.completed);
@@ -71,29 +75,32 @@ export const MatchContainer = () => {
   }, []);
 
   return (
-    <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
-      {summary && <MatchSummary />}
-      <MatchStartModal isOpen={completed && reloaded === false && !summary} />
-      {!completed && (
-        <AnimatePresence>
-          {terms.map((term, index) =>
-            term.completed ? (
-              ""
-            ) : (
-              <MatchCard
-                term={term}
-                index={index}
-                key={index}
-                onDragStart={onDragStart}
-                onDrag={onDrag}
-                onDragEnd={onDragEnd}
-              />
-            ),
-          )}
-        </AnimatePresence>
-      )}
-      <EventListener wrapper={wrapper} />
-      {!completed && <MatchInfo />}
-    </Box>
+    <>
+      <HeadSeo title={`Match: ${title}`} />
+      <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
+        {summary && <MatchSummary />}
+        <MatchStartModal isOpen={completed && reloaded === false && !summary} />
+        {!completed && (
+          <AnimatePresence>
+            {terms.map((term, index) =>
+              term.completed ? (
+                ""
+              ) : (
+                <MatchCard
+                  term={term}
+                  index={index}
+                  key={index}
+                  onDragStart={onDragStart}
+                  onDrag={onDrag}
+                  onDragEnd={onDragEnd}
+                />
+              ),
+            )}
+          </AnimatePresence>
+        )}
+        <EventListener wrapper={wrapper} />
+        {!completed && <MatchInfo />}
+      </Box>
+    </>
   );
 };

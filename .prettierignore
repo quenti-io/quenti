@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .turbo/
+.yarn/
 public
 **/**/node_modules
 **/**/.next
@@ -11,4 +12,3 @@ public
 
 .gitignore
 .eslintignore
-.yarn

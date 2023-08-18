@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -31,10 +30,12 @@ export const HydrateProfileData: React.FC<
   const router = useRouter();
   const session = useSession();
   const username = router.query.username as string;
-  const profile = api.profile.get.useQuery((username || "").substring(1), {
-    retry: false,
-    enabled: !!username,
-  });
+  const profile = api.profile.get.useQuery(
+    { username: (username || "").substring(1) },
+    {
+      enabled: !!username,
+    },
+  );
   const { loading } = useLoading();
 
   if (profile.error?.data?.httpStatus === 404) return <Profile404 />;
@@ -47,9 +48,6 @@ export const HydrateProfileData: React.FC<
         isMe: profile.data.id === session.data?.user?.id,
       }}
     >
-      <Head>
-        <title>{profile.data.username} | Quenti</title>
-      </Head>
       {children}
     </ProfileContext.Provider>
   );

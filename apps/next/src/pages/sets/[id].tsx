@@ -24,7 +24,7 @@ const Set = ({
   return (
     <>
       <HeadSeo
-        title={`${title} | Quenti`}
+        title={title}
         description={description}
         entity={{
           type: "StudySet",

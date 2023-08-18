@@ -23,7 +23,6 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   const { data } = api.studySets.byId.useQuery(
     { studySetId: id },
     {
-      retry: false,
       enabled: !!id,
       onError: (e) => {
         if (e.data?.httpStatus == 403) {

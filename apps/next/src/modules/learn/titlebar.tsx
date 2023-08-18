@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Link } from "@quenti/components";
+import { HeadSeo, Link } from "@quenti/components";
 
 import { Flex, Heading, IconButton } from "@chakra-ui/react";
 
@@ -11,7 +11,7 @@ import { useLearnContext } from "../../stores/use-learn-store";
 import { LearnSettingsModal } from "./learn-settings-modal";
 
 export const Titlebar = () => {
-  const { id } = useSet();
+  const { id, title } = useSet();
 
   const completed = useLearnContext((s) => s.completed);
   const currentRound = useLearnContext((s) => s.currentRound);
@@ -20,6 +20,7 @@ export const Titlebar = () => {
 
   return (
     <>
+      <HeadSeo title={`Learn: ${title}`} />
       <LearnSettingsModal
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}

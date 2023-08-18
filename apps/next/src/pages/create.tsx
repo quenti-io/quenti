@@ -2,6 +2,7 @@ import debounce from "lodash.debounce";
 import React from "react";
 import { shallow } from "zustand/shallow";
 
+import { HeadSeo } from "@quenti/components";
 import { api } from "@quenti/trpc";
 
 import { Container } from "@chakra-ui/react";
@@ -18,13 +19,16 @@ import {
 
 const Create = () => {
   return (
-    <HydrateAutoSaveData>
-      <WithFooter>
-        <Container maxW="7xl">
-          <EditorWrapper />
-        </Container>
-      </WithFooter>
-    </HydrateAutoSaveData>
+    <>
+      <HeadSeo title="Create a new set" />
+      <HydrateAutoSaveData>
+        <WithFooter>
+          <Container maxW="7xl">
+            <EditorWrapper />
+          </Container>
+        </WithFooter>
+      </HydrateAutoSaveData>
+    </>
   );
 };
 

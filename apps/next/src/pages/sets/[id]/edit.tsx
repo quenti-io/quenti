@@ -1,6 +1,7 @@
-import Head from "next/head";
 import React from "react";
 import { shallow } from "zustand/shallow";
+
+import { HeadSeo } from "@quenti/components";
 
 import { Container } from "@chakra-ui/react";
 
@@ -16,33 +17,40 @@ import {
 
 const Edit = () => {
   return (
-    <HydrateEditSetData>
-      <WithFooter>
-        <Container maxW="7xl">
-          <EditorWrapper />
-        </Container>
-      </WithFooter>
-    </HydrateEditSetData>
-  );
-};
-
-const EditorWrapper = () => {
-  return (
     <>
-      <HeadComponent />
-      <PropertiesListener />
-      <SetEditorPure />
+      <HeadSeo
+        title="Edit Set"
+        nextSeoProps={{
+          noindex: true,
+          nofollow: true,
+        }}
+      />
+      <HydrateEditSetData>
+        <WithFooter>
+          <Container maxW="7xl">
+            <EditorWrapper />
+          </Container>
+        </WithFooter>
+      </HydrateEditSetData>
     </>
   );
 };
 
-const HeadComponent = () => {
+const EditorWrapper = () => {
   const title = useSetEditorContext((s) => s.title);
 
   return (
-    <Head>
-      <title>Edit {title} | Quenti</title>
-    </Head>
+    <>
+      <HeadSeo
+        title={`Edit ${title}`}
+        nextSeoProps={{
+          noindex: true,
+          nofollow: true,
+        }}
+      />
+      <PropertiesListener />
+      <SetEditorPure />
+    </>
   );
 };
 

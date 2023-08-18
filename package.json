@@ -13,7 +13,7 @@
     "db:generate": "dotenv -- turbo db:generate",
     "db:push": "dotenv -- turbo db:push db:generate",
     "db:studio": "dotenv -- yarn -F db dev",
-    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
+    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\"",
     "lint": "dotenv -- turbo lint",
     "lint:fix": "turbo lint:fix",
     "type-check": "turbo type-check",

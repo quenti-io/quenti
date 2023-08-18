@@ -26,7 +26,6 @@ export const HydrateAdmin: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
 
   const { data } = api.admin.landing.useQuery(undefined, {
-    retry: false,
     onError: (error) => {
       void (async () => {
         if (error.data?.httpStatus == 403) {
@@ -35,9 +34,7 @@ export const HydrateAdmin: React.FC<React.PropsWithChildren> = ({
       })();
     },
   });
-  const { data: userData } = api.admin.getUsers.useQuery(undefined, {
-    retry: false,
-  });
+  const { data: userData } = api.admin.getUsers.useQuery();
 
   const { loading } = useLoading();
 

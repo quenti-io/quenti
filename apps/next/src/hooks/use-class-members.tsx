@@ -12,7 +12,6 @@ export const useClassMembers = () => {
     { id },
     {
       enabled: !!id && !!session.data?.user,
-      retry: false,
     },
   );
 };

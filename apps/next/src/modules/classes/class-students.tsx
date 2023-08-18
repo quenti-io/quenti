@@ -53,7 +53,6 @@ export const ClassStudentsRaw = () => {
       },
       {
         enabled: isLoaded,
-        retry: false,
         keepPreviousData: true,
         cacheTime: 0,
         getNextPageParam: (lastPage) => lastPage.nextCursor,

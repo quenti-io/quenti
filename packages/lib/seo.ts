@@ -17,6 +17,13 @@ export interface EntityImageProps {
   };
 }
 
+export interface ProfileImageProps {
+  username: string;
+  image: string;
+  name: string | null;
+  verified: boolean;
+}
+
 export const buildEntityImage = (
   props: EntityImageProps,
   encodeUri = false,
@@ -30,6 +37,21 @@ export const buildEntityImage = (
     `&numItems=${props.numItems}`,
     `&userImage=${encodeURIComponent(props.user.image)}`,
     `&username=${encodeURIComponent(props.user.username)}`,
+  ].join("");
+
+  return encodeUri ? encodeURIComponent(url) : url;
+};
+
+export const buildProfileImage = (
+  props: ProfileImageProps,
+  encodeUri = false,
+) => {
+  const url = [
+    "?type=profile",
+    `&username=${encodeURIComponent(props.username)}`,
+    `&image=${encodeURIComponent(props.image)}`,
+    `&name=${encodeURIComponent(props.name ?? "")}`,
+    `&verified=${props.verified}`,
   ].join("");
 
   return encodeUri ? encodeURIComponent(url) : url;
