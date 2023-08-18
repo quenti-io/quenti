@@ -6433,6 +6433,7 @@ __metadata:
   resolution: "@quenti/website@workspace:packages/website"
   dependencies:
     "@chakra-ui/react": ^2.7.1
+    "@quenti/branding": "*"
     "@quenti/components": "*"
     "@tabler/icons-react": ^2.30.0
   languageName: unknown
