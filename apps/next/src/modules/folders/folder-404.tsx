@@ -16,8 +16,8 @@ export const Folder404 = () => {
       />
       <Center h="calc(100vh - 160px)">
         <GhostMessage
-          message="We couldn't find this folder"
-          subheading="It might have been deleted by the original creator."
+          message="Please don't get mad but..."
+          subheading="The folder you're looking for doesn't exist."
           homeButton
         />
       </Center>

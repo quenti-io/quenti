@@ -24,23 +24,15 @@ const Set = ({ set }: inferSSRProps<typeof getServerSideProps>) => {
       <HeadSeo
         title={set?.title ?? "Not found"}
         description={set?.description ?? undefined}
-        entity={
-          set
-            ? {
-                type: "StudySet",
-                title: set.title,
-                description: set.description,
-                numItems: set._count.terms,
-                user: {
-                  username: set.user.username,
-                  image: set.user.image || "",
-                },
-              }
-            : undefined
-        }
-        nextSeoProps={{
-          noindex: !set,
-          nofollow: !set,
+        entity={{
+          type: "StudySet",
+          title: set.title,
+          description: set.description,
+          numItems: set._count.terms,
+          user: {
+            username: set.user.username,
+            image: set.user.image || "",
+          },
         }}
       />
       <HydrateSetData placeholder={<SetLoading />}>
