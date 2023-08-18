@@ -1,3 +1,4 @@
+import { HeadSeo } from "@quenti/components";
 import { api } from "@quenti/trpc";
 
 import { Container, Stack } from "@chakra-ui/react";
@@ -14,15 +15,18 @@ const Home = () => {
   const isEmpty = !data?.sets.length && !data?.folders.length;
 
   return (
-    <WithFooter>
-      <Container maxW="7xl">
-        <Stack spacing={12}>
-          {!isLoading && isEmpty && <EmptyDashboard />}
-          <SetGrid />
-          <ClassesGrid />
-        </Stack>
-      </Container>
-    </WithFooter>
+    <>
+      <HeadSeo title="Home" />
+      <WithFooter>
+        <Container maxW="7xl">
+          <Stack spacing={12}>
+            {!isLoading && isEmpty && <EmptyDashboard />}
+            <SetGrid />
+            <ClassesGrid />
+          </Stack>
+        </Container>
+      </WithFooter>
+    </>
   );
 };
 

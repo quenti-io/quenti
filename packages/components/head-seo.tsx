@@ -2,6 +2,7 @@ import merge from "lodash.merge";
 import { NextSeo, type NextSeoProps } from "next-seo";
 import { usePathname } from "next/navigation";
 
+import { BODY_COPY_SEO } from "@quenti/branding";
 import { env } from "@quenti/env/client";
 import {
   type EntityImageProps,
@@ -14,7 +15,7 @@ import { canonicalUrl } from "@quenti/lib/url";
 
 export interface HeadSeoProps {
   title: string;
-  description: string;
+  description?: string;
   canonical?: string;
   hideTitleSuffix?: boolean;
   nextSeoProps?: NextSeoProps;
@@ -64,7 +65,7 @@ const buildSeo = (props: {
 
 export const HeadSeo: React.FC<HeadSeoProps> = ({
   title: _title,
-  description: _description,
+  description: _description = BODY_COPY_SEO,
   canonical,
   hideTitleSuffix = false,
   nextSeoProps = {},

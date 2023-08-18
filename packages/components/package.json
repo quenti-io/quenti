@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.8.0",
+    "@quenti/branding": "*",
     "@quenti/env": "*",
     "@quenti/lib": "*",
     "lodash.merge": "^4.6.2",

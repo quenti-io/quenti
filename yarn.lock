@@ -6215,11 +6215,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@quenti/branding@*, @quenti/branding@workspace:packages/branding":
+  version: 0.0.0-use.local
+  resolution: "@quenti/branding@workspace:packages/branding"
+  languageName: unknown
+  linkType: soft
+
 "@quenti/components@*, @quenti/components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@quenti/components@workspace:packages/components"
   dependencies:
     "@chakra-ui/react": ^2.8.0
+    "@quenti/branding": "*"
     "@quenti/env": "*"
     "@quenti/lib": "*"
     "@types/lodash.merge": ^4.6.7
@@ -6301,6 +6308,7 @@ __metadata:
     "@next/bundle-analyzer": ^13.4.8
     "@planetscale/database": ^1.10.0
     "@quenti/auth": "*"
+    "@quenti/branding": "*"
     "@quenti/env": "*"
     "@quenti/inngest": "*"
     "@quenti/interfaces": "*"
