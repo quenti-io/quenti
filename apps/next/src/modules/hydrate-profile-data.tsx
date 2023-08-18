@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -49,9 +48,6 @@ export const HydrateProfileData: React.FC<
         isMe: profile.data.id === session.data?.user?.id,
       }}
     >
-      <Head>
-        <title>{profile.data.username} | Quenti</title>
-      </Head>
       {children}
     </ProfileContext.Provider>
   );

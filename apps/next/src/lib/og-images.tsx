@@ -129,19 +129,46 @@ export const EntityImage: React.FC<EntityImageProps> = ({
   );
 };
 
-export const ProfileImage: React.FC<ProfileImageProps> = ({ username }) => {
+// TODO: Add the inline verified badge https://github.com/vercel/satori/issues/532
+export const ProfileImage: React.FC<ProfileImageProps> = ({
+  username,
+  name,
+  image,
+}) => {
   return (
     <ImageWrapper>
-      <h2
-        tw="font-bold text-white text-7xl overflow-hidden pb-4"
-        style={{
-          fontFamily: "Outfit",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {username}
-      </h2>
+      <div tw="flex w-full" style={{ gap: 40, boxSizing: "border-box" }}>
+        <img width="120" height="120" src={image} tw="rounded-full" />
+        <div tw="flex flex-col w-full">
+          <h2
+            tw="font-bold text-white text-7xl m-0 overflow-hidden max-w-[800px] pb-2"
+            style={{
+              fontFamily: "Outfit",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {name ?? username}
+          </h2>
+          <p tw="text-gray-300 text-2xl -mt-2">@{username}</p>
+        </div>
+      </div>
+      <div tw="flex items-center">
+        <img
+          width="44"
+          height="44"
+          src={`${env.NEXT_PUBLIC_BASE_URL}/avatars/quenti.png`}
+          tw="rounded-full"
+        />
+        <div
+          style={{
+            fontFamily: "Outfit",
+          }}
+          tw="text-white text-3xl ml-4"
+        >
+          Quenti
+        </div>
+      </div>
     </ImageWrapper>
   );
 };
