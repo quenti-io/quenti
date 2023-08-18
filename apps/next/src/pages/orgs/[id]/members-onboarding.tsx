@@ -64,6 +64,7 @@ export default function OrgMembersOnboarding() {
     <OnboardingMetadata step="members-onboarding">
       <WizardLayout
         title="Invite members"
+        seoTitle="Invite Members"
         description="Invite additional members to join your organization."
         steps={5}
         currentStep={1}

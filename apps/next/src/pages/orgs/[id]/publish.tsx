@@ -66,7 +66,8 @@ export default function OrgPublish() {
   return (
     <OnboardingMetadata step="publish">
       <WizardLayout
-        title={"Publish"}
+        title="Publish"
+        seoTitle="Publish Organization"
         description={"That's it! Your organization is ready to be published."}
         steps={5}
         currentStep={4}

@@ -45,6 +45,7 @@ export default function OrgDomainFilter() {
     <OnboardingMetadata step="domain-filter">
       <WizardLayout
         title="Set up a domain filter"
+        seoTitle="Domain Filter"
         description={
           <>
             Set up a filter to determine if an email address is associated with

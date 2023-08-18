@@ -43,6 +43,7 @@ const AccountType = () => {
   return (
     <DefaultLayout
       heading="Are you a student or a teacher?"
+      seoTitle="Account Type"
       description="You can change this later in settings."
       defaultNext={false}
       nextLoading={setUserType.isLoading}

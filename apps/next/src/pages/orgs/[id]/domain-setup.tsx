@@ -37,6 +37,7 @@ export default function OrgDomainSetup() {
   return (
     <WizardLayout
       title="Set up your domain"
+      seoTitle="Domain Setup"
       description="Set up your organization's domain to start enrolling students. New and existing accounts with an associated email ending in your domain will be automatically enrolled once your organization is published."
       steps={5}
       currentStep={2}
