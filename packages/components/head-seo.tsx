@@ -6,9 +6,11 @@ import { BODY_COPY_SEO } from "@quenti/branding";
 import { env } from "@quenti/env/client";
 import {
   type EntityImageProps,
+  type ProfileImageProps,
   SEO_IMAGE_DEFAULT,
   SEO_IMAGE_OG,
   buildEntityImage,
+  buildProfileImage,
 } from "@quenti/lib/seo";
 import { truncateOnWord } from "@quenti/lib/text";
 import { canonicalUrl } from "@quenti/lib/url";
@@ -20,6 +22,7 @@ export interface HeadSeoProps {
   hideTitleSuffix?: boolean;
   nextSeoProps?: NextSeoProps;
   entity?: EntityImageProps;
+  profile?: ProfileImageProps;
 }
 
 const buildSeo = (props: {
@@ -70,6 +73,7 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
   hideTitleSuffix = false,
   nextSeoProps = {},
   entity,
+  profile,
 }) => {
   const path = usePathname();
   const defaultCanonical = canonicalUrl({
@@ -89,6 +93,15 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
 
   if (entity) {
     const ogImage = SEO_IMAGE_OG + buildEntityImage(entity);
+    seoObject = buildSeo({
+      title,
+      description,
+      image: ogImage,
+      canonical: canonical ?? defaultCanonical,
+    });
+  }
+  if (profile) {
+    const ogImage = SEO_IMAGE_OG + buildProfileImage(profile);
     seoObject = buildSeo({
       title,
       description,
