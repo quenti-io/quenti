@@ -1,3 +1,7 @@
+import type { GetServerSidePropsContext } from "next";
+
+import { prisma } from "@quenti/prisma";
+
 import {
   Container,
   Stack,
@@ -50,6 +54,39 @@ const UserPage = () => {
       </WithFooter>
     </HydrateProfileData>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const _username = ctx.query?.username as string;
+  const username = _username.substring(1);
+
+  const user = await prisma.user.findUnique({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+      username: true,
+      image: true,
+      displayName: true,
+      name: true,
+      verified: true,
+    },
+  });
+
+  return {
+    props: {
+      user: user
+        ? {
+            id: user.id,
+            username: user.username,
+            image: user.image,
+            name: user.displayName ? user.name : null,
+            verified: user.verified,
+          }
+        : null,
+    },
+  };
 };
 
 UserPage.PageWrapper = PageWrapper;
