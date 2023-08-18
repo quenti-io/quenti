@@ -1,3 +1,5 @@
+import { HeadSeo } from "@quenti/components";
+
 import { PageWrapper } from "../../../common/page-wrapper";
 import { getLayout } from "../../../layouts/main-layout";
 import { CreateMatchData } from "../../../modules/create-match-data";
@@ -6,11 +8,14 @@ import { MatchContainer } from "../../../modules/match/match-container";
 
 const Match = () => {
   return (
-    <HydrateSetData disallowDirty requireFresh>
-      <CreateMatchData>
-        <MatchContainer />
-      </CreateMatchData>
-    </HydrateSetData>
+    <>
+      <HeadSeo title="Match" />
+      <HydrateSetData disallowDirty requireFresh>
+        <CreateMatchData>
+          <MatchContainer />
+        </CreateMatchData>
+      </HydrateSetData>
+    </>
   );
 };
 

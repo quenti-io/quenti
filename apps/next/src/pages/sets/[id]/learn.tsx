@@ -1,5 +1,6 @@
 import React from "react";
 
+import { HeadSeo } from "@quenti/components";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import { api } from "@quenti/trpc";
 
@@ -20,17 +21,20 @@ import { useLearnContext } from "../../../stores/use-learn-store";
 
 const Learn = () => {
   return (
-    <HydrateSetData disallowDirty>
-      <CreateLearnData>
-        <Container maxW="4xl">
-          <Stack spacing={8}>
-            <Titlebar />
-            <LearnContainer />
-          </Stack>
-        </Container>
-        <ActionBar />
-      </CreateLearnData>
-    </HydrateSetData>
+    <>
+      <HeadSeo title="Learn" />
+      <HydrateSetData disallowDirty>
+        <CreateLearnData>
+          <Container maxW="4xl">
+            <Stack spacing={8}>
+              <Titlebar />
+              <LearnContainer />
+            </Stack>
+          </Container>
+          <ActionBar />
+        </CreateLearnData>
+      </HydrateSetData>
+    </>
   );
 };
 

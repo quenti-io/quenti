@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 
+import { HeadSeo } from "@quenti/components";
 import { avatarUrl } from "@quenti/lib/avatar";
 
 import {
@@ -47,40 +48,43 @@ const Settings = () => {
   if (loading || !layout || !me) return <Loading />;
 
   return (
-    <WithFooter>
-      <SettingsContext.Provider value={{ layout }}>
-        <Container maxW="4xl">
-          <Stack spacing={12}>
-            <HStack spacing={4}>
-              <Avatar
-                src={avatarUrl({
-                  ...session.user!,
-                  image: session.user!.image!,
-                })}
-                size="sm"
-                className="highlight-block"
-              />
-              <Heading>Settings</Heading>
-            </HStack>
-            <Stack spacing={8}>
-              <GAccountInfo />
-              <Divider borderColor={divider} />
-              <UnboundOnly strict>
-                <AccountType />
+    <>
+      <HeadSeo title="Settings" />
+      <WithFooter>
+        <SettingsContext.Provider value={{ layout }}>
+          <Container maxW="4xl">
+            <Stack spacing={12}>
+              <HStack spacing={4}>
+                <Avatar
+                  src={avatarUrl({
+                    ...session.user!,
+                    image: session.user!.image!,
+                  })}
+                  size="sm"
+                  className="highlight-block"
+                />
+                <Heading>Settings</Heading>
+              </HStack>
+              <Stack spacing={8}>
+                <GAccountInfo />
                 <Divider borderColor={divider} />
-              </UnboundOnly>
-              <ProfileInfo />
-              <Divider borderColor={divider} />
-              <AppPreferences />
-              <Divider borderColor={divider} />
-              <DataUsage />
-              <Divider borderColor={divider} />
-              <DangerZone />
+                <UnboundOnly strict>
+                  <AccountType />
+                  <Divider borderColor={divider} />
+                </UnboundOnly>
+                <ProfileInfo />
+                <Divider borderColor={divider} />
+                <AppPreferences />
+                <Divider borderColor={divider} />
+                <DataUsage />
+                <Divider borderColor={divider} />
+                <DangerZone />
+              </Stack>
             </Stack>
-          </Stack>
-        </Container>
-      </SettingsContext.Provider>
-    </WithFooter>
+          </Container>
+        </SettingsContext.Provider>
+      </WithFooter>
+    </>
   );
 };
 

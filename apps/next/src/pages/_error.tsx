@@ -1,4 +1,4 @@
-import Head from "next/head";
+import { HeadSeo } from "@quenti/components";
 
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 
@@ -7,9 +7,13 @@ import { PageWrapper } from "../common/page-wrapper";
 export default function Error() {
   return (
     <>
-      <Head>
-        <title>Error | Quenti</title>
-      </Head>
+      <HeadSeo
+        title="Oh Snap!"
+        nextSeoProps={{
+          noindex: true,
+          nofollow: true,
+        }}
+      />
       <Center height="calc(100vh - 120px)">
         <VStack textAlign="center" px="4">
           <Heading
