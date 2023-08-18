@@ -41,6 +41,7 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
     user: {
       username: studySet.user.username,
       image: studySet.user.image!,
+      name: studySet.user.displayName ? studySet.user.username : null,
       verified: studySet.user.verified,
     },
   };
