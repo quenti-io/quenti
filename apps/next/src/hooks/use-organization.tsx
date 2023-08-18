@@ -12,7 +12,6 @@ export const useOrganization = () => {
     { id },
     {
       enabled: !!id && !!session.data?.user,
-      retry: false,
       refetchOnMount: false,
     },
   );

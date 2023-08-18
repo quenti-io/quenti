@@ -15,7 +15,6 @@ export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { data } = api.autoSave.get.useQuery(undefined, {
-    retry: false,
     cacheTime: 0,
     refetchOnWindowFocus: false,
   });

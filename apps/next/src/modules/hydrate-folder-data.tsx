@@ -73,7 +73,6 @@ export const HydrateFolderData: React.FC<
       includeTerms: withTerms,
     },
     {
-      retry: false,
       enabled: !!username && !isDirty,
       onSuccess: (data) => {
         if (isDirty) setIsDirty(false);

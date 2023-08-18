@@ -43,7 +43,6 @@ export const OrganizationStudents = () => {
       },
       {
         enabled: !!org,
-        retry: false,
         keepPreviousData: true,
         cacheTime: 0,
         getNextPageParam: (lastPage) => lastPage.nextCursor,

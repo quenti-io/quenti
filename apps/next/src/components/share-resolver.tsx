@@ -19,7 +19,6 @@ export const ShareResolver = () => {
   const [resolved, setResolved] = React.useState<EntityType | "404">();
 
   api.shareResolver.query.useQuery(sanitized, {
-    retry: false,
     enabled: !!id && !loading,
     onSuccess: (data) => {
       void (async () => {

@@ -53,7 +53,6 @@ export default function OrgPublish() {
     { id },
     {
       enabled: !!id,
-      retry: false,
     },
   );
 

@@ -32,7 +32,6 @@ export const HydrateProfileData: React.FC<
   const session = useSession();
   const username = router.query.username as string;
   const profile = api.profile.get.useQuery((username || "").substring(1), {
-    retry: false,
     enabled: !!username,
   });
   const { loading } = useLoading();
