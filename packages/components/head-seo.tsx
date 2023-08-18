@@ -16,6 +16,7 @@ export interface HeadSeoProps {
   title: string;
   description: string;
   canonical?: string;
+  hideTitleSuffix?: boolean;
   nextSeoProps?: NextSeoProps;
   entity?: EntityImageProps;
 }
@@ -62,9 +63,10 @@ const buildSeo = (props: {
 };
 
 export const HeadSeo: React.FC<HeadSeoProps> = ({
-  title,
-  description,
+  title: _title,
+  description: _description,
   canonical,
+  hideTitleSuffix = false,
   nextSeoProps = {},
   entity,
 }) => {
@@ -74,10 +76,12 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
     origin: env.NEXT_PUBLIC_BASE_URL,
   });
 
-  const truncated = truncateOnWord(description);
+  const title = `${_title}${!hideTitleSuffix ? " | Quenti" : ""}`;
+  const description = truncateOnWord(_description);
+
   let seoObject = buildSeo({
     title,
-    description: truncated,
+    description: description,
     image: SEO_IMAGE_DEFAULT,
     canonical: canonical ?? defaultCanonical,
   });
@@ -86,7 +90,7 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
     const ogImage = SEO_IMAGE_OG + buildEntityImage(entity);
     seoObject = buildSeo({
       title,
-      description: truncated,
+      description,
       image: ogImage,
       canonical: canonical ?? defaultCanonical,
     });
