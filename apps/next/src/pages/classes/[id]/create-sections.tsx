@@ -77,6 +77,7 @@ export default function CreateSections() {
   return (
     <WizardLayout
       title="Create sections"
+      seoTitle="Create Sections"
       description="With classes, students and assignments are organized into sections. Try creating a section for each individual period or block in your class, for example. You can always update your sections later."
       steps={4}
       currentStep={2}

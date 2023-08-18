@@ -1,4 +1,7 @@
+import dynamic from "next/dynamic";
 import React from "react";
+
+import { HeadSeo } from "@quenti/components";
 
 import {
   Button,
@@ -10,8 +13,14 @@ import {
 
 import { useNextStep } from "./present-wrapper";
 
+const GlobalShortcutLayer = dynamic(
+  () => import("../../components/global-shortcut-layer"),
+  { ssr: false },
+);
+
 interface DefaultLayoutProps {
   heading: string;
+  seoTitle: string;
   description: string | React.ReactNode;
   action?: string;
   defaultNext?: boolean;
@@ -25,6 +34,7 @@ export const DefaultLayout: React.FC<
   React.PropsWithChildren<DefaultLayoutProps>
 > = ({
   heading,
+  seoTitle,
   description,
   action = "Continue",
   defaultNext = true,
@@ -39,29 +49,40 @@ export const DefaultLayout: React.FC<
   const text = useColorModeValue("gray.700", "gray.300");
 
   return (
-    <VStack spacing="12" px="4">
-      <VStack spacing="4">
-        <Heading size="lg" textAlign="center">
-          {heading}
-        </Heading>
-        <Text color={text} fontSize="sm" textAlign="center">
-          {description}
-        </Text>
-      </VStack>
-      {children}
-      <Button
-        w="72"
-        size={{ base: "md", md: "lg" }}
-        onClick={async () => {
-          await onNext?.();
-          if (defaultNext) next();
+    <>
+      <HeadSeo
+        title={seoTitle}
+        description={description?.toLocaleString()}
+        nextSeoProps={{
+          noindex: true,
+          nofollow: true,
         }}
-        isDisabled={nextDisabled}
-        isLoading={nextLoading}
-        variant={nextVariant}
-      >
-        {action}
-      </Button>
-    </VStack>
+      />
+      <GlobalShortcutLayer />
+      <VStack spacing="12" px="4">
+        <VStack spacing="4">
+          <Heading size="lg" textAlign="center">
+            {heading}
+          </Heading>
+          <Text color={text} fontSize="sm" textAlign="center">
+            {description}
+          </Text>
+        </VStack>
+        {children}
+        <Button
+          w="72"
+          size={{ base: "md", md: "lg" }}
+          onClick={async () => {
+            await onNext?.();
+            if (defaultNext) next();
+          }}
+          isDisabled={nextDisabled}
+          isLoading={nextLoading}
+          variant={nextVariant}
+        >
+          {action}
+        </Button>
+      </VStack>
+    </>
   );
 };

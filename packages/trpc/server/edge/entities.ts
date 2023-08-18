@@ -1,3 +1,5 @@
+/* @ts-ignore-file */
+
 import type { Kysely } from "kysely";
 
 import { avatarUrl } from "@quenti/lib/avatar";

@@ -22,6 +22,7 @@ import { organizationIcon } from "../../utils/icons";
 
 const computeMap = (
   invite = false,
+  orgMembership = false,
   organizationBound = false,
   isMobile = false,
 ) => {
@@ -40,7 +41,7 @@ const computeMap = (
   if (isMobile) remove("/command-menu");
   if (!invite) remove("/invite");
   if (organizationBound) {
-    remove("/subscribe");
+    if (!orgMembership) remove("/subscribe");
     remove("/account-type");
   }
 
@@ -64,9 +65,10 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   const { data: me } = useMe();
 
   const isBound = !!me?.organization;
+  const hasMembership = !!me?.orgMembership;
 
   const hasInvite = !!me?.orgInvites.length;
-  const map = computeMap(hasInvite, isBound, isMobile);
+  const map = computeMap(hasInvite, isBound, hasMembership, isMobile);
 
   const currentStep = router.pathname.replace("/onboarding", "");
 

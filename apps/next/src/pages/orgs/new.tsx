@@ -80,6 +80,7 @@ export default function NewOrganization() {
   return (
     <WizardLayout
       title="Create a new organization"
+      seoTitle="New Organization"
       description="Create an organization to manage teachers and students."
       steps={5}
       currentStep={0}

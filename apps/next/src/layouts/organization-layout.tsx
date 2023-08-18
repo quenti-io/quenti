@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { HeadSeo } from "@quenti/components";
+
 import {
   Box,
   Button,
@@ -78,6 +80,19 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
 
   const Icon = organizationIcon(org?.icon || 0);
 
+  const getTabName = (route = router.pathname) => {
+    switch (route) {
+      case `/orgs/[id]`:
+        return "Members";
+      case `/orgs/[id]/students`:
+        return "Students";
+      case `/orgs/[id]/settings`:
+        return "Settings";
+      case `/orgs/[id]/billing`:
+        return "Billing";
+    }
+  };
+
   const getTabIndex = (route = router.pathname) => {
     switch (route) {
       case `/orgs/[id]`:
@@ -95,6 +110,13 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
 
   return (
     <MainLayout>
+      <HeadSeo
+        title={`${getTabName()}${org ? ` - ${org.name}` : ""}`}
+        nextSeoProps={{
+          noindex: true,
+          nofollow: true,
+        }}
+      />
       <WithFooter>
         <Container maxW="6xl" overflow="hidden">
           {isLoaded && isUpgraded && org.published && <ConfettiLayer />}

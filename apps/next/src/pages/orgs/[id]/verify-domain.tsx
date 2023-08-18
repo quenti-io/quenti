@@ -117,6 +117,7 @@ export default function OrgVerifyEmail() {
     <OnboardingMetadata step="verify-domain">
       <WizardLayout
         title="Verify your domain"
+        seoTitle="Verify Domain"
         description={`Enter the code we sent to ${
           studentDomain?.verifiedEmail || "example@example.com"
         }.`}

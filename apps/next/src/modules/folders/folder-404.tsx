@@ -1,24 +1,26 @@
-import { Link } from "@quenti/components";
+import { HeadSeo } from "@quenti/components";
 
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 
-import { IconFolder } from "@tabler/icons-react";
+import { GhostMessage } from "../../components/ghost-message";
 
 export const Folder404 = () => {
   return (
-    <Center h="calc(100vh - 120px)">
-      <VStack spacing={12} textAlign="center" px="8">
-        <VStack spacing={4}>
-          <IconFolder />
-          <Heading>We couldn&apos;t find this folder</Heading>
-        </VStack>
-        <VStack spacing={4}>
-          <Text>It might have been deleted by the original creator.</Text>
-          <Button as={Link} href="/home" variant="ghost">
-            Home
-          </Button>
-        </VStack>
-      </VStack>
-    </Center>
+    <>
+      <HeadSeo
+        title="Not Found"
+        nextSeoProps={{
+          nofollow: true,
+          noindex: true,
+        }}
+      />
+      <Center h="calc(100vh - 160px)">
+        <GhostMessage
+          message="Please don't get mad but..."
+          subheading="The folder you're looking for doesn't exist."
+          homeButton
+        />
+      </Center>
+    </>
   );
 };

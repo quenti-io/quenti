@@ -481,11 +481,9 @@ model Highscore {
 }
 
 model EntityShare {
-  id       String
+  id       String     @id
   entityId String     @unique
   type     EntityType
-
-  @@id([id, entityId])
 }
 
 enum EntityType {

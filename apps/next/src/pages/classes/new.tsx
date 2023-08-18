@@ -65,6 +65,7 @@ export default function NewClass() {
   return (
     <WizardLayout
       title="Create a new class"
+      seoTitle="New Class"
       description="Create a class to manage students and create assignments."
       steps={4}
       currentStep={0}

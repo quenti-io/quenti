@@ -34,6 +34,7 @@ export const OnboardingCommandMenu = () => {
     <PresentWrapper>
       <DefaultLayout
         heading={interacted ? "That wasn't too bad!" : "Command menu"}
+        seoTitle="Command Menu"
         description={
           interacted ? (
             <>

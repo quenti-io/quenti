@@ -24,6 +24,7 @@ export const OnboardingTheme = () => {
     <PresentWrapper>
       <DefaultLayout
         heading="Choose your theme"
+        seoTitle="Choose Your Theme"
         description="You can change this later in settings."
       >
         <ToggleGroup

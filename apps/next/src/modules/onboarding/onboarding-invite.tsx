@@ -27,6 +27,7 @@ export const OnboardingInvite = () => {
     <PresentWrapper>
       <DefaultLayout
         heading="Join organization"
+        seoTitle="Join Organization"
         description="You've been invited to join the following organization:"
         action="Accept invite"
         nextDisabled={!invite}

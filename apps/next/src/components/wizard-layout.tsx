@@ -1,5 +1,7 @@
 import React from "react";
 
+import { HeadSeo } from "@quenti/components";
+
 import {
   Container,
   Heading,
@@ -14,6 +16,7 @@ import { SegmentedProgress } from "./segmented-progress";
 
 export interface WizardLayoutProps {
   title: string;
+  seoTitle?: string;
   description: string | React.ReactNode;
   steps: number;
   currentStep: number;
@@ -26,6 +29,7 @@ export const WizardLayout: React.FC<
   React.PropsWithChildren<WizardLayoutProps>
 > = ({
   title,
+  seoTitle,
   description: _description,
   steps,
   currentStep,
@@ -43,44 +47,56 @@ export const WizardLayout: React.FC<
   );
 
   return (
-    <Container maxW="2xl" pb="20">
-      <Stack>
-        <Stack spacing="8" p="8">
-          <Stack>
-            <Text color={text} fontSize="sm" fontWeight={600}>
-              Step {currentStep + 1} of {steps}
-            </Text>
-            <SegmentedProgress steps={steps} currentStep={currentStep} />
-          </Stack>
-          <Stack spacing="4">
-            <Heading size="lg">{title}</Heading>
-            {enableSkeleton ? (
-              <Skeleton isLoaded={isLoaded} fitContent>
-                {description}
-              </Skeleton>
-            ) : (
-              description
-            )}
-          </Stack>
-        </Stack>
-        <SlideFade
-          initial={{
-            opacity: 0,
-            transform: "translateY(-20px)",
+    <>
+      {seoTitle && (
+        <HeadSeo
+          title={seoTitle}
+          description={_description?.toString()}
+          nextSeoProps={{
+            noindex: true,
+            nofollow: true,
           }}
-          animate={
-            cardIn
-              ? {
-                  opacity: 1,
-                  transform: "translateY(0)",
-                }
-              : undefined
-          }
-          in={cardIn}
-        >
-          {children}
-        </SlideFade>
-      </Stack>
-    </Container>
+        />
+      )}
+      <Container maxW="2xl" pb="20">
+        <Stack>
+          <Stack spacing="8" p="8">
+            <Stack>
+              <Text color={text} fontSize="sm" fontWeight={600}>
+                Step {currentStep + 1} of {steps}
+              </Text>
+              <SegmentedProgress steps={steps} currentStep={currentStep} />
+            </Stack>
+            <Stack spacing="4">
+              <Heading size="lg">{title}</Heading>
+              {enableSkeleton ? (
+                <Skeleton isLoaded={isLoaded} fitContent>
+                  {description}
+                </Skeleton>
+              ) : (
+                description
+              )}
+            </Stack>
+          </Stack>
+          <SlideFade
+            initial={{
+              opacity: 0,
+              transform: "translateY(-20px)",
+            }}
+            animate={
+              cardIn
+                ? {
+                    opacity: 1,
+                    transform: "translateY(0)",
+                  }
+                : undefined
+            }
+            in={cardIn}
+          >
+            {children}
+          </SlideFade>
+        </Stack>
+      </Container>
+    </>
   );
 };

@@ -23,6 +23,7 @@ export const OnboardingSubscribe = () => {
     <PresentWrapper>
       <DefaultLayout
         heading="Subscribe to updates"
+        seoTitle="Subscribe to Updates"
         description="We're always adding new features and improvements. Want to stay in the loop?"
       >
         <Card

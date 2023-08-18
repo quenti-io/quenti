@@ -1,24 +1,26 @@
-import { Link } from "@quenti/components";
+import { HeadSeo } from "@quenti/components";
 
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 
-import { IconLock } from "@tabler/icons-react";
+import { GhostMessage } from "../../components/ghost-message";
 
 export const SetPrivate = () => {
   return (
-    <Center h="calc(100vh - 120px)">
-      <VStack spacing={12}>
-        <VStack spacing={4}>
-          <IconLock />
-          <Heading>This set is private</Heading>
-        </VStack>
-        <VStack spacing={4}>
-          <Text>We can&apos;t show you any further details.</Text>
-          <Button as={Link} href="/home" variant="ghost">
-            Home
-          </Button>
-        </VStack>
-      </VStack>
-    </Center>
+    <>
+      <HeadSeo
+        title="Set Private"
+        nextSeoProps={{
+          nofollow: true,
+          noindex: true,
+        }}
+      />
+      <Center h="calc(100vh - 160px)">
+        <GhostMessage
+          message="Sorry, this is super secret sauce"
+          subheading="The study set you're trying to view is private."
+          homeButton
+        />
+      </Center>
+    </>
   );
 };
