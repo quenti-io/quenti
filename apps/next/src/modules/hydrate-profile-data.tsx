@@ -31,9 +31,12 @@ export const HydrateProfileData: React.FC<
   const router = useRouter();
   const session = useSession();
   const username = router.query.username as string;
-  const profile = api.profile.get.useQuery((username || "").substring(1), {
-    enabled: !!username,
-  });
+  const profile = api.profile.get.useQuery(
+    { username: (username || "").substring(1) },
+    {
+      enabled: !!username,
+    },
+  );
   const { loading } = useLoading();
 
   if (profile.error?.data?.httpStatus === 404) return <Profile404 />;

@@ -8,7 +8,7 @@ import { foldersRouter } from "./routers/folders/_router";
 import { importRouter } from "./routers/import";
 import { leaderboardRouter } from "./routers/leaderboard/_router";
 import { organizationsRouter } from "./routers/organizations/_router";
-import { profileRouter } from "./routers/profile";
+import { profileRouter } from "./routers/profile/_router";
 import { recentRouter } from "./routers/recent";
 import { shareResolverRouter } from "./routers/share-resolver";
 import { studiableTermsRouter } from "./routers/studiable-terms";

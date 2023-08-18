@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import React from "react";
 
 import { avatarUrl } from "@quenti/lib/avatar";
 
@@ -34,7 +33,7 @@ export const ProfileArea = () => {
       >
         <HStack spacing="2">
           <Heading className="highlight-block" w="max-content">
-            {profile.username}
+            {profile.name ?? profile.username}
           </Heading>
           {profile.verified && (
             <Box color="blue.300">
@@ -52,7 +51,7 @@ export const ProfileArea = () => {
             className="highlight-block"
             w="max-content"
           >
-            {profile.name}
+            @{profile.username}
           </Text>
         )}
       </Flex>
@@ -71,14 +70,12 @@ ProfileArea.Skeleton = function ProfileAreaSkeleton() {
       </Skeleton>
       <Flex flexDir="column" justifyContent="space-between" h="16">
         <Skeleton fitContent>
-          <Heading w="max-content">
-            {username ? username.replace("@", "") : "username"}
-          </Heading>
+          <Heading w="max-content">Firstname Last</Heading>
         </Skeleton>
         <Flex alignItems="center" h="14px">
           <SkeletonText noOfLines={1} skeletonHeight="12px">
             <Text lineHeight="none" fontSize="sm" w="max-content">
-              Firstname Lastname
+              {username ? username.replace("@", "") : "username"}
             </Text>
           </SkeletonText>
         </Flex>
