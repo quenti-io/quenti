@@ -37,6 +37,10 @@ const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
             image: set.user.image || "",
           },
         }}
+        nextSeoProps={{
+          noindex: set.visibility != "Public",
+          nofollow: set.visibility != "Public",
+        }}
       />
       <HydrateSetData placeholder={<SetLoading />}>
         <InternalSet />

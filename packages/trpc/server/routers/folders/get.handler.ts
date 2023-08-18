@@ -81,8 +81,8 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   });
 
   if (
-    (!!studySets.length && !studySetsICanSee.length) ||
-    (!studySets.length && !isMyFolder)
+    !isMyFolder &&
+    ((!!studySets.length && !studySetsICanSee.length) || !studySets.length)
   ) {
     throw new TRPCError({
       code: "FORBIDDEN",

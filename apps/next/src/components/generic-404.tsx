@@ -1,24 +1,26 @@
-import { Link } from "@quenti/components";
+import { HeadSeo } from "@quenti/components";
 
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 
-import { IconHelpHexagon } from "@tabler/icons-react";
+import { GhostMessage } from "./ghost-message";
 
 export const Generic404 = () => {
   return (
-    <Center h="calc(100vh - 120px)">
-      <VStack spacing={12} textAlign="center" px="8">
-        <VStack spacing={4}>
-          <IconHelpHexagon />
-          <Heading>We can&apos;t find what you&apos;re looking for</Heading>
-        </VStack>
-        <VStack spacing={4}>
-          <Text>Please check the URL and try again.</Text>
-          <Button as={Link} href="/home" variant="ghost">
-            Home
-          </Button>
-        </VStack>
-      </VStack>
-    </Center>
+    <>
+      <HeadSeo
+        title="Not Found"
+        nextSeoProps={{
+          nofollow: true,
+          noindex: true,
+        }}
+      />
+      <Center h="calc(100vh - 160px)">
+        <GhostMessage
+          message="Aw shucks, we couldn't find that!"
+          subheading="We couldn't find what you were looking for. Check the URL and try again."
+          homeButton
+        />
+      </Center>
+    </>
   );
 };

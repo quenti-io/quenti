@@ -33,7 +33,17 @@ export const getRecentFolders = async (
         user: true,
         _count: {
           select: {
-            studySets: true,
+            studySets: {
+              where: {
+                studySet: {
+                  OR: [
+                    { visibility: "Public" },
+                    { visibility: "Unlisted" },
+                    { userId },
+                  ],
+                },
+              },
+            },
           },
         },
       },
