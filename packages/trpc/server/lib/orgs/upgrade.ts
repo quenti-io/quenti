@@ -1,6 +1,7 @@
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
 
+import { bulkJoinOrgClasses } from "./classes";
 import { conflictingDomains } from "./domains";
 import {
   bulkJoinOrgMembersAsTeachers,
@@ -59,6 +60,7 @@ export const upgradeOrganization = async (
   }
 
   await bulkJoinOrgMembersAsTeachers(org.id);
+  await bulkJoinOrgClasses(org.id);
 
   try {
     await prisma.organizationMembership.update({
