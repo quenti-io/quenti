@@ -6,7 +6,9 @@ import { HeadSeo } from "@quenti/components";
 import { Container } from "@chakra-ui/react";
 
 import { PageWrapper } from "../../../common/page-wrapper";
+import { AuthedPage } from "../../../components/authed-page";
 import { WithFooter } from "../../../components/with-footer";
+import { useNonSetOwnerRedirect } from "../../../hooks/use-non-set-owner-redirect";
 import { getLayout } from "../../../layouts/main-layout";
 import { HydrateEditSetData } from "../../../modules/hydrate-edit-set-data";
 import { SetEditorPure } from "../../../modules/set-editor";
@@ -16,8 +18,10 @@ import {
 } from "../../../stores/use-set-editor-store";
 
 const Edit = () => {
+  useNonSetOwnerRedirect();
+
   return (
-    <>
+    <AuthedPage>
       <HeadSeo
         title="Edit Set"
         nextSeoProps={{
@@ -32,7 +36,7 @@ const Edit = () => {
           </Container>
         </WithFooter>
       </HydrateEditSetData>
-    </>
+    </AuthedPage>
   );
 };
 

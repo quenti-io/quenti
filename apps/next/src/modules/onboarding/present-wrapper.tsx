@@ -18,6 +18,7 @@ import { Loading } from "../../components/loading";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useLoading } from "../../hooks/use-loading";
 import { useMe } from "../../hooks/use-me";
+import { useUnauthedRedirect } from "../../hooks/use-unauthed-redirect";
 import { organizationIcon } from "../../utils/icons";
 
 const computeMap = (
@@ -62,6 +63,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 768px)")[0];
 
+  useUnauthedRedirect();
   const { data: me } = useMe();
 
   const isBound = !!me?.organization;

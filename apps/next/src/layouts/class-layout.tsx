@@ -22,6 +22,7 @@ import {
 
 import { IconPointFilled, IconSchool } from "@tabler/icons-react";
 
+import { AuthedPage } from "../components/authed-page";
 import { SkeletonTab } from "../components/skeleton-tab";
 import { WithFooter } from "../components/with-footer";
 import { useClass } from "../hooks/use-class";
@@ -63,7 +64,7 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
   };
 
   return (
-    <>
+    <AuthedPage>
       <HeadSeo title={getTitle()} hideTitleSuffix={!name && !data} />
       <MainLayout>
         <WithFooter>
@@ -170,7 +171,7 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
           </Container>
         </WithFooter>
       </MainLayout>
-    </>
+    </AuthedPage>
   );
 };
 

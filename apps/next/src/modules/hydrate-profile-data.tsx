@@ -28,12 +28,14 @@ export const HydrateProfileData: React.FC<
   React.PropsWithChildren<HydrateProfileDataProps>
 > = ({ children, fallback }) => {
   const router = useRouter();
-  const session = useSession();
+  const { data: session, status } = useSession();
   const username = router.query.username as string;
-  const profile = api.profile.get.useQuery(
+
+  const queryKey = status == "authenticated" ? "get" : "getPublic";
+  const profile = (api.profile[queryKey] as typeof api.profile.get).useQuery(
     { username: (username || "").substring(1) },
     {
-      enabled: !!username,
+      enabled: status !== "loading" && !!username,
     },
   );
   const { loading } = useLoading();
@@ -45,7 +47,7 @@ export const HydrateProfileData: React.FC<
     <ProfileContext.Provider
       value={{
         ...profile.data,
-        isMe: profile.data.id === session.data?.user?.id,
+        isMe: profile.data.id === session?.user?.id,
       }}
     >
       {children}

@@ -42,7 +42,7 @@ const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
           nofollow: set.visibility != "Public",
         }}
       />
-      <HydrateSetData placeholder={<SetLoading />}>
+      <HydrateSetData placeholder={<SetLoading />} isPublic>
         <InternalSet />
       </HydrateSetData>
     </>

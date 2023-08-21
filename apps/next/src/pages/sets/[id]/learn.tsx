@@ -7,6 +7,7 @@ import { api } from "@quenti/trpc";
 import { Container, Stack } from "@chakra-ui/react";
 
 import { PageWrapper } from "../../../common/page-wrapper";
+import { AuthedPage } from "../../../components/authed-page";
 import { useSet } from "../../../hooks/use-set";
 import { getLayout } from "../../../layouts/main-layout";
 import { CreateLearnData } from "../../../modules/create-learn-data";
@@ -21,7 +22,7 @@ import { useLearnContext } from "../../../stores/use-learn-store";
 
 const Learn = () => {
   return (
-    <>
+    <AuthedPage>
       <HeadSeo title="Learn" />
       <HydrateSetData disallowDirty>
         <CreateLearnData>
@@ -34,7 +35,7 @@ const Learn = () => {
           <ActionBar />
         </CreateLearnData>
       </HydrateSetData>
-    </>
+    </AuthedPage>
   );
 };
 

@@ -16,10 +16,10 @@ import {
 } from "@chakra-ui/react";
 
 import { PageWrapper } from "../common/page-wrapper";
+import { AuthedPage } from "../components/authed-page";
 import { Loading } from "../components/loading";
 import { UnboundOnly } from "../components/unbound-only";
 import { WithFooter } from "../components/with-footer";
-import { useLoading } from "../hooks/use-loading";
 import { useMe } from "../hooks/use-me";
 import { getLayout } from "../layouts/main-layout";
 import { AccountType } from "../modules/settings/account-type";
@@ -34,9 +34,17 @@ export const SettingsContext = React.createContext<{
 }>({});
 
 const Settings = () => {
+  return (
+    <AuthedPage>
+      <HeadSeo title="Settings" />
+      <SettingsInner />
+    </AuthedPage>
+  );
+};
+
+const SettingsInner = () => {
   const session = useSession()!.data!;
   const { data: me } = useMe();
-  const { loading } = useLoading();
 
   const layout: "mobile" | "desktop" | undefined = useBreakpointValue({
     base: "mobile",
@@ -45,46 +53,43 @@ const Settings = () => {
 
   const divider = useColorModeValue("gray.400", "gray.600");
 
-  if (loading || !layout || !me) return <Loading />;
+  if (!layout || !me) return <Loading />;
 
   return (
-    <>
-      <HeadSeo title="Settings" />
-      <WithFooter>
-        <SettingsContext.Provider value={{ layout }}>
-          <Container maxW="4xl">
-            <Stack spacing={12}>
-              <HStack spacing={4}>
-                <Avatar
-                  src={avatarUrl({
-                    ...session.user!,
-                    image: session.user!.image!,
-                  })}
-                  size="sm"
-                  className="highlight-block"
-                />
-                <Heading>Settings</Heading>
-              </HStack>
-              <Stack spacing={8}>
-                <GAccountInfo />
+    <WithFooter>
+      <SettingsContext.Provider value={{ layout }}>
+        <Container maxW="4xl">
+          <Stack spacing={12}>
+            <HStack spacing={4}>
+              <Avatar
+                src={avatarUrl({
+                  ...session.user!,
+                  image: session.user!.image!,
+                })}
+                size="sm"
+                className="highlight-block"
+              />
+              <Heading>Settings</Heading>
+            </HStack>
+            <Stack spacing={8}>
+              <GAccountInfo />
+              <Divider borderColor={divider} />
+              <UnboundOnly strict>
+                <AccountType />
                 <Divider borderColor={divider} />
-                <UnboundOnly strict>
-                  <AccountType />
-                  <Divider borderColor={divider} />
-                </UnboundOnly>
-                <ProfileInfo />
-                <Divider borderColor={divider} />
-                <AppPreferences />
-                <Divider borderColor={divider} />
-                <DataUsage />
-                <Divider borderColor={divider} />
-                <DangerZone />
-              </Stack>
+              </UnboundOnly>
+              <ProfileInfo />
+              <Divider borderColor={divider} />
+              <AppPreferences />
+              <Divider borderColor={divider} />
+              <DataUsage />
+              <Divider borderColor={divider} />
+              <DangerZone />
             </Stack>
-          </Container>
-        </SettingsContext.Provider>
-      </WithFooter>
-    </>
+          </Stack>
+        </Container>
+      </SettingsContext.Provider>
+    </WithFooter>
   );
 };
 

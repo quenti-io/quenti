@@ -18,6 +18,7 @@ import {
 import { IconExternalLink, IconPlus } from "@tabler/icons-react";
 
 import { PageWrapper } from "../../common/page-wrapper";
+import { AuthedPage } from "../../components/authed-page";
 import { Loading } from "../../components/loading";
 import { WithFooter } from "../../components/with-footer";
 import { useMe } from "../../hooks/use-me";
@@ -56,7 +57,7 @@ export default function Organizations() {
   if (!!me?.orgInvites.length) return <OrganizationInviteScreen />;
 
   return (
-    <>
+    <AuthedPage>
       <HeadSeo title="Organizations" />
       <WithFooter>
         <SlideFade
@@ -123,7 +124,7 @@ export default function Organizations() {
           </Container>
         </SlideFade>
       </WithFooter>
-    </>
+    </AuthedPage>
   );
 }
 

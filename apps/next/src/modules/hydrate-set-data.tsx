@@ -39,6 +39,7 @@ export type AuthedData = AuthedReturn & {
 };
 
 export interface HydrateSetDataProps {
+  isPublic?: boolean;
   disallowDirty?: boolean;
   requireFresh?: boolean;
   placeholder?: React.ReactNode;
@@ -46,8 +47,14 @@ export interface HydrateSetDataProps {
 
 export const HydrateSetData: React.FC<
   React.PropsWithChildren<HydrateSetDataProps>
-> = ({ disallowDirty = false, requireFresh, placeholder, children }) => {
-  const { status } = useSession();
+> = ({
+  isPublic,
+  disallowDirty = false,
+  requireFresh,
+  placeholder,
+  children,
+}) => {
+  const { data: session, status } = useSession();
   const id = useRouter().query.id as string;
   const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
     s.isDirty,
@@ -96,6 +103,7 @@ export const HydrateSetData: React.FC<
   if (error?.data?.httpStatus == 403) return <SetPrivate />;
   if (
     status == "loading" ||
+    (!isPublic && !session) ||
     !data ||
     (disallowDirty && isDirty) ||
     (!isFetchedAfterMount && requireFresh)

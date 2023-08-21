@@ -18,7 +18,7 @@ const Flashcards = () => {
   return (
     <>
       <HeadSeo title="Flashcards" />
-      <HydrateSetData>
+      <HydrateSetData isPublic>
         <FlashcardsSettingsModal
           isOpen={settingsOpen}
           onClose={() => setSettingsOpen(false)}

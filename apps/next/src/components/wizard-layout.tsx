@@ -12,6 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { AuthedPage } from "./authed-page";
 import { SegmentedProgress } from "./segmented-progress";
 
 export interface WizardLayoutProps {
@@ -47,7 +48,7 @@ export const WizardLayout: React.FC<
   );
 
   return (
-    <>
+    <AuthedPage>
       {seoTitle && (
         <HeadSeo
           title={seoTitle}
@@ -97,6 +98,6 @@ export const WizardLayout: React.FC<
           </SlideFade>
         </Stack>
       </Container>
-    </>
+    </AuthedPage>
   );
 };
