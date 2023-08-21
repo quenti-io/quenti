@@ -5,7 +5,7 @@ import { containerRouter } from "./routers/container/_router";
 import { devRouter } from "./routers/dev";
 import { discoverableRouter } from "./routers/discoverable";
 import { foldersRouter } from "./routers/folders/_router";
-import { importRouter } from "./routers/import";
+import { importRouter } from "./routers/import/_router";
 import { leaderboardRouter } from "./routers/leaderboard/_router";
 import { organizationsRouter } from "./routers/organizations/_router";
 import { profileRouter } from "./routers/profile/_router";

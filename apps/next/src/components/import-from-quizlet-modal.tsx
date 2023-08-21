@@ -56,7 +56,7 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
   const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
   const errorText = useColorModeValue("red.500", "red.200");
 
-  const fromUrl = api.import.fromUrl.useMutation({
+  const postQuizletJob = api.import.postQuizletJob.useMutation({
     onSuccess: async () => {
       onClose();
 
@@ -132,10 +132,10 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
               Cancel
             </Button>
             <Button
-              isLoading={fromUrl.isLoading}
+              isLoading={postQuizletJob.isLoading}
               isDisabled={!url || invalid}
               onClick={async () => {
-                await fromUrl.mutateAsync({
+                await postQuizletJob.mutateAsync({
                   url,
                 });
               }}

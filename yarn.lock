@@ -6274,6 +6274,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@quenti/integrations@workspace:packages/integrations":
+  version: 0.0.0-use.local
+  resolution: "@quenti/integrations@workspace:packages/integrations"
+  dependencies:
+    "@t3-oss/env-nextjs": ^0.6.1
+  languageName: unknown
+  linkType: soft
+
 "@quenti/interfaces@*, @quenti/interfaces@workspace:packages/interfaces":
   version: 0.0.0-use.local
   resolution: "@quenti/interfaces@workspace:packages/interfaces"

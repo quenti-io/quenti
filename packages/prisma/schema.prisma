@@ -99,6 +99,7 @@ model User {
   classes        ClassMembership[]
   classInvites   PendingClassInvite[]
   classBans      ClassBan[]
+  importJobs     ImportJob[]
 
   @@index([organizationId])
 }
@@ -478,6 +479,25 @@ model Highscore {
   @@id([leaderboardId, userId, eligible])
   @@index([userId])
   @@index([leaderboardId])
+}
+
+model ImportJob {
+  id        String          @id @default(cuid())
+  userId    String
+  url       String
+  status    ImportJobStatus @default(Pending)
+  statusUrl String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@index([userId])
+}
+
+enum ImportJobStatus {
+  Pending
+  Processing
+  Completed
 }
 
 model EntityShare {
