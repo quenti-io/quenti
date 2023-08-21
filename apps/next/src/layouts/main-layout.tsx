@@ -1,10 +1,13 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
-import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
+import { type LoadingBarRef } from "react-top-loading-bar";
 
 import { Navbar } from "../components/navbar";
 
+const LoadingBar = dynamic(() => import("react-top-loading-bar"), {
+  ssr: false,
+});
 const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
   { ssr: false },

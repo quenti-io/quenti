@@ -4317,12 +4317,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/bundle-analyzer@npm:^13.4.8":
-  version: 13.4.8
-  resolution: "@next/bundle-analyzer@npm:13.4.8"
+"@next/bundle-analyzer@npm:^13.4.19":
+  version: 13.4.19
+  resolution: "@next/bundle-analyzer@npm:13.4.19"
   dependencies:
     webpack-bundle-analyzer: 4.7.0
-  checksum: 137d0fa9471e856d23a051f722d3000ad320d2205858bfef14606ebac644dd29946a34ce3d370b59a86769959def5ef37a3700d43cbd241c5ad345f0a7bc4f0e
+  checksum: 562ff4c21ae0b2a8061b7a5faac282319e8d197678138442151ab0de4af5a6e27b0900b5779d24df5758a9da45c5d5445e1ba3a35ea7507288965fa9fdcec53b
   languageName: node
   linkType: hard
 
@@ -6259,7 +6259,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/env@workspace:packages/env"
   dependencies:
-    "@t3-oss/env-nextjs": ^0.6.0
+    "@t3-oss/env-nextjs": ^0.6.1
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
@@ -6305,7 +6305,7 @@ __metadata:
     "@highlight-run/react": ^3.2.1
     "@hookform/resolvers": ^3.1.1
     "@next-auth/prisma-adapter": ^1.0.7
-    "@next/bundle-analyzer": ^13.4.8
+    "@next/bundle-analyzer": ^13.4.19
     "@planetscale/database": ^1.10.0
     "@quenti/auth": "*"
     "@quenti/branding": "*"
@@ -6316,7 +6316,7 @@ __metadata:
     "@quenti/payments": "*"
     "@quenti/prisma": "*"
     "@quenti/trpc": "*"
-    "@tabler/icons-react": ^2.30.0
+    "@tabler/icons-react": ^2.31.0
     "@tanstack/react-query": ^4.29.19
     "@tanstack/react-virtual": ^3.0.0-alpha.0
     "@types/aos": ^3.0.4
@@ -6348,7 +6348,7 @@ __metadata:
     micro: ^10.0.1
     nanoid: ^4.0.2
     next: ^13.4.17
-    next-auth: ^4.23.0
+    next-auth: ^4.23.1
     next-axiom: ^0.18.0
     next-build-id: ^3.0.0
     otp-generator: ^4.0.1
@@ -6435,7 +6435,7 @@ __metadata:
     "@chakra-ui/react": ^2.7.1
     "@quenti/branding": "*"
     "@quenti/components": "*"
-    "@tabler/icons-react": ^2.30.0
+    "@tabler/icons-react": ^2.31.0
   languageName: unknown
   linkType: soft
 
@@ -6763,44 +6763,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@t3-oss/env-core@npm:0.6.0":
-  version: 0.6.0
-  resolution: "@t3-oss/env-core@npm:0.6.0"
+"@t3-oss/env-core@npm:0.6.1":
+  version: 0.6.1
+  resolution: "@t3-oss/env-core@npm:0.6.1"
   peerDependencies:
     typescript: ">=4.7.2"
     zod: ^3.0.0
-  checksum: 00c5b8e2d893f85e9d33099fded1e9ee1c74e642144b91d60096d31ed5bcd09986f14b275316568aa1a1f42d1b01a34b67dcf1396e11d837ff5c11b4bfb56a3a
+  checksum: 6a1dd9d2f88643f6315a3add7eb6053a436a953a3c2b59b9743a2d8f28dbafcdaf4f6bccf0e7dfe424189834f75fbb53b9ac3891076a19b289468e4b406a340b
   languageName: node
   linkType: hard
 
-"@t3-oss/env-nextjs@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@t3-oss/env-nextjs@npm:0.6.0"
+"@t3-oss/env-nextjs@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "@t3-oss/env-nextjs@npm:0.6.1"
   dependencies:
-    "@t3-oss/env-core": 0.6.0
+    "@t3-oss/env-core": 0.6.1
   peerDependencies:
     typescript: ">=4.7.2"
     zod: ^3.0.0
-  checksum: d3708558241bcf857dfcfbc778a4d0166a5e690414893d7a4eb95dcafa12810d4fdc1cffe41402004acdd0d8f558f9369499bd9032d04e158d8698b5e85c7f32
+  checksum: c103a501b186c2a1633ead602fbd4e2d3096f736dceecba2f88a8c7b016c6f982a42bb8eb948e8069df93bf8d51a8a973e49a0a497d3da9282933683ced665e5
   languageName: node
   linkType: hard
 
-"@tabler/icons-react@npm:^2.30.0":
-  version: 2.30.0
-  resolution: "@tabler/icons-react@npm:2.30.0"
+"@tabler/icons-react@npm:^2.31.0":
+  version: 2.31.0
+  resolution: "@tabler/icons-react@npm:2.31.0"
   dependencies:
-    "@tabler/icons": 2.30.0
+    "@tabler/icons": 2.31.0
     prop-types: ^15.7.2
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: 2d137865d24b2034820e5edcb99d938a899b29d31613671d9b574823a614f460d90cdd4efd39c1571b7244225e339a722daddc58921569079b4ed530162354b6
+  checksum: 40cc56d1c8038d058c9f7185a73be97b6f55832bcf7ad239f8f6e1c983cd1669d2a8c16cb665f979867669a762b6e31ff8b2dc9e92a658df1103e1b1ef7355ec
   languageName: node
   linkType: hard
 
-"@tabler/icons@npm:2.30.0":
-  version: 2.30.0
-  resolution: "@tabler/icons@npm:2.30.0"
-  checksum: d89255ea6bb0a5280f9d23ab85005ef0f7c7c0198904db7d7d6cbc0289c7ba108c433c6f9fb6531fc127619ed61452c6c5832e7c7cc49a5889faad412636e618
+"@tabler/icons@npm:2.31.0":
+  version: 2.31.0
+  resolution: "@tabler/icons@npm:2.31.0"
+  checksum: 2a273ef996592b9fc490a29bb96cb310e84c4e8b7eeb7a0b8ddceab389049c38b54dbe04965544280e69e4ba68b4f8204bbcc18791d7fbd00bf87ce8a165122d
   languageName: node
   linkType: hard
 
@@ -13855,9 +13855,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:^4.23.0":
-  version: 4.23.0
-  resolution: "next-auth@npm:4.23.0"
+"next-auth@npm:^4.23.1":
+  version: 4.23.1
+  resolution: "next-auth@npm:4.23.1"
   dependencies:
     "@babel/runtime": ^7.20.13
     "@panva/hkdf": ^1.0.2
@@ -13876,7 +13876,7 @@ __metadata:
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: 1383f026902185ee789914da2d7650cf574548efbcdbb33d5ca049035a81fdde39a2935e3ad1e2ade92db7b54978e889ff0ddd06c65d3c7ab4c23e2d04cf29cb
+  checksum: 995114797c257ccf71a82d19fb6316fb7709b552aaaf66444591c505a4b8e00b0cae3f4db4316b63a8cc439076044cc391ab171c4f6ee2e086709c5b3bbfed24
   languageName: node
   linkType: hard
 

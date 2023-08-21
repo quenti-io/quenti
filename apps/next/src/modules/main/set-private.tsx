@@ -24,3 +24,5 @@ export const SetPrivate = () => {
     </>
   );
 };
+
+export default SetPrivate;

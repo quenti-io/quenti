@@ -24,3 +24,5 @@ export const Set404 = () => {
     </>
   );
 };
+
+export default Set404;
