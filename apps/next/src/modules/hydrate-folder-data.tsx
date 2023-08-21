@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
@@ -56,6 +57,7 @@ export interface HydrateFolderDataProps {
 export const HydrateFolderData: React.FC<
   React.PropsWithChildren<HydrateFolderDataProps>
 > = ({ children, withTerms = false, disallowDirty, fallback }) => {
+  const { status } = useSession();
   const router = useRouter();
   const username = router.query.username as string;
   const slug = router.query.slug as string;
@@ -66,7 +68,9 @@ export const HydrateFolderData: React.FC<
     s.setIsDirty,
   ]);
 
-  const folder = api.folders.get.useQuery(
+  const queryKey = status == "authenticated" ? "get" : "getPublic";
+
+  const folder = (api.folders[queryKey] as typeof api.folders.get).useQuery(
     {
       username: (username || "").slice(1),
       idOrSlug: slug,
@@ -107,6 +111,8 @@ const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({
   data,
   children,
 }) => {
+  const { status } = useSession();
+
   const getVal = (data: FolderData): Partial<ContainerStoreProps> => ({
     shuffleFlashcards: data.container.shuffleFlashcards,
     starredTerms: data.container.starredTerms,
@@ -118,12 +124,14 @@ const ContextLayer: React.FC<React.PropsWithChildren<{ data: FolderData }>> = ({
 
   const storeRef = React.useRef<ContainerStore>();
   if (!storeRef.current) {
-    storeRef.current = createContainerStore(getVal(data));
+    storeRef.current = createContainerStore(
+      status == "authenticated" ? getVal(data) : undefined,
+    );
   }
 
   React.useEffect(() => {
     const trigger = (data: FolderData) => {
-      storeRef.current?.setState(getVal(data));
+      if (status == "authenticated") storeRef.current?.setState(getVal(data));
     };
 
     queryEventChannel.on("folderQueryRefetched", trigger);

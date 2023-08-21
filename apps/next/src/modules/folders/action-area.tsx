@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -30,6 +31,7 @@ import {
 
 import { ConfirmModal } from "../../components/confirm-modal";
 import { MenuOption } from "../../components/menu-option";
+import { menuEventChannel } from "../../events/menu";
 import { useFolder } from "../../hooks/use-folder";
 import { EditFolderModal } from "./edit-folder-modal";
 import { FolderCreatorOnly } from "./folder-creator-only";
@@ -81,7 +83,7 @@ export const ActionArea = () => {
         <ButtonGroup size={{ base: "md", sm: "lg" }} gap={2}>
           <ButtonGroup size={{ base: "md", sm: "lg" }} gap={0}>
             <StudyButton folder={folder} slug={slug} mode="Flashcards" />
-            <StudyButton folder={folder} slug={slug} mode="Match" />
+            <StudyButton folder={folder} slug={slug} mode="Match" authEnabled />
           </ButtonGroup>
           <Button
             leftIcon={<IconShare />}
@@ -133,10 +135,23 @@ interface StudyButtonProps {
   folder: ReturnType<typeof useFolder>;
   slug: string;
   mode: "Flashcards" | "Match";
+  authEnabled?: boolean;
 }
 
-const StudyButton: React.FC<StudyButtonProps> = ({ folder, slug, mode }) => {
+const StudyButton: React.FC<StudyButtonProps> = ({
+  folder,
+  slug,
+  mode,
+  authEnabled,
+}) => {
+  const { status } = useSession();
   const icon = mode == "Flashcards" ? <IconCards /> : <IconLayersSubtract />;
+
+  const isLink =
+    !!folder.sets.length && (status == "authenticated" || !authEnabled);
+  const href = `/@${
+    folder.user.username
+  }/folders/${slug}/${mode.toLowerCase()}`;
 
   return (
     <Tooltip label={mode}>
@@ -145,13 +160,17 @@ const StudyButton: React.FC<StudyButtonProps> = ({ folder, slug, mode }) => {
           icon={icon}
           aria-label={mode}
           isDisabled={!folder.sets.length}
-          as={!folder.sets.length ? undefined : Link}
-          href={
-            folder.sets.length
-              ? `/@${
-                  folder.user.username
-                }/folders/${slug}/${mode.toLowerCase()}`
-              : undefined
+          as={isLink ? Link : undefined}
+          href={isLink ? href : undefined}
+          onClick={
+            status == "authenticated" || !authEnabled
+              ? undefined
+              : () => {
+                  menuEventChannel.emit("openSignup", {
+                    message: `Create an account for free to study this folder with ${mode}`,
+                    callbackUrl: href,
+                  });
+                }
           }
         />
       </span>

@@ -1,9 +1,14 @@
 import { loadHandler } from "../../lib/load-handler";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../../trpc";
 import { ZAddSetsSchema } from "./add-sets.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZEditSchema } from "./edit.schema";
+import { ZGetPublicSchema } from "./get-public.schema";
 import { ZGetShareIdSchema } from "./get-share-id.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZRecentForSetAddSchema } from "./recent-for-set-add.schema";
@@ -14,6 +19,7 @@ import { ZStarTermSchema } from "./star-term.schema";
 type FoldersRouterHandlerCache = {
   handlers: {
     get?: typeof import("./get.handler").getHandler;
+    ["get-public"]?: typeof import("./get-public.handler").getPublicHandler;
     recent?: typeof import("./recent.handler").recentHandler;
     ["recent-for-set-add"]?: typeof import("./recent-for-set-add.handler").recentForSetAddHandler;
     ["get-share-id"]?: typeof import("./get-share-id.handler").getShareIdHandler;
@@ -36,6 +42,12 @@ export const foldersRouter = createTRPCRouter({
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers["get"]!({ ctx, input });
   }),
+  getPublic: publicProcedure
+    .input(ZGetPublicSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-public");
+      return HANDLER_CACHE.handlers["get-public"]!({ ctx, input });
+    }),
   recent: protectedProcedure
     .input(ZRecentSchema)
     .query(async ({ ctx, input }) => {
