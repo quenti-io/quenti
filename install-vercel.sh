@@ -11,7 +11,7 @@ install () {
   SUBMODULE_PATH=$2
 
   # Get submodule commit
-  output=`git submodule status --recursive $SU`
+  output=`git submodule status --recursive $SUBMODULE_PATH`
   no_prefix=${output#*-}
   COMMIT=${no_prefix% *}
 
