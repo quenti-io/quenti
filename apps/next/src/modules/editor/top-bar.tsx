@@ -58,9 +58,10 @@ export const TopBar = () => {
       top="2"
       zIndex="50"
       borderWidth="2px"
-      borderColor="gray.100"
+      transition="border-color 0.2s ease-in-out"
+      borderColor={errorState ? errorColor : "gray.100"}
       _dark={{
-        borderColor: "gray.750",
+        borderColor: errorState ? errorColor : "gray.750",
       }}
       shadow="xl"
     >
