@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   HStack,
+  Heading,
   Spinner,
   Stack,
   Text,
@@ -31,7 +32,7 @@ export const TopBar = () => {
   isSavingRef.current = isSaving;
 
   const subTextColor = useColorModeValue("gray.600", "gray.400");
-  const bg = useColorModeValue("gray.200", "gray.800");
+  const bg = useColorModeValue("white", "gray.800");
 
   const text = isSaving
     ? "Saving..."
@@ -56,15 +57,20 @@ export const TopBar = () => {
       position="sticky"
       top="2"
       zIndex="50"
+      borderWidth="2px"
+      borderColor="gray.100"
+      _dark={{
+        borderColor: "gray.750",
+      }}
       shadow="xl"
     >
       <Flex align="center" justify="space-between" w="full">
         <Stack>
           <HStack>
-            <IconPencil />
-            <Text fontSize="lg" fontWeight={600}>
+            <IconPencil size={18} />
+            <Heading fontSize="lg">
               {mode == "create" ? "Create a new set" : "Edit set"}
-            </Text>
+            </Heading>
           </HStack>
           <HStack color={subTextColor} spacing={4}>
             {isSaving && <Spinner size="sm" />}
