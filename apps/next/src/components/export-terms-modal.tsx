@@ -4,21 +4,17 @@ import {
   Button,
   Flex,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Text,
   Textarea,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 
-import { IconCheck, IconCopy } from "@tabler/icons-react";
-
 import { useSet } from "../hooks/use-set";
+import { AnimatedCheckCircle } from "./animated-icons/check";
+import { Modal } from "./modal";
+import { Toast } from "./toast";
 
 export interface ExportTermsModalProps {
   isOpen: boolean;
@@ -30,6 +26,7 @@ export const ExportTermsModal: React.FC<ExportTermsModalProps> = ({
   onClose,
 }) => {
   const { terms } = useSet();
+  const toast = useToast();
 
   const [_termDelimiter, setTermDelimiter] = React.useState("\\t");
   const [_cardDelimiter, setCardDelimiter] = React.useState("\\n");
@@ -56,83 +53,72 @@ export const ExportTermsModal: React.FC<ExportTermsModalProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const result = useMemo(() => parseTerms(td, cd), [td, cd, terms]);
 
-  const textareaBg = useColorModeValue("gray.100", "gray.750");
+  const textareaBg = useColorModeValue("gray.50", "gray.750");
   const grayText = useColorModeValue("gray.600", "gray.400");
-
-  const [copied, setCopied] = React.useState(false);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(result);
+    onClose();
 
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
+    toast({
+      title: "Copied to clipboard",
+      status: "success",
+      colorScheme: "green",
+      icon: <AnimatedCheckCircle />,
+      render: Toast,
+    });
   };
 
   return (
-    <Modal
-      onClose={onClose}
-      isOpen={isOpen}
-      isCentered
-      size="3xl"
-      scrollBehavior="inside"
-    >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent>
-        <ModalHeader fontSize="2xl" fontWeight={700}>
-          Export Terms
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Stack spacing={6} mb="4">
-            <Flex gap={4}>
-              <Stack w="full">
-                <Stack spacing={0}>
-                  <Text fontWeight={700}>In between terms</Text>
-                  <Text fontSize="sm" color={grayText}>
-                    Defaults to tab
-                  </Text>
-                </Stack>
-                <Input
-                  variant="flushed"
-                  placeholder="Tab"
-                  value={_termDelimiter}
-                  onChange={(e) => setTermDelimiter(e.target.value)}
-                />
+    <Modal onClose={onClose} isOpen={isOpen} size="2xl" scrollBehavior="inside">
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Export terms</Modal.Heading>
+          <Flex gap={4}>
+            <Stack w="full">
+              <Stack spacing={0}>
+                <Text fontWeight={700}>In between terms</Text>
+                <Text fontSize="sm" color={grayText}>
+                  Defaults to tab
+                </Text>
               </Stack>
-              <Stack w="full">
-                <Stack spacing={0}>
-                  <Text fontWeight={700}>In between cards</Text>
-                  <Text fontSize="sm" color={grayText}>
-                    Defaults to newline
-                  </Text>
-                </Stack>
-                <Input
-                  variant="flushed"
-                  placeholder="Newline"
-                  value={_cardDelimiter}
-                  onChange={(e) => setCardDelimiter(e.target.value)}
-                />
-              </Stack>
-            </Flex>
-            <Stack spacing={6}>
-              <Textarea
-                bg={textareaBg}
-                height={300}
-                value={result}
-                resize="none"
+              <Input
+                variant="flushed"
+                placeholder="Tab"
+                value={_termDelimiter}
+                onChange={(e) => setTermDelimiter(e.target.value)}
               />
-              <Flex justifyContent="end">
-                <Button
-                  leftIcon={copied ? <IconCheck /> : <IconCopy />}
-                  onClick={handleCopy}
-                >
-                  Copy
-                </Button>
-              </Flex>
             </Stack>
+            <Stack w="full">
+              <Stack spacing={0}>
+                <Text fontWeight={700}>In between cards</Text>
+                <Text fontSize="sm" color={grayText}>
+                  Defaults to newline
+                </Text>
+              </Stack>
+              <Input
+                variant="flushed"
+                placeholder="Newline"
+                value={_cardDelimiter}
+                onChange={(e) => setCardDelimiter(e.target.value)}
+              />
+            </Stack>
+          </Flex>
+          <Stack spacing={6}>
+            <Textarea
+              bg={textareaBg}
+              height={300}
+              value={result}
+              resize="none"
+            />
           </Stack>
-        </ModalBody>
-      </ModalContent>
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
+          <Button onClick={handleCopy}>Copy</Button>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };
