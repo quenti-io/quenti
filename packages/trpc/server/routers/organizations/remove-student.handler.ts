@@ -37,6 +37,15 @@ export const removeStudentHandler = async ({
       organizationId: null,
     },
   });
+
+  await ctx.prisma.classMembership.deleteMany({
+    where: {
+      class: {
+        orgId: input.orgId,
+      },
+      userId: input.studentId,
+    },
+  });
 };
 
 export default removeStudentHandler;
