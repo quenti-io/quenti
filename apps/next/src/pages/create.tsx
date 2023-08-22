@@ -22,13 +22,13 @@ const Create = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Create a new set" />
-      <HydrateAutoSaveData>
-        <WithFooter>
-          <Container maxW="7xl">
+      <WithFooter>
+        <Container maxW="7xl">
+          <HydrateAutoSaveData>
             <EditorWrapper />
-          </Container>
-        </WithFooter>
-      </HydrateAutoSaveData>
+          </HydrateAutoSaveData>
+        </Container>
+      </WithFooter>
     </AuthedPage>
   );
 };

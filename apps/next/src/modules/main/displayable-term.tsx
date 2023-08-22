@@ -15,7 +15,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconEdit, IconStar, IconStarFilled } from "@tabler/icons-react";
+import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { ScriptFormatter } from "../../components/script-formatter";
@@ -167,7 +167,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                   <IconButton
                     size={{ base: "sm", sm: undefined }}
                     transform={{ base: "scale(0.8)", sm: "scale(1)" }}
-                    icon={<IconEdit size={18} />}
+                    icon={<IconEditCircle size={18} />}
                     variant={isEditing ? "solid" : "ghost"}
                     aria-label="Edit"
                     rounded="full"

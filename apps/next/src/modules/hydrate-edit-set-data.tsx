@@ -4,13 +4,13 @@ import React from "react";
 
 import { type RouterOutputs, api } from "@quenti/trpc";
 
-import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
 import {
   type SetEditorStore,
   SetEditorStoreContext,
   createSetEditorStore,
 } from "../stores/use-set-editor-store";
+import { EditorLoading } from "./editor/editor-loading";
 
 export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -42,7 +42,7 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   );
 
   if (loading || !data || data.userId !== session.data?.user?.id)
-    return <Loading />;
+    return <EditorLoading />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };

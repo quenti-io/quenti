@@ -5,13 +5,14 @@ import {
   Flex,
   HStack,
   Heading,
+  Skeleton,
   Spinner,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconPencil } from "@tabler/icons-react";
+import { IconEditCircle } from "@tabler/icons-react";
 
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
@@ -68,7 +69,7 @@ export const TopBar = () => {
       <Flex align="center" justify="space-between" w="full">
         <Stack>
           <HStack>
-            <IconPencil size={18} />
+            <IconEditCircle size={18} />
             <Heading fontSize="lg">
               {mode == "create" ? "Create a new set" : "Edit set"}
             </Heading>
@@ -103,5 +104,21 @@ export const TopBar = () => {
         </Button>
       </Flex>
     </HStack>
+  );
+};
+
+TopBar.Skeleton = function TopBarSkeleton() {
+  return (
+    <Skeleton rounded="xl" position="sticky" top="2" zIndex="50" shadow="xl">
+      <HStack py="3" px="5" rounded="xl">
+        <Stack>
+          <HStack>
+            <Heading fontSize="lg">Create new set</Heading>
+          </HStack>
+          <Text fontSize="sm">Loading</Text>
+        </Stack>
+        <Button>Done</Button>
+      </HStack>
+    </Skeleton>
   );
 };
