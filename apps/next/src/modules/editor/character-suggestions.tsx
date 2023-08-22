@@ -85,7 +85,7 @@ export const CharacterSuggestions: React.FC<CharacterSuggestionsProps> = ({
             <Button
               size="sm"
               w="max"
-              variant="solid"
+              variant="outline"
               leftIcon={<IconLanguage size={18} />}
               onClick={onLanguageClick}
             >

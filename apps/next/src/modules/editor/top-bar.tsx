@@ -4,13 +4,15 @@ import {
   Button,
   Flex,
   HStack,
+  Heading,
+  Skeleton,
   Spinner,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconPencil } from "@tabler/icons-react";
+import { IconEditCircle } from "@tabler/icons-react";
 
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
@@ -31,7 +33,7 @@ export const TopBar = () => {
   isSavingRef.current = isSaving;
 
   const subTextColor = useColorModeValue("gray.600", "gray.400");
-  const bg = useColorModeValue("gray.200", "gray.800");
+  const bg = useColorModeValue("white", "gray.800");
 
   const text = isSaving
     ? "Saving..."
@@ -52,19 +54,25 @@ export const TopBar = () => {
       py="3"
       px="5"
       bg={bg}
-      rounded="lg"
+      rounded="xl"
       position="sticky"
       top="2"
       zIndex="50"
+      borderWidth="2px"
+      transition="border-color 0.2s ease-in-out"
+      borderColor={errorState ? errorColor : "gray.100"}
+      _dark={{
+        borderColor: errorState ? errorColor : "gray.750",
+      }}
       shadow="xl"
     >
       <Flex align="center" justify="space-between" w="full">
         <Stack>
           <HStack>
-            <IconPencil />
-            <Text fontSize="lg" fontWeight={600}>
+            <IconEditCircle size={18} />
+            <Heading fontSize="lg">
               {mode == "create" ? "Create a new set" : "Edit set"}
-            </Text>
+            </Heading>
           </HStack>
           <HStack color={subTextColor} spacing={4}>
             {isSaving && <Spinner size="sm" />}
@@ -96,5 +104,21 @@ export const TopBar = () => {
         </Button>
       </Flex>
     </HStack>
+  );
+};
+
+TopBar.Skeleton = function TopBarSkeleton() {
+  return (
+    <Skeleton rounded="xl" position="sticky" top="2" zIndex="50" shadow="xl">
+      <HStack py="3" px="5" rounded="xl">
+        <Stack>
+          <HStack>
+            <Heading fontSize="lg">Create new set</Heading>
+          </HStack>
+          <Text fontSize="sm">Loading</Text>
+        </Stack>
+        <Button>Done</Button>
+      </HStack>
+    </Skeleton>
   );
 };

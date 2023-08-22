@@ -7,6 +7,7 @@ import { languageName } from "@quenti/core/language";
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   Flex,
   HStack,
@@ -113,8 +114,8 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     const LanguageButtonPure = React.memo(LanguageButton);
 
     const mutedText = useColorModeValue("gray.500", "gray.400");
-    const borderColor = useColorModeValue("gray.200", "gray.900");
-    const bg = useColorModeValue("gray.100", "gray.750");
+    const borderColor = useColorModeValue("gray.100", "gray.800");
+    const bg = useColorModeValue("white", "gray.700");
 
     const handleInsert = (
       c: string,
@@ -148,39 +149,52 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     );
 
     return (
-      <Card position="relative" ref={ref} style={style}>
+      <Card
+        position="relative"
+        ref={ref}
+        style={style}
+        bg={bg}
+        rounded="xl"
+        borderColor={borderColor}
+        borderWidth="2px"
+      >
         {React.useMemo(
           () => (
             <Stack>
               <Flex
                 align="center"
-                borderBottom="4px"
+                borderBottom="2px"
+                bg="gray.50"
+                _dark={{
+                  bg: "gray.750",
+                }}
                 borderColor={borderColor}
-                roundedTop="md"
-                bg={bg}
+                roundedTop="xl"
                 px="5"
-                py="3"
+                py="10px"
                 justify="space-between"
               >
-                <Text fontWeight={700}>{term.rank + 1}</Text>
-                <HStack>
+                <Text fontWeight={700} fontFamily="heading">
+                  {term.rank + 1}
+                </Text>
+                <ButtonGroup size="sm">
                   <IconButton
-                    icon={<IconGripHorizontal />}
+                    icon={<IconGripHorizontal size={18} />}
                     aria-label="Reorder"
                     variant="ghost"
                     {...attributes}
                     {...listeners}
                   />
                   <IconButton
-                    icon={<IconTrash />}
+                    icon={<IconTrash size={18} />}
                     aria-label="Delete"
                     variant="ghost"
                     isDisabled={!deletable}
                     onClick={() => deleteTerm(term.id)}
                   />
-                </HStack>
+                </ButtonGroup>
               </Flex>
-              <HStack px="5" pt="2" pb="6" spacing={6} alignItems="start">
+              <HStack px="5" pb="4" spacing={6} alignItems="start">
                 <Stack w="full" spacing={2}>
                   <Box pos="relative">
                     <AutoResizeTextarea

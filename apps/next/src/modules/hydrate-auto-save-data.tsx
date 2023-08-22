@@ -3,13 +3,13 @@ import React from "react";
 
 import { type RouterOutputs, api } from "@quenti/trpc";
 
-import { Loading } from "../components/loading";
 import { useLoading } from "../hooks/use-loading";
 import {
   type SetEditorStore,
   SetEditorStoreContext,
   createSetEditorStore,
 } from "../stores/use-set-editor-store";
+import { EditorLoading } from "./editor/editor-loading";
 
 export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -19,7 +19,7 @@ export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
     refetchOnWindowFocus: false,
   });
   const { loading } = useLoading();
-  if (loading || !data) return <Loading />;
+  if (loading || !data) return <EditorLoading />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };

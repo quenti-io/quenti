@@ -6,6 +6,7 @@ import {
   Flex,
   IconButton,
   Menu,
+  Skeleton,
   Tooltip,
 } from "@chakra-ui/react";
 
@@ -25,7 +26,7 @@ export interface ButtonAreaProps {
   onImportOpen: () => void;
 }
 
-export const ButtonArea: React.FC<ButtonAreaProps> = ({ onImportOpen }) => {
+export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
   const visibility = useSetEditorContext((s) => s.visibility);
   const setVisibility = useSetEditorContext((s) => s.setVisibility);
   const flipTerms = useSetEditorContext((s) => s.flipTerms);
@@ -53,9 +54,9 @@ export const ButtonArea: React.FC<ButtonAreaProps> = ({ onImportOpen }) => {
       <Flex align={"center"} justifyContent={"space-between"}>
         <Button
           leftIcon={<IconPlus />}
-          variant="ghost"
-          colorScheme="orange"
+          variant="outline"
           onClick={onImportOpen}
+          colorScheme="gray"
         >
           Import terms
         </Button>
@@ -84,7 +85,7 @@ export const ButtonArea: React.FC<ButtonAreaProps> = ({ onImportOpen }) => {
                 <IconButton
                   icon={<IconKeyboard />}
                   rounded="full"
-                  aria-label="Flip terms and definitions"
+                  aria-label="Show keyboard shortcuts"
                   onClick={() => setShortcutModalOpen(true)}
                 />
               </Tooltip>
@@ -93,5 +94,35 @@ export const ButtonArea: React.FC<ButtonAreaProps> = ({ onImportOpen }) => {
         </ButtonGroup>
       </Flex>
     </>
+  );
+};
+
+ButtonArea.Skeleton = function ButtonAreaSkeleton() {
+  return (
+    <Flex align={"center"} justifyContent={"space-between"}>
+      <Skeleton fitContent rounded="lg">
+        <Button leftIcon={<IconPlus />} variant="outline">
+          Import terms
+        </Button>
+      </Skeleton>
+      <ButtonGroup>
+        <ButtonGroup spacing={4}>
+          <Skeleton rounded="full">
+            <IconButton
+              icon={<IconSwitchHorizontal />}
+              rounded="full"
+              aria-label="Flip terms and definitions"
+            />
+          </Skeleton>
+          <Skeleton rounded="full">
+            <IconButton
+              icon={<IconKeyboard />}
+              rounded="full"
+              aria-label="Show keyboard shortcuts"
+            />
+          </Skeleton>
+        </ButtonGroup>
+      </ButtonGroup>
+    </Flex>
   );
 };

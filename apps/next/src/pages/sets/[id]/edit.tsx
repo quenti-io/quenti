@@ -29,13 +29,13 @@ const Edit = () => {
           nofollow: true,
         }}
       />
-      <HydrateEditSetData>
-        <WithFooter>
-          <Container maxW="7xl">
+      <WithFooter>
+        <Container maxW="7xl">
+          <HydrateEditSetData>
             <EditorWrapper />
-          </Container>
-        </WithFooter>
-      </HydrateEditSetData>
+          </HydrateEditSetData>
+        </Container>
+      </WithFooter>
     </AuthedPage>
   );
 };

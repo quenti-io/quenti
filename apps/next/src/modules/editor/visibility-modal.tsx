@@ -1,19 +1,17 @@
 import type { StudySetVisibility } from "@quenti/prisma/client";
 
 import {
-  Button,
   HStack,
   Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalOverlay,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 
 import { IconLink, IconLock, IconWorld } from "@tabler/icons-react";
+
+import { Modal } from "../../components/modal";
+import { ToggleGroup } from "../../components/toggle-group";
 
 export interface VisibilityModalProps {
   isOpen: boolean;
@@ -28,43 +26,66 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
   visibility,
   onChangeVisibility,
 }) => {
+  const tabBorderColor = useColorModeValue("gray.200", "gray.700");
+  const tabHoverColor = useColorModeValue("gray.50", "gray.750");
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg" isCentered>
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent rounded="xl">
-        <ModalBody>
-          <Stack spacing={4} py="4" px="2">
-            <VisibilityOption
-              name="Public"
-              description="Anyone can view and study this set, and it will be displayed on your profile."
-              icon={<IconWorld size={20} />}
-              selected={visibility === "Public"}
-              onSelect={() => onChangeVisibility("Public")}
-            />
-            <VisibilityOption
-              name="Unlisted"
-              description="Anyone can view and study this set via a direct link, but it will be hidden from your profile."
-              icon={<IconLink size={20} />}
-              selected={visibility === "Unlisted"}
-              onSelect={() => onChangeVisibility("Unlisted")}
-            />
-            <VisibilityOption
-              name="Private"
-              description="Only you can view and study this set."
-              icon={<IconLock size={20} />}
-              selected={visibility === "Private"}
-              onSelect={() => onChangeVisibility("Private")}
-            />
-          </Stack>
-        </ModalBody>
-      </ModalContent>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Set visibility</Modal.Heading>
+          <ToggleGroup
+            index={
+              visibility === "Public" ? 0 : visibility === "Unlisted" ? 1 : 2
+            }
+            orientation="vertical"
+            tabBorderColor={tabBorderColor}
+            tabHoverColor={tabHoverColor}
+            tabProps={{
+              borderBottomWidth: "2px",
+              borderBottomColor: "gray.200",
+              _last: {
+                borderBottomWidth: 0,
+              },
+              _dark: {
+                borderBottomColor: "gray.700",
+              },
+            }}
+          >
+            <ToggleGroup.Tab onClick={() => onChangeVisibility("Public")}>
+              <VisibilityOption
+                name="Public"
+                description="Anyone can view and study this set, and it will be publicly available on your profile."
+                icon={<IconWorld size={20} />}
+                selected={visibility === "Public"}
+              />
+            </ToggleGroup.Tab>
+            <ToggleGroup.Tab onClick={() => onChangeVisibility("Unlisted")}>
+              <VisibilityOption
+                name="Unlisted"
+                description="Anyone can view and study this set via a direct link, but it will be hidden from your profile and not visible in folders."
+                icon={<IconLink size={20} />}
+                selected={visibility === "Unlisted"}
+              />
+            </ToggleGroup.Tab>
+            <ToggleGroup.Tab onClick={() => onChangeVisibility("Private")}>
+              <VisibilityOption
+                name="Private"
+                description="Only you can view and study this set."
+                icon={<IconLock size={20} />}
+                selected={visibility === "Private"}
+              />
+            </ToggleGroup.Tab>
+          </ToggleGroup>
+        </Modal.Body>
+      </Modal.Content>
     </Modal>
   );
 };
 
 interface VisbilityOptionProps {
   selected: boolean;
-  onSelect: () => void;
   name: string;
   icon: React.ReactNode;
   description: string;
@@ -72,42 +93,27 @@ interface VisbilityOptionProps {
 
 const VisibilityOption: React.FC<VisbilityOptionProps> = ({
   selected,
-  onSelect,
   name,
   icon,
   description,
 }) => {
-  const textColor = useColorModeValue("alpha.900", "alpha.100");
-  const blueColor = useColorModeValue("blue.400", "blue.300");
-  const grayText = useColorModeValue("gray.800", "gray.200");
+  const grayText = useColorModeValue("gray.600", "gray.400");
 
   return (
-    <Button
-      variant={selected ? "solid" : "outline"}
-      onClick={onSelect}
-      whiteSpace="normal"
-      h="max-content"
-      py="4"
-      textAlign="left"
-      justifyContent="start"
-      textColor={!selected ? textColor : undefined}
-      borderColor={blueColor}
-      shadow="md"
-    >
-      <Stack spacing={3}>
-        <HStack spacing={2}>
-          {icon}
-          <Heading size="md">{name}</Heading>
-        </HStack>
-        <Text
-          fontSize="small"
-          lineHeight="normal"
-          fontWeight="normal"
-          color={selected ? textColor : grayText}
-        >
-          {description}
-        </Text>
-      </Stack>
-    </Button>
+    <Stack spacing="2" textAlign="left" w="full" py="3">
+      <HStack spacing="2" transition="color 0.2s ease-in-out">
+        {icon}
+        <Heading size="md" fontWeight={600}>
+          {name}
+        </Heading>
+      </HStack>
+      <Text
+        fontSize="sm"
+        fontWeight={selected ? 600 : 400}
+        color={selected ? undefined : grayText}
+      >
+        {description}
+      </Text>
+    </Stack>
   );
 };
