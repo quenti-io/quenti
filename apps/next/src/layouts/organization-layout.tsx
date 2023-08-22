@@ -33,12 +33,12 @@ import {
 
 import { AnimatedXCircle } from "../components/animated-icons/x";
 import { AuthedPage } from "../components/authed-page";
+import { ConfettiLayer } from "../components/confetti-layer";
 import { SkeletonTab } from "../components/skeleton-tab";
 import { Toast } from "../components/toast";
 import { WithFooter } from "../components/with-footer";
 import { useOrganization } from "../hooks/use-organization";
 import { useOrganizationMember } from "../hooks/use-organization-member";
-import { ConfettiLayer } from "../modules/organizations/confetti-layer";
 import { getBaseDomain } from "../modules/organizations/utils/get-base-domain";
 import { useOnboardingStep } from "../modules/organizations/utils/use-onboarding-step";
 import { organizationIcon } from "../utils/icons";

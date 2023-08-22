@@ -44,6 +44,7 @@ export const ConfettiLayer = () => {
         refConfetti={getInstance}
         style={{
           position: "fixed",
+          zIndex: 1000,
           pointerEvents: "none",
           width: "100%",
           height: "100%",
@@ -54,3 +55,5 @@ export const ConfettiLayer = () => {
     </>
   );
 };
+
+export default ConfettiLayer;

@@ -8,6 +8,7 @@ import {
   ModalOverlay as ChakraModalOverlay,
   type ComponentWithAs,
   type HeadingProps,
+  type ModalContentProps,
   type ModalProps,
   Stack,
   type StackProps,
@@ -15,19 +16,17 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-const Content = function ModalBody({
-  children,
-}: {
-  children?: JSX.Element | JSX.Element[];
-}) {
-  const modalBg = useColorModeValue("white", "gray.800");
+const Content = forwardRef<ModalContentProps, "div">(
+  ({ children, ...props }) => {
+    const modalBg = useColorModeValue("white", "gray.800");
 
-  return (
-    <ChakraModalContent rounded="xl" bg={modalBg} shadow="xl">
-      {children}
-    </ChakraModalContent>
-  );
-};
+    return (
+      <ChakraModalContent rounded="xl" bg={modalBg} shadow="xl" {...props}>
+        {children}
+      </ChakraModalContent>
+    );
+  },
+);
 
 const Body = forwardRef<StackProps, "div">(({ children, ...props }) => {
   return (
