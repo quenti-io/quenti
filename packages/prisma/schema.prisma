@@ -340,6 +340,7 @@ model StudySet {
   leaderboards       Leaderboard[]
   classes            StudySetsOnClasses[]
   assignments        StudySetsOnAssignments[]
+  importJob          ImportJob?
 
   @@unique([id, userId])
   @@index([userId])
@@ -482,13 +483,16 @@ model Highscore {
 }
 
 model ImportJob {
-  id        String          @id @default(cuid())
-  userId    String
-  url       String
-  status    ImportJobStatus @default(Pending)
-  statusUrl String
+  id           String          @id @default(cuid())
+  userId       String
+  url          String
+  status       ImportJobStatus @default(Pending)
+  statusUrl    String
+  completedAt  DateTime?
+  createdSetId String?         @unique
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studySet StudySet? @relation(fields: [createdSetId], references: [id], onDelete: NoAction)
 
   @@unique([userId, url])
   @@index([userId])

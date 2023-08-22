@@ -56,13 +56,9 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
   const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
   const errorText = useColorModeValue("red.500", "red.200");
 
-  const postQuizletJob = api.import.postQuizletJob.useMutation({
-    onSuccess: async () => {
-      onClose();
-
-      if (router.pathname === "/create") {
-        router.reload();
-      } else await router.push("/create");
+  const fromUrl = api.import.fromUrl.useMutation({
+    onSuccess: (data) => {
+      if (data) void router.push(`/${data.createdSetId}`);
     },
     onError: (err) => {
       if (
@@ -132,10 +128,10 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
               Cancel
             </Button>
             <Button
-              isLoading={postQuizletJob.isLoading}
+              isLoading={fromUrl.isLoading}
               isDisabled={!url || invalid}
               onClick={async () => {
-                await postQuizletJob.mutateAsync({
+                await fromUrl.mutateAsync({
                   url,
                 });
               }}

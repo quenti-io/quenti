@@ -1,10 +1,10 @@
 import { loadHandler } from "../../lib/load-handler";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { ZPostQuizletJobSchema } from "./post-quizlet-job.schema";
+import { ZFromUrlSchema } from "./from-url.schema";
 
 type ImportRouterHandlerCache = {
   handlers: {
-    ["post-quizlet-job"]?: typeof import("./post-quizlet-job.handler").postQuizletJobHandler;
+    ["from-url"]?: typeof import("./from-url.handler").fromUrlHandler;
   };
 } & { routerPath: string };
 
@@ -14,10 +14,10 @@ const HANDLER_CACHE: ImportRouterHandlerCache = {
 };
 
 export const importRouter = createTRPCRouter({
-  postQuizletJob: protectedProcedure
-    .input(ZPostQuizletJobSchema)
+  fromUrl: protectedProcedure
+    .input(ZFromUrlSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "post-quizlet-job");
-      return HANDLER_CACHE.handlers["post-quizlet-job"]!({ ctx, input });
+      await loadHandler(HANDLER_CACHE, "from-url");
+      return HANDLER_CACHE.handlers["from-url"]!({ ctx, input });
     }),
 });

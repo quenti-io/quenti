@@ -55,6 +55,7 @@ let config = withHighlightConfig(
       "@quenti/prisma",
       "@quenti/trpc",
       "@quenti/inngest",
+      "@quenti/integrations",
       "@quenti/types",
       "@quenti/website",
     ],
