@@ -53,7 +53,7 @@ export const TopBar = () => {
       py="3"
       px="5"
       bg={bg}
-      rounded="lg"
+      rounded="xl"
       position="sticky"
       top="2"
       zIndex="50"

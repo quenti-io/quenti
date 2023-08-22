@@ -56,6 +56,7 @@ export const TitleProperties = () => {
       <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
         <AutoResizeTextarea
           value={description}
+          rounded="lg"
           onChange={(e) => {
             setDescription(e.target.value);
           }}

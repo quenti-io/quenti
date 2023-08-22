@@ -53,9 +53,9 @@ export const ButtonArea: React.FC<ButtonAreaProps> = ({ onImportOpen }) => {
       <Flex align={"center"} justifyContent={"space-between"}>
         <Button
           leftIcon={<IconPlus />}
-          variant="ghost"
-          colorScheme="orange"
+          variant="outline"
           onClick={onImportOpen}
+          colorScheme="gray"
         >
           Import terms
         </Button>

@@ -1,16 +1,6 @@
-import {
-  Divider,
-  Flex,
-  Heading,
-  Kbd,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalOverlay,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, Kbd, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+
+import { Modal } from "../../components/modal";
 
 export interface ShortcutModalProps {
   isOpen: boolean;
@@ -22,44 +12,40 @@ export const ShortcutModal: React.FC<ShortcutModalProps> = ({
   onClose,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" pb="6" rounded="xl">
-        <ModalBody>
-          <Stack spacing={12}>
-            <Heading fontSize="4xl">Keyboard Shortcuts</Heading>
-            <Stack spacing={4}>
-              <Shortcut
-                name="Add card"
-                label="Inserts below the current card"
-                shortcut={
-                  <span>
-                    <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>R</Kbd>
-                  </span>
-                }
-              />
-              <Divider />
-              <Shortcut
-                name="Next side or card"
-                shortcut={
-                  <span>
-                    <Kbd>Tab</Kbd>
-                  </span>
-                }
-              />
-              <Divider />
-              <Shortcut
-                name="Move current card up/down"
-                shortcut={
-                  <span>
-                    <Kbd>Alt</Kbd> + <Kbd>↑</Kbd> / <Kbd>↓</Kbd>
-                  </span>
-                }
-              />
-            </Stack>
-          </Stack>
-        </ModalBody>
-      </ModalContent>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Keyboard shortcuts</Modal.Heading>
+          <Shortcut
+            name="Add card"
+            label="Inserts below the current card"
+            shortcut={
+              <span>
+                <Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>R</Kbd>
+              </span>
+            }
+          />
+          <Modal.BodySeparator />
+          <Shortcut
+            name="Next side or card"
+            shortcut={
+              <span>
+                <Kbd>Tab</Kbd>
+              </span>
+            }
+          />
+          <Modal.BodySeparator />
+          <Shortcut
+            name="Move current card up/down"
+            shortcut={
+              <span>
+                <Kbd>Alt</Kbd> + <Kbd>↑</Kbd> / <Kbd>↓</Kbd>
+              </span>
+            }
+          />
+        </Modal.Body>
+      </Modal.Content>
     </Modal>
   );
 };
@@ -76,7 +62,7 @@ const Shortcut: React.FC<ShortcutProps> = ({ name, label, shortcut }) => {
   return (
     <Flex justifyContent="space-between" alignItems="start">
       <Stack spacing={0}>
-        <Text fontSize="lg" fontWeight={600} fontFamily="Outfit">
+        <Text fontSize="lg" fontWeight={700}>
           {name}
         </Text>
         {label && (

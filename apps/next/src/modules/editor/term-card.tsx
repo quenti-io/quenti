@@ -114,7 +114,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     const LanguageButtonPure = React.memo(LanguageButton);
 
     const mutedText = useColorModeValue("gray.500", "gray.400");
-    const borderColor = useColorModeValue("gray.200", "gray.700");
+    const borderColor = useColorModeValue("gray.100", "gray.700");
     const bg = useColorModeValue("white", "gray.750");
 
     const handleInsert = (
