@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 
 import {
   Button,
+  ButtonGroup,
   Flex,
   Input,
   Stack,
@@ -116,7 +117,12 @@ export const ExportTermsModal: React.FC<ExportTermsModalProps> = ({
         </Modal.Body>
         <Modal.Divider />
         <Modal.Footer>
-          <Button onClick={handleCopy}>Copy</Button>
+          <ButtonGroup>
+            <Button variant="ghost" colorScheme="gray" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button onClick={handleCopy}>Copy</Button>
+          </ButtonGroup>
         </Modal.Footer>
       </Modal.Content>
     </Modal>

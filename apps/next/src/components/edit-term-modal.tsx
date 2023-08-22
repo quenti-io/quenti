@@ -3,21 +3,11 @@ import React from "react";
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
-import {
-  Button,
-  ButtonGroup,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-} from "@chakra-ui/react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
+import { Modal } from "./modal";
 
 export interface EditTermModalProps {
   term: Term | null;
@@ -59,38 +49,28 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   });
 
   return (
-    <Modal
-      onClose={onClose}
-      isOpen={isOpen}
-      isCentered
-      size="xl"
-      initialFocusRef={initialRef}
-    >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent>
-        <ModalHeader>Edit Term</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Stack spacing={6}>
-            <AutoResizeTextarea
-              allowTab={false}
-              value={word}
-              w="full"
-              onChange={(e) => setWord(e.target.value)}
-              variant="flushed"
-              ref={!onDefinition ? initialRef : null}
-            />
-            <AutoResizeTextarea
-              allowTab={false}
-              value={definition}
-              w="full"
-              onChange={(e) => setDefinition(e.target.value)}
-              variant="flushed"
-              ref={onDefinition ? initialRef : null}
-            />
-          </Stack>
-        </ModalBody>
-        <ModalFooter>
+    <Modal onClose={onClose} isOpen={isOpen} initialFocusRef={initialRef}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Edit term</Modal.Heading>
+          <AutoResizeTextarea
+            allowTab={false}
+            value={word}
+            w="full"
+            onChange={(e) => setWord(e.target.value)}
+            ref={!onDefinition ? initialRef : null}
+          />
+          <AutoResizeTextarea
+            allowTab={false}
+            value={definition}
+            w="full"
+            onChange={(e) => setDefinition(e.target.value)}
+            ref={onDefinition ? initialRef : null}
+          />
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
           <ButtonGroup>
             <Button variant="ghost" colorScheme="gray" onClick={onClose}>
               Cancel
@@ -110,8 +90,8 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
               Save
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };
