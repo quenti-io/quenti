@@ -21,7 +21,7 @@ import {
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
-  IconEdit,
+  IconEditCircle,
   IconStar,
   IconStarFilled,
   IconX,
@@ -113,7 +113,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             <HStack spacing={2}>
               <SetCreatorOnly studySetId={term.studySetId}>
                 <IconButton
-                  icon={<IconEdit />}
+                  icon={<IconEditCircle />}
                   aria-label="Edit"
                   rounded="full"
                   variant="ghost"
