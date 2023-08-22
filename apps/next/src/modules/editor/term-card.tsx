@@ -114,8 +114,8 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     const LanguageButtonPure = React.memo(LanguageButton);
 
     const mutedText = useColorModeValue("gray.500", "gray.400");
-    const borderColor = useColorModeValue("gray.100", "gray.700");
-    const bg = useColorModeValue("white", "gray.750");
+    const borderColor = useColorModeValue("gray.100", "gray.800");
+    const bg = useColorModeValue("white", "gray.700");
 
     const handleInsert = (
       c: string,
@@ -166,7 +166,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
                 borderBottom="2px"
                 bg="gray.50"
                 _dark={{
-                  bg: "gray.800",
+                  bg: "gray.750",
                 }}
                 borderColor={borderColor}
                 roundedTop="xl"

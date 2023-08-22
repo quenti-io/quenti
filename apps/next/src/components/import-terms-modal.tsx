@@ -4,14 +4,9 @@ import {
   Button,
   ButtonGroup,
   Flex,
+  FormControl,
+  FormLabel,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Text,
   useColorModeValue,
@@ -20,6 +15,7 @@ import {
 import { plural } from "../utils/string";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 import { GenericTermCard } from "./generic-term-card";
+import { Modal } from "./modal";
 
 export interface ImportTermsModalProps {
   isOpen: boolean;
@@ -74,35 +70,30 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
     [value, td, cd],
   );
 
-  const textareaBg = useColorModeValue("gray.100", "gray.750");
+  const textareaBg = useColorModeValue("gray.100", "gray.900");
 
   return (
-    <Modal
-      onClose={onClose}
-      isOpen={isOpen}
-      isCentered
-      size="3xl"
-      scrollBehavior="inside"
-    >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent>
-        <ModalHeader fontSize="2xl" fontWeight={700}>
-          Import Terms
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+    <Modal onClose={onClose} isOpen={isOpen} size="3xl" scrollBehavior="inside">
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Import Terms</Modal.Heading>
           <Stack spacing={6}>
-            <Text>
-              Copy and paste your terms and definitions in the following format:
-            </Text>
-            <AutoResizeTextarea
-              bg={textareaBg}
-              placeholder={generatePlaceholder()}
-              minHeight="100px"
-              allowTab
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
+            <FormControl>
+              <FormLabel mb="3">
+                Copy and paste your terms and definitions in the following
+                format:
+              </FormLabel>
+              <AutoResizeTextarea
+                bg={textareaBg}
+                placeholder={generatePlaceholder()}
+                minHeight="100px"
+                rounded="lg"
+                allowTab
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+            </FormControl>
             <Flex gap={4}>
               <Stack w="full">
                 <Stack spacing={0}>
@@ -135,7 +126,7 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
             </Flex>
             <Text fontWeight={700}>
               Preview{" "}
-              {!!previewTerms.length && plural(previewTerms.length, "Term")}
+              {!!previewTerms.length && plural(previewTerms.length, "term")}
             </Text>
             <Stack>
               {previewTerms.map(({ word, definition }, i) => (
@@ -150,8 +141,9 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
               )}
             </Stack>
           </Stack>
-        </ModalBody>
-        <ModalFooter>
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
           <ButtonGroup>
             <Button variant="ghost" colorScheme="gray" onClick={onClose}>
               Cancel
@@ -166,8 +158,8 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
               {!!previewTerms.length && plural(previewTerms.length, "term")}
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };
