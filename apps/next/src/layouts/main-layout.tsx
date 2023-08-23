@@ -5,6 +5,7 @@ import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 
 import { Navbar } from "../components/navbar";
 import { effectChannel } from "../events/effects";
+import { useOnboardingRedirect } from "../hooks/use-onboarding-redirect";
 
 const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
@@ -22,6 +23,8 @@ const ConfettiLayer = dynamic(() => import("../components/confetti-layer"), {
 });
 
 export const MainLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
+  useOnboardingRedirect();
+
   const barRef = React.useRef<LoadingBarRef>(null);
   const router = useRouter();
 

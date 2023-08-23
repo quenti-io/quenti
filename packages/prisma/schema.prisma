@@ -64,25 +64,26 @@ enum UserType {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  name             String?
-  username         String    @unique
-  email            String    @unique
-  emailVerified    DateTime?
-  image            String?
-  type             UserType  @default(Student)
-  verified         Boolean   @default(false)
-  createdAt        DateTime  @default(now())
-  lastSeenAt       DateTime  @default(now())
-  bannedAt         DateTime?
-  displayName      Boolean   @default(true)
-  flags            Int       @default(0)
+  id                  String    @id @default(cuid())
+  name                String?
+  username            String    @unique
+  email               String    @unique
+  emailVerified       DateTime?
+  image               String?
+  type                UserType  @default(Student)
+  verified            Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  lastSeenAt          DateTime  @default(now())
+  bannedAt            DateTime?
+  displayName         Boolean   @default(true)
+  flags               Int       @default(0)
   /// @zod.custom(imports.userMetadataSchema)
-  metadata         Json?
-  enableUsageData  Boolean   @default(true)
-  changelogVersion String
-  isOrgEligible    Boolean   @default(false)
-  organizationId   String?
+  metadata            Json?
+  enableUsageData     Boolean   @default(true)
+  completedOnboarding Boolean   @default(false)
+  changelogVersion    String
+  isOrgEligible       Boolean   @default(false)
+  organizationId      String?
 
   accounts       Account[]
   sessions       Session[]
@@ -99,7 +100,6 @@ model User {
   classes        ClassMembership[]
   classInvites   PendingClassInvite[]
   classBans      ClassBan[]
-  importJobs     ImportJob[]
 
   @@index([organizationId])
 }
@@ -340,7 +340,6 @@ model StudySet {
   leaderboards       Leaderboard[]
   classes            StudySetsOnClasses[]
   assignments        StudySetsOnAssignments[]
-  importJob          ImportJob?
 
   @@unique([id, userId])
   @@index([userId])
@@ -480,28 +479,6 @@ model Highscore {
   @@id([leaderboardId, userId, eligible])
   @@index([userId])
   @@index([leaderboardId])
-}
-
-model ImportJob {
-  id           String          @id @default(cuid())
-  userId       String
-  url          String
-  status       ImportJobStatus @default(Pending)
-  statusUrl    String
-  completedAt  DateTime?
-  createdSetId String?         @unique
-
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  studySet StudySet? @relation(fields: [createdSetId], references: [id], onDelete: NoAction)
-
-  @@unique([userId, url])
-  @@index([userId])
-}
-
-enum ImportJobStatus {
-  Pending
-  Processing
-  Completed
 }
 
 model EntityShare {
