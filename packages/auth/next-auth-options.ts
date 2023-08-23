@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
         session.user.banned = !!user.bannedAt;
         session.user.flags = user.flags;
         session.user.enableUsageData = user.enableUsageData;
+        session.user.completedOnboarding = user.completedOnboarding;
         session.user.changelogVersion = user.changelogVersion;
         session.user.organizationId = user.organizationId;
         session.user.isOrgEligible = user.isOrgEligible;

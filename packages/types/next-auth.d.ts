@@ -17,6 +17,7 @@ declare module "next-auth" {
       banned: boolean;
       flags: number;
       enableUsageData: boolean;
+      completedOnboarding: boolean;
       changelogVersion: string;
       organizationId: string | null;
       isOrgEligible: boolean;
@@ -34,6 +35,7 @@ declare module "next-auth" {
     bannedAt: Date | null;
     flags: number;
     enableUsageData: boolean;
+    completedOnboarding: boolean;
     changelogVersion: string;
     organizationId: string | null;
     isOrgEligible: boolean;
