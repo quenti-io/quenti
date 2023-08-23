@@ -53,7 +53,7 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
       />
       <Flex align={"center"} justifyContent={"space-between"}>
         <Button
-          leftIcon={<IconPlus />}
+          leftIcon={<IconPlus size={18} />}
           variant="outline"
           onClick={onImportOpen}
           colorScheme="gray"
