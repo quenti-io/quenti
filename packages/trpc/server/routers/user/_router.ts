@@ -13,6 +13,7 @@ type UserRouterHandlerCache = {
     ["check-username"]?: typeof import("./check-username.handler").checkUsernameHandler;
     ["set-display-name"]?: typeof import("./set-display-name.handler").setDisplayNameHandler;
     ["set-user-type"]?: typeof import("./set-user-type.handler").setUserTypeHandler;
+    ["complete-onboarding"]?: typeof import("./complete-onboarding.handler").completeOnboardingHandler;
     ["view-changelog"]?: typeof import("./view-changelog.handler").viewChangelogHandler;
     ["set-enable-usage-data"]?: typeof import("./set-enable-usage-data.handler").setEnableUsageDataHandler;
     ["delete-account"]?: typeof import("./delete-account.handler").deleteAccountHandler;
@@ -53,6 +54,10 @@ export const userRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "set-user-type");
       return HANDLER_CACHE.handlers["set-user-type"]!({ ctx, input });
     }),
+  completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+    await loadHandler(HANDLER_CACHE, "complete-onboarding");
+    return HANDLER_CACHE.handlers["complete-onboarding"]!({ ctx });
+  }),
   viewChangelog: protectedProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "view-changelog");
     return HANDLER_CACHE.handlers["view-changelog"]!({ ctx });

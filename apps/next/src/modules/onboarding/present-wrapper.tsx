@@ -19,6 +19,7 @@ import { SegmentedProgress } from "../../components/segmented-progress";
 import { useLoading } from "../../hooks/use-loading";
 import { useMe } from "../../hooks/use-me";
 import { useUnauthedRedirect } from "../../hooks/use-unauthed-redirect";
+import { getSafeRedirectUrl } from "../../lib/urls";
 import { organizationIcon } from "../../utils/icons";
 
 const computeMap = (
@@ -61,6 +62,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const router = useRouter();
+  const callbackUrl = router.query.callbackUrl as string;
   const isMobile = useMediaQuery("(max-width: 768px)")[0];
 
   useUnauthedRedirect();
@@ -74,9 +76,21 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
 
   const currentStep = router.pathname.replace("/onboarding", "");
 
+  const getFinalizedCallbackUrl = () => {
+    if (!callbackUrl) return "/home";
+    return getSafeRedirectUrl(callbackUrl);
+  };
+
   const nextStep = () => {
     const next = map[map.indexOf(currentStep)! + 1];
-    void router.push(next ? `/onboarding${next}` : "/home");
+    if (next) {
+      void router.replace({
+        pathname: `/onboarding${next}`,
+        query: {
+          callbackUrl,
+        },
+      });
+    } else void router.push(getFinalizedCallbackUrl());
   };
 
   const Icon = me?.organization
@@ -143,7 +157,12 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
               currentStep={map.indexOf(currentStep)}
               clickable
               onClick={async (i) => {
-                await router.push(`/onboarding${map[i]!}`);
+                await router.replace({
+                  pathname: `/onboarding${map[i]!}`,
+                  query: {
+                    callbackUrl,
+                  },
+                });
               }}
             />
           </Box>
