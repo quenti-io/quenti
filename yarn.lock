@@ -6274,7 +6274,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quenti/integrations@workspace:packages/integrations":
+"@quenti/integrations@*, @quenti/integrations@workspace:packages/integrations":
   version: 0.0.0-use.local
   resolution: "@quenti/integrations@workspace:packages/integrations"
   dependencies:
@@ -6418,6 +6418,7 @@ __metadata:
     "@quenti/core": "*"
     "@quenti/emails": "*"
     "@quenti/inngest": "*"
+    "@quenti/integrations": "*"
     "@quenti/interfaces": "*"
     "@quenti/lib": "*"
     "@quenti/payments": "*"
@@ -6429,6 +6430,9 @@ __metadata:
     email-providers: ^2.0.1
     superjson: ^1.13.1
     zod: ^3.21.4
+  dependenciesMeta:
+    "@quenti/integrations":
+      optional: true
   languageName: unknown
   linkType: soft
 
