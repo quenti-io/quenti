@@ -8,6 +8,7 @@ import { PageWrapper } from "../../../common/page-wrapper";
 import { getLayout } from "../../../layouts/main-layout";
 import { ControlsBar } from "../../../modules/flashcards/controls-bar";
 import { FlashcardArea } from "../../../modules/flashcards/flashcard-area";
+import { FlashcardsLoading } from "../../../modules/flashcards/flashcards-loading";
 import { FlashcardsSettingsModal } from "../../../modules/flashcards/flashcards-settings-modal";
 import { TitleBar } from "../../../modules/flashcards/titlebar";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
@@ -18,7 +19,7 @@ const Flashcards = () => {
   return (
     <>
       <HeadSeo title="Flashcards" />
-      <HydrateSetData isPublic>
+      <HydrateSetData isPublic placeholder={<FlashcardsLoading />}>
         <FlashcardsSettingsModal
           isOpen={settingsOpen}
           onClose={() => setSettingsOpen(false)}

@@ -1,6 +1,6 @@
 import { HeadSeo, Link } from "@quenti/components";
 
-import { Flex, Heading, IconButton, Tag } from "@chakra-ui/react";
+import { Flex, Heading, IconButton, Skeleton, Tag } from "@chakra-ui/react";
 
 import { IconX } from "@tabler/icons-react";
 
@@ -48,5 +48,47 @@ export const TitleBar = () => {
         </Flex>
       </Flex>
     </>
+  );
+};
+
+interface TitleBarSkeletonProps {
+  titlePlaceholder?: string;
+}
+
+TitleBar.Skeleton = function TitleBarSkeleton({
+  titlePlaceholder,
+}: TitleBarSkeletonProps) {
+  return (
+    <Flex
+      w="full"
+      gap={4}
+      alignItems="center"
+      mt="2"
+      justifyContent="space-between"
+    >
+      <Skeleton fitContent rounded="lg">
+        <Tag size="lg" fontWeight={700} colorScheme="blue" w="110px">
+          Flashcards
+        </Tag>
+      </Skeleton>
+      <Skeleton fitContent rounded="lg">
+        <Heading
+          size="md"
+          flex="1"
+          textAlign="center"
+          display={{ base: "none", md: "block" }}
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+        >
+          {titlePlaceholder ?? "Flashcards Placeholder"}
+        </Heading>
+      </Skeleton>
+      <Flex w="110px" justifyContent="end">
+        <Skeleton rounded="full" fitContent>
+          <IconButton icon={<IconX />} aria-label="Close" rounded="full" />
+        </Skeleton>
+      </Flex>
+    </Flex>
   );
 };
