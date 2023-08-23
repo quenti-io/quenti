@@ -1,22 +1,16 @@
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
 import {
   Button,
-  Heading,
-  Modal,
-  ModalBody,
   ModalCloseButton,
-  ModalContent,
-  ModalOverlay,
+  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
 
-import { IconBrandGoogle } from "@tabler/icons-react";
-
 import { menuEventChannel } from "../events/menu";
+import { Modal } from "./modal";
 
 export default function SignupModal() {
   const router = useRouter();
@@ -42,33 +36,51 @@ export default function SignupModal() {
     <Modal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      size="3xl"
+      isCentered={false}
       initialFocusRef={focusRef}
     >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" pb="8" rounded="2xl">
-        <ModalBody paddingX="16" paddingY="8">
-          <ModalCloseButton />
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body pb="4">
+          <ModalCloseButton rounded="full" top="3" right="3" />
           <VStack spacing="8">
-            <VStack spacing="4">
-              <Heading>Sign up to continue studying</Heading>
-              <Text fontSize="lg">{message}</Text>
+            <VStack>
+              <Modal.Heading>Sign up to continue studying</Modal.Heading>
+              <Text>{message}</Text>
             </VStack>
-            <Button
-              size="lg"
-              ref={focusRef}
-              leftIcon={<IconBrandGoogle size={18} stroke="4px" />}
-              onClick={async () =>
-                await signIn("google", {
-                  callbackUrl: callbackUrl || router.asPath,
-                })
-              }
-            >
-              Continue with Google
-            </Button>
+            <Stack>
+              <Button
+                ref={focusRef}
+                h="10"
+                fontSize="sm"
+                onClick={async () =>
+                  await router.push(
+                    `/auth/signup?callbackUrl=${encodeURIComponent(
+                      callbackUrl || router.asPath,
+                    )}`,
+                  )
+                }
+              >
+                Sign up for Quenti
+              </Button>
+              <Button
+                h="10"
+                variant="outline"
+                fontSize="sm"
+                onClick={async () =>
+                  await router.push(
+                    `/auth/login?callbackUrl=${encodeURIComponent(
+                      callbackUrl || router.asPath,
+                    )}`,
+                  )
+                }
+              >
+                I already have an account
+              </Button>
+            </Stack>
           </VStack>
-        </ModalBody>
-      </ModalContent>
+        </Modal.Body>
+      </Modal.Content>
     </Modal>
   );
 }
