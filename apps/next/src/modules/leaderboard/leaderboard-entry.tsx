@@ -131,7 +131,7 @@ const RankIndicator: React.FC<{ rank: number }> = ({ rank }) => {
       color={rosetteColor}
     >
       <IconRosetteFilled style={{ position: "absolute", top: 0, left: 0 }} />
-      <Heading fontSize="xs" pt="2px" textColor={bg} zIndex="10">
+      <Heading fontSize="xs" textColor={bg} zIndex="10">
         {rank}
       </Heading>
     </Box>
