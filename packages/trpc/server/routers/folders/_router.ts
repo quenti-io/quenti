@@ -60,7 +60,7 @@ export const foldersRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "recent-for-set-add");
       return HANDLER_CACHE.handlers["recent-for-set-add"]!({ ctx, input });
     }),
-  getShareId: protectedProcedure
+  getShareId: publicProcedure
     .input(ZGetShareIdSchema)
     .query(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "get-share-id");

@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
 import { shortId } from "../../common/generator";
-import type { NonNullableUserContext } from "../../lib/types";
+import type { DefaultContext } from "../../lib/types";
 import type { TGetShareIdSchema } from "./get-share-id.schema";
 
 type GetShareIdOptions = {
-  ctx: NonNullableUserContext;
+  ctx: DefaultContext;
   input: TGetShareIdSchema;
 };
 
