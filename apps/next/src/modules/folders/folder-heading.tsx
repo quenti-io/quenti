@@ -7,7 +7,6 @@ import { api } from "@quenti/trpc";
 
 import {
   Avatar,
-  Box,
   Button,
   ButtonGroup,
   Center,
@@ -165,29 +164,50 @@ export const FolderHeading = () => {
 
 FolderHeading.Skeleton = function FolderHeadingSkeleton() {
   const router = useRouter();
-  const username = router.query.username as string | undefined;
-  const slug = router.query.slug as string | undefined;
+  const { username, slug } = router.query;
 
   const TextWrapper = ({ children }: { children: React.ReactNode }) => (
     <Flex alignItems="center" h="6">
-      <SkeletonText noOfLines={1} skeletonHeight="20px">
+      <SkeletonText noOfLines={1} skeletonHeight="18px">
         {children}
       </SkeletonText>
     </Flex>
   );
 
   return (
-    <Stack spacing={4}>
-      <Skeleton fitContent>
-        <Heading size="2xl" lineHeight="40px">
-          <Box as="span" verticalAlign="middle" mr="4">
-            <IconFolder style={{ display: "inline" }} size={40} />
-          </Box>
-          <Box as="span" verticalAlign="middle">
-            {slug || "folder title"}
-          </Box>
-        </Heading>
-      </Skeleton>
-    </Stack>
+    <HStack
+      flexDir={{ base: "column", md: "row" }}
+      justifyContent="space-between"
+      alignItems={{ base: "start", md: "end" }}
+      spacing={{ base: 8, md: 4 }}
+    >
+      <Stack spacing="3">
+        <Flex alignItems="center" h="12">
+          <SkeletonText noOfLines={1} skeletonHeight="44px">
+            <Heading size="2xl">
+              {((slug || "Folder Title") as string).replace("-", " ")}
+            </Heading>
+          </SkeletonText>
+        </Flex>
+        <HStack spacing="4">
+          <HStack>
+            <Skeleton width="20px" height="20px" rounded="full" />
+            <TextWrapper>
+              <Text>{username}</Text>
+            </TextWrapper>
+          </HStack>
+          <TextWrapper>
+            <HStack
+              color="gray.700"
+              _dark={{ color: "gray.300" }}
+              spacing="6px"
+            >
+              <IconFolder size={18} />
+              <Text>5 sets</Text>
+            </HStack>
+          </TextWrapper>
+        </HStack>
+      </Stack>
+    </HStack>
   );
 };

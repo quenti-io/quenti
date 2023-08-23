@@ -109,7 +109,11 @@ export const FolderSets = () => {
 
 FolderSets.Skeleton = function FolderSetsSkeleton() {
   return (
-    <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
+    <Grid
+      templateColumns="repeat(auto-fill, minmax(256px, 1fr))"
+      gap={4}
+      w="full"
+    >
       {Array.from({ length: 6 }).map((_, i) => (
         <GridItem key={i}>
           <Skeleton rounded="lg">

@@ -34,3 +34,18 @@ export const LinkArea = () => {
     </SimpleGrid>
   );
 };
+
+LinkArea.Skeleton = function LinkAreaSkeleton() {
+  return (
+    <SimpleGrid
+      spacing="4"
+      w={{ base: "full", lg: "160px" }}
+      h="max-content"
+      columns={{ base: 2, md: 3, lg: 1 }}
+    >
+      {["Flashcards", "Match"].map((name, i) => (
+        <Linkable key={i} name={name} href="" icon={<IconCards />} skeleton />
+      ))}
+    </SimpleGrid>
+  );
+};

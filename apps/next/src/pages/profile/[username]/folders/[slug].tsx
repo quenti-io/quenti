@@ -44,20 +44,17 @@ const FolderPage = ({ folder }: inferSSRProps<typeof getServerSideProps>) => {
                 <FolderHeading />
                 <FolderDescription />
               </Stack>
-              <Stack spacing="0">
-                <Flex
-                  gap={8}
-                  flexDir={{ base: "column", lg: "row" }}
-                  alignItems="stretch"
-                  w="full"
-                >
-                  <LinkArea />
-                  {/* <FolderDescription /> */}
-                  <Flex flex="1">
-                    <FolderSets />
-                  </Flex>
+              <Flex
+                gap={8}
+                flexDir={{ base: "column", lg: "row" }}
+                alignItems="stretch"
+                w="full"
+              >
+                <LinkArea />
+                <Flex flex="1">
+                  <FolderSets />
                 </Flex>
-              </Stack>
+              </Flex>
             </Stack>
           </Container>
         </WithFooter>
