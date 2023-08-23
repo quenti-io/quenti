@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 
 import { api } from "@quenti/trpc";
 
-import { Flex, HStack, IconButton, Tooltip } from "@chakra-ui/react";
+import { Flex, HStack, IconButton, Skeleton, Tooltip } from "@chakra-ui/react";
 
 import {
   IconArrowsShuffle,
@@ -18,9 +18,7 @@ interface ControlsBarProps {
   onSettingsClick: () => void;
 }
 
-export const ControlsBar: React.FC<ControlsBarProps> = ({
-  onSettingsClick,
-}) => {
+export const ControlsBar = ({ onSettingsClick }: ControlsBarProps) => {
   const authed = useSession().status == "authenticated";
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
@@ -84,6 +82,36 @@ export const ControlsBar: React.FC<ControlsBarProps> = ({
         variant="ghost"
         onClick={onSettingsClick}
       />
+    </Flex>
+  );
+};
+
+ControlsBar.Skeleton = function ControlsBarSkeleton() {
+  return (
+    <Flex justifyContent="space-between">
+      <HStack spacing={4}>
+        <Skeleton rounded="full" fitContent>
+          <IconButton
+            icon={<IconArrowsShuffle />}
+            aria-label="Shuffle"
+            rounded="full"
+          />
+        </Skeleton>
+        <Skeleton rounded="full" fitContent>
+          <IconButton
+            icon={<IconPlayerPlay />}
+            aria-label="Shuffle"
+            rounded="full"
+          />
+        </Skeleton>
+      </HStack>
+      <Skeleton rounded="full" fitContent>
+        <IconButton
+          icon={<IconSettings />}
+          aria-label="Setings"
+          rounded="full"
+        />
+      </Skeleton>
     </Flex>
   );
 };

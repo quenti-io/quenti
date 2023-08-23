@@ -1,20 +1,11 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-import {
-  Button,
-  Flex,
-  Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalOverlay,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, ButtonGroup, Stack, Text } from "@chakra-ui/react";
 
 import { IconArrowBack, IconPlayerPlay } from "@tabler/icons-react";
 
+import { Modal } from "../../components/modal";
 import { useMatchContext } from "../../stores/use-match-store";
 
 export interface MatchStartModalProps {
@@ -30,44 +21,39 @@ export const MatchStartModal: React.FC<MatchStartModalProps> = ({ isOpen }) => {
   return (
     <Modal
       isOpen={isOpen}
-      isCentered
-      size="xl"
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      onClose={() => {}}
+      onClose={() => undefined}
       initialFocusRef={actionRef}
     >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" pb="8" rounded="xl">
-        <ModalBody>
-          <Stack spacing={8}>
-            <Heading>Welcome to Match!</Heading>
-            <Stack spacing={8}>
-              <Text>Drag corresponding tiles together to clear the board.</Text>
-              {/*TODO: There should be a gif here*/}
-              <Flex gap={4}>
-                <Button
-                  w="full"
-                  colorScheme="gray"
-                  leftIcon={<IconArrowBack />}
-                  variant="outline"
-                  onClick={router.back}
-                >
-                  Back
-                </Button>
-                <Button
-                  w="full"
-                  leftIcon={<IconPlayerPlay />}
-                  variant="solid"
-                  onClick={newRound}
-                  ref={actionRef}
-                >
-                  Start Game
-                </Button>
-              </Flex>
-            </Stack>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body spacing="10">
+          <Stack>
+            <Modal.Heading>Welcome to Match!</Modal.Heading>
+            <Text>Drag corresponding tiles together to clear the board.</Text>
           </Stack>
-        </ModalBody>
-      </ModalContent>
+          {/*TODO: There should be a gif here*/}
+          <ButtonGroup>
+            <Button
+              w="full"
+              colorScheme="gray"
+              leftIcon={<IconArrowBack size={18} />}
+              variant="outline"
+              onClick={router.back}
+            >
+              Back
+            </Button>
+            <Button
+              w="full"
+              leftIcon={<IconPlayerPlay size={18} />}
+              variant="solid"
+              onClick={newRound}
+              ref={actionRef}
+            >
+              Start game
+            </Button>
+          </ButtonGroup>
+        </Modal.Body>
+      </Modal.Content>
     </Modal>
   );
 };

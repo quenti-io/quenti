@@ -41,7 +41,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     data: {
       title: input.title,
       description: input.description,
-      slug: !existing ? slug : null,
+      slug: !existing || existing.id == input.folderId ? slug : null,
     },
   });
 };

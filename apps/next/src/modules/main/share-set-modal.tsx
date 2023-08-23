@@ -81,7 +81,9 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
                 />
               </Skeleton>
               <Skeleton rounded="lg" isLoaded={!!getShareId.data}>
-                <Button onClick={copy}>Copy</Button>
+                <Button onClick={copy} variant="outline">
+                  Copy link
+                </Button>
               </Skeleton>
             </HStack>
           ) : (

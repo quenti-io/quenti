@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components";
@@ -8,17 +9,28 @@ import { PageWrapper } from "../../../../../common/page-wrapper";
 import { getLayout } from "../../../../../layouts/main-layout";
 import { ControlsBar } from "../../../../../modules/flashcards/controls-bar";
 import { FlashcardArea } from "../../../../../modules/flashcards/flashcard-area";
+import { FlashcardsLoading } from "../../../../../modules/flashcards/flashcards-loading";
 import { FlashcardsSettingsModal } from "../../../../../modules/flashcards/flashcards-settings-modal";
 import { TitleBar } from "../../../../../modules/flashcards/titlebar";
 import { HydrateFolderData } from "../../../../../modules/hydrate-folder-data";
 
 const FolderStudyFlashcards = () => {
+  const router = useRouter();
+  const slug = router.query.slug as string;
+
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
   return (
     <>
       <HeadSeo title="Flashcards" />
-      <HydrateFolderData withTerms>
+      <HydrateFolderData
+        withTerms
+        fallback={
+          <FlashcardsLoading
+            titlePlaceholder={(slug || "Placeholder Title").replace("-", "")}
+          />
+        }
+      >
         <FlashcardsSettingsModal
           isOpen={settingsOpen}
           onClose={() => setSettingsOpen(false)}

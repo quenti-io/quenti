@@ -20,6 +20,9 @@
     "superjson": "^1.13.1",
     "zod": "^3.21.4"
   },
+  "optionalDependencies": {
+    "@quenti/integrations": "*"
+  },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix"

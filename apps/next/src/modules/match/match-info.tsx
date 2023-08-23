@@ -93,10 +93,8 @@ const MatchInfo = () => {
       />
       <Card
         bg={bg}
-        rounded="lg"
-        borderWidth="2px"
-        borderBottomWidth="4px"
-        borderTopWidth="0"
+        rounded="xl"
+        borderBottomWidth="3px"
         borderColor={borderColor}
         w="250px"
         ml="7"

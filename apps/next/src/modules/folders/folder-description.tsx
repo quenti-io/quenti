@@ -5,5 +5,11 @@ import { useFolder } from "../../hooks/use-folder";
 export const FolderDescription = () => {
   const folder = useFolder();
 
-  return <Text whiteSpace="pre-wrap">{folder.description}</Text>;
+  return (
+    !!folder.description.length && (
+      <Text whiteSpace="pre-wrap" mt="6">
+        {folder.description}
+      </Text>
+    )
+  );
 };

@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+
 import { api } from "@quenti/trpc";
 
 import { Grid, GridItem, Heading, Skeleton, Stack } from "@chakra-ui/react";
@@ -5,7 +7,9 @@ import { Grid, GridItem, Heading, Skeleton, Stack } from "@chakra-ui/react";
 import { ClassCard } from "../../components/class-card";
 
 export const ClassesGrid = () => {
-  const { data, isLoading } = api.recent.get.useQuery();
+  const { status } = useSession();
+  const { data, isLoading: recentLoading } = api.recent.get.useQuery();
+  const isLoading = status == "unauthenticated" || recentLoading;
 
   return (
     <Stack spacing={6}>

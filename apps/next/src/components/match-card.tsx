@@ -100,14 +100,14 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
       style={{ x, y, zIndex: term.zIndex }}
     >
       <Card
-        rounded="md"
+        rounded="lg"
         py="4"
         px="5"
         ref={card}
         bg={linkBg}
         borderColor={linkBorder}
         borderWidth="2px"
-        shadow="lg"
+        shadow="md"
         transition="border-color ease-in-out 150ms"
         maxW="200px"
         w="max-content"

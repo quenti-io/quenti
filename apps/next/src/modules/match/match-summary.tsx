@@ -13,7 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { IconArrowBack } from "@tabler/icons-react";
+import { IconArrowBack, IconPlayerPlay } from "@tabler/icons-react";
 
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
@@ -101,13 +101,15 @@ export const MatchSummary = () => {
         <ButtonGroup w="full" justifyContent="end">
           <Button
             variant="outline"
-            leftIcon={<IconArrowBack />}
+            leftIcon={<IconArrowBack size={18} />}
             as={Link}
             href={rootUrl}
           >
             Back to {type === "folder" ? "folder" : "set"}
           </Button>
-          <Button onClick={nextRound}>Play again</Button>
+          <Button onClick={nextRound} leftIcon={<IconPlayerPlay size={18} />}>
+            Play again
+          </Button>
         </ButtonGroup>
       </Stack>
     </Container>

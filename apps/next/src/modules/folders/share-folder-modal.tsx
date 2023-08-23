@@ -3,20 +3,11 @@ import React from "react";
 import { env } from "@quenti/env/client";
 import { api } from "@quenti/trpc";
 
-import {
-  Button,
-  HStack,
-  Heading,
-  Input,
-  Modal,
-  ModalContent,
-  ModalOverlay,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, HStack, Input, Skeleton, useToast } from "@chakra-ui/react";
 
-import { IconCheck, IconCopy } from "@tabler/icons-react";
-
+import { AnimatedCheckCircle } from "../../components/animated-icons/check";
+import { Modal } from "../../components/modal";
+import { Toast } from "../../components/toast";
 import { useFolder } from "../../hooks/use-folder";
 
 export interface ShareFolderModalProps {
@@ -29,8 +20,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
   onClose,
 }) => {
   const { id } = useFolder();
-  const primaryBg = useColorModeValue("gray.200", "gray.800");
-  const inputColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const toast = useToast();
 
   const getShareId = api.folders.getShareId.useQuery(
     { folderId: id },
@@ -40,50 +30,41 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
   );
   const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
 
-  const [copied, setCopied] = React.useState(false);
   const copy = async () => {
     await navigator.clipboard.writeText(url);
+    onClose();
 
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
+    toast({
+      title: "Copied link to clipboard",
+      status: "success",
+      icon: <AnimatedCheckCircle />,
+      colorScheme: "green",
+      render: Toast,
+    });
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="xl"
-      isCentered
-      autoFocus={false}
-    >
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="8" rounded="xl">
-        <Stack spacing={8}>
-          <Heading fontSize="4xl">Share this folder</Heading>
-          <HStack spacing={4}>
-            <Input
-              placeholder="Title"
-              variant="flushed"
-              spellCheck={false}
-              fontWeight={700}
-              bg={primaryBg}
-              color={inputColor}
-              rounded="md"
-              px="4"
-              size="lg"
-              value={getShareId.isLoading ? "Loading..." : url}
-            />
-            <Button
-              size="lg"
-              leftIcon={copied ? <IconCheck /> : <IconCopy />}
-              onClick={copy}
-              isLoading={getShareId.isLoading}
-            >
-              Copy
-            </Button>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Share this folder</Modal.Heading>
+          <HStack spacing="3" pb="4">
+            <Skeleton width="full" rounded="lg" isLoaded={!!getShareId.data}>
+              <Input
+                spellCheck={false}
+                fontWeight={600}
+                value={getShareId.isLoading ? "Loading..." : url}
+              />
+            </Skeleton>
+            <Skeleton rounded="lg" isLoaded={!!getShareId.data}>
+              <Button onClick={copy} variant="outline">
+                Copy link
+              </Button>
+            </Skeleton>
           </HStack>
-        </Stack>
-      </ModalContent>
+        </Modal.Body>
+      </Modal.Content>
     </Modal>
   );
 };
