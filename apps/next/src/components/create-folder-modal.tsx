@@ -49,7 +49,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
-          <Modal.Heading>Create Folder</Modal.Heading>
+          <Modal.Heading>Create folder</Modal.Heading>
           <Stack spacing={4}>
             <Input
               placeholder="Title"

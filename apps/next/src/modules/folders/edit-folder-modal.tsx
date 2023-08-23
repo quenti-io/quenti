@@ -4,21 +4,10 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
-import {
-  Button,
-  ButtonGroup,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, ButtonGroup, Input, Stack } from "@chakra-ui/react";
 
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
+import { Modal } from "../../components/modal";
 import { useFolder } from "../../hooks/use-folder";
 
 export interface EditFolderModalProps {
@@ -35,9 +24,6 @@ export const EditFolderModal: React.FC<EditFolderModalProps> = ({
   const session = useSession();
   const folder = useFolder();
 
-  const primaryBg = useColorModeValue("gray.200", "gray.800");
-  const secondaryBg = useColorModeValue("gray.100", "gray.750");
-
   const [title, setTitle] = React.useState(folder.title);
   const [description, setDescription] = React.useState(folder.description);
 
@@ -53,38 +39,45 @@ export const EditFolderModal: React.FC<EditFolderModalProps> = ({
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent p="4" rounded="xl">
-        <ModalHeader fontWeight={700} fontSize="3xl">
-          Edit Folder
-        </ModalHeader>
-        <ModalBody>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Edit folder</Modal.Heading>
           <Stack spacing={4}>
             <Input
               placeholder="Title"
               variant="flushed"
               fontWeight={700}
-              bg={primaryBg}
-              rounded="md"
-              px="4"
-              size="lg"
+              bg="gray.100"
+              px="14px"
+              _dark={{
+                bg: "gray.700",
+              }}
+              rounded="lg"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <AutoResizeTextarea
               allowTab={false}
               placeholder="Description (optional)"
-              bg={secondaryBg}
-              py="4"
+              py="3"
               border="none"
+              bg="gray.50"
+              _dark={{
+                bg: "gray.750",
+              }}
+              minH="100px"
               value={description}
+              size="sm"
+              rounded="lg"
               onChange={(e) => setDescription(e.target.value)}
             />
           </Stack>
-        </ModalBody>
-        <ModalFooter>
-          <ButtonGroup gap={2}>
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
+          <ButtonGroup>
             <Button variant="ghost" colorScheme="gray" onClick={onClose}>
               Cancel
             </Button>
@@ -101,8 +94,8 @@ export const EditFolderModal: React.FC<EditFolderModalProps> = ({
               Save
             </Button>
           </ButtonGroup>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };

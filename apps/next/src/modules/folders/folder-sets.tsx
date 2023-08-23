@@ -98,7 +98,7 @@ export const FolderSets = () => {
                 setHasOpenedSets(true);
               }}
             >
-              Add Sets
+              Add sets
             </Button>
           </GridItem>
         </FolderCreatorOnly>

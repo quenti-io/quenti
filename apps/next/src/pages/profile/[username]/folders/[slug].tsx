@@ -10,6 +10,7 @@ import { WithFooter } from "../../../../components/with-footer";
 import { getLayout } from "../../../../layouts/main-layout";
 import type { inferSSRProps } from "../../../../lib/infer-ssr-props";
 import { Folder404 } from "../../../../modules/folders/folder-404";
+import { FolderDescription } from "../../../../modules/folders/folder-description";
 import { FolderHeading } from "../../../../modules/folders/folder-heading";
 import { FolderLoading } from "../../../../modules/folders/folder-loading";
 import { FolderSets } from "../../../../modules/folders/folder-sets";
@@ -39,11 +40,11 @@ const FolderPage = ({ folder }: inferSSRProps<typeof getServerSideProps>) => {
         <WithFooter>
           <Container maxW="7xl">
             <Stack spacing={12}>
-              <Stack spacing={8}>
+              <Stack spacing="0">
                 <FolderHeading />
-                {/* <ActionArea /> */}
+                <FolderDescription />
               </Stack>
-              <Stack spacing={6}>
+              <Stack spacing="0">
                 <Flex
                   gap={8}
                   flexDir={{ base: "column", lg: "row" }}

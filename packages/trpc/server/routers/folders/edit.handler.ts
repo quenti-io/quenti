@@ -25,12 +25,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
   }
 
   const slug = slugify(input.title, { lower: true });
-  const existing = await ctx.prisma.folder.findUnique({
+  const existing = await ctx.prisma.folder.findFirst({
     where: {
-      userId_slug: {
-        userId: ctx.session.user.id,
-        slug,
-      },
+      id: { not: input.folderId },
+      userId: ctx.session.user.id,
+      slug,
     },
   });
 
