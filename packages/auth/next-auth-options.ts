@@ -1,6 +1,7 @@
 import { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+import { env as clientEnv } from "@quenti/env/client";
 import { env } from "@quenti/env/server";
 import { prisma } from "@quenti/prisma";
 
@@ -29,6 +30,17 @@ export const authOptions: NextAuthOptions = {
         session.version = version;
       }
       return session;
+    },
+    redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same domain
+      else if (
+        new URL(url).hostname ===
+        new URL(clientEnv.NEXT_PUBLIC_BASE_URL).hostname
+      )
+        return url;
+      return baseUrl;
     },
     async signIn({ user }) {
       const regexes = await prisma.allowedEmailRegex.findMany();
@@ -87,8 +99,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
+    signIn: "/auth/login",
     signOut: "/",
-    newUser: "/onboarding",
   },
   // Configure one or more authentication providers
   adapter: CustomPrismaAdapter(prisma),

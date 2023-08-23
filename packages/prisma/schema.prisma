@@ -64,25 +64,26 @@ enum UserType {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  name             String?
-  username         String    @unique
-  email            String    @unique
-  emailVerified    DateTime?
-  image            String?
-  type             UserType  @default(Student)
-  verified         Boolean   @default(false)
-  createdAt        DateTime  @default(now())
-  lastSeenAt       DateTime  @default(now())
-  bannedAt         DateTime?
-  displayName      Boolean   @default(true)
-  flags            Int       @default(0)
+  id                  String    @id @default(cuid())
+  name                String?
+  username            String    @unique
+  email               String    @unique
+  emailVerified       DateTime?
+  image               String?
+  type                UserType  @default(Student)
+  verified            Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  lastSeenAt          DateTime  @default(now())
+  bannedAt            DateTime?
+  displayName         Boolean   @default(true)
+  flags               Int       @default(0)
   /// @zod.custom(imports.userMetadataSchema)
-  metadata         Json?
-  enableUsageData  Boolean   @default(true)
-  changelogVersion String
-  isOrgEligible    Boolean   @default(false)
-  organizationId   String?
+  metadata            Json?
+  enableUsageData     Boolean   @default(true)
+  completedOnboarding Boolean   @default(false)
+  changelogVersion    String
+  isOrgEligible       Boolean   @default(false)
+  organizationId      String?
 
   accounts       Account[]
   sessions       Session[]
