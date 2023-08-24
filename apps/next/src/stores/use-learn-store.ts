@@ -353,12 +353,9 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
 
 export const LearnContext = React.createContext<LearnStore | null>(null);
 
-export const useLearnContext = <T>(
-  selector: (state: LearnState) => T,
-  equalityFn?: (left: T, right: T) => boolean,
-): T => {
+export const useLearnContext = <T>(selector: (state: LearnState) => T): T => {
   const store = React.useContext(LearnContext);
   if (!store) throw new Error("Missing LearnContext.Provider in the tree");
 
-  return useStore(store, selector, equalityFn);
+  return useStore(store, selector);
 };
