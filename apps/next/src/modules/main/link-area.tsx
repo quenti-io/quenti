@@ -50,7 +50,7 @@ export const LinkArea = () => {
       <Linkable
         name="Test"
         icon={<IconReport />}
-        href="/#coming-soon"
+        href={`/${id}/test`}
         requireAuth
       />
       <Linkable

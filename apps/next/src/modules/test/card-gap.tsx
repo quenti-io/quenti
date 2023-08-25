@@ -3,7 +3,6 @@ import {
   Button,
   HStack,
   Heading,
-  IconButton,
   Stack,
   Text,
   VStack,
@@ -14,12 +13,10 @@ import {
   IconPoint,
   IconPointFilled,
   IconReport,
-  IconRotate,
-  IconSettings,
-  IconX,
 } from "@tabler/icons-react";
 
 import { useTestContext } from "../../stores/use-test-store";
+import { TestOptions } from "./test-options";
 
 export interface TestCardGapProps {
   type: "start" | "question" | "finish";
@@ -130,32 +127,7 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
               {title}
             </Heading>
           </Stack>
-          <HStack
-            w={{ base: "full", md: "auto" }}
-            justifyContent={{ base: "space-between", md: "auto" }}
-          >
-            <HStack ml={{ base: "-2", md: 0 }}>
-              <IconButton
-                icon={<IconRotate />}
-                aria-label="Restart"
-                rounded="full"
-                variant="ghost"
-              />
-              <IconButton
-                icon={<IconSettings />}
-                aria-label="Settings"
-                rounded="full"
-                variant="ghost"
-              />
-            </HStack>
-            <IconButton
-              colorScheme="gray"
-              icon={<IconX />}
-              aria-label="Back"
-              rounded="full"
-              variant="ghost"
-            />
-          </HStack>
+          <TestOptions />
         </HStack>
       )}
       {type == "finish" && (

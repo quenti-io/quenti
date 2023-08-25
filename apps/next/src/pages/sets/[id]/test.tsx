@@ -62,8 +62,8 @@ const TestContainer = () => {
             borderWidth="2px"
             borderColor="gray.100"
             _dark={{
-              bg: "gray.800",
-              borderColor: "gray.750",
+              bg: "gray.750",
+              borderColor: "gray.700",
             }}
             rounded="2xl"
           >
