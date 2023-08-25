@@ -135,7 +135,7 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
           <Heading size="md" m="0">
             Ready to submit your test?
           </Heading>
-          <Button>Check answers</Button>
+          <Button size="lg">Check answers</Button>
         </VStack>
       )}
     </HStack>
