@@ -26,7 +26,7 @@ export const MultipleChoiceCard = ({ i }: { i: number }) => {
           Choose matching{" "}
           {question.answerMode == "Definition" ? "definition" : "term"}
         </FormLabel>
-        <SimpleGrid columns={2} gap="6">
+        <SimpleGrid columns={{ base: 1, sm: 2 }} gap={{ base: 4, md: 6 }}>
           {data.choices.map((choice, ci) => (
             <Clickable
               key={ci}

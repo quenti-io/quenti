@@ -1,22 +1,22 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   HStack,
   Heading,
   IconButton,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 
 import {
-  IconArrowLeft,
   IconCircleCheckFilled,
   IconPoint,
   IconPointFilled,
   IconReport,
   IconRotate,
   IconSettings,
+  IconX,
 } from "@tabler/icons-react";
 
 import { useTestContext } from "../../stores/use-test-store";
@@ -47,13 +47,15 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
 
   return (
     <HStack
-      ml="34px"
+      ml={{ base: "5px", sm: "26px", md: "34px" }}
+      pr={{ base: "10px", sm: "52px", md: "68px" }}
       spacing="4"
       alignItems={type == "question" ? "center" : "stretch"}
+      w="full"
     >
-      <Stack w="3px" position="relative">
+      <Stack w={{ base: "2px", sm: "3px" }} position="relative" minH="12">
         <Box
-          w="3px"
+          w={{ base: "2px", sm: "3px" }}
           minH="12"
           h="full"
           bg="gray.200"
@@ -61,6 +63,19 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
           roundedTop={type == "start" ? "full" : undefined}
           roundedBottom={type == "finish" ? "full" : undefined}
         />
+        {(type == "question" || type == "finish") && (
+          <Box
+            display={{ base: "block", sm: "none" }}
+            position="absolute"
+            top="-4"
+            left="0"
+            w={{ base: "2px", sm: "3px" }}
+            h="20"
+            bg="gray.200"
+            _dark={{ bg: "gray.750" }}
+            zIndex={-1}
+          />
+        )}
         {type !== "start" && (
           <Box
             w="6"
@@ -100,7 +115,13 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
         </Text>
       )}
       {title && (
-        <HStack justifyContent="space-between" w="full" pr="34px">
+        <HStack
+          justifyContent={{ base: "start", md: "space-between" }}
+          alignItems="start"
+          w="full"
+          pr={{ base: "5px", sm: "26px", md: "34px" }}
+          flexDir={{ base: "column-reverse", md: "row" }}
+        >
           <Stack spacing="0">
             <Text fontSize="sm" fontWeight={600}>
               Test
@@ -109,35 +130,41 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
               {title}
             </Heading>
           </Stack>
-          <ButtonGroup colorScheme="gray" spacing="2">
+          <HStack
+            w={{ base: "full", md: "auto" }}
+            justifyContent={{ base: "space-between", md: "auto" }}
+          >
+            <HStack ml={{ base: "-2", md: 0 }}>
+              <IconButton
+                icon={<IconRotate />}
+                aria-label="Restart"
+                rounded="full"
+                variant="ghost"
+              />
+              <IconButton
+                icon={<IconSettings />}
+                aria-label="Settings"
+                rounded="full"
+                variant="ghost"
+              />
+            </HStack>
             <IconButton
-              icon={<IconRotate />}
-              aria-label="Restart"
+              colorScheme="gray"
+              icon={<IconX />}
+              aria-label="Back"
               rounded="full"
               variant="ghost"
             />
-            <IconButton
-              icon={<IconSettings />}
-              aria-label="Settings"
-              rounded="full"
-              variant="ghost"
-            />
-            <IconButton
-              icon={<IconArrowLeft />}
-              aria-label="Settings"
-              rounded="full"
-              variant="ghost"
-            />
-          </ButtonGroup>
+          </HStack>
         </HStack>
       )}
       {type == "finish" && (
-        <Stack ml="8" mt="10" spacing="6" h="32">
+        <VStack mt="10" spacing="6" h="24" w="full" pr="4">
           <Heading size="md" m="0">
             Ready to submit your test?
           </Heading>
-          <Button variant="outline">Check answers</Button>
-        </Stack>
+          <Button>Check answers</Button>
+        </VStack>
       )}
     </HStack>
   );

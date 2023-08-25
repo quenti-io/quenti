@@ -20,7 +20,7 @@ const Test = () => {
       <HeadSeo title="Test" />
       <HydrateSetData disallowDirty>
         <CreateTestData>
-          <Container maxW="4xl" mt="10">
+          <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
             <TestContainer />
           </Container>
         </CreateTestData>
@@ -45,7 +45,7 @@ const TestContainer = () => {
   };
 
   return (
-    <Stack spacing="0" pb="20">
+    <Stack spacing="0" pb="20" w="full">
       <TestCardGap type="start" title={title} />
       {outline.map((type, i) => (
         <>
@@ -66,7 +66,11 @@ const TestContainer = () => {
             }}
             rounded="2xl"
           >
-            <Stack spacing={6} px="8" py="7">
+            <Stack
+              spacing={6}
+              px={{ base: 5, sm: 6, md: 8 }}
+              py={{ base: 5, sm: 5, md: 7 }}
+            >
               {card(type, i)}
             </Stack>
           </Card>

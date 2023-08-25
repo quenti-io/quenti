@@ -38,7 +38,7 @@ export const TrueFalseCard = ({ i }: { i: number }) => {
 
   return (
     <>
-      <Grid templateColumns="1fr 2px 1fr" gap="3">
+      <Grid templateColumns="1fr 2px 1fr" gap={{ base: 1, md: 3 }}>
         <Box h="full" w="full">
           <PromptDisplay
             label={question.answerMode == "Definition" ? "Term" : "Definition"}
@@ -61,7 +61,7 @@ export const TrueFalseCard = ({ i }: { i: number }) => {
       </Grid>
       <Stack spacing="2">
         <FormLabel>Choose an answer</FormLabel>
-        <SimpleGrid columns={2} gap="6">
+        <SimpleGrid columns={2} gap={{ base: 4, md: 6 }}>
           <Clickable
             isSelected={trueSelected}
             onClick={() => {
