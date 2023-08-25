@@ -30,10 +30,14 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
       },
     });
 
+    // SUPER IMPORTANT: **clone the terms when initializing** so we aren't modifying the original
+    // objects when we transition back to the main set page (test store uses a lot of .pop() calls on the array)
+    const cloned = Array.from(terms);
+
     storeRef.current
       .getState()
       .initialize(
-        terms,
+        cloned,
         20,
         [
           TestQuestionType.TrueFalse,
