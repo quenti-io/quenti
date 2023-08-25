@@ -16,7 +16,19 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
 
   const storeRef = React.useRef<TestStore>();
   if (!storeRef.current) {
-    storeRef.current = createTestStore();
+    storeRef.current = createTestStore(undefined, {
+      onAnswerDelegate: (index) => {
+        const next = document.getElementById(`test-card-${index + 1}`);
+        if (!next) return;
+
+        const position = next.getBoundingClientRect();
+        window.scrollTo({
+          left: position.left,
+          top: position.top + window.scrollY - 48,
+          behavior: "smooth",
+        });
+      },
+    });
 
     storeRef.current
       .getState()

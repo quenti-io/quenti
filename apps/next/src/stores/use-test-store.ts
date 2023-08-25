@@ -38,11 +38,15 @@ interface TestState extends TestStoreProps {
     data: D["answer"],
   ) => void;
   clearAnswer: (index: number) => void;
+  onAnswerDelegate: (index: number) => void;
 }
 
 export type TestStore = ReturnType<typeof createTestStore>;
 
-export const createTestStore = (initProps?: Partial<TestStoreProps>) => {
+export const createTestStore = (
+  initProps?: Partial<TestStoreProps>,
+  behaviors?: Partial<TestState>,
+) => {
   const DEFAULT_PROPS: TestStoreProps = {
     questionCount: 20,
     questionTypes: [
@@ -111,6 +115,8 @@ export const createTestStore = (initProps?: Partial<TestStoreProps>) => {
           const question = state.timeline[index]!;
           question.answered = true;
           question.data.answer = data;
+
+          behaviors?.onAnswerDelegate?.(index);
           return { timeline: [...state.timeline] };
         });
       },
@@ -121,6 +127,9 @@ export const createTestStore = (initProps?: Partial<TestStoreProps>) => {
           question.data.answer = undefined;
           return { timeline: [...state.timeline] };
         });
+      },
+      onAnswerDelegate: (index) => {
+        behaviors?.onAnswerDelegate?.(index);
       },
     })),
   );
