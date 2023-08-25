@@ -6,10 +6,14 @@ import {
   generateMatchQuestion,
   generateMcqQuestion,
   generateTrueFalseQuestion,
-  generateWrittenQuestion,
+  generateWriteQuestion,
 } from "@quenti/core/generator";
-import { type TestQuestion, TestQuestionType } from "@quenti/interfaces";
-import { takeNRandom } from "@quenti/lib/array";
+import {
+  type DefaultData,
+  type TestQuestion,
+  TestQuestionType,
+} from "@quenti/interfaces";
+import { shuffleArray, takeNRandom } from "@quenti/lib/array";
 import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
 
 export interface TestStoreProps {
@@ -29,8 +33,11 @@ interface TestState extends TestStoreProps {
     questionTypes: TestQuestionType[],
     answerMode: StudySetAnswerMode,
   ) => void;
-  answerQuestion: (index: number, entry: number, termId?: string) => void;
-  clearAnswer: (index: number, entry: number) => void;
+  answerQuestion: <D extends DefaultData>(
+    index: number,
+    data: D["answer"],
+  ) => void;
+  clearAnswer: (index: number) => void;
 }
 
 export type TestStore = ReturnType<typeof createTestStore>;
@@ -55,143 +62,64 @@ export const createTestStore = (initProps?: Partial<TestStoreProps>) => {
       ...DEFAULT_PROPS,
       ...initProps,
       initialize: (allTerms, questionCount, questionTypes, answerMode) => {
-        const terms = takeNRandom(allTerms, questionCount);
+        let pool = shuffleArray(allTerms);
 
-        // An outline of what the test will look like before it is populated with questions
-        let skeletonTimeline = new Array<{
-          type: TestQuestionType;
-          entries: number;
-        }>();
+        let outline: TestQuestionType[] = [];
+        outline = outline
+          .concat(Array(5).fill(TestQuestionType.TrueFalse))
+          .concat(Array(5).fill(TestQuestionType.MultipleChoice));
 
-        const order = Object.values(TestQuestionType) as TestQuestionType[];
-        const priority = [
-          TestQuestionType.MultipleChoice,
-          TestQuestionType.Write,
-          TestQuestionType.TrueFalse,
-          TestQuestionType.Match,
-        ];
+        const timeline: TestQuestion[] = [];
 
-        // Determines whether or not a question type is eligible to be added to the timeline
-        // based on the number of spaces it has been calculated to consume
-        const isEligibleGivenInstances = (
-          type: TestQuestionType,
-          count: number,
-        ) => {
-          if (type !== TestQuestionType.Match) return true;
-          else return count >= 2;
-        };
-
-        // // The number of slots to be assigned for a particular question type
-        // const getEntriesForType = (type: TestQuestionType, count: number) => {
-        //   switch (type) {
-        //     case TestQuestionType.TrueFalse:
-        //     case TestQuestionType.MultipleChoice:
-        //     case TestQuestionType.Write:
-        //       return 1;
-        //     case TestQuestionType.Match:
-        //       return count;
-        //   }
-        // };
-
-        // If the question count is divisible by the number of question
-        // types, split the questions evenly.
-        if (questionCount % questionTypes.length == 0) {
-          for (const type of order) {
-            const chunk = questionCount % questionTypes.length;
-            if (isEligibleGivenInstances(type, chunk))
-              skeletonTimeline.push({
-                type,
-                entries: chunk,
-              });
-          }
-        } else {
-          // Otherwise, split the questions as evenly as possible based on priority
-          // and fill all of the remaining slots with the remaining question types
-          // Example: if there 20 total questions, and three different types of questions,
-          // the first 7 would be multiple choice, the next 7 would be true/false, and the last 6 is matching
-          let remaining = questionCount;
-          let remaininTypes = questionTypes.length;
-          for (const type of priority.filter((x) =>
-            questionTypes.includes(x),
-          )) {
-            const chunk = Math.ceil(remaining / remaininTypes);
-            if (isEligibleGivenInstances(type, chunk))
-              skeletonTimeline.push({
-                type,
-                entries: chunk,
-              });
-
-            remaining -= chunk;
-            remaininTypes--;
-          }
-
-          // Sort the skeleton timeline by order
-          skeletonTimeline = skeletonTimeline.sort(
-            (a, b) => order.indexOf(a.type) - order.indexOf(b.type),
-          );
-        }
-
-        const timeline = new Array<TestQuestion>();
-
-        // Populate the timeline with questions
-        for (const { type, entries } of skeletonTimeline) {
+        for (const type of outline) {
           switch (type) {
-            case TestQuestionType.TrueFalse:
-            case TestQuestionType.MultipleChoice:
-            case TestQuestionType.Write:
-              for (let i = 0; i < entries; i++) {
-                timeline.push(
-                  type == TestQuestionType.TrueFalse
-                    ? generateTrueFalseQuestion(terms[i]!, allTerms, answerMode)
-                    : type == TestQuestionType.MultipleChoice
-                    ? generateMcqQuestion(terms[i]!, allTerms, answerMode)
-                    : generateWrittenQuestion(terms[i]!, answerMode),
-                );
-              }
+            case TestQuestionType.TrueFalse: {
+              const term = pool.pop()!;
+              timeline.push(generateTrueFalseQuestion(term, pool, answerMode));
               break;
-            case TestQuestionType.Match:
-              const matchTerms = takeNRandom(allTerms, entries);
-              timeline.push(generateMatchQuestion(matchTerms, answerMode));
+            }
+            case TestQuestionType.MultipleChoice: {
+              const term = pool.pop()!;
+              timeline.push(generateMcqQuestion(term, pool, answerMode));
               break;
+            }
+            case TestQuestionType.Match: {
+              const terms = takeNRandom(pool, 4);
+              pool = pool.filter((t) => !terms.find((x) => x.id == t.id));
+              timeline.push(generateMatchQuestion(terms, answerMode));
+            }
+            case TestQuestionType.Write: {
+              const term = pool.pop()!;
+              timeline.push(generateWriteQuestion(term, answerMode));
+            }
           }
         }
 
-        console.log("CREATED", timeline);
+        console.log(timeline);
 
         set({
           allTerms,
           questionCount,
           questionTypes,
           answerMode,
+          outline,
           timeline,
-          outline: timeline.map((q) => q.type),
         });
       },
-      answerQuestion: (index, _entry, termId) => {
+      answerQuestion: (index, data) => {
         set((state) => {
           const question = state.timeline[index]!;
-          const entry = question.entries[_entry]!;
-
-          entry.answer = {
-            term: termId,
-          };
           question.answered = true;
-
-          return {
-            timeline: state.timeline,
-          };
+          question.data.answer = data;
+          return { timeline: [...state.timeline] };
         });
       },
-      clearAnswer: (index, _entry) => {
+      clearAnswer: (index) => {
         set((state) => {
           const question = state.timeline[index]!;
-          const entry = question.entries[_entry]!;
-          entry.answer = undefined;
           question.answered = false;
-
-          return {
-            timeline: state.timeline,
-          };
+          question.data.answer = undefined;
+          return { timeline: [...state.timeline] };
         });
       },
     })),

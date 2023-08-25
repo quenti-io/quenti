@@ -9,19 +9,37 @@ export enum TestQuestionType {
   Match = "Match",
 }
 
-export interface TestQuestion {
+export type DefaultData =
+  | TrueFalseData
+  | MultipleChoiceData
+  | WriteData
+  | MatchData;
+
+export interface TestQuestion<D = DefaultData> {
   type: TestQuestionType;
   answerMode: StudySetAnswerMode;
-  entries: QuestionEntry[];
+  data: D;
   answered: boolean;
 }
 
-export interface QuestionEntry {
+export interface TrueFalseData {
   term: Term;
-  distractors: Term[];
-  answer?: AnswerObject;
+  distractor?: Term;
+  answer?: boolean;
 }
 
-export interface AnswerObject {
-  term?: string;
+export interface MultipleChoiceData {
+  term: Term;
+  choices: Term[];
+  answer?: string;
+}
+
+export interface WriteData {
+  term: Term;
+  answer?: string;
+}
+
+export interface MatchData {
+  terms: Term[];
+  answer?: string[];
 }

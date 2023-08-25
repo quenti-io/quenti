@@ -1,4 +1,11 @@
-import { type TestQuestion, TestQuestionType } from "@quenti/interfaces";
+import {
+  type MatchData,
+  type MultipleChoiceData,
+  type TestQuestion,
+  TestQuestionType,
+  type TrueFalseData,
+} from "@quenti/interfaces";
+import { shuffleArray } from "@quenti/lib/array";
 import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
 
 import { generateDistractors } from "./distractors";
@@ -12,37 +19,40 @@ export const getAnswerMode = (
 
 export const generateTrueFalseQuestion = (
   term: Term,
-  allTerms: Term[],
+  distractorPool: Term[],
   answerMode: StudySetAnswerMode,
-): TestQuestion => {
+): TestQuestion<TrueFalseData> => {
   const evaluation = Math.random() > 0.5;
+  const distractor = evaluation
+    ? undefined
+    : distractorPool[Math.floor(Math.random() * distractorPool.length)];
+
   return {
     type: TestQuestionType.TrueFalse,
     answerMode: getAnswerMode(answerMode),
-    entries: [
-      {
-        term,
-        distractors: evaluation ? generateDistractors(term, allTerms, 1) : [],
-      },
-    ],
+    data: {
+      term,
+      distractor,
+    },
     answered: false,
   };
 };
 
 export const generateMcqQuestion = (
   term: Term,
-  allTerms: Term[],
+  distractorPool: Term[],
   answerMode: StudySetAnswerMode,
-): TestQuestion => {
+): TestQuestion<MultipleChoiceData> => {
+  const distractors = generateDistractors(term, distractorPool, 3);
+  const choices = shuffleArray([term, ...distractors]);
+
   return {
     type: TestQuestionType.MultipleChoice,
     answerMode: getAnswerMode(answerMode),
-    entries: [
-      {
-        term,
-        distractors: generateDistractors(term, allTerms, 3),
-      },
-    ],
+    data: {
+      term,
+      choices,
+    },
     answered: false,
   };
 };
@@ -50,28 +60,25 @@ export const generateMcqQuestion = (
 export const generateMatchQuestion = (
   terms: Term[],
   answerMode: StudySetAnswerMode,
-): TestQuestion => {
+): TestQuestion<MatchData> => {
   return {
     type: TestQuestionType.Match,
     answerMode: getAnswerMode(answerMode),
-    entries: terms.map((term) => ({ term, distractors: [] })),
+    data: {
+      terms,
+    },
     answered: false,
   };
 };
 
-export const generateWrittenQuestion = (
+export const generateWriteQuestion = (
   term: Term,
   answerMode: StudySetAnswerMode,
 ): TestQuestion => {
   return {
     type: TestQuestionType.Write,
     answerMode: getAnswerMode(answerMode),
-    entries: [
-      {
-        term,
-        distractors: [],
-      },
-    ],
+    data: { term },
     answered: false,
   };
 };

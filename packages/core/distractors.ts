@@ -1,23 +1,18 @@
+import { takeNRandom } from "@quenti/lib/array";
 import type { Term } from "@quenti/prisma/client";
 
 export const generateDistractors = (
   term: Term,
-  allTerms: Term[],
+  pool: Term[],
   count: number,
 ): Term[] => {
-  if (count > 4) throw new Error("Cannot generate more than 4 distractors");
-  const distractors = new Set<Term>();
+  const distractors = new Array<Term>();
 
-  // The pool of distractors is all terms at most 4 to the left and right of the term
-  const pool = allTerms.filter(
+  const distractorPool = pool.filter(
     (t) =>
-      t.id !== term.id && t.rank >= term.rank - 4 && t.rank <= term.rank + 4,
+      t.id != term.id && t.rank >= term.rank - 4 && t.rank <= term.rank + 4,
   );
 
-  while (distractors.size < count) {
-    const index = Math.floor(Math.random() * pool.length);
-    distractors.add(pool[index]!);
-  }
-
+  distractors.push(...takeNRandom(distractorPool, count));
   return Array.from(distractors);
 };

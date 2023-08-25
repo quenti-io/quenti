@@ -1,8 +1,8 @@
-import { shuffleArray } from "@quenti/lib/array";
-import type { Term } from "@quenti/prisma/client";
+import type { MultipleChoiceData } from "@quenti/interfaces";
 
-import { SimpleGrid } from "@chakra-ui/react";
+import { FormLabel, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
+import { ScriptFormatter } from "../../../components/script-formatter";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
 import { Clickable } from "../clickable";
@@ -10,45 +10,47 @@ import { PromptDisplay } from "../prompt-display";
 import { useCardSelector } from "../use-card-selector";
 
 export const MultipleChoiceCard = ({ i }: { i: number }) => {
-  const q = useTestContext((s) => s.timeline[i]!);
-
-  const entry = q.entries[0]!;
-  const distractors = entry.distractors;
-
-  const choices = shuffleArray(distractors.concat(entry.term));
-
-  return (
-    <>
-      <PromptDisplay
-        label={q.answerMode == "Definition" ? "Term" : "Definition"}
-        content={word(q.answerMode, entry.term, "prompt")}
-      />
-      <Choices i={i} choices={choices} />
-    </>
-  );
-};
-
-const Choices = ({ i: index, choices }: { i: number; choices: Term[] }) => {
-  const { q, isAnswered, answer } = useCardSelector(index);
+  const { question, answered, data } = useCardSelector<MultipleChoiceData>(i);
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);
   const clearAnswer = useTestContext((s) => s.clearAnswer);
 
   return (
-    <SimpleGrid columns={2} gap="6">
-      {choices.map((choice, i) => (
-        <Clickable
-          key={i}
-          isSelected={isAnswered && answer?.term == choice.id}
-          onClick={() => {
-            if (!(isAnswered && answer?.term == choice.id))
-              answerQuestion(index, 0, choice.id);
-            else clearAnswer(index, 0);
-          }}
-        >
-          {word(q.answerMode, choice, "answer")}
-        </Clickable>
-      ))}
-    </SimpleGrid>
+    <>
+      <PromptDisplay
+        label={question.answerMode == "Definition" ? "Term" : "Definition"}
+        content={word(question.answerMode, data.term, "prompt")}
+      />
+      <Stack spacing="2">
+        <FormLabel>
+          Choose matching{" "}
+          {question.answerMode == "Definition" ? "definition" : "term"}
+        </FormLabel>
+        <SimpleGrid columns={2} gap="6">
+          {data.choices.map((choice, ci) => (
+            <Clickable
+              key={ci}
+              isSelected={answered && data.answer == choice.id}
+              onClick={() => {
+                if (data.answer !== choice.id)
+                  answerQuestion<MultipleChoiceData>(i, choice.id);
+                else clearAnswer(i);
+              }}
+            >
+              <Text
+                size="lg"
+                whiteSpace="pre-wrap"
+                textAlign="start"
+                fontWeight="normal"
+              >
+                <ScriptFormatter>
+                  {word(question.answerMode, choice, "answer")}
+                </ScriptFormatter>
+              </Text>
+            </Clickable>
+          ))}
+        </SimpleGrid>
+      </Stack>
+    </>
   );
 };

@@ -5,9 +5,11 @@ import { Card, Container, Stack } from "@chakra-ui/react";
 
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
+import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { getLayout } from "../../../layouts/main-layout";
 import { CreateTestData } from "../../../modules/create-test-data";
 import HydrateSetData from "../../../modules/hydrate-set-data";
+import { TestCardGap } from "../../../modules/test/card-gap";
 import { MultipleChoiceCard } from "../../../modules/test/cards/multiple-choice-card";
 import { TrueFalseCard } from "../../../modules/test/cards/true-false-card";
 import { useTestContext } from "../../../stores/use-test-store";
@@ -18,7 +20,7 @@ const Test = () => {
       <HeadSeo title="Test" />
       <HydrateSetData disallowDirty>
         <CreateTestData>
-          <Container maxW="4xl">
+          <Container maxW="4xl" mt="10">
             <TestContainer />
           </Container>
         </CreateTestData>
@@ -28,6 +30,7 @@ const Test = () => {
 };
 
 const TestContainer = () => {
+  const { title } = useSetFolderUnison();
   const outline = useTestContext((s) => s.outline);
 
   const card = (type: TestQuestionType, i: number) => {
@@ -42,22 +45,34 @@ const TestContainer = () => {
   };
 
   return (
-    <Stack spacing="8" mt="10">
+    <Stack spacing="0" pb="20">
+      <TestCardGap type="start" title={title} />
       {outline.map((type, i) => (
-        <Card
-          key={i}
-          overflow="hidden"
-          bg="white"
-          _dark={{
-            bg: "gray.750",
-          }}
-          rounded="2xl"
-        >
-          <Stack spacing={6} px="8" py="7">
-            {card(type, i)}
-          </Stack>
-        </Card>
+        <>
+          <TestCardGap
+            type="question"
+            index={i}
+            numQuestions={outline.length}
+          />
+          <Card
+            key={i}
+            overflow="hidden"
+            bg="white"
+            borderWidth="2px"
+            borderColor="gray.100"
+            _dark={{
+              bg: "gray.800",
+              borderColor: "gray.750",
+            }}
+            rounded="2xl"
+          >
+            <Stack spacing={6} px="8" py="7">
+              {card(type, i)}
+            </Stack>
+          </Card>
+        </>
       ))}
+      <TestCardGap type="finish" />
     </Stack>
   );
 };

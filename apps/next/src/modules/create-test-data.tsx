@@ -28,7 +28,7 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
           TestQuestionType.MultipleChoice,
           TestQuestionType.Match,
         ],
-        "Word",
+        "Definition",
       );
   }
 
