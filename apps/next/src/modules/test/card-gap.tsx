@@ -22,6 +22,7 @@ export interface TestCardGapProps {
   type: "start" | "question" | "finish";
   title?: string;
   index?: number;
+  count?: number;
   numQuestions?: number;
 }
 
@@ -29,6 +30,7 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
   type,
   title,
   index,
+  count = 1,
   numQuestions,
 }) => {
   const answered = useTestContext((s) => s.timeline[index || 0]?.answered);
@@ -108,7 +110,9 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
             color: "gray.400",
           }}
         >
-          {index + 1} / {numQuestions}
+          {`${
+            count <= 1 ? index + 1 : `${index + 1}-${index + count}`
+          } / ${numQuestions}`}
         </Text>
       )}
       {title && (

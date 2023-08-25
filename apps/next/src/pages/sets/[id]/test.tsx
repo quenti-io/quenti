@@ -32,6 +32,7 @@ const Test = () => {
 const TestContainer = () => {
   const { title } = useSetFolderUnison();
   const outline = useTestContext((s) => s.outline);
+  const questionCount = useTestContext((s) => s.questionCount);
 
   const card = (type: TestQuestionType, i: number) => {
     switch (type) {
@@ -47,16 +48,17 @@ const TestContainer = () => {
   return (
     <Stack spacing="0" pb="20" w="full">
       <TestCardGap type="start" title={title} />
-      {outline.map((type, i) => (
+      {outline.map(({ type, count, index }) => (
         <>
           <TestCardGap
             type="question"
-            index={i}
-            numQuestions={outline.length}
+            index={index}
+            numQuestions={questionCount}
+            count={count}
           />
           <Card
-            key={i}
-            id={`test-card-${i}`}
+            key={index}
+            id={`test-card-${index}`}
             overflow="hidden"
             bg="white"
             borderWidth="2px"
@@ -72,7 +74,7 @@ const TestContainer = () => {
               px={{ base: 5, sm: 6, md: 8 }}
               py={{ base: 5, sm: 5, md: 7 }}
             >
-              {card(type, i)}
+              {card(type, index)}
             </Stack>
           </Card>
         </>
