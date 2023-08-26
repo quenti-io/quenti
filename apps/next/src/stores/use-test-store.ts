@@ -10,8 +10,11 @@ import {
 } from "@quenti/core/generator";
 import {
   type DefaultData,
+  type MatchData,
+  type MultipleChoiceData,
   type TestQuestion,
   TestQuestionType,
+  type TrueFalseData,
 } from "@quenti/interfaces";
 import { shuffleArray, takeNRandom } from "@quenti/lib/array";
 import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
@@ -30,6 +33,9 @@ export interface TestStoreProps {
   outline: OutlineEntry[];
   timeline: TestQuestion[];
   specialCharacters: string[];
+  result?: {
+    score: number;
+  };
 }
 
 interface TestState extends TestStoreProps {
@@ -45,6 +51,7 @@ interface TestState extends TestStoreProps {
     completed?: boolean,
   ) => void;
   clearAnswer: (index: number) => void;
+  submit: () => void;
   onAnswerDelegate: (index: number) => void;
 }
 
@@ -69,7 +76,7 @@ export const createTestStore = (
   };
 
   return createStore<TestState>()(
-    subscribeWithSelector((set) => ({
+    subscribeWithSelector((set, get) => ({
       ...DEFAULT_PROPS,
       ...initProps,
       initialize: (allTerms, questionCount, questionTypes, answerMode) => {
@@ -178,6 +185,42 @@ export const createTestStore = (
           question.answered = false;
           question.data.answer = undefined;
           return { timeline: [...state.timeline] };
+        });
+      },
+      submit: () => {
+        const state = get();
+        if (state.timeline.some((q) => !q.answered))
+          throw new Error("Not all questions have been answered");
+
+        let score = 0;
+
+        for (const question of state.timeline) {
+          switch (question.type) {
+            case TestQuestionType.TrueFalse: {
+              const data = question.data as TrueFalseData;
+              const isTrue = !data.distractor;
+              if (isTrue && data.answer) score++;
+              break;
+            }
+            case TestQuestionType.MultipleChoice: {
+              const data = question.data as MultipleChoiceData;
+              if (data.answer == data.term.id) score++;
+              break;
+            }
+            case TestQuestionType.Match: {
+              const data = question.data as MatchData;
+              for (const { term, zone } of data.answer) {
+                if (term == zone) score++;
+              }
+              break;
+            }
+          }
+        }
+
+        set({
+          result: {
+            score,
+          },
         });
       },
       onAnswerDelegate: (index) => {
