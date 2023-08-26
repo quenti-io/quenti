@@ -65,7 +65,8 @@ export const generateMatchQuestion = (
     type: TestQuestionType.Match,
     answerMode: getAnswerMode(answerMode),
     data: {
-      terms,
+      terms: shuffleArray(Array.from(terms)),
+      zones: terms,
       answer: [],
     },
     answered: false,

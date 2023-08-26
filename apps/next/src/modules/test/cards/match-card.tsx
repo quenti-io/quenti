@@ -133,7 +133,7 @@ export const MatchCard = ({ i }: { i: number }) => {
             ))}
           </Box>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap="6" mt="8">
-            {data.terms.map((term, i) => (
+            {data.zones.map((term, i) => (
               <>
                 <GridItem
                   display="flex"
