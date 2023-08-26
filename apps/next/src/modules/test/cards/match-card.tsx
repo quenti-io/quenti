@@ -14,6 +14,7 @@ import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 
 import type { MatchData } from "@quenti/interfaces";
+import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 import {
   Box,
@@ -135,7 +136,7 @@ export const MatchCard = ({ i }: { i: number }) => {
             {data.terms.map((term) => (
               <>
                 <GridItem display="flex" alignItems="center">
-                  <Droppable id={term.id}>
+                  <Droppable id={term.id} answerMode={question.answerMode}>
                     {!!getInZone(term.id) && (
                       <Draggable id={getInZone(term.id)!.term}>
                         <InternalWrapper onRemove={() => clearZone(term.id)}>
@@ -171,10 +172,9 @@ export const MatchCard = ({ i }: { i: number }) => {
   );
 };
 
-const Droppable: React.FC<React.PropsWithChildren & { id: string }> = ({
-  children,
-  id,
-}) => {
+const Droppable: React.FC<
+  React.PropsWithChildren<{ id: string; answerMode: StudySetAnswerMode }>
+> = ({ children, id, answerMode }) => {
   const { isOver, setNodeRef } = useDroppable({
     id,
   });
@@ -202,7 +202,9 @@ const Droppable: React.FC<React.PropsWithChildren & { id: string }> = ({
         color="gray.500"
         fontSize="sm"
       >
-        <Text>Select a term</Text>
+        <Text>
+          Drag a {answerMode == "Definition" ? "definition" : "term"} here
+        </Text>
       </Center>
       {children}
     </Box>
