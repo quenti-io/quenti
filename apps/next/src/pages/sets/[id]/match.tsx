@@ -11,7 +11,7 @@ const Match = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Match" />
-      <HydrateSetData disallowDirty requireFresh>
+      <HydrateSetData>
         <CreateMatchData>
           <MatchContainer />
         </CreateMatchData>

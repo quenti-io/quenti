@@ -122,8 +122,8 @@ export const MatchCard = ({ i }: { i: number }) => {
           <Box display="inline-block" ml="-6px" mt="-6px">
             {options.map((term) => (
               <Draggable id={term.id} key={term.id} inline>
-                <ExternalWrapper>
-                  <Text>
+                <ExternalWrapper id={term.id}>
+                  <Text whiteSpace="pre-wrap">
                     <ScriptFormatter>
                       {word(question.answerMode, term, "answer")}
                     </ScriptFormatter>
@@ -132,15 +132,22 @@ export const MatchCard = ({ i }: { i: number }) => {
               </Draggable>
             ))}
           </Box>
-          <SimpleGrid columns={2} gap="6" mt="8">
-            {data.terms.map((term) => (
+          <SimpleGrid columns={{ base: 1, md: 2 }} gap="6" mt="8">
+            {data.terms.map((term, i) => (
               <>
-                <GridItem display="flex" alignItems="center">
+                <GridItem
+                  display="flex"
+                  alignItems="center"
+                  order={{ base: i + 1, md: i }}
+                >
                   <Droppable id={term.id} answerMode={question.answerMode}>
                     {!!getInZone(term.id) && (
                       <Draggable id={getInZone(term.id)!.term}>
-                        <InternalWrapper onRemove={() => clearZone(term.id)}>
-                          <Text>
+                        <InternalWrapper
+                          id={getInZone(term.id)!.term}
+                          onRemove={() => clearZone(term.id)}
+                        >
+                          <Text whiteSpace="pre-wrap">
                             <ScriptFormatter>
                               {word(
                                 question.answerMode,
@@ -156,7 +163,11 @@ export const MatchCard = ({ i }: { i: number }) => {
                     )}
                   </Droppable>
                 </GridItem>
-                <GridItem display="flex" alignItems="center">
+                <GridItem
+                  display="flex"
+                  alignItems="center"
+                  order={{ base: i, md: i + 1 }}
+                >
                   <Text>
                     <ScriptFormatter>
                       {word(question.answerMode, term, "prompt")}
@@ -189,7 +200,7 @@ const Droppable: React.FC<
       transition="all 0.15s ease-in-out"
       borderColor={isOver ? "gray.200" : "gray.100"}
       _dark={{
-        borderColor: isOver ? "gray.600" : "gray.700",
+        borderColor: isOver ? "gray.500" : "gray.600",
       }}
       position="relative"
     >
@@ -221,6 +232,7 @@ const Draggable: React.FC<
   const style = {
     transform: CSS.Translate.toString(transform),
     zIndex: isDragging ? 100 : undefined,
+    ["touch-action"]: "manipulation",
   };
 
   return (
@@ -238,13 +250,21 @@ const Draggable: React.FC<
   );
 };
 
-const ExternalWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+const ExternalWrapper: React.FC<React.PropsWithChildren<{ id: string }>> = ({
+  children,
+  id,
+}) => {
+  const { isDragging } = useDraggable({
+    id,
+  });
+
   return (
     <Box
       borderWidth="2px"
       bg="gray.50"
       borderColor="gray.200"
       transition="all 0.15s ease-in-out"
+      shadow={isDragging ? "lg" : "sm"}
       _hover={{
         borderColor: "gray.300",
       }}
@@ -266,18 +286,24 @@ const ExternalWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 };
 
 const InternalWrapper: React.FC<
-  React.PropsWithChildren<{ onRemove: () => void }>
-> = ({ children, onRemove }) => {
+  React.PropsWithChildren<{ id: string; onRemove: () => void }>
+> = ({ children, id, onRemove }) => {
+  const { isDragging } = useDraggable({
+    id,
+  });
+
   return (
     <Box
       bg="gray.50"
       borderWidth="2px"
       borderColor="gray.300"
+      transition="all 0.15s ease-in-out"
+      shadow={isDragging ? "lg" : "none"}
       _dark={{
         bg: "gray.700",
         borderColor: "gray.600",
       }}
-      rounded="xl"
+      rounded="10px"
       w="full"
       h="full"
       py="2"
