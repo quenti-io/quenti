@@ -41,5 +41,5 @@ export interface WriteData {
 
 export interface MatchData {
   terms: Term[];
-  answer?: string[];
+  answer: { zone: string; term: string }[];
 }

@@ -1,3 +1,5 @@
+import { DndContext } from "@dnd-kit/core";
+
 import { HeadSeo } from "@quenti/components";
 import { TestQuestionType } from "@quenti/interfaces";
 
@@ -10,6 +12,7 @@ import { getLayout } from "../../../layouts/main-layout";
 import { CreateTestData } from "../../../modules/create-test-data";
 import HydrateSetData from "../../../modules/hydrate-set-data";
 import { TestCardGap } from "../../../modules/test/card-gap";
+import { MatchCard } from "../../../modules/test/cards/match-card";
 import { MultipleChoiceCard } from "../../../modules/test/cards/multiple-choice-card";
 import { TrueFalseCard } from "../../../modules/test/cards/true-false-card";
 import { useTestContext } from "../../../stores/use-test-store";
@@ -40,6 +43,8 @@ const TestContainer = () => {
         return <TrueFalseCard i={i} />;
       case TestQuestionType.MultipleChoice:
         return <MultipleChoiceCard i={i} />;
+      case TestQuestionType.Match:
+        return <MatchCard i={i} />;
       default:
         return null;
     }
@@ -59,7 +64,6 @@ const TestContainer = () => {
           <Card
             key={index}
             id={`test-card-${index}`}
-            overflow="hidden"
             bg="white"
             borderWidth="2px"
             borderColor="gray.100"

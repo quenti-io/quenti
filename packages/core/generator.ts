@@ -66,6 +66,7 @@ export const generateMatchQuestion = (
     answerMode: getAnswerMode(answerMode),
     data: {
       terms,
+      answer: [],
     },
     answered: false,
   };

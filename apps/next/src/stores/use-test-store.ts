@@ -42,6 +42,7 @@ interface TestState extends TestStoreProps {
   answerQuestion: <D extends DefaultData>(
     index: number,
     data: D["answer"],
+    completed?: boolean,
   ) => void;
   clearAnswer: (index: number) => void;
   onAnswerDelegate: (index: number) => void;
@@ -161,13 +162,13 @@ export const createTestStore = (
           timeline,
         });
       },
-      answerQuestion: (index, data) => {
+      answerQuestion: (index, data, completed = true) => {
         set((state) => {
           const question = state.timeline[index]!;
-          question.answered = true;
+          question.answered = completed;
           question.data.answer = data;
 
-          behaviors?.onAnswerDelegate?.(index);
+          if (completed) behaviors?.onAnswerDelegate?.(index);
           return { timeline: [...state.timeline] };
         });
       },
