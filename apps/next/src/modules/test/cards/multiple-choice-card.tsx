@@ -8,8 +8,9 @@ import { useTestContext } from "../../../stores/use-test-store";
 import { Clickable } from "../clickable";
 import { PromptDisplay } from "../prompt-display";
 import { useCardSelector } from "../use-card-selector";
+import type { CardProps } from "./common";
 
-export const MultipleChoiceCard = ({ i }: { i: number }) => {
+export const MultipleChoiceCard: React.FC<CardProps> = ({ i }) => {
   const { question, answered, data } = useCardSelector<MultipleChoiceData>(i);
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);

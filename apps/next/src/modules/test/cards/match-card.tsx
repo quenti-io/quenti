@@ -34,12 +34,13 @@ import { InteractivePointerSensor } from "../../../lib/dnd-kit-sensors";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
 import { useCardSelector } from "../use-card-selector";
+import type { CardProps } from "./common";
 
 type _Over = Over & { id: string };
 type _Active = Active & { id: string };
 type DragEnd = DragEndEvent & { over: _Over | null; active: _Active | null };
 
-export const MatchCard = ({ i }: { i: number }) => {
+export const MatchCard: React.FC<CardProps> = ({ i }) => {
   const { question, data, answer } = useCardSelector<MatchData>(i);
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);

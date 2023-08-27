@@ -18,9 +18,11 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
   correctness,
 }) => {
   const card = (type: TestQuestionType, i: number) => {
+    const result = correctness !== undefined;
+
     switch (type) {
       case TestQuestionType.TrueFalse:
-        return <TrueFalseCard i={i} />;
+        return <TrueFalseCard i={i} result={result} />;
       case TestQuestionType.MultipleChoice:
         return <MultipleChoiceCard i={i} />;
       case TestQuestionType.Match:

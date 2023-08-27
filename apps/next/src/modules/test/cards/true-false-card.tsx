@@ -1,14 +1,12 @@
 import type { TrueFalseData } from "@quenti/interfaces";
-
+import { getRandom } from "@quenti/lib/array";
 import {
-  Box,
-  FormLabel,
-  Grid,
-  HStack,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+  CORRECT,
+  TRUE_FALSE_INCORRECT_IS_FALSE,
+  TRUE_FALSE_INCORRECT_IS_TRUE,
+} from "@quenti/lib/constants/remarks";
+
+import { Box, Grid, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
 import {
   IconCircleCheck,
@@ -17,14 +15,17 @@ import {
   IconCircleXFilled,
 } from "@tabler/icons-react";
 
+import { ScriptFormatter } from "../../../components/script-formatter";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
 import { Clickable } from "../clickable";
+import { GenericLabel } from "../generic-label";
 import { PromptDisplay } from "../prompt-display";
 import { useCardSelector } from "../use-card-selector";
+import type { CardProps } from "./common";
 
-export const TrueFalseCard = ({ i }: { i: number }) => {
-  const { question, data } = useCardSelector<TrueFalseData>(i);
+export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
+  const { question, data, answer } = useCardSelector<TrueFalseData>(i);
 
   const rightSide = data.distractor
     ? word(question.answerMode, data.distractor, "answer")
@@ -33,8 +34,23 @@ export const TrueFalseCard = ({ i }: { i: number }) => {
   const answerQuestion = useTestContext((s) => s.answerQuestion);
   const clearAnswer = useTestContext((s) => s.clearAnswer);
 
-  const trueSelected = data.answer === true;
-  const falseSelected = data.answer === false;
+  const trueSelected = answer === true;
+  const falseSelected = answer === false;
+
+  const evaluation = result
+    ? (!data.distractor && trueSelected) || (!!data.distractor && falseSelected)
+    : undefined;
+
+  const remark =
+    evaluation !== undefined
+      ? evaluation
+        ? getRandom(CORRECT)
+        : getRandom(
+            data.distractor
+              ? TRUE_FALSE_INCORRECT_IS_FALSE
+              : TRUE_FALSE_INCORRECT_IS_TRUE,
+          )
+      : undefined;
 
   return (
     <>
@@ -59,11 +75,15 @@ export const TrueFalseCard = ({ i }: { i: number }) => {
           />
         </Box>
       </Grid>
-      <Stack spacing="2">
-        <FormLabel>Choose an answer</FormLabel>
+      <Stack>
+        <GenericLabel evaluation={evaluation}>
+          {remark ?? "Choose an answer"}
+        </GenericLabel>
         <SimpleGrid columns={2} gap={{ base: 4, md: 6 }}>
           <Clickable
+            disabled={result}
             isSelected={trueSelected}
+            evaluation={trueSelected ? evaluation : undefined}
             onClick={() => {
               if (!trueSelected) answerQuestion<TrueFalseData>(i, true);
               else clearAnswer(i);
@@ -79,7 +99,9 @@ export const TrueFalseCard = ({ i }: { i: number }) => {
             </HStack>
           </Clickable>
           <Clickable
+            disabled={result}
             isSelected={falseSelected}
+            evaluation={falseSelected ? evaluation : undefined}
             onClick={() => {
               if (!falseSelected) answerQuestion<TrueFalseData>(i, false);
               else clearAnswer(i);
@@ -96,6 +118,24 @@ export const TrueFalseCard = ({ i }: { i: number }) => {
           </Clickable>
         </SimpleGrid>
       </Stack>
+      {result && !!data.distractor && (
+        <Stack>
+          <GenericLabel>
+            Correct{" "}
+            {question.answerMode == "Definition" ? "definition" : "term"}
+          </GenericLabel>
+          <Clickable disabled>
+            <HStack>
+              <IconCircleCheck size={18} />
+              <Text fontWeight="normal">
+                <ScriptFormatter>
+                  {word(question.answerMode, data.term, "answer")}
+                </ScriptFormatter>
+              </Text>
+            </HStack>
+          </Clickable>
+        </Stack>
+      )}
     </>
   );
 };
