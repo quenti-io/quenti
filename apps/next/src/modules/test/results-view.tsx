@@ -48,7 +48,6 @@ export const ResultsView = () => {
     <Box
       w="2px"
       rounded="full"
-      display={{ base: "none", sm: "block" }}
       mx="2"
       bg="gray.100"
       _dark={{
@@ -59,8 +58,8 @@ export const ResultsView = () => {
   const horizontalDivider = (
     <Box
       h="2px"
+      w="full"
       rounded="full"
-      display={{ base: "block", sm: "none" }}
       my="2"
       bg="gray.100"
       _dark={{
@@ -88,73 +87,78 @@ export const ResultsView = () => {
         borderWidth="2px"
       >
         <HStack
-          spacing={{ base: 8, md: 4 }}
+          spacing="4"
           alignItems="stretch"
           flexDir={{ base: "column", md: "row" }}
         >
-          <CircularProgress
-            value={perc}
-            color="blue.300"
-            trackColor={trackColor}
-            // @ts-expect-error type '{ base: string; sm: string; }' is not assignable...
-            size={{ base: "100px", sm: "140px" }}
-            w="max"
-            thickness="4px"
-            style={{
-              strokeLinecap: "round",
-            }}
-            justifySelf={{ base: "end", md: undefined }}
-          >
-            <CircularProgressLabel
-              fontFamily="Outfit"
-              fontSize="xl"
-              fontWeight={700}
+          <HStack spacing="4" alignItems="stretch">
+            <CircularProgress
+              value={perc}
+              color="blue.300"
+              trackColor={trackColor}
+              // @ts-expect-error type '{ base: string; sm: string; }' is not assignable...
+              size={{ base: "100px", sm: "140px" }}
+              w="max"
+              thickness="4px"
+              style={{
+                strokeLinecap: "round",
+              }}
+              justifySelf={{ base: "end", md: undefined }}
             >
-              {`${Math.round((result.score / questionCount) * 100)}%`}
-            </CircularProgressLabel>
-          </CircularProgress>
-          <Center justifySelf={{ base: "start", md: undefined }}>
-            <Stack>
-              <HStack>
-                <Box color="blue.300">
-                  <IconCircleCheck />
-                </Box>
-                <Heading size="md">
-                  {result.score}{" "}
-                  <Text
-                    as="span"
-                    fontFamily="body"
-                    fontWeight={500}
-                    fontSize="md"
+              <CircularProgressLabel
+                fontFamily="Outfit"
+                fontSize="xl"
+                fontWeight={700}
+              >
+                {`${Math.round((result.score / questionCount) * 100)}%`}
+              </CircularProgressLabel>
+            </CircularProgress>
+            <Center justifySelf={{ base: "start", md: undefined }}>
+              <Stack>
+                <HStack>
+                  <Box color="blue.300">
+                    <IconCircleCheck />
+                  </Box>
+                  <Heading size="md">
+                    {result.score}{" "}
+                    <Text
+                      as="span"
+                      fontFamily="body"
+                      fontWeight={500}
+                      fontSize="md"
+                    >
+                      correct
+                    </Text>
+                  </Heading>
+                </HStack>
+                <HStack>
+                  <Box
+                    color="gray.400"
+                    _dark={{
+                      color: "gray.500",
+                    }}
                   >
-                    correct
-                  </Text>
-                </Heading>
-              </HStack>
-              <HStack>
-                <Box
-                  color="gray.400"
-                  _dark={{
-                    color: "gray.500",
-                  }}
-                >
-                  <IconCircleX />
-                </Box>
-                <Heading size="md">
-                  {questionCount - result.score}{" "}
-                  <Text
-                    as="span"
-                    fontFamily="body"
-                    fontWeight={500}
-                    fontSize="md"
-                  >
-                    incorrect
-                  </Text>
-                </Heading>
-              </HStack>
-            </Stack>
-          </Center>
-          {divider}
+                    <IconCircleX />
+                  </Box>
+                  <Heading size="md">
+                    {questionCount - result.score}{" "}
+                    <Text
+                      as="span"
+                      fontFamily="body"
+                      fontWeight={500}
+                      fontSize="md"
+                    >
+                      incorrect
+                    </Text>
+                  </Heading>
+                </HStack>
+              </Stack>
+            </Center>
+          </HStack>
+          <Box display={{ base: "none", md: "inherit" }}>{divider}</Box>
+          <Box display={{ base: "inherit", md: "none" }}>
+            {horizontalDivider}
+          </Box>
           <HStack
             w={{ base: "full", md: "auto" }}
             alignItems="stretch"
@@ -169,8 +173,10 @@ export const ResultsView = () => {
                 ))}
               </Stack>
             </Stack>
-            {divider}
-            {horizontalDivider}
+            <Box display={{ base: "none", sm: "inherit" }}>{divider}</Box>
+            <Box display={{ base: "block", sm: "none" }}>
+              {horizontalDivider}
+            </Box>
             <Stack spacing="4" flex={{ base: "1", md: undefined }}>
               <Heading size="md">Time</Heading>
               <HStack>
@@ -199,7 +205,7 @@ const ByTypeComponent: React.FC<
             color: "gray.500",
           }}
         >
-          <Icon />
+          <Icon size={20} />
         </Box>
         <Text fontSize="sm" fontWeight={600}>
           {getQuestionTypeName(type)}
