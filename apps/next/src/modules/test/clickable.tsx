@@ -56,7 +56,10 @@ export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
           : "gray"
       }
       pointerEvents={disabled ? "none" : undefined}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
+      _hover={disabled ? {} : undefined}
+      _focus={disabled ? {} : undefined}
+      _active={disabled ? {} : undefined}
       justifyContent="start"
     >
       {children}

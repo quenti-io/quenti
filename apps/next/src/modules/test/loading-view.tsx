@@ -4,6 +4,7 @@ import {
   Heading,
   Progress,
   ScaleFade,
+  SlideFade,
   Text,
   VStack,
   keyframes,
@@ -63,7 +64,7 @@ const blueBlob = keyframes({
 
 export const LoadingView = () => {
   return (
-    <Center position="fixed" top="20" w="100vh" height="calc(100vh - 160px)">
+    <Center position="fixed" top="20" w="100vw" height="calc(100vh - 160px)">
       <Center position="relative" h="300px">
         <ScaleFade
           in
@@ -113,28 +114,48 @@ export const LoadingView = () => {
           </Box>
         </ScaleFade>
         <VStack>
-          <Progress
-            w="48"
-            rounded="full"
-            mb="4"
-            value={20}
-            h="1"
-            isIndeterminate
-            bg="gray.50"
-            _dark={{
-              bg: "gray.900",
-            }}
-          />
-          <Heading size="xl">Grading your test...</Heading>
-          <Text
-            fontWeight={500}
-            color="gray.700"
-            _dark={{
-              color: "gray.300",
+          <SlideFade in>
+            <Progress
+              w="48"
+              rounded="full"
+              mb="4"
+              value={20}
+              h="1"
+              isIndeterminate
+              bg="gray.50"
+              _dark={{
+                bg: "gray.900",
+              }}
+            />
+          </SlideFade>
+          <SlideFade
+            in
+            transition={{
+              enter: {
+                delay: 0.1,
+              },
             }}
           >
-            Think you got it this time?
-          </Text>
+            <Heading size="xl">Grading your test...</Heading>
+          </SlideFade>
+          <SlideFade
+            in
+            transition={{
+              enter: {
+                delay: 0.3,
+              },
+            }}
+          >
+            <Text
+              fontWeight={500}
+              color="gray.700"
+              _dark={{
+                color: "gray.300",
+              }}
+            >
+              Think you got it this time?
+            </Text>
+          </SlideFade>
         </VStack>
       </Center>
     </Center>

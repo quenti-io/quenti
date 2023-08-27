@@ -5,15 +5,14 @@ import { useTestContext } from "../../stores/use-test-store";
 import { TestCardGap } from "./card-gap";
 import { CardWrapper } from "./card-wrapper";
 
-export const TestView = () => {
+interface TestViewProps {
+  onSubmit: () => void;
+}
+
+export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
   const { title } = useSetFolderUnison();
   const outline = useTestContext((s) => s.outline);
   const questionCount = useTestContext((s) => s.questionCount);
-  const submit = useTestContext((s) => s.submit);
-
-  const onSubmit = () => {
-    submit();
-  };
 
   return (
     <Stack spacing="0" pb="20" w="full">

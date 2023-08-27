@@ -92,6 +92,15 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
                   fontWeight={
                     evaluateTerm(choice.id) !== undefined ? 500 : "normal"
                   }
+                  style={
+                    result
+                      ? {
+                          cursor: "text",
+                          pointerEvents: "auto",
+                          userSelect: "text",
+                        }
+                      : {}
+                  }
                 >
                   <ScriptFormatter>
                     {word(question.answerMode, choice, "answer")}

@@ -201,12 +201,25 @@ export const createTestStore = (
         if (state.timeline.some((q) => !q.answered))
           throw new Error("Not all questions have been answered");
 
+        const getNumberOfQuestions = (type: TestQuestionType) => {
+          switch (type) {
+            case TestQuestionType.Match: {
+              const data = state.timeline
+                .filter((q) => q.type == type)
+                .map((q) => q.data as MatchData);
+              return data.reduce((acc, cur) => acc + cur.terms.length, 0);
+            }
+            default:
+              return state.timeline.filter((q) => q.type == type).length;
+          }
+        };
+
         let score = 0;
         const byType: NonNullable<TestStoreProps["result"]>["byType"] =
           state.questionTypes.map((t) => ({
             type: t,
             score: 0,
-            total: state.timeline.filter((q) => q.type == t).length,
+            total: getNumberOfQuestions(t),
           }));
         const byQuestion: NonNullable<TestStoreProps["result"]>["byQuestion"] =
           state.timeline.map((q, i) => ({
@@ -255,8 +268,6 @@ export const createTestStore = (
             }
           }
         }
-
-        console.log("Score:", score);
 
         set({
           result: {

@@ -14,7 +14,13 @@ export const EvaluatedFalse: React.FC<{ children: string }> = ({
         <Box>
           <IconCircleX size={18} />
         </Box>
-        <Text whiteSpace="pre-wrap" fontWeight={500}>
+        <Text
+          whiteSpace="pre-wrap"
+          fontWeight={500}
+          cursor="text"
+          pointerEvents="auto"
+          userSelect="text"
+        >
           <ScriptFormatter>{children}</ScriptFormatter>
         </Text>
       </HStack>
@@ -48,7 +54,13 @@ export const EvaluatedTrue: React.FC<EvaluatedTrueProps> = ({
         ) : (
           <Box>{icon}</Box>
         )}
-        <Text whiteSpace="pre-wrap" fontWeight={500}>
+        <Text
+          whiteSpace="pre-wrap"
+          fontWeight={500}
+          cursor="text"
+          pointerEvents="auto"
+          userSelect="text"
+        >
           <ScriptFormatter>{children}</ScriptFormatter>
         </Text>
       </HStack>

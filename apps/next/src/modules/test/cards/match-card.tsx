@@ -216,7 +216,10 @@ const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
                 </ScriptFormatter>
               </Text>
               <SimpleGrid
-                columns={{ base: 1, lg: evaluateZone(term.id) ? 1 : 2 }}
+                columns={{
+                  base: 1,
+                  lg: evaluateZone(term.id) || !getAnswer(term.id) ? 1 : 2,
+                }}
                 gap="4"
               >
                 {!evaluateZone(term.id) && (

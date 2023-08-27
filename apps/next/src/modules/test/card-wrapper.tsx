@@ -1,6 +1,6 @@
 import { TestQuestionType } from "@quenti/interfaces";
 
-import { Box, Card, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Box, Card, Fade, Stack, useColorModeValue } from "@chakra-ui/react";
 
 import { MatchCard } from "./cards/match-card";
 import { MultipleChoiceCard } from "./cards/multiple-choice-card";
@@ -49,20 +49,34 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
       position="relative"
     >
       {correctness !== undefined && (
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          w="full"
-          h="full"
-          background="transparent"
-          rounded="2xl"
-          boxShadow={`0 -15px 60px -5px ${
-            correctness ? correctColor : incorrectColor
-          }`}
-          opacity="0.15"
-          zIndex={-1}
-        />
+        <Fade
+          in
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: -1,
+          }}
+          transition={{
+            enter: {
+              duration: 2,
+            },
+          }}
+        >
+          <Box
+            w="full"
+            h="full"
+            background="transparent"
+            rounded="2xl"
+            boxShadow={`0 -15px 60px -5px ${
+              correctness ? correctColor : incorrectColor
+            }`}
+            opacity="0.15"
+            zIndex={-1}
+          />
+        </Fade>
       )}
       <Stack
         spacing={6}
