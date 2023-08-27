@@ -1,20 +1,14 @@
-import { DndContext } from "@dnd-kit/core";
-
 import { HeadSeo } from "@quenti/components";
-import { TestQuestionType } from "@quenti/interfaces";
 
-import { Card, Container, Stack } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
-import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { getLayout } from "../../../layouts/main-layout";
 import { CreateTestData } from "../../../modules/create-test-data";
 import HydrateSetData from "../../../modules/hydrate-set-data";
-import { TestCardGap } from "../../../modules/test/card-gap";
-import { MatchCard } from "../../../modules/test/cards/match-card";
-import { MultipleChoiceCard } from "../../../modules/test/cards/multiple-choice-card";
-import { TrueFalseCard } from "../../../modules/test/cards/true-false-card";
+import { ResultsView } from "../../../modules/test/results-view";
+import { TestView } from "../../../modules/test/test-view";
 import { useTestContext } from "../../../stores/use-test-store";
 
 const Test = () => {
@@ -33,59 +27,10 @@ const Test = () => {
 };
 
 const TestContainer = () => {
-  const { title } = useSetFolderUnison();
-  const outline = useTestContext((s) => s.outline);
-  const questionCount = useTestContext((s) => s.questionCount);
+  const result = useTestContext((s) => s.result);
 
-  const card = (type: TestQuestionType, i: number) => {
-    switch (type) {
-      case TestQuestionType.TrueFalse:
-        return <TrueFalseCard i={i} />;
-      case TestQuestionType.MultipleChoice:
-        return <MultipleChoiceCard i={i} />;
-      case TestQuestionType.Match:
-        return <MatchCard i={i} />;
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <Stack spacing="0" pb="20" w="full">
-      <TestCardGap type="start" title={title} />
-      {outline.map(({ type, count, index }) => (
-        <>
-          <TestCardGap
-            type="question"
-            index={index}
-            numQuestions={questionCount}
-            count={count}
-          />
-          <Card
-            key={index}
-            id={`test-card-${index}`}
-            bg="white"
-            borderWidth="2px"
-            borderColor="gray.100"
-            _dark={{
-              bg: "gray.750",
-              borderColor: "gray.700",
-            }}
-            rounded="2xl"
-          >
-            <Stack
-              spacing={6}
-              px={{ base: 5, sm: 6, md: 8 }}
-              py={{ base: 5, sm: 5, md: 7 }}
-            >
-              {card(type, index)}
-            </Stack>
-          </Card>
-        </>
-      ))}
-      <TestCardGap type="finish" />
-    </Stack>
-  );
+  if (result) return <ResultsView />;
+  return <TestView />;
 };
 
 Test.PageWrapper = PageWrapper;

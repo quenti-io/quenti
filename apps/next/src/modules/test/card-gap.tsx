@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  HStack,
-  Heading,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, HStack, Heading, Stack, Text } from "@chakra-ui/react";
 
 import {
   IconCircleCheckFilled,
@@ -133,16 +125,6 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
           </Stack>
           <TestOptions />
         </HStack>
-      )}
-      {type == "finish" && (
-        <VStack mt="10" spacing="6" h="24" w="full" pr="4">
-          <Heading size="md" m="0">
-            Ready to submit your test?
-          </Heading>
-          <Button size="lg" fontSize="md">
-            Check answers
-          </Button>
-        </VStack>
       )}
     </HStack>
   );

@@ -35,6 +35,11 @@ export interface TestStoreProps {
   specialCharacters: string[];
   result?: {
     score: number;
+    byType: {
+      type: TestQuestionType;
+      score: number;
+      total: number;
+    }[];
   };
 }
 
@@ -73,6 +78,26 @@ export const createTestStore = (
     outline: [],
     timeline: [],
     specialCharacters: [],
+    result: {
+      score: 18,
+      byType: [
+        {
+          type: TestQuestionType.TrueFalse,
+          score: 5,
+          total: 6,
+        },
+        {
+          type: TestQuestionType.MultipleChoice,
+          score: 4,
+          total: 6,
+        },
+        {
+          type: TestQuestionType.Match,
+          score: 4,
+          total: 6,
+        },
+      ],
+    },
   };
 
   return createStore<TestState>()(
@@ -193,33 +218,47 @@ export const createTestStore = (
           throw new Error("Not all questions have been answered");
 
         let score = 0;
+        const byType: NonNullable<TestStoreProps["result"]>["byType"] =
+          state.questionTypes.map((t) => ({
+            type: t,
+            score: 0,
+            total: state.timeline.filter((q) => q.type == t).length,
+          }));
+
+        const increment = (type: TestQuestionType) => {
+          score++;
+          byType.find((t) => t.type == type)!.score++;
+        };
 
         for (const question of state.timeline) {
           switch (question.type) {
             case TestQuestionType.TrueFalse: {
               const data = question.data as TrueFalseData;
               const isTrue = !data.distractor;
-              if (isTrue && data.answer) score++;
+              if (isTrue && data.answer) increment(question.type);
               break;
             }
             case TestQuestionType.MultipleChoice: {
               const data = question.data as MultipleChoiceData;
-              if (data.answer == data.term.id) score++;
+              if (data.answer == data.term.id) increment(question.type);
               break;
             }
             case TestQuestionType.Match: {
               const data = question.data as MatchData;
               for (const { term, zone } of data.answer) {
-                if (term == zone) score++;
+                if (term == zone) increment(question.type);
               }
               break;
             }
           }
         }
 
+        console.log("Score:", score);
+
         set({
           result: {
             score,
+            byType,
           },
         });
       },
