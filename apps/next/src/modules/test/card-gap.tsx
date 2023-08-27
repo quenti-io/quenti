@@ -2,6 +2,7 @@ import {
   Box,
   HStack,
   Heading,
+  SlideFade,
   Stack,
   Text,
   useColorModeValue,
@@ -139,12 +140,42 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
           flexDir={{ base: "column-reverse", md: "row" }}
         >
           <Stack spacing="0">
-            <Text fontSize="sm" fontWeight={600}>
-              Test
-            </Text>
-            <Heading size="xl" m="0">
-              {title}
-            </Heading>
+            <SlideFade
+              in
+              initial={{
+                opacity: 0,
+                transform: "translateY(-10px)",
+              }}
+              animate={{
+                opacity: 1,
+                transform: "translateY(0px)",
+                transition: {
+                  delay: 0.32,
+                },
+              }}
+            >
+              <Text fontSize="sm" fontWeight={600}>
+                Test
+              </Text>
+            </SlideFade>
+            <SlideFade
+              in
+              initial={{
+                opacity: 0,
+                transform: "translateY(-10px)",
+              }}
+              animate={{
+                opacity: 1,
+                transform: "translateY(0px)",
+                transition: {
+                  delay: 0.3,
+                },
+              }}
+            >
+              <Heading size="xl" m="0">
+                {title}
+              </Heading>
+            </SlideFade>
           </Stack>
           <TestOptions />
         </HStack>
