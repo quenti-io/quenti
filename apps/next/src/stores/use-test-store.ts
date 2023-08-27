@@ -61,6 +61,7 @@ interface TestState extends TestStoreProps {
   ) => void;
   clearAnswer: (index: number) => void;
   submit: () => void;
+  reset: () => void;
   onAnswerDelegate: (index: number) => void;
 }
 
@@ -89,7 +90,7 @@ export const createTestStore = (
       ...DEFAULT_PROPS,
       ...initProps,
       initialize: (allTerms, questionCount, questionTypes, answerMode) => {
-        let pool = shuffleArray(allTerms);
+        let pool = shuffleArray(Array.from(allTerms));
 
         let outline: TestQuestionType[] = [];
 
@@ -198,8 +199,6 @@ export const createTestStore = (
       },
       submit: () => {
         const state = get();
-        if (state.timeline.some((q) => !q.answered))
-          throw new Error("Not all questions have been answered");
 
         const getNumberOfQuestions = (type: TestQuestionType) => {
           switch (type) {
@@ -276,6 +275,21 @@ export const createTestStore = (
             byQuestion,
           },
         });
+      },
+      reset: () => {
+        set({
+          result: undefined,
+          outline: [],
+          timeline: [],
+        });
+
+        const state = get();
+        state.initialize(
+          state.allTerms,
+          state.questionCount,
+          state.questionTypes,
+          state.answerMode,
+        );
       },
       onAnswerDelegate: (index) => {
         behaviors?.onAnswerDelegate?.(index);

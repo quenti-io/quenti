@@ -1,5 +1,19 @@
-import { Fade, Heading, ScaleFade, SlideFade, Stack } from "@chakra-ui/react";
+import { Link } from "@quenti/components";
 
+import {
+  Button,
+  ButtonGroup,
+  Fade,
+  HStack,
+  Heading,
+  ScaleFade,
+  SlideFade,
+  Stack,
+} from "@chakra-ui/react";
+
+import { IconReport } from "@tabler/icons-react";
+
+import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useTestContext } from "../../stores/use-test-store";
 import { TestCardGap } from "./card-gap";
 import { CardWrapper } from "./card-wrapper";
@@ -9,6 +23,9 @@ export const ResultsView = () => {
   const result = useTestContext((s) => s.result!);
   const questionCount = useTestContext((s) => s.questionCount);
   const outline = useTestContext((s) => s.outline);
+  const reset = useTestContext((s) => s.reset);
+
+  const rootUrl = useEntityRootUrl();
 
   return (
     <Stack spacing="6">
@@ -20,7 +37,22 @@ export const ResultsView = () => {
           },
         }}
       >
-        <Heading>Your results</Heading>
+        <HStack justifyContent="space-between">
+          <Heading>Your results</Heading>
+          <ButtonGroup>
+            <Button leftIcon={<IconReport size={18} />} onClick={() => reset()}>
+              New test
+            </Button>
+            <Button
+              variant="outline"
+              colorScheme="gray"
+              as={Link}
+              href={rootUrl}
+            >
+              Back
+            </Button>
+          </ButtonGroup>
+        </HStack>
       </Fade>
       <ScaleFade in>
         <ResultsCard />
