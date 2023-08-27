@@ -84,7 +84,7 @@ export const MatchCard: React.FC<CardProps> = ({ i }) => {
       answerQuestion<MatchData>(
         i,
         answer.filter((a) => a.term !== active.id),
-        false,
+        result,
       );
     }
   };
