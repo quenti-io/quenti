@@ -14,6 +14,8 @@ import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 
 import type { MatchData } from "@quenti/interfaces";
+import { getRandom } from "@quenti/lib/array";
+import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 import {
@@ -33,6 +35,8 @@ import { ScriptFormatter } from "../../../components/script-formatter";
 import { InteractivePointerSensor } from "../../../lib/dnd-kit-sensors";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
+import { EvaluatedFalse, EvaluatedTrue } from "../evaluated";
+import { GenericLabel } from "../generic-label";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 
@@ -40,7 +44,12 @@ type _Over = Over & { id: string };
 type _Active = Active & { id: string };
 type DragEnd = DragEndEvent & { over: _Over | null; active: _Active | null };
 
-export const MatchCard: React.FC<CardProps> = ({ i }) => {
+export const MatchCard: React.FC<CardProps> = ({ i, result }) => {
+  if (result) return <ResultsMatchCard i={i} />;
+  return <InteractiveMatchCard i={i} />;
+};
+
+const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
   const { question, data, answer } = useCardSelector<MatchData>(i);
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);
@@ -84,7 +93,7 @@ export const MatchCard: React.FC<CardProps> = ({ i }) => {
       answerQuestion<MatchData>(
         i,
         answer.filter((a) => a.term !== active.id),
-        result,
+        false,
       );
     }
   };
@@ -111,14 +120,7 @@ export const MatchCard: React.FC<CardProps> = ({ i }) => {
   return (
     <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
       <Stack>
-        <Text textColor="gray.500" fontSize="sm" fontWeight={600}>
-          Matching questions
-        </Text>
-        <Text fontSize="xl" whiteSpace="pre-wrap" fontWeight={600}>
-          Drag a {question.answerMode == "Definition" ? "term" : "definition"}{" "}
-          to its {question.answerMode == "Definition" ? "definition" : "term"}{" "}
-          below
-        </Text>
+        <Header i={i} />
         <Stack mt="4">
           <Box display="inline-block" ml="-6px" mt="-6px">
             {options.map((term) => (
@@ -169,7 +171,7 @@ export const MatchCard: React.FC<CardProps> = ({ i }) => {
                   alignItems="center"
                   order={{ base: i, md: i + 1 }}
                 >
-                  <Text>
+                  <Text whiteSpace="pre-wrap">
                     <ScriptFormatter>
                       {word(question.answerMode, term, "prompt")}
                     </ScriptFormatter>
@@ -181,6 +183,108 @@ export const MatchCard: React.FC<CardProps> = ({ i }) => {
         </Stack>
       </Stack>
     </DndContext>
+  );
+};
+
+const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
+  const { question, data, answer } = useCardSelector<MatchData>(i);
+
+  const evaluateZone = (id: string): boolean => {
+    const term = answer.find((a) => a.zone === id);
+    if (!term) return false;
+    return term.term === id;
+  };
+  const getAnswer = (id: string) => {
+    const termId = answer.find((a) => a.zone === id)?.term;
+    if (!termId) return undefined;
+    return data.terms.find((t) => t.id === termId);
+  };
+
+  const remark = (id: string) =>
+    getRandom(evaluateZone(id) ? CORRECT : INCORRECT);
+
+  return (
+    <Stack spacing="2">
+      <Header i={i} />
+      <Stack spacing="8" mt="4">
+        {data.zones.map((term, i) => (
+          <>
+            <Stack key={term.id} spacing="6">
+              <Text whiteSpace="pre-wrap" fontSize="lg">
+                <ScriptFormatter>
+                  {word(question.answerMode, term, "prompt")}
+                </ScriptFormatter>
+              </Text>
+              <SimpleGrid
+                columns={{ base: 1, lg: evaluateZone(term.id) ? 1 : 2 }}
+                gap="4"
+              >
+                {!evaluateZone(term.id) && (
+                  <Stack spacing="2">
+                    <GenericLabel evaluation={evaluateZone(term.id)}>
+                      {remark(term.id)}
+                    </GenericLabel>
+                    {!!getAnswer(term.id) && (
+                      <EvaluatedFalse>
+                        {word(
+                          question.answerMode,
+                          getAnswer(term.id)!,
+                          "answer",
+                        )}
+                      </EvaluatedFalse>
+                    )}
+                  </Stack>
+                )}
+                <Stack>
+                  {!evaluateZone(term.id) ? (
+                    <GenericLabel>
+                      Correct{" "}
+                      {question.answerMode == "Definition"
+                        ? "definition"
+                        : "term"}
+                    </GenericLabel>
+                  ) : (
+                    <GenericLabel evaluation={evaluateZone(term.id)}>
+                      {remark(term.id)}
+                    </GenericLabel>
+                  )}
+                  <EvaluatedTrue>
+                    {word(question.answerMode, term, "answer")}
+                  </EvaluatedTrue>
+                </Stack>
+              </SimpleGrid>
+            </Stack>
+            {i < data.zones.length - 1 && (
+              <Box
+                w="full"
+                h="2px"
+                bg="gray.200"
+                rounded="full"
+                _dark={{
+                  bg: "gray.700",
+                }}
+              />
+            )}
+          </>
+        ))}
+      </Stack>
+    </Stack>
+  );
+};
+
+const Header: React.FC<Pick<CardProps, "i">> = ({ i }) => {
+  const { question } = useCardSelector<MatchData>(i);
+
+  return (
+    <>
+      <Text textColor="gray.500" fontSize="sm" fontWeight={600}>
+        Matching questions
+      </Text>
+      <Text fontSize="xl" whiteSpace="pre-wrap" fontWeight={600}>
+        Drag a {question.answerMode == "Definition" ? "term" : "definition"} to
+        its {question.answerMode == "Definition" ? "definition" : "term"} below
+      </Text>
+    </>
   );
 };
 

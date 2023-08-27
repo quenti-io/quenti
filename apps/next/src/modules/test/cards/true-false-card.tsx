@@ -15,10 +15,10 @@ import {
   IconCircleXFilled,
 } from "@tabler/icons-react";
 
-import { ScriptFormatter } from "../../../components/script-formatter";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
 import { Clickable } from "../clickable";
+import { EvaluatedTrue } from "../evaluated";
 import { GenericLabel } from "../generic-label";
 import { PromptDisplay } from "../prompt-display";
 import { useCardSelector } from "../use-card-selector";
@@ -81,6 +81,7 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
         </GenericLabel>
         <SimpleGrid columns={2} gap={{ base: 4, md: 6 }}>
           <Clickable
+            hasIcon
             disabled={result}
             isSelected={trueSelected}
             evaluation={trueSelected ? evaluation : undefined}
@@ -99,6 +100,7 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
             </HStack>
           </Clickable>
           <Clickable
+            hasIcon
             disabled={result}
             isSelected={falseSelected}
             evaluation={falseSelected ? evaluation : undefined}
@@ -124,16 +126,9 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
             Correct{" "}
             {question.answerMode == "Definition" ? "definition" : "term"}
           </GenericLabel>
-          <Clickable disabled>
-            <HStack>
-              <IconCircleCheck size={18} />
-              <Text fontWeight="normal">
-                <ScriptFormatter>
-                  {word(question.answerMode, data.term, "answer")}
-                </ScriptFormatter>
-              </Text>
-            </HStack>
-          </Clickable>
+          <EvaluatedTrue>
+            {word(question.answerMode, data.term, "answer")}
+          </EvaluatedTrue>
         </Stack>
       )}
     </>

@@ -4,9 +4,9 @@ import type { MultipleChoiceData } from "@quenti/interfaces";
 import { getRandom } from "@quenti/lib/array";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 
-import { HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import { Box, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
-import { IconCircleCheck, IconCircleX } from "@tabler/icons-react";
+import { IconCircleCheckFilled, IconCircleX } from "@tabler/icons-react";
 
 import { ScriptFormatter } from "../../../components/script-formatter";
 import { word } from "../../../stores/use-learn-store";
@@ -19,7 +19,6 @@ import type { CardProps } from "./common";
 
 export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
   const { question, answered, data } = useCardSelector<MultipleChoiceData>(i);
-  // const result = undefined;
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);
   const clearAnswer = useTestContext((s) => s.clearAnswer);
@@ -36,11 +35,15 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
   const EvaluationWrapper: React.FC<
     React.PropsWithChildren<{ evaluation?: boolean }>
   > = ({ evaluation, children }) => {
-    const Icon = evaluation ? IconCircleCheck : IconCircleX;
+    const Icon = evaluation ? IconCircleCheckFilled : IconCircleX;
 
     return (
       <HStack>
-        {evaluation !== undefined && <Icon size={18} />}
+        {evaluation !== undefined && (
+          <Box>
+            <Icon size={18} />
+          </Box>
+        )}
         {children}
       </HStack>
     );
@@ -86,7 +89,9 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
                   size="lg"
                   whiteSpace="pre-wrap"
                   textAlign="start"
-                  fontWeight="normal"
+                  fontWeight={
+                    evaluateTerm(choice.id) !== undefined ? 500 : "normal"
+                  }
                 >
                   <ScriptFormatter>
                     {word(question.answerMode, choice, "answer")}

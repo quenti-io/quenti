@@ -82,30 +82,6 @@ export const createTestStore = (
     outline: [],
     timeline: [],
     specialCharacters: [],
-    result: {
-      score: 18,
-      byType: [
-        {
-          type: TestQuestionType.TrueFalse,
-          score: 5,
-          total: 6,
-        },
-        {
-          type: TestQuestionType.MultipleChoice,
-          score: 4,
-          total: 6,
-        },
-        {
-          type: TestQuestionType.Match,
-          score: 4,
-          total: 6,
-        },
-      ],
-      byQuestion: Array.from({ length: 20 }).map((_, i) => ({
-        index: i,
-        correct: i % 2 == 0,
-      })),
-    },
   };
 
   return createStore<TestState>()(
@@ -250,8 +226,7 @@ export const createTestStore = (
           switch (question.type) {
             case TestQuestionType.TrueFalse: {
               const data = question.data as TrueFalseData;
-              const isTrue = !data.distractor;
-              if (isTrue && data.answer) {
+              if (data.answer == !data.distractor) {
                 increment(question.type);
                 answerCorrectly(index);
               }

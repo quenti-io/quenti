@@ -62,8 +62,7 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
 
   return (
     <HStack
-      ml={{ base: "5px", sm: "26px", md: "34px" }}
-      pr={{ base: "10px", sm: "52px", md: "68px" }}
+      px={{ base: "5px", sm: "26px", md: "34px" }}
       spacing="4"
       alignItems={type == "question" ? "center" : "stretch"}
       w="full"

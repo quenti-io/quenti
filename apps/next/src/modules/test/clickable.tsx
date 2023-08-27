@@ -5,6 +5,7 @@ export interface ClickableProps {
   isSelected?: boolean;
   evaluation?: boolean;
   disabled?: boolean;
+  hasIcon?: boolean;
 }
 
 export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
@@ -13,10 +14,17 @@ export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
   evaluation,
   disabled,
   children,
+  hasIcon = evaluation !== undefined,
 }) => {
   const selectedBorder = useColorModeValue("blue.600", "blue.200");
-  const correctBorder = useColorModeValue("green.500", "green.200");
-  const incorrectBorder = useColorModeValue("red.500", "red.200");
+  const correctBorder = useColorModeValue(
+    "rgba(47, 133, 90, 0.2)",
+    "rgba(154, 230, 180, 0.2)",
+  );
+  const incorrectBorder = useColorModeValue(
+    "rgba(197, 48, 48, 0.2)",
+    "rgba(252, 129, 129, 0.2)",
+  );
   const defaultBorder = useColorModeValue("gray.200", "gray.600");
 
   return (
@@ -35,7 +43,7 @@ export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
           ? selectedBorder
           : defaultBorder
       }
-      px="6"
+      px={hasIcon ? 4 : 6}
       py="4"
       h="full"
       colorScheme={

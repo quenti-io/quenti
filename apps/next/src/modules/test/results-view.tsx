@@ -14,7 +14,7 @@ export const ResultsView = () => {
     <Stack spacing="6">
       <Heading>Your Results</Heading>
       <ResultsCard />
-      <Stack spacing="0">
+      <Stack spacing="0" pb="20">
         {outline.map(({ type, count, index }) => (
           <>
             <TestCardGap
