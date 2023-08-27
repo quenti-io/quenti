@@ -55,7 +55,7 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
           h="full"
           background="transparent"
           rounded="2xl"
-          boxShadow={`0 -25px 60px -10px ${
+          boxShadow={`0 -20px 60px -10px ${
             correctness ? correctColor : incorrectColor
           }`}
           opacity="0.1"
