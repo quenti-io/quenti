@@ -1,14 +1,21 @@
 import { TestQuestionType } from "@quenti/interfaces";
 
-import { Card, Stack } from "@chakra-ui/react";
+import { Box, Card, Stack, useColorModeValue } from "@chakra-ui/react";
 
 import { MatchCard } from "./cards/match-card";
 import { MultipleChoiceCard } from "./cards/multiple-choice-card";
 import { TrueFalseCard } from "./cards/true-false-card";
 
-export const CardWrapper: React.FC<{ type: TestQuestionType; i: number }> = ({
+export interface CardWrapperProps {
+  type: TestQuestionType;
+  i: number;
+  correctness?: boolean;
+}
+
+export const CardWrapper: React.FC<CardWrapperProps> = ({
   type,
   i,
+  correctness,
 }) => {
   const card = (type: TestQuestionType, i: number) => {
     switch (type) {
@@ -23,6 +30,9 @@ export const CardWrapper: React.FC<{ type: TestQuestionType; i: number }> = ({
     }
   };
 
+  const correctColor = useColorModeValue("#38a169", "#68d391");
+  const incorrectColor = useColorModeValue("#e53e3e", "#fc8181");
+
   return (
     <Card
       id={`test-card-${i}`}
@@ -34,7 +44,24 @@ export const CardWrapper: React.FC<{ type: TestQuestionType; i: number }> = ({
         borderColor: "gray.700",
       }}
       rounded="2xl"
+      position="relative"
     >
+      {correctness !== undefined && (
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          w="full"
+          h="full"
+          background="transparent"
+          rounded="2xl"
+          boxShadow={`0 -25px 60px -10px ${
+            correctness ? correctColor : incorrectColor
+          }`}
+          opacity="0.1"
+          zIndex={-1}
+        />
+      )}
       <Stack
         spacing={6}
         px={{ base: 5, sm: 6, md: 8 }}

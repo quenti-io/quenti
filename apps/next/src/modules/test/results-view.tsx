@@ -24,7 +24,11 @@ export const ResultsView = () => {
               count={count}
               correctness={result.byQuestion[index]!.correct}
             />
-            <CardWrapper type={type} i={index} />
+            <CardWrapper
+              type={type}
+              i={index}
+              correctness={result.byQuestion[index]!.correct}
+            />
           </>
         ))}
       </Stack>
