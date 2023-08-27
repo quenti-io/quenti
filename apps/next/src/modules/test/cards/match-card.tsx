@@ -281,8 +281,8 @@ const Header: React.FC<Pick<CardProps, "i">> = ({ i }) => {
         Matching questions
       </Text>
       <Text fontSize="xl" whiteSpace="pre-wrap" fontWeight={600}>
-        Drag a {question.answerMode == "Definition" ? "term" : "definition"} to
-        its {question.answerMode == "Definition" ? "definition" : "term"} below
+        Drag a {question.answerMode == "Definition" ? "definition" : "term"} to
+        its {question.answerMode == "Definition" ? "term" : "definition"} below
       </Text>
     </>
   );
