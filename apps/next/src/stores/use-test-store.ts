@@ -40,6 +40,10 @@ export interface TestStoreProps {
       score: number;
       total: number;
     }[];
+    byQuestion: {
+      index: number;
+      correct: boolean;
+    }[];
   };
 }
 
@@ -97,6 +101,10 @@ export const createTestStore = (
           total: 6,
         },
       ],
+      byQuestion: Array.from({ length: 20 }).map((_, i) => ({
+        index: i,
+        correct: i % 2 == 0,
+      })),
     },
   };
 
@@ -224,30 +232,50 @@ export const createTestStore = (
             score: 0,
             total: state.timeline.filter((q) => q.type == t).length,
           }));
+        const byQuestion: NonNullable<TestStoreProps["result"]>["byQuestion"] =
+          state.timeline.map((q, i) => ({
+            index: i,
+            correct: false,
+          }));
 
         const increment = (type: TestQuestionType) => {
           score++;
           byType.find((t) => t.type == type)!.score++;
         };
+        const answerCorrectly = (index: number) => {
+          byQuestion.find((q) => q.index == index)!.correct = true;
+        };
 
-        for (const question of state.timeline) {
+        for (const [index, question] of state.timeline.entries()) {
           switch (question.type) {
             case TestQuestionType.TrueFalse: {
               const data = question.data as TrueFalseData;
               const isTrue = !data.distractor;
-              if (isTrue && data.answer) increment(question.type);
+              if (isTrue && data.answer) {
+                increment(question.type);
+                answerCorrectly(index);
+              }
               break;
             }
             case TestQuestionType.MultipleChoice: {
               const data = question.data as MultipleChoiceData;
-              if (data.answer == data.term.id) increment(question.type);
+              if (data.answer == data.term.id) {
+                increment(question.type);
+                answerCorrectly(index);
+              }
               break;
             }
             case TestQuestionType.Match: {
               const data = question.data as MatchData;
+              let allCorrect = true;
               for (const { term, zone } of data.answer) {
                 if (term == zone) increment(question.type);
+                else {
+                  allCorrect = false;
+                }
               }
+              if (allCorrect) answerCorrectly(index);
+
               break;
             }
           }
@@ -259,6 +287,7 @@ export const createTestStore = (
           result: {
             score,
             byType,
+            byQuestion,
           },
         });
       },

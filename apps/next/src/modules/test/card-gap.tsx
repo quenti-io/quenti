@@ -1,7 +1,15 @@
-import { Box, HStack, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Heading,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 import {
   IconCircleCheckFilled,
+  IconCircleXFilled,
   IconPoint,
   IconPointFilled,
   IconReport,
@@ -16,6 +24,7 @@ export interface TestCardGapProps {
   index?: number;
   count?: number;
   numQuestions?: number;
+  correctness?: boolean;
 }
 
 export const TestCardGap: React.FC<TestCardGapProps> = ({
@@ -24,17 +33,32 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
   index,
   count = 1,
   numQuestions,
+  correctness,
 }) => {
   const answered = useTestContext((s) => s.timeline[index || 0]?.answered);
 
   const Icon =
-    type == "start"
+    correctness !== undefined
+      ? correctness
+        ? IconCircleCheckFilled
+        : IconCircleXFilled
+      : type == "start"
       ? IconReport
       : type == "finish"
       ? IconCircleCheckFilled
       : answered
       ? IconPointFilled
       : IconPoint;
+
+  const defaultQuestionIconColor = useColorModeValue("gray.200", "gray.700");
+  const correctQuestionIconColor = useColorModeValue("green.500", "green.300");
+  const incorrectQuestionIconColor = useColorModeValue("red.500", "red.300");
+  const questionIconColor =
+    correctness !== undefined
+      ? correctness
+        ? correctQuestionIconColor
+        : incorrectQuestionIconColor
+      : defaultQuestionIconColor;
 
   return (
     <HStack
@@ -78,10 +102,10 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
               type == "question" ? "translate(-50%, -50%)" : "translate(-50%)"
             }
             bg="gray.50"
-            color={type == "question" ? "gray.200" : "gray.400"}
+            color={type == "question" ? questionIconColor : "gray.400"}
             _dark={{
               bg: "gray.900",
-              color: type == "question" ? "gray.700" : "gray.500",
+              color: type == "question" ? questionIconColor : "gray.500",
             }}
             rounded="full"
             display="flex"
