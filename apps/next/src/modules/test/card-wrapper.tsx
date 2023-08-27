@@ -24,7 +24,7 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
       case TestQuestionType.TrueFalse:
         return <TrueFalseCard i={i} result={result} />;
       case TestQuestionType.MultipleChoice:
-        return <MultipleChoiceCard i={i} />;
+        return <MultipleChoiceCard i={i} result={result} />;
       case TestQuestionType.Match:
         return <MatchCard i={i} />;
       default:
