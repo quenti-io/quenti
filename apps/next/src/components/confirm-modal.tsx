@@ -12,29 +12,40 @@ import { Modal } from "./modal";
 
 export interface ConfirmModalProps {
   isOpen: boolean;
+  heading?: string;
   body: React.ReactNode;
   isLoading?: boolean;
-  heading?: string;
   actionText?: string;
   destructive?: boolean;
+  cancelText?: string;
+  finalFocusRef?: React.RefObject<HTMLElement>;
   onClose: () => void;
+  onCancel?: () => void;
   onConfirm: () => void;
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   heading,
+  body,
+  isLoading,
   actionText,
   destructive,
-  isLoading,
-  body,
+  cancelText,
   onClose,
+  onCancel,
   onConfirm,
+  finalFocusRef,
 }) => {
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      finalFocusRef={finalFocusRef}
+    >
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
@@ -46,8 +57,15 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <Modal.Divider />
         <Modal.Footer>
           <ButtonGroup>
-            <Button variant="ghost" colorScheme="gray" onClick={onClose}>
-              Cancel
+            <Button
+              variant={cancelText ? "outline" : "ghost"}
+              colorScheme="gray"
+              onClick={() => {
+                onCancel?.();
+                onClose();
+              }}
+            >
+              {cancelText ?? "Cancel"}
             </Button>
             <Button
               onClick={onConfirm}
