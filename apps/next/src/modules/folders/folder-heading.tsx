@@ -90,7 +90,9 @@ export const FolderHeading = () => {
         spacing={{ base: 8, md: 4 }}
       >
         <Stack spacing="3">
-          <Heading size="2xl">{folder.title}</Heading>
+          <Heading size="2xl" overflowWrap="anywhere">
+            {folder.title}
+          </Heading>
           <HStack spacing="4">
             <HStack>
               <Avatar width="20px" height="20px" src={avatarUrl(folder.user)} />

@@ -6,6 +6,7 @@ import { Container } from "@chakra-ui/react";
 
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
+import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { getLayout } from "../../../layouts/main-layout";
 import { CreateTestData } from "../../../modules/create-test-data";
 import HydrateSetData from "../../../modules/hydrate-set-data";
@@ -19,11 +20,24 @@ const Test = () => {
     <AuthedPage>
       <HeadSeo title="Test" />
       <HydrateSetData disallowDirty>
-        <CreateTestData>
-          <TestContainer />
-        </CreateTestData>
+        <SeoWrapper>
+          <CreateTestData>
+            <TestContainer />
+          </CreateTestData>
+        </SeoWrapper>
       </HydrateSetData>
     </AuthedPage>
+  );
+};
+
+const SeoWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const { title } = useSetFolderUnison();
+
+  return (
+    <>
+      <HeadSeo title={`Test: ${title}`} />
+      {children}
+    </>
   );
 };
 

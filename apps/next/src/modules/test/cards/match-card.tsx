@@ -126,7 +126,7 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
             {options.map((term) => (
               <Draggable id={term.id} key={term.id} inline>
                 <ExternalWrapper id={term.id}>
-                  <Text whiteSpace="pre-wrap">
+                  <Text whiteSpace="pre-wrap" overflowWrap="anywhere">
                     <ScriptFormatter>
                       {word(question.answerMode, term, "answer")}
                     </ScriptFormatter>
@@ -150,7 +150,7 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
                           id={getInZone(term.id)!.term}
                           onRemove={() => clearZone(term.id)}
                         >
-                          <Text whiteSpace="pre-wrap">
+                          <Text whiteSpace="pre-wrap" overflowWrap="anywhere">
                             <ScriptFormatter>
                               {word(
                                 question.answerMode,
@@ -171,7 +171,7 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
                   alignItems="center"
                   order={{ base: i, md: i + 1 }}
                 >
-                  <Text whiteSpace="pre-wrap">
+                  <Text whiteSpace="pre-wrap" overflowWrap="anywhere">
                     <ScriptFormatter>
                       {word(question.answerMode, term, "prompt")}
                     </ScriptFormatter>
@@ -210,7 +210,11 @@ const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
         {data.zones.map((term, i) => (
           <>
             <Stack key={term.id} spacing="6">
-              <Text whiteSpace="pre-wrap" fontSize="lg">
+              <Text
+                whiteSpace="pre-wrap"
+                fontSize={{ base: "md", sm: "lg" }}
+                overflowWrap="anywhere"
+              >
                 <ScriptFormatter>
                   {word(question.answerMode, term, "prompt")}
                 </ScriptFormatter>
@@ -283,7 +287,7 @@ const Header: React.FC<Pick<CardProps, "i">> = ({ i }) => {
       <Text textColor="gray.500" fontSize="sm" fontWeight={600}>
         Matching questions
       </Text>
-      <Text fontSize="xl" whiteSpace="pre-wrap" fontWeight={600}>
+      <Text fontSize="xl" fontWeight={600}>
         Drag a {question.answerMode == "Definition" ? "definition" : "term"} to
         its {question.answerMode == "Definition" ? "term" : "definition"} below
       </Text>

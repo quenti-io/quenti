@@ -82,7 +82,7 @@ export const InteractionCard = () => {
             </Box>
           </HStack>
           <Box minH={{ base: "60px", md: "140px" }}>
-            <Text fontSize="xl" whiteSpace="pre-wrap">
+            <Text fontSize="xl" whiteSpace="pre-wrap" overflowWrap="anywhere">
               <ScriptFormatter>
                 {word(active.answerMode, active.term, "prompt")}
               </ScriptFormatter>

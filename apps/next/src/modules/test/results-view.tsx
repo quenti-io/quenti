@@ -37,7 +37,15 @@ export const ResultsView = () => {
           },
         }}
       >
-        <HStack justifyContent="space-between">
+        <HStack
+          justifyContent="space-between"
+          flexDir={{
+            base: "column",
+            sm: "row",
+          }}
+          spacing="4"
+          alignItems={{ base: "start", sm: "center" }}
+        >
           <Heading>Your results</Heading>
           <ButtonGroup>
             <Button leftIcon={<IconReport size={18} />} onClick={() => reset()}>

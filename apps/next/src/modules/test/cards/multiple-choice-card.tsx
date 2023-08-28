@@ -89,6 +89,7 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
                   size="lg"
                   whiteSpace="pre-wrap"
                   textAlign="start"
+                  overflowWrap="anywhere"
                   fontWeight={
                     evaluateTerm(choice.id) !== undefined ? 500 : "normal"
                   }

@@ -20,6 +20,7 @@ export const EvaluatedFalse: React.FC<{ children: string }> = ({
           cursor="text"
           pointerEvents="auto"
           userSelect="text"
+          overflowWrap="anywhere"
         >
           <ScriptFormatter>{children}</ScriptFormatter>
         </Text>
@@ -60,6 +61,7 @@ export const EvaluatedTrue: React.FC<EvaluatedTrueProps> = ({
           cursor="text"
           pointerEvents="auto"
           userSelect="text"
+          overflowWrap="anywhere"
         >
           <ScriptFormatter>{children}</ScriptFormatter>
         </Text>

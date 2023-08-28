@@ -57,6 +57,7 @@ export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
       }
       pointerEvents={disabled ? "none" : undefined}
       onClick={disabled ? undefined : onClick}
+      overflowWrap="anywhere"
       _hover={disabled ? {} : undefined}
       _focus={disabled ? {} : undefined}
       _active={disabled ? {} : undefined}

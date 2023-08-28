@@ -17,7 +17,11 @@ export const PromptDisplay: React.FC<PromptDisplayProps> = ({
         {label}
       </Text>
       <Box minH={{ base: "60px", md: "140px" }}>
-        <Text fontSize="xl" whiteSpace="pre-wrap">
+        <Text
+          fontSize={{ base: "md", sm: "lg", md: "xl" }}
+          whiteSpace="pre-wrap"
+          overflowWrap="anywhere"
+        >
           <ScriptFormatter>{content}</ScriptFormatter>
         </Text>
       </Box>

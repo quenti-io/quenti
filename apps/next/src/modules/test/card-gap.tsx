@@ -172,7 +172,7 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
                 },
               }}
             >
-              <Heading size="xl" m="0">
+              <Heading size="xl" m="0" overflowWrap="anywhere">
                 {title}
               </Heading>
             </SlideFade>

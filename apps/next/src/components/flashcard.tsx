@@ -75,6 +75,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
       <Box
         bg="orange.300"
         height="1"
+        minH="1"
         style={{
           visibility: !isFlipped ? "visible" : "hidden",
           transition: "width 0.1s ease-in-out",
@@ -182,6 +183,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
       <Box
         bg="orange.300"
         height="1"
+        minH="1"
         style={{
           visibility: isFlipped ? "visible" : "hidden",
           transition: "width 0.1s ease-in-out",
@@ -214,6 +216,7 @@ const ShrinkableText: React.FC<{
         display: "table-cell",
         verticalAlign: "middle",
         textAlign: "center",
+        overflowWrap: "anywhere",
       }}
     >
       <ScriptFormatter>{text}</ScriptFormatter>

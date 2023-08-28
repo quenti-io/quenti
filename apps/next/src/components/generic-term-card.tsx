@@ -35,7 +35,7 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({
         gap={[0, 6, 6]}
       >
         <Flex w="full" flexDir={["column", "row", "row"]} gap={[2, 6, 6]}>
-          <Text w="full" whiteSpace="pre-wrap">
+          <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
             <ScriptFormatter>{term.word}</ScriptFormatter>
           </Text>
           <Box
@@ -44,7 +44,7 @@ export const GenericTermCard: React.FC<GenericTermCardProps> = ({
             rounded="full"
             w="4px"
           />
-          <Text w="full" whiteSpace="pre-wrap">
+          <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
             <ScriptFormatter>{term.definition}</ScriptFormatter>
           </Text>
         </Flex>

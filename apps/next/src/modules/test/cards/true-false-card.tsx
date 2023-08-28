@@ -54,8 +54,11 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
 
   return (
     <>
-      <Grid templateColumns="1fr 2px 1fr" gap={{ base: 1, md: 3 }}>
-        <Box h="full" w="full">
+      <Grid
+        templateColumns={{ base: "1fr", sm: "1fr 2px 1fr" }}
+        gap={{ base: 1, md: 3 }}
+      >
+        <Box h="full" w="full" pr={{ base: 0, sm: "4" }}>
           <PromptDisplay
             label={question.answerMode == "Definition" ? "Term" : "Definition"}
             content={word(question.answerMode, data.term, "prompt")}
@@ -63,12 +66,23 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
         </Box>
         <Box
           h="full"
+          display={{ base: "none", sm: "block" }}
           bg="gray.200"
           _dark={{
             bg: "gray.700",
           }}
         />
-        <Box w="full" pl="4">
+        <Box
+          w="full"
+          h="2px"
+          my="4"
+          display={{ base: "block", sm: "none" }}
+          bg="gray.200"
+          _dark={{
+            bg: "gray.700",
+          }}
+        />
+        <Box w="full" pl={{ base: 0, sm: 4 }}>
           <PromptDisplay
             label={question.answerMode == "Definition" ? "Definition" : "Term"}
             content={rightSide}
