@@ -16,7 +16,7 @@ export const EditorLoading: React.FC<EditorLoadingProps> = ({ mode }) => {
       <ButtonArea.Skeleton mode={mode} />
       <Stack spacing="4">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} height="149px" w="full" rounded="xl" />
+          <Skeleton key={i} height="153px" w="full" rounded="xl" />
         ))}
       </Stack>
     </Stack>

@@ -3,7 +3,7 @@ import React from "react";
 import {
   Button,
   ButtonGroup,
-  Flex,
+  HStack,
   IconButton,
   Menu,
   Skeleton,
@@ -55,8 +55,28 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
         isOpen={shortcutModalOpen}
         onClose={() => setShortcutModalOpen(false)}
       />
-      <Flex align={"center"} justifyContent={"space-between"}>
-        <ButtonGroup>
+      <HStack
+        justifyContent="space-between"
+        spacing="6"
+        alignItems={{
+          base: "start",
+          md: "center",
+        }}
+        flexDir={{
+          base: "column",
+          md: "row",
+        }}
+      >
+        <HStack
+          alignItems={{
+            base: "start",
+            sm: "center",
+          }}
+          flexDir={{
+            base: "column",
+            sm: "row",
+          }}
+        >
           <Button
             leftIcon={<IconKeyframes size={18} />}
             variant="outline"
@@ -76,8 +96,14 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
               Import from Quizlet
             </Button>
           )}
-        </ButtonGroup>
-        <ButtonGroup>
+        </HStack>
+        <ButtonGroup
+          w={{ base: "full", md: "auto" }}
+          justifyContent={{
+            base: "space-between",
+            md: "auto",
+          }}
+        >
           <Button
             leftIcon={visibilityIcon(visibility)}
             rightIcon={<IconChevronDown />}
@@ -109,7 +135,7 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
             </Menu>
           </ButtonGroup>
         </ButtonGroup>
-      </Flex>
+      </HStack>
     </>
   );
 };
@@ -122,8 +148,28 @@ ButtonArea.Skeleton = function ButtonAreaSkeleton({
   mode,
 }: ButtonAreaSkeletonProps) {
   return (
-    <Flex align={"center"} justifyContent={"space-between"}>
-      <ButtonGroup>
+    <HStack
+      justifyContent="space-between"
+      spacing="6"
+      alignItems={{
+        base: "start",
+        md: "center",
+      }}
+      flexDir={{
+        base: "column",
+        md: "row",
+      }}
+    >
+      <HStack
+        alignItems={{
+          base: "start",
+          sm: "center",
+        }}
+        flexDir={{
+          base: "column",
+          sm: "row",
+        }}
+      >
         <Skeleton fitContent rounded="lg">
           <Button leftIcon={<IconPlus size={18} />} variant="outline">
             Import terms
@@ -139,8 +185,14 @@ ButtonArea.Skeleton = function ButtonAreaSkeleton({
             </Button>
           </Skeleton>
         )}{" "}
-      </ButtonGroup>
-      <ButtonGroup>
+      </HStack>
+      <ButtonGroup
+        w={{ base: "full", md: "auto" }}
+        justifyContent={{
+          base: "end",
+          md: "auto",
+        }}
+      >
         <ButtonGroup spacing={4}>
           <Skeleton rounded="full">
             <IconButton
@@ -158,6 +210,6 @@ ButtonArea.Skeleton = function ButtonAreaSkeleton({
           </Skeleton>
         </ButtonGroup>
       </ButtonGroup>
-    </Flex>
+    </HStack>
   );
 };
