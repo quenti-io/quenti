@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Container, Stack } from "@chakra-ui/react";
 
 import { WithFooter } from "../../components/with-footer";
@@ -5,7 +7,7 @@ import { DescriptionAreaSkeleton } from "./skeletons/description-area-skeleton";
 import { FlashcardPreviewSkeleton } from "./skeletons/flashcard-preview-skeleton";
 import { HeadingAreaSkeleton } from "./skeletons/heading-area-skeleton";
 
-export const SetLoading = () => {
+export const SetLoadingRaw = () => {
   return (
     <WithFooter>
       <Container maxW="7xl">
@@ -25,4 +27,4 @@ export const SetLoading = () => {
   );
 };
 
-export default SetLoading;
+export const SetLoading = React.memo(SetLoadingRaw);

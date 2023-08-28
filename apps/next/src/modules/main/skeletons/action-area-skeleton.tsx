@@ -1,8 +1,10 @@
+import React from "react";
+
 import { ButtonGroup, IconButton, Skeleton } from "@chakra-ui/react";
 
 import { IconHexagon } from "@tabler/icons-react";
 
-export const ActionAreaSkeleton = () => {
+export const ActionAreaSkeletonRaw = () => {
   return (
     <Skeleton fitContent rounded="xl">
       <ButtonGroup isAttached colorScheme="gray" size="lg" rounded="xl">
@@ -18,3 +20,5 @@ export const ActionAreaSkeleton = () => {
     </Skeleton>
   );
 };
+
+export const ActionAreaSkeleton = React.memo(ActionAreaSkeletonRaw);

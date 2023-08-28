@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Flex,
   HStack,
@@ -9,7 +11,7 @@ import {
 
 import { ActionAreaSkeleton } from "./action-area-skeleton";
 
-export const DescriptionAreaSkeleton = () => {
+export const DescriptionAreaSkeletonRaw = () => {
   return (
     <Stack spacing={8}>
       <Flex
@@ -37,3 +39,5 @@ export const DescriptionAreaSkeleton = () => {
     </Stack>
   );
 };
+
+export const DescriptionAreaSkeleton = React.memo(DescriptionAreaSkeletonRaw);
