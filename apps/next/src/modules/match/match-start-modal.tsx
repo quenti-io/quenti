@@ -32,7 +32,7 @@ export const MatchStartModal: React.FC<MatchStartModalProps> = ({ isOpen }) => {
             <Text>Drag corresponding tiles together to clear the board.</Text>
           </Stack>
           {/*TODO: There should be a gif here*/}
-          <ButtonGroup>
+          <ButtonGroup spacing="4">
             <Button
               w="full"
               colorScheme="gray"
