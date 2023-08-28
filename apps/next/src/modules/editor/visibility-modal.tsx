@@ -33,7 +33,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <Modal.Overlay />
       <Modal.Content>
-        <Modal.Body>
+        <Modal.Body pb="6">
           <Modal.Heading>Set visibility</Modal.Heading>
           <ToggleGroup
             index={

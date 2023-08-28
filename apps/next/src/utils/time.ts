@@ -21,7 +21,9 @@ export const getRelativeTime = (d1: Date, d2 = new Date()) => {
           Math.round(elapsed / units[u as keyof typeof units]),
           u as Parameters<typeof rtf.format>[1],
         )
-        .replace(/now/g, "just now");
+        .replace(/now/g, "just now")
+        .replace(/^\d second[s]? ago$/, "just now")
+        .replace(/^in.*$/, "just now");
 };
 
 export const relevantLabel = (date: Date) => {

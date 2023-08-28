@@ -12,12 +12,15 @@ import {
 
 import {
   IconChevronDown,
+  IconCloudDownload,
   IconKeyboard,
+  IconKeyframes,
   IconPlus,
   IconSwitchHorizontal,
 } from "@tabler/icons-react";
 
 import { visibilityIcon } from "../../common/visibility-icon";
+import { menuEventChannel } from "../../events/menu";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { ShortcutModal } from "./shortcut-modal";
 import { VisibilityModal } from "./visibility-modal";
@@ -27,6 +30,7 @@ export interface ButtonAreaProps {
 }
 
 export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
+  const mode = useSetEditorContext((s) => s.mode);
   const visibility = useSetEditorContext((s) => s.visibility);
   const setVisibility = useSetEditorContext((s) => s.setVisibility);
   const flipTerms = useSetEditorContext((s) => s.flipTerms);
@@ -52,14 +56,27 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
         onClose={() => setShortcutModalOpen(false)}
       />
       <Flex align={"center"} justifyContent={"space-between"}>
-        <Button
-          leftIcon={<IconPlus size={18} />}
-          variant="outline"
-          onClick={onImportOpen}
-          colorScheme="gray"
-        >
-          Import terms
-        </Button>
+        <ButtonGroup>
+          <Button
+            leftIcon={<IconKeyframes size={18} />}
+            variant="outline"
+            onClick={onImportOpen}
+            colorScheme="gray"
+          >
+            Import terms
+          </Button>
+          {mode == "create" && (
+            <Button
+              leftIcon={<IconCloudDownload size={18} />}
+              variant="outline"
+              onClick={() => {
+                menuEventChannel.emit("openImportDialog", true);
+              }}
+            >
+              Import from Quizlet
+            </Button>
+          )}
+        </ButtonGroup>
         <ButtonGroup>
           <Button
             leftIcon={visibilityIcon(visibility)}

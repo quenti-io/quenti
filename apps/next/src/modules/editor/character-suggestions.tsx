@@ -35,7 +35,7 @@ export const CharacterSuggestions: React.FC<CharacterSuggestionsProps> = ({
   const [uppercased, setUppercased] = React.useState(false);
   const text = useColorModeValue("gray.900", "whiteAlpha.900");
 
-  const bg = useColorModeValue("gray.50", "gray.800");
+  const bg = useColorModeValue("white", "gray.800");
 
   if (!focused || !characters.length) return null;
 
@@ -44,8 +44,14 @@ export const CharacterSuggestions: React.FC<CharacterSuggestionsProps> = ({
       <motion.div initial={{ y: -10 }} animate={{ y: 0 }}>
         <Box
           bg={bg}
-          roundedBottom="lg"
+          roundedBottom="xl"
           shadow="xl"
+          borderTopWidth="0"
+          borderWidth="2px"
+          borderColor="gray.100"
+          _dark={{
+            borderColor: "gray.700",
+          }}
           p="4"
           onMouseDown={(e) => e.preventDefault()}
         >

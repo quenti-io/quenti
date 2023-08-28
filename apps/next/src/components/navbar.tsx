@@ -45,6 +45,7 @@ export const Navbar: React.FC = () => {
 
   const [folderModalOpen, setFolderModalOpen] = React.useState(false);
   const [folderChildSetId, setFolderChildSetId] = React.useState<string>();
+  const [importIsEdit, setImportIsEdit] = React.useState(false);
   const [importModalOpen, setImportModalOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -52,7 +53,8 @@ export const Navbar: React.FC = () => {
       setFolderChildSetId(setId);
       setFolderModalOpen(true);
     };
-    const openImportDialog = () => {
+    const openImportDialog = (edit = false) => {
+      setImportIsEdit(edit);
       setImportModalOpen(true);
     };
     const createClass = () => {
@@ -85,6 +87,7 @@ export const Navbar: React.FC = () => {
         onClose={() => {
           setImportModalOpen(false);
         }}
+        edit={importIsEdit}
       />
       <Flex pos="relative" zIndex={1000} w="full">
         <HStack
@@ -98,7 +101,10 @@ export const Navbar: React.FC = () => {
         >
           <LeftNav
             onFolderClick={() => setFolderModalOpen(true)}
-            onImportClick={() => setImportModalOpen(true)}
+            onImportClick={() => {
+              setImportIsEdit(false);
+              setImportModalOpen(true);
+            }}
             onClassClick={() => void router.push("/classes/new")}
           />
           <Box display={["block", "block", "none"]}>
@@ -133,7 +139,10 @@ export const Navbar: React.FC = () => {
               isOpen={isMobileMenuOpen}
               onClose={onMobileMenuToggle}
               onFolderClick={() => setFolderModalOpen(true)}
-              onImportClick={() => setImportModalOpen(true)}
+              onImportClick={() => {
+                setImportIsEdit(false);
+                setImportModalOpen(true);
+              }}
             />
           </Box>
           <HStack
