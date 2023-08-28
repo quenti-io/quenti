@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Box,
   Button,
@@ -16,7 +18,7 @@ import {
 import { LoadingFlashcard } from "../../../components/loading-flashcard";
 import { LinkAreaSkeleton } from "./link-area-skeleton";
 
-export const FlashcardPreviewSkeleton = () => {
+export const FlashcardPreviewSkeletonRaw = () => {
   return (
     <Flex
       gap={8}
@@ -64,3 +66,5 @@ export const FlashcardPreviewSkeleton = () => {
     </Flex>
   );
 };
+
+export const FlashcardPreviewSkeleton = React.memo(FlashcardPreviewSkeletonRaw);

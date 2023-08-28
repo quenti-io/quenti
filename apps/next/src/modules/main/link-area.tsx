@@ -10,7 +10,6 @@ import {
   LinkBox,
   LinkOverlay,
   SimpleGrid,
-  Skeleton,
   useColorModeValue,
 } from "@chakra-ui/react";
 
@@ -81,7 +80,6 @@ interface LinkableProps {
   href: string;
   disabled?: boolean;
   requireAuth?: boolean;
-  skeleton?: boolean;
 }
 
 export const Linkable: React.FC<LinkableProps> = ({
@@ -90,7 +88,6 @@ export const Linkable: React.FC<LinkableProps> = ({
   href,
   disabled = false,
   requireAuth = false,
-  skeleton,
 }) => {
   const authed = useSession().status == "authenticated";
   const authEnabled = requireAuth && !authed;
@@ -110,84 +107,77 @@ export const Linkable: React.FC<LinkableProps> = ({
     name
   );
 
-  const Wrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
-    if (skeleton) return <Skeleton rounded="xl">{children}</Skeleton>;
-    return <>{children}</>;
-  };
-
   return (
-    <Wrapper>
-      <LinkBox
-        bg={bg}
-        py="4"
-        px="5"
-        borderBottomWidth="3px"
-        rounded="xl"
-        borderColor={borderColor}
-        shadow="md"
-        transition="all ease-in-out 150ms"
-        role="group"
-        outline="2px solid"
-        outlineColor="transparent"
-        _hover={{
-          transform: "translateY(-2px)",
-          borderBottomColor: !disabled ? "blue.200" : disabledHover,
-          shadow: "lg",
-        }}
-        sx={{
-          // https://larsmagnus.co/blog/focus-visible-within-the-missing-pseudo-class
-          "&:has(:focus-visible)": {
-            outlineColor: "blue.300",
-            bg: focusColor,
-          },
-        }}
-        cursor="pointer"
-        onClick={() => {
-          if (authEnabled)
-            menuEventChannel.emit("openSignup", {
-              message: `Create an account for free to study with ${name}`,
-              callbackUrl: href,
-            });
-        }}
-      >
-        <HStack spacing="3">
-          <Box w="6" h="6" position="relative">
-            <Box
-              color="blue.400"
-              position="absolute"
-              filter="blur(2px)"
-              top="1"
-              left="-1"
-              opacity="0.3"
-              transition="all ease-in-out 300ms"
-              _groupHover={{
-                transform: "translateX(-3px)",
-              }}
-              _groupFocusWithin={{
-                transform: "translateX(-3px)",
-              }}
-            >
-              {icon}
-            </Box>
-            <Box
-              color="blue.300"
-              position="relative"
-              transition="all ease-in-out 300ms"
-              _groupHover={{
-                transform: "translateY(-2px)",
-              }}
-              _groupFocusWithin={{
-                transform: "translateY(-2px)",
-              }}
-            >
-              {icon}
-            </Box>
+    <LinkBox
+      bg={bg}
+      py="4"
+      px="5"
+      borderBottomWidth="3px"
+      rounded="xl"
+      borderColor={borderColor}
+      shadow="md"
+      transition="all ease-in-out 150ms"
+      role="group"
+      outline="2px solid"
+      outlineColor="transparent"
+      _hover={{
+        transform: "translateY(-2px)",
+        borderBottomColor: !disabled ? "blue.200" : disabledHover,
+        shadow: "lg",
+      }}
+      sx={{
+        // https://larsmagnus.co/blog/focus-visible-within-the-missing-pseudo-class
+        "&:has(:focus-visible)": {
+          outlineColor: "blue.300",
+          bg: focusColor,
+        },
+      }}
+      cursor="pointer"
+      onClick={() => {
+        if (authEnabled)
+          menuEventChannel.emit("openSignup", {
+            message: `Create an account for free to study with ${name}`,
+            callbackUrl: href,
+          });
+      }}
+    >
+      <HStack spacing="3">
+        <Box w="6" h="6" position="relative">
+          <Box
+            color="blue.400"
+            position="absolute"
+            filter="blur(2px)"
+            top="1"
+            left="-1"
+            opacity="0.3"
+            transition="all ease-in-out 300ms"
+            _groupHover={{
+              transform: "translateX(-3px)",
+            }}
+            _groupFocusWithin={{
+              transform: "translateX(-3px)",
+            }}
+          >
+            {icon}
           </Box>
-          <Heading size="sm" color={disabled ? disabledHeading : undefined}>
-            {overlay}
-          </Heading>
-        </HStack>
-      </LinkBox>
-    </Wrapper>
+          <Box
+            color="blue.300"
+            position="relative"
+            transition="all ease-in-out 300ms"
+            _groupHover={{
+              transform: "translateY(-2px)",
+            }}
+            _groupFocusWithin={{
+              transform: "translateY(-2px)",
+            }}
+          >
+            {icon}
+          </Box>
+        </Box>
+        <Heading size="sm" color={disabled ? disabledHeading : undefined}>
+          {overlay}
+        </Heading>
+      </HStack>
+    </LinkBox>
   );
 };

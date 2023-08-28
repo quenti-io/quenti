@@ -89,7 +89,7 @@ export const Navbar: React.FC = () => {
         }}
         edit={importIsEdit}
       />
-      <Flex pos="relative" zIndex={1000} w="full">
+      <Flex pos="relative" zIndex={1000} w="full" h="20">
         <HStack
           as="header"
           aria-label="Main navigation"

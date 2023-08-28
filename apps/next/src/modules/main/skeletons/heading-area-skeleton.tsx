@@ -1,6 +1,8 @@
+import React from "react";
+
 import { Flex, HStack, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
 
-export const HeadingAreaSkeleton = () => {
+export const HeadingAreaSkeletonRaw = () => {
   return (
     <Stack spacing={4}>
       <Skeleton fitContent>
@@ -21,3 +23,5 @@ export const HeadingAreaSkeleton = () => {
     </Stack>
   );
 };
+
+export const HeadingAreaSkeleton = React.memo(HeadingAreaSkeletonRaw);
