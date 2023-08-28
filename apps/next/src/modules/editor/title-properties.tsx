@@ -84,7 +84,7 @@ export const TitleProperties = () => {
               }}
             />
           </Stack>
-          <HStack>
+          <HStack flexWrap="wrap">
             {parsedTags.map((tag, i) => (
               <Tag key={i} bg={tagBg}>
                 {tag}
