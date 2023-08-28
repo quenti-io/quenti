@@ -82,7 +82,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
                 />
                 <Skeleton
                   key={i}
-                  rounded="xl"
+                  rounded="2xl"
                   w="full"
                   h={{ base: "376px", sm: "245px", md: "340px" }}
                 />
