@@ -38,7 +38,7 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
       .getState()
       .initialize(
         cloned,
-        20,
+        Math.min(20, cloned.length),
         [
           TestQuestionType.TrueFalse,
           TestQuestionType.MultipleChoice,

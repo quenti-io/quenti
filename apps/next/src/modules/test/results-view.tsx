@@ -16,7 +16,7 @@ import { IconArrowUp, IconReport } from "@tabler/icons-react";
 
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useTestContext } from "../../stores/use-test-store";
-import { TestCardGap } from "./card-gap";
+import { TestCardGapRaw } from "./card-gap";
 import { CardWrapper } from "./card-wrapper";
 import { ResultsCard } from "./results-card";
 
@@ -67,7 +67,7 @@ export const ResultsView = () => {
         <ResultsCard />
       </ScaleFade>
       <Stack spacing="0" pb="20">
-        {outline.map(({ type, count, index }) => (
+        {outline.map(({ type, count, startingIndex }, index) => (
           <>
             <SlideFade
               in
@@ -78,9 +78,10 @@ export const ResultsView = () => {
                 },
               }}
             >
-              <TestCardGap
+              <TestCardGapRaw
                 type="question"
                 index={index}
+                startingIndex={startingIndex}
                 numQuestions={questionCount}
                 count={count}
                 correctness={result.byQuestion[index]!.correct}

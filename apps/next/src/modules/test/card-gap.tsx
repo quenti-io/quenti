@@ -1,7 +1,11 @@
+import React from "react";
+
 import {
   Box,
+  Flex,
   HStack,
   Heading,
+  Skeleton,
   SlideFade,
   Stack,
   Text,
@@ -23,20 +27,24 @@ export interface TestCardGapProps {
   type: "start" | "question" | "finish";
   title?: string;
   index?: number;
+  startingIndex?: number;
   count?: number;
   numQuestions?: number;
   correctness?: boolean;
+  skeleton?: boolean;
   onSettingsClick?: () => void;
   onResetClick?: () => void;
 }
 
-export const TestCardGap: React.FC<TestCardGapProps> = ({
+export const TestCardGapRaw: React.FC<TestCardGapProps> = ({
   type,
   title,
   index,
+  startingIndex,
   count = 1,
   numQuestions,
   correctness,
+  skeleton,
   onSettingsClick,
   onResetClick,
 }) => {
@@ -64,6 +72,18 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
         ? correctQuestionIconColor
         : incorrectQuestionIconColor
       : defaultQuestionIconColor;
+
+  const TextWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+    if (!skeleton) return <>{children}</>;
+
+    return (
+      <Flex h="21px" alignItems="center">
+        <Skeleton height="18px" rounded="full">
+          {children}
+        </Skeleton>
+      </Flex>
+    );
+  };
 
   return (
     <HStack
@@ -120,21 +140,27 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
           </Box>
         )}
       </Stack>
-      {index !== undefined && numQuestions !== undefined && (
-        <Text
-          fontSize="sm"
-          fontWeight={600}
-          fontFamily="heading"
-          color="gray.500"
-          _dark={{
-            color: "gray.400",
-          }}
-        >
-          {`${
-            count <= 1 ? index + 1 : `${index + 1}-${index + count}`
-          } / ${numQuestions}`}
-        </Text>
-      )}
+      {index !== undefined &&
+        startingIndex !== undefined &&
+        numQuestions !== undefined && (
+          <TextWrapper>
+            <Text
+              fontSize="sm"
+              fontWeight={600}
+              fontFamily="heading"
+              color="gray.500"
+              _dark={{
+                color: "gray.400",
+              }}
+            >
+              {`${
+                count <= 1
+                  ? startingIndex + 1
+                  : `${startingIndex + 1}-${startingIndex + count}`
+              } / ${numQuestions}`}
+            </Text>
+          </TextWrapper>
+        )}
       {title && (
         <HStack
           justifyContent={{ base: "start", md: "space-between" }}
@@ -190,3 +216,5 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
     </HStack>
   );
 };
+
+export const TestCardGap = React.memo(TestCardGapRaw);

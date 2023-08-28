@@ -5,6 +5,7 @@ import {
   Button,
   Fade,
   Heading,
+  Skeleton,
   SlideFade,
   Stack,
   VStack,
@@ -34,7 +35,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
     setTimeout(() => {
       reset();
       setEnter(true);
-    }, 300);
+    }, 500);
   };
 
   return (
@@ -57,9 +58,32 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
             type="start"
             title={title}
             onSettingsClick={() => setSettingsOpen(true)}
+            onResetClick={manualReset}
           />
+        </Fade>{" "}
+        <Fade in={!enter} unmountOnExit>
+          <Stack spacing="0">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <>
+                <TestCardGap
+                  type="question"
+                  index={i}
+                  startingIndex={i}
+                  numQuestions={500}
+                  count={1}
+                  skeleton
+                />
+                <Skeleton
+                  key={i}
+                  rounded="xl"
+                  w="full"
+                  h={{ base: "376px", sm: "245px", md: "340px" }}
+                />
+              </>
+            ))}
+          </Stack>
         </Fade>
-        {outline.map(({ type, count, index }) => (
+        {outline.map(({ type, count, startingIndex }, index) => (
           <>
             <SlideFade
               initial={{
@@ -75,12 +99,24 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
                         delay: 0.2 + index * 0.05,
                       },
                     }
+                  : index == 0
+                  ? {
+                      opacity: 0,
+                      transform: "translateY(0px)",
+                      transition: {
+                        duration: 0.1,
+                      },
+                    }
                   : {}
               }
+              style={{
+                zIndex: -1,
+              }}
             >
               <TestCardGap
                 type="question"
                 index={index}
+                startingIndex={startingIndex}
                 numQuestions={questionCount}
                 count={count}
               />
@@ -106,17 +142,35 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
             </SlideFade>
           </>
         ))}
-        <Box position="relative">
-          <TestCardGap type="finish" />
-          <VStack mt="10" spacing="6" h="24" w="full">
-            <Heading size="md" m="0">
-              Ready to submit your test?
-            </Heading>
-            <Button size="lg" fontSize="md" onClick={onSubmit}>
-              Check answers
-            </Button>
-          </VStack>
-        </Box>
+        <Fade
+          initial={{
+            opacity: 0,
+            transform: "translateY(-20px)",
+          }}
+          animate={
+            enter
+              ? {
+                  opacity: 1,
+                  transform: "translateY(0px)",
+                  transition: {
+                    delay: 0.4,
+                  },
+                }
+              : {}
+          }
+        >
+          <Box position="relative">
+            <TestCardGap type="finish" />
+            <VStack mt="10" spacing="6" h="24" w="full" position="relative">
+              <Heading size="md" m="0">
+                Ready to submit your test?
+              </Heading>
+              <Button size="lg" fontSize="md" onClick={onSubmit}>
+                Check answers
+              </Button>
+            </VStack>
+          </Box>
+        </Fade>
       </Stack>
     </>
   );

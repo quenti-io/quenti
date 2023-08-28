@@ -164,7 +164,9 @@ export const ResultsCard = () => {
           flexDir={{ base: "column", sm: "row" }}
         >
           <Stack spacing="4" flex={{ base: "1", md: undefined }}>
-            <Heading size="md">By question type</Heading>
+            <Heading size="md" w="40">
+              By question type
+            </Heading>
             <Stack w={{ base: "full", sm: "max-content" }}>
               {result.byType.map((props) => (
                 <ByTypeComponent key={props.type} {...props} />
