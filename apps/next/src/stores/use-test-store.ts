@@ -26,6 +26,12 @@ export type OutlineEntry = {
 };
 
 export interface TestStoreProps {
+  settings: {
+    questionCount: number;
+    questionTypes: TestQuestionType[];
+    studyStarred: boolean;
+    answerMode: StudySetAnswerMode;
+  };
   questionCount: number;
   questionTypes: TestQuestionType[];
   answerMode: StudySetAnswerMode;
@@ -56,6 +62,7 @@ interface TestState extends TestStoreProps {
     questionTypes: TestQuestionType[],
     answerMode: StudySetAnswerMode,
   ) => void;
+  setSettings: (settings: Partial<TestStoreProps["settings"]>) => void;
   answerQuestion: <D extends DefaultData>(
     index: number,
     data: D["answer"],
@@ -75,6 +82,16 @@ export const createTestStore = (
   behaviors?: Partial<TestState>,
 ) => {
   const DEFAULT_PROPS: TestStoreProps = {
+    settings: {
+      questionCount: 20,
+      questionTypes: [
+        TestQuestionType.TrueFalse,
+        TestQuestionType.MultipleChoice,
+        TestQuestionType.Match,
+      ],
+      studyStarred: false,
+      answerMode: "Word",
+    },
     questionCount: 20,
     questionTypes: [
       TestQuestionType.TrueFalse,
@@ -174,6 +191,12 @@ export const createTestStore = (
         }
 
         set({
+          settings: {
+            questionCount,
+            questionTypes,
+            answerMode,
+            studyStarred: false,
+          },
           allTerms,
           questionCount,
           questionTypes,
@@ -183,6 +206,11 @@ export const createTestStore = (
           startedAt: new Date(),
           endedAt: undefined,
         });
+      },
+      setSettings: (settings) => {
+        set((state) => ({
+          settings: { ...state.settings, ...settings },
+        }));
       },
       answerQuestion: (index, data, completed = true) => {
         set((state) => {
@@ -294,9 +322,9 @@ export const createTestStore = (
         const state = get();
         state.initialize(
           state.allTerms,
-          state.questionCount,
-          state.questionTypes,
-          state.answerMode,
+          state.settings.questionCount,
+          state.settings.questionTypes,
+          state.settings.answerMode,
         );
       },
       onAnswerDelegate: (index) => {

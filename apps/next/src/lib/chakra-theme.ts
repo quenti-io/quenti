@@ -152,6 +152,18 @@ const components = {
       _hover: { textDecoration: "none" },
     },
   },
+  Switch: {
+    baseStyle: ({ colorMode }: StyleFunctionProps) => ({
+      track: {
+        borderWidth: "2px",
+        borderColor: colorMode == "light" ? "gray.100" : "gray.700",
+        bg: colorMode == "light" ? "gray.200" : "gray.750",
+        _checked: {
+          bg: "blue.300",
+        },
+      },
+    }),
+  },
   Checkbox: {
     baseStyle: () => ({
       control: {

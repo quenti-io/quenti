@@ -26,6 +26,8 @@ export interface TestCardGapProps {
   count?: number;
   numQuestions?: number;
   correctness?: boolean;
+  onSettingsClick?: () => void;
+  onResetClick?: () => void;
 }
 
 export const TestCardGap: React.FC<TestCardGapProps> = ({
@@ -35,6 +37,8 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
   count = 1,
   numQuestions,
   correctness,
+  onSettingsClick,
+  onResetClick,
 }) => {
   const answered = useTestContext((s) => s.timeline[index || 0]?.answered);
 
@@ -177,7 +181,10 @@ export const TestCardGap: React.FC<TestCardGapProps> = ({
               </Heading>
             </SlideFade>
           </Stack>
-          <TestOptions />
+          <TestOptions
+            onResetClick={() => onResetClick?.()}
+            onSettingsClick={() => onSettingsClick?.()}
+          />
         </HStack>
       )}
     </HStack>

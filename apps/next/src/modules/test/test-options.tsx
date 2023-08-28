@@ -6,7 +6,15 @@ import { IconRotate, IconSettings, IconX } from "@tabler/icons-react";
 
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 
-export const TestOptions = () => {
+export interface TestOptionsProps {
+  onSettingsClick: () => void;
+  onResetClick: () => void;
+}
+
+export const TestOptions: React.FC<TestOptionsProps> = ({
+  onSettingsClick,
+  onResetClick,
+}) => {
   const rootUrl = useEntityRootUrl();
 
   return (
@@ -20,12 +28,14 @@ export const TestOptions = () => {
           aria-label="Restart"
           rounded="full"
           variant="ghost"
+          onClick={onResetClick}
         />
         <IconButton
           icon={<IconSettings />}
           aria-label="Settings"
           rounded="full"
           variant="ghost"
+          onClick={onSettingsClick}
         />
       </HStack>
       <IconButton

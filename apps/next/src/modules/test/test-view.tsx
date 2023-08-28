@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Box,
   Button,
@@ -22,10 +24,26 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
   const { title } = useSetFolderUnison();
   const outline = useTestContext((s) => s.outline);
   const questionCount = useTestContext((s) => s.questionCount);
+  const reset = useTestContext((s) => s.reset);
+
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [enter, setEnter] = React.useState(true);
+
+  const manualReset = () => {
+    setEnter(false);
+    setTimeout(() => {
+      reset();
+      setEnter(true);
+    }, 300);
+  };
 
   return (
     <>
-      <TestSettingsModal isOpen onClose={() => undefined} />
+      <TestSettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        onReset={manualReset}
+      />
       <Stack spacing="0" pb="20" w="full">
         <Fade
           in
@@ -35,23 +53,30 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
             },
           }}
         >
-          <TestCardGap type="start" title={title} />
+          <TestCardGap
+            type="start"
+            title={title}
+            onSettingsClick={() => setSettingsOpen(true)}
+          />
         </Fade>
         {outline.map(({ type, count, index }) => (
           <>
             <SlideFade
-              in
               initial={{
                 opacity: 0,
                 transform: "translateY(-20px)",
               }}
-              animate={{
-                opacity: 1,
-                transform: "translateY(0px)",
-                transition: {
-                  delay: 0.2 + index * 0.05,
-                },
-              }}
+              animate={
+                enter
+                  ? {
+                      opacity: 1,
+                      transform: "translateY(0px)",
+                      transition: {
+                        delay: 0.2 + index * 0.05,
+                      },
+                    }
+                  : {}
+              }
             >
               <TestCardGap
                 type="question"
@@ -61,18 +86,21 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
               />
             </SlideFade>
             <SlideFade
-              in
               initial={{
                 opacity: 0,
                 transform: "translateY(-20px)",
               }}
-              animate={{
-                opacity: 1,
-                transform: "translateY(0px)",
-                transition: {
-                  delay: 0.2 + index * 0.025,
-                },
-              }}
+              animate={
+                enter
+                  ? {
+                      opacity: 1,
+                      transform: "translateY(0px)",
+                      transition: {
+                        delay: 0.2 + index * 0.025,
+                      },
+                    }
+                  : {}
+              }
             >
               <CardWrapper type={type} i={index} />
             </SlideFade>
