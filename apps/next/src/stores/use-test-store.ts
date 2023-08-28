@@ -77,34 +77,34 @@ interface TestState extends TestStoreProps {
 
 export type TestStore = ReturnType<typeof createTestStore>;
 
-export const createTestStore = (
-  initProps?: Partial<TestStoreProps>,
-  behaviors?: Partial<TestState>,
-) => {
-  const DEFAULT_PROPS: TestStoreProps = {
-    settings: {
-      questionCount: 20,
-      questionTypes: [
-        TestQuestionType.TrueFalse,
-        TestQuestionType.MultipleChoice,
-        TestQuestionType.Match,
-      ],
-      studyStarred: false,
-      answerMode: "Word",
-    },
+export const DEFAULT_PROPS: TestStoreProps = {
+  settings: {
     questionCount: 20,
     questionTypes: [
       TestQuestionType.TrueFalse,
       TestQuestionType.MultipleChoice,
       TestQuestionType.Match,
     ],
+    studyStarred: false,
     answerMode: "Word",
-    allTerms: [],
-    outline: [],
-    timeline: [],
-    specialCharacters: [],
-  };
+  },
+  questionCount: 20,
+  questionTypes: [
+    TestQuestionType.TrueFalse,
+    TestQuestionType.MultipleChoice,
+    TestQuestionType.Match,
+  ],
+  answerMode: "Word",
+  allTerms: [],
+  outline: [],
+  timeline: [],
+  specialCharacters: [],
+};
 
+export const createTestStore = (
+  initProps?: Partial<TestStoreProps>,
+  behaviors?: Partial<TestState>,
+) => {
   return createStore<TestState>()(
     subscribeWithSelector((set, get) => ({
       ...DEFAULT_PROPS,

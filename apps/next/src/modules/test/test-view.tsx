@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 import {
@@ -12,17 +13,21 @@ import {
 } from "@chakra-ui/react";
 
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
-import { useTestContext } from "../../stores/use-test-store";
+import { TestContext, useTestContext } from "../../stores/use-test-store";
 import { TestCardGap } from "./card-gap";
 import { CardWrapper } from "./card-wrapper";
 import { TestSettingsModal } from "./test-settings-modal";
+import { pushQueryParams } from "./utils/url-params";
 
 interface TestViewProps {
   onSubmit: () => void;
 }
 
 export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
-  const { title } = useSetFolderUnison();
+  const { id, title } = useSetFolderUnison();
+  const router = useRouter();
+
+  const store = React.useContext(TestContext)!;
   const outline = useTestContext((s) => s.outline);
   const questionCount = useTestContext((s) => s.questionCount);
   const reset = useTestContext((s) => s.reset);
@@ -31,6 +36,8 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
   const [enter, setEnter] = React.useState(true);
 
   const manualReset = () => {
+    pushQueryParams(id, store.getState().settings, router);
+
     setEnter(false);
     setTimeout(() => {
       reset();

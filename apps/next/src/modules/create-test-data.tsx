@@ -1,18 +1,22 @@
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 import React from "react";
-
-import { TestQuestionType } from "@quenti/interfaces";
 
 import { useAuthedSet } from "../hooks/use-set";
 import {
+  DEFAULT_PROPS,
   TestContext,
   type TestStore,
   createTestStore,
 } from "../stores/use-test-store";
+import { getQueryParams } from "./test/utils/url-params";
 
 export const CreateTestData: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const { terms } = useAuthedSet();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { id, terms } = useAuthedSet();
 
   const storeRef = React.useRef<TestStore>();
   if (!storeRef.current) {
@@ -30,21 +34,28 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
       },
     });
 
+    const { settings, valid } = searchParams.get("count")
+      ? getQueryParams()
+      : { settings: DEFAULT_PROPS.settings, valid: true };
+
     // SUPER IMPORTANT: **clone the terms when initializing** so we aren't modifying the original
     // objects when we transition back to the main set page (test store uses a lot of .pop() calls on the array)
     const cloned = Array.from(terms);
+
+    if (!valid) {
+      void router.replace({
+        pathname: `/${id}/test`,
+        query: null,
+      });
+    }
 
     storeRef.current
       .getState()
       .initialize(
         cloned,
-        Math.min(20, cloned.length),
-        [
-          TestQuestionType.TrueFalse,
-          TestQuestionType.MultipleChoice,
-          TestQuestionType.Match,
-        ],
-        "Word",
+        Math.min(settings.questionCount, cloned.length),
+        settings.questionTypes,
+        settings.answerMode,
       );
   }
 

@@ -199,6 +199,7 @@ const QuestionTypeComponent: React.FC<{ type: TestQuestionType }> = ({
       <Switch
         size="md"
         isChecked={questionTypes.includes(type)}
+        isDisabled={questionTypes.length <= 1 && questionTypes.includes(type)}
         onChange={(e) => {
           if (e.target.checked) {
             setSettings({
