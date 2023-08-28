@@ -122,9 +122,9 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
       <Stack>
         <Header i={i} />
         <Stack mt="4">
-          <Box display="inline-block" ml="-6px" mt="-6px">
+          <HStack spacing="3" flexWrap="wrap">
             {options.map((term) => (
-              <Draggable id={term.id} key={term.id} inline>
+              <Draggable id={term.id} key={term.id}>
                 <ExternalWrapper id={term.id}>
                   <Text whiteSpace="pre-wrap" overflowWrap="anywhere">
                     <ScriptFormatter>
@@ -134,7 +134,7 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
                 </ExternalWrapper>
               </Draggable>
             ))}
-          </Box>
+          </HStack>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap="6" mt="8">
             {data.zones.map((term, i) => (
               <>
@@ -334,9 +334,10 @@ const Droppable: React.FC<
   );
 };
 
-const Draggable: React.FC<
-  React.PropsWithChildren & { id: string; inline?: boolean }
-> = ({ children, id, inline = false }) => {
+const Draggable: React.FC<React.PropsWithChildren & { id: string }> = ({
+  children,
+  id,
+}) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id,
@@ -354,8 +355,6 @@ const Draggable: React.FC<
       style={style}
       {...listeners}
       {...attributes}
-      display={inline ? "inline-block" : undefined}
-      flex="1"
     >
       {children}
     </Box>
@@ -388,7 +387,6 @@ const ExternalWrapper: React.FC<React.PropsWithChildren<{ id: string }>> = ({
         },
       }}
       rounded="xl"
-      m="6px"
       py="2"
       px="3"
     >
