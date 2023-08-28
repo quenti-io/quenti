@@ -49,7 +49,14 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
     );
   };
 
-  const Wrapper = evaluation !== undefined ? EvaluationWrapper : React.Fragment;
+  const Wrapper: React.FC<
+    React.PropsWithChildren<{ evaluation: boolean | undefined }>
+  > = ({ evaluation, children }) => {
+    if (evaluation === undefined) return <>{children}</>;
+    return (
+      <EvaluationWrapper evaluation={evaluation}>{children}</EvaluationWrapper>
+    );
+  };
 
   const evaluateTerm = (term: string): boolean | undefined => {
     if (evaluation == undefined) return undefined;

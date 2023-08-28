@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Link } from "@quenti/components";
 
 import {
@@ -68,7 +70,7 @@ export const ResultsView = () => {
       </ScaleFade>
       <Stack spacing="0" pb="20">
         {outline.map(({ type, count, startingIndex }, index) => (
-          <>
+          <React.Fragment key={index}>
             <SlideFade
               in
               transition={{
@@ -107,7 +109,7 @@ export const ResultsView = () => {
                 correctness={result.byQuestion[index]!.correct}
               />
             </SlideFade>
-          </>
+          </React.Fragment>
         ))}
         <VStack mt="10">
           <Button

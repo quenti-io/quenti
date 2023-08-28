@@ -110,10 +110,13 @@ export const Linkable: React.FC<LinkableProps> = ({
     name
   );
 
-  const Wrapper = skeleton ? Skeleton : React.Fragment;
+  const Wrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+    if (skeleton) return <Skeleton rounded="xl">{children}</Skeleton>;
+    return <>{children}</>;
+  };
 
   return (
-    <Wrapper rounded="xl">
+    <Wrapper>
       <LinkBox
         bg={bg}
         py="4"

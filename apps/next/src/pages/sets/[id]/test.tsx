@@ -91,7 +91,7 @@ const TestContainer = () => {
   };
 
   return (
-    <>
+    <AuthedPage>
       <ConfirmModal
         isOpen={hasUnansweredOpen}
         onClose={() => setHasUnansweredOpen(false)}
@@ -123,7 +123,7 @@ const TestContainer = () => {
           )}
         </Container>
       )}
-    </>
+    </AuthedPage>
   );
 };
 

@@ -137,7 +137,7 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
           </HStack>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap="6" mt="8">
             {data.zones.map((term, i) => (
-              <>
+              <React.Fragment key={i}>
                 <GridItem
                   display="flex"
                   alignItems="center"
@@ -177,7 +177,7 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
                     </ScriptFormatter>
                   </Text>
                 </GridItem>
-              </>
+              </React.Fragment>
             ))}
           </SimpleGrid>
         </Stack>
@@ -208,7 +208,7 @@ const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
       <Header i={i} />
       <Stack spacing="8" mt="4">
         {data.zones.map((term, i) => (
-          <>
+          <React.Fragment key={i}>
             <Stack key={term.id} spacing="6">
               <Text
                 whiteSpace="pre-wrap"
@@ -272,7 +272,7 @@ const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
                 }}
               />
             )}
-          </>
+          </React.Fragment>
         ))}
       </Stack>
     </Stack>
@@ -345,7 +345,7 @@ const Draggable: React.FC<React.PropsWithChildren & { id: string }> = ({
   const style = {
     transform: CSS.Translate.toString(transform),
     zIndex: isDragging ? 100 : undefined,
-    ["touch-action"]: "manipulation",
+    touchAction: "manipulation",
   };
 
   return (

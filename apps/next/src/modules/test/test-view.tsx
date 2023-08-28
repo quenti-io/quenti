@@ -64,7 +64,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
         <Fade in={!enter} unmountOnExit>
           <Stack spacing="0">
             {Array.from({ length: 5 }).map((_, i) => (
-              <>
+              <React.Fragment key={i}>
                 <TestCardGap
                   type="question"
                   index={i}
@@ -79,12 +79,12 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
                   w="full"
                   h={{ base: "376px", sm: "245px", md: "340px" }}
                 />
-              </>
+              </React.Fragment>
             ))}
           </Stack>
         </Fade>
         {outline.map(({ type, count, startingIndex }, index) => (
-          <>
+          <React.Fragment key={index}>
             <SlideFade
               initial={{
                 opacity: 0,
@@ -96,7 +96,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
                       opacity: 1,
                       transform: "translateY(0px)",
                       transition: {
-                        delay: 0.2 + index * 0.05,
+                        delay: 0.2 + Math.min(index, 9) * 0.05,
                       },
                     }
                   : index == 0
@@ -132,7 +132,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
                       opacity: 1,
                       transform: "translateY(0px)",
                       transition: {
-                        delay: 0.2 + index * 0.025,
+                        delay: 0.2 + Math.min(index, 9) * 0.025,
                       },
                     }
                   : {}
@@ -140,7 +140,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
             >
               <CardWrapper type={type} i={index} />
             </SlideFade>
-          </>
+          </React.Fragment>
         ))}
         <Fade
           initial={{
