@@ -78,6 +78,7 @@ export const SelectableGenericCard: React.FC<SelectableGenericCard> = ({
               WebkitLineClamp: 2,
               lineClamp: 2,
               WebkitBoxOrient: "vertical",
+              overflowWrap: "anywhere",
             }}
           >
             {title}

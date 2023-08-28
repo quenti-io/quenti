@@ -127,7 +127,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 }}
               />
             ) : (
-              <Text w="full" whiteSpace="pre-wrap">
+              <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
                 <ScriptFormatter>{editWord}</ScriptFormatter>
               </Text>
             )}
@@ -144,7 +144,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 }}
               />
             ) : (
-              <Text w="full" whiteSpace="pre-wrap">
+              <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
                 <ScriptFormatter>{editDefinition}</ScriptFormatter>
               </Text>
             )}

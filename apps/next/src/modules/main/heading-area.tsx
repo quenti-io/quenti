@@ -71,7 +71,7 @@ export const HeadingArea = () => {
       />
       <Stack spacing={4}>
         {tags.length && (
-          <HStack spacing={3}>
+          <HStack spacing={3} flexWrap="wrap">
             {tags.map((t, i) => (
               <Tag bg={tagBg} key={i} fontWeight={600}>
                 {t}

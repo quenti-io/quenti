@@ -165,13 +165,13 @@ export const TermsList = () => {
         </LanguageMenuWrapper>
       </Stack>
       <Button
-        leftIcon={<IconPlus />}
+        leftIcon={<IconPlus size={18} />}
         size="lg"
         height="24"
         variant="outline"
         onClick={() => addTerm(terms.length)}
       >
-        Add Card
+        Add card
       </Button>
     </Stack>
   );

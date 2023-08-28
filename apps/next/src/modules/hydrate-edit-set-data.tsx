@@ -42,7 +42,7 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
   );
 
   if (loading || !data || data.userId !== session.data?.user?.id)
-    return <EditorLoading />;
+    return <EditorLoading mode="edit" />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };

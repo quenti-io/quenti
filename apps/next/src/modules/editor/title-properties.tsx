@@ -84,7 +84,7 @@ export const TitleProperties = () => {
               }}
             />
           </Stack>
-          <HStack>
+          <HStack flexWrap="wrap">
             {parsedTags.map((tag, i) => (
               <Tag key={i} bg={tagBg}>
                 {tag}
@@ -101,10 +101,10 @@ TitleProperties.Skeleton = function TitlePropertiesSkeleton() {
   return (
     <Stack spacing={6}>
       <Stack spacing={0}>
-        <Flex h="72px" alignItems="center">
+        <Flex h={["36px", "45px", "72px"]} alignItems="center">
           <SkeletonText
             maxW="300px"
-            skeletonHeight="52px"
+            skeletonHeight={["27px", "34px", "52px"]}
             noOfLines={1}
             rounded="md"
           >
@@ -145,6 +145,7 @@ TitleProperties.Skeleton = function TitlePropertiesSkeleton() {
               />
             </Skeleton>
           </Stack>
+          <HStack />
         </Stack>
       </Flex>
     </Stack>

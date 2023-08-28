@@ -2,7 +2,7 @@ import { eventBus } from "../lib/event-bus";
 
 export const menuEventChannel = eventBus<{
   createFolder: (setId?: string) => void;
-  openImportDialog: () => void;
+  openImportDialog: (edit?: boolean) => void;
   folderWithSetCreated: (setId: string) => void;
   openChangelog: () => void;
   createClass: () => void;

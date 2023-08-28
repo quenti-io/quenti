@@ -6240,6 +6240,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/core@workspace:packages/core"
   dependencies:
+    "@quenti/lib": "*"
     "@quenti/prisma": "*"
   languageName: unknown
   linkType: soft

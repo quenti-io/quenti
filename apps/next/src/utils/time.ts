@@ -21,7 +21,9 @@ export const getRelativeTime = (d1: Date, d2 = new Date()) => {
           Math.round(elapsed / units[u as keyof typeof units]),
           u as Parameters<typeof rtf.format>[1],
         )
-        .replace(/now/g, "just now");
+        .replace(/now/g, "just now")
+        .replace(/^\d second[s]? ago$/, "just now")
+        .replace(/^in.*$/, "just now");
 };
 
 export const relevantLabel = (date: Date) => {
@@ -67,6 +69,13 @@ export const briefFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
 });
+
+export const formatElapsedTime = (ms: number) => {
+  const value = new Date(ms).toISOString().substring(11, 19);
+  if (value.startsWith("00:")) {
+    return value.substring(3);
+  }
+};
 
 export const formatDeciseconds = (deciseconds: number) => {
   const seconds = Math.floor(deciseconds / 10);

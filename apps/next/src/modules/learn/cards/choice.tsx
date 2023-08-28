@@ -186,6 +186,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
                   size="lg"
                   color={textColor}
                   whiteSpace="pre-wrap"
+                  overflowWrap="anywhere"
                   textAlign="start"
                   fontWeight="normal"
                 >

@@ -100,6 +100,10 @@ let config = withHighlightConfig(
         source: "/:id(c[a-z0-9]{24})/match",
         destination: "/sets/:id/match",
       },
+      {
+        source: "/:id(c[a-z0-9]{24})/test",
+        destination: "/sets/:id/test",
+      },
     ],
     productionBrowserSourceMaps: true,
   }),

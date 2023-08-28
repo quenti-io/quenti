@@ -77,7 +77,7 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
-          <Modal.Heading>Import Terms</Modal.Heading>
+          <Modal.Heading>Import terms</Modal.Heading>
           <Stack spacing={6}>
             <FormControl>
               <FormLabel mb="3">

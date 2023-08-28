@@ -21,12 +21,12 @@ export const DescriptionAreaSkeleton = () => {
           <Skeleton w="12" h="12" rounded="full" />
           <Stack spacing={0}>
             <Flex alignItems="center" h="18px">
-              <SkeletonText fitContent skeletonHeight="3" noOfLines={1}>
+              <SkeletonText skeletonHeight="3" noOfLines={1}>
                 <Text fontSize="xs">Created by</Text>
               </SkeletonText>
             </Flex>
             <Flex alignItems="center" h="6">
-              <SkeletonText fitContent skeletonHeight="4" noOfLines={1}>
+              <SkeletonText skeletonHeight="4" noOfLines={1}>
                 <Text fontWeight={700}>placeholder</Text>
               </SkeletonText>
             </Flex>

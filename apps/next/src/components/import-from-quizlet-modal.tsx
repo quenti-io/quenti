@@ -29,6 +29,7 @@ import { Modal } from "./modal";
 export interface ImportFromQuizletModalProps {
   isOpen: boolean;
   onClose: () => void;
+  edit?: boolean;
 }
 
 const spin = keyframes({
@@ -73,6 +74,7 @@ const messages = [
 export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
   isOpen,
   onClose,
+  edit = false,
 }) => {
   const router = useRouter();
 
@@ -105,20 +107,24 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
   const fromUrl = api.import.fromUrl.useMutation({
     onSuccess: async (data) => {
       if (data) {
-        await router.push(`/${data.createdSetId}`);
+        await router.push(
+          !edit ? `/${data.createdSetId}` : `/${data.createdSetId}/edit`,
+        );
 
         onClose();
         requestAnimationFrame(() => {
           setUrl("");
         });
 
-        effectChannel.emit("prepareConfetti");
+        if (!edit) {
+          effectChannel.emit("prepareConfetti");
 
-        const handler = () => {
-          effectChannel.emit("confetti");
-          queryEventChannel.off("setQueryRefetched", handler);
-        };
-        queryEventChannel.on("setQueryRefetched", handler);
+          const handler = () => {
+            effectChannel.emit("confetti");
+            queryEventChannel.off("setQueryRefetched", handler);
+          };
+          queryEventChannel.on("setQueryRefetched", handler);
+        }
       }
     },
     onError: (err) => {

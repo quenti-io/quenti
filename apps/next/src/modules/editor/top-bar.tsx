@@ -57,6 +57,8 @@ export const TopBar = () => {
       rounded="xl"
       position="sticky"
       top="2"
+      w={{ base: "calc(100% + 16px)", sm: "calc(100% + 40px)" }}
+      ml={{ base: "-8px", sm: "-20px" }}
       zIndex="50"
       borderWidth="2px"
       transition="border-color 0.2s ease-in-out"
@@ -109,13 +111,22 @@ export const TopBar = () => {
 
 TopBar.Skeleton = function TopBarSkeleton() {
   return (
-    <Skeleton rounded="xl" position="sticky" top="2" zIndex="50" shadow="xl">
+    <Skeleton
+      rounded="xl"
+      position="sticky"
+      top="2"
+      zIndex="50"
+      shadow="xl"
+      w={{ base: "calc(100% + 16px)", sm: "calc(100% + 40px)" }}
+      ml={{ base: "-8px", sm: "-20px" }}
+      borderWidth="2px"
+    >
       <HStack py="3" px="5" rounded="xl">
         <Stack>
           <HStack>
             <Heading fontSize="lg">Create new set</Heading>
           </HStack>
-          <Text fontSize="sm">Loading</Text>
+          <Text fontSize="sm">5 terms saved just now</Text>
         </Stack>
         <Button>Done</Button>
       </HStack>

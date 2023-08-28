@@ -3,7 +3,7 @@ import React from "react";
 import {
   Button,
   ButtonGroup,
-  Flex,
+  HStack,
   IconButton,
   Menu,
   Skeleton,
@@ -12,12 +12,15 @@ import {
 
 import {
   IconChevronDown,
+  IconCloudDownload,
   IconKeyboard,
+  IconKeyframes,
   IconPlus,
   IconSwitchHorizontal,
 } from "@tabler/icons-react";
 
 import { visibilityIcon } from "../../common/visibility-icon";
+import { menuEventChannel } from "../../events/menu";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { ShortcutModal } from "./shortcut-modal";
 import { VisibilityModal } from "./visibility-modal";
@@ -27,6 +30,7 @@ export interface ButtonAreaProps {
 }
 
 export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
+  const mode = useSetEditorContext((s) => s.mode);
   const visibility = useSetEditorContext((s) => s.visibility);
   const setVisibility = useSetEditorContext((s) => s.setVisibility);
   const flipTerms = useSetEditorContext((s) => s.flipTerms);
@@ -51,16 +55,55 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
         isOpen={shortcutModalOpen}
         onClose={() => setShortcutModalOpen(false)}
       />
-      <Flex align={"center"} justifyContent={"space-between"}>
-        <Button
-          leftIcon={<IconPlus size={18} />}
-          variant="outline"
-          onClick={onImportOpen}
-          colorScheme="gray"
+      <HStack
+        justifyContent="space-between"
+        spacing="6"
+        alignItems={{
+          base: "start",
+          md: "center",
+        }}
+        flexDir={{
+          base: "column",
+          md: "row",
+        }}
+      >
+        <HStack
+          alignItems={{
+            base: "start",
+            sm: "center",
+          }}
+          flexDir={{
+            base: "column",
+            sm: "row",
+          }}
         >
-          Import terms
-        </Button>
-        <ButtonGroup>
+          <Button
+            leftIcon={<IconKeyframes size={18} />}
+            variant="outline"
+            onClick={onImportOpen}
+            colorScheme="gray"
+          >
+            Import terms
+          </Button>
+          {mode == "create" && (
+            <Button
+              leftIcon={<IconCloudDownload size={18} />}
+              variant="outline"
+              onClick={() => {
+                menuEventChannel.emit("openImportDialog", true);
+              }}
+            >
+              Import from Quizlet
+            </Button>
+          )}
+        </HStack>
+        <ButtonGroup
+          w={{ base: "full", md: "auto" }}
+          justifyContent={{
+            base: "space-between",
+            md: "auto",
+          }}
+        >
           <Button
             leftIcon={visibilityIcon(visibility)}
             rightIcon={<IconChevronDown />}
@@ -92,20 +135,64 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
             </Menu>
           </ButtonGroup>
         </ButtonGroup>
-      </Flex>
+      </HStack>
     </>
   );
 };
 
-ButtonArea.Skeleton = function ButtonAreaSkeleton() {
+export interface ButtonAreaSkeletonProps {
+  mode: "create" | "edit";
+}
+
+ButtonArea.Skeleton = function ButtonAreaSkeleton({
+  mode,
+}: ButtonAreaSkeletonProps) {
   return (
-    <Flex align={"center"} justifyContent={"space-between"}>
-      <Skeleton fitContent rounded="lg">
-        <Button leftIcon={<IconPlus />} variant="outline">
-          Import terms
-        </Button>
-      </Skeleton>
-      <ButtonGroup>
+    <HStack
+      justifyContent="space-between"
+      spacing="6"
+      alignItems={{
+        base: "start",
+        md: "center",
+      }}
+      flexDir={{
+        base: "column",
+        md: "row",
+      }}
+    >
+      <HStack
+        alignItems={{
+          base: "start",
+          sm: "center",
+        }}
+        flexDir={{
+          base: "column",
+          sm: "row",
+        }}
+      >
+        <Skeleton fitContent rounded="lg">
+          <Button leftIcon={<IconPlus size={18} />} variant="outline">
+            Import terms
+          </Button>
+        </Skeleton>
+        {mode == "create" && (
+          <Skeleton fitContent rounded="lg">
+            <Button
+              leftIcon={<IconCloudDownload size={18} />}
+              variant="outline"
+            >
+              Import from Quizlet
+            </Button>
+          </Skeleton>
+        )}{" "}
+      </HStack>
+      <ButtonGroup
+        w={{ base: "full", md: "auto" }}
+        justifyContent={{
+          base: "end",
+          md: "auto",
+        }}
+      >
         <ButtonGroup spacing={4}>
           <Skeleton rounded="full">
             <IconButton
@@ -123,6 +210,6 @@ ButtonArea.Skeleton = function ButtonAreaSkeleton() {
           </Skeleton>
         </ButtonGroup>
       </ButtonGroup>
-    </Flex>
+    </HStack>
   );
 };

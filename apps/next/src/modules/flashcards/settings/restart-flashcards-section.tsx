@@ -27,7 +27,7 @@ export const RestartFlashcardsSection: React.FC<{
     <Flex justifyContent="end">
       <Button
         variant="ghost"
-        leftIcon={<IconReload />}
+        leftIcon={<IconReload size={18} />}
         isLoading={apiResetCardsProgress.isLoading}
         onClick={() => {
           apiResetCardsProgress.mutate({
@@ -36,7 +36,7 @@ export const RestartFlashcardsSection: React.FC<{
           });
         }}
       >
-        Restart Flashcards
+        Restart flashcards
       </Button>
     </Flex>
   );

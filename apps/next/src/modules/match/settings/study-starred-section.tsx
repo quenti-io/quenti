@@ -20,7 +20,7 @@ export const StudyStarredSection = () => {
   return (
     <Flex gap={8}>
       <Stack w="full">
-        <Text fontWeight={700}>Study starred</Text>
+        <Text fontWeight={600}>Study starred</Text>
       </Stack>
       <Switch
         size="lg"
