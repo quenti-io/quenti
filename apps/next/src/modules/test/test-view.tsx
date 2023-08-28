@@ -77,7 +77,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
       ))}
       <Box position="relative">
         <TestCardGap type="finish" />
-        <VStack mt="10" spacing="6" h="24" w="full" pr="4">
+        <VStack mt="10" spacing="6" h="24" w="full">
           <Heading size="md" m="0">
             Ready to submit your test?
           </Heading>

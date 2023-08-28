@@ -9,9 +9,10 @@ import {
   ScaleFade,
   SlideFade,
   Stack,
+  VStack,
 } from "@chakra-ui/react";
 
-import { IconReport } from "@tabler/icons-react";
+import { IconArrowUp, IconReport } from "@tabler/icons-react";
 
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useTestContext } from "../../stores/use-test-store";
@@ -107,6 +108,20 @@ export const ResultsView = () => {
             </SlideFade>
           </>
         ))}
+        <VStack mt="10">
+          <Button
+            variant="ghost"
+            leftIcon={<IconArrowUp size={18} />}
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }}
+          >
+            Back to top
+          </Button>
+        </VStack>
       </Stack>
     </Stack>
   );
