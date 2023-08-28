@@ -4,12 +4,16 @@ import { ButtonArea } from "./button-area";
 import { TitleProperties } from "./title-properties";
 import { TopBar } from "./top-bar";
 
-export const EditorLoading = () => {
+export interface EditorLoadingProps {
+  mode: "create" | "edit";
+}
+
+export const EditorLoading: React.FC<EditorLoadingProps> = ({ mode }) => {
   return (
     <Stack spacing="8">
       <TopBar.Skeleton />
       <TitleProperties.Skeleton />
-      <ButtonArea.Skeleton />
+      <ButtonArea.Skeleton mode={mode} />
       <Stack spacing="4">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} height="149px" w="full" rounded="xl" />

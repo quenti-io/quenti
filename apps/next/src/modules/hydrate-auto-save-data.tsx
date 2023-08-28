@@ -19,7 +19,7 @@ export const HydrateAutoSaveData: React.FC<React.PropsWithChildren> = ({
     refetchOnWindowFocus: false,
   });
   const { loading } = useLoading();
-  if (loading || !data) return <EditorLoading />;
+  if (loading || !data) return <EditorLoading mode="create" />;
 
   return <ContextLayer data={data}>{children}</ContextLayer>;
 };

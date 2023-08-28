@@ -114,14 +114,32 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
   );
 };
 
-ButtonArea.Skeleton = function ButtonAreaSkeleton() {
+export interface ButtonAreaSkeletonProps {
+  mode: "create" | "edit";
+}
+
+ButtonArea.Skeleton = function ButtonAreaSkeleton({
+  mode,
+}: ButtonAreaSkeletonProps) {
   return (
     <Flex align={"center"} justifyContent={"space-between"}>
-      <Skeleton fitContent rounded="lg">
-        <Button leftIcon={<IconPlus />} variant="outline">
-          Import terms
-        </Button>
-      </Skeleton>
+      <ButtonGroup>
+        <Skeleton fitContent rounded="lg">
+          <Button leftIcon={<IconPlus size={18} />} variant="outline">
+            Import terms
+          </Button>
+        </Skeleton>
+        {mode == "create" && (
+          <Skeleton fitContent rounded="lg">
+            <Button
+              leftIcon={<IconCloudDownload size={18} />}
+              variant="outline"
+            >
+              Import from Quizlet
+            </Button>
+          </Skeleton>
+        )}{" "}
+      </ButtonGroup>
       <ButtonGroup>
         <ButtonGroup spacing={4}>
           <Skeleton rounded="full">
