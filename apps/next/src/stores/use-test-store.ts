@@ -33,6 +33,8 @@ export interface TestStoreProps {
   outline: OutlineEntry[];
   timeline: TestQuestion[];
   specialCharacters: string[];
+  startedAt?: Date;
+  endedAt?: Date;
   result?: {
     score: number;
     byType: {
@@ -60,6 +62,7 @@ interface TestState extends TestStoreProps {
     completed?: boolean,
   ) => void;
   clearAnswer: (index: number) => void;
+  setEndedAt: (date: Date) => void;
   submit: () => void;
   reset: () => void;
   onAnswerDelegate: (index: number) => void;
@@ -177,6 +180,8 @@ export const createTestStore = (
           answerMode,
           outline: consolidated,
           timeline,
+          startedAt: new Date(),
+          endedAt: undefined,
         });
       },
       answerQuestion: (index, data, completed = true) => {
@@ -196,6 +201,9 @@ export const createTestStore = (
           question.data.answer = undefined;
           return { timeline: [...state.timeline] };
         });
+      },
+      setEndedAt: (date) => {
+        set({ endedAt: date });
       },
       submit: () => {
         const state = get();

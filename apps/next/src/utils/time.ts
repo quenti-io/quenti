@@ -68,6 +68,13 @@ export const briefFormatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
+export const formatElapsedTime = (ms: number) => {
+  const value = new Date(ms).toISOString().substring(11, 19);
+  if (value.startsWith("00:")) {
+    return value.substring(3);
+  }
+};
+
 export const formatDeciseconds = (deciseconds: number) => {
   const seconds = Math.floor(deciseconds / 10);
   const deci = deciseconds % 10;

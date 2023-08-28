@@ -24,11 +24,13 @@ import {
   type TestStoreProps,
   useTestContext,
 } from "../../stores/use-test-store";
+import { formatElapsedTime } from "../../utils/time";
 import { getQuestionTypeIcon, getQuestionTypeName } from "./utils/type";
 
 export const ResultsCard = () => {
   const result = useTestContext((s) => s.result!);
   const questionCount = useTestContext((s) => s.questionCount);
+  const [startedAt, endedAt] = useTestContext((s) => [s.startedAt, s.endedAt]);
 
   const [perc, setPerc] = React.useState(0);
   React.useEffect(() => {
@@ -175,7 +177,12 @@ export const ResultsCard = () => {
             <Heading size="md">Time</Heading>
             <HStack>
               <IconHourglassLow size={18} />
-              <Text fontWeight={600}>02:30</Text>
+              <Text fontWeight={600}>
+                {formatElapsedTime(
+                  (endedAt || new Date()).getTime() -
+                    (startedAt || new Date()).getTime(),
+                )}
+              </Text>
             </HStack>
           </Stack>
         </HStack>

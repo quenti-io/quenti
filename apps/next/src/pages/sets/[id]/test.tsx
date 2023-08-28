@@ -29,11 +29,14 @@ const Test = () => {
 
 const TestContainer = () => {
   const result = useTestContext((s) => s.result);
+  const setEndedAt = useTestContext((s) => s.setEndedAt);
   const submit = useTestContext((s) => s.submit);
 
   const [loading, setLoading] = React.useState(false);
 
   const onSubmit = () => {
+    setEndedAt(new Date());
+
     setLoading(true);
     setTimeout(
       () => {
