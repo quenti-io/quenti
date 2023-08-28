@@ -73,21 +73,21 @@ export const LearnSettingsModal: React.FC<LearnSettingsModal> = ({
           <Modal.Body>
             <Modal.Heading>Settings</Modal.Heading>
             <StudyStarredSection />
-            <Modal.BodySeparator />
+            <Modal.Divider />
             <ShuffleLearnSection />
-            <Modal.BodySeparator />
+            <Modal.Divider />
             <AnswerModeSection />
             {multipleAnswerMode !== "Unknown" && (
               <>
-                <Modal.BodySeparator />
+                <Modal.Divider />
                 <MultipleAnswerModeSection />
               </>
             )}
-            <Modal.BodySeparator />
+            <Modal.Divider />
             <ResetProgressSection />
             {useExtendedFeedbackBank && (
               <>
-                <Modal.BodySeparator />
+                <Modal.Divider />
                 <ExtendedFeedbackSection />
               </>
             )}
