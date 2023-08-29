@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@quenti/env": "*",
+    "@quenti/lib": "*",
     "@quenti/prisma": "*",
     "cohere-ai": "^6.2.2",
     "faiss-node": "^0.3.0"

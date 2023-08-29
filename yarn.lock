@@ -6250,6 +6250,7 @@ __metadata:
   resolution: "@quenti/cortex@workspace:packages/cortex"
   dependencies:
     "@quenti/env": "*"
+    "@quenti/lib": "*"
     "@quenti/prisma": "*"
     cohere-ai: ^6.2.2
     faiss-node: ^0.3.0
@@ -6290,6 +6291,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/integrations@workspace:packages/integrations"
   dependencies:
+    "@quenti/cortex": "*"
     "@quenti/env": "*"
     "@quenti/lib": "*"
     "@quenti/prisma": "*"
