@@ -1,7 +1,7 @@
 import type { Term } from "@quenti/prisma/client";
 
-import { generateEmbeddings } from "./embeddings";
-import { VectorStore } from "./vector-store";
+import { generateEmbeddings } from "../lib/embeddings";
+import { VectorStore } from "../lib/vector-store";
 
 type DistractorOutput = {
   type: "word" | "definition";
