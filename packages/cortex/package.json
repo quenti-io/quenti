@@ -11,6 +11,6 @@
     "@quenti/lib": "*",
     "@quenti/prisma": "*",
     "cohere-ai": "^6.2.2",
-    "faiss-node": "^0.3.0"
+    "ml-distance": "^4.0.1"
   }
 }

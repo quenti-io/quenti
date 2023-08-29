@@ -1,7 +1,7 @@
 import type { Term } from "@quenti/prisma/client";
 
 import { generateEmbeddings } from "./embeddings";
-import { generateIndex, getThreeNearest } from "./faiss";
+import { VectorStore } from "./vector-store";
 
 type DistractorOutput = {
   type: "word" | "definition";
@@ -30,10 +30,10 @@ export const generateDistractorsInScope = async (
   const output = new Array<DistractorOutput>();
 
   const embeddings = await generateEmbeddings(terms.map((t) => t[type]));
-  const index = generateIndex(embeddings);
+  const vectorStore = new VectorStore(embeddings);
 
   for (const [i, embedding] of embeddings.entries()) {
-    const nearest = getThreeNearest(index, embedding);
+    const nearest = vectorStore.search(embedding);
     for (const n of nearest) {
       output.push({
         type,
