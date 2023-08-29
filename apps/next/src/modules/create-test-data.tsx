@@ -18,7 +18,7 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { id, terms } = useAuthedSet();
+  const { id, terms, wordLanguage, definitionLanguage } = useAuthedSet();
 
   const storeRef = React.useRef<TestStore>();
   if (!storeRef.current) {
@@ -33,6 +33,11 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
           top: position.top + window.scrollY - 48,
           behavior: "smooth",
         });
+
+        const input = document.getElementById(`write-card-input-${index + 1}`);
+        if (input) {
+          input.focus();
+        }
       },
     });
 
@@ -50,6 +55,11 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
         query: null,
       });
     }
+
+    storeRef.current.setState({
+      wordLanguage,
+      definitionLanguage,
+    });
 
     storeRef.current
       .getState()

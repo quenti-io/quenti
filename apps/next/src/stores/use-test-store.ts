@@ -2,6 +2,8 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
+import type { Language } from "@quenti/core";
+import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import {
   generateMatchQuestion,
   generateMcqQuestion,
@@ -16,6 +18,7 @@ import {
   type TestQuestion,
   TestQuestionType,
   type TrueFalseData,
+  type WriteData,
 } from "@quenti/interfaces";
 import { shuffleArray, takeNRandom } from "@quenti/lib/array";
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
@@ -33,6 +36,8 @@ export interface TestStoreProps {
     studyStarred: boolean;
     answerMode: StudySetAnswerMode;
   };
+  wordLanguage: Language;
+  definitionLanguage: Language;
   questionCount: number;
   questionTypes: TestQuestionType[];
   answerMode: StudySetAnswerMode;
@@ -68,6 +73,7 @@ interface TestState extends TestStoreProps {
     index: number,
     data: D["answer"],
     completed?: boolean,
+    ignoreDelegate?: boolean,
   ) => void;
   clearAnswer: (index: number) => void;
   setEndedAt: (date: Date) => void;
@@ -89,6 +95,8 @@ export const DEFAULT_PROPS: TestStoreProps = {
     studyStarred: false,
     answerMode: "Word",
   },
+  wordLanguage: "en",
+  definitionLanguage: "en",
   questionCount: 20,
   questionTypes: [
     TestQuestionType.TrueFalse,
@@ -238,13 +246,19 @@ export const createTestStore = (
           settings: { ...state.settings, ...settings },
         }));
       },
-      answerQuestion: (index, data, completed = true) => {
+      answerQuestion: (
+        index,
+        data,
+        completed = true,
+        ignoreDelegate = false,
+      ) => {
         set((state) => {
           const question = state.timeline[index]!;
           question.answered = completed;
           question.data.answer = data;
 
-          if (completed) behaviors?.onAnswerDelegate?.(index);
+          if (completed && !ignoreDelegate)
+            behaviors?.onAnswerDelegate?.(index);
           return { timeline: [...state.timeline] };
         });
       },
@@ -314,6 +328,28 @@ export const createTestStore = (
               }
               break;
             }
+            case TestQuestionType.Write: {
+              const data = question.data as WriteData;
+
+              const evaluation = evaluate(
+                question.answerMode == "Definition"
+                  ? state.definitionLanguage
+                  : state.wordLanguage,
+                "One",
+                data.answer || "",
+                question.answerMode == "Definition"
+                  ? data.term.definition
+                  : data.term.word,
+              );
+              data.evaluation = evaluation == EvaluationResult.Correct;
+
+              if (data.evaluation) {
+                increment(question.type);
+                answerCorrectly(index);
+              }
+
+              break;
+            }
             case TestQuestionType.Match: {
               const data = question.data as MatchData;
               // Start with the assumption that all answers are correct if everything is answered
@@ -337,6 +373,7 @@ export const createTestStore = (
             byType,
             byQuestion,
           },
+          timeline: [...state.timeline],
         });
       },
       reset: () => {

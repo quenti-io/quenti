@@ -44,6 +44,7 @@ export interface MultipleChoiceData {
 
 export interface WriteData {
   term: Term;
+  evaluation?: boolean;
   answer?: string;
 }
 

@@ -5,6 +5,7 @@ import { Box, Card, Fade, Stack, useColorModeValue } from "@chakra-ui/react";
 import { MatchCard } from "./cards/match-card";
 import { MultipleChoiceCard } from "./cards/multiple-choice-card";
 import { TrueFalseCard } from "./cards/true-false-card";
+import { WriteCard } from "./cards/write-card";
 
 export interface CardWrapperProps {
   type: TestQuestionType;
@@ -27,6 +28,8 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
         return <MultipleChoiceCard i={i} result={result} />;
       case TestQuestionType.Match:
         return <MatchCard i={i} result={result} />;
+      case TestQuestionType.Write:
+        return <WriteCard i={i} result={result} />;
       default:
         return null;
     }
