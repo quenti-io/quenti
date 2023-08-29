@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 
 import { TRPCError } from "@trpc/server";
 
+import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAddSchema } from "./add.schema";
 
@@ -39,13 +40,17 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
     },
   });
 
-  return await ctx.prisma.term.create({
+  const created = await ctx.prisma.term.create({
     data: {
       ...input.term,
       id: nanoid(),
       studySetId: input.studySetId,
     },
   });
+
+  await markCortexStale(input.studySetId);
+
+  return created;
 };
 
 export default addHandler;

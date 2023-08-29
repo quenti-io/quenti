@@ -40,6 +40,7 @@ export type AuthedData = AuthedReturn & {
 
 export interface HydrateSetDataProps {
   isPublic?: boolean;
+  withDistractors?: boolean;
   disallowDirty?: boolean;
   requireFresh?: boolean;
   placeholder?: React.ReactNode;
@@ -49,6 +50,7 @@ export const HydrateSetData: React.FC<
   React.PropsWithChildren<HydrateSetDataProps>
 > = ({
   isPublic,
+  withDistractors = false,
   disallowDirty = false,
   requireFresh,
   placeholder,
@@ -65,7 +67,7 @@ export const HydrateSetData: React.FC<
   const { data, error, refetch, isFetchedAfterMount } = (
     api.studySets[queryKey] as typeof api.studySets.byId
   ).useQuery(
-    { studySetId: id },
+    { studySetId: id, withDistractors },
     {
       enabled: status !== "loading" && !!id && !isDirty,
       onSuccess: (data) => {

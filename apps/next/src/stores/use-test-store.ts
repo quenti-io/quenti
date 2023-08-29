@@ -12,12 +12,13 @@ import {
   type DefaultData,
   type MatchData,
   type MultipleChoiceData,
+  type TermWithDistractors,
   type TestQuestion,
   TestQuestionType,
   type TrueFalseData,
 } from "@quenti/interfaces";
 import { shuffleArray, takeNRandom } from "@quenti/lib/array";
-import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
+import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 export type OutlineEntry = {
   type: TestQuestionType;
@@ -35,7 +36,7 @@ export interface TestStoreProps {
   questionCount: number;
   questionTypes: TestQuestionType[];
   answerMode: StudySetAnswerMode;
-  allTerms: Term[];
+  allTerms: TermWithDistractors[];
   outline: OutlineEntry[];
   timeline: TestQuestion[];
   specialCharacters: string[];
@@ -57,7 +58,7 @@ export interface TestStoreProps {
 
 interface TestState extends TestStoreProps {
   initialize: (
-    allTerms: Term[],
+    allTerms: TermWithDistractors[],
     questionCount: number,
     questionTypes: TestQuestionType[],
     answerMode: StudySetAnswerMode,
@@ -193,12 +194,12 @@ export const createTestStore = (
           switch (type) {
             case TestQuestionType.TrueFalse: {
               const term = pool.pop()!;
-              timeline.push(generateTrueFalseQuestion(term, pool, answerMode));
+              timeline.push(generateTrueFalseQuestion(term, answerMode));
               break;
             }
             case TestQuestionType.MultipleChoice: {
               const term = pool.pop()!;
-              timeline.push(generateMcqQuestion(term, pool, answerMode));
+              timeline.push(generateMcqQuestion(term, answerMode));
               break;
             }
             case TestQuestionType.Match: {

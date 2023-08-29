@@ -6,6 +6,7 @@
     "@2toad/profanity": "^2.2.0",
     "@quenti/auth": "*",
     "@quenti/core": "*",
+    "@quenti/cortex": "*",
     "@quenti/emails": "*",
     "@quenti/inngest": "*",
     "@quenti/interfaces": "*",

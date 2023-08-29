@@ -6,6 +6,7 @@ import {
   HStack,
   Heading,
   Skeleton,
+  type SkeletonProps,
   SlideFade,
   Stack,
   Text,
@@ -48,21 +49,6 @@ export const TestCardGapRaw: React.FC<TestCardGapProps> = ({
   onSettingsClick,
   onResetClick,
 }) => {
-  const answered = useTestContext((s) => s.timeline[index || 0]?.answered);
-
-  const Icon =
-    correctness !== undefined
-      ? correctness
-        ? IconCircleCheckFilled
-        : IconCircleXFilled
-      : type == "start"
-      ? IconReport
-      : type == "finish"
-      ? IconCircleCheckFilled
-      : answered
-      ? IconPointFilled
-      : IconPoint;
-
   const defaultQuestionIconColor = useColorModeValue("gray.200", "gray.700");
   const correctQuestionIconColor = useColorModeValue("green.500", "green.300");
   const incorrectQuestionIconColor = useColorModeValue("red.500", "red.300");
@@ -73,12 +59,28 @@ export const TestCardGapRaw: React.FC<TestCardGapProps> = ({
         : incorrectQuestionIconColor
       : defaultQuestionIconColor;
 
-  const TextWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const TextWrapper: React.FC<
+    React.PropsWithChildren<{
+      rounded?: SkeletonProps["rounded"];
+      skeletonHeight?: SkeletonProps["height"];
+    }>
+  > = ({ children, rounded = "full", skeletonHeight = "18px" }) => {
     if (!skeleton) return <>{children}</>;
 
     return (
       <Flex h="21px" alignItems="center">
-        <Skeleton height="18px" rounded="full">
+        <Skeleton height={skeletonHeight} rounded={rounded}>
+          {children}
+        </Skeleton>
+      </Flex>
+    );
+  };
+  const HeadingWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+    if (!skeleton) return <>{children}</>;
+
+    return (
+      <Flex h={{ base: "39.9px", md: "43.2px" }} alignItems="center">
+        <Skeleton height={{ base: "32px", md: "36px" }} rounded="lg">
           {children}
         </Skeleton>
       </Flex>
@@ -136,7 +138,11 @@ export const TestCardGapRaw: React.FC<TestCardGapProps> = ({
             alignItems="center"
             justifyContent="center"
           >
-            <Icon size={24} />
+            {!skeleton ? (
+              <GapIcon type={type} correctness={correctness} index={index} />
+            ) : (
+              <IconPoint size={24} />
+            )}
           </Box>
         )}
       </Stack>
@@ -173,8 +179,8 @@ export const TestCardGapRaw: React.FC<TestCardGapProps> = ({
             <SlideFade
               in
               initial={{
-                opacity: 0,
-                transform: "translateY(-10px)",
+                opacity: skeleton ? 1 : 0,
+                transform: skeleton ? "none" : "translateY(-10px)",
               }}
               animate={{
                 opacity: 1,
@@ -184,15 +190,17 @@ export const TestCardGapRaw: React.FC<TestCardGapProps> = ({
                 },
               }}
             >
-              <Text fontSize="sm" fontWeight={600}>
-                Test
-              </Text>
+              <TextWrapper rounded="md" skeletonHeight="14px">
+                <Text fontSize="sm" fontWeight={600}>
+                  Test
+                </Text>
+              </TextWrapper>
             </SlideFade>
             <SlideFade
               in
               initial={{
-                opacity: 0,
-                transform: "translateY(-10px)",
+                opacity: skeleton ? 1 : 0,
+                transform: skeleton ? "none" : "translateY(-10px)",
               }}
               animate={{
                 opacity: 1,
@@ -202,19 +210,43 @@ export const TestCardGapRaw: React.FC<TestCardGapProps> = ({
                 },
               }}
             >
-              <Heading size="xl" m="0" overflowWrap="anywhere">
-                {title}
-              </Heading>
+              <HeadingWrapper>
+                <Heading size="xl" m="0" overflowWrap="anywhere">
+                  {title}
+                </Heading>
+              </HeadingWrapper>
             </SlideFade>
           </Stack>
           <TestOptions
             onResetClick={() => onResetClick?.()}
             onSettingsClick={() => onSettingsClick?.()}
+            skeleton={skeleton}
           />
         </HStack>
       )}
     </HStack>
   );
+};
+
+const GapIcon: React.FC<
+  Pick<TestCardGapProps, "type" | "correctness" | "index">
+> = ({ type, correctness, index }) => {
+  const answered = useTestContext((s) => s.timeline[index || 0]?.answered);
+
+  const Icon =
+    correctness !== undefined
+      ? correctness
+        ? IconCircleCheckFilled
+        : IconCircleXFilled
+      : type == "start"
+      ? IconReport
+      : type == "finish"
+      ? IconCircleCheckFilled
+      : answered
+      ? IconPointFilled
+      : IconPoint;
+
+  return <Icon size={24} />;
 };
 
 export const TestCardGap = React.memo(TestCardGapRaw);

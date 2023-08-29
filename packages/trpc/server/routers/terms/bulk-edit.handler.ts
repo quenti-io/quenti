@@ -2,6 +2,7 @@ import { Prisma } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
 
+import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBulkEditSchema } from "./bulk-edit.schema";
 
@@ -58,6 +59,8 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
   `;
 
   await ctx.prisma.$executeRaw(query);
+
+  await markCortexStale(input.studySetId);
 };
 
 export default bulkEditHandler;

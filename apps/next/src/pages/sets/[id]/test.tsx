@@ -13,6 +13,7 @@ import { CreateTestData } from "../../../modules/create-test-data";
 import HydrateSetData from "../../../modules/hydrate-set-data";
 import { LoadingView } from "../../../modules/test/loading-view";
 import { ResultsView } from "../../../modules/test/results-view";
+import { TestLoading } from "../../../modules/test/test-loading";
 import { TestView } from "../../../modules/test/test-view";
 import { TestContext, useTestContext } from "../../../stores/use-test-store";
 
@@ -20,7 +21,11 @@ const Test = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Test" />
-      <HydrateSetData disallowDirty>
+      <HydrateSetData
+        disallowDirty
+        withDistractors
+        placeholder={<TestLoading />}
+      >
         <SeoWrapper>
           <CreateTestData>
             <TestContainer />
