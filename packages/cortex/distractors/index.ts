@@ -43,6 +43,5 @@ export const generateDistractorsInScope = async (
     }
   }
 
-  console.log("DISTRACTORS", output);
   return output;
 };
