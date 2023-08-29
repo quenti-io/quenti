@@ -68,6 +68,7 @@ export const createFromAutosaveHandler = async ({
           })),
         },
       },
+      cortexStale: false,
     },
     select: {
       id: true,
@@ -87,6 +88,7 @@ export const createFromAutosaveHandler = async ({
       type: d.type == "word" ? "Word" : "Definition",
       termId: d.termId,
       distractingId: d.distractorId,
+      studySetId: studySet.id,
     })),
   });
 

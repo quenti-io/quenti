@@ -32,6 +32,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     data: {
       word: input.word,
       definition: input.definition,
+      studySet: {
+        update: {
+          cortexStale: true,
+        },
+      },
     },
   });
   return term;

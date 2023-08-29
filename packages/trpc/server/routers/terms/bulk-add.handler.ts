@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 
 import { TRPCError } from "@trpc/server";
 
+import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBulkAddSchema } from "./bulk-add.schema";
 
@@ -41,6 +42,8 @@ export const bulkAddHandler = async ({ ctx, input }: BulkAddOptions) => {
   await ctx.prisma.term.createMany({
     data,
   });
+
+  await markCortexStale(input.studySetId);
 
   return data;
 };

@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
+import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TDeleteSchema } from "./delete.schema";
 
@@ -73,6 +74,8 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
       },
     },
   });
+
+  await markCortexStale(input.studySetId);
 
   return { deleted: input.termId };
 };

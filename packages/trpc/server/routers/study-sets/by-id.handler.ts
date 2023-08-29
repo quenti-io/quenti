@@ -9,6 +9,7 @@ import {
 
 import { TRPCError } from "@trpc/server";
 
+import { regenerateCortex } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TByIdSchema } from "./by-id.schema";
 
@@ -24,6 +25,7 @@ const studySetSelect = Prisma.validator<Prisma.StudySetSelect>()({
   savedAt: true,
   title: true,
   description: true,
+  cortexStale: true,
   tags: true,
   visibility: true,
   wordLanguage: true,
@@ -99,7 +101,7 @@ type Widened = Widen<
 type WidenedTerm = Widen<Widened["terms"][number]>;
 
 export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
-  const studySet = (
+  let studySet = (
     input.withDistractors
       ? await getWithDistractors(input.studySetId)
       : await get(input.studySetId)
@@ -119,6 +121,11 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
       code: "FORBIDDEN",
       message: "This set is private.",
     });
+  }
+
+  if (input.withDistractors && studySet.cortexStale) {
+    await regenerateCortex(input.studySetId);
+    studySet = (await getWithDistractors(input.studySetId)) as Widened;
   }
 
   const container = await ctx.prisma.container.upsert({

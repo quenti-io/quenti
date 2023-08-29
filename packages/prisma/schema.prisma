@@ -334,7 +334,9 @@ model StudySet {
   visibility         StudySetVisibility       @default(Public)
   wordLanguage       String                   @default("en")
   definitionLanguage String                   @default("en")
+  cortexStale        Boolean                  @default(true)
   terms              Term[]
+  distractors        Distractor[]
   containers         Container[]
   folders            StudySetsOnFolders[]
   leaderboards       Leaderboard[]
@@ -451,13 +453,16 @@ enum DistractorType {
 
 model Distractor {
   id            String         @id @default(cuid())
+  studySetId    String
   termId        String
   distractingId String
   type          DistractorType
 
-  term       Term @relation(name: "distractor-term-id", fields: [termId], references: [id], onDelete: Cascade)
-  distractor Term @relation(name: "distractor-distractor-id", fields: [distractingId], references: [id], onDelete: Cascade)
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  term       Term     @relation(name: "distractor-term-id", fields: [termId], references: [id], onDelete: Cascade)
+  distractor Term     @relation(name: "distractor-distractor-id", fields: [distractingId], references: [id], onDelete: Cascade)
 
+  @@index([studySetId])
   @@index([termId])
   @@index([distractingId])
 }
