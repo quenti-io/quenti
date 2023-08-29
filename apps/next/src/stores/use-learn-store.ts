@@ -57,7 +57,7 @@ export type LearnStore = ReturnType<typeof createLearnStore>;
 
 export const word = (
   mode: StudySetAnswerMode,
-  term: Term,
+  term: Pick<Term, "word" | "definition">,
   type: "prompt" | "answer",
 ) => {
   if (mode == "Definition")

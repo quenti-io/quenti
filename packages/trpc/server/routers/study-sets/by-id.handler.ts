@@ -95,9 +95,7 @@ const getWithDistractors = async (id: string) => {
 
 type AwaitedGet = Awaited<ReturnType<typeof get>>;
 type AwaitedGetWithDistractors = Awaited<ReturnType<typeof getWithDistractors>>;
-type Widened = Widen<
-  NonNullable<AwaitedGet> | NonNullable<AwaitedGetWithDistractors>
->;
+type Widened = NonNullable<AwaitedGet> | NonNullable<AwaitedGetWithDistractors>;
 type WidenedTerm = Widen<Widened["terms"][number]>;
 
 export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
@@ -178,6 +176,8 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
 
   return {
     ...studySet,
+    createdAt: new Date(studySet.createdAt),
+    savedAt: new Date(studySet.savedAt),
     terms: input.withDistractors
       ? studySet.terms.map((t) => ({
           ...t,
