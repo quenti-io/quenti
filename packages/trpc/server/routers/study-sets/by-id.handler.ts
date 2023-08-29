@@ -1,5 +1,11 @@
 import type { Language } from "@quenti/core";
-import type { StarredTerm, StudiableTerm } from "@quenti/prisma/client";
+import type { Widen } from "@quenti/lib/widen";
+import { prisma } from "@quenti/prisma";
+import {
+  Prisma,
+  type StarredTerm,
+  type StudiableTerm,
+} from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
 
@@ -11,16 +17,93 @@ type ByIdOptions = {
   input: TByIdSchema;
 };
 
-export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
-  const studySet = await ctx.prisma.studySet.findUnique({
-    where: {
-      id: input.studySetId,
+const studySetSelect = Prisma.validator<Prisma.StudySetSelect>()({
+  id: true,
+  userId: true,
+  createdAt: true,
+  savedAt: true,
+  title: true,
+  description: true,
+  tags: true,
+  visibility: true,
+  wordLanguage: true,
+  definitionLanguage: true,
+  user: {
+    select: {
+      username: true,
+      name: true,
+      displayName: true,
+      image: true,
+      verified: true,
     },
-    include: {
-      user: true,
-      terms: true,
+  },
+});
+
+const termsSelect = Prisma.validator<Prisma.TermSelect>()({
+  id: true,
+  rank: true,
+  word: true,
+  definition: true,
+  studySetId: true,
+});
+
+const distractorsArgs = Prisma.validator<Prisma.Term$distractorsArgs>()({
+  select: {
+    type: true,
+    distractor: {
+      select: {
+        id: true,
+        word: true,
+        definition: true,
+      },
+    },
+  },
+});
+
+const get = async (id: string) => {
+  return await prisma.studySet.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      ...studySetSelect,
+      terms: {
+        select: termsSelect,
+      },
     },
   });
+};
+
+const getWithDistractors = async (id: string) => {
+  return await prisma.studySet.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      ...studySetSelect,
+      terms: {
+        select: {
+          ...termsSelect,
+          distractors: distractorsArgs,
+        },
+      },
+    },
+  });
+};
+
+type AwaitedGet = Awaited<ReturnType<typeof get>>;
+type AwaitedGetWithDistractors = Awaited<ReturnType<typeof getWithDistractors>>;
+type Widened = Widen<
+  NonNullable<AwaitedGet> | NonNullable<AwaitedGetWithDistractors>
+>;
+type WidenedTerm = Widen<Widened["terms"][number]>;
+
+export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
+  const studySet = (
+    input.withDistractors
+      ? await getWithDistractors(input.studySetId)
+      : await get(input.studySetId)
+  ) as Widened;
 
   if (!studySet) {
     throw new TRPCError({
@@ -38,7 +121,7 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     });
   }
 
-  await ctx.prisma.container.upsert({
+  const container = await ctx.prisma.container.upsert({
     where: {
       userId_entityId_type: {
         userId: ctx.session.user.id,
@@ -54,16 +137,6 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     },
     update: {
       viewedAt: new Date(),
-    },
-  });
-
-  const container = await ctx.prisma.container.findUnique({
-    where: {
-      userId_entityId_type: {
-        userId: ctx.session.user.id,
-        entityId: input.studySetId,
-        type: "StudySet",
-      },
     },
     include: {
       starredTerms: true,
@@ -98,6 +171,15 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
 
   return {
     ...studySet,
+    terms: input.withDistractors
+      ? studySet.terms.map((t) => ({
+          ...t,
+          distractors: (t as WidenedTerm).distractors!.map((d) => ({
+            ...d.distractor,
+            type: d.type,
+          })),
+        }))
+      : studySet.terms,
     tags: studySet.tags as string[],
     wordLanguage: studySet.wordLanguage as Language,
     definitionLanguage: studySet.definitionLanguage as Language,

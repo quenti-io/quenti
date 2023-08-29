@@ -1,3 +1,5 @@
+import { bulkGenerateDistractors } from "@quenti/cortex/distractors";
+
 import { TRPCError } from "@trpc/server";
 
 import {
@@ -60,7 +62,6 @@ export const createFromAutosaveHandler = async ({
       terms: {
         createMany: {
           data: autoSave.autoSaveTerms.map((term) => ({
-            id: term.id,
             word: profanity.censor(term.word.slice(0, MAX_TERM)),
             definition: profanity.censor(term.definition.slice(0, MAX_TERM)),
             rank: term.rank,
@@ -68,6 +69,25 @@ export const createFromAutosaveHandler = async ({
         },
       },
     },
+    select: {
+      id: true,
+      terms: {
+        select: {
+          id: true,
+          word: true,
+          definition: true,
+        },
+      },
+    },
+  });
+
+  const distractors = await bulkGenerateDistractors(studySet.terms);
+  await ctx.prisma.distractor.createMany({
+    data: distractors.map((d) => ({
+      type: d.type == "word" ? "Word" : "Definition",
+      termId: d.termId,
+      distractingId: d.distractorId,
+    })),
   });
 
   return studySet;

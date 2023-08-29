@@ -20,7 +20,7 @@ const Test = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Test" />
-      <HydrateSetData disallowDirty>
+      <HydrateSetData disallowDirty withDistractors>
         <SeoWrapper>
           <CreateTestData>
             <TestContainer />

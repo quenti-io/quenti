@@ -1,14 +1,13 @@
 import {
   type MatchData,
   type MultipleChoiceData,
+  type TermWithDistractors,
   type TestQuestion,
   TestQuestionType,
   type TrueFalseData,
 } from "@quenti/interfaces";
-import { shuffleArray } from "@quenti/lib/array";
+import { getRandom, shuffleArray } from "@quenti/lib/array";
 import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
-
-import { generateDistractors } from "./distractors";
 
 export const getAnswerMode = (
   answerMode: StudySetAnswerMode,
@@ -18,14 +17,13 @@ export const getAnswerMode = (
 };
 
 export const generateTrueFalseQuestion = (
-  term: Term,
-  distractorPool: Term[],
+  term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
 ): TestQuestion<TrueFalseData> => {
   const evaluation = Math.random() > 0.5;
-  const distractor = evaluation
-    ? undefined
-    : distractorPool[Math.floor(Math.random() * distractorPool.length)];
+  const distractor = !evaluation
+    ? getRandom(term.distractors.filter((d) => d.type == answerMode))
+    : undefined;
 
   return {
     type: TestQuestionType.TrueFalse,
@@ -39,12 +37,20 @@ export const generateTrueFalseQuestion = (
 };
 
 export const generateMcqQuestion = (
-  term: Term,
-  distractorPool: Term[],
+  term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
 ): TestQuestion<MultipleChoiceData> => {
-  const distractors = generateDistractors(term, distractorPool, 3);
-  const choices = shuffleArray([term, ...distractors]);
+  // const distractors = term.;
+  const choices = shuffleArray([
+    term,
+    ...term.distractors
+      .filter((d) => d.type == answerMode)
+      .map((d) => ({
+        id: d.id,
+        word: d.word,
+        definition: d.definition,
+      })),
+  ]);
 
   return {
     type: TestQuestionType.MultipleChoice,

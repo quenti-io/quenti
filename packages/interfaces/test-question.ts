@@ -1,6 +1,14 @@
-import type { StudySetAnswerMode } from "@quenti/prisma/client";
+import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
 
-import type { Term } from ".prisma/client";
+export type Distractor = {
+  id: string;
+  type: "Word" | "Definition";
+  word: string;
+  definition: string;
+};
+export type TermWithDistractors = Term & {
+  distractors: Distractor[];
+};
 
 export enum TestQuestionType {
   TrueFalse = "TrueFalse",
@@ -24,13 +32,13 @@ export interface TestQuestion<D = DefaultData> {
 
 export interface TrueFalseData {
   term: Term;
-  distractor?: Term;
+  distractor?: Distractor;
   answer?: boolean;
 }
 
 export interface MultipleChoiceData {
   term: Term;
-  choices: Term[];
+  choices: Omit<Distractor, "type">[];
   answer?: string;
 }
 

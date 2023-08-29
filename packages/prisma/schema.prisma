@@ -437,9 +437,29 @@ model Term {
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
+  distractors    Distractor[]    @relation("distractor-term-id")
+  distracting    Distractor[]    @relation("distractor-distractor-id")
 
   @@unique([id, studySetId])
   @@index([studySetId])
+}
+
+enum DistractorType {
+  Word
+  Definition
+}
+
+model Distractor {
+  id            String         @id @default(cuid())
+  termId        String
+  distractingId String
+  type          DistractorType
+
+  term       Term @relation(name: "distractor-term-id", fields: [termId], references: [id], onDelete: Cascade)
+  distractor Term @relation(name: "distractor-distractor-id", fields: [distractingId], references: [id], onDelete: Cascade)
+
+  @@index([termId])
+  @@index([distractingId])
 }
 
 model AutoSaveTerm {

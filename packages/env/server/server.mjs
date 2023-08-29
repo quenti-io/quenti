@@ -36,6 +36,7 @@ export const env = createEnv({
     STRIPE_ORG_MONTHLY_PRICE_ID: z.string().optional(),
     UPSTASH_REDIS_REST_URL: z.string().optional(),
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+    COHERE_API_KEY: z.string().optional(),
     SERVER_NAME: z.enum(["production", "staging"]).optional(),
   },
   skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
