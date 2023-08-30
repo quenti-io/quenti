@@ -1,6 +1,9 @@
 import React from "react";
 
 import { HeadSeo } from "@quenti/components";
+import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
+import { TestQuestionType, type WriteData } from "@quenti/interfaces";
+import { api } from "@quenti/trpc";
 
 import { Container } from "@chakra-ui/react";
 
@@ -57,9 +60,81 @@ const TestContainer = () => {
   const [hasUnansweredOpen, setHasUnansweredOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
+  const bulkGrade = api.cortex.bulkGrade.useMutation({
+    onSuccess: (data) => {
+      stateSubmit(
+        data,
+        new Date().getTime() - store.getState().endedAt!.getTime(),
+      );
+    },
+  });
+
+  const stateSubmit = (
+    cortexGraded: Parameters<typeof submit>[0] = [],
+    apiElapsedMs: number,
+  ) => {
+    const doSubmit = () => {
+      submit(cortexGraded);
+      setLoading(false);
+    };
+
+    if (apiElapsedMs > 2000) doSubmit();
+    else
+      setTimeout(
+        doSubmit,
+        Math.floor(Math.random() * 2000) + 2000 - Math.min(1000, apiElapsedMs),
+      );
+  };
+
   const checkAllAnswered = () => {
     return store.getState().timeline.every((question) => question.answered);
   };
+  const getCortexEligible = () => {
+    const state = store.getState();
+
+    return state.timeline
+      .map((question, index) => ({ ...question, index }))
+      .filter((question) => {
+        if (question.type !== TestQuestionType.Write) return false;
+        if (!question.answered || !question.data.answer) return false;
+
+        const data = question.data as WriteData;
+        const original =
+          question.answerMode == "Definition"
+            ? data.term.definition
+            : data.term.word;
+        if (original.split(" ").length < 3) return false;
+
+        // Pre-evaluate the question to see if it's already correct and we can skip an api call
+        if (
+          evaluate(
+            question.answerMode == "Definition"
+              ? state.definitionLanguage
+              : state.wordLanguage,
+            "One",
+            data.answer || "",
+            question.answerMode == "Definition"
+              ? data.term.definition
+              : data.term.word,
+          ) == EvaluationResult.Correct
+        )
+          return false;
+
+        return true;
+      })
+      .map((question) => {
+        const data = question.data as WriteData;
+        return {
+          index: question.index,
+          answer:
+            question.answerMode == "Word"
+              ? data.term.word
+              : data.term.definition,
+          input: data.answer!,
+        };
+      });
+  };
+
   const scrollToFirstUnanswered = () => {
     const firstUnanswered = store
       .getState()
@@ -77,22 +152,20 @@ const TestContainer = () => {
     });
   };
 
-  const onSubmit = (bypass = false) => {
+  const onSubmit = async (bypass = false) => {
     if (!checkAllAnswered() && !bypass) {
       setHasUnansweredOpen(true);
       return;
     }
 
     setEndedAt(new Date());
-
     setLoading(true);
-    setTimeout(
-      () => {
-        submit();
-        setLoading(false);
-      },
-      Math.floor(Math.random() * 2000) + 2000,
-    );
+
+    const cortexEligible = getCortexEligible();
+    if (!cortexEligible.length) stateSubmit([], 0);
+    else {
+      await bulkGrade.mutateAsync({ answers: cortexEligible });
+    }
   };
 
   return (
@@ -109,7 +182,7 @@ const TestContainer = () => {
         }}
         onConfirm={() => {
           setHasUnansweredOpen(false);
-          onSubmit(true);
+          void onSubmit(true);
         }}
         finalFocusRef={finalRef}
       />
@@ -122,7 +195,7 @@ const TestContainer = () => {
           ) : (
             <TestView
               onSubmit={() => {
-                onSubmit();
+                void onSubmit();
               }}
             />
           )}

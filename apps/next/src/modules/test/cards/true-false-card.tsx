@@ -1,10 +1,4 @@
 import type { TrueFalseData } from "@quenti/interfaces";
-import { getRandom } from "@quenti/lib/array";
-import {
-  CORRECT,
-  TRUE_FALSE_INCORRECT_IS_FALSE,
-  TRUE_FALSE_INCORRECT_IS_TRUE,
-} from "@quenti/lib/constants/remarks";
 
 import { Box, Grid, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
@@ -25,7 +19,7 @@ import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 
 export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
-  const { question, data, answer } = useCardSelector<TrueFalseData>(i);
+  const { question, data, answer, remarks } = useCardSelector<TrueFalseData>(i);
 
   const rightSide = data.distractor
     ? word(question.answerMode, data.distractor, "answer")
@@ -41,16 +35,7 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
     ? (!data.distractor && trueSelected) || (!!data.distractor && falseSelected)
     : undefined;
 
-  const remark =
-    evaluation !== undefined
-      ? evaluation
-        ? getRandom(CORRECT)
-        : getRandom(
-            data.distractor
-              ? TRUE_FALSE_INCORRECT_IS_FALSE
-              : TRUE_FALSE_INCORRECT_IS_TRUE,
-          )
-      : undefined;
+  const remark = result ? remarks?.[0] : undefined;
 
   return (
     <>
@@ -91,7 +76,7 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
       </Grid>
       <Stack>
         <GenericLabel evaluation={evaluation}>
-          {remark ?? "Choose an answer"}
+          {remark?.remark ?? "Choose an answer"}
         </GenericLabel>
         <SimpleGrid columns={2} gap={{ base: 4, md: 6 }}>
           <Clickable

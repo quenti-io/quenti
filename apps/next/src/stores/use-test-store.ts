@@ -2,6 +2,8 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
+import type { Language } from "@quenti/core";
+import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import {
   generateMatchQuestion,
   generateMcqQuestion,
@@ -9,6 +11,7 @@ import {
   generateWriteQuestion,
 } from "@quenti/core/generator";
 import {
+  type CortexGraderResponse,
   type DefaultData,
   type MatchData,
   type MultipleChoiceData,
@@ -16,8 +19,16 @@ import {
   type TestQuestion,
   TestQuestionType,
   type TrueFalseData,
+  type WriteData,
 } from "@quenti/interfaces";
-import { shuffleArray, takeNRandom } from "@quenti/lib/array";
+import { getRandom, shuffleArray, takeNRandom } from "@quenti/lib/array";
+import {
+  CORRECT,
+  CORRECT_IS_SIMILAR,
+  INCORRECT,
+  TRUE_FALSE_INCORRECT_IS_FALSE,
+  TRUE_FALSE_INCORRECT_IS_TRUE,
+} from "@quenti/lib/constants/remarks";
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 export type OutlineEntry = {
@@ -33,10 +44,13 @@ export interface TestStoreProps {
     studyStarred: boolean;
     answerMode: StudySetAnswerMode;
   };
+  wordLanguage: Language;
+  definitionLanguage: Language;
   questionCount: number;
   questionTypes: TestQuestionType[];
   answerMode: StudySetAnswerMode;
   allTerms: TermWithDistractors[];
+  starredTerms: string[];
   outline: OutlineEntry[];
   timeline: TestQuestion[];
   specialCharacters: string[];
@@ -44,6 +58,7 @@ export interface TestStoreProps {
   endedAt?: Date;
   result?: {
     score: number;
+    remarks: { id: string; remark: string }[][];
     byType: {
       type: TestQuestionType;
       score: number;
@@ -59,19 +74,25 @@ export interface TestStoreProps {
 interface TestState extends TestStoreProps {
   initialize: (
     allTerms: TermWithDistractors[],
+    starredTerms: string[],
     questionCount: number,
     questionTypes: TestQuestionType[],
+    studyStarred: boolean,
     answerMode: StudySetAnswerMode,
   ) => void;
   setSettings: (settings: Partial<TestStoreProps["settings"]>) => void;
+  getMaxQuestions: () => number;
   answerQuestion: <D extends DefaultData>(
     index: number,
     data: D["answer"],
     completed?: boolean,
+    ignoreDelegate?: boolean,
   ) => void;
   clearAnswer: (index: number) => void;
   setEndedAt: (date: Date) => void;
-  submit: () => void;
+  submit: (
+    cortexGraded: (CortexGraderResponse & { originalIndex: number })[],
+  ) => void;
   reset: () => void;
   onAnswerDelegate: (index: number) => void;
 }
@@ -89,6 +110,8 @@ export const DEFAULT_PROPS: TestStoreProps = {
     studyStarred: false,
     answerMode: "Word",
   },
+  wordLanguage: "en",
+  definitionLanguage: "en",
   questionCount: 20,
   questionTypes: [
     TestQuestionType.TrueFalse,
@@ -97,6 +120,7 @@ export const DEFAULT_PROPS: TestStoreProps = {
   ],
   answerMode: "Word",
   allTerms: [],
+  starredTerms: [],
   outline: [],
   timeline: [],
   specialCharacters: [],
@@ -110,8 +134,23 @@ export const createTestStore = (
     subscribeWithSelector((set, get) => ({
       ...DEFAULT_PROPS,
       ...initProps,
-      initialize: (allTerms, questionCount, questionTypes, answerMode) => {
-        let pool = shuffleArray(Array.from(allTerms));
+      initialize: (
+        allTerms,
+        starredTerms,
+        questionCount,
+        questionTypes,
+        studyStarred,
+        answerMode,
+      ) => {
+        const all = Array.from(allTerms);
+
+        let initialTerms = Array.from(all);
+        if (studyStarred && starredTerms.length > 0)
+          initialTerms = initialTerms.filter((t) =>
+            starredTerms.includes(t.id),
+          );
+
+        let pool = shuffleArray(initialTerms);
 
         const typeOrder = Object.values(TestQuestionType);
         let types = typeOrder.filter((t) => questionTypes.includes(t));
@@ -221,9 +260,10 @@ export const createTestStore = (
             questionCount,
             questionTypes,
             answerMode,
-            studyStarred: false,
+            studyStarred,
           },
-          allTerms,
+          allTerms: all,
+          starredTerms,
           questionCount,
           questionTypes,
           answerMode,
@@ -238,13 +278,25 @@ export const createTestStore = (
           settings: { ...state.settings, ...settings },
         }));
       },
-      answerQuestion: (index, data, completed = true) => {
+      getMaxQuestions: () => {
+        const state = get();
+        return state.settings.studyStarred
+          ? state.starredTerms.length
+          : state.allTerms.length;
+      },
+      answerQuestion: (
+        index,
+        data,
+        completed = true,
+        ignoreDelegate = false,
+      ) => {
         set((state) => {
           const question = state.timeline[index]!;
           question.answered = completed;
           question.data.answer = data;
 
-          if (completed) behaviors?.onAnswerDelegate?.(index);
+          if (completed && !ignoreDelegate)
+            behaviors?.onAnswerDelegate?.(index);
           return { timeline: [...state.timeline] };
         });
       },
@@ -259,7 +311,7 @@ export const createTestStore = (
       setEndedAt: (date) => {
         set({ endedAt: date });
       },
-      submit: () => {
+      submit: (cortexGraded) => {
         const state = get();
 
         const getNumberOfQuestions = (type: TestQuestionType) => {
@@ -287,6 +339,7 @@ export const createTestStore = (
             index: i,
             correct: false,
           }));
+        const remarks: { id: string; remark: string }[][] = [];
 
         const increment = (type: TestQuestionType) => {
           score++;
@@ -296,6 +349,21 @@ export const createTestStore = (
           byQuestion.find((q) => q.index == index)!.correct = true;
         };
 
+        const pushRemark = (
+          id: string,
+          evaluation: boolean,
+          customBank?: string[],
+        ) => {
+          remarks.push([
+            {
+              id,
+              remark: getRandom(
+                customBank ?? (evaluation ? CORRECT : INCORRECT),
+              ),
+            },
+          ]);
+        };
+
         for (const [index, question] of state.timeline.entries()) {
           switch (question.type) {
             case TestQuestionType.TrueFalse: {
@@ -303,7 +371,16 @@ export const createTestStore = (
               if (data.answer == !data.distractor) {
                 increment(question.type);
                 answerCorrectly(index);
-              }
+                pushRemark(data.term.id, true);
+              } else
+                pushRemark(
+                  data.term.id,
+                  false,
+                  data.distractor
+                    ? TRUE_FALSE_INCORRECT_IS_FALSE
+                    : TRUE_FALSE_INCORRECT_IS_TRUE,
+                );
+
               break;
             }
             case TestQuestionType.MultipleChoice: {
@@ -312,19 +389,65 @@ export const createTestStore = (
                 increment(question.type);
                 answerCorrectly(index);
               }
+              pushRemark(data.term.id, data.answer == data.term.id);
+
+              break;
+            }
+            case TestQuestionType.Write: {
+              const data = question.data as WriteData;
+
+              const cortexResponse = cortexGraded.find(
+                (g) => g.originalIndex == index,
+              );
+
+              const evaluation =
+                cortexResponse?.evaluation ??
+                evaluate(
+                  question.answerMode == "Definition"
+                    ? state.definitionLanguage
+                    : state.wordLanguage,
+                  "One",
+                  data.answer || "",
+                  question.answerMode == "Definition"
+                    ? data.term.definition
+                    : data.term.word,
+                ) == EvaluationResult.Correct;
+
+              data.evaluation = evaluation;
+              data.cortexResponse = cortexResponse;
+
+              if (data.evaluation) {
+                increment(question.type);
+                answerCorrectly(index);
+
+                if ((data.cortexResponse?.entailment?.score || 1) < 0.7) {
+                  pushRemark(data.term.id, true, CORRECT_IS_SIMILAR);
+                  break;
+                }
+              }
+
+              pushRemark(data.term.id, data.evaluation);
+
               break;
             }
             case TestQuestionType.Match: {
               const data = question.data as MatchData;
+
+              const matchRemarks = new Array<{ id: string; remark: string }>();
               // Start with the assumption that all answers are correct if everything is answered
               let allCorrect = data.answer.length == data.terms.length;
               for (const { term, zone } of data.answer) {
-                if (term == zone) increment(question.type);
-                else {
+                if (term == zone) {
+                  increment(question.type);
+                  matchRemarks.push({ id: zone, remark: getRandom(CORRECT) });
+                } else {
                   allCorrect = false;
+                  matchRemarks.push({ id: zone, remark: getRandom(INCORRECT) });
                 }
               }
               if (allCorrect) answerCorrectly(index);
+
+              remarks.push(matchRemarks);
 
               break;
             }
@@ -336,21 +459,25 @@ export const createTestStore = (
             score,
             byType,
             byQuestion,
+            remarks,
           },
+          timeline: [...state.timeline],
         });
       },
       reset: () => {
         set({
           result: undefined,
-          outline: [],
-          timeline: [],
+          outline: Array.from([]),
+          timeline: Array.from([]),
         });
 
         const state = get();
         state.initialize(
           state.allTerms,
+          state.starredTerms,
           state.settings.questionCount,
           state.settings.questionTypes,
+          state.settings.studyStarred,
           state.settings.answerMode,
         );
       },

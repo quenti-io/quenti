@@ -2,6 +2,7 @@ import { adminRouter } from "./routers/admin/_router";
 import { autoSaveRouter } from "./routers/auto-save/_router";
 import { classesRouter } from "./routers/classes/_router";
 import { containerRouter } from "./routers/container/_router";
+import { cortexRouter } from "./routers/cortex/_router";
 import { devRouter } from "./routers/dev";
 import { discoverableRouter } from "./routers/discoverable";
 import { foldersRouter } from "./routers/folders/_router";
@@ -31,6 +32,7 @@ export const appRouter = createTRPCRouter({
   terms: termsRouter,
   container: containerRouter,
   studiableTerms: studiableTermsRouter,
+  cortex: cortexRouter,
   leaderboard: leaderboardRouter,
   recent: recentRouter,
   autoSave: autoSaveRouter,

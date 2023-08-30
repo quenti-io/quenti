@@ -99,6 +99,7 @@ export const ResultsCard = () => {
             // @ts-expect-error type '{ base: string; sm: string; }' is not assignable...
             size={{ base: "100px", sm: "140px" }}
             w="max"
+            h="max"
             thickness="4px"
             style={{
               strokeLinecap: "round",

@@ -40,7 +40,6 @@ export const generateMcqQuestion = (
   term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
 ): TestQuestion<MultipleChoiceData> => {
-  // const distractors = term.;
   const choices = shuffleArray([
     term,
     ...term.distractors
@@ -86,7 +85,7 @@ export const generateWriteQuestion = (
   return {
     type: TestQuestionType.Write,
     answerMode: getAnswerMode(answerMode),
-    data: { term },
+    data: { term, answer: "" },
     answered: false,
   };
 };

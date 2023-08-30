@@ -1,5 +1,7 @@
 import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
 
+import type { CortexGraderResponse } from "./cortex";
+
 export type Distractor = {
   id: string;
   type: "Word" | "Definition";
@@ -44,6 +46,8 @@ export interface MultipleChoiceData {
 
 export interface WriteData {
   term: Term;
+  evaluation?: boolean;
+  cortexResponse?: CortexGraderResponse;
   answer?: string;
 }
 

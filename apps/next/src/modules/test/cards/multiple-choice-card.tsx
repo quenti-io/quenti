@@ -1,8 +1,6 @@
 import React from "react";
 
 import type { MultipleChoiceData } from "@quenti/interfaces";
-import { getRandom } from "@quenti/lib/array";
-import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 
 import { Box, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
@@ -18,19 +16,14 @@ import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 
 export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
-  const { question, answered, data } = useCardSelector<MultipleChoiceData>(i);
+  const { question, answered, data, remarks } =
+    useCardSelector<MultipleChoiceData>(i);
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);
   const clearAnswer = useTestContext((s) => s.clearAnswer);
 
   const evaluation = result ? data.answer === data.term.id : undefined;
-
-  const remark =
-    evaluation !== undefined
-      ? evaluation
-        ? getRandom(CORRECT)
-        : getRandom(INCORRECT)
-      : undefined;
+  const remark = result ? remarks?.[0] : undefined;
 
   const EvaluationWrapper: React.FC<
     React.PropsWithChildren<{ evaluation?: boolean }>
@@ -73,7 +66,7 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
       />
       <Stack spacing="2">
         <GenericLabel evaluation={evaluation}>
-          {remark ??
+          {remark?.remark ??
             `Choose matching ${
               question.answerMode == "Definition" ? "definition" : "term"
             }`}
