@@ -99,7 +99,11 @@ const TestContainer = () => {
         if (!question.answered || !question.data.answer) return false;
 
         const data = question.data as WriteData;
-        if (data.answer!.split(" ").length < 3) return false;
+        const original =
+          question.answerMode == "Definition"
+            ? data.term.definition
+            : data.term.word;
+        if (original.split(" ").length < 3) return false;
 
         // Pre-evaluate the question to see if it's already correct and we can skip an api call
         if (

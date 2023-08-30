@@ -467,8 +467,8 @@ export const createTestStore = (
       reset: () => {
         set({
           result: undefined,
-          outline: [],
-          timeline: [],
+          outline: Array.from([]),
+          timeline: Array.from([]),
         });
 
         const state = get();

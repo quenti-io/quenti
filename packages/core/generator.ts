@@ -86,7 +86,7 @@ export const generateWriteQuestion = (
   return {
     type: TestQuestionType.Write,
     answerMode: getAnswerMode(answerMode),
-    data: { term },
+    data: { term, answer: "" },
     answered: false,
   };
 };
