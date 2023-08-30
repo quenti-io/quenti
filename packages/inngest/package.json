@@ -5,7 +5,7 @@
   "dependencies": {
     "@quenti/emails": "*",
     "@quenti/env": "*",
-    "inngest": "^2.4.1"
+    "inngest": "^2.6.0"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",

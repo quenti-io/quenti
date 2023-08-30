@@ -16,6 +16,8 @@ const ShareResolver = ({
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
+
   const id = ctx.query?.id as string;
 
   const entityShare = await prisma.entityShare.findUnique({

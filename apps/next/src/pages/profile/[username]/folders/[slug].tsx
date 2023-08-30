@@ -67,6 +67,8 @@ FolderPage.PageWrapper = PageWrapper;
 FolderPage.getLayout = getLayout;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
+
   const username = (ctx.query?.username as string).substring(1);
   const idOrSlug = ctx.query?.slug as string;
 

@@ -62,6 +62,8 @@ const UserPage = ({ user }: inferSSRProps<typeof getServerSideProps>) => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
+
   const _username = ctx.query?.username as string;
   const username = _username.substring(1);
 
