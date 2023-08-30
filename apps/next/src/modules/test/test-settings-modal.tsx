@@ -1,3 +1,5 @@
+import React from "react";
+
 import { TestQuestionType } from "@quenti/interfaces";
 
 import {
@@ -32,9 +34,11 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
   onClose,
   onReset,
 }) => {
-  const numTerms = useTestContext((s) => s.allTerms.length);
   const questionCount = useTestContext((s) => s.settings.questionCount);
+  const allTerms = useTestContext((s) => s.allTerms.length);
+  const starredTerms = useTestContext((s) => s.starredTerms.length);
   const answerMode = useTestContext((s) => s.settings.answerMode);
+  const studyStarred = useTestContext((s) => s.settings.studyStarred);
   const setSettings = useTestContext((s) => s.setSettings);
 
   const mutedColor = useColorModeValue("gray.600", "gray.400");
@@ -56,7 +60,7 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
             </Stack>
             <Slider
               min={1}
-              max={numTerms}
+              max={studyStarred ? starredTerms : allTerms}
               step={1}
               value={questionCount}
               onChange={(v) => {
@@ -125,13 +129,30 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
               </Text>
             </Stack>
             <ToggleGroup
-              index={0}
+              index={studyStarred ? 1 : 0}
               tabProps={{
                 fontWeight: 600,
               }}
             >
-              <ToggleGroup.Tab>All</ToggleGroup.Tab>
-              <ToggleGroup.Tab>Starred</ToggleGroup.Tab>
+              <ToggleGroup.Tab
+                onClick={() => {
+                  setSettings({ studyStarred: false });
+                }}
+                isDisabled={!starredTerms}
+              >
+                All
+              </ToggleGroup.Tab>
+              <ToggleGroup.Tab
+                onClick={() => {
+                  setSettings({
+                    studyStarred: true,
+                    questionCount: Math.min(questionCount, starredTerms),
+                  });
+                }}
+                isDisabled={!starredTerms}
+              >
+                Starred
+              </ToggleGroup.Tab>
             </ToggleGroup>
           </HStack>
           <Modal.Divider />

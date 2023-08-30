@@ -4,6 +4,7 @@ import React from "react";
 
 import type { TermWithDistractors } from "@quenti/interfaces";
 
+import { queryEventChannel } from "../events/query";
 import { useAuthedSet } from "../hooks/use-set";
 import {
   DEFAULT_PROPS,
@@ -11,6 +12,7 @@ import {
   type TestStore,
   createTestStore,
 } from "../stores/use-test-store";
+import type { SetData } from "./hydrate-set-data";
 import { getQueryParams } from "./test/utils/url-params";
 
 export const CreateTestData: React.FC<React.PropsWithChildren> = ({
@@ -18,7 +20,8 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { id, terms, wordLanguage, definitionLanguage } = useAuthedSet();
+  const { id, terms, wordLanguage, definitionLanguage, container } =
+    useAuthedSet();
 
   const storeRef = React.useRef<TestStore>();
   if (!storeRef.current) {
@@ -65,11 +68,29 @@ export const CreateTestData: React.FC<React.PropsWithChildren> = ({
       .getState()
       .initialize(
         cloned as TermWithDistractors[],
+        container.starredTerms,
         Math.min(settings.questionCount, cloned.length),
         settings.questionTypes,
+        settings.studyStarred,
         settings.answerMode,
       );
   }
+
+  React.useEffect(() => {
+    const onRefetch = (data: SetData) => {
+      if (!data.container) return;
+      storeRef.current?.setState({
+        allTerms: data.terms as TermWithDistractors[],
+        starredTerms: data.container.starredTerms,
+      });
+    };
+
+    queryEventChannel.on("setQueryRefetched", onRefetch);
+    return () => {
+      queryEventChannel.off("setQueryRefetched", onRefetch);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <TestContext.Provider value={storeRef.current}>

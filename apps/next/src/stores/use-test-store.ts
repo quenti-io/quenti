@@ -50,6 +50,7 @@ export interface TestStoreProps {
   questionTypes: TestQuestionType[];
   answerMode: StudySetAnswerMode;
   allTerms: TermWithDistractors[];
+  starredTerms: string[];
   outline: OutlineEntry[];
   timeline: TestQuestion[];
   specialCharacters: string[];
@@ -73,11 +74,14 @@ export interface TestStoreProps {
 interface TestState extends TestStoreProps {
   initialize: (
     allTerms: TermWithDistractors[],
+    starredTerms: string[],
     questionCount: number,
     questionTypes: TestQuestionType[],
+    studyStarred: boolean,
     answerMode: StudySetAnswerMode,
   ) => void;
   setSettings: (settings: Partial<TestStoreProps["settings"]>) => void;
+  getMaxQuestions: () => number;
   answerQuestion: <D extends DefaultData>(
     index: number,
     data: D["answer"],
@@ -116,6 +120,7 @@ export const DEFAULT_PROPS: TestStoreProps = {
   ],
   answerMode: "Word",
   allTerms: [],
+  starredTerms: [],
   outline: [],
   timeline: [],
   specialCharacters: [],
@@ -129,8 +134,23 @@ export const createTestStore = (
     subscribeWithSelector((set, get) => ({
       ...DEFAULT_PROPS,
       ...initProps,
-      initialize: (allTerms, questionCount, questionTypes, answerMode) => {
-        let pool = shuffleArray(Array.from(allTerms));
+      initialize: (
+        allTerms,
+        starredTerms,
+        questionCount,
+        questionTypes,
+        studyStarred,
+        answerMode,
+      ) => {
+        const all = Array.from(allTerms);
+
+        let initialTerms = Array.from(all);
+        if (studyStarred && starredTerms.length > 0)
+          initialTerms = initialTerms.filter((t) =>
+            starredTerms.includes(t.id),
+          );
+
+        let pool = shuffleArray(initialTerms);
 
         const typeOrder = Object.values(TestQuestionType);
         let types = typeOrder.filter((t) => questionTypes.includes(t));
@@ -240,9 +260,10 @@ export const createTestStore = (
             questionCount,
             questionTypes,
             answerMode,
-            studyStarred: false,
+            studyStarred,
           },
-          allTerms,
+          allTerms: all,
+          starredTerms,
           questionCount,
           questionTypes,
           answerMode,
@@ -256,6 +277,12 @@ export const createTestStore = (
         set((state) => ({
           settings: { ...state.settings, ...settings },
         }));
+      },
+      getMaxQuestions: () => {
+        const state = get();
+        return state.settings.studyStarred
+          ? state.starredTerms.length
+          : state.allTerms.length;
       },
       answerQuestion: (
         index,
@@ -393,7 +420,7 @@ export const createTestStore = (
                 increment(question.type);
                 answerCorrectly(index);
 
-                if ((data.cortexResponse?.entailment?.score || 1) < 0.6) {
+                if ((data.cortexResponse?.entailment?.score || 1) < 0.7) {
                   pushRemark(data.term.id, true, CORRECT_IS_SIMILAR);
                   break;
                 }
@@ -447,8 +474,10 @@ export const createTestStore = (
         const state = get();
         state.initialize(
           state.allTerms,
+          state.starredTerms,
           state.settings.questionCount,
           state.settings.questionTypes,
+          state.settings.studyStarred,
           state.settings.answerMode,
         );
       },
