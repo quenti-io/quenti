@@ -8,7 +8,7 @@
     "@quenti/env": "*",
     "@quenti/lib": "*",
     "lodash.merge": "^4.6.2",
-    "next": "^13.4.17",
+    "next": "^13.4.19",
     "next-seo": "^6.1.0"
   },
   "scripts": {
