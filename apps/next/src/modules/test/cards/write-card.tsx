@@ -44,7 +44,22 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
         </HStack>
         {result ? (
           evaluation ? (
-            <EvaluatedTrue>{answer || ""}</EvaluatedTrue>
+            <Stack spacing="6">
+              <EvaluatedTrue>{answer || ""}</EvaluatedTrue>
+              {data.cortexResponse && (
+                <Stack spacing="2">
+                  <GenericLabel>
+                    Original{" "}
+                    {question.answerMode == "Definition"
+                      ? "definition"
+                      : "term"}
+                  </GenericLabel>
+                  <EvaluatedTrue>
+                    {word(question.answerMode, data.term, "answer")}
+                  </EvaluatedTrue>
+                </Stack>
+              )}
+            </Stack>
           ) : (
             <Stack spacing="6">
               <EvaluatedFalse>{answer || ""}</EvaluatedFalse>

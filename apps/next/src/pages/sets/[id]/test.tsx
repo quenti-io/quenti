@@ -1,6 +1,7 @@
 import React from "react";
 
 import { HeadSeo } from "@quenti/components";
+import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import { TestQuestionType, type WriteData } from "@quenti/interfaces";
 import { api } from "@quenti/trpc";
 
@@ -89,15 +90,31 @@ const TestContainer = () => {
     return store.getState().timeline.every((question) => question.answered);
   };
   const getCortexEligible = () => {
-    return store
-      .getState()
-      .timeline.map((question, index) => ({ ...question, index }))
+    const state = store.getState();
+
+    return state.timeline
+      .map((question, index) => ({ ...question, index }))
       .filter((question) => {
         if (question.type !== TestQuestionType.Write) return false;
         if (!question.answered || !question.data.answer) return false;
 
         const data = question.data as WriteData;
         if (data.answer!.split(" ").length < 3) return false;
+
+        // Pre-evaluate the question to see if it's already correct and we can skip an api call
+        if (
+          evaluate(
+            question.answerMode == "Definition"
+              ? state.definitionLanguage
+              : state.wordLanguage,
+            "One",
+            data.answer || "",
+            question.answerMode == "Definition"
+              ? data.term.definition
+              : data.term.word,
+          ) == EvaluationResult.Correct
+        )
+          return false;
 
         return true;
       })
