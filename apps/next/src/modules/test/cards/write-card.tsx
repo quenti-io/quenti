@@ -3,10 +3,11 @@ import type { WriteData } from "@quenti/interfaces";
 import { getRandom } from "@quenti/lib/array";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 
-import { Input, Stack, useColorModeValue } from "@chakra-ui/react";
+import { HStack, Input, Stack, useColorModeValue } from "@chakra-ui/react";
 
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
+import { CortexGraded } from "../cortex-graded";
 import { EvaluatedFalse, EvaluatedTrue } from "../evaluated";
 import { GenericLabel } from "../generic-label";
 import { PromptDisplay } from "../prompt-display";
@@ -39,9 +40,12 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
         content={word(question.answerMode, data.term, "prompt")}
       />
       <Stack>
-        <GenericLabel evaluation={evaluation}>
-          {remark ?? "Your answer"}
-        </GenericLabel>
+        <HStack justifyContent="space-between" pr="2">
+          <GenericLabel evaluation={evaluation}>
+            {remark ?? "Your answer"}
+          </GenericLabel>
+          {data.cortexGraded && <CortexGraded />}
+        </HStack>
         {result ? (
           evaluation ? (
             <EvaluatedTrue>{answer || ""}</EvaluatedTrue>

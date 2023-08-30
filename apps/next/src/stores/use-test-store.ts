@@ -77,7 +77,7 @@ interface TestState extends TestStoreProps {
   ) => void;
   clearAnswer: (index: number) => void;
   setEndedAt: (date: Date) => void;
-  submit: () => void;
+  submit: (cortexGraded: { index: number; evaluation: boolean }[]) => void;
   reset: () => void;
   onAnswerDelegate: (index: number) => void;
 }
@@ -273,7 +273,7 @@ export const createTestStore = (
       setEndedAt: (date) => {
         set({ endedAt: date });
       },
-      submit: () => {
+      submit: (cortexGraded) => {
         const state = get();
 
         const getNumberOfQuestions = (type: TestQuestionType) => {
@@ -331,17 +331,23 @@ export const createTestStore = (
             case TestQuestionType.Write: {
               const data = question.data as WriteData;
 
-              const evaluation = evaluate(
-                question.answerMode == "Definition"
-                  ? state.definitionLanguage
-                  : state.wordLanguage,
-                "One",
-                data.answer || "",
-                question.answerMode == "Definition"
-                  ? data.term.definition
-                  : data.term.word,
-              );
-              data.evaluation = evaluation == EvaluationResult.Correct;
+              const graded = cortexGraded.find((g) => g.index == index);
+
+              const evaluation =
+                graded?.evaluation ??
+                evaluate(
+                  question.answerMode == "Definition"
+                    ? state.definitionLanguage
+                    : state.wordLanguage,
+                  "One",
+                  data.answer || "",
+                  question.answerMode == "Definition"
+                    ? data.term.definition
+                    : data.term.word,
+                ) == EvaluationResult.Correct;
+
+              data.evaluation = evaluation;
+              data.cortexGraded = !!graded;
 
               if (data.evaluation) {
                 increment(question.type);

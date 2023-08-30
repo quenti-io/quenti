@@ -45,6 +45,7 @@ export interface MultipleChoiceData {
 export interface WriteData {
   term: Term;
   evaluation?: boolean;
+  cortexGraded?: boolean;
   answer?: string;
 }
 
