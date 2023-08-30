@@ -9,6 +9,7 @@ export const useCardSelector = <D extends DefaultData>(i: number) => {
   const answer = useTestContext(
     (s) => s.timeline[i]!.data.answer,
   ) as D["answer"];
+  const remarks = useTestContext((s) => s.result?.remarks[i]);
 
-  return { question, answered, data, answer };
+  return { question, answered, data, answer, remarks };
 };

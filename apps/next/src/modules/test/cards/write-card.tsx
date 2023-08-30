@@ -1,7 +1,5 @@
 import { placeholderLanguage } from "@quenti/core";
 import type { WriteData } from "@quenti/interfaces";
-import { getRandom } from "@quenti/lib/array";
-import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 
 import { HStack, Input, Stack, useColorModeValue } from "@chakra-ui/react";
 
@@ -17,7 +15,7 @@ import type { CardProps } from "./common";
 export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
   const wordLanguage = useTestContext((s) => s.wordLanguage);
   const definitionLanguage = useTestContext((s) => s.definitionLanguage);
-  const { question, answer, data } = useCardSelector<WriteData>(i);
+  const { question, answer, data, remarks } = useCardSelector<WriteData>(i);
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);
   const clearAnswer = useTestContext((s) => s.clearAnswer);
@@ -27,11 +25,7 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
   const placeholderColor = useColorModeValue("gray.600", "gray.400");
 
   const evaluation = result ? data.evaluation : undefined;
-
-  const remark =
-    evaluation !== undefined
-      ? getRandom(evaluation ? CORRECT : INCORRECT)
-      : undefined;
+  const remark = result ? remarks?.[0] : undefined;
 
   return (
     <>
@@ -42,7 +36,7 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
       <Stack>
         <HStack justifyContent="space-between" pr="2">
           <GenericLabel evaluation={evaluation}>
-            {remark ?? "Your answer"}
+            {remark?.remark ?? "Your answer"}
           </GenericLabel>
           {data.cortexResponse && (
             <CortexGraded response={data.cortexResponse} />

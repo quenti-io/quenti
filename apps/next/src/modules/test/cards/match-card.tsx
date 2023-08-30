@@ -14,8 +14,6 @@ import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 
 import type { MatchData } from "@quenti/interfaces";
-import { getRandom } from "@quenti/lib/array";
-import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 import {
@@ -187,7 +185,7 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
 };
 
 const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
-  const { question, data, answer } = useCardSelector<MatchData>(i);
+  const { question, data, answer, remarks } = useCardSelector<MatchData>(i);
 
   const evaluateZone = (id: string): boolean => {
     const term = answer.find((a) => a.zone === id);
@@ -201,7 +199,7 @@ const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
   };
 
   const remark = (id: string) =>
-    getRandom(evaluateZone(id) ? CORRECT : INCORRECT);
+    remarks?.find((r) => r.id === id)?.remark ?? "";
 
   return (
     <Stack spacing="2">

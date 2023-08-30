@@ -25,3 +25,11 @@ export const TRUE_FALSE_INCORRECT_IS_FALSE = [
   "Not quite. This one's false.",
   "This one's false.",
 ];
+
+export const CORRECT_IS_SIMILAR = [
+  "Close enough, we'll give it to you!",
+  "Close enough, we'll take it.",
+  "Sure, we'll take it.",
+  "Similar, fair enough.",
+  "Similar, we'll take it.",
+];

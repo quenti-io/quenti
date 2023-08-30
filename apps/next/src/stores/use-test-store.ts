@@ -21,7 +21,14 @@ import {
   type TrueFalseData,
   type WriteData,
 } from "@quenti/interfaces";
-import { shuffleArray, takeNRandom } from "@quenti/lib/array";
+import { getRandom, shuffleArray, takeNRandom } from "@quenti/lib/array";
+import {
+  CORRECT,
+  CORRECT_IS_SIMILAR,
+  INCORRECT,
+  TRUE_FALSE_INCORRECT_IS_FALSE,
+  TRUE_FALSE_INCORRECT_IS_TRUE,
+} from "@quenti/lib/constants/remarks";
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 export type OutlineEntry = {
@@ -50,6 +57,7 @@ export interface TestStoreProps {
   endedAt?: Date;
   result?: {
     score: number;
+    remarks: { id: string; remark: string }[][];
     byType: {
       type: TestQuestionType;
       score: number;
@@ -304,6 +312,7 @@ export const createTestStore = (
             index: i,
             correct: false,
           }));
+        const remarks: { id: string; remark: string }[][] = [];
 
         const increment = (type: TestQuestionType) => {
           score++;
@@ -313,6 +322,21 @@ export const createTestStore = (
           byQuestion.find((q) => q.index == index)!.correct = true;
         };
 
+        const pushRemark = (
+          id: string,
+          evaluation: boolean,
+          customBank?: string[],
+        ) => {
+          remarks.push([
+            {
+              id,
+              remark: getRandom(
+                customBank ?? (evaluation ? CORRECT : INCORRECT),
+              ),
+            },
+          ]);
+        };
+
         for (const [index, question] of state.timeline.entries()) {
           switch (question.type) {
             case TestQuestionType.TrueFalse: {
@@ -320,7 +344,16 @@ export const createTestStore = (
               if (data.answer == !data.distractor) {
                 increment(question.type);
                 answerCorrectly(index);
-              }
+                pushRemark(data.term.id, true);
+              } else
+                pushRemark(
+                  data.term.id,
+                  false,
+                  data.distractor
+                    ? TRUE_FALSE_INCORRECT_IS_FALSE
+                    : TRUE_FALSE_INCORRECT_IS_TRUE,
+                );
+
               break;
             }
             case TestQuestionType.MultipleChoice: {
@@ -329,6 +362,8 @@ export const createTestStore = (
                 increment(question.type);
                 answerCorrectly(index);
               }
+              pushRemark(data.term.id, data.answer == data.term.id);
+
               break;
             }
             case TestQuestionType.Write: {
@@ -357,21 +392,35 @@ export const createTestStore = (
               if (data.evaluation) {
                 increment(question.type);
                 answerCorrectly(index);
+
+                if ((data.cortexResponse?.entailment?.score || 1) < 0.6) {
+                  pushRemark(data.term.id, true, CORRECT_IS_SIMILAR);
+                  break;
+                }
               }
+
+              pushRemark(data.term.id, data.evaluation);
 
               break;
             }
             case TestQuestionType.Match: {
               const data = question.data as MatchData;
+
+              const matchRemarks = new Array<{ id: string; remark: string }>();
               // Start with the assumption that all answers are correct if everything is answered
               let allCorrect = data.answer.length == data.terms.length;
               for (const { term, zone } of data.answer) {
-                if (term == zone) increment(question.type);
-                else {
+                if (term == zone) {
+                  increment(question.type);
+                  matchRemarks.push({ id: zone, remark: getRandom(CORRECT) });
+                } else {
                   allCorrect = false;
+                  matchRemarks.push({ id: zone, remark: getRandom(INCORRECT) });
                 }
               }
               if (allCorrect) answerCorrectly(index);
+
+              remarks.push(matchRemarks);
 
               break;
             }
@@ -383,6 +432,7 @@ export const createTestStore = (
             score,
             byType,
             byQuestion,
+            remarks,
           },
           timeline: [...state.timeline],
         });
