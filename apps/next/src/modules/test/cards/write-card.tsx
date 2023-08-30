@@ -44,7 +44,9 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
           <GenericLabel evaluation={evaluation}>
             {remark ?? "Your answer"}
           </GenericLabel>
-          {data.cortexGraded && <CortexGraded />}
+          {data.cortexResponse && (
+            <CortexGraded response={data.cortexResponse} />
+          )}
         </HStack>
         {result ? (
           evaluation ? (

@@ -20,8 +20,8 @@ export const bulkGradeHandler = async ({ ctx, input }: BulkGradeOptions) => {
   });
 
   return (await bulkGradeAnswers(input.answers)).map((evaluation, i) => ({
-    index: input.answers[i]?.index || 0,
-    evaluation,
+    ...evaluation,
+    originalIndex: input.answers[i]?.index || 0,
   }));
 };
 

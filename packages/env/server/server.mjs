@@ -37,6 +37,8 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_URL: z.string().optional(),
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
     COHERE_API_KEY: z.string().optional(),
+    HUGGINGFACE_ENDPOINT: z.string().url().optional(),
+    HUGGINGFACE_API_KEY: z.string().optional(),
     SERVER_NAME: z.enum(["production", "staging"]).optional(),
   },
   skipValidation: process.env.SKIP_ENV_VALIDATION === "true",

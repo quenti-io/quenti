@@ -7,7 +7,9 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
+    "@huggingface/inference": "^2.6.1",
     "@quenti/env": "*",
+    "@quenti/interfaces": "*",
     "@quenti/lib": "*",
     "@quenti/prisma": "*",
     "cohere-ai": "^6.2.2",

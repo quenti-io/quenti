@@ -3874,6 +3874,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@huggingface/inference@npm:^2.6.1":
+  version: 2.6.1
+  resolution: "@huggingface/inference@npm:2.6.1"
+  checksum: db01e36d2847549e0bb5f63d490ba009331961db17eb168cf4ad1257d69a826830617086f474794805af65729f62f4db556615b24f457c0dea5612aed42dd710
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.10":
   version: 0.11.10
   resolution: "@humanwhocodes/config-array@npm:0.11.10"
@@ -6249,7 +6256,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/cortex@workspace:packages/cortex"
   dependencies:
+    "@huggingface/inference": ^2.6.1
     "@quenti/env": "*"
+    "@quenti/interfaces": "*"
     "@quenti/lib": "*"
     "@quenti/prisma": "*"
     cohere-ai: ^6.2.2

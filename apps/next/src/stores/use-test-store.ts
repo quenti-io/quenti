@@ -11,6 +11,7 @@ import {
   generateWriteQuestion,
 } from "@quenti/core/generator";
 import {
+  type CortexGraderResponse,
   type DefaultData,
   type MatchData,
   type MultipleChoiceData,
@@ -77,7 +78,9 @@ interface TestState extends TestStoreProps {
   ) => void;
   clearAnswer: (index: number) => void;
   setEndedAt: (date: Date) => void;
-  submit: (cortexGraded: { index: number; evaluation: boolean }[]) => void;
+  submit: (
+    cortexGraded: (CortexGraderResponse & { originalIndex: number })[],
+  ) => void;
   reset: () => void;
   onAnswerDelegate: (index: number) => void;
 }
@@ -331,10 +334,12 @@ export const createTestStore = (
             case TestQuestionType.Write: {
               const data = question.data as WriteData;
 
-              const graded = cortexGraded.find((g) => g.index == index);
+              const cortexResponse = cortexGraded.find(
+                (g) => g.originalIndex == index,
+              );
 
               const evaluation =
-                graded?.evaluation ??
+                cortexResponse?.evaluation ??
                 evaluate(
                   question.answerMode == "Definition"
                     ? state.definitionLanguage
@@ -347,7 +352,7 @@ export const createTestStore = (
                 ) == EvaluationResult.Correct;
 
               data.evaluation = evaluation;
-              data.cortexGraded = !!graded;
+              data.cortexResponse = cortexResponse;
 
               if (data.evaluation) {
                 increment(question.type);

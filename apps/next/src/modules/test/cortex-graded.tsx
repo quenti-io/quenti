@@ -1,8 +1,14 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import type { CortexGraderResponse } from "@quenti/interfaces";
+
+import { Box, HStack, Stack, Text, Tooltip } from "@chakra-ui/react";
 
 import { IconBrain } from "@tabler/icons-react";
 
-export const CortexGraded = () => {
+interface CortextGradedProps {
+  response: CortexGraderResponse;
+}
+
+export const CortexGraded: React.FC<CortextGradedProps> = ({ response }) => {
   return (
     <HStack>
       <Text
@@ -15,27 +21,57 @@ export const CortexGraded = () => {
       >
         Graded with
       </Text>
-      <HStack
-        color="blue.300"
-        spacing="4px"
-        bgGradient="linear(to-r, blue.700, blue.300)"
+      <Tooltip
+        bg="white"
         _dark={{
-          bgGradient: "linear(to-r, blue.100, blue.300)",
+          bg: "gray.900",
         }}
-        bgClip="text"
+        py="2"
+        px="3"
+        label={
+          <Stack spacing="2px">
+            <Stack spacing="0">
+              <Text fontWeight={700}>Similarity</Text>
+              <Text fontSize="xs" fontFamily="mono">
+                {response.similarity}
+              </Text>
+            </Stack>
+            {response.entailment && (
+              <Stack spacing="0">
+                <Text fontWeight={700}>Entailment</Text>
+                <Text fontSize="xs" fontFamily="mono">
+                  {response.entailment.label}: {response.entailment.score}
+                </Text>
+              </Stack>
+            )}
+          </Stack>
+        }
+        placement="top"
       >
-        <Box
-          color="blue.700"
+        <HStack
+          color="blue.300"
+          spacing="4px"
+          bgGradient="linear(to-r, blue.700, blue.300)"
           _dark={{
-            color: "blue.100",
+            bgGradient: "linear(to-r, blue.100, blue.300)",
           }}
+          bgClip="text"
         >
-          <IconBrain size={16} />
-        </Box>
-        <Text fontWeight={700} fontSize="sm">
-          Cortex
-        </Text>
-      </HStack>
+          <Box
+            color="blue.700"
+            _dark={{
+              color: "blue.100",
+            }}
+          >
+            <IconBrain size={16} />
+          </Box>
+          <HStack spacing="1">
+            <Text fontWeight={700} fontSize="sm">
+              Cortex
+            </Text>
+          </HStack>
+        </HStack>
+      </Tooltip>
     </HStack>
   );
 };

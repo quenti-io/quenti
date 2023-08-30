@@ -25,6 +25,7 @@
   "globalEnv": [
     "NODE_ENV",
     "PORT",
+    "VERCEL",
     "VERCEL_URL",
     "STRIPE_PRIVATE_KEY",
     "ANALYZE"
