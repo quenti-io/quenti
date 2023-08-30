@@ -76,7 +76,7 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
             boxShadow={`0 -15px 60px -5px ${
               correctness ? correctColor : incorrectColor
             }`}
-            opacity="0.15"
+            opacity="0.1"
             zIndex={-1}
           />
         </Fade>
