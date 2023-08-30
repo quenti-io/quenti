@@ -48,6 +48,7 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
           <HStack
             gap={{ base: 4, sm: 8 }}
             flexDir={{ base: "column", sm: "row" }}
+            alignItems={{ base: "start", sm: "center" }}
             justifyContent="space-between"
           >
             <Stack spacing="0">
@@ -114,6 +115,7 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
           <HStack
             gap={{ base: 4, sm: 8 }}
             flexDir={{ base: "column", sm: "row" }}
+            alignItems={{ base: "start", md: "center" }}
             justifyContent="space-between"
           >
             <Stack spacing="0">
@@ -136,6 +138,7 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
           <HStack
             gap={{ base: 4, sm: 8 }}
             flexDir={{ base: "column", sm: "row" }}
+            alignItems={{ base: "start", md: "center" }}
             justifyContent="space-between"
           >
             <Stack spacing="0">
