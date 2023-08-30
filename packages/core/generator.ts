@@ -40,7 +40,6 @@ export const generateMcqQuestion = (
   term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
 ): TestQuestion<MultipleChoiceData> => {
-  // const distractors = term.;
   const choices = shuffleArray([
     term,
     ...term.distractors

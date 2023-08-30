@@ -32,7 +32,5 @@ const processEntailment = async (
   const result = sorted[0];
   if (!result) return { label: "NEUTRAL", score: 0 };
 
-  console.log(answer, input, result);
-
   return result;
 };
