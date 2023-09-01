@@ -1,6 +1,6 @@
 import { Box, Stack, Text } from "@chakra-ui/react";
 
-import { ScriptFormatter } from "../../components/script-formatter";
+import { ScriptFormatter } from "../script-formatter";
 
 export interface PromptDisplayProps {
   label: string;

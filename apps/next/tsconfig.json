@@ -14,5 +14,5 @@
     "../../packages/core/evaluator.ts",
     "../../packages/components/logo.tsx",
     "../../packages/components/link.tsx"
-  ]
+, "../../packages/components/test/prompt-display.tsx", "../../packages/components/test/generic-label.tsx"  ]
 }

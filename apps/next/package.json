@@ -12,7 +12,7 @@
     "upload-sourcemaps": "npx @highlight-run/sourcemap-uploader upload --path=\".next\" -k ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY}"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.7.1",
+    "@chakra-ui/react": "^2.8.0",
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/modifiers": "^6.0.1",
     "@dnd-kit/sortable": "^7.0.2",
@@ -27,6 +27,7 @@
     "@planetscale/database": "^1.11.0",
     "@quenti/auth": "*",
     "@quenti/branding": "*",
+    "@quenti/components": "*",
     "@quenti/env": "*",
     "@quenti/inngest": "*",
     "@quenti/interfaces": "*",
@@ -43,7 +44,7 @@
     "@vercel/og": "^0.5.11",
     "aos": "^2.3.4",
     "axios": "^1.4.0",
-    "chakra-react-select": "^4.6.0",
+    "chakra-react-select": "^4.7.0",
     "diff": "^5.1.0",
     "framer-motion": "^10.16.2",
     "highlight.run": "^7.4.0",

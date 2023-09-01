@@ -1,6 +1,11 @@
 import React from "react";
 
 import {
+  getQuestionTypeIcon,
+  getQuestionTypeName,
+} from "@quenti/components/utils";
+
+import {
   Box,
   Card,
   Center,
@@ -25,7 +30,6 @@ import {
   useTestContext,
 } from "../../stores/use-test-store";
 import { formatElapsedTime } from "../../utils/time";
-import { getQuestionTypeIcon, getQuestionTypeName } from "./utils/type";
 
 export const ResultsCard = () => {
   const result = useTestContext((s) => s.result!);

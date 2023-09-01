@@ -12,7 +12,7 @@ export const SkeletonTab: React.FC<
 > = ({ isLoaded, children, href }) => {
   return (
     <Link href={href}>
-      <Tab px="0" bg="none" fontWeight={600} pb="3" isSelected>
+      <Tab px="0" bg="none" fontWeight={600} pb="3">
         <Flex alignItems="center" h="21px">
           <SkeletonText isLoaded={isLoaded} noOfLines={1} skeletonHeight="4">
             {children}
