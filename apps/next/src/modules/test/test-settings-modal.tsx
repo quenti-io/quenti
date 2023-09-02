@@ -1,5 +1,9 @@
 import React from "react";
 
+import {
+  getQuestionTypeIcon,
+  getQuestionTypeName,
+} from "@quenti/components/utils";
 import { TestQuestionType } from "@quenti/interfaces";
 
 import {
@@ -21,7 +25,6 @@ import { Modal } from "../../components/modal";
 import { SelectAnswerMode } from "../../components/select-answer-mode";
 import { ToggleGroup } from "../../components/toggle-group";
 import { useTestContext } from "../../stores/use-test-store";
-import { getQuestionTypeIcon, getQuestionTypeName } from "./utils/type";
 
 export interface TestSettingsModalProps {
   isOpen: boolean;

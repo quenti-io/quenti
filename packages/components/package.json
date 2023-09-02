@@ -6,7 +6,9 @@
     "@chakra-ui/react": "^2.8.0",
     "@quenti/branding": "*",
     "@quenti/env": "*",
+    "@quenti/interfaces": "*",
     "@quenti/lib": "*",
+    "@tabler/icons-react": "^2.32.0",
     "lodash.merge": "^4.6.2",
     "next": "^13.4.19",
     "next-seo": "^6.1.0"

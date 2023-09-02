@@ -21,7 +21,12 @@
       "cache": false
     }
   },
-  "globalDependencies": ["**/.env", "yarn.lock"],
+  "globalDependencies": [
+    "**/.env",
+    "yarn.lock",
+    "packages/website/**/*",
+    "packages/integrations/**/*"
+  ],
   "globalEnv": [
     "NODE_ENV",
     "PORT",

@@ -1,17 +1,19 @@
 import React from "react";
 
+import { ScriptFormatter } from "@quenti/components/script-formatter";
+import {
+  Clickable,
+  GenericLabel,
+  PromptDisplay,
+} from "@quenti/components/test";
 import type { MultipleChoiceData } from "@quenti/interfaces";
 
 import { Box, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
 import { IconCircleCheckFilled, IconCircleX } from "@tabler/icons-react";
 
-import { ScriptFormatter } from "../../../components/script-formatter";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
-import { Clickable } from "../clickable";
-import { GenericLabel } from "../generic-label";
-import { PromptDisplay } from "../prompt-display";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 

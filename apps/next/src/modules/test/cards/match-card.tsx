@@ -13,6 +13,11 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 
+import {
+  EvaluatedFalse,
+  EvaluatedTrue,
+  GenericLabel,
+} from "@quenti/components/test";
 import type { MatchData } from "@quenti/interfaces";
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
@@ -33,8 +38,6 @@ import { ScriptFormatter } from "../../../components/script-formatter";
 import { InteractivePointerSensor } from "../../../lib/dnd-kit-sensors";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
-import { EvaluatedFalse, EvaluatedTrue } from "../evaluated";
-import { GenericLabel } from "../generic-label";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 

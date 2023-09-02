@@ -1,3 +1,9 @@
+import {
+  EvaluatedFalse,
+  EvaluatedTrue,
+  GenericLabel,
+  PromptDisplay,
+} from "@quenti/components/test";
 import { placeholderLanguage } from "@quenti/core";
 import type { WriteData } from "@quenti/interfaces";
 
@@ -6,9 +12,6 @@ import { HStack, Input, Stack, useColorModeValue } from "@chakra-ui/react";
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
 import { CortexGraded } from "../cortex-graded";
-import { EvaluatedFalse, EvaluatedTrue } from "../evaluated";
-import { GenericLabel } from "../generic-label";
-import { PromptDisplay } from "../prompt-display";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 

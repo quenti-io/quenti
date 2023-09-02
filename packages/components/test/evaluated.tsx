@@ -1,8 +1,9 @@
+import { ScriptFormatter } from "@quenti/components";
+
 import { Box, HStack, Text } from "@chakra-ui/react";
 
 import { IconCircleCheckFilled, IconCircleX } from "@tabler/icons-react";
 
-import { ScriptFormatter } from "../../components/script-formatter";
 import { Clickable } from "./clickable";
 
 export const EvaluatedFalse: React.FC<{ children: string }> = ({

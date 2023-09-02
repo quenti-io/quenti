@@ -1,3 +1,9 @@
+import {
+  Clickable,
+  EvaluatedTrue,
+  GenericLabel,
+  PromptDisplay,
+} from "@quenti/components/test";
 import type { TrueFalseData } from "@quenti/interfaces";
 
 import { Box, Grid, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
@@ -11,10 +17,6 @@ import {
 
 import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
-import { Clickable } from "../clickable";
-import { EvaluatedTrue } from "../evaluated";
-import { GenericLabel } from "../generic-label";
-import { PromptDisplay } from "../prompt-display";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 
