@@ -6,6 +6,7 @@ import { prisma } from "@quenti/prisma";
 import type { GetServerSidePropsContext } from "@quenti/types";
 
 import { PageWrapper } from "../../common/page-wrapper";
+import InternalSet from "../../components/internal-set";
 import { getLayout } from "../../layouts/main-layout";
 import type { inferSSRProps } from "../../lib/infer-ssr-props";
 import HydrateSetData from "../../modules/hydrate-set-data";
@@ -15,9 +16,6 @@ const SetPrivate = dynamic(() => import("../../modules/main/set-private"), {
   ssr: false,
 });
 const Set404 = dynamic(() => import("../../modules/main/set-404"), {
-  ssr: false,
-});
-const InternalSet = dynamic(() => import("../../components/internal-set"), {
   ssr: false,
 });
 
