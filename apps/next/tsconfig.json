@@ -6,13 +6,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "../../packages/types/next-auth.d.ts",
-    "../../packages/core/language.ts",
-    "../../packages/lib/avatar.ts",
-    "../../packages/lib/array.ts",
-    "../../packages/lib/error.ts",
-    "../../packages/core/evaluator.ts",
-    "../../packages/components/logo.tsx",
-    "../../packages/components/link.tsx"
-, "../../packages/components/test/prompt-display.tsx", "../../packages/components/test/generic-label.tsx"  ]
+    "../../packages/types/next-auth.d.ts"
+  ]
 }
