@@ -1,7 +1,8 @@
 import React from "react";
 
+import { isRectInBounds } from "@quenti/lib/area";
+
 import { type MatchItem, useMatchContext } from "../../stores/use-match-store";
-import { isRectInBounds } from "../../utils/area";
 
 export const EventListener: React.FC<{
   wrapper: React.RefObject<HTMLDivElement>;

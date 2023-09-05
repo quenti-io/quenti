@@ -2,6 +2,7 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
+import { type Rect, areRectanglesOverlapping, pad } from "@quenti/lib/area";
 import { takeNRandom } from "@quenti/lib/array";
 import type { Term } from "@quenti/prisma/client";
 
@@ -9,7 +10,6 @@ import {
   MATCH_SHUFFLE_TIME,
   MATCH_TERMS_IN_ROUND,
 } from "../../../../packages/lib/constants/match";
-import { type Rect, areRectanglesOverlapping, pad } from "../utils/area";
 
 interface RoundSummary {
   endTime: number;
