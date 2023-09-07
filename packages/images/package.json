@@ -1,0 +1,13 @@
+{
+  "name": "@quenti/images",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.405.0",
+    "@quenti/env": "*"
+  }
+}

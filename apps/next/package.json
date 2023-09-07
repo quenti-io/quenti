@@ -29,6 +29,7 @@
     "@quenti/branding": "*",
     "@quenti/components": "*",
     "@quenti/env": "*",
+    "@quenti/images": "*",
     "@quenti/inngest": "*",
     "@quenti/interfaces": "*",
     "@quenti/lib": "*",

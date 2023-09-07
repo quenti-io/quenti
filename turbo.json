@@ -33,6 +33,7 @@
     "VERCEL",
     "VERCEL_URL",
     "STRIPE_PRIVATE_KEY",
+    "SKIP_ENV_VALIDATION",
     "ANALYZE"
   ]
 }
