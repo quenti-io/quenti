@@ -1,46 +1,46 @@
-import {
-  DeleteObjectsCommand,
-  ListObjectsCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
+import { HeadObjectCommand } from "@aws-sdk/client-s3";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
-import { AVATARS_BUCKET, S3 } from ".";
-import { md5Hash } from "./utils";
+import { env } from "@quenti/env/server";
 
-export const setUserAvatar = async (userId: string, avatar: Buffer) => {
-  if (!S3) return;
+import { S3, USERS_BUCKET } from ".";
 
-  const md5 = md5Hash(avatar);
+export const getPresignedAvatarUrl = async (
+  userId: string,
+): Promise<string> => {
+  if (!S3) return "";
 
-  await S3.send(
-    new PutObjectCommand({
-      Bucket: AVATARS_BUCKET,
-      Key: `${userId}/avatars/${md5}.png`,
-      ContentType: "image/png",
-      CacheControl: "public, max-age=31536000",
-    }),
-  );
+  const presigned = await createPresignedPost(S3, {
+    Bucket: USERS_BUCKET,
+    Key: `${userId}/avatar.png`,
+    Expires: 300,
+    Fields: {
+      acl: "public-read",
+    },
+    Conditions: [
+      {
+        "Cache-Control": "s-maxage=86400, stale-while-revalidate=60",
+        "Content-Type": "image/png",
+      },
+    ],
+  });
 
-  const objects = await S3.send(
-    new ListObjectsCommand({
-      Bucket: AVATARS_BUCKET,
-      Prefix: `${userId}/avatars`,
-    }),
-  );
+  return presigned.url;
+};
 
-  if (!objects.Contents?.length) return;
+export const getUserAvatarUrl = async (userId: string) => {
+  if (!S3) return null;
 
-  const toDelete = new Array<{ Key: string }>();
-  for (const object of objects.Contents) {
-    if (object.Key && object.Key !== `${userId}/avatars/${md5}.png`) {
-      toDelete.push({ Key: object.Key });
-    }
+  try {
+    await S3.send(
+      new HeadObjectCommand({
+        Bucket: USERS_BUCKET,
+        Key: `${userId}/avatar.png`,
+      }),
+    );
+
+    return `${env.USERS_BUCKET_URL}/${userId}/avatar.png`;
+  } catch {
+    return null;
   }
-
-  await S3.send(
-    new DeleteObjectsCommand({
-      Bucket: AVATARS_BUCKET,
-      Delete: { Objects: toDelete },
-    }),
-  );
 };

@@ -2,11 +2,17 @@ import { S3Client } from "@aws-sdk/client-s3";
 
 import { env } from "@quenti/env/server";
 
-export const AVATARS_BUCKET = env.AVATARS_BUCKET_NAME || "avatars";
+export const USERS_BUCKET = env.USERS_BUCKET_NAME || "users";
 export const ASSETS_BUCKET = env.ASSETS_BUCKET_NAME || "assets";
 
+export * from "./avatars";
+
 const hasEnv =
-  !!env.R2_ACCOUNT_ID && !!env.R2_ACCESS_KEY_ID && !!env.R2_SECRET_ACCESS_KEY;
+  !!env.R2_ACCOUNT_ID &&
+  !!env.R2_ACCESS_KEY_ID &&
+  !!env.R2_SECRET_ACCESS_KEY &&
+  !!env.USERS_BUCKET_URL &&
+  !!env.ASSETS_BUCKET_NAME;
 
 export const S3 = hasEnv
   ? new S3Client({
