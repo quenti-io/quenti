@@ -8,7 +8,12 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.405.0",
-    "@aws-sdk/s3-presigned-post": "^3.408.0",
-    "@quenti/env": "*"
+    "@quenti/components": "*",
+    "@quenti/env": "*",
+    "jsonwebtoken": "^9.0.2",
+    "react-easy-crop": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2"
   }
 }

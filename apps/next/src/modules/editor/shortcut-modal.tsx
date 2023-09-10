@@ -1,6 +1,6 @@
 import { Flex, Kbd, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 
 export interface ShortcutModalProps {
   isOpen: boolean;

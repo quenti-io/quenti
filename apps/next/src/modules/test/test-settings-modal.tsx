@@ -21,7 +21,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { SelectAnswerMode } from "../../components/select-answer-mode";
 import { ToggleGroup } from "../../components/toggle-group";
 import { useTestContext } from "../../stores/use-test-store";

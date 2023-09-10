@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 
 import { Authed } from "../../components/authed";
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../stores/use-container-store";
 import { useSetPropertiesStore } from "../../stores/use-set-properties-store";

@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 
 import { AutoResizeTextarea } from "./auto-resize-textarea";
-import { Modal } from "./modal";
+import { Modal } from "@quenti/components/modal";
 
 export interface CreateClassModalProps {
   isOpen: boolean;

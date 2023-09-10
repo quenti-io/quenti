@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 import { menuEventChannel } from "../events/menu";
-import { Modal } from "./modal";
+import { Modal } from "@quenti/components/modal";
 
 export default function SignupModal() {
   const router = useRouter();

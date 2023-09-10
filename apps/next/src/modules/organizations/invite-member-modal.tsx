@@ -33,7 +33,7 @@ import { IconLink, IconUpload, IconUser, IconUsers } from "@tabler/icons-react";
 
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { Toast } from "../../components/toast";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";

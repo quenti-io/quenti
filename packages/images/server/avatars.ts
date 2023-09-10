@@ -1,45 +1,56 @@
-import { HeadObjectCommand } from "@aws-sdk/client-s3";
-import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { DeleteObjectsCommand, ListObjectsCommand } from "@aws-sdk/client-s3";
+import jwt from "jsonwebtoken";
 
 import { env } from "@quenti/env/server";
 
 import { S3, USERS_BUCKET } from ".";
 
-export const getPresignedAvatarUrl = async (
-  userId: string,
-): Promise<string> => {
+export const getPresignedAvatarJwt = (userId: string) => {
   if (!S3) return "";
 
-  const presigned = await createPresignedPost(S3, {
-    Bucket: USERS_BUCKET,
-    Key: `${userId}/avatar.png`,
-    Expires: 300,
-    Fields: {
-      acl: "public-read",
-    },
-    Conditions: [
-      {
-        "Cache-Control": "s-maxage=86400, stale-while-revalidate=60",
-        "Content-Type": "image/png",
-      },
-    ],
+  return jwt.sign({ sub: userId }, env.QUENTI_ENCRYPTION_KEY, {
+    expiresIn: "120s",
   });
-
-  return presigned.url;
 };
 
 export const getUserAvatarUrl = async (userId: string) => {
   if (!S3) return null;
 
   try {
-    await S3.send(
-      new HeadObjectCommand({
+    const objects = await S3.send(
+      new ListObjectsCommand({
         Bucket: USERS_BUCKET,
-        Key: `${userId}/avatar.png`,
+        Prefix: `${userId}/avatar/`,
       }),
     );
 
-    return `${env.USERS_BUCKET_URL}/${userId}/avatar.png`;
+    if (!objects.Contents?.length) return null;
+    const keys = objects.Contents.map((object) => object.Key).filter(
+      (key) => !!key,
+    ) as string[];
+
+    const timestamps = keys.map((key) => {
+      const timestamp = key.split("/")[2]!.split(".")[0]!;
+      return parseInt(timestamp, 10);
+    });
+
+    const latest = Math.max(...timestamps);
+    const latestKey = keys[timestamps.indexOf(latest)];
+    const toPrune = keys.filter((key) => key !== latestKey);
+
+    console.log("LATEST", latestKey);
+    console.log("TO PRUNE", toPrune);
+
+    if (toPrune.length) {
+      await S3.send(
+        new DeleteObjectsCommand({
+          Bucket: USERS_BUCKET,
+          Delete: { Objects: toPrune.map((k) => ({ Key: k })) },
+        }),
+      );
+    }
+
+    return `${env.USERS_BUCKET_URL}/${latestKey}`;
   } catch {
     return null;
   }

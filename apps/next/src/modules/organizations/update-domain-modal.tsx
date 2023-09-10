@@ -19,7 +19,7 @@ import {
 
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../components/animated-icons/x";
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { Toast } from "../../components/toast";
 import { useOrganization } from "../../hooks/use-organization";

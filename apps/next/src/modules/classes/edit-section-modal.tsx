@@ -11,7 +11,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { useClass } from "../../hooks/use-class";
 
 export interface EditSectionModalProps {

@@ -1,10 +1,7 @@
-import "@uploadthing/react/styles.css";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
+import React from "react";
 
-import { VStack } from "@chakra-ui/react";
-
-import { Modal } from "../../components/modal";
+import { UploadAvatarModal as InnerModal } from "@quenti/images/react";
+import { api } from "@quenti/trpc";
 
 interface UploadAvatarModalProps {
   isOpen: boolean;
@@ -15,28 +12,44 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const session = useSession()!.data!;
+  const [buffer, setBuffer] = React.useState<ArrayBuffer | null>(null);
+
+  const uploadComplete = api.user.uploadAvatarComplete.useMutation({
+    onSuccess: () => {
+      const event = new Event("visibilitychange");
+      document.dispatchEvent(event);
+      onClose();
+    },
+  });
+
+  const uploadAvatar = api.user.uploadAvatar.useMutation({
+    onSuccess: async (url) => {
+      if (!buffer) return;
+
+      const result = await fetch(url, {
+        method: "PUT",
+        body: buffer,
+        headers: {
+          "Content-Type": "image/png",
+          "Cache-Control": "public, max-age=31536000",
+        },
+      });
+
+      if (result.ok) {
+        await uploadComplete.mutateAsync();
+      }
+    },
+  });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <Modal.Overlay />
-      <Modal.Content>
-        <Modal.Body>
-          <Modal.Heading>Upload avatar</Modal.Heading>
-          <VStack>
-            <Image
-              src={session.user?.image || ""}
-              alt="Avatar"
-              width={64}
-              height={64}
-              className="highlight-block"
-              style={{
-                borderRadius: "50%",
-              }}
-            />
-          </VStack>
-        </Modal.Body>
-      </Modal.Content>
-    </Modal>
+    <InnerModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmitBuffer={(buffer) => {
+        setBuffer(buffer);
+        uploadAvatar.mutate();
+      }}
+      isLoading={uploadAvatar.isLoading || uploadComplete.isLoading}
+    />
   );
 };

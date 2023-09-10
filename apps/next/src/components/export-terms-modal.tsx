@@ -14,7 +14,7 @@ import {
 
 import { useSet } from "../hooks/use-set";
 import { AnimatedCheckCircle } from "./animated-icons/check";
-import { Modal } from "./modal";
+import { Modal } from "@quenti/components/modal";
 import { Toast } from "./toast";
 
 export interface ExportTermsModalProps {

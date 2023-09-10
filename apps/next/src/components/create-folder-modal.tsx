@@ -8,7 +8,7 @@ import { Button, ButtonGroup, Input, Stack } from "@chakra-ui/react";
 
 import { menuEventChannel } from "../events/menu";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
-import { Modal } from "./modal";
+import { Modal } from "@quenti/components/modal";
 
 export interface CreateFolderModalProps {
   isOpen: boolean;

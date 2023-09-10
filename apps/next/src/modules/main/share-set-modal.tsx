@@ -17,7 +17,7 @@ import {
 import { IconEditCircle, IconLock } from "@tabler/icons-react";
 
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { Toast } from "../../components/toast";
 import { useSet } from "../../hooks/use-set";
 

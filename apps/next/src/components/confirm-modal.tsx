@@ -8,7 +8,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { Modal } from "./modal";
+import { Modal } from "@quenti/components/modal";
 
 export interface ConfirmModalProps {
   isOpen: boolean;

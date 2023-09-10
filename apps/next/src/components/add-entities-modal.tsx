@@ -17,7 +17,7 @@ import {
 
 import { IconPlus } from "@tabler/icons-react";
 
-import { Modal } from "./modal";
+import { Modal } from "@quenti/components/modal";
 import { SelectableGenericCard } from "./selectable-generic-card";
 
 export interface AddEntitiesModal {

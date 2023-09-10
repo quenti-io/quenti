@@ -4,7 +4,7 @@ import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 
 import { useMediaQuery } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { useFeature } from "../../hooks/use-feature";
 import { useAuthedSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";

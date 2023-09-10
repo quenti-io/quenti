@@ -15,7 +15,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 import { getBaseDomain } from "./utils/get-base-domain";
 

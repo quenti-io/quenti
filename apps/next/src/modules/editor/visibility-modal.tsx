@@ -10,7 +10,7 @@ import {
 
 import { IconLink, IconLock, IconWorld } from "@tabler/icons-react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { ToggleGroup } from "../../components/toggle-group";
 
 export interface VisibilityModalProps {

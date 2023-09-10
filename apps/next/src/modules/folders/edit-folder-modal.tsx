@@ -7,7 +7,7 @@ import { api } from "@quenti/trpc";
 import { Button, ButtonGroup, Input, Stack } from "@chakra-ui/react";
 
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { useFolder } from "../../hooks/use-folder";
 
 export interface EditFolderModalProps {

@@ -13,7 +13,7 @@ import {
 
 import { IconUserX } from "@tabler/icons-react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { useClass } from "../../hooks/use-class";
 import { addressStudents } from "./utils/address-students";
 

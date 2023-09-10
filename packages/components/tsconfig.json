@@ -6,5 +6,5 @@
     "target": "ES5",
     "jsx": "react-jsx"
   },
-  "include": ["."]
+  "include": [".", "../images/react/upload-avatar-modal.tsx"]
 }

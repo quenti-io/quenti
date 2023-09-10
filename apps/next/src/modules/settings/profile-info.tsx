@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import React from "react";
 
 import { Link } from "@quenti/components";
@@ -52,7 +51,8 @@ export const ProfileInfo = () => {
       <Stack spacing={8}>
         <HStack spacing="4">
           <Skeleton rounded="full" isLoaded={!!session.user}>
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={session.user?.image || ""}
               alt="Avatar"
               width={64}

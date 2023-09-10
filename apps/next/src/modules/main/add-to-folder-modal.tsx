@@ -24,7 +24,7 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 

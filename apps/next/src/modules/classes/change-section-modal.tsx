@@ -19,7 +19,7 @@ import {
 
 import { IconArrowRight } from "@tabler/icons-react";
 
-import { Modal } from "../../components/modal";
+import { Modal } from "@quenti/components/modal";
 import { useClass } from "../../hooks/use-class";
 import { SectionSelect } from "./section-select";
 import { addressStudents } from "./utils/address-students";

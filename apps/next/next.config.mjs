@@ -26,6 +26,12 @@ const appVersion = pjson.version;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const domains = ["lh3.googleusercontent.com"];
+if (process.env.USERS_BUCKET_URL)
+  domains.push(new URL(process.env.USERS_BUCKET_URL).host);
+if (process.env.ASSETS_BUCKET_URL)
+  domains.push(new URL(process.env.ASSETS_BUCKET_URL).host);
+
 /** @type {import("next").NextConfig} */
 let config = {
   generateBuildId: () => nextBuildId({ dir: __dirname }),
@@ -39,7 +45,7 @@ let config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    domains,
   },
   transpilePackages: [
     "@quenti/auth",
