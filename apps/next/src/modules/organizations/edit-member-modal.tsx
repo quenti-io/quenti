@@ -1,11 +1,11 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import type { MembershipRole } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, FormControl, FormLabel } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";

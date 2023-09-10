@@ -10,6 +10,7 @@ export const env = createEnv({
     NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID: z.string().optional(),
     NEXT_PUBLIC_BETTERUPTIME_ID: z.string().optional(),
     NEXT_PUBLIC_STRIPE_PUBLIC_KEY: z.string().optional(),
+    NEXT_PUBLIC_CDN_WORKER_ENDPOINT: z.string().url().optional(),
   },
   runtimeEnv: {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -20,6 +21,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID,
     NEXT_PUBLIC_BETTERUPTIME_ID: process.env.NEXT_PUBLIC_BETTERUPTIME_ID,
     NEXT_PUBLIC_STRIPE_PUBLIC_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+    NEXT_PUBLIC_CDN_WORKER_ENDPOINT:
+      process.env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT,
   },
   skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
 });

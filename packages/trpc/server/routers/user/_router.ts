@@ -14,6 +14,8 @@ type UserRouterHandlerCache = {
     ["set-display-name"]?: typeof import("./set-display-name.handler").setDisplayNameHandler;
     ["set-user-type"]?: typeof import("./set-user-type.handler").setUserTypeHandler;
     ["complete-onboarding"]?: typeof import("./complete-onboarding.handler").completeOnboardingHandler;
+    ["upload-avatar"]?: typeof import("./upload-avatar.handler").uploadAvatarHandler;
+    ["upload-avatar-complete"]?: typeof import("./upload-avatar-complete.handler").uploadAvatarCompleteHandler;
     ["view-changelog"]?: typeof import("./view-changelog.handler").viewChangelogHandler;
     ["set-enable-usage-data"]?: typeof import("./set-enable-usage-data.handler").setEnableUsageDataHandler;
     ["delete-account"]?: typeof import("./delete-account.handler").deleteAccountHandler;
@@ -57,6 +59,14 @@ export const userRouter = createTRPCRouter({
   completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "complete-onboarding");
     return HANDLER_CACHE.handlers["complete-onboarding"]!({ ctx });
+  }),
+  uploadAvatar: protectedProcedure.mutation(async ({ ctx }) => {
+    await loadHandler(HANDLER_CACHE, "upload-avatar");
+    return HANDLER_CACHE.handlers["upload-avatar"]!({ ctx });
+  }),
+  uploadAvatarComplete: protectedProcedure.mutation(async ({ ctx }) => {
+    await loadHandler(HANDLER_CACHE, "upload-avatar-complete");
+    return HANDLER_CACHE.handlers["upload-avatar-complete"]!({ ctx });
   }),
   viewChangelog: protectedProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "view-changelog");

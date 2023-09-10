@@ -4,6 +4,7 @@ import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -19,7 +20,6 @@ import {
   Stack,
 } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 import { plural } from "../../utils/string";
 import { getBaseDomain } from "../organizations/utils/get-base-domain";

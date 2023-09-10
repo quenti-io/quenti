@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
+
 import {
   Button,
   ModalCloseButton,
@@ -10,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 
 import { menuEventChannel } from "../events/menu";
-import { Modal } from "./modal";
 
 export default function SignupModal() {
   const router = useRouter();

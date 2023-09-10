@@ -1,5 +1,7 @@
 import React, { useMemo } from "react";
 
+import { Modal } from "@quenti/components/modal";
+
 import {
   Button,
   ButtonGroup,
@@ -14,7 +16,6 @@ import {
 
 import { useSet } from "../hooks/use-set";
 import { AnimatedCheckCircle } from "./animated-icons/check";
-import { Modal } from "./modal";
 import { Toast } from "./toast";
 
 export interface ExportTermsModalProps {

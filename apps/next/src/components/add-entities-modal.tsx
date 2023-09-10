@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import type { SetFolderEntity } from "@quenti/interfaces";
 
 import {
@@ -17,7 +18,6 @@ import {
 
 import { IconPlus } from "@tabler/icons-react";
 
-import { Modal } from "./modal";
 import { SelectableGenericCard } from "./selectable-generic-card";
 
 export interface AddEntitiesModal {

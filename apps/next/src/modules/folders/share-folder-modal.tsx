@@ -1,12 +1,12 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import { env } from "@quenti/env/client";
 import { api } from "@quenti/trpc";
 
 import { Button, HStack, Input, Skeleton, useToast } from "@chakra-ui/react";
 
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
-import { Modal } from "../../components/modal";
 import { Toast } from "../../components/toast";
 import { useFolder } from "../../hooks/use-folder";
 

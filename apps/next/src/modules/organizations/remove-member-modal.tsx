@@ -1,8 +1,8 @@
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, Text } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 
 export interface RemoveMemberModalProps {

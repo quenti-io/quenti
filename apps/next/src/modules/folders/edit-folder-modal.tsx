@@ -2,12 +2,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, Input, Stack } from "@chakra-ui/react";
 
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { Modal } from "../../components/modal";
 import { useFolder } from "../../hooks/use-folder";
 
 export interface EditFolderModalProps {

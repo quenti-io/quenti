@@ -8,6 +8,7 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -26,7 +27,6 @@ import {
 import { IconUpload, IconUser, IconUsers } from "@tabler/icons-react";
 
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { Modal } from "../../components/modal";
 import { ToggleGroup } from "../../components/toggle-group";
 import { useClass } from "../../hooks/use-class";
 import { getBaseDomain } from "../organizations/utils/get-base-domain";

@@ -1,3 +1,4 @@
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -10,7 +11,6 @@ import {
 
 import { IconUserX } from "@tabler/icons-react";
 
-import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 
 export interface RemoveTeacherModalProps {

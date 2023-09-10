@@ -1,14 +1,10 @@
-import { useSession } from "next-auth/react";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components";
-import { avatarUrl } from "@quenti/lib/avatar";
 
 import {
-  Avatar,
   Container,
   Divider,
-  HStack,
   Heading,
   Stack,
   useBreakpointValue,
@@ -43,7 +39,6 @@ const Settings = () => {
 };
 
 const SettingsInner = () => {
-  const session = useSession()!.data!;
   const { data: me } = useMe();
 
   const layout: "mobile" | "desktop" | undefined = useBreakpointValue({
@@ -60,17 +55,7 @@ const SettingsInner = () => {
       <SettingsContext.Provider value={{ layout }}>
         <Container maxW="4xl">
           <Stack spacing={12}>
-            <HStack spacing={4}>
-              <Avatar
-                src={avatarUrl({
-                  ...session.user!,
-                  image: session.user!.image!,
-                })}
-                size="sm"
-                className="highlight-block"
-              />
-              <Heading>Settings</Heading>
-            </HStack>
+            <Heading size="2xl">Settings</Heading>
             <Stack spacing={8}>
               <GAccountInfo />
               <Divider borderColor={divider} />

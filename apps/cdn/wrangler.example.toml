@@ -1,0 +1,17 @@
+name = "cdn"
+main = "src/index.ts"
+compatibility_date = "2023-05-18"
+
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+
+# Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
+# Note: Use secrets to store sensitive data.
+# Docs: https://developers.cloudflare.com/workers/platform/environment-variables
+vars = { CORS_ALLOWED_ORIGINS = "*" }
+
+# Bind an R2 Bucket. Use R2 to store arbitrarily large blobs of data, such as files.
+# Docs: https://developers.cloudflare.com/r2/api/workers/workers-api-usage/
+r2_buckets = [
+  { binding = "USERS_BUCKET", preview_bucket_name = "users-dev", bucket_name = "users" },
+  { binding = "ASSETS_BUCKET", preview_bucket_name = "assets-dev", bucket_name = "assets" },
+]

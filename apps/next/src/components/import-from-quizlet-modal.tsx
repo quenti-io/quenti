@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -24,7 +25,6 @@ import { QUIZLET_IMPORT_REGEXP } from "../../../../packages/lib/constants/charac
 import { effectChannel } from "../events/effects";
 import { queryEventChannel } from "../events/query";
 import styles from "./glow-wrapper.module.css";
-import { Modal } from "./modal";
 
 export interface ImportFromQuizletModalProps {
   isOpen: boolean;

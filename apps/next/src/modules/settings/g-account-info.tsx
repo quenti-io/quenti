@@ -1,14 +1,6 @@
 import { useSession } from "next-auth/react";
 
-import {
-  HStack,
-  Stack,
-  Text,
-  Tooltip,
-  useColorModeValue,
-} from "@chakra-ui/react";
-
-import { IconInfoCircle } from "@tabler/icons-react";
+import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
 
 import { SectionWrapper } from "./section-wrapper";
 
@@ -28,14 +20,9 @@ export const GAccountInfo = () => {
         <Text fontSize="xl" className="highlight-block">
           {session.user.name}
         </Text>
-        <HStack color={grayText}>
-          <Text fontSize="sm" className="highlight-block">
-            {session.user.email}
-          </Text>
-          <Tooltip label="Your email is not shared with anyone">
-            <IconInfoCircle size={18} />
-          </Tooltip>
-        </HStack>
+        <Text fontSize="sm" className="highlight-block" color={grayText}>
+          {session.user.email}
+        </Text>
       </Stack>
     </SectionWrapper>
   );

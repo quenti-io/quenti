@@ -1,6 +1,7 @@
 import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -11,7 +12,6 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import { Modal } from "../../components/modal";
 import { useClass } from "../../hooks/use-class";
 
 export interface EditSectionModalProps {

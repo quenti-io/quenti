@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -24,7 +25,6 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 
-import { Modal } from "../../components/modal";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 
