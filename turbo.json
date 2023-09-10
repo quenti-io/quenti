@@ -8,7 +8,8 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**"],
+      "inputs": ["**/*", "!apps/cdn/**"]
     },
     "start": {
       "outputs": ["dist/**", "build/**"]
@@ -36,6 +37,12 @@
     "USERS_BUCKET_URL",
     "ASSETS_BUCKET_URL",
     "SKIP_ENV_VALIDATION",
-    "ANALYZE"
+    "ANALYZE",
+    "NEXT_PUBLIC_BASE_URL",
+    "NEXT_PUBLIC_DEPLOYMENT",
+    "NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID",
+    "NEXT_PUBLIC_BETTERUPTIME_ID",
+    "NEXT_PUBLIC_STRIPE_PUBLIC_KEY",
+    "NEXT_PUBLIC_CDN_WORKER_ENDPOINT"
   ]
 }

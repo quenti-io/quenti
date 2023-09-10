@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components";
@@ -39,6 +40,7 @@ const Settings = () => {
 };
 
 const SettingsInner = () => {
+  const { data: session } = useSession();
   const { data: me } = useMe();
 
   const layout: "mobile" | "desktop" | undefined = useBreakpointValue({
@@ -48,7 +50,7 @@ const SettingsInner = () => {
 
   const divider = useColorModeValue("gray.400", "gray.600");
 
-  if (!layout || !me) return <Loading />;
+  if (!layout || !session || !me) return <Loading />;
 
   return (
     <WithFooter>
