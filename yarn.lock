@@ -17456,16 +17456,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"test@workspace:apps/test":
-  version: 0.0.0-use.local
-  resolution: "test@workspace:apps/test"
-  dependencies:
-    "@cloudflare/workers-types": ^4.20230419.0
-    typescript: ^5.0.4
-    wrangler: ^3.0.0
-  languageName: unknown
-  linkType: soft
-
 "text-table@npm:^0.2.0":
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
