@@ -1,5 +1,3 @@
-import { nanoid } from "nanoid";
-
 import { TRPCError } from "@trpc/server";
 
 import { markCortexStale } from "../../lib/cortex";
@@ -34,7 +32,6 @@ export const bulkAddHandler = async ({ ctx, input }: BulkAddOptions) => {
 
   const data = input.terms.map((term, i) => ({
     ...term,
-    id: nanoid(),
     studySetId: input.studySetId,
     rank: studySet._count.terms + i,
   }));

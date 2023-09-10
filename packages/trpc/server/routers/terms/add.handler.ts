@@ -1,5 +1,3 @@
-import { nanoid } from "nanoid";
-
 import { TRPCError } from "@trpc/server";
 
 import { markCortexStale } from "../../lib/cortex";
@@ -43,7 +41,6 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
   const created = await ctx.prisma.term.create({
     data: {
       ...input.term,
-      id: nanoid(),
       studySetId: input.studySetId,
     },
   });
