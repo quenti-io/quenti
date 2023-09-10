@@ -28,6 +28,7 @@ interface UploadAvatarModalProps {
   isOpen: boolean;
   onClose: () => void;
   isLoading?: boolean;
+  onError?: (error: string) => void;
   onSubmitBuffer?: (buffer: ArrayBuffer) => void;
 }
 
@@ -35,6 +36,7 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
   isOpen,
   onClose,
   isLoading,
+  onError,
   onSubmitBuffer,
 }) => {
   const [crop, setCrop] = React.useState<Rect | null>(null);
@@ -52,7 +54,9 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
     const file = e.target.files[0]!;
 
     if (file.size > limit) {
-      console.error("Image size limit exceed", file.size, limit);
+      onError?.(
+        `That file is too large! Max file size is ${limit / 1000000} MB`,
+      );
     } else {
       setFile(file);
     }
@@ -105,7 +109,6 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
               style={{ display: "none" }}
               type="file"
               id="upload-avatar-input"
-              // className="text-default pointer-events-none absolute mt-4 opacity-0 "
               accept="image/*"
             />
             <label htmlFor="upload-avatar-input">
@@ -139,10 +142,6 @@ interface CropContainerProps {
 const CropContainer: React.FC<CropContainerProps> = ({ image, onComplete }) => {
   const [crop, setCrop] = React.useState({ x: 0, y: 0 });
   const [zoom, setZoom] = React.useState(1);
-
-  // const handleZoomSliderChange = (value: number) => {
-  //   value < 1 ? setZoom(1) : setZoom(value);
-  // };
 
   return (
     <Box>

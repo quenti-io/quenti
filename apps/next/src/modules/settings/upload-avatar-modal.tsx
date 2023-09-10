@@ -4,6 +4,11 @@ import { env } from "@quenti/env/client";
 import { UploadAvatarModal as InnerModal } from "@quenti/images/react";
 import { api } from "@quenti/trpc";
 
+import { useToast } from "@chakra-ui/react";
+
+import { AnimatedXCircle } from "../../components/animated-icons/x";
+import { Toast } from "../../components/toast";
+
 interface UploadAvatarModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,6 +18,8 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const toast = useToast();
+
   const [buffer, setBuffer] = React.useState<ArrayBuffer | null>(null);
 
   const uploadComplete = api.user.uploadAvatarComplete.useMutation({
@@ -45,6 +52,15 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
     <InnerModal
       isOpen={isOpen}
       onClose={onClose}
+      onError={(error) => {
+        toast({
+          title: error,
+          status: "error",
+          colorScheme: "red",
+          icon: <AnimatedXCircle />,
+          render: Toast,
+        });
+      }}
       onSubmitBuffer={(buffer) => {
         setBuffer(buffer);
         uploadAvatar.mutate();
