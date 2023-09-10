@@ -2,13 +2,13 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, Input, Stack } from "@chakra-ui/react";
 
 import { menuEventChannel } from "../events/menu";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
-import { Modal } from "@quenti/components/modal";
 
 export interface CreateFolderModalProps {
   isOpen: boolean;

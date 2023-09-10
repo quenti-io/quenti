@@ -1,3 +1,4 @@
+import { Modal } from "@quenti/components/modal";
 import { avatarUrl } from "@quenti/lib/avatar";
 import type { User } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
@@ -13,7 +14,6 @@ import {
 
 import { IconUserX } from "@tabler/icons-react";
 
-import { Modal } from "@quenti/components/modal";
 import { useClass } from "../../hooks/use-class";
 import { addressStudents } from "./utils/address-students";
 

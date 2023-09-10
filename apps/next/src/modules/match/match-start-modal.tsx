@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
+
 import { Button, ButtonGroup, Stack, Text } from "@chakra-ui/react";
 
 import { IconArrowBack, IconPlayerPlay } from "@tabler/icons-react";
 
-import { Modal } from "@quenti/components/modal";
 import { useMatchContext } from "../../stores/use-match-store";
 
 export interface MatchStartModalProps {

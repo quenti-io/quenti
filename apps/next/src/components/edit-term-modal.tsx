@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
@@ -7,7 +8,6 @@ import { Button, ButtonGroup } from "@chakra-ui/react";
 
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
-import { Modal } from "@quenti/components/modal";
 
 export interface EditTermModalProps {
   term: Term | null;

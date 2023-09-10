@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import { allEqual } from "@quenti/lib/array";
 import { avatarUrl } from "@quenti/lib/avatar";
 import type { User } from "@quenti/prisma/client";
@@ -19,7 +20,6 @@ import {
 
 import { IconArrowRight } from "@tabler/icons-react";
 
-import { Modal } from "@quenti/components/modal";
 import { useClass } from "../../hooks/use-class";
 import { SectionSelect } from "./section-select";
 import { addressStudents } from "./utils/address-students";

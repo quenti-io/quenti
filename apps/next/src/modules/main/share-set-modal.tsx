@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { Modal } from "@quenti/components/modal";
 import { env } from "@quenti/env/client";
 import { api } from "@quenti/trpc";
 
@@ -17,7 +18,6 @@ import {
 import { IconEditCircle, IconLock } from "@tabler/icons-react";
 
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
-import { Modal } from "@quenti/components/modal";
 import { Toast } from "../../components/toast";
 import { useSet } from "../../hooks/use-set";
 

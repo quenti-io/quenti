@@ -3,6 +3,7 @@ import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -15,7 +16,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { Modal } from "@quenti/components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 import { getBaseDomain } from "./utils/get-base-domain";
 

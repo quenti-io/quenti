@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
+
 import {
   Button,
   ButtonGroup,
@@ -7,8 +9,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-
-import { Modal } from "@quenti/components/modal";
 
 export interface ConfirmModalProps {
   isOpen: boolean;

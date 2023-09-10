@@ -1,5 +1,6 @@
 import React from "react";
 
+import { env } from "@quenti/env/client";
 import { UploadAvatarModal as InnerModal } from "@quenti/images/react";
 import { api } from "@quenti/trpc";
 
@@ -23,15 +24,14 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
   });
 
   const uploadAvatar = api.user.uploadAvatar.useMutation({
-    onSuccess: async (url) => {
-      if (!buffer) return;
+    onSuccess: async (jwt) => {
+      if (!buffer || !env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT) return;
 
-      const result = await fetch(url, {
+      const result = await fetch(env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT, {
         method: "PUT",
         body: buffer,
         headers: {
-          "Content-Type": "image/png",
-          "Cache-Control": "public, max-age=31536000",
+          Authorization: `Bearer ${jwt}`,
         },
       });
 

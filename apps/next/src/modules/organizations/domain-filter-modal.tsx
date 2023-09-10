@@ -1,10 +1,10 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, Text } from "@chakra-ui/react";
 
-import { Modal } from "@quenti/components/modal";
 import { DomainFilterForm } from "./domain-filter-form";
 
 export interface DomainFilterModalProps {

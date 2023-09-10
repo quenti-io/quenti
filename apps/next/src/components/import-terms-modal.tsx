@@ -1,5 +1,7 @@
 import React, { useMemo } from "react";
 
+import { Modal } from "@quenti/components/modal";
+
 import {
   Button,
   ButtonGroup,
@@ -15,7 +17,6 @@ import {
 import { plural } from "../utils/string";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 import { GenericTermCard } from "./generic-term-card";
-import { Modal } from "@quenti/components/modal";
 
 export interface ImportTermsModalProps {
   isOpen: boolean;

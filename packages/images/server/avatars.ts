@@ -38,9 +38,6 @@ export const getUserAvatarUrl = async (userId: string) => {
     const latestKey = keys[timestamps.indexOf(latest)];
     const toPrune = keys.filter((key) => key !== latestKey);
 
-    console.log("LATEST", latestKey);
-    console.log("TO PRUNE", toPrune);
-
     if (toPrune.length) {
       await S3.send(
         new DeleteObjectsCommand({

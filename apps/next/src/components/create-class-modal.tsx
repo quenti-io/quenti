@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import {
@@ -16,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 
 import { AutoResizeTextarea } from "./auto-resize-textarea";
-import { Modal } from "@quenti/components/modal";
 
 export interface CreateClassModalProps {
   isOpen: boolean;

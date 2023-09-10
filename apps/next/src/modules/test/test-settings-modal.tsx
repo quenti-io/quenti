@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import {
   getQuestionTypeIcon,
   getQuestionTypeName,
@@ -21,7 +22,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { Modal } from "@quenti/components/modal";
 import { SelectAnswerMode } from "../../components/select-answer-mode";
 import { ToggleGroup } from "../../components/toggle-group";
 import { useTestContext } from "../../stores/use-test-store";

@@ -60,4 +60,6 @@ yarn-error.log*
 .turbo
 
 # Cloudflare
+.dev.vars
+.wrangler
 wrangler.toml

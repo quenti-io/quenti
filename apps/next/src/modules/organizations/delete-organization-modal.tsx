@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, Text, useColorModeValue } from "@chakra-ui/react";
 
-import { Modal } from "@quenti/components/modal";
 import { useOrganization } from "../../hooks/use-organization";
 
 interface DeleteOrganizationModalProps {

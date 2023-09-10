@@ -3,6 +3,7 @@ import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Modal } from "@quenti/components/modal";
 import { env } from "@quenti/env/client";
 import type { MembershipRole } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
@@ -33,7 +34,6 @@ import { IconLink, IconUpload, IconUser, IconUsers } from "@tabler/icons-react";
 
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { Modal } from "@quenti/components/modal";
 import { Toast } from "../../components/toast";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { MemberRoleSelect } from "./member-role-select";

@@ -1,3 +1,4 @@
+import { Modal } from "@quenti/components/modal";
 import type { StudySetVisibility } from "@quenti/prisma/client";
 
 import {
@@ -10,7 +11,6 @@ import {
 
 import { IconLink, IconLock, IconWorld } from "@tabler/icons-react";
 
-import { Modal } from "@quenti/components/modal";
 import { ToggleGroup } from "../../components/toggle-group";
 
 export interface VisibilityModalProps {
