@@ -42,7 +42,14 @@ export const bulkAddHandler = async ({ ctx, input }: BulkAddOptions) => {
 
   await markCortexStale(input.studySetId);
 
-  return data;
+  return await ctx.prisma.term.findMany({
+    where: {
+      studySetId: input.studySetId,
+    },
+    select: {
+      id: true,
+    },
+  });
 };
 
 export default bulkAddHandler;

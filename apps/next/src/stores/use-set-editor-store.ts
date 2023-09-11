@@ -197,7 +197,7 @@ export const createSetEditorStore = (
       addServerTerms: (terms: string[]) => {
         set((state) => {
           return {
-            serverTerms: [...state.serverTerms, ...terms],
+            serverTerms: [...new Set([...state.serverTerms, ...terms])],
           };
         });
         behaviors?.addServerTerms?.(terms);

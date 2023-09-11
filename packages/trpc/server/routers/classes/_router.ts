@@ -22,6 +22,8 @@ import { ZRemoveMembersSchema } from "./remove-members.schema";
 import { ZUpdateSectionSchema } from "./update-section.schema";
 import { ZUpdateStudentsSchema } from "./update-students.schema";
 import { ZUpdateSchema } from "./update.schema";
+import { ZUploadLogoCompleteSchema } from "./upload-logo-complete.schema";
+import { ZUploadLogoSchema } from "./upload-logo.schema";
 
 type ClassesRouterHandlerCache = {
   handlers: {
@@ -43,6 +45,8 @@ type ClassesRouterHandlerCache = {
     ["remove-members"]?: typeof import("./remove-members.handler").removeMembersHandler;
     ["update-students"]?: typeof import("./update-students.handler").updateStudentsHandler;
     ["ban-students"]?: typeof import("./ban-students.handler").banStudentsHandler;
+    ["upload-logo"]?: typeof import("./upload-logo.handler").uploadLogoHandler;
+    ["upload-logo-complete"]?: typeof import("./upload-logo-complete.handler").uploadLogoCompleteHandler;
   };
 } & { routerPath: string };
 
@@ -157,5 +161,17 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "ban-students");
       return HANDLER_CACHE.handlers["ban-students"]!({ ctx, input });
+    }),
+  uploadLogo: teacherProcedure
+    .input(ZUploadLogoSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-logo");
+      return HANDLER_CACHE.handlers["upload-logo"]!({ ctx, input });
+    }),
+  uploadLogoComplete: teacherProcedure
+    .input(ZUploadLogoCompleteSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-logo-complete");
+      return HANDLER_CACHE.handlers["upload-logo-complete"]!({ ctx, input });
     }),
 });

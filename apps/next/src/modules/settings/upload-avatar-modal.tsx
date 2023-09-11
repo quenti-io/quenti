@@ -34,13 +34,16 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
     onSuccess: async (jwt) => {
       if (!buffer || !env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT) return;
 
-      const result = await fetch(env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT, {
-        method: "PUT",
-        body: buffer,
-        headers: {
-          Authorization: `Bearer ${jwt}`,
+      const result = await fetch(
+        `${env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT}/avatar`,
+        {
+          method: "PUT",
+          body: buffer,
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
         },
-      });
+      );
 
       if (result.ok) {
         await uploadComplete.mutateAsync();

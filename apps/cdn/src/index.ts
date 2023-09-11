@@ -1,4 +1,5 @@
-import { handler } from "./avatar";
+import { handler as assetsHandler } from "./assets";
+import { handler as avatarHandler } from "./avatar";
 
 export interface Env {
   QUENTI_ENCRYPTION_KEY: string;
@@ -24,8 +25,16 @@ export default {
         headers,
       });
     }
+    if (request.method !== "PUT")
+      return new Response("Method not allowed", { status: 405 });
+
+    const pathname = new URL(request.url).pathname;
+    const handler = pathname.startsWith("/avatar")
+      ? avatarHandler
+      : assetsHandler;
 
     const response = await handler(request, env);
+
     for (const [key, value] of Object.entries(headers)) {
       response.headers.set(key, value);
     }

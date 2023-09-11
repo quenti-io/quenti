@@ -8,17 +8,13 @@ export const handler = async (
   const sub = await getSub(request, env);
   if (sub instanceof Response) return sub;
 
-  // Make sure the body isn't over 5 MB
   const body = await request.arrayBuffer();
-  if (body.byteLength > 5 * 1024 * 1024)
+  if (body.byteLength > 10 * 1024 * 1024)
     return new Response("File too large", { status: 413 });
 
-  const userId = sub;
-  const key = `${userId}/avatar/${Date.now()}.png`;
-
-  await env.USERS_BUCKET.put(key, body, {
+  await env.ASSETS_BUCKET.put(sub, body, {
     httpMetadata: {
-      cacheControl: "public, max-age=31536000",
+      cacheControl: "s-maxage=300 stale-while-revalidate=59",
       contentType: "image/png",
     },
   });
