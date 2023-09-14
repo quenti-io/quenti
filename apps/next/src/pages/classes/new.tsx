@@ -54,6 +54,10 @@ export default function NewClass() {
 
   const create = api.classes.create.useMutation({
     onSuccess: async (data) => {
+      if (!file) {
+        await router.push(`/classes/${data.id}/teachers-onboarding`);
+        return;
+      }
       await uploadLogo.mutateAsync({ classId: data.id });
     },
   });
