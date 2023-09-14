@@ -3,6 +3,7 @@ import Cropper from "react-easy-crop";
 
 import { Modal } from "@quenti/components";
 import type { Rect } from "@quenti/lib/area";
+import { useFileReader } from "@quenti/lib/hooks";
 
 import {
   Box,
@@ -164,16 +165,6 @@ const CropContainer: React.FC<CropContainerProps> = ({ image, onComplete }) => {
   );
 };
 
-type FileReaderMethod = keyof Pick<
-  InstanceType<typeof FileReader>,
-  "readAsText" | "readAsBinaryString" | "readAsDataURL" | "readAsArrayBuffer"
->;
-
-interface UseFileReaderOptions {
-  method: FileReaderMethod;
-  onLoad?: (result: unknown) => void;
-}
-
 const createImage = (url: string) => {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
@@ -182,41 +173,6 @@ const createImage = (url: string) => {
     image.setAttribute("crossOrigin", "anonymous"); // needed to avoid cross-origin issues on CodeSandbox
     image.src = url;
   });
-};
-
-const useFileReader = (options: UseFileReaderOptions) => {
-  const { method = "readAsText", onLoad } = options;
-
-  const [file, setFile] = React.useState<File | null>(null);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<DOMException | null>(null);
-  const [result, setResult] = React.useState<string | ArrayBuffer | null>(null);
-
-  React.useEffect(() => {
-    if (!file && result) {
-      setResult(null);
-    }
-  }, [file, result]);
-
-  React.useEffect(() => {
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadstart = () => setLoading(true);
-    reader.onloadend = () => setLoading(false);
-    reader.onerror = () => setError(reader.error);
-
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      setResult(e.target?.result ?? null);
-      if (onLoad) {
-        onLoad(e.target?.result ?? null);
-      }
-    };
-
-    reader[method](file);
-  }, [file, method, onLoad]);
-
-  return [{ result, error, file, loading }, setFile] as const;
 };
 
 const getCroppedImage = async (src: string, crop: Rect): Promise<string> => {

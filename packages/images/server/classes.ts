@@ -30,7 +30,7 @@ export const getClassAssetUrl = async (
     await S3.send(
       new HeadObjectCommand({
         Bucket: ASSETS_BUCKET,
-        Key: `classes/${classId}/${asset}`,
+        Key: `classes/${classId}/${asset}.png`,
       }),
     );
 

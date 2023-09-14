@@ -20,13 +20,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconPointFilled, IconSchool } from "@tabler/icons-react";
+import { IconPointFilled } from "@tabler/icons-react";
 
 import { AuthedPage } from "../components/authed-page";
 import { SkeletonTab } from "../components/skeleton-tab";
 import { WithFooter } from "../components/with-footer";
 import { useClass } from "../hooks/use-class";
 import { useIsClassTeacher } from "../hooks/use-is-class-teacher";
+import { ClassLogo } from "../modules/classes/class-logo";
 import { getColorFromId } from "../utils/color";
 import { plural } from "../utils/string";
 import { MainLayout } from "./main-layout";
@@ -100,10 +101,9 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
                       h="72px"
                       bg="white"
                       shadow="2xl"
+                      overflow="hidden"
                     >
-                      <Box color="gray.900">
-                        <IconSchool size={36} />
-                      </Box>
+                      <ClassLogo width={72} height={72} url={data?.logoUrl} />
                     </Center>
                   </Skeleton>
                 </Center>

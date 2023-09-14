@@ -5,6 +5,8 @@ import { Prisma } from "@quenti/prisma/client";
 const classSelect = Prisma.validator<Prisma.ClassDefaultArgs["select"]>()({
   id: true,
   name: true,
+  logoUrl: true,
+  bannerUrl: true,
 });
 
 const teacherCountSelect =

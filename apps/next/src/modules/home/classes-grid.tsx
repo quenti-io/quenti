@@ -40,6 +40,7 @@ export const ClassesGrid = () => {
               studySets: class_._count.studySets || 0,
             }}
             for={class_.as}
+            logo={class_.logoUrl}
           />
         ))}
       </Grid>

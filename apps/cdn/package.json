@@ -12,6 +12,7 @@
     "wrangler": "^3.0.0"
   },
   "dependencies": {
+    "is-mobile": "^4.0.0",
     "jose": "^4.14.6"
   }
 }

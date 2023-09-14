@@ -1,4 +1,4 @@
-import { getClassAssetUrl, getResizedUrl } from "@quenti/images/server";
+import { getClassAssetUrl } from "@quenti/images/server";
 
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
@@ -15,10 +15,8 @@ export const uploadLogoCompleteHandler = async ({
 }: UploadLogoCompleteOptions) => {
   await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
 
-  const url = await getClassAssetUrl(input.classId, "logo");
-  if (!url) return;
-
-  const logoUrl = getResizedUrl(url, { width: 128, height: 128, fit: "cover" });
+  const logoUrl = await getClassAssetUrl(input.classId, "logo");
+  if (!logoUrl) return;
 
   await ctx.prisma.class.update({
     where: {
@@ -29,3 +27,5 @@ export const uploadLogoCompleteHandler = async ({
     },
   });
 };
+
+export default uploadLogoCompleteHandler;

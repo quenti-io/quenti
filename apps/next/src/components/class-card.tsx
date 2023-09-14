@@ -14,14 +14,16 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconPointFilled, IconSchool } from "@tabler/icons-react";
+import { IconPointFilled } from "@tabler/icons-react";
 
+import { ClassLogo } from "../modules/classes/class-logo";
 import { getColorFromId } from "../utils/color";
 import { plural } from "../utils/string";
 
 interface ClassCardProps {
   id: string;
   name: string;
+  logo?: string | null;
   data: Widen<
     | { students: number; sections: number }
     | { studySets: number; folders: number }
@@ -33,6 +35,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
   id,
   name,
   data,
+  logo,
   for: for_,
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
@@ -84,19 +87,8 @@ export const ClassCard: React.FC<ClassCardProps> = ({
             rounded="18px"
             p="6px"
           >
-            <Box
-              w="full"
-              h="full"
-              rounded="xl"
-              bg="white"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              shadow="lg"
-            >
-              <Box color="gray.900">
-                <IconSchool size={32} />
-              </Box>
+            <Box w="52px" h="52px" rounded="xl" shadow="lg" overflow="hidden">
+              <ClassLogo width={52} height={52} url={logo} />
             </Box>
           </Box>
         </Flex>
