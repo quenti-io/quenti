@@ -1,4 +1,8 @@
-import { HeadObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectsCommand,
+  HeadObjectCommand,
+  ListObjectsCommand,
+} from "@aws-sdk/client-s3";
 import jwt from "jsonwebtoken";
 
 import { env } from "@quenti/env/server";
@@ -38,4 +42,31 @@ export const getClassAssetUrl = async (
   } catch {
     return null;
   }
+};
+
+export const deleteClassAssets = async (classId: string) => {
+  if (!S3) return;
+
+  const objects = await S3.send(
+    new ListObjectsCommand({
+      Bucket: ASSETS_BUCKET,
+      Prefix: `classes/${classId}/`,
+    }),
+  );
+
+  const toDelete = new Array<{ Key: string }>();
+  if (!objects.Contents?.length) return;
+
+  for (const object of objects.Contents) {
+    toDelete.push({ Key: object.Key! });
+  }
+
+  await S3.send(
+    new DeleteObjectsCommand({
+      Bucket: ASSETS_BUCKET,
+      Delete: {
+        Objects: toDelete,
+      },
+    }),
+  );
 };

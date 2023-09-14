@@ -51,7 +51,11 @@ export default {
           )
         : new Request(assetUrl, request);
 
-      return fetch(imageRequest);
+      const result = await fetch(imageRequest);
+      result.headers.set(
+        "Cache-Control",
+        "s-maxage=300 stale-while-revalidate=59",
+      );
     }
 
     if (request.method !== "PUT")

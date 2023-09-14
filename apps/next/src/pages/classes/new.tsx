@@ -3,9 +3,6 @@ import { useRouter } from "next/router";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { env } from "@quenti/env/client";
-import { dataUrlToBuffer } from "@quenti/images/react/utils";
-import { useFileReader } from "@quenti/lib/hooks";
 import { api } from "@quenti/trpc";
 
 import {
@@ -30,6 +27,7 @@ import { WizardLayout } from "../../components/wizard-layout";
 import { useStudentRedirect } from "../../hooks/use-student-redirect";
 import { getLayout } from "../../layouts/main-layout";
 import { ClassLogo } from "../../modules/classes/class-logo";
+import { useClassLogoUpload } from "../../modules/classes/use-class-logo-upload";
 
 interface CreateClassFormInputs {
   name: string;
@@ -44,43 +42,13 @@ const schema = z.object({
   description: z.string().default("").optional(),
 });
 
-interface FileEvent<T = Element> extends React.FormEvent<T> {
-  target: EventTarget & T;
-}
-
 export default function NewClass() {
   const router = useRouter();
   useStudentRedirect("/home");
 
-  const [{ result }, setFile] = useFileReader({
-    method: "readAsDataURL",
-  });
-
-  const uploadComplete = api.classes.uploadLogoComplete.useMutation({
-    onSuccess: async (_, { classId }) => {
+  const { file, setFile, onInputFile, uploadLogo } = useClassLogoUpload({
+    onComplete: async (classId) => {
       await router.push(`/classes/${classId}/teachers-onboarding`);
-    },
-  });
-
-  const uploadLogo = api.classes.uploadLogo.useMutation({
-    onSuccess: async (jwt, { classId }) => {
-      if (!result || !env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT) return;
-      const buffer = dataUrlToBuffer(result as string);
-
-      const response = await fetch(
-        `${env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT}/assets`,
-        {
-          method: "PUT",
-          body: buffer,
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        },
-      );
-
-      if (response.ok) {
-        await uploadComplete.mutateAsync({ classId });
-      }
     },
   });
 
@@ -96,26 +64,6 @@ export default function NewClass() {
   const {
     formState: { errors },
   } = createMethods;
-
-  const onInputFile = (e: FileEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) {
-      return;
-    }
-
-    const limit = 10 * 1000000; // max limit 10 MB
-    const file = e.target.files[0]!;
-
-    if (file.size > limit) {
-      // onError?.(
-      //   `That file is too large! Max file size is ${limit / 1000000} MB`,
-      // );
-    } else {
-      setFile(file);
-      setTimeout(() => {
-        console.log("FILE", result);
-      }, 100);
-    }
-  };
 
   const onSubmit: SubmitHandler<CreateClassFormInputs> = async (data) => {
     await create.mutateAsync(data);
@@ -141,14 +89,14 @@ export default function NewClass() {
                     minH="64px"
                     bg="white"
                     border="solid 1px"
-                    borderColor={result ? "white" : "gray.200"}
+                    borderColor={file ? "white" : "gray.200"}
                     _dark={{
-                      borderColor: result ? "gray.800" : "white",
+                      borderColor: file ? "gray.800" : "white",
                     }}
                     overflow="hidden"
                   >
                     <ClassLogo
-                      url={result ? (result as string) : undefined}
+                      url={file ? (file as string) : undefined}
                       width={64}
                       height={64}
                       local
@@ -180,10 +128,7 @@ export default function NewClass() {
                           Upload image
                         </Button>
                       </label>
-                      <Button
-                        isDisabled={!result}
-                        onClick={() => setFile(null)}
-                      >
+                      <Button isDisabled={!file} onClick={() => setFile(null)}>
                         Remove
                       </Button>
                     </ButtonGroup>
