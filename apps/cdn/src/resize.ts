@@ -15,9 +15,11 @@ export const resizeToDimension = (
   options.push(`h_${opts.height}`);
   options.push(`c_fill`);
 
-  return `https://res.cloudinary.com/${
+  const response = `https://res.cloudinary.com/${
     env.CLOUDINARY_CLOUD
-  }/image/fetch/${options.join(",")}/${url}`;
+  }/image/fetch/${options.join(",")}/${encodeURIComponent(url)}`;
+
+  return response;
 };
 
 export const isCloudinaryRequest = (req: Request) => {

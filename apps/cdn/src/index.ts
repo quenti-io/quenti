@@ -38,9 +38,12 @@ export default {
         if (!parsedUrl.hostname.endsWith(env.CDN_ROOT_DOMAIN))
           return new Response("Invalid URL", { status: 400 });
 
+        const etag = url.searchParams.get("etag");
+        if (!etag) return new Response("Invalid URL", { status: 400 });
+
         parsedUrl.search = "";
         parsedUrl.hash = "";
-        assetUrl = parsedUrl.toString();
+        assetUrl = parsedUrl.toString() + `?etag=${etag}`;
 
         width = parseInt(url.searchParams.get("w") || "");
         height = parseInt(url.searchParams.get("h") || "");
