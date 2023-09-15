@@ -2,7 +2,7 @@
   "name": "quenti-monorepo",
   "private": true,
   "workspaces": [
-    "apps/*",
+    "apps/next",
     "packages/*"
   ],
   "scripts": {

@@ -58,8 +58,3 @@ yarn-error.log*
 .react-email
 
 .turbo
-
-# Cloudflare
-.dev.vars
-.wrangler
-wrangler.toml
