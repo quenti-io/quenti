@@ -21,6 +21,7 @@ export const thumbhashFromCdn = async (
   );
   // Get the raw rgba data from the image, png encoding won't work
   const image = sharp(buffer)
+    .ensureAlpha()
     .resize(scaledWidth, scaledHeight, { fit: "fill" })
     .raw();
 
