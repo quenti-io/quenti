@@ -38,7 +38,9 @@ export const getClassAssetUrl = async (
       }),
     );
 
-    return `${env.ASSETS_BUCKET_URL}/classes/${classId}/${asset}.png`;
+    return `${
+      env.ASSETS_BUCKET_URL
+    }/classes/${classId}/${asset}.png?etag=${Date.now()}`;
   } catch {
     return null;
   }

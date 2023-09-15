@@ -7,5 +7,5 @@ export const squareCdnLoader = ({
   src: string;
   width: number;
 }) => {
-  return `${env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT}/image/${src}?w=${width}&h=${width}`;
+  return `${env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT}/image/${src}&w=${width}&h=${width}`;
 };
