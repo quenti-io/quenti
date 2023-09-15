@@ -11,7 +11,8 @@
     "@quenti/components": "*",
     "@quenti/env": "*",
     "jsonwebtoken": "^9.0.2",
-    "react-easy-crop": "^5.0.2"
+    "react-easy-crop": "^5.0.2",
+    "thumbhash": "^0.1.1"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.2"

@@ -103,7 +103,12 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
                       shadow="2xl"
                       overflow="hidden"
                     >
-                      <ClassLogo width={72} height={72} url={data?.logoUrl} />
+                      <ClassLogo
+                        width={72}
+                        height={72}
+                        url={data?.logoUrl}
+                        hash={data?.logoHash}
+                      />
                     </Center>
                   </Skeleton>
                 </Center>

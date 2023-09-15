@@ -71,6 +71,7 @@
     "short-unique-id": "^4.4.4",
     "slugify": "^1.6.6",
     "stripe": "^12.18.0",
+    "thumbhash": "^0.1.1",
     "use-fit-text": "^2.4.0",
     "zod": "^3.22.2",
     "zustand": "^4.4.1"

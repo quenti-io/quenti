@@ -7,6 +7,7 @@ export const ASSETS_BUCKET = env.ASSETS_BUCKET_NAME || "assets";
 
 export * from "./avatars";
 export * from "./classes";
+export * from "./thumbhash";
 
 const hasEnv =
   !!env.R2_ACCOUNT_ID &&

@@ -41,6 +41,7 @@ export const ClassesGrid = () => {
             }}
             for={class_.as}
             logo={class_.logoUrl}
+            hash={class_.logoHash}
           />
         ))}
       </Grid>

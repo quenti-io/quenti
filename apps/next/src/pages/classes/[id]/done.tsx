@@ -24,6 +24,7 @@ export default function OnboardingDone() {
           id={data?.id || ""}
           name={data?.name || ""}
           logo={data?.logoUrl || ""}
+          hash={data?.logoHash}
           data={{ students: data?.students, sections: data?.sections?.length }}
           for="Teacher"
         />

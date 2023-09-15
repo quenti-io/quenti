@@ -201,7 +201,9 @@ model Class {
   description String
   orgId       String?
   logoUrl     String?
+  logoHash    String?
   bannerUrl   String?
+  bannerHash  String?
 
   organization Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
   members      ClassMembership[]

@@ -1,4 +1,8 @@
 import Image from "next/image";
+import React from "react";
+import { thumbHashToDataURL } from "thumbhash";
+
+import { decodeBase64 } from "@quenti/lib/bytes";
 
 import { Box, Center } from "@chakra-ui/react";
 
@@ -8,6 +12,7 @@ import { squareCdnLoader } from "../../common/cdn-loaders";
 
 export interface ClassLogoProps {
   url?: string | null;
+  hash?: string | null;
   width: number;
   height: number;
   local?: boolean;
@@ -15,6 +20,7 @@ export interface ClassLogoProps {
 
 export const ClassLogo: React.FC<ClassLogoProps> = ({
   url,
+  hash,
   width,
   height,
   local = false,
@@ -34,6 +40,12 @@ export const ClassLogo: React.FC<ClassLogoProps> = ({
         width={!local ? width : undefined}
         height={!local ? height : undefined}
         fill={local}
+        blurDataURL={
+          hash
+            ? thumbHashToDataURL(new Uint8Array(decodeBase64(hash)))
+            : undefined
+        }
+        placeholder={hash ? "blur" : undefined}
         style={{
           objectFit: "cover",
         }}

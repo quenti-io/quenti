@@ -6,7 +6,9 @@ const classSelect = Prisma.validator<Prisma.ClassDefaultArgs["select"]>()({
   id: true,
   name: true,
   logoUrl: true,
+  logoHash: true,
   bannerUrl: true,
+  bannerHash: true,
 });
 
 const teacherCountSelect =

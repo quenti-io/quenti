@@ -15,5 +15,5 @@
     "server",
     "server/root.ts",
     "../types/next-auth.d.ts"
-  ]
+, "../images/server/thumbhash.ts"  ]
 }
