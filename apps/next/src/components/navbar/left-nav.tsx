@@ -55,10 +55,9 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         align="center"
         justify="space-between"
         className="nav-content__mobile"
-        color="white"
       >
         <HStack as={Link} href="/home" rel="home" ml="2">
-          <Logo boxSize="28px" />
+          <Logo boxSize="24px" />
           <Heading
             as="p"
             fontSize="2xl"
