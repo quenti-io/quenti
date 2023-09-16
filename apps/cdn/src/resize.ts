@@ -10,14 +10,8 @@ export const resizeToDimension = (
   env: Env,
   opts: ResizeOptions,
 ): string => {
-  const options = [];
-  options.push(`w_${opts.width}`);
-  options.push(`h_${opts.height}`);
-  options.push(`c_fill`);
-
-  const response = `https://res.cloudinary.com/${
-    env.CLOUDINARY_CLOUD
-  }/image/fetch/${options.join(",")}/${encodeURIComponent(url)}`;
+  const param = url.includes("?") ? "&" : "?";
+  const response = `https://${env.TWIC_DOMAIN}/${url}${param}twic=v1/cover=${opts.width}x${opts.height}`;
 
   return response;
 };

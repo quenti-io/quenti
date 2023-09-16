@@ -16,7 +16,7 @@ export const getPresignedClassAssetJwt = (
   if (!S3) return "";
 
   return jwt.sign(
-    { sub: `classes/${classId}/${asset}.png` },
+    { sub: `classes/${classId}/${asset}` },
     env.QUENTI_ENCRYPTION_KEY,
     {
       expiresIn: "120s",
@@ -34,13 +34,13 @@ export const getClassAssetUrl = async (
     await S3.send(
       new HeadObjectCommand({
         Bucket: ASSETS_BUCKET,
-        Key: `classes/${classId}/${asset}.png`,
+        Key: `classes/${classId}/${asset}`,
       }),
     );
 
     return `${
       env.ASSETS_BUCKET_URL
-    }/classes/${classId}/${asset}.png?etag=${Date.now()}`;
+    }/classes/${classId}/${asset}?etag=${Date.now()}`;
   } catch {
     return null;
   }

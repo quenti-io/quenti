@@ -14,7 +14,7 @@ export const handler = async (
     return new Response("File too large", { status: 413 });
 
   const userId = sub;
-  const key = `${userId}/avatar/${Date.now()}.png`;
+  const key = `${userId}/avatar/${Date.now()}`;
 
   await env.USERS_BUCKET.put(key, body, {
     httpMetadata: {

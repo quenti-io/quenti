@@ -5,7 +5,7 @@ import { resizeToDimension } from "./resize";
 export interface Env {
   QUENTI_ENCRYPTION_KEY: string;
   CORS_ALLOWED_ORIGINS: string;
-  CLOUDINARY_CLOUD?: string;
+  TWIC_DOMAIN?: string;
   CDN_ROOT_DOMAIN: string;
   // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
   USERS_BUCKET: R2Bucket;
@@ -51,7 +51,7 @@ export default {
         return new Response("Malformed URL", { status: 400 });
       }
 
-      const imageRequest = env.CLOUDINARY_CLOUD
+      const imageRequest = env.TWIC_DOMAIN
         ? new Request(
             resizeToDimension(assetUrl, env, { width, height }),
             request,
