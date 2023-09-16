@@ -3762,6 +3762,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jitsu/nextjs@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "@jitsu/nextjs@npm:3.1.5"
+  dependencies:
+    "@jitsu/sdk-js": ^3.1.5
+    cookie: ^0.5.0
+  peerDependencies:
+    next: ^10.0.8 || ^11.0 || ^12.0
+    react: 15.x || 16.x || 17.x || 18.x
+  checksum: 22e01e39508911bac05433b3af7ee350ab05e3258493fcf91c94faf72f30559a065e739356b32dad9def0876cbd73a2374a1043c12d749e041cf283fd410b7e8
+  languageName: node
+  linkType: hard
+
+"@jitsu/sdk-js@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "@jitsu/sdk-js@npm:3.1.5"
+  checksum: 584ecd16201ca75fa74df9addc24b6b66f515653ba88d571f94ffb8c08dfe722478d301315102ad3d0cb527bc802a47e68de2a72ce23f3c5e703c72b5881c3a5
+  languageName: node
+  linkType: hard
+
 "@jridgewell/gen-mapping@npm:^0.1.0":
   version: 0.1.1
   resolution: "@jridgewell/gen-mapping@npm:0.1.1"
@@ -5613,6 +5633,7 @@ __metadata:
     "@highlight-run/next": ^4.1.0
     "@highlight-run/react": ^3.2.1
     "@hookform/resolvers": ^3.1.1
+    "@jitsu/nextjs": ^3.1.5
     "@next-auth/prisma-adapter": ^1.0.7
     "@planetscale/database": ^1.11.0
     "@quenti/auth": "*"

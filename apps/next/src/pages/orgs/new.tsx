@@ -25,6 +25,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { PageWrapper } from "../../common/page-wrapper";
 import { WizardLayout } from "../../components/wizard-layout";
 import { getLayout } from "../../layouts/main-layout";
+import { useTelemetry } from "../../lib/telemetry";
 import { ORGANIZATION_ICONS } from "../../utils/icons";
 
 const schema = z.object({
@@ -43,9 +44,15 @@ interface NewOrganizationFormInput {
 export default function NewOrganization() {
   const utils = api.useContext();
   const router = useRouter();
+  const { event } = useTelemetry();
 
   const create = api.organizations.create.useMutation({
     onSuccess: async (data) => {
+      void event("org_created", {
+        id: data.id,
+        name: data.name,
+      });
+
       await utils.user.me.invalidate();
       await router.push(`/orgs/${data.id}/members-onboarding`);
     },

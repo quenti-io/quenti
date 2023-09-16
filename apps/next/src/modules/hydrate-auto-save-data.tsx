@@ -4,6 +4,7 @@ import React from "react";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
 import { useLoading } from "../hooks/use-loading";
+import { useTelemetry } from "../lib/telemetry";
 import {
   type SetEditorStore,
   SetEditorStoreContext,
@@ -29,12 +30,20 @@ const ContextLayer: React.FC<
     data: RouterOutputs["autoSave"]["get"];
   }>
 > = ({ data, children }) => {
+  const { event } = useTelemetry();
+
   const router = useRouter();
   const create = api.studySets.createFromAutosave.useMutation({
     onError: (data) => {
       storeRef.current!.getState().setSaveError(data.message);
     },
     onSuccess: async (data) => {
+      void event("set_created", {
+        id: data.id,
+        title: data.title,
+        visibility: data.visibility,
+        terms: data.terms.length,
+      });
       await router.push(`/${data.id}`);
     },
   });

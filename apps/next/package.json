@@ -23,6 +23,7 @@
     "@highlight-run/next": "^4.1.0",
     "@highlight-run/react": "^3.2.1",
     "@hookform/resolvers": "^3.1.1",
+    "@jitsu/nextjs": "^3.1.5",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@planetscale/database": "^1.11.0",
     "@quenti/auth": "*",

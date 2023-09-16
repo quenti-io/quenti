@@ -8,6 +8,7 @@ import { api } from "@quenti/trpc";
 import { Button, ButtonGroup, Input, Stack } from "@chakra-ui/react";
 
 import { menuEventChannel } from "../events/menu";
+import { useTelemetry } from "../lib/telemetry";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 
 export interface CreateFolderModalProps {
@@ -21,6 +22,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   onClose,
   childSetId,
 }) => {
+  const { event } = useTelemetry();
   const router = useRouter();
   const session = useSession();
 
@@ -29,6 +31,10 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
 
   const createFolder = api.folders.create.useMutation({
     onSuccess: async (data) => {
+      void event("folder_created", {
+        id: data.id,
+      });
+
       if (!childSetId) {
         onClose();
         await router.push(

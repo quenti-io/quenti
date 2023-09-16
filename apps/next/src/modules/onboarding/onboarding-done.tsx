@@ -2,18 +2,22 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
+import { useTelemetry } from "../../lib/telemetry";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper, useNextStep } from "./present-wrapper";
 
 export const OnboardingDone = () => {
+  const { event } = useTelemetry();
   const next = useNextStep();
 
   const [startedLoading, setStartedLoading] = React.useState(false);
 
   const completeOnboarding = api.user.completeOnboarding.useMutation({
     onSuccess: async () => {
-      const event = new Event("visibilitychange");
-      document.dispatchEvent(event);
+      void event("onboarding_completed", {});
+
+      const docEvent = new Event("visibilitychange");
+      document.dispatchEvent(docEvent);
 
       await new Promise((resolve) => setTimeout(resolve, 500));
       next();
