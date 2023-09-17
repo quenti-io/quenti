@@ -11,7 +11,7 @@ export const env = createEnv({
     NEXT_PUBLIC_BETTERUPTIME_ID: z.string().optional(),
     NEXT_PUBLIC_STRIPE_PUBLIC_KEY: z.string().optional(),
     NEXT_PUBLIC_CDN_WORKER_ENDPOINT: z.string().url().optional(),
-    NEXT_PUBLIC_TELEMETRY_HOST: z.string().url().optional(),
+    NEXT_PUBLIC_TELEMETRY_HOST: z.string().optional(),
     NEXT_PUBLIC_TELEMETRY_KEY: z.string().optional(),
   },
   runtimeEnv: {

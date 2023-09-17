@@ -1,10 +1,10 @@
 import React from "react";
 
-import Icon, { type IconProps } from "@chakra-ui/icon";
+import { type ChakraProps, chakra } from "@chakra-ui/react";
 
-export const Logo: React.FC<IconProps> = (props) => {
+export const Logo: React.FC<ChakraProps> = (props) => {
   return (
-    <Icon
+    <chakra.svg
       viewBox="0 0 132 132"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -37,6 +37,6 @@ export const Logo: React.FC<IconProps> = (props) => {
         stroke-linecap="round"
         stroke-linejoin="round"
       />
-    </Icon>
+    </chakra.svg>
   );
 };

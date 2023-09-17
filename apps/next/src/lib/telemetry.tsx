@@ -1,5 +1,4 @@
-import { JitsuContext, JitsuProvider, createClient } from "@jitsu/nextjs";
-import { type EventPayload, type UserProps } from "@jitsu/sdk-js";
+import { JitsuProvider, useJitsu } from "@jitsu/jitsu-react";
 import { useSession } from "next-auth/react";
 import React from "react";
 
@@ -53,37 +52,39 @@ export type Events = {
 export const TELEMETRY_ENABLED =
   !!env.NEXT_PUBLIC_TELEMETRY_HOST && !!env.NEXT_PUBLIC_TELEMETRY_KEY;
 
-export const jitsuClient = TELEMETRY_ENABLED
-  ? createClient({
-      tracking_host: env.NEXT_PUBLIC_TELEMETRY_HOST!,
-      key: env.NEXT_PUBLIC_TELEMETRY_KEY!,
-    })
-  : null;
-
 export const TelemtryProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  if (!jitsuClient) return <>{children}</>;
+  if (!TELEMETRY_ENABLED) return <>{children}</>;
 
-  return <JitsuProvider client={jitsuClient}>{children}</JitsuProvider>;
+  return (
+    <JitsuProvider
+      options={{
+        host: env.NEXT_PUBLIC_TELEMETRY_HOST || "",
+        writeKey: env.NEXT_PUBLIC_TELEMETRY_KEY,
+        disabled: !TELEMETRY_ENABLED,
+      }}
+    >
+      {children}
+    </JitsuProvider>
+  );
 };
 
 export const IdentifyUser = () => {
-  if (!jitsuClient) return null;
-  return <InnerIdentify />;
-};
-
-const InnerIdentify = () => {
-  const { id } = useJitsuInternal_();
   const { data: session } = useSession();
+  const { analytics } = useJitsu();
 
   React.useEffect(() => {
-    if (!session?.user) return;
-    void id({
-      id: session.user.id,
+    if (!TELEMETRY_ENABLED || !session?.user) return;
+    void analytics.identify(session.user.id, {
+      name: session.user.name,
+      username: session.user.username,
       email: session.user.email!,
+      flags: session.user.flags,
+      organizationId: session.user.organizationId,
+      banned: session.user.banned,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user]);
@@ -91,34 +92,16 @@ const InnerIdentify = () => {
   return null;
 };
 
-const useJitsuInternal_ = () => {
-  const client = React.useContext(JitsuContext);
-
-  const id = React.useCallback(
-    (userData: UserProps, doNotSendEvent?: boolean): Promise<void> =>
-      client?.id(userData, doNotSendEvent),
-    [client],
-  );
-
-  const track = React.useCallback(
-    (typeName: string, payload?: EventPayload): Promise<void> =>
-      client?.track(typeName, payload),
-    [client],
-  );
-
-  return { id, track };
-};
-
 export const useTelemetry = () => {
-  const { id, track } = useJitsuInternal_();
+  const { analytics } = useJitsu();
 
   const event = async <T extends keyof Events>(name: T, data: Events[T]) => {
     if (!TELEMETRY_ENABLED) {
       console.log(`Local telemetry | ${name}:`, data);
       return;
     }
-    await track(name, data);
+    await analytics.track(name, data);
   };
 
-  return { id, event };
+  return { event };
 };
