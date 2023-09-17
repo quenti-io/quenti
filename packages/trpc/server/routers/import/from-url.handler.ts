@@ -11,7 +11,7 @@ type Return = {
   importFromUrl: (
     url: string,
     userId: string,
-  ) => Promise<{ createdSetId: string }>;
+  ) => Promise<{ createdSetId: string; title: string; terms: number }>;
 };
 
 export const fromUrlHandler = async ({ ctx, input }: FromUrlOptions) => {

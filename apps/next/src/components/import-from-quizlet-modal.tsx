@@ -24,6 +24,7 @@ import {
 import { QUIZLET_IMPORT_REGEXP } from "../../../../packages/lib/constants/characters";
 import { effectChannel } from "../events/effects";
 import { queryEventChannel } from "../events/query";
+import { useTelemetry } from "../lib/telemetry";
 import styles from "./glow-wrapper.module.css";
 
 export interface ImportFromQuizletModalProps {
@@ -76,10 +77,12 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
   onClose,
   edit = false,
 }) => {
+  const { event } = useTelemetry();
   const router = useRouter();
 
   const [_url, setUrl] = React.useState("");
   const [error, setError] = React.useState("");
+  const [importStarted, setImportStarted] = React.useState<number | null>(null);
 
   const attemptFormat = (u: string) => {
     // Remove the scheme if it exists
@@ -107,6 +110,18 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
   const fromUrl = api.import.fromUrl.useMutation({
     onSuccess: async (data) => {
       if (data) {
+        const finished = Date.now();
+        const elapsed = importStarted ? finished - importStarted : 0;
+
+        void event("import_completed", {
+          setId: data.createdSetId,
+          title: data.title,
+          terms: data.terms,
+          origin: url,
+          source: "quizlet",
+          elapsed,
+        });
+
         await router.push(
           !edit ? `/${data.createdSetId}` : `/${data.createdSetId}/edit`,
         );
@@ -247,6 +262,7 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
                     isDisabled={!url || invalid}
                     onClick={async () => {
                       setError("");
+                      setImportStarted(Date.now());
                       await fromUrl.mutateAsync({
                         url,
                       });

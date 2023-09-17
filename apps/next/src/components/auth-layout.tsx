@@ -21,6 +21,7 @@ import {
 import { IconBrandGoogle } from "@tabler/icons-react";
 
 import { Logo } from "../../../../packages/components/logo";
+import { useTelemetry } from "../lib/telemetry";
 import { getSafeRedirectUrl } from "../lib/urls";
 import { Loading } from "./loading";
 
@@ -34,6 +35,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
   onUserExists,
 }) => {
   const router = useRouter();
+  const { event } = useTelemetry();
   const { status, data: session } = useSession();
   const callbackUrl =
     typeof router.query.callbackUrl == "string"
@@ -99,7 +101,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
               }}
             >
               <VStack spacing="8">
-                <Logo width={20} height={20} />
+                <Logo width={24} height={24} />
                 <Heading fontSize="24px" textAlign="center">
                   {mode == "signup"
                     ? "Create your Quenti account"
@@ -111,6 +113,12 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                     fontSize="sm"
                     leftIcon={<IconBrandGoogle size={18} strokeWidth={4} />}
                     onClick={async () => {
+                      if (mode == "signup") {
+                        await event("signup", {});
+                      } else {
+                        await event("login", {});
+                      }
+
                       await signIn("google", {
                         callbackUrl: safeCallbackUrl,
                         redirect: false,

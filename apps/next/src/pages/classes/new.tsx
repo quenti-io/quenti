@@ -26,6 +26,7 @@ import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { WizardLayout } from "../../components/wizard-layout";
 import { useStudentRedirect } from "../../hooks/use-student-redirect";
 import { getLayout } from "../../layouts/main-layout";
+import { useTelemetry } from "../../lib/telemetry";
 import { ClassLogo } from "../../modules/classes/class-logo";
 import { useClassLogoUpload } from "../../modules/classes/use-class-logo-upload";
 
@@ -44,10 +45,17 @@ const schema = z.object({
 
 export default function NewClass() {
   const router = useRouter();
+  const { event } = useTelemetry();
+
   useStudentRedirect("/home");
+
+  const sendEvent = (id: string, name: string) => {
+    void event("class_created", { id, name });
+  };
 
   const { file, setFile, onInputFile, uploadLogo } = useClassLogoUpload({
     onComplete: async (classId) => {
+      sendEvent(classId, create.variables?.name || "");
       await router.push(`/classes/${classId}/teachers-onboarding`);
     },
   });
@@ -55,6 +63,7 @@ export default function NewClass() {
   const create = api.classes.create.useMutation({
     onSuccess: async (data) => {
       if (!file) {
+        sendEvent(data.id, data.name);
         await router.push(`/classes/${data.id}/teachers-onboarding`);
         return;
       }

@@ -72,6 +72,8 @@ export const createFromAutosaveHandler = async ({
     },
     select: {
       id: true,
+      title: true,
+      visibility: true,
       terms: {
         select: {
           id: true,

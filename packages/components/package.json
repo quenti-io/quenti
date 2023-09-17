@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@chakra-ui/react": "^2.8.0",
+    "@chakra-ui/react": "^2.8.1",
     "@quenti/branding": "*",
     "@quenti/env": "*",
     "@quenti/interfaces": "*",
     "@quenti/lib": "*",
-    "@tabler/icons-react": "^2.32.0",
+    "@tabler/icons-react": "^2.34.0",
     "lodash.merge": "^4.6.2",
     "next": "^13.4.19",
     "next-seo": "^6.1.0"

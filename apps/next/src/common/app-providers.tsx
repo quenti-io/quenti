@@ -1,11 +1,15 @@
+import { HighlightInit } from "@highlight-run/next/client";
 import { Analytics } from "@vercel/analytics/react";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps as NextAppProps } from "next/app";
 
+import { env } from "@quenti/env/client";
+
 import { ChakraProvider } from "@chakra-ui/react";
 
 import { theme } from "../lib/chakra-theme";
+import { IdentifyUser, TelemtryProvider } from "../lib/telemetry";
 import { HistoryProvider } from "../modules/history-provider";
 
 export { reportWebVitals } from "next-axiom";
@@ -28,21 +32,34 @@ type AppPropsWithChildren = AppProps & { children: React.ReactNode };
 export const AppProviders = (props: AppPropsWithChildren) => {
   return (
     <>
-      <ChakraProvider
-        theme={theme}
-        toastOptions={{
-          defaultOptions: {
-            containerStyle: {
-              marginBottom: "2rem",
-              marginTop: "-1rem",
+      <TelemtryProvider>
+        <HighlightInit
+          excludedHostnames={["localhost"]}
+          projectId={env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID}
+          tracingOrigins
+          networkRecording={{
+            enabled: true,
+            recordHeadersAndBody: true,
+          }}
+          environment={env.NEXT_PUBLIC_DEPLOYMENT}
+        />
+        <ChakraProvider
+          theme={theme}
+          toastOptions={{
+            defaultOptions: {
+              containerStyle: {
+                marginBottom: "2rem",
+                marginTop: "-1rem",
+              },
             },
-          },
-        }}
-      >
-        <SessionProvider session={props.pageProps.session ?? undefined}>
-          <HistoryProvider>{props.children}</HistoryProvider>
-        </SessionProvider>
-      </ChakraProvider>
+          }}
+        >
+          <SessionProvider session={props.pageProps.session ?? undefined}>
+            <IdentifyUser />
+            <HistoryProvider>{props.children}</HistoryProvider>
+          </SessionProvider>
+        </ChakraProvider>
+      </TelemtryProvider>
       <Analytics />
     </>
   );
