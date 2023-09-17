@@ -1,4 +1,5 @@
-import { JitsuProvider, useJitsu } from "@jitsu/jitsu-react";
+import { JitsuContext, JitsuProvider } from "@jitsu/jitsu-react";
+import { emptyAnalytics } from "@jitsu/js";
 import { useSession } from "next-auth/react";
 import React from "react";
 
@@ -72,9 +73,19 @@ export const TelemtryProvider = ({
   );
 };
 
+const useJitsuInternal_ = () => {
+  const instance = React.useContext(JitsuContext);
+
+  if (!TELEMETRY_ENABLED) {
+    return { analytics: emptyAnalytics };
+  } else if (instance?.analytics) return instance;
+
+  return { analytics: emptyAnalytics };
+};
+
 export const IdentifyUser = () => {
   const { data: session } = useSession();
-  const { analytics } = useJitsu();
+  const { analytics } = useJitsuInternal_();
 
   React.useEffect(() => {
     if (!TELEMETRY_ENABLED || !session?.user) return;
@@ -93,7 +104,7 @@ export const IdentifyUser = () => {
 };
 
 export const useTelemetry = () => {
-  const { analytics } = useJitsu();
+  const { analytics } = useJitsuInternal_();
 
   const event = async <T extends keyof Events>(name: T, data: Events[T]) => {
     if (!TELEMETRY_ENABLED) {
