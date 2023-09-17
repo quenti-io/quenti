@@ -101,16 +101,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
               }}
             >
               <VStack spacing="8">
-                <Center
-                  w="24"
-                  h="24"
-                  rounded="full"
-                  bgGradient="linear-gradient(to-tr, blue.400 50%, blue.200)"
-                  shadow="xl"
-                  color="white"
-                >
-                  <Logo width={14} height={14} />
-                </Center>
+                <Logo width={24} height={24} />
                 <Heading fontSize="24px" textAlign="center">
                   {mode == "signup"
                     ? "Create your Quenti account"

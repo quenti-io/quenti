@@ -1,13 +1,25 @@
+import { motion } from "framer-motion";
 import React from "react";
 
 import { BODY_COPY_BASE } from "@quenti/branding";
 import { HeadSeo } from "@quenti/components";
 
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { Button, Heading, Text, VStack } from "@chakra-ui/react";
 
 import { Logo } from "../../../../../packages/components/logo";
 import { useTelemetry } from "../../lib/telemetry";
 import { PresentWrapper, useNextStep } from "./present-wrapper";
+
+const ghost = {
+  transition: {
+    repeat: Infinity,
+    duration: 5,
+    ease: "backInOut",
+  },
+  animate: {
+    translateY: [0, -20, 0],
+  },
+};
 
 export const OnboardingIntro = () => {
   const { event } = useTelemetry();
@@ -39,16 +51,9 @@ const Intro = () => {
 
   return (
     <VStack spacing={6} textAlign="center">
-      <Center
-        w="24"
-        h="24"
-        rounded="full"
-        bgGradient="linear-gradient(to-tr, blue.400 50%, blue.200)"
-        shadow="xl"
-        color="white"
-      >
-        <Logo width={14} height={14} />
-      </Center>
+      <motion.div {...ghost}>
+        <Logo width={24} height={24} />
+      </motion.div>
       <Heading size="3xl">Welcome to Quenti</Heading>
       <Text fontWeight={500}>{BODY_COPY_BASE}</Text>
       <Button mt="4" w="72" size="lg" onClick={next}>
