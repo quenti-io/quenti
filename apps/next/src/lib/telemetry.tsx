@@ -53,7 +53,7 @@ export type Events = {
 export const TELEMETRY_ENABLED =
   !!env.NEXT_PUBLIC_TELEMETRY_HOST && !!env.NEXT_PUBLIC_TELEMETRY_KEY;
 
-export const TelemtryProvider = ({
+export const TelemetryProvider = ({
   children,
 }: {
   children: React.ReactNode;
