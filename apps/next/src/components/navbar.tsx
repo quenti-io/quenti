@@ -20,12 +20,12 @@ import {
 import { IconMenu, IconX } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
+import LeftNav from "./navbar/left-nav";
 
 const ImportFromQuizletModal = dynamic(
   () => import("./import-from-quizlet-modal"),
   { ssr: false },
 );
-const LeftNav = dynamic(() => import("./navbar/left-nav"), { ssr: false });
 const MobileMenu = dynamic(() => import("./navbar/mobile-menu"), {
   ssr: false,
 });
