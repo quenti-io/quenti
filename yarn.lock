@@ -1316,6 +1316,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@calcom/embed-core@npm:1.3.2":
+  version: 1.3.2
+  resolution: "@calcom/embed-core@npm:1.3.2"
+  checksum: 4af84c7c4b2cefcc27e44d6743132de834a92e6229eb2a57bcb664f7199e139f21aff46b9b7a1dfe1c47c5941450268a96bf3fa432b3d9dd3b300ef269110634
+  languageName: node
+  linkType: hard
+
+"@calcom/embed-react@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@calcom/embed-react@npm:1.3.0"
+  dependencies:
+    "@calcom/embed-core": 1.3.2
+    "@calcom/embed-snippet": 1.1.2
+  peerDependencies:
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: f0c544fbf450e679dde98a53d4797073e48263e0587ddc9c0fc25b3788929a30367075074665796881cdcf6dbb01908043baf5e78362e54224628f9485d8ce9d
+  languageName: node
+  linkType: hard
+
+"@calcom/embed-snippet@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@calcom/embed-snippet@npm:1.1.2"
+  dependencies:
+    "@calcom/embed-core": 1.3.2
+  checksum: 362024b27cbbf91143447b36ab30e0b0fa135ed299fa40598e9c61b3bcc642a75f63e5081bc6c8653c4232bedea54e59e4d2199514b3a532c07cf5340ca909a5
+  languageName: node
+  linkType: hard
+
 "@chakra-ui/accordion@npm:2.3.1":
   version: 2.3.1
   resolution: "@chakra-ui/accordion@npm:2.3.1"
@@ -5850,6 +5879,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/website@workspace:packages/website"
   dependencies:
+    "@calcom/embed-react": ^1.3.0
     "@chakra-ui/react": ^2.8.1
     "@quenti/branding": "*"
     "@quenti/components": "*"

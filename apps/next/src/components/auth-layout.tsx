@@ -148,6 +148,15 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                         textDecoration: "underline",
                       }}
                     >
+                      Privacy Policy
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      href="/terms"
+                      _hover={{
+                        textDecoration: "underline",
+                      }}
+                    >
                       Terms of Service
                     </Link>
                     .

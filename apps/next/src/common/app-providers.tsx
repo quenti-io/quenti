@@ -60,7 +60,13 @@ export const AppProviders = (props: AppPropsWithChildren) => {
           </SessionProvider>
         </ChakraProvider>
       </TelemtryProvider>
-      <Analytics />
+      <Analytics
+        mode={
+          env.NEXT_PUBLIC_DEPLOYMENT == "production"
+            ? "production"
+            : "development"
+        }
+      />
     </>
   );
 };

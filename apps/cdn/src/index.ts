@@ -15,7 +15,7 @@ export interface Env {
 const corsHeaders = (origins = "*") => ({
   "Access-Control-Allow-Origin": origins,
   "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
-  "Access-Control-Allow-Headers": "Authorization",
+  "Access-Control-Allow-Headers": "*",
 });
 
 // eslint-disable-next-line import/no-anonymous-default-export
