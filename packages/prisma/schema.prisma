@@ -102,6 +102,7 @@ model User {
   classBans      ClassBan[]
 
   @@index([organizationId])
+  @@index([type])
 }
 
 model VerificationToken {
