@@ -8,20 +8,36 @@ import { api } from "@quenti/trpc";
 import {
   Box,
   Button,
+  Center,
+  Flex,
   HStack,
+  Heading,
   Input,
   InputGroup,
   InputLeftElement,
   Skeleton,
+  SkeletonText,
   SlideFade,
   Stack,
   Tag,
+  Text,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconEdit, IconPlus, IconSearch, IconUserX } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconAt,
+  IconCircleDot,
+  IconDiscountCheck,
+  IconEdit,
+  IconPlus,
+  IconSearch,
+  IconUserX,
+} from "@tabler/icons-react";
 
 import { MemberComponent } from "../../../components/member-component";
+import { organizationIcon } from "../../../utils/icons";
 import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
@@ -29,12 +45,14 @@ import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationWelcome } from "../organization-welcome";
 import { RemoveMemberModal } from "../remove-member-modal";
 import { getBaseDomain } from "../utils/get-base-domain";
+import { useOnboardingStep } from "../utils/use-onboarding-step";
 
 export const OrganizationMembers = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: session } = useSession();
   const isUpgraded = router.query.upgrade === "success";
+  const onboardingStep = useOnboardingStep();
 
   const { data: org } = api.organizations.get.useQuery(
     { id },
@@ -43,6 +61,8 @@ export const OrganizationMembers = () => {
     },
   );
 
+  const isLoaded = !!org;
+
   const me = org
     ? org.members.find((m) => m.userId == session?.user?.id)
     : undefined;
@@ -50,6 +70,8 @@ export const OrganizationMembers = () => {
     ? org.members.filter((m) => m.userId != session?.user?.id)
     : [];
   const pending = org ? org.pendingInvites : [];
+
+  const domain = getBaseDomain(org);
 
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [editMember, setEditMember] = React.useState<string | undefined>();
@@ -102,175 +124,251 @@ export const OrganizationMembers = () => {
     setRemoveMember(id);
   }, []);
 
+  const Icon = organizationIcon(org?.icon || 0);
+
   const borderColor = useColorModeValue("gray.200", "gray.700");
+  const mutedColor = useColorModeValue("gray.700", "gray.300");
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
-    <Stack spacing="6" pb="20">
-      {org && isUpgraded && org.published && <OrganizationWelcome />}
-      {org && (
-        <>
-          <InviteMemberModal
-            isOpen={inviteModalOpen}
-            onClose={() => setInviteModalOpen(false)}
-            orgId={org.id}
-            token={org.inviteToken?.token}
-            domain={getBaseDomain(org)!.requestedDomain}
-          />
-          <EditMemberModal
-            isOpen={!!editMember}
-            onClose={() => setEditMember(undefined)}
-            id={editMember || ""}
-            role={
-              editMemberType == "user"
-                ? org.members.find((m) => m.id == editMember)?.role || "Member"
-                : org.pendingInvites.find((m) => m.id == editMember)?.role ||
-                  "Member"
-            }
-            type={editMemberType}
-          />
-          <RemoveMemberModal
-            isOpen={!!removeMember}
-            onClose={() => setRemoveMember(undefined)}
-            id={removeMember || ""}
-            type={removeMemberType}
-          />
-        </>
-      )}
-      <HStack>
-        <Skeleton rounded="md" fitContent isLoaded={!!org} w="full">
-          <InputGroup bg={menuBg} shadow="sm" rounded="md">
-            <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
-              <IconSearch size={18} />
-            </InputLeftElement>
-            <Input
-              placeholder={`Search ${plural(
-                org?.members.length || 0,
-                "member",
-              )}`}
-              pl="44px"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </InputGroup>
+    <Stack spacing="10" pb="20">
+      <HStack spacing="6">
+        <Skeleton isLoaded={isLoaded} fitContent rounded="full">
+          <Center w="16" h="16" rounded="full" bg="blue.400">
+            <Icon size={32} color="white" />
+          </Center>
         </Skeleton>
-        <OrganizationAdminOnly>
-          <Button
-            leftIcon={<IconPlus size={18} />}
-            onClick={() => setInviteModalOpen(true)}
-          >
-            Add
-          </Button>
-        </OrganizationAdminOnly>
+        <Stack spacing={onboardingStep ? 2 : 0} flex="1" overflow="hidden">
+          <Flex h="43.2px" alignItems="center" w="full">
+            <SkeletonText
+              isLoaded={isLoaded}
+              fitContent
+              noOfLines={1}
+              skeletonHeight="36px"
+              maxW="full"
+            >
+              <HStack w="full">
+                <Heading
+                  overflow="hidden"
+                  whiteSpace="nowrap"
+                  textOverflow="ellipsis"
+                  maxW="full"
+                >
+                  {org?.name || "Loading..."}
+                </Heading>
+                {org?.published ? (
+                  <Box color="blue.300">
+                    <Tooltip label="Verified organization">
+                      <IconDiscountCheck aria-label="Verified" />
+                    </Tooltip>
+                  </Box>
+                ) : (
+                  <Box color="gray.500">
+                    <Tooltip label="Not published">
+                      <IconCircleDot aria-label="Not published" />
+                    </Tooltip>
+                  </Box>
+                )}
+              </HStack>
+            </SkeletonText>
+          </Flex>
+          {isLoaded && onboardingStep && (
+            <Button
+              leftIcon={<IconArrowRight />}
+              w="max"
+              size="sm"
+              onClick={() => {
+                void router.push(`/orgs/${id}/${onboardingStep}`);
+              }}
+            >
+              Continue setup
+            </Button>
+          )}
+          {domain?.domain && (
+            <Flex h="21px" alignItems="center">
+              <SkeletonText
+                noOfLines={1}
+                fitContent
+                w="max-content"
+                isLoaded={isLoaded}
+                skeletonHeight="10px"
+              >
+                <HStack spacing="1" color={mutedColor}>
+                  <IconAt size="16" />
+                  <Text fontSize="sm">{domain?.domain}</Text>
+                </HStack>
+              </SkeletonText>
+            </Flex>
+          )}
+        </Stack>
       </HStack>
-      {org ? (
-        <SlideFade in={!!org} offsetY="20px">
+      <Stack spacing="6">
+        {org && isUpgraded && org.published && <OrganizationWelcome />}
+        {org && (
+          <>
+            <InviteMemberModal
+              isOpen={inviteModalOpen}
+              onClose={() => setInviteModalOpen(false)}
+              orgId={org.id}
+              token={org.inviteToken?.token}
+              domain={getBaseDomain(org)!.requestedDomain}
+            />
+            <EditMemberModal
+              isOpen={!!editMember}
+              onClose={() => setEditMember(undefined)}
+              id={editMember || ""}
+              role={
+                editMemberType == "user"
+                  ? org.members.find((m) => m.id == editMember)?.role ||
+                    "Member"
+                  : org.pendingInvites.find((m) => m.id == editMember)?.role ||
+                    "Member"
+              }
+              type={editMemberType}
+            />
+            <RemoveMemberModal
+              isOpen={!!removeMember}
+              onClose={() => setRemoveMember(undefined)}
+              id={removeMember || ""}
+              type={removeMemberType}
+            />
+          </>
+        )}
+        <HStack>
+          <Skeleton rounded="md" fitContent isLoaded={!!org} w="full">
+            <InputGroup bg={menuBg} shadow="sm" rounded="md">
+              <InputLeftElement pointerEvents="none" pl="2" color="gray.500">
+                <IconSearch size={18} />
+              </InputLeftElement>
+              <Input
+                placeholder={`Search ${plural(
+                  org?.members.length || 0,
+                  "member",
+                )}`}
+                pl="44px"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </InputGroup>
+          </Skeleton>
+          <OrganizationAdminOnly>
+            <Button
+              leftIcon={<IconPlus size={18} />}
+              onClick={() => setInviteModalOpen(true)}
+            >
+              Add
+            </Button>
+          </OrganizationAdminOnly>
+        </HStack>
+        {org ? (
+          <SlideFade in={!!org} offsetY="20px">
+            <Box
+              border="1px solid"
+              rounded="lg"
+              borderColor={borderColor}
+              bg={menuBg}
+            >
+              {me && filterFn(me) && (
+                <MemberComponent
+                  id={me.id}
+                  email={me.user.email}
+                  user={me.user}
+                  isMe
+                  additionalTags={
+                    <>
+                      {me.role !== "Member" && (
+                        <Tag
+                          size="sm"
+                          colorScheme={me.role == "Owner" ? "purple" : "gray"}
+                        >
+                          {me.role}
+                        </Tag>
+                      )}
+                    </>
+                  }
+                />
+              )}
+              {others.filter(filterFn).map((m) => (
+                <MemberComponent
+                  key={m.user.id}
+                  id={m.id}
+                  email={m.user.email}
+                  user={m.user}
+                  additionalTags={
+                    <>
+                      {m.role !== "Member" && (
+                        <Tag
+                          size="sm"
+                          colorScheme={m.role == "Owner" ? "purple" : "gray"}
+                        >
+                          {m.role}
+                        </Tag>
+                      )}
+                    </>
+                  }
+                  canManage={canManage(m.role)}
+                  actions={[
+                    {
+                      label: "Edit",
+                      icon: IconEdit,
+                      onClick: editMemberCallback,
+                    },
+                    {
+                      label: "Remove",
+                      icon: IconUserX,
+                      onClick: removeMemberCallback,
+                      destructive: true,
+                    },
+                  ]}
+                />
+              ))}
+              {pending.filter(pendingFilterFn).map((m) => (
+                <MemberComponent
+                  key={m.id}
+                  id={m.id}
+                  email={m.email}
+                  user={m.user ?? undefined}
+                  canManage={canManage("Member")}
+                  pending
+                  actions={[
+                    {
+                      label: "Edit",
+                      icon: IconEdit,
+                      onClick: editInviteCallback,
+                    },
+                    {
+                      label: "Remove",
+                      icon: IconUserX,
+                      onClick: removeInviteCallback,
+                    },
+                  ]}
+                />
+              ))}
+            </Box>
+          </SlideFade>
+        ) : (
           <Box
             border="1px solid"
             rounded="lg"
             borderColor={borderColor}
             bg={menuBg}
           >
-            {me && filterFn(me) && (
+            {Array.from({ length: 10 }).map((_, i) => (
               <MemberComponent
-                id={me.id}
-                email={me.user.email}
-                user={me.user}
-                isMe
-                additionalTags={
-                  <>
-                    {me.role !== "Member" && (
-                      <Tag
-                        size="sm"
-                        colorScheme={me.role == "Owner" ? "purple" : "gray"}
-                      >
-                        {me.role}
-                      </Tag>
-                    )}
-                  </>
-                }
-              />
-            )}
-            {others.filter(filterFn).map((m) => (
-              <MemberComponent
-                key={m.user.id}
-                id={m.id}
-                email={m.user.email}
-                user={m.user}
-                additionalTags={
-                  <>
-                    {m.role !== "Member" && (
-                      <Tag
-                        size="sm"
-                        colorScheme={m.role == "Owner" ? "purple" : "gray"}
-                      >
-                        {m.role}
-                      </Tag>
-                    )}
-                  </>
-                }
-                canManage={canManage(m.role)}
-                actions={[
-                  {
-                    label: "Edit",
-                    icon: IconEdit,
-                    onClick: editMemberCallback,
-                  },
-                  {
-                    label: "Remove",
-                    icon: IconUserX,
-                    onClick: removeMemberCallback,
-                    destructive: true,
-                  },
-                ]}
-              />
-            ))}
-            {pending.filter(pendingFilterFn).map((m) => (
-              <MemberComponent
-                key={m.id}
-                id={m.id}
-                email={m.email}
-                user={m.user ?? undefined}
-                canManage={canManage("Member")}
-                pending
-                actions={[
-                  {
-                    label: "Edit",
-                    icon: IconEdit,
-                    onClick: editInviteCallback,
-                  },
-                  {
-                    label: "Remove",
-                    icon: IconUserX,
-                    onClick: removeInviteCallback,
-                  },
-                ]}
+                key={i}
+                id=""
+                skeleton
+                email="placeholder@example.com"
+                user={{
+                  name: "Jonathan Doe",
+                  username: "johndoe",
+                  image: null,
+                }}
               />
             ))}
           </Box>
-        </SlideFade>
-      ) : (
-        <Box
-          border="1px solid"
-          rounded="lg"
-          borderColor={borderColor}
-          bg={menuBg}
-        >
-          {Array.from({ length: 10 }).map((_, i) => (
-            <MemberComponent
-              key={i}
-              id=""
-              skeleton
-              email="placeholder@example.com"
-              user={{
-                name: "Jonathan Doe",
-                username: "johndoe",
-                image: null,
-              }}
-            />
-          ))}
-        </Box>
-      )}
+        )}
+      </Stack>
     </Stack>
   );
 };
