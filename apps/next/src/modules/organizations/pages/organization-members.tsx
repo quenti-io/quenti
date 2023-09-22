@@ -47,7 +47,7 @@ import { RemoveMemberModal } from "../remove-member-modal";
 import { getBaseDomain } from "../utils/get-base-domain";
 import { useOnboardingStep } from "../utils/use-onboarding-step";
 
-export const OrganizationMembers = () => {
+export const OrganizationTeachers = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: session } = useSession();

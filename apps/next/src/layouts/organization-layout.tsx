@@ -159,19 +159,28 @@ const OrganizationTabList = () => {
         </SkeletonTab>
         <SkeletonTab
           isLoaded={isLoaded}
-          href={`/orgs/${id}/students`}
+          href={`/orgs/${id}/teachers`}
           ref={(e: HTMLDivElement) => (navRef.current[1] = e)}
           onPointerEnter={() => setHover(1)}
-          hover={hasHover && hover == 1}
+          hover={hasHover && hover === 1}
+        >
+          Teachers
+        </SkeletonTab>
+        <SkeletonTab
+          isLoaded={isLoaded}
+          href={`/orgs/${id}/students`}
+          ref={(e: HTMLDivElement) => (navRef.current[2] = e)}
+          onPointerEnter={() => setHover(2)}
+          hover={hasHover && hover == 2}
         >
           Students
         </SkeletonTab>
         <SkeletonTab
           isLoaded={isLoaded}
           href={`/orgs/${id}/settings`}
-          ref={(e: HTMLDivElement) => (navRef.current[2] = e)}
-          onPointerEnter={() => setHover(2)}
-          hover={hasHover && hover == 2}
+          ref={(e: HTMLDivElement) => (navRef.current[3] = e)}
+          onPointerEnter={() => setHover(3)}
+          hover={hasHover && hover == 3}
         >
           <Box display="flex" gap="2" alignItems="center">
             Settings
@@ -182,13 +191,13 @@ const OrganizationTabList = () => {
             )}
           </Box>
         </SkeletonTab>
-        {(index == 3 || me?.role == "Admin" || me?.role == "Owner") && (
+        {(index == 4 || me?.role == "Admin" || me?.role == "Owner") && (
           <SkeletonTab
             isLoaded={isLoaded}
             href={`/orgs/${id}/billing`}
-            ref={(e: HTMLDivElement) => (navRef.current[3] = e)}
-            onPointerEnter={() => setHover(3)}
-            hover={hasHover && hover == 3}
+            ref={(e: HTMLDivElement) => (navRef.current[4] = e)}
+            onPointerEnter={() => setHover(4)}
+            hover={hasHover && hover == 4}
           >
             <Box display="flex" gap="2" alignItems="center">
               Billing
@@ -212,12 +221,14 @@ const useCurrentTab = (route?: string): { index: number; name: string } => {
     switch (route) {
       case `/orgs/[id]`:
         return [0, "Dashboard"];
+      case `/orgs/[id]/teachers`:
+        return [1, "Teachers"];
       case `/orgs/[id]/students`:
-        return [1, "Students"];
+        return [2, "Students"];
       case `/orgs/[id]/settings`:
-        return [2, "Settings"];
+        return [3, "Settings"];
       case `/orgs/[id]/billing`:
-        return [3, "Billing"];
+        return [4, "Billing"];
       default:
         return [0, "Undefined"];
     }
