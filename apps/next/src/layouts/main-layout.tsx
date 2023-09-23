@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import React from "react";
 import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 
-import { Navbar } from "../components/navbar";
 import { effectChannel } from "../events/effects";
 import { useOnboardingRedirect } from "../hooks/use-onboarding-redirect";
 
@@ -21,6 +20,10 @@ const SignupModal = dynamic(() => import("../components/signup-modal"), {
 const ConfettiLayer = dynamic(() => import("../components/confetti-layer"), {
   ssr: false,
 });
+
+const Navbar = dynamic(() =>
+  import("../components/navbar").then((mod) => mod.Navbar),
+);
 
 export const MainLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   useOnboardingRedirect();
@@ -62,7 +65,9 @@ export const MainLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
         waitingTime={500}
         transitionTime={500}
       />
-      <Navbar />
+      <div style={{ height: 80 }}>
+        <Navbar />
+      </div>
       <GlobalShortcutLayer />
       <SignupModal />
       <ChangelogContainer />

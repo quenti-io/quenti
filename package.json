@@ -28,7 +28,7 @@
     "stripe-webhook": "stripe listen --forward-to localhost:3000/api/stripe/webhook"
   },
   "dependencies": {
-    "eslint-config-next": "^13.4.19",
+    "eslint-config-next": "^13.5.2",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-turbo": "^1.10.14",
     "eslint-plugin-prettier": "^5.0.0",
@@ -39,10 +39,10 @@
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/jest": "^29.5.4",
     "@types/prettier": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.3.0",
-    "@typescript-eslint/parser": "^6.3.0",
-    "dotenv-cli": "^7.2.1",
-    "eslint": "^8.49.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "dotenv-cli": "^7.3.0",
+    "eslint": "^8.50.0",
     "jest": "^29.6.0",
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",

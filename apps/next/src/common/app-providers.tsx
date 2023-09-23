@@ -1,16 +1,45 @@
-import { HighlightInit } from "@highlight-run/next/client";
-import { Analytics } from "@vercel/analytics/react";
 import type { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 import type { AppProps as NextAppProps } from "next/app";
+import dynamic from "next/dynamic";
 
 import { env } from "@quenti/env/client";
 
-import { ChakraProvider } from "@chakra-ui/react";
-
 import { theme } from "../lib/chakra-theme";
-import { IdentifyUser, TelemetryProvider } from "../lib/telemetry";
-import { HistoryProvider } from "../modules/history-provider";
+
+const ChakraProvider = dynamic(
+  () => import("@chakra-ui/react").then((mod) => mod.ChakraProvider),
+  { ssr: false },
+);
+const HighlightInit = dynamic(
+  () => import("@highlight-run/next/client").then((mod) => mod.HighlightInit),
+  { ssr: false },
+);
+const SessionProvider = dynamic(
+  () => import("next-auth/react").then((mod) => mod.SessionProvider),
+  { ssr: false },
+);
+const Analytics = dynamic(
+  () => import("@vercel/analytics/react").then((mod) => mod.Analytics),
+  { ssr: false },
+);
+const HistoryProvider = dynamic(
+  () =>
+    import("../modules/history-provider").then((mod) => mod.HistoryProvider),
+  { ssr: false },
+);
+
+const TelemetryProvider = dynamic(
+  () => import("../lib/telemetry").then((mod) => mod.TelemetryProvider),
+  {
+    ssr: false,
+  },
+);
+const IdentifyUser = dynamic(
+  () => import("../lib/telemetry").then((mod) => mod.IdentifyUser),
+  {
+    ssr: false,
+  },
+);
 
 export { reportWebVitals } from "next-axiom";
 
