@@ -37,6 +37,7 @@ let config = {
   generateBuildId: () => nextBuildId({ dir: __dirname }),
   experimental: {
     instrumentationHook: true,
+    esmExternals: false,
   },
   reactStrictMode: true,
   swcMinify: true,

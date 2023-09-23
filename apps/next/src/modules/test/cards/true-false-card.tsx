@@ -45,15 +45,14 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
         templateColumns={{ base: "1fr", sm: "1fr 2px 1fr" }}
         gap={{ base: 1, md: 3 }}
       >
-        <Box h="full" w="full" pr={{ base: 0, sm: "4" }}>
+        <Box w="full" pr={{ base: 0, sm: "4" }}>
           <PromptDisplay
             label={question.answerMode == "Definition" ? "Term" : "Definition"}
             content={word(question.answerMode, data.term, "prompt")}
           />
         </Box>
         <Box
-          h="full"
-          display={{ base: "none", sm: "block" }}
+          display={{ base: "none", sm: "grid" }}
           bg="gray.200"
           _dark={{
             bg: "gray.700",
