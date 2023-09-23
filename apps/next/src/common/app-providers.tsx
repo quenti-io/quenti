@@ -4,12 +4,10 @@ import dynamic from "next/dynamic";
 
 import { env } from "@quenti/env/client";
 
+import { ChakraProvider } from "@chakra-ui/react";
+
 import { theme } from "../lib/chakra-theme";
 
-const ChakraProvider = dynamic(
-  () => import("@chakra-ui/react").then((mod) => mod.ChakraProvider),
-  { ssr: false },
-);
 const HighlightInit = dynamic(
   () => import("@highlight-run/next/client").then((mod) => mod.HighlightInit),
   { ssr: false },
