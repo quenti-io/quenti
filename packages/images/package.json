@@ -7,7 +7,7 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.405.0",
+    "@aws-sdk/client-s3": "^3.418.0",
     "@quenti/components": "*",
     "@quenti/env": "*",
     "jsonwebtoken": "^9.0.2",

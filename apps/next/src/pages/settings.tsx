@@ -22,7 +22,6 @@ import { getLayout } from "../layouts/main-layout";
 import { AccountType } from "../modules/settings/account-type";
 import { AppPreferences } from "../modules/settings/app-preferences";
 import { DangerZone } from "../modules/settings/danger-zone";
-import { DataUsage } from "../modules/settings/data-usage";
 import { GAccountInfo } from "../modules/settings/g-account-info";
 import { ProfileInfo } from "../modules/settings/profile-info";
 
@@ -68,8 +67,6 @@ const SettingsInner = () => {
               <ProfileInfo />
               <Divider borderColor={divider} />
               <AppPreferences />
-              <Divider borderColor={divider} />
-              <DataUsage />
               <Divider borderColor={divider} />
               <DangerZone />
             </Stack>

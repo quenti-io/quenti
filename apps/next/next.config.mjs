@@ -18,7 +18,7 @@ import pjson from "./package.json" assert { type: "json" };
 const shouldAnalyzeBundles = process.env.ANALYZE === "true";
 
 const withBundleAnalyzer = shouldAnalyzeBundles
-  ? (await import("next-bundle-analyzer")).default
+  ? (await import("@next/bundle-analyzer")).default
   : () => undefined;
 
 const appVersion = pjson.version;

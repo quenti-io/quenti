@@ -8,9 +8,9 @@
     "@quenti/env": "*",
     "@quenti/interfaces": "*",
     "@quenti/lib": "*",
-    "@tabler/icons-react": "^2.34.0",
+    "@tabler/icons-react": "^2.35.0",
     "lodash.merge": "^4.6.2",
-    "next": "^13.4.19",
+    "next": "^13.5.2",
     "next-seo": "^6.1.0"
   },
   "scripts": {

@@ -6,11 +6,8 @@ import { prisma } from "@quenti/prisma";
 import type { GetServerSidePropsContext } from "@quenti/types";
 
 import { PageWrapper } from "../../common/page-wrapper";
-import InternalSet from "../../components/internal-set";
 import { getLayout } from "../../layouts/main-layout";
 import type { inferSSRProps } from "../../lib/infer-ssr-props";
-import HydrateSetData from "../../modules/hydrate-set-data";
-import { SetLoading } from "../../modules/main/set-loading";
 
 const SetPrivate = dynamic(() => import("../../modules/main/set-private"), {
   ssr: false,
@@ -18,6 +15,10 @@ const SetPrivate = dynamic(() => import("../../modules/main/set-private"), {
 const Set404 = dynamic(() => import("../../modules/main/set-404"), {
   ssr: false,
 });
+
+const InternalSet = dynamic(() =>
+  import("../../components/internal-set").then((mod) => mod.default),
+);
 
 const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
   if (isPrivate) return <SetPrivate />;
@@ -43,9 +44,7 @@ const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
           nofollow: set.visibility != "Public",
         }}
       />
-      <HydrateSetData placeholder={<SetLoading />} isPublic>
-        <InternalSet />
-      </HydrateSetData>
+      <InternalSet />
     </>
   );
 };

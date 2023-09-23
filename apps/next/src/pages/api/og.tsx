@@ -89,7 +89,7 @@ export default async function handler(request: NextRequest) {
           />
         ),
         ogConfig,
-      ) as { body: Buffer };
+      ) as { body: BodyInit };
 
       return new Response(img.body, {
         status: 200,
@@ -115,7 +115,7 @@ export default async function handler(request: NextRequest) {
           />
         ),
         ogConfig,
-      ) as { body: Buffer };
+      ) as { body: BodyInit };
 
       return new Response(img.body, {
         status: 200,
