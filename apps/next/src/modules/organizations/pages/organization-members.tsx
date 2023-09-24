@@ -71,7 +71,6 @@ export const OrganizationTeachers = () => {
     : [];
   const pending = org ? org.pendingInvites : [];
 
-  const domain = getBaseDomain(org);
 
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [editMember, setEditMember] = React.useState<string | undefined>();
@@ -127,81 +126,10 @@ export const OrganizationTeachers = () => {
   const Icon = organizationIcon(org?.icon || 0);
 
   const borderColor = useColorModeValue("gray.200", "gray.700");
-  const mutedColor = useColorModeValue("gray.700", "gray.300");
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
     <Stack spacing="10" pb="20">
-      <HStack spacing="6">
-        <Skeleton isLoaded={isLoaded} fitContent rounded="full">
-          <Center w="16" h="16" rounded="full" bg="blue.400">
-            <Icon size={32} color="white" />
-          </Center>
-        </Skeleton>
-        <Stack spacing={onboardingStep ? 2 : 0} flex="1" overflow="hidden">
-          <Flex h="43.2px" alignItems="center" w="full">
-            <SkeletonText
-              isLoaded={isLoaded}
-              fitContent
-              noOfLines={1}
-              skeletonHeight="36px"
-              maxW="full"
-            >
-              <HStack w="full">
-                <Heading
-                  overflow="hidden"
-                  whiteSpace="nowrap"
-                  textOverflow="ellipsis"
-                  maxW="full"
-                >
-                  {org?.name || "Loading..."}
-                </Heading>
-                {org?.published ? (
-                  <Box color="blue.300">
-                    <Tooltip label="Verified organization">
-                      <IconDiscountCheck aria-label="Verified" />
-                    </Tooltip>
-                  </Box>
-                ) : (
-                  <Box color="gray.500">
-                    <Tooltip label="Not published">
-                      <IconCircleDot aria-label="Not published" />
-                    </Tooltip>
-                  </Box>
-                )}
-              </HStack>
-            </SkeletonText>
-          </Flex>
-          {isLoaded && onboardingStep && (
-            <Button
-              leftIcon={<IconArrowRight />}
-              w="max"
-              size="sm"
-              onClick={() => {
-                void router.push(`/orgs/${id}/${onboardingStep}`);
-              }}
-            >
-              Continue setup
-            </Button>
-          )}
-          {domain?.domain && (
-            <Flex h="21px" alignItems="center">
-              <SkeletonText
-                noOfLines={1}
-                fitContent
-                w="max-content"
-                isLoaded={isLoaded}
-                skeletonHeight="10px"
-              >
-                <HStack spacing="1" color={mutedColor}>
-                  <IconAt size="16" />
-                  <Text fontSize="sm">{domain?.domain}</Text>
-                </HStack>
-              </SkeletonText>
-            </Flex>
-          )}
-        </Stack>
-      </HStack>
       <Stack spacing="6">
         {org && isUpgraded && org.published && <OrganizationWelcome />}
         {org && (

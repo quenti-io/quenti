@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .betteruptime-announcement {
   position: relative !important;
   font-family: "Open Sans" !important;
