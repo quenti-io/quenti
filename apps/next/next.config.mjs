@@ -37,6 +37,7 @@ let config = {
   generateBuildId: () => nextBuildId({ dir: __dirname }),
   experimental: {
     instrumentationHook: true,
+    // Tommy, I love you so much https://holocron.so/blog/optimizing-next.js-cold-starts-for-vercel
     esmExternals: false,
   },
   reactStrictMode: true,
