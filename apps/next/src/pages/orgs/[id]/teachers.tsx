@@ -1,6 +1,6 @@
 import { PageWrapper } from "../../../common/page-wrapper";
 import { getLayout } from "../../../layouts/organization-layout";
-import { OrganizationTeachers } from "../../../modules/organizations/pages/organization-members";
+import { OrganizationTeachers } from "../../../modules/organizations/pages/organization-teachers";
 
 const Page = () => {
   return <OrganizationTeachers />;

@@ -8,36 +8,20 @@ import { api } from "@quenti/trpc";
 import {
   Box,
   Button,
-  Center,
-  Flex,
   HStack,
-  Heading,
   Input,
   InputGroup,
   InputLeftElement,
   Skeleton,
-  SkeletonText,
   SlideFade,
   Stack,
   Tag,
-  Text,
-  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import {
-  IconArrowRight,
-  IconAt,
-  IconCircleDot,
-  IconDiscountCheck,
-  IconEdit,
-  IconPlus,
-  IconSearch,
-  IconUserX,
-} from "@tabler/icons-react";
+import { IconEdit, IconPlus, IconSearch, IconUserX } from "@tabler/icons-react";
 
 import { MemberComponent } from "../../../components/member-component";
-import { organizationIcon } from "../../../utils/icons";
 import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
@@ -45,14 +29,12 @@ import { OrganizationAdminOnly } from "../organization-admin-only";
 import { OrganizationWelcome } from "../organization-welcome";
 import { RemoveMemberModal } from "../remove-member-modal";
 import { getBaseDomain } from "../utils/get-base-domain";
-import { useOnboardingStep } from "../utils/use-onboarding-step";
 
 export const OrganizationTeachers = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: session } = useSession();
   const isUpgraded = router.query.upgrade === "success";
-  const onboardingStep = useOnboardingStep();
 
   const { data: org } = api.organizations.get.useQuery(
     { id },
@@ -61,8 +43,6 @@ export const OrganizationTeachers = () => {
     },
   );
 
-  const isLoaded = !!org;
-
   const me = org
     ? org.members.find((m) => m.userId == session?.user?.id)
     : undefined;
@@ -70,7 +50,6 @@ export const OrganizationTeachers = () => {
     ? org.members.filter((m) => m.userId != session?.user?.id)
     : [];
   const pending = org ? org.pendingInvites : [];
-
 
   const [inviteModalOpen, setInviteModalOpen] = React.useState(false);
   const [editMember, setEditMember] = React.useState<string | undefined>();
@@ -122,8 +101,6 @@ export const OrganizationTeachers = () => {
     setRemoveMemberType("invite");
     setRemoveMember(id);
   }, []);
-
-  const Icon = organizationIcon(org?.icon || 0);
 
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const menuBg = useColorModeValue("white", "gray.800");
