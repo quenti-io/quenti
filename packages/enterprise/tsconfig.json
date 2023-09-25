@@ -6,13 +6,5 @@
     "target": "ES5",
     "jsx": "react-jsx"
   },
-  "include": [
-    "index.ts",
-    "integrations.ts",
-    "client",
-    "next",
-    "react",
-    "server",
-    "../types/next-auth.d.ts"
-  ]
+  "include": [".", "analytics"]
 }

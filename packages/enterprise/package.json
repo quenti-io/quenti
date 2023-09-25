@@ -1,12 +1,12 @@
 {
-  "name": "@quenti/inngest",
+  "name": "@quenti/enterprise",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@quenti/emails": "*",
-    "@quenti/enterprise": "*",
+    "@clickhouse/client": "^0.2.2",
+    "@quenti/core": "*",
     "@quenti/env": "*",
-    "inngest": "^2.7.0"
+    "@quenti/prisma": "*"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",

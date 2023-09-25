@@ -2621,6 +2621,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@clickhouse/client-common@npm:0.2.2":
+  version: 0.2.2
+  resolution: "@clickhouse/client-common@npm:0.2.2"
+  checksum: de8ddac8458d7ad7f1b167528eb89b52fa98c286047a5b190dc6be8f6a3f3c834095a7b0af141ae88b37362c3afb7aab74e44d2452d7cf05abcb4f19e3bcf91b
+  languageName: node
+  linkType: hard
+
+"@clickhouse/client@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@clickhouse/client@npm:0.2.2"
+  dependencies:
+    "@clickhouse/client-common": 0.2.2
+  checksum: 70b1a26ea085ba759af1a760f97050ceb0c40ba76780145d2e0968e5cb739638ac6a6edeabf8de6354cf948bc2c02d2bcf24f083b4e171043d2d2ba380efe992
+  languageName: node
+  linkType: hard
+
 "@commander-js/extra-typings@npm:9.4.1":
   version: 9.4.1
   resolution: "@commander-js/extra-typings@npm:9.4.1"
@@ -5788,6 +5804,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@quenti/enterprise@*, @quenti/enterprise@workspace:packages/enterprise":
+  version: 0.0.0-use.local
+  resolution: "@quenti/enterprise@workspace:packages/enterprise"
+  dependencies:
+    "@clickhouse/client": ^0.2.2
+    "@quenti/core": "*"
+    "@quenti/env": "*"
+    "@quenti/prisma": "*"
+  languageName: unknown
+  linkType: soft
+
 "@quenti/env@*, @quenti/env@workspace:packages/env":
   version: 0.0.0-use.local
   resolution: "@quenti/env@workspace:packages/env"
@@ -5816,6 +5843,7 @@ __metadata:
   resolution: "@quenti/inngest@workspace:packages/inngest"
   dependencies:
     "@quenti/emails": "*"
+    "@quenti/enterprise": "*"
     "@quenti/env": "*"
     inngest: ^2.7.0
   languageName: unknown

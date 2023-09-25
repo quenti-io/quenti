@@ -1,7 +1,7 @@
 import { sendClassInviteEmail } from "@quenti/emails";
 import { env } from "@quenti/env/client";
 
-import { inngest } from "..";
+import { inngest } from "../inngest";
 
 export const sendClassInviteEmails = inngest.createFunction(
   { name: "Send class invite emails" },

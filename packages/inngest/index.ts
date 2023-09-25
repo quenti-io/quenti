@@ -1,3 +1,4 @@
+import { collectOrganizationActivity } from "./functions/collect-organization-activity";
 import { sendClassInviteEmails } from "./functions/send-class-invite-emails";
 import { sendOrgInviteEmails } from "./functions/send-org-invite-emails";
 
@@ -37,4 +38,8 @@ export type Events = {
 };
 
 export * from "./inngest";
-export const functions = [sendOrgInviteEmails, sendClassInviteEmails];
+export const functions = [
+  sendOrgInviteEmails,
+  sendClassInviteEmails,
+  collectOrganizationActivity,
+];

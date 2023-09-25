@@ -59,6 +59,7 @@ let config = {
     "@quenti/components",
     "@quenti/branding",
     "@quenti/payments",
+    "@quenti/enterprise",
     "@quenti/prisma",
     "@quenti/trpc",
     "@quenti/inngest",
