@@ -72,7 +72,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
             nofollow: true,
           }}
         />
-        <Box mt="2" pb="30" style={{ minHeight: "calc(100vh - 112px)" }}>
+        <Box pb="30" style={{ minHeight: "calc(100vh - 80px)" }}>
           <Tabs borderColor={borderColor} size="sm" index={index} isManual>
             <OrganizationTabList />
             <Container maxW="6xl" overflow="hidden">
