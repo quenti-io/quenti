@@ -1,9 +1,7 @@
-import cohere from "cohere-ai";
-
 import { env } from "@quenti/env/server";
 import { chunkArray } from "@quenti/lib/array";
 
-if (env.COHERE_API_KEY) cohere.init(env.COHERE_API_KEY);
+import { cohere } from "./cohere";
 
 const EMBEDDING_API_BATCH_SIZE = 96;
 

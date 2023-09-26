@@ -1,3 +1,5 @@
+import { classifyClass } from "@quenti/cortex/classify";
+
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
@@ -15,6 +17,8 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       code: "BAD_REQUEST",
       message: "Classes are not yet supported for personal accounts",
     });
+
+  await classifyClass(input.name);
 
   return await ctx.prisma.class.create({
     data: {
