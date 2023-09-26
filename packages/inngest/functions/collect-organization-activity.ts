@@ -4,7 +4,7 @@ import { inngest } from "../inngest";
 
 export const collectOrganizationActivity = inngest.createFunction(
   { name: "Collect organization activity" },
-  { cron: "* * * * *" },
+  { cron: "*/5 * * * *" },
   async () => {
     await collectActivity();
   },

@@ -243,7 +243,7 @@ export const CATEGORIES = {
       "Animation and Digital Storytelling",
     ],
   },
-  "Career and Technical Education (CTE)": {
+  "Career and Technical Education": {
     Business: [
       "Business Management and Entrepreneurship",
       "Marketing and Sales Strategies",
