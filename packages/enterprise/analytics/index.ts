@@ -1,6 +1,7 @@
 import prisma from "@quenti/prisma";
 
 import { clickhouse } from "./clickhouse";
+import { cache } from "./redis";
 
 const LAST_30_MINUTES = 1000 * 60 * 30;
 
@@ -65,6 +66,13 @@ export const collectOrganizationActivity = async () => {
     })),
   );
 
+  const setData: { [key: string]: number } = {};
+  for (const a of activity) {
+    setData[`org:${a.organizationId}:active-users`] =
+      a.activeStudents + a.activeTeachers;
+  }
+
+  await cache?.mset(setData);
   await ingestIntoClickHouse(activity);
 };
 
@@ -137,11 +145,17 @@ export const getOrganizationActivity = async (
 
   const result: { data: Entry[] } = await rows.json();
 
-  return result.data.map((r) => ({
-    time: new Date(`${r.time} UTC`).toISOString(),
-    activeStudents: r.activeStudents,
-    activeTeachers: r.activeTeachers,
-  }));
+  const total: number =
+    (await cache?.get(`org:${organizationId}:active-users`)) || 0;
+
+  return {
+    activity: result.data.map((r) => ({
+      time: new Date(`${r.time} UTC`).toISOString(),
+      activeStudents: r.activeStudents,
+      activeTeachers: r.activeTeachers,
+    })),
+    total,
+  };
 };
 
 const ingestIntoClickHouse = async (activity: Activity[]) => {

@@ -18,7 +18,7 @@ export const getActivityHandler = async ({
   if (!(await isOrganizationMember(ctx.session.user.id, input.id)))
     throw new TRPCError({ code: "UNAUTHORIZED" });
 
-  return { activity: await getOrganizationActivity(input.id, input.period) };
+  return await getOrganizationActivity(input.id, input.period);
 };
 
 export default getActivityHandler;

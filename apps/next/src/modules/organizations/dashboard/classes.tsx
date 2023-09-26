@@ -24,11 +24,11 @@ const OrganizationClassesRaw = () => {
   );
 
   const consolidate = (
-    data: RouterOutputs["organizations"]["getClassStatistics"],
+    input: RouterOutputs["organizations"]["getClassStatistics"],
   ) => {
     let total = 0;
 
-    const consolidated = data.map((r) => ({
+    const consolidated = input.map((r) => ({
       name: r.category || "Other",
       value: r.count,
     }));

@@ -152,7 +152,9 @@ const OrganizationActivityRaw = () => {
                 )}
                 <IconPointFilled />
               </Box>
-              <Metric className="font-display">870</Metric>
+              <Metric className="font-display">
+                {initialized ? data?.total : 100}
+              </Metric>
             </HStack>
           </Skeleton>
         </div>
