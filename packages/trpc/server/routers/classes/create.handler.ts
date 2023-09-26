@@ -1,4 +1,4 @@
-import { classifyClass } from "@quenti/cortex/classify";
+import { inngest } from "@quenti/inngest";
 
 import { TRPCError } from "@trpc/server";
 
@@ -18,9 +18,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       message: "Classes are not yet supported for personal accounts",
     });
 
-  await classifyClass(input.name);
-
-  return await ctx.prisma.class.create({
+  const created = await ctx.prisma.class.create({
     data: {
       name: input.name,
       description: input.description ?? "",
@@ -34,6 +32,16 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       },
     },
   });
+
+  await inngest.send({
+    name: "cortex/classify-class",
+    data: {
+      classId: created.id,
+      name: created.name,
+    },
+  });
+
+  return created;
 };
 
 export default createHandler;

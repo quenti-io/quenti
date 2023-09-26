@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@quenti/cortex": "*",
     "@quenti/emails": "*",
     "@quenti/enterprise": "*",
     "@quenti/env": "*",
+    "@quenti/prisma": "*",
     "inngest": "^2.7.0"
   },
   "scripts": {

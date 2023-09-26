@@ -5842,9 +5842,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/inngest@workspace:packages/inngest"
   dependencies:
+    "@quenti/cortex": "*"
     "@quenti/emails": "*"
     "@quenti/enterprise": "*"
     "@quenti/env": "*"
+    "@quenti/prisma": "*"
     inngest: ^2.7.0
   languageName: unknown
   linkType: soft

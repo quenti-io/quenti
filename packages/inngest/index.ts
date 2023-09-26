@@ -1,4 +1,5 @@
 import { collectOrganizationActivity } from "./functions/collect-organization-activity";
+import { cortexClassifyClass } from "./functions/cortex-classify-class";
 import { sendClassInviteEmails } from "./functions/send-class-invite-emails";
 import { sendOrgInviteEmails } from "./functions/send-org-invite-emails";
 
@@ -32,14 +33,25 @@ type ClassesInviteTeachers = {
   };
 };
 
+type CortexClassifyClass = {
+  data: {
+    classId: string;
+    name: string;
+  };
+};
+
 export type Events = {
+  "cortex/classify-class": CortexClassifyClass;
   "orgs/invite-members": OrgsInviteMembers;
   "classes/invite-teachers": ClassesInviteTeachers;
 };
 
 export * from "./inngest";
 export const functions = [
+  // Events
   sendOrgInviteEmails,
   sendClassInviteEmails,
+  cortexClassifyClass,
+  // Scheduled jobs
   collectOrganizationActivity,
 ];
