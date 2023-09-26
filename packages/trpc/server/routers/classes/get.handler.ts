@@ -13,7 +13,7 @@ type GetOptions = {
   input: TGetSchema;
 };
 
-const orgSelect = Prisma.validator<Prisma.OrganizationArgs>()({
+const orgSelect = Prisma.validator<Prisma.OrganizationDefaultArgs>()({
   select: {
     id: true,
     domains: {
