@@ -27,12 +27,12 @@ Get up and running by following these steps.
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/miapolis/quizlet.cc
+   git clone https://github.com/quenti-io/quenti.git
    ```
 2. Go to the project folder
 
    ```sh
-   cd quizlet.cc
+   cd quenti
    ````
 3. Install dependencies with yarn
 
