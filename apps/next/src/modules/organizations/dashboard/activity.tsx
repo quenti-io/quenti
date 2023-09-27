@@ -41,6 +41,7 @@ const OrganizationActivityRaw = () => {
   const id = router.query.id as string;
   const session = useSession();
 
+  const [activeUsers, setActiveUsers] = React.useState<number>(100);
   const [periodIndex, setPeriodIndex] = React.useState<number>(0);
   const [chartData, setChartData] = React.useState<
     ReturnType<typeof formatActivityData>
@@ -58,6 +59,14 @@ const OrganizationActivityRaw = () => {
       },
     },
   );
+
+  const initialized = !!chartData.length;
+
+  React.useEffect(() => {
+    if (!initialized || !data) return;
+    setActiveUsers(data?.total || 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialized, data]);
 
   const formatActivityData = (
     activity: NonNullable<NonNullable<typeof data>["activity"]>,
@@ -107,8 +116,6 @@ const OrganizationActivityRaw = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, orgData]);
 
-  const initialized = !!chartData.length;
-
   return (
     <Card
       p="0"
@@ -152,9 +159,7 @@ const OrganizationActivityRaw = () => {
                 )}
                 <IconPointFilled />
               </Box>
-              <Metric className="font-display">
-                {initialized ? data?.total : 100}
-              </Metric>
+              <Metric className="font-display">{activeUsers}</Metric>
             </HStack>
           </Skeleton>
         </div>
@@ -190,7 +195,7 @@ const OrganizationActivityRaw = () => {
       </Flex>
       <Skeleton h="full" mt="8" rounded="xl" isLoaded={!!chartData.length}>
         <AreaChart
-          className="-ml-4 h-full w-[calc(100%+16px)]"
+          className="-ml-4 h-[436px] w-[calc(100%+16px)]"
           data={chartData}
           index="time"
           categories={["Students", "Teachers"]}

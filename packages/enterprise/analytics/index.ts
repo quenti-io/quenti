@@ -11,69 +11,35 @@ type Activity = {
   activeTeachers: number;
 };
 
-export const collectOrganizationActivity = async () => {
-  const results = await prisma.user.groupBy({
-    by: ["organizationId", "type"],
+export const collectOrganizationActivity = async (orgId: string) => {
+  const users = await prisma.user.findMany({
     where: {
-      organizationId: {
-        not: null,
-      },
-      lastSeenAt: {
-        gte: new Date(Date.now() - LAST_30_MINUTES),
-      },
-    },
-    _count: true,
-  });
-
-  let activity = results.reduce((acc, cur) => {
-    const organizationId = cur.organizationId;
-    const type = cur.type;
-    const count = cur._count;
-
-    const existing = acc.find((a) => a.organizationId === organizationId);
-
-    if (existing) {
-      const key = type == "Student" ? "activeStudents" : "activeTeachers";
-      existing[key] = count;
-    } else {
-      acc.push({
-        organizationId: organizationId!,
-        activeStudents: type == "Student" ? count : 0,
-        activeTeachers: type == "Teacher" ? count : 0,
-      });
-    }
-
-    return acc;
-  }, new Array<Activity>());
-
-  const allOrganizations = await prisma.organization.findMany({
-    where: {
-      published: true,
+      organizationId: orgId,
     },
     select: {
       id: true,
+      type: true,
+      lastSeenAt: true,
     },
   });
 
-  const missing = allOrganizations.filter(
-    (org) => !activity.find((a) => a.organizationId === org.id),
-  );
-  activity = activity.concat(
-    missing.map((org) => ({
-      organizationId: org.id,
-      activeStudents: 0,
-      activeTeachers: 0,
-    })),
+  const now = new Date().getTime();
+  const active = users.filter(
+    (u) => u.lastSeenAt.getTime() >= now - LAST_30_MINUTES,
   );
 
-  const setData: { [key: string]: number } = {};
-  for (const a of activity) {
-    setData[`org:${a.organizationId}:active-users`] =
-      a.activeStudents + a.activeTeachers;
-  }
+  const activeStudents = active.filter((u) => u.type === "Student").length;
+  const activeTeachers = active.filter((u) => u.type === "Teacher").length;
 
-  await cache?.mset(setData);
-  await ingestIntoClickHouse(activity);
+  await cache?.set(
+    `org:${orgId}:active-users`,
+    activeStudents + activeTeachers,
+  );
+  await ingestIntoClickHouse({
+    organizationId: orgId,
+    activeStudents,
+    activeTeachers,
+  });
 };
 
 export const getOrganizationActivity = async (
@@ -83,8 +49,7 @@ export const getOrganizationActivity = async (
   if (!clickhouse) return;
 
   const buildQuery = () => {
-    // const start = "now()";
-    const start = "toDateTime('2023-01-07 23:55:00')";
+    const start = "now()";
 
     if (period == "12h")
       return `
@@ -158,7 +123,7 @@ export const getOrganizationActivity = async (
   };
 };
 
-const ingestIntoClickHouse = async (activity: Activity[]) => {
+const ingestIntoClickHouse = async (activity: Activity) => {
   if (!clickhouse) return;
 
   await clickhouse.insert({

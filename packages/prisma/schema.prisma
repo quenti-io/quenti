@@ -103,7 +103,6 @@ model User {
 
   @@index([organizationId])
   @@index([type])
-  @@index([lastSeenAt])
 }
 
 model VerificationToken {
