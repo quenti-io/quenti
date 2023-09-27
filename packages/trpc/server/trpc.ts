@@ -108,6 +108,12 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
+// Process batches every minute to avoid row locking issues, although slightly less accurate
+const lastSeenUpdateInterval = 60 * 1000;
+// store all users active for the session in memory, along with a timestamp
+// ...approximately 31,038 active users would have to use the serverless function for the memory usage to increase by just 1 MB
+const userMap = new Map<string, number>();
+
 /**
  * Reusable middleware that enforces users are logged in before running the
  * procedure
@@ -128,12 +134,19 @@ export const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   (register.getSingleMetric("authed_api_requests_total") as Counter).inc();
 
   const userId = ctx.session.user.id;
-  void (async () => {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { lastSeenAt: new Date() },
-    });
-  })();
+  const lastSeenAt = userMap.get(userId);
+
+  if ((lastSeenAt || 0) < Date.now() - lastSeenUpdateInterval) {
+    const now = new Date();
+    void (async () => {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { lastSeenAt: now },
+      });
+    })();
+
+    userMap.set(userId, now.getTime());
+  }
 
   return next({
     ctx: {
