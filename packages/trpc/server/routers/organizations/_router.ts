@@ -8,7 +8,10 @@ import { ZCreateInviteSchema } from "./create-invite.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZEditMemberRoleSchema } from "./edit-member-role.schema";
+import { ZGetActivitySchema } from "./get-activity.schema";
+import { ZGetClassStatisticsSchema } from "./get-class-statistics.schema";
 import { ZGetStudentsSchema } from "./get-students.schema";
+import { ZGetUserStatisticsSchema } from "./get-user-statistics.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZInviteMemberSchema } from "./invite-member.schema";
 import { ZPublishSchema } from "./publish.schema";
@@ -26,6 +29,9 @@ type OrganizationsRouterHandlerCache = {
   handlers: {
     ["get-belonging"]?: typeof import("./get-belonging.handler").getBelongingHandler;
     get?: typeof import("./get.handler").getHandler;
+    ["get-activity"]?: typeof import("./get-activity.handler").getActivityHandler;
+    ["get-user-statistics"]?: typeof import("./get-user-statistics.handler").getUserStatisticsHandler;
+    ["get-class-statistics"]?: typeof import("./get-class-statistics.handler").getClassStatisticsHandler;
     ["get-students"]?: typeof import("./get-students.handler").getStudentsHandler;
     create?: typeof import("./create.handler").createHandler;
     update?: typeof import("./update.handler").updateHandler;
@@ -63,6 +69,24 @@ export const organizationsRouter = createTRPCRouter({
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers["get"]!({ ctx, input });
   }),
+  getActivity: teacherProcedure
+    .input(ZGetActivitySchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-activity");
+      return HANDLER_CACHE.handlers["get-activity"]!({ ctx, input });
+    }),
+  getUserStatistics: teacherProcedure
+    .input(ZGetUserStatisticsSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-user-statistics");
+      return HANDLER_CACHE.handlers["get-user-statistics"]!({ ctx, input });
+    }),
+  getClassStatistics: teacherProcedure
+    .input(ZGetClassStatisticsSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-class-statistics");
+      return HANDLER_CACHE.handlers["get-class-statistics"]!({ ctx, input });
+    }),
   getStudents: teacherProcedure
     .input(ZGetStudentsSchema)
     .query(async ({ ctx, input }) => {

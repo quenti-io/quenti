@@ -1,33 +1,27 @@
-import {
-  Card,
-  Container,
-  Heading,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Col, Grid } from "@tremor/react";
 
-import { useOrganization } from "../../../hooks/use-organization";
+import { Container, Stack } from "@chakra-ui/react";
+
+import { OrganizationActivity } from "../dashboard/activity";
+import { OrganizationClasses } from "../dashboard/classes";
+import { OrganizationUsers } from "../dashboard/users";
+import { OrgDisplay } from "../org-display";
 
 export const OrganizationDashboard = () => {
-  const { data: org } = useOrganization();
-
   return (
-    <Container maxW="6xl">
-      <SimpleGrid columns={3}>
-        <Card bg="gray.750" rounded="xl" py="4" px="8">
-          <Stack spacing="4">
-            <Stack spacing="0">
-              <Text color="gray.500" fontWeight={600} fontSize="sm">
-                Students
-              </Text>
-              <Heading fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}>
-                {org?._count.users || 0}
-              </Heading>
-            </Stack>
-          </Stack>
-        </Card>
-      </SimpleGrid>
+    <Container maxW="6xl" flex="1">
+      <Stack spacing="6">
+        <OrgDisplay />
+        <Grid numItems={1} numItemsSm={2} numItemsLg={3} className="mt-6 gap-6">
+          <Col numColSpan={2} className="h-[500]">
+            <OrganizationActivity />
+          </Col>
+          <Col numColSpan={1} className="space-y-6">
+            <OrganizationUsers />
+            <OrganizationClasses />
+          </Col>
+        </Grid>
+      </Stack>
     </Container>
   );
 };

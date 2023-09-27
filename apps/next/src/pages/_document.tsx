@@ -15,11 +15,7 @@ const Document = () => {
           rel="stylesheet"
         />
       </Head>
-      <body
-        style={{
-          overflowX: "hidden",
-        }}
-      >
+      <body className="overflow-x-hidden bg-gray-50 dark:bg-gray-900">
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Main />
         <NextScript />

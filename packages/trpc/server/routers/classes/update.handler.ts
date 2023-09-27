@@ -1,3 +1,5 @@
+import { inngest } from "@quenti/inngest";
+
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TUpdateSchema } from "./update.schema";
@@ -10,7 +12,7 @@ type UpdateOptions = {
 export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
   await isClassTeacherOrThrow(input.id, ctx.session.user.id);
 
-  return await ctx.prisma.class.update({
+  const updated = await ctx.prisma.class.update({
     where: {
       id: input.id,
     },
@@ -24,6 +26,16 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
         : {}),
     },
   });
+
+  await inngest.send({
+    name: "cortex/classify-class",
+    data: {
+      classId: updated.id,
+      name: updated.name,
+    },
+  });
+
+  return updated;
 };
 
 export default updateHandler;
