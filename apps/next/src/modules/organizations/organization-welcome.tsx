@@ -31,7 +31,8 @@ export const OrganizationWelcome = () => {
           <Text fontSize="sm" color={muted}>
             We&apos;re thrilled to have you on board!
             <br />
-            Get started with managing teachers, students, billing and more.
+            Get started with managing classes, teachers, students, billing and
+            more.
           </Text>
         </Stack>
       </Card>
