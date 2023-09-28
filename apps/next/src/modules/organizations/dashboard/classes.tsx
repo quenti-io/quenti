@@ -5,9 +5,9 @@ import React from "react";
 
 import { type RouterOutputs, api } from "@quenti/trpc";
 
-import { Skeleton } from "@chakra-ui/react";
+import { Heading, Skeleton, Stack } from "@chakra-ui/react";
 
-import { IconSchool } from "@tabler/icons-react";
+import { IconChevronDown, IconSchool } from "@tabler/icons-react";
 
 import { Card } from "../dashboard/card";
 
@@ -55,7 +55,7 @@ const OrganizationClassesRaw = () => {
 
   return (
     <Skeleton rounded="xl" isLoaded={!!data}>
-      <Card>
+      <Card h="330px">
         <Flex justifyContent="start" className="w-max space-x-4">
           <Icon icon={IconSchool} variant="light" size="md" color="blue" />
           <div>
@@ -63,7 +63,27 @@ const OrganizationClassesRaw = () => {
             <Metric className="font-display">{total}</Metric>
           </div>
         </Flex>
-        <BarList data={consolidated} className="mt-4 h-56" />
+        {!consolidated.length && (
+          <Stack mt="4" spacing="3">
+            <Heading size="md">No classes</Heading>
+            <Text>
+              Types of classes created within your organization will show up
+              here.
+            </Text>
+            <Text>
+              Use the{" "}
+              <span className="inline-block">
+                <span className="flex items-center space-x-[2px] pr-1 font-semibold">
+                  <Text>Create</Text>
+                  <IconChevronDown size="18" />
+                </span>
+              </span>
+              menu at the top to create a new class, or invite teachers to get
+              started.
+            </Text>
+          </Stack>
+        )}
+        <BarList data={consolidated} className="mt-4" />
       </Card>
     </Skeleton>
   );

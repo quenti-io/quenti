@@ -127,10 +127,8 @@ const OrganizationActivityRaw = () => {
         bg: "none",
         border: "none",
       }}
-      w="calc(100% + 16px)"
-      ml="-4"
     >
-      <Flex className="ml-4 w-[calc(100%-16px)]" justifyContent="between">
+      <Flex justifyContent="between">
         <div className="space-y-1">
           <Flex alignItems="center" className="h-5">
             <SkeletonText
