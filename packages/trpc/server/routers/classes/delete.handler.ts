@@ -1,4 +1,4 @@
-import { deleteClassAssets } from "@quenti/images/server";
+import { deleteObjectAssets } from "@quenti/images/server";
 
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
@@ -18,7 +18,7 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
     },
   });
 
-  await deleteClassAssets(input.id);
+  await deleteObjectAssets(input.id);
 };
 
 export default deleteHandler;

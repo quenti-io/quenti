@@ -1,4 +1,4 @@
-import { getPresignedClassAssetJwt } from "@quenti/images/server";
+import { getPresignedObjectAssetJwt } from "@quenti/images/server";
 
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
@@ -12,7 +12,7 @@ type UploadLogoOptions = {
 export const uploadLogoHandler = async ({ ctx, input }: UploadLogoOptions) => {
   await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
 
-  return getPresignedClassAssetJwt(input.classId, "logo");
+  return getPresignedObjectAssetJwt("class", input.classId, "logo");
 };
 
 export default uploadLogoHandler;

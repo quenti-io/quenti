@@ -1,4 +1,4 @@
-import { getClassAssetUrl } from "@quenti/images/server";
+import { getObjectAssetUrl } from "@quenti/images/server";
 import { thumbhashFromCdn } from "@quenti/images/server";
 
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
@@ -16,7 +16,7 @@ export const uploadLogoCompleteHandler = async ({
 }: UploadLogoCompleteOptions) => {
   await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
 
-  const logoUrl = await getClassAssetUrl(input.classId, "logo");
+  const logoUrl = await getObjectAssetUrl("class", input.classId, "logo");
   if (!logoUrl) return;
 
   const logoHash = await thumbhashFromCdn(logoUrl, 256, 256);
