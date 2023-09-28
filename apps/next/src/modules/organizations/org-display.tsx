@@ -23,7 +23,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useOrganization } from "../../hooks/use-organization";
-import { organizationIcon } from "../../utils/icons";
+import { OrganizationLogo } from "./organization-logo";
 import { getBaseDomain } from "./utils/get-base-domain";
 import { useOnboardingStep } from "./utils/use-onboarding-step";
 
@@ -37,15 +37,18 @@ export const OrgDisplay = () => {
 
   const isLoaded = !!org;
 
-  const Icon = organizationIcon(org?.icon || 0);
-
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   return (
     <HStack spacing="6">
       <Skeleton isLoaded={isLoaded} fitContent rounded="full">
-        <Center w="16" h="16" rounded="full" bg="blue.400">
-          <Icon size={32} color="white" />
+        <Center w="16" h="16" rounded="full" bg="white" overflow="hidden">
+          <OrganizationLogo
+            width={64}
+            height={64}
+            hash={org?.logoHash || ""}
+            url={org?.logoUrl || ""}
+          />
         </Center>
       </Skeleton>
       <Stack spacing={onboardingStep ? 2 : 0} flex="1" overflow="hidden">
@@ -84,14 +87,15 @@ export const OrgDisplay = () => {
         </Flex>
         {isLoaded && onboardingStep && (
           <Button
-            leftIcon={<IconArrowRight />}
+            leftIcon={<IconArrowRight size={16} />}
             w="max"
             size="sm"
+            variant="outline"
             onClick={() => {
               void router.push(`/orgs/${id}/${onboardingStep}`);
             }}
           >
-            Continue setup
+            <Text fontSize="xs">Continue setup</Text>
           </Button>
         )}
         {domain?.domain && (

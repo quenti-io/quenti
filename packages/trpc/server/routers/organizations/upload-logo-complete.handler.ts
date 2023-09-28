@@ -1,7 +1,8 @@
-import { getObjectAssetUrl } from "@quenti/images/server";
-import { thumbhashFromCdn } from "@quenti/images/server";
+import { getObjectAssetUrl, thumbhashFromCdn } from "@quenti/images/server";
 
-import { isClassTeacherOrThrow } from "../../lib/queries/classes";
+import { TRPCError } from "@trpc/server";
+
+import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TUploadLogoCompleteSchema } from "./upload-logo-complete.schema";
 
@@ -14,16 +15,17 @@ export const uploadLogoCompleteHandler = async ({
   ctx,
   input,
 }: UploadLogoCompleteOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
+  if (!(await isOrganizationAdmin(ctx.session.user.id, input.orgId)))
+    throw new TRPCError({ code: "UNAUTHORIZED" });
 
-  const logoUrl = await getObjectAssetUrl("class", input.classId, "logo");
+  const logoUrl = await getObjectAssetUrl("organization", input.orgId, "logo");
   if (!logoUrl) return;
 
   const logoHash = await thumbhashFromCdn(logoUrl, 256, 256);
 
-  await ctx.prisma.class.update({
+  await ctx.prisma.organization.update({
     where: {
-      id: input.classId,
+      id: input.orgId,
     },
     data: {
       logoUrl,

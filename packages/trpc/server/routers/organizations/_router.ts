@@ -10,6 +10,7 @@ import { ZDeleteSchema } from "./delete.schema";
 import { ZEditMemberRoleSchema } from "./edit-member-role.schema";
 import { ZGetActivitySchema } from "./get-activity.schema";
 import { ZGetClassStatisticsSchema } from "./get-class-statistics.schema";
+import { ZGetClassesSchema } from "./get-classes.schema";
 import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetUserStatisticsSchema } from "./get-user-statistics.schema";
 import { ZGetSchema } from "./get.schema";
@@ -23,20 +24,24 @@ import { ZSetDomainFilterSchema } from "./set-domain-filter.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
 import { ZSetMemberMetadataSchema } from "./set-member-metadata.schema";
 import { ZUpdateSchema } from "./update.schema";
+import { ZUploadLogoCompleteSchema } from "./upload-logo-complete.schema";
+import { ZUploadLogoSchema } from "./upload-logo.schema";
 import { ZVerifyStudentDomainSchema } from "./verify-student-domain.schema";
 
 type OrganizationsRouterHandlerCache = {
   handlers: {
-    ["get-belonging"]?: typeof import("./get-belonging.handler").getBelongingHandler;
     get?: typeof import("./get.handler").getHandler;
     ["get-activity"]?: typeof import("./get-activity.handler").getActivityHandler;
     ["get-user-statistics"]?: typeof import("./get-user-statistics.handler").getUserStatisticsHandler;
     ["get-class-statistics"]?: typeof import("./get-class-statistics.handler").getClassStatisticsHandler;
+    ["get-classes"]?: typeof import("./get-classes.handler").getClassesHandler;
     ["get-students"]?: typeof import("./get-students.handler").getStudentsHandler;
     create?: typeof import("./create.handler").createHandler;
     update?: typeof import("./update.handler").updateHandler;
     publish?: typeof import("./publish.handler").publishHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
+    ["upload-logo"]?: typeof import("./upload-logo.handler").uploadLogoHandler;
+    ["upload-logo-complete"]?: typeof import("./upload-logo-complete.handler").uploadLogoCompleteHandler;
     ["invite-member"]?: typeof import("./invite-member.handler").inviteMemberHandler;
     ["create-invite"]?: typeof import("./create-invite.handler").createInviteHandler;
     ["set-invite-expiration"]?: typeof import("./set-invite-expiration.handler").setInviteExpirationHandler;
@@ -61,10 +66,6 @@ const HANDLER_CACHE: OrganizationsRouterHandlerCache = {
 };
 
 export const organizationsRouter = createTRPCRouter({
-  getBelonging: teacherProcedure.query(async ({ ctx }) => {
-    await loadHandler(HANDLER_CACHE, "get-belonging");
-    return HANDLER_CACHE.handlers["get-belonging"]!({ ctx });
-  }),
   get: teacherProcedure.input(ZGetSchema).query(async ({ ctx, input }) => {
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers["get"]!({ ctx, input });
@@ -86,6 +87,12 @@ export const organizationsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "get-class-statistics");
       return HANDLER_CACHE.handlers["get-class-statistics"]!({ ctx, input });
+    }),
+  getClasses: teacherProcedure
+    .input(ZGetClassesSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-classes");
+      return HANDLER_CACHE.handlers["get-classes"]!({ ctx, input });
     }),
   getStudents: teacherProcedure
     .input(ZGetStudentsSchema)
@@ -116,6 +123,18 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "delete");
       return HANDLER_CACHE.handlers["delete"]!({ ctx, input });
+    }),
+  uploadLogo: teacherProcedure
+    .input(ZUploadLogoSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-logo");
+      return HANDLER_CACHE.handlers["upload-logo"]!({ ctx, input });
+    }),
+  uploadLogoComplete: teacherProcedure
+    .input(ZUploadLogoCompleteSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-logo-complete");
+      return HANDLER_CACHE.handlers["upload-logo-complete"]!({ ctx, input });
     }),
   inviteMember: teacherProcedure
     .input(ZInviteMemberSchema)

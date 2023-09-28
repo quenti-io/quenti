@@ -11,7 +11,7 @@ export const updateStudentsHandler = async ({
   ctx,
   input,
 }: UpdateStudentsOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   await ctx.prisma.classMembership.updateMany({
     where: {

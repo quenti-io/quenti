@@ -1,6 +1,4 @@
-import { TRPCError } from "@trpc/server";
-
-import { getClassMember } from "../../lib/queries/classes";
+import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TRemoveEntitySchema } from "./remove-entity.schema";
 
@@ -13,9 +11,7 @@ export const removeEntityHandler = async ({
   ctx,
   input,
 }: RemoveEntityOptions) => {
-  const member = await getClassMember(input.classId, ctx.session.user.id);
-  if (!member) throw new TRPCError({ code: "NOT_FOUND" });
-  if (member.type !== "Teacher") throw new TRPCError({ code: "FORBIDDEN" });
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   if (input.type == "Folder") {
     await ctx.prisma.foldersOnClasses.delete({

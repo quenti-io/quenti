@@ -1,6 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
-import { getClassMember } from "../../lib/queries/classes";
+import {
+  getClassMember,
+  getClassOrganizationMember,
+} from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TRemoveMembersSchema } from "./remove-members.schema";
 
@@ -14,8 +17,15 @@ export const removeMembersHandler = async ({
   input,
 }: RemoveMembersOptions) => {
   const member = await getClassMember(input.id, ctx.session.user.id);
-  if (!member) throw new TRPCError({ code: "NOT_FOUND" });
-  if (member.type !== "Teacher") throw new TRPCError({ code: "FORBIDDEN" });
+
+  if (member?.type !== "Teacher") {
+    const orgMember = await getClassOrganizationMember(
+      input.id,
+      ctx.session.user.id,
+    );
+    if (!(orgMember?.role === "Owner" || orgMember?.role === "Admin"))
+      throw new TRPCError({ code: "FORBIDDEN" });
+  }
 
   if (input.type == "member") {
     const teachers = await ctx.prisma.classMembership.findMany({
@@ -30,7 +40,7 @@ export const removeMembersHandler = async ({
 
     const teachersLeft = teachers.filter((t) => !input.members.includes(t.id));
 
-    if (input.members.includes(member.id) && teachersLeft.length == 0)
+    if (member && input.members.includes(member.id) && teachersLeft.length == 0)
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "You cannot remove yourself as the only teacher in a class.",

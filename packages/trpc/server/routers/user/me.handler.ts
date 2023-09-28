@@ -12,7 +12,8 @@ export const meHandler = async ({ ctx }: MeOptions) => {
         select: {
           id: true,
           name: true,
-          icon: true,
+          logoUrl: true,
+          logoHash: true,
           domains: {
             select: {
               id: true,
@@ -32,7 +33,8 @@ export const meHandler = async ({ ctx }: MeOptions) => {
             select: {
               id: true,
               name: true,
-              icon: true,
+              logoUrl: true,
+              logoHash: true,
             },
           },
         },
@@ -43,7 +45,8 @@ export const meHandler = async ({ ctx }: MeOptions) => {
             select: {
               id: true,
               name: true,
-              icon: true,
+              logoUrl: true,
+              logoHash: true,
               published: true,
               _count: {
                 select: {

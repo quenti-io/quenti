@@ -13,32 +13,30 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  IconButton,
+  HStack,
   Input,
-  Skeleton,
   Stack,
-  useColorModeValue,
+  Text,
 } from "@chakra-ui/react";
 
-import { IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconUpload } from "@tabler/icons-react";
 
 import { PageWrapper } from "../../common/page-wrapper";
 import { WizardLayout } from "../../components/wizard-layout";
 import { getLayout } from "../../layouts/main-layout";
 import { useTelemetry } from "../../lib/telemetry";
-import { ORGANIZATION_ICONS } from "../../utils/icons";
+import { OrganizationLogo } from "../../modules/organizations/organization-logo";
+import { useOrgLogoUpload } from "../../modules/organizations/use-org-logo-upload";
 
 const schema = z.object({
   name: z
     .string()
     .nonempty({ message: "Enter a name" })
     .max(50, { message: "Name must be less than 50 characters" }),
-  icon: z.number().int().min(0),
 });
 
 interface NewOrganizationFormInput {
   name: string;
-  icon: number;
 }
 
 export default function NewOrganization() {
@@ -46,15 +44,27 @@ export default function NewOrganization() {
   const router = useRouter();
   const { event } = useTelemetry();
 
+  const sendEvent = (id: string, name: string) => {
+    void event("class_created", { id, name });
+  };
+
+  const { file, setFile, onInputFile, uploadLogo } = useOrgLogoUpload({
+    onComplete: async (orgId) => {
+      sendEvent(orgId, create.variables?.name || "");
+      await router.push(`/orgs/${orgId}/members-onboarding`);
+    },
+  });
+
   const create = api.organizations.create.useMutation({
     onSuccess: async (data) => {
-      void event("org_created", {
-        id: data.id,
-        name: data.name,
-      });
-
       await utils.user.me.invalidate();
-      await router.push(`/orgs/${data.id}/members-onboarding`);
+
+      if (!file) {
+        sendEvent(data.id, data.name);
+        await router.push(`/orgs/${data.id}/members-onboarding`);
+        return;
+      }
+      await uploadLogo.mutateAsync({ orgId: data.id });
     },
     onError: (error) => {
       if (error.message == "name_profane") {
@@ -69,7 +79,6 @@ export default function NewOrganization() {
   const newOrganizationFormMethods = useForm<NewOrganizationFormInput>({
     defaultValues: {
       name: "",
-      icon: 0,
     },
     resolver: zodResolver(schema),
   });
@@ -81,8 +90,6 @@ export default function NewOrganization() {
   const onSubmit: SubmitHandler<NewOrganizationFormInput> = async (data) => {
     await create.mutateAsync(data);
   };
-
-  const iconColor = useColorModeValue("#171923", "white");
 
   return (
     <WizardLayout
@@ -96,6 +103,61 @@ export default function NewOrganization() {
         <Card p="8" variant="outline" shadow="lg" rounded="lg">
           <Stack spacing="10">
             <Stack spacing="6">
+              <HStack spacing="4">
+                <Box
+                  rounded="full"
+                  minW="64px"
+                  minH="64px"
+                  bg="white"
+                  border="solid 1px"
+                  borderColor={file ? "white" : "gray.200"}
+                  _dark={{
+                    borderColor: file ? "gray.800" : "white",
+                  }}
+                  overflow="hidden"
+                >
+                  <OrganizationLogo
+                    url={file ? (file as string) : undefined}
+                    width={64}
+                    height={64}
+                    local
+                  />
+                </Box>
+                <Stack spacing="2">
+                  <FormLabel m="0" fontWeight={700} fontSize="sm">
+                    Organization logo
+                  </FormLabel>
+                  <input
+                    onInput={onInputFile}
+                    style={{ display: "none" }}
+                    type="file"
+                    id="upload-logo-input"
+                    accept="image/*"
+                  />
+                  <ButtonGroup
+                    variant="outline"
+                    colorScheme="gray"
+                    size="sm"
+                    fontSize="sm"
+                  >
+                    <label htmlFor="upload-logo-input">
+                      <Button
+                        as="span"
+                        leftIcon={<IconUpload size={18} />}
+                        cursor="pointer"
+                      >
+                        Upload image
+                      </Button>
+                    </label>
+                    <Button isDisabled={!file} onClick={() => setFile(null)}>
+                      Remove
+                    </Button>
+                  </ButtonGroup>
+                  <Text color="gray.500" fontSize="xs">
+                    Image files up to 10 MB (recommended 512px x 512px)
+                  </Text>
+                </Stack>
+              </HStack>
               <Controller
                 name="name"
                 control={newOrganizationFormMethods.control}
@@ -111,38 +173,6 @@ export default function NewOrganization() {
                       onChange={onChange}
                     />
                     <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-                  </FormControl>
-                )}
-              />
-              <Controller
-                name="icon"
-                control={newOrganizationFormMethods.control}
-                render={({ field: { value, onChange } }) => (
-                  <FormControl>
-                    <FormLabel fontSize="sm" mb="10px">
-                      Icon
-                    </FormLabel>
-                    <Box ml="-4px" mt="-4px">
-                      {ORGANIZATION_ICONS.map((Icon, i) => (
-                        <Box display="inline-block" p="1" key={i}>
-                          <Skeleton rounded="md" isLoaded>
-                            <IconButton
-                              w="max"
-                              variant={value == i ? "solid" : "ghost"}
-                              aria-label="Icon"
-                              onClick={() => onChange(i)}
-                              icon={
-                                <Icon
-                                  size={18}
-                                  style={{ transition: "all 300ms" }}
-                                  color={value == i ? "white" : iconColor}
-                                />
-                              }
-                            />
-                          </Skeleton>
-                        </Box>
-                      ))}
-                    </Box>
                   </FormControl>
                 )}
               />

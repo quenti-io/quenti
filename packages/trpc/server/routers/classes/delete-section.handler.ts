@@ -13,7 +13,7 @@ export const deleteSectionHandler = async ({
   ctx,
   input,
 }: DeleteSectionOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   const section = await ctx.prisma.section.findFirst({
     where: {

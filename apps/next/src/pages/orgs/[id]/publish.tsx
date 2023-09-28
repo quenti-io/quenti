@@ -154,7 +154,7 @@ export default function OrgPublish() {
                   w="100%"
                   h="100%"
                   top="0"
-                  rounded="lg"
+                  rounded="xl"
                   bgGradient={gradient}
                 />
                 <Box zIndex={20} px="6">

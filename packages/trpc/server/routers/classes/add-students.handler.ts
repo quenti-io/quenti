@@ -13,7 +13,7 @@ export const addStudentsHandler = async ({
   ctx,
   input,
 }: AddStudentsOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   const class_ = await ctx.prisma.class.findUniqueOrThrow({
     where: {

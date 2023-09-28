@@ -1,9 +1,9 @@
 import { PageWrapper } from "../../../common/page-wrapper";
 import { getLayout } from "../../../layouts/organization-layout";
-import { OrganizationMembers } from "../../../modules/organizations/pages/organization-members";
+import { OrganizationClasses } from "../../../modules/organizations/pages/organization-classes";
 
 const Page = () => {
-  return <OrganizationMembers />;
+  return <OrganizationClasses />;
 };
 
 Page.PageWrapper = PageWrapper;

@@ -73,7 +73,7 @@ export const ClassSettings = () => {
 
   const update = api.classes.update.useMutation({
     onSuccess: async () => {
-      if (file) {
+      if (file && imageSrc !== null) {
         await uploadLogo.mutateAsync({ classId: data!.id });
       }
 
@@ -120,6 +120,7 @@ export const ClassSettings = () => {
         body="Are you sure you want to leave this class? You will not be able to access it again unless you are re-invited."
         isLoading={removeMembers.isLoading}
         onConfirm={() => {
+          if (!data!.me.id) return;
           removeMembers.mutate({
             id: data!.id,
             members: [data!.me.id],
@@ -289,7 +290,7 @@ export const ClassSettings = () => {
           isLoaded={isLoaded}
         >
           <ButtonGroup spacing="2">
-            {(data?.teachers?.length || 0) > 1 ? (
+            {(data?.teachers?.length || 0) > 1 && data?.me.id ? (
               <Button
                 w="max"
                 variant="outline"

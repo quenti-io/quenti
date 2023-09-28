@@ -1,6 +1,8 @@
 import { getPresignedObjectAssetJwt } from "@quenti/images/server";
 
-import { isClassTeacherOrThrow } from "../../lib/queries/classes";
+import { TRPCError } from "@trpc/server";
+
+import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TUploadLogoSchema } from "./upload-logo.schema";
 
@@ -10,9 +12,10 @@ type UploadLogoOptions = {
 };
 
 export const uploadLogoHandler = async ({ ctx, input }: UploadLogoOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
+  if (!(await isOrganizationAdmin(ctx.session.user.id, input.orgId)))
+    throw new TRPCError({ code: "UNAUTHORIZED" });
 
-  return getPresignedObjectAssetJwt("class", input.classId, "logo");
+  return getPresignedObjectAssetJwt("organization", input.orgId, "logo");
 };
 
 export default uploadLogoHandler;

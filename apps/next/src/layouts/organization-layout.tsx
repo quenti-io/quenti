@@ -117,6 +117,40 @@ const OrganizationTabList = () => {
 
   const { transform, width, height } = getTransformProperties(hover || 0);
 
+  const tabContent = [
+    { content: "Dashboard", slug: "" },
+    { content: "Classes", slug: "/classes" },
+    { content: "Teachers", slug: "/teachers" },
+    { content: "Students", slug: "/students" },
+    {
+      content: (
+        <Box display="flex" gap="2" alignItems="center" key="Settings">
+          Settings
+          {domain?.conflicting && (
+            <Box display="inline-flex" color="orange.400" w="4" h="4">
+              <IconAlertCircleFilled size={16} />
+            </Box>
+          )}
+        </Box>
+      ),
+      slug: "/settings",
+    },
+    {
+      content: (
+        <Box display="flex" gap="2" alignItems="center" key="Billing">
+          Billing
+          {isLoaded && !org.published && (
+            <Box display="inline-flex" color="orange.400" w="4" h="4">
+              <IconAlertCircleFilled size={16} />
+            </Box>
+          )}
+        </Box>
+      ),
+      slug: "/billing",
+      admin: true,
+    },
+  ];
+
   return (
     <Box
       w="full"
@@ -148,66 +182,23 @@ const OrganizationTabList = () => {
           transition="all 0.15s ease-in-out"
           opacity={hasHover ? 1 : 0}
         />
-        <SkeletonTab
-          isLoaded={isLoaded}
-          href={`/orgs/${id}`}
-          ref={(e: HTMLDivElement) => (navRef.current[0] = e)}
-          onPointerEnter={() => setHover(0)}
-          hover={hasHover && hover === 0}
-        >
-          Dashboard
-        </SkeletonTab>
-        <SkeletonTab
-          isLoaded={isLoaded}
-          href={`/orgs/${id}/teachers`}
-          ref={(e: HTMLDivElement) => (navRef.current[1] = e)}
-          onPointerEnter={() => setHover(1)}
-          hover={hasHover && hover === 1}
-        >
-          Teachers
-        </SkeletonTab>
-        <SkeletonTab
-          isLoaded={isLoaded}
-          href={`/orgs/${id}/students`}
-          ref={(e: HTMLDivElement) => (navRef.current[2] = e)}
-          onPointerEnter={() => setHover(2)}
-          hover={hasHover && hover == 2}
-        >
-          Students
-        </SkeletonTab>
-        <SkeletonTab
-          isLoaded={isLoaded}
-          href={`/orgs/${id}/settings`}
-          ref={(e: HTMLDivElement) => (navRef.current[3] = e)}
-          onPointerEnter={() => setHover(3)}
-          hover={hasHover && hover == 3}
-        >
-          <Box display="flex" gap="2" alignItems="center">
-            Settings
-            {domain?.conflicting && (
-              <Box display="inline-flex" color="orange.400" w="4" h="4">
-                <IconAlertCircleFilled size={16} />
-              </Box>
-            )}
-          </Box>
-        </SkeletonTab>
-        {(index == 4 || me?.role == "Admin" || me?.role == "Owner") && (
-          <SkeletonTab
-            isLoaded={isLoaded}
-            href={`/orgs/${id}/billing`}
-            ref={(e: HTMLDivElement) => (navRef.current[4] = e)}
-            onPointerEnter={() => setHover(4)}
-            hover={hasHover && hover == 4}
-          >
-            <Box display="flex" gap="2" alignItems="center">
-              Billing
-              {isLoaded && !org.published && (
-                <Box display="inline-flex" color="orange.400" w="4" h="4">
-                  <IconAlertCircleFilled size={16} />
-                </Box>
-              )}
-            </Box>
-          </SkeletonTab>
+        {tabContent.map(
+          ({ content, slug, admin }, i) =>
+            (!admin ||
+              index == i ||
+              me?.role == "Admin" ||
+              me?.role == "Owner") && (
+              <SkeletonTab
+                key={i}
+                isLoaded={isLoaded}
+                href={`/orgs/${id}${slug}`}
+                ref={(e: HTMLDivElement) => (navRef.current[i] = e)}
+                onPointerEnter={() => setHover(i)}
+                hover={hasHover && hover === i}
+              >
+                {content}
+              </SkeletonTab>
+            ),
         )}
       </TabList>
     </Box>
@@ -217,25 +208,22 @@ const OrganizationTabList = () => {
 const useCurrentTab = (route?: string): { index: number; name: string } => {
   const router = useRouter();
 
+  const ROUTES = [
+    { path: `/orgs/[id]`, name: "Dashboard" },
+    { path: `/orgs/[id]/classes`, name: "Classes" },
+    { path: `/orgs/[id]/teachers`, name: "Teachers" },
+    { path: `/orgs/[id]/students`, name: "Students" },
+    { path: `/orgs/[id]/settings`, name: "Settings" },
+    { path: `/orgs/[id]/billing`, name: "Billing" },
+  ];
+
   const getCurrentTab = (route = router.pathname) => {
-    switch (route) {
-      case `/orgs/[id]`:
-        return [0, "Dashboard"];
-      case `/orgs/[id]/teachers`:
-        return [1, "Teachers"];
-      case `/orgs/[id]/students`:
-        return [2, "Students"];
-      case `/orgs/[id]/settings`:
-        return [3, "Settings"];
-      case `/orgs/[id]/billing`:
-        return [4, "Billing"];
-      default:
-        return [0, "Undefined"];
-    }
+    const index = ROUTES.findIndex((r) => r.path === route);
+    const name = ROUTES[index]?.name;
+    return { index: Math.max(index, 0), name: name || "Undefined" };
   };
 
-  const [index, name] = getCurrentTab(route);
-  return { index: index as number, name: name as string };
+  return getCurrentTab(route);
 };
 
 interface SkeletonTabProps {
