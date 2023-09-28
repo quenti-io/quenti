@@ -18,7 +18,7 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
     },
   });
 
-  await deleteObjectAssets(input.id);
+  await deleteObjectAssets("class", input.id);
 };
 
 export default deleteHandler;

@@ -23,6 +23,8 @@ import { ZSetDomainFilterSchema } from "./set-domain-filter.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
 import { ZSetMemberMetadataSchema } from "./set-member-metadata.schema";
 import { ZUpdateSchema } from "./update.schema";
+import { ZUploadLogoCompleteSchema } from "./upload-logo-complete.schema";
+import { ZUploadLogoSchema } from "./upload-logo.schema";
 import { ZVerifyStudentDomainSchema } from "./verify-student-domain.schema";
 
 type OrganizationsRouterHandlerCache = {
@@ -37,6 +39,8 @@ type OrganizationsRouterHandlerCache = {
     update?: typeof import("./update.handler").updateHandler;
     publish?: typeof import("./publish.handler").publishHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
+    ["upload-logo"]?: typeof import("./upload-logo.handler").uploadLogoHandler;
+    ["upload-logo-complete"]?: typeof import("./upload-logo-complete.handler").uploadLogoCompleteHandler;
     ["invite-member"]?: typeof import("./invite-member.handler").inviteMemberHandler;
     ["create-invite"]?: typeof import("./create-invite.handler").createInviteHandler;
     ["set-invite-expiration"]?: typeof import("./set-invite-expiration.handler").setInviteExpirationHandler;
@@ -116,6 +120,18 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "delete");
       return HANDLER_CACHE.handlers["delete"]!({ ctx, input });
+    }),
+  uploadLogo: teacherProcedure
+    .input(ZUploadLogoSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-logo");
+      return HANDLER_CACHE.handlers["upload-logo"]!({ ctx, input });
+    }),
+  uploadLogoComplete: teacherProcedure
+    .input(ZUploadLogoCompleteSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-logo-complete");
+      return HANDLER_CACHE.handlers["upload-logo-complete"]!({ ctx, input });
     }),
   inviteMember: teacherProcedure
     .input(ZInviteMemberSchema)
