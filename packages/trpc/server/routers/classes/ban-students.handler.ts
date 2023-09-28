@@ -11,7 +11,7 @@ export const banStudentsHandler = async ({
   ctx,
   input,
 }: BanStudentsOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   const members = await ctx.prisma.classMembership.findMany({
     where: {

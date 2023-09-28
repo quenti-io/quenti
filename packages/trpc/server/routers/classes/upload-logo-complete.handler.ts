@@ -14,7 +14,7 @@ export const uploadLogoCompleteHandler = async ({
   ctx,
   input,
 }: UploadLogoCompleteOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   const logoUrl = await getObjectAssetUrl("class", input.classId, "logo");
   if (!logoUrl) return;

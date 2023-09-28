@@ -17,7 +17,7 @@ export const inviteTeachersHandler = async ({
   ctx,
   input,
 }: InviteTeachersOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   await rateLimitOrThrowMultiple({
     type: RateLimitType.FanOut,

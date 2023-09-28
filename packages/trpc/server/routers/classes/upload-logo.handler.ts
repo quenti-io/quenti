@@ -10,7 +10,7 @@ type UploadLogoOptions = {
 };
 
 export const uploadLogoHandler = async ({ ctx, input }: UploadLogoOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   return getPresignedObjectAssetJwt("class", input.classId, "logo");
 };

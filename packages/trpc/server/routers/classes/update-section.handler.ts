@@ -15,7 +15,7 @@ export const updateSectionHandler = async ({
   ctx,
   input,
 }: UpdateSectionOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   try {
     await ctx.prisma.section.update({

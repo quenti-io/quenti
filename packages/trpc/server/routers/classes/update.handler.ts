@@ -12,6 +12,15 @@ type UpdateOptions = {
 export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
   await isClassTeacherOrThrow(input.id, ctx.session.user.id);
 
+  const currentName = await ctx.prisma.class.findUniqueOrThrow({
+    where: {
+      id: input.id,
+    },
+    select: {
+      name: true,
+    },
+  });
+
   const updated = await ctx.prisma.class.update({
     where: {
       id: input.id,
@@ -27,13 +36,14 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
     },
   });
 
-  await inngest.send({
-    name: "cortex/classify-class",
-    data: {
-      classId: updated.id,
-      name: updated.name,
-    },
-  });
+  if (currentName.name !== updated.name)
+    await inngest.send({
+      name: "cortex/classify-class",
+      data: {
+        classId: updated.id,
+        name: updated.name,
+      },
+    });
 
   return updated;
 };

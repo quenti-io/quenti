@@ -4,7 +4,10 @@ import { Prisma, type PrismaClient } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
 
-import { getClassMember } from "../../lib/queries/classes";
+import {
+  getClassMember,
+  getClassOrganizationMember,
+} from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TGetSchema } from "./get.schema";
 
@@ -183,19 +186,27 @@ type Widened = Widen<AwaitedGetTeacher | AwaitedGetStudent>;
 
 export const getHandler = async ({ ctx, input }: GetOptions) => {
   const member = await getClassMember(input.id, ctx.session.user.id);
-  if (!member) throw new TRPCError({ code: "NOT_FOUND" });
+  let orgMember: Awaited<ReturnType<typeof getClassOrganizationMember>> = null;
+  if (!member) {
+    orgMember = await getClassOrganizationMember(input.id, ctx.session.user.id);
+    if (!orgMember) throw new TRPCError({ code: "NOT_FOUND" });
+  }
 
-  await ctx.prisma.classMembership.update({
-    where: {
-      id: member.id,
-    },
-    data: {
-      viewedAt: new Date(),
-    },
-  });
+  if (member) {
+    await ctx.prisma.classMembership.update({
+      where: {
+        id: member.id,
+      },
+      data: {
+        viewedAt: new Date(),
+      },
+    });
+  }
 
   const class_ = (
-    member.type === "Teacher"
+    member?.type === "Teacher" ||
+    orgMember?.role === "Admin" ||
+    orgMember?.role === "Owner"
       ? await getTeacher(input.id, ctx.prisma)
       : await getStudent(input.id, ctx.prisma)
   ) as Widened;
@@ -224,9 +235,10 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       teacherInvites: class_.invites,
     }),
     me: {
-      id: member.id,
-      type: member.type,
-      sectionId: member.sectionId,
+      id: member?.id || orgMember?.id,
+      type:
+        member?.type || (orgMember?.role == "Member" ? "Student" : "Teacher"),
+      sectionId: member?.sectionId,
     },
   };
 };

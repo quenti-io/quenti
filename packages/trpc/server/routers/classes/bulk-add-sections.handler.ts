@@ -13,7 +13,7 @@ export const bulkAddSectionsHandler = async ({
   ctx,
   input,
 }: BulkAddSectionsOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
   const sections = await ctx.prisma.section.findMany({
     where: {
