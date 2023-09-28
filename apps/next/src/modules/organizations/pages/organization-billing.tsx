@@ -44,7 +44,7 @@ export const OrganizationBilling = () => {
 
   const firstConflicting = org?.domains.find((d) => d.conflicting);
 
-  const cardBg = useColorModeValue("white", "gray.750");
+  const cardBg = useColorModeValue("white", "gray.800");
   const highlight = useColorModeValue("blue.500", "blue.200");
   const mutedText = useColorModeValue("gray.700", "gray.300");
 
@@ -91,8 +91,7 @@ export const OrganizationBilling = () => {
           <Card
             px="6"
             py="6"
-            variant="outline"
-            rounded="md"
+            rounded="xl"
             borderLeftColor="orange.400"
             borderLeftWidth="2px"
             shadow="md"

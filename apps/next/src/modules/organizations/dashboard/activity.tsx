@@ -16,14 +16,17 @@ import { api } from "@quenti/trpc";
 
 import {
   Box,
+  Center,
   HStack,
+  Heading,
   Skeleton,
   SkeletonText,
   Spinner,
+  VStack,
   keyframes,
 } from "@chakra-ui/react";
 
-import { IconPointFilled } from "@tabler/icons-react";
+import { IconActivityHeartbeat, IconPointFilled } from "@tabler/icons-react";
 
 import { useOrganization } from "../../../hooks/use-organization";
 import { Card } from "./card";
@@ -35,6 +38,39 @@ const pulse = keyframes({
 });
 
 const PERIODS = ["12h", "24h", "5d", "14d", "30d"] as const;
+
+const placeholderData = [
+  {
+    time: "12:00",
+    Students: 0,
+    Teachers: 0,
+  },
+  {
+    time: "13:00",
+    Students: 10,
+    Teachers: 12,
+  },
+  {
+    time: "14:00",
+    Students: 10,
+    Teachers: 6,
+  },
+  {
+    time: "15:00",
+    Students: 4,
+    Teachers: 6,
+  },
+  {
+    time: "16:00",
+    Students: 7,
+    Teachers: 7,
+  },
+  {
+    time: "17:00",
+    Students: 10,
+    Teachers: 0,
+  },
+];
 
 const OrganizationActivityRaw = () => {
   const router = useRouter();
@@ -191,16 +227,60 @@ const OrganizationActivityRaw = () => {
           </HStack>
         </TabGroup>
       </Flex>
-      <Skeleton h="full" mt="8" rounded="xl" isLoaded={initialized}>
+      <Skeleton
+        h="full"
+        mt="8"
+        rounded="xl"
+        isLoaded={initialized}
+        position="relative"
+        overflow="hidden"
+      >
         <AreaChart
           className="-ml-4 h-[436px] w-[calc(100%+16px)]"
-          data={chartData}
+          data={chartData.length > 1 ? chartData : placeholderData}
           index="time"
           categories={["Students", "Teachers"]}
           colors={["blue", "orange"]}
           showLegend={false}
           allowDecimals={false}
         />
+        {initialized && chartData.length <= 1 && (
+          <Center
+            position="absolute"
+            top="0"
+            left="0"
+            w="full"
+            h="full"
+            className="bg-gray-50 bg-opacity-50 backdrop-blur-lg dark:bg-gray-900 dark:bg-opacity-50"
+            rounded="xl"
+            borderWidth="1px"
+            borderColor="gray.200"
+            _dark={{
+              borderColor: "gray.750",
+            }}
+            p="10"
+            textAlign="center"
+          >
+            <VStack>
+              <HStack>
+                <IconActivityHeartbeat />
+                <Heading size="lg">No activity yet</Heading>
+              </HStack>
+              <Text>
+                {!orgData?.published ? (
+                  "Publish your organization to start collecting insights."
+                ) : (
+                  <>
+                    Your organization doesn&apos;t have enough recorded activity
+                    for this period.
+                    <br />
+                    Check back later.
+                  </>
+                )}
+              </Text>
+            </VStack>
+          </Center>
+        )}
       </Skeleton>
     </Card>
   );

@@ -5,10 +5,12 @@ import React from "react";
 
 import { type RouterOutputs, api } from "@quenti/trpc";
 
-import { Skeleton } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 
 import { IconUsers } from "@tabler/icons-react";
 
+import { useOrganization } from "../../../hooks/use-organization";
+import { plural } from "../../../utils/string";
 import { Card } from "../dashboard/card";
 
 const OrganizationUsersRaw = () => {
@@ -16,6 +18,7 @@ const OrganizationUsersRaw = () => {
   const id = router.query.id as string;
   const session = useSession();
 
+  const { data: org } = useOrganization();
   const { data } = api.organizations.getUserStatistics.useQuery(
     { id },
     {
@@ -43,20 +46,44 @@ const OrganizationUsersRaw = () => {
   const { students, teachers } = consolidate(data || []);
 
   return (
-    <Skeleton rounded="xl" isLoaded={!!data}>
+    <Skeleton rounded="xl" isLoaded={!!data && !!org}>
       <Card>
         <Flex justifyContent="start" className="space-x-4">
           <Icon icon={IconUsers} variant="light" size="md" color="blue" />
           <div>
             <Text>Total users</Text>
-            <Metric className="font-display">{students + teachers}</Metric>
+            <Metric className="font-display">
+              {(students + teachers).toLocaleString()}
+            </Metric>
           </div>
         </Flex>
-        <CategoryBar
-          className="mt-4"
-          values={[students, teachers]}
-          colors={["blue", "orange"]}
-        />
+        <Box mt="4" h="9">
+          {org?.published ? (
+            <div className="space-y-2">
+              <Flex justifyContent="between">
+                <Text>
+                  {plural(students, "student", { toLocaleString: true })}
+                </Text>
+                <Text>
+                  {plural(teachers, "teacher", { toLocaleString: true })}
+                </Text>
+              </Flex>
+              <CategoryBar
+                values={[
+                  (students / (students + teachers)) * 100,
+                  (teachers / (students + teachers)) * 100,
+                ]}
+                colors={["blue", "orange"]}
+                showLabels={false}
+              />
+            </div>
+          ) : (
+            <Text>
+              Your organization needs to be published before you can enroll
+              users.
+            </Text>
+          )}
+        </Box>
         <Legend
           className="mt-3"
           categories={["Students", "Teachers"]}
