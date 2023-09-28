@@ -123,7 +123,6 @@ model Organization {
   id        String   @id @default(cuid())
   name      String
   createdAt DateTime @default(now())
-  icon      Int      @default(0)
   logoUrl   String?
   logoHash  String?
   published Boolean  @default(false)
