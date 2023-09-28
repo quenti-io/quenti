@@ -20,6 +20,12 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
     data: {
       name: input.name,
       icon: input.icon,
+      ...(input.clearLogo
+        ? {
+            logoUrl: null,
+            logoHash: null,
+          }
+        : {}),
     },
   });
 };

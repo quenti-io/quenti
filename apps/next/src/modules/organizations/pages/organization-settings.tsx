@@ -14,7 +14,6 @@ import {
   Flex,
   HStack,
   Heading,
-  IconButton,
   Input,
   Skeleton,
   SkeletonText,
@@ -29,6 +28,7 @@ import {
   IconLogout,
   IconSettings,
   IconTrash,
+  IconUpload,
   IconWorldCheck,
   IconWorldPlus,
 } from "@tabler/icons-react";
@@ -37,17 +37,18 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { Toast } from "../../../components/toast";
 import { useOrganization } from "../../../hooks/use-organization";
-import { ORGANIZATION_ICONS } from "../../../utils/icons";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
 import { DomainCard } from "../domain-card";
 import { DomainFilterCard } from "../domain-filter-card";
 import { DomainFilterModal } from "../domain-filter-modal";
 import { LeaveOrganizationModal } from "../leave-organization-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
+import { OrganizationLogo } from "../organization-logo";
 import { RemoveDomainFilterModal } from "../remove-domain-filter-modal";
 import { RemoveDomainModal } from "../remove-domain-modal";
 import { SettingsWrapper } from "../settings-wrapper";
 import { UpdateDomainModal } from "../update-domain-modal";
+import { useOrgLogoUpload } from "../use-org-logo-upload";
 import { getBaseDomain } from "../utils/get-base-domain";
 
 export const OrganizationSettings = () => {
@@ -61,7 +62,6 @@ export const OrganizationSettings = () => {
   const toast = useToast();
   const inputBg = useColorModeValue("white", "gray.900");
   const inputBorder = useColorModeValue("gray.200", "gray.600");
-  const iconColor = useColorModeValue("#171923", "white");
   const mutedColor = useColorModeValue("gray.600", "gray.400");
   const linkDefault = useColorModeValue("gray.700", "gray.300");
   const highlight = useColorModeValue("blue.500", "blue.200");
@@ -79,8 +79,22 @@ export const OrganizationSettings = () => {
     { id: string; domain: string } | undefined
   >();
 
+  const [imageSrc, setImageSrc] = React.useState<string | null | undefined>(
+    undefined,
+  );
+  const imageLoaded = imageSrc !== undefined;
+
+  const { file, onInputFile, uploadLogo } = useOrgLogoUpload({});
+  React.useEffect(() => {
+    if (file) setImageSrc(file as string);
+  }, [file]);
+
   const update = api.organizations.update.useMutation({
     onSuccess: async () => {
+      if (file && imageSrc !== null) {
+        await uploadLogo.mutateAsync({ orgId: org!.id });
+      }
+
       toast({
         title: "Organization updated successfully",
         status: "success",
@@ -98,6 +112,7 @@ export const OrganizationSettings = () => {
       setMounted(true);
       setOrgName(org.name);
       setIcon(org.icon);
+      setImageSrc(org.logoUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
@@ -183,6 +198,7 @@ export const OrganizationSettings = () => {
                   id: org!.id,
                   name: orgName,
                   icon: icon || 0,
+                  clearLogo: imageSrc === null,
                 });
               }}
             >
@@ -198,6 +214,75 @@ export const OrganizationSettings = () => {
         isLoaded={!!org}
       >
         <Stack spacing="5" pb="2px">
+          <HStack spacing="4">
+            <Skeleton rounded="xl" isLoaded={imageLoaded}>
+              <Box
+                w="16"
+                minW="16"
+                h="16"
+                rounded="full"
+                overflow="hidden"
+                shadow="lg"
+              >
+                <OrganizationLogo
+                  width={64}
+                  height={64}
+                  url={imageSrc}
+                  local={!!file}
+                />
+              </Box>
+            </Skeleton>
+            <Stack>
+              <input
+                onInput={onInputFile}
+                style={{ position: "absolute", display: "none" }}
+                type="file"
+                id="upload-logo-input"
+                accept="image/*"
+              />
+              <Flex alignItems="center" height="42px">
+                <SkeletonText
+                  fitContent
+                  noOfLines={2}
+                  skeletonHeight={3}
+                  isLoaded={imageLoaded}
+                >
+                  <Text
+                    fontSize="sm"
+                    maxW="xs"
+                    color="gray.600"
+                    _dark={{
+                      color: "gray.400",
+                    }}
+                  >
+                    We recommend using an image of at least 512x512 for the
+                    organization.
+                  </Text>
+                </SkeletonText>
+              </Flex>
+              <ButtonGroup size="sm" colorScheme="gray" variant="outline">
+                <Skeleton rounded="lg" isLoaded={imageLoaded}>
+                  <label htmlFor="upload-logo-input">
+                    <Button
+                      as="span"
+                      leftIcon={<IconUpload size={16} />}
+                      cursor="pointer"
+                    >
+                      Upload
+                    </Button>
+                  </label>
+                </Skeleton>
+                <Skeleton rounded="lg" isLoaded={imageLoaded}>
+                  <Button
+                    isDisabled={!org?.logoUrl && !file}
+                    onClick={() => setImageSrc(null)}
+                  >
+                    Remove
+                  </Button>
+                </Skeleton>
+              </ButtonGroup>
+            </Stack>
+          </HStack>
           <Stack spacing="1">
             <SkeletonLabel isLoaded={!!org}>Name</SkeletonLabel>
             <Skeleton rounded="md" w="full" isLoaded={!!org}>
@@ -210,31 +295,6 @@ export const OrganizationSettings = () => {
                 isDisabled={!isAdmin}
               />
             </Skeleton>
-          </Stack>
-          <Stack spacing="1">
-            <SkeletonLabel isLoaded={!!org}>Icon</SkeletonLabel>
-            <Box ml="-4px" mt="-4px">
-              {ORGANIZATION_ICONS.map((Icon, i) => (
-                <Box display="inline-block" p="1" key={i}>
-                  <Skeleton rounded="md" isLoaded={!!org}>
-                    <IconButton
-                      w="max"
-                      variant={icon == i ? "solid" : "ghost"}
-                      aria-label="Icon"
-                      onClick={() => setIcon(i)}
-                      isDisabled={!isAdmin}
-                      icon={
-                        <Icon
-                          size={18}
-                          style={{ transition: "all 300ms" }}
-                          color={icon == i ? "white" : iconColor}
-                        />
-                      }
-                    />
-                  </Skeleton>
-                </Box>
-              ))}
-            </Box>
           </Stack>
           <Stack spacing="1">
             <SkeletonLabel isLoaded={!!org}>Domains</SkeletonLabel>

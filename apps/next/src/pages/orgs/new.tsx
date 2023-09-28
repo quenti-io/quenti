@@ -105,7 +105,7 @@ export default function NewOrganization() {
             <Stack spacing="6">
               <HStack spacing="4">
                 <Box
-                  rounded="xl"
+                  rounded="full"
                   minW="64px"
                   minH="64px"
                   bg="white"

@@ -31,6 +31,7 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
       ...(input.clearLogo
         ? {
             logoUrl: null,
+            logoHash: null,
           }
         : {}),
     },

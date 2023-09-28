@@ -73,7 +73,7 @@ export const ClassSettings = () => {
 
   const update = api.classes.update.useMutation({
     onSuccess: async () => {
-      if (file) {
+      if (file && imageSrc !== null) {
         await uploadLogo.mutateAsync({ classId: data!.id });
       }
 
