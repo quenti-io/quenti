@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 
 import {
+  IconBuildingSkyscraper,
   IconChevronDown,
   IconLogout,
   IconMoon,
@@ -28,7 +29,6 @@ import {
 } from "@tabler/icons-react";
 
 import { useMe } from "../../hooks/use-me";
-import { organizationIcon } from "../../utils/icons";
 import { MenuOption } from "../menu-option";
 
 export const UserMenu = () => {
@@ -41,8 +41,6 @@ export const UserMenu = () => {
 
   const { colorMode, toggleColorMode } = useColorMode();
   const [menuOpen, setMenuOpen] = React.useState(false);
-
-  const OrgIcon = organizationIcon(me?.orgMembership?.organization.icon || 0);
 
   return (
     <Menu
@@ -99,7 +97,7 @@ export const UserMenu = () => {
             <MenuDivider />
             <Link href={`/orgs/${me.orgMembership.organization.id}`} passHref>
               <MenuOption
-                icon={<OrgIcon size={18} />}
+                icon={<IconBuildingSkyscraper size={18} />}
                 label={me.orgMembership.organization.name}
               />
             </Link>

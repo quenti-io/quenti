@@ -16,13 +16,14 @@ import {
 } from "@chakra-ui/react";
 
 import { getColorFromId } from "../../utils/color";
-import { organizationIcon } from "../../utils/icons";
 import { plural } from "../../utils/string";
+import { OrganizationLogo } from "./organization-logo";
 
 export interface OrganizationCardProps {
   id: string;
   name: string;
-  icon?: number;
+  logoUrl?: string | null;
+  logoHash?: string | null;
   skeleton?: boolean;
   disableLink?: boolean;
   members: number;
@@ -32,7 +33,8 @@ export interface OrganizationCardProps {
 export const OrganizationCard: React.FC<OrganizationCardProps> = ({
   id,
   name,
-  icon = 0,
+  logoUrl,
+  logoHash,
   skeleton,
   disableLink = false,
   members,
@@ -48,11 +50,8 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
       </LinkOverlay>
     );
 
-  const Icon = organizationIcon(icon);
-
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
-  const iconBg = useColorModeValue("gray.700", "whiteAlpha.900");
 
   return (
     <Wrapper rounded="md">
@@ -100,22 +99,13 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
                 zIndex="100"
                 position="relative"
                 rounded="full"
-                p="4px"
               >
-                <Box
-                  w="full"
-                  h="full"
-                  rounded="full"
-                  bg={iconBg}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  shadow="xl"
-                >
-                  <Box color={linkBg}>
-                    <Icon size={32} />
-                  </Box>
-                </Box>
+                <OrganizationLogo
+                  width={64}
+                  height={64}
+                  url={logoUrl}
+                  hash={logoHash}
+                />
               </Box>
             </Flex>
             <Stack ml="1" spacing="1">

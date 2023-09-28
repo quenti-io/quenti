@@ -17,7 +17,6 @@ export const OnboardingInvite = () => {
 
   const acceptInvite = api.organizations.acceptInvite.useMutation({
     onSuccess: async () => {
-      await utils.organizations.getBelonging.invalidate();
       await utils.user.me.invalidate();
       next();
     },
@@ -43,7 +42,8 @@ export const OnboardingInvite = () => {
           {invite ? (
             <OrganizationCard
               id={invite.id}
-              icon={invite.icon}
+              logoUrl={invite.logoUrl}
+              logoHash={invite.logoHash}
               name={invite.name}
               members={invite._count.members}
               students={invite._count.users}

@@ -14,13 +14,14 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 
+import { IconBuildingSkyscraper } from "@tabler/icons-react";
+
 import { Loading } from "../../components/loading";
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useLoading } from "../../hooks/use-loading";
 import { useMe } from "../../hooks/use-me";
 import { useUnauthedRedirect } from "../../hooks/use-unauthed-redirect";
 import { getSafeRedirectUrl } from "../../lib/urls";
-import { organizationIcon } from "../../utils/icons";
 
 const computeMap = (
   invite = false,
@@ -93,10 +94,6 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
     } else void router.push(getFinalizedCallbackUrl());
   };
 
-  const Icon = me?.organization
-    ? organizationIcon(me.organization.icon)
-    : React.Fragment;
-
   const muted = useColorModeValue("gray.500", "gray.500");
 
   const { loading } = useLoading();
@@ -116,7 +113,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
             >
               <HStack>
                 <Box color={muted}>
-                  <Icon />
+                  <IconBuildingSkyscraper />
                 </Box>
                 <Heading size="sm">{me.organization.name}</Heading>
               </HStack>

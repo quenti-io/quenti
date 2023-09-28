@@ -30,7 +30,6 @@ import { ZVerifyStudentDomainSchema } from "./verify-student-domain.schema";
 
 type OrganizationsRouterHandlerCache = {
   handlers: {
-    ["get-belonging"]?: typeof import("./get-belonging.handler").getBelongingHandler;
     get?: typeof import("./get.handler").getHandler;
     ["get-activity"]?: typeof import("./get-activity.handler").getActivityHandler;
     ["get-user-statistics"]?: typeof import("./get-user-statistics.handler").getUserStatisticsHandler;
@@ -67,10 +66,6 @@ const HANDLER_CACHE: OrganizationsRouterHandlerCache = {
 };
 
 export const organizationsRouter = createTRPCRouter({
-  getBelonging: teacherProcedure.query(async ({ ctx }) => {
-    await loadHandler(HANDLER_CACHE, "get-belonging");
-    return HANDLER_CACHE.handlers["get-belonging"]!({ ctx });
-  }),
   get: teacherProcedure.input(ZGetSchema).query(async ({ ctx, input }) => {
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers["get"]!({ ctx, input });

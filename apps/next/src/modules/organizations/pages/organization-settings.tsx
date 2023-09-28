@@ -68,7 +68,6 @@ export const OrganizationSettings = () => {
 
   const [mounted, setMounted] = React.useState(false);
   const [orgName, setOrgName] = React.useState("");
-  const [icon, setIcon] = React.useState<number | undefined>();
   const [leaveOpen, setLeaveOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [domainVerify, setDomainVerify] = React.useState(false);
@@ -111,7 +110,6 @@ export const OrganizationSettings = () => {
     if (org && !mounted) {
       setMounted(true);
       setOrgName(org.name);
-      setIcon(org.icon);
       setImageSrc(org.logoUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,7 +184,7 @@ export const OrganizationSettings = () => {
               variant="ghost"
               onClick={() => {
                 setOrgName(org!.name);
-                setIcon(org!.icon);
+                setImageSrc(org!.logoUrl);
               }}
             >
               Reset
@@ -197,7 +195,6 @@ export const OrganizationSettings = () => {
                 update.mutate({
                   id: org!.id,
                   name: orgName,
-                  icon: icon || 0,
                   clearLogo: imageSrc === null,
                 });
               }}

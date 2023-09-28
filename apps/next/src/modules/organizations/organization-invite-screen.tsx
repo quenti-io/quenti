@@ -67,7 +67,8 @@ export const OrganizationInviteScreen = () => {
           <Box w="lg">
             <OrganizationCard
               id={invite.id}
-              icon={invite.icon}
+              logoUrl={invite.logoUrl}
+              logoHash={invite.logoHash}
               name={invite.name}
               members={invite._count.members}
               students={invite._count.users}
