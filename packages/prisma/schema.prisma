@@ -124,6 +124,8 @@ model Organization {
   name      String
   createdAt DateTime @default(now())
   icon      Int      @default(0)
+  logoUrl   String?
+  logoHash  String?
   published Boolean  @default(false)
   /// @zod.custom(imports.orgMetadataSchema)
   metadata  Json?
