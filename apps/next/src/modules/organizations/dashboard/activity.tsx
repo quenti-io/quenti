@@ -43,6 +43,7 @@ const OrganizationActivityRaw = () => {
 
   const [activeUsers, setActiveUsers] = React.useState<number>(100);
   const [periodIndex, setPeriodIndex] = React.useState<number>(0);
+  const [initialized, setInitialized] = React.useState(false);
   const [chartData, setChartData] = React.useState<
     ReturnType<typeof formatActivityData>
   >([]);
@@ -59,8 +60,6 @@ const OrganizationActivityRaw = () => {
       },
     },
   );
-
-  const initialized = !!chartData.length;
 
   React.useEffect(() => {
     if (!initialized || !data) return;
@@ -113,6 +112,7 @@ const OrganizationActivityRaw = () => {
   React.useEffect(() => {
     if (isLoading || !data?.activity || !orgData) return;
     setChartData(formatActivityData(data.activity));
+    setInitialized(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, orgData]);
 
@@ -191,7 +191,7 @@ const OrganizationActivityRaw = () => {
           </HStack>
         </TabGroup>
       </Flex>
-      <Skeleton h="full" mt="8" rounded="xl" isLoaded={!!chartData.length}>
+      <Skeleton h="full" mt="8" rounded="xl" isLoaded={initialized}>
         <AreaChart
           className="-ml-4 h-[436px] w-[calc(100%+16px)]"
           data={chartData}

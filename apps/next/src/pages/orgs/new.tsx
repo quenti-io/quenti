@@ -33,7 +33,6 @@ const schema = z.object({
     .string()
     .nonempty({ message: "Enter a name" })
     .max(50, { message: "Name must be less than 50 characters" }),
-  icon: z.number().int().min(0),
 });
 
 interface NewOrganizationFormInput {

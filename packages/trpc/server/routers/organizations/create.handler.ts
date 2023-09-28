@@ -49,7 +49,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
   return await ctx.prisma.organization.create({
     data: {
       name: input.name,
-      icon: input.icon,
+      icon: 0,
       members: {
         create: {
           userId: ctx.session.user.id,
