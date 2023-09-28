@@ -26,15 +26,13 @@ import { plural } from "../../../utils/string";
 import { EditMemberModal } from "../edit-member-modal";
 import { InviteMemberModal } from "../invite-member-modal";
 import { OrganizationAdminOnly } from "../organization-admin-only";
-import { OrganizationWelcome } from "../organization-welcome";
 import { RemoveMemberModal } from "../remove-member-modal";
 import { getBaseDomain } from "../utils/get-base-domain";
 
-export const OrganizationTeachers = () => {
+export const OrganizationMembers = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: session } = useSession();
-  const isUpgraded = router.query.upgrade === "success";
 
   const { data: org } = api.organizations.get.useQuery(
     { id },
@@ -108,7 +106,6 @@ export const OrganizationTeachers = () => {
   return (
     <Stack spacing="10" pb="20">
       <Stack spacing="6">
-        {org && isUpgraded && org.published && <OrganizationWelcome />}
         {org && (
           <>
             <InviteMemberModal

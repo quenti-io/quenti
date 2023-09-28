@@ -10,7 +10,7 @@ import {
 import { IconConfetti } from "@tabler/icons-react";
 
 export const OrganizationWelcome = () => {
-  const cardBg = useColorModeValue("white", "gray.750");
+  const cardBg = useColorModeValue("white", "gray.800");
   const muted = useColorModeValue("gray.700", "gray.300");
 
   return (
@@ -19,8 +19,9 @@ export const OrganizationWelcome = () => {
         p="6"
         shadow="md"
         bg={cardBg}
-        borderWidth="2px"
+        borderBottomWidth="2px"
         borderColor="blue.300"
+        rounded="xl"
       >
         <Stack>
           <Heading size="md" display="inline-flex" alignItems="center" gap="2">
