@@ -73,8 +73,16 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
           }}
         />
         <Box pb="30" style={{ minHeight: "calc(100vh - 80px)" }}>
-          <Tabs borderColor={borderColor} size="sm" index={index} isManual>
-            <OrganizationTabList />
+          <Tabs
+            borderColor={borderColor}
+            size="sm"
+            index={index}
+            isManual
+            overflow="hidden"
+          >
+            <Box pb="2" overflowX="auto">
+              <OrganizationTabList />
+            </Box>
             <Container maxW="6xl" overflow="hidden">
               <TabPanels mt="10">{children}</TabPanels>
             </Container>
@@ -153,7 +161,8 @@ const OrganizationTabList = () => {
 
   return (
     <Box
-      w="full"
+      w="fit-content"
+      minW="100%"
       borderBottomWidth="2px"
       px="10"
       borderColor="gray.200"
