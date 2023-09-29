@@ -164,7 +164,7 @@ const OrganizationTabList = () => {
       w="fit-content"
       minW="100%"
       borderBottomWidth="2px"
-      px="10"
+      px={{ base: 8, md: "10" }}
       borderColor="gray.200"
       _dark={{
         borderColor: "gray.750",
