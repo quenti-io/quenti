@@ -11,8 +11,8 @@ import { ZEditMemberRoleSchema } from "./edit-member-role.schema";
 import { ZGetActivitySchema } from "./get-activity.schema";
 import { ZGetClassStatisticsSchema } from "./get-class-statistics.schema";
 import { ZGetClassesSchema } from "./get-classes.schema";
-import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetUserStatisticsSchema } from "./get-user-statistics.schema";
+import { ZGetUsersSchema } from "./get-users.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZInviteMemberSchema } from "./invite-member.schema";
 import { ZPublishSchema } from "./publish.schema";
@@ -35,7 +35,7 @@ type OrganizationsRouterHandlerCache = {
     ["get-user-statistics"]?: typeof import("./get-user-statistics.handler").getUserStatisticsHandler;
     ["get-class-statistics"]?: typeof import("./get-class-statistics.handler").getClassStatisticsHandler;
     ["get-classes"]?: typeof import("./get-classes.handler").getClassesHandler;
-    ["get-students"]?: typeof import("./get-students.handler").getStudentsHandler;
+    ["get-users"]?: typeof import("./get-users.handler").getStudentsHandler;
     create?: typeof import("./create.handler").createHandler;
     update?: typeof import("./update.handler").updateHandler;
     publish?: typeof import("./publish.handler").publishHandler;
@@ -94,11 +94,11 @@ export const organizationsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "get-classes");
       return HANDLER_CACHE.handlers["get-classes"]!({ ctx, input });
     }),
-  getStudents: teacherProcedure
-    .input(ZGetStudentsSchema)
+  getUsers: teacherProcedure
+    .input(ZGetUsersSchema)
     .query(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "get-students");
-      return HANDLER_CACHE.handlers["get-students"]!({ ctx, input });
+      await loadHandler(HANDLER_CACHE, "get-users");
+      return HANDLER_CACHE.handlers["get-users"]!({ ctx, input });
     }),
   create: teacherProcedure
     .input(ZCreateSchema)

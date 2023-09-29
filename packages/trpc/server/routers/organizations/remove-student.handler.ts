@@ -17,6 +17,12 @@ export const removeStudentHandler = async ({
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
+  if (input.studentId == ctx.session.user.id)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Cannot remove yourself",
+    });
+
   const student = await ctx.prisma.user.findFirst({
     where: {
       id: input.studentId,

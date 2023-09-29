@@ -21,7 +21,7 @@ export const RemoveStudentModal: React.FC<RemoveStudentModalProps> = ({
   const removeStudent = api.organizations.removeStudent.useMutation({
     onSuccess: async () => {
       onClose();
-      await utils.organizations.getStudents.invalidate();
+      await utils.organizations.getUsers.invalidate();
     },
   });
 

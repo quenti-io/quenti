@@ -70,7 +70,7 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
       onClose();
       addStudentFormMethods.reset();
 
-      await utils.organizations.getStudents.invalidate();
+      await utils.organizations.getUsers.invalidate();
     },
     onError: (error) => {
       switch (error.message) {
