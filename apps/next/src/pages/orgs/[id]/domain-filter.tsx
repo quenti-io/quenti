@@ -118,17 +118,23 @@ export default function OrgDomainFilter() {
                 onChangeFilter={setFilter}
                 onChangeLoading={setLoading}
               >
-                <ButtonGroup w="full" size="sm">
+                <ButtonGroup w="full">
                   <Button
                     w="full"
                     variant="outline"
                     leftIcon={<IconArrowLeft size={18} />}
                     colorScheme="gray"
                     onClick={() => router.back()}
+                    fontSize="sm"
                   >
                     Go back
                   </Button>
-                  <Button w="full" type="submit" isLoading={loading}>
+                  <Button
+                    w="full"
+                    type="submit"
+                    isLoading={loading}
+                    fontSize="sm"
+                  >
                     Create filter
                   </Button>
                 </ButtonGroup>
@@ -164,6 +170,7 @@ const ExampleCard = ({
     <Card
       bg={cardBg}
       p="4"
+      h="full"
       shadow="lg"
       cursor="pointer"
       onClick={onClick}

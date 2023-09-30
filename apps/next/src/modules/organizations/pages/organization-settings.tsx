@@ -212,7 +212,7 @@ export const OrganizationSettings = () => {
       >
         <Stack spacing="5" pb="2px">
           <HStack spacing="4">
-            <Skeleton rounded="xl" isLoaded={imageLoaded}>
+            <Skeleton rounded="full" isLoaded={imageLoaded}>
               <Box
                 w="16"
                 minW="16"

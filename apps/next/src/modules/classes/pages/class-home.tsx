@@ -2,7 +2,7 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
-import { Stack } from "@chakra-ui/react";
+import { GridItem, Stack } from "@chakra-ui/react";
 
 import { AddEntitiesModal } from "../../../components/add-entities-modal";
 import { FolderCard } from "../../../components/folder-card";
@@ -106,20 +106,21 @@ export const ClassHome = () => {
             type="folder"
           >
             {data?.folders?.map((folder) => (
-              <FolderCard
-                key={folder.id}
-                folder={folder}
-                numSets={folder._count.studySets}
-                user={folder.user}
-                removable={isTeacher}
-                onRemove={() =>
-                  removeEntity.mutate({
-                    classId: data.id,
-                    entityId: folder.id,
-                    type: "Folder",
-                  })
-                }
-              />
+              <GridItem key={folder.id}>
+                <FolderCard
+                  folder={folder}
+                  numSets={folder._count.studySets}
+                  user={folder.user}
+                  removable={isTeacher}
+                  onRemove={() =>
+                    removeEntity.mutate({
+                      classId: data.id,
+                      entityId: folder.id,
+                      type: "Folder",
+                    })
+                  }
+                />
+              </GridItem>
             ))}
           </EntityGroup>
         )}
@@ -134,20 +135,21 @@ export const ClassHome = () => {
             type="studySet"
           >
             {data?.studySets?.map((studySet) => (
-              <StudySetCard
-                key={studySet.id}
-                studySet={studySet}
-                numTerms={studySet._count.terms}
-                user={studySet.user}
-                removable={isTeacher}
-                onRemove={() =>
-                  removeEntity.mutate({
-                    classId: data.id,
-                    entityId: studySet.id,
-                    type: "StudySet",
-                  })
-                }
-              />
+              <GridItem key={studySet.id}>
+                <StudySetCard
+                  studySet={studySet}
+                  numTerms={studySet._count.terms}
+                  user={studySet.user}
+                  removable={isTeacher}
+                  onRemove={() =>
+                    removeEntity.mutate({
+                      classId: data.id,
+                      entityId: studySet.id,
+                      type: "StudySet",
+                    })
+                  }
+                />
+              </GridItem>
             ))}
           </EntityGroup>
         )}

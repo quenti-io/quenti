@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import React from "react";
 
 import {
   Box,
@@ -27,7 +28,7 @@ import { OrganizationLogo } from "./organization-logo";
 import { getBaseDomain } from "./utils/get-base-domain";
 import { useOnboardingStep } from "./utils/use-onboarding-step";
 
-export const OrgDisplay = () => {
+const OrgDisplayRaw = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const onboardingStep = useOnboardingStep();
@@ -118,3 +119,5 @@ export const OrgDisplay = () => {
     </HStack>
   );
 };
+
+export const OrgDisplay = React.memo(OrgDisplayRaw);

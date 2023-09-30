@@ -100,7 +100,7 @@ export default function NewOrganization() {
       currentStep={0}
     >
       <form onSubmit={newOrganizationFormMethods.handleSubmit(onSubmit)}>
-        <Card p="8" variant="outline" shadow="lg" rounded="lg">
+        <Card p="8" variant="outline" shadow="lg" rounded="xl">
           <Stack spacing="10">
             <Stack spacing="6">
               <HStack spacing="4">
@@ -177,8 +177,13 @@ export default function NewOrganization() {
                 )}
               />
             </Stack>
-            <ButtonGroup w="full" size="sm">
-              <Button variant="outline" w="full" onClick={() => router.back()}>
+            <ButtonGroup w="full">
+              <Button
+                variant="outline"
+                w="full"
+                onClick={() => router.back()}
+                fontSize="sm"
+              >
                 Cancel
               </Button>
               <Button
@@ -186,6 +191,7 @@ export default function NewOrganization() {
                 rightIcon={<IconArrowRight size="18" />}
                 type="submit"
                 isLoading={create.isLoading}
+                fontSize="sm"
               >
                 Continue
               </Button>

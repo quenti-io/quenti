@@ -83,7 +83,7 @@ export default function CreateSections() {
       currentStep={2}
     >
       <form onSubmit={createSectionsMethods.handleSubmit(onSubmit)}>
-        <Card p="8" variant="outline" shadow="lg" rounded="lg">
+        <Card p="8" variant="outline" shadow="lg" rounded="xl">
           <Stack spacing="10">
             <Stack spacing="4">
               <FormLabel m="0" fontSize="sm" color={labelColor}>

@@ -105,7 +105,7 @@ export default function TeachersOnboarding() {
               </Fade>
             </Skeleton>
           </Flex>
-          <Card p="8" pb="4" variant="outline" shadow="lg" rounded="lg">
+          <Card p="8" pb="4" variant="outline" shadow="lg" rounded="xl">
             <Stack spacing="4">
               <Stack spacing="0" ml="-4" mt="-4">
                 <OnboardingMember
