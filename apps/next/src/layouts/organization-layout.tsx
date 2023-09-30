@@ -26,6 +26,7 @@ import { Footer } from "../components/footer";
 import { Toast } from "../components/toast";
 import { useOrganization } from "../hooks/use-organization";
 import { useOrganizationMember } from "../hooks/use-organization-member";
+import { useStudentRedirect } from "../hooks/use-student-redirect";
 import { getBaseDomain } from "../modules/organizations/utils/get-base-domain";
 import { MainLayout } from "./main-layout";
 
@@ -35,6 +36,8 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
   const toast = useToast();
   const isUpgraded = router.query.upgrade === "success";
+
+  useStudentRedirect("/home");
 
   const { data: org, error } = useOrganization();
 
@@ -73,8 +76,16 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
           }}
         />
         <Box pb="30" style={{ minHeight: "calc(100vh - 80px)" }}>
-          <Tabs borderColor={borderColor} size="sm" index={index} isManual>
-            <OrganizationTabList />
+          <Tabs
+            borderColor={borderColor}
+            size="sm"
+            index={index}
+            isManual
+            overflow="hidden"
+          >
+            <Box pb="2" overflowX="auto">
+              <OrganizationTabList />
+            </Box>
             <Container maxW="6xl" overflow="hidden">
               <TabPanels mt="10">{children}</TabPanels>
             </Container>
@@ -153,9 +164,10 @@ const OrganizationTabList = () => {
 
   return (
     <Box
-      w="full"
+      w="fit-content"
+      minW="100%"
       borderBottomWidth="2px"
-      px="10"
+      px={{ base: 8, md: "10" }}
       borderColor="gray.200"
       _dark={{
         borderColor: "gray.750",

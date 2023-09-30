@@ -158,7 +158,7 @@ export const OrganizationMembers = () => {
               leftIcon={<IconPlus size={18} />}
               onClick={() => setInviteModalOpen(true)}
             >
-              Add
+              Invite
             </Button>
           </OrganizationAdminOnly>
         </HStack>

@@ -89,6 +89,7 @@ const OrganizationActivityRaw = () => {
     { id, period: PERIODS[periodIndex]! },
     {
       enabled: !!id && !!session.data?.user,
+      refetchInterval: 60 * 1000,
       trpc: {
         context: {
           skipBatch: true,
@@ -164,7 +165,10 @@ const OrganizationActivityRaw = () => {
         border: "none",
       }}
     >
-      <Flex justifyContent="between">
+      <Flex
+        justifyContent="between"
+        className="w-full flex-col items-start sm:flex-row sm:items-center"
+      >
         <div className="space-y-1">
           <Flex alignItems="center" className="h-5">
             <SkeletonText
@@ -197,35 +201,37 @@ const OrganizationActivityRaw = () => {
             </HStack>
           </Skeleton>
         </div>
-        <TabGroup
-          index={periodIndex}
-          onIndexChange={setPeriodIndex}
-          className="w-max"
-        >
-          <HStack spacing="3">
-            <motion.div
-              initial={{
-                opacity: 0,
-              }}
-              animate={
-                isLoading && initialized
-                  ? {
-                      opacity: 1,
-                    }
-                  : {}
-              }
-            >
-              <Spinner size="sm" color="blue.300" />
-            </motion.div>
-            <Skeleton rounded="lg" isLoaded={initialized}>
-              <TabList color="gray" variant="solid">
-                {PERIODS.map((period, index) => (
-                  <Tab key={index}>{period}</Tab>
-                ))}
-              </TabList>
-            </Skeleton>
-          </HStack>
-        </TabGroup>
+        <div className="flex w-full justify-end sm:w-max">
+          <TabGroup
+            index={periodIndex}
+            onIndexChange={setPeriodIndex}
+            className="w-max"
+          >
+            <HStack spacing="3">
+              <motion.div
+                initial={{
+                  opacity: 0,
+                }}
+                animate={
+                  isLoading && initialized
+                    ? {
+                        opacity: 1,
+                      }
+                    : {}
+                }
+              >
+                <Spinner size="sm" color="blue.300" />
+              </motion.div>
+              <Skeleton rounded="lg" isLoaded={initialized}>
+                <TabList color="gray" variant="solid">
+                  {PERIODS.map((period, index) => (
+                    <Tab key={index}>{period}</Tab>
+                  ))}
+                </TabList>
+              </Skeleton>
+            </HStack>
+          </TabGroup>
+        </div>
       </Flex>
       <Skeleton
         h="full"

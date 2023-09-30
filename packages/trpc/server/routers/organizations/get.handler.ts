@@ -29,7 +29,6 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
               username: true,
               image: true,
               email: true,
-              // TODO: include classes
             },
           },
         },
@@ -66,15 +65,6 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
           verifiedAt: true,
           verifiedEmail: true,
           filter: true,
-        },
-      },
-      _count: {
-        select: {
-          users: {
-            where: {
-              type: "Student",
-            },
-          },
         },
       },
     },

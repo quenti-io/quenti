@@ -2,6 +2,7 @@ import { collectOrganizationActivity } from "./functions/collect-organization-ac
 import { cortexClassifyClass } from "./functions/cortex-classify-class";
 import { sendClassInviteEmails } from "./functions/send-class-invite-emails";
 import { sendOrgInviteEmails } from "./functions/send-org-invite-emails";
+import { sendOrgTeacherInviteEmails } from "./functions/send-org-teacher-invite-emails";
 
 type BaseInviter = {
   id: string;
@@ -19,6 +20,16 @@ type OrgsInviteMembers = {
     inviter: BaseInviter;
     signupEmails: string[];
     loginEmails: string[];
+  };
+};
+type OrgInviteTeachers = {
+  data: {
+    org: {
+      id: string;
+      name: string;
+    };
+    inviter: BaseInviter;
+    emails: string[];
   };
 };
 type ClassesInviteTeachers = {
@@ -43,6 +54,7 @@ type CortexClassifyClass = {
 export type Events = {
   "cortex/classify-class": CortexClassifyClass;
   "orgs/invite-members": OrgsInviteMembers;
+  "orgs/invite-teachers": OrgInviteTeachers;
   "classes/invite-teachers": ClassesInviteTeachers;
 };
 
@@ -50,6 +62,7 @@ export * from "./inngest";
 export const functions = [
   // Events
   sendOrgInviteEmails,
+  sendOrgTeacherInviteEmails,
   sendClassInviteEmails,
   cortexClassifyClass,
   // Scheduled jobs

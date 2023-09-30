@@ -27,18 +27,18 @@ export const OrganizationDashboard = () => {
   );
 
   return (
-    <Container maxW="6xl" flex="1">
+    <Container maxW="6xl" flex="1" px="0">
       <Stack spacing="12">
         {org && isUpgraded && org.published && <OrganizationWelcome />}
         <Stack spacing="6">
           <OrgDisplay />
           <Grid
             numItems={1}
-            numItemsSm={2}
+            numItemsSm={1}
             numItemsLg={3}
             className="mt-6 gap-6"
           >
-            <Col numColSpan={2} className="h-[500]">
+            <Col numColSpanLg={2} className="h-[500]">
               <OrganizationActivity />
             </Col>
             <Col numColSpan={1} className="space-y-6">

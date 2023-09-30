@@ -177,7 +177,7 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ onBack }) => {
       }}
       in
     >
-      <Card p="8" variant="outline" shadow="lg" rounded="lg">
+      <Card p="8" variant="outline" shadow="lg" rounded="xl">
         <DomainForm
           onChangeLoading={setLoading}
           onSuccess={async () => {
@@ -186,12 +186,13 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ onBack }) => {
             await router.push(`/orgs/${id}/verify-domain`);
           }}
         >
-          <ButtonGroup w="full" size="sm">
+          <ButtonGroup w="full">
             <Button
               w="full"
               variant="outline"
               leftIcon={<IconArrowLeft size={18} />}
               onClick={onBack}
+              fontSize="sm"
             >
               Go back
             </Button>
@@ -199,6 +200,7 @@ const FormWrapper: React.FC<FormWrapperProps> = ({ onBack }) => {
               w="full"
               type="submit"
               isLoading={loading || shouldTransition}
+              fontSize="sm"
             >
               Add domain
             </Button>

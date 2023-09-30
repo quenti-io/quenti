@@ -100,12 +100,24 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = ({
                 position="relative"
                 rounded="full"
               >
-                <OrganizationLogo
-                  width={64}
-                  height={64}
-                  url={logoUrl}
-                  hash={logoHash}
-                />
+                <Box
+                  w="16"
+                  h="16"
+                  bg={linkBg}
+                  zIndex="100"
+                  position="relative"
+                  rounded="full"
+                  p="4px"
+                >
+                  <Box w="14" h="14" rounded="full" overflow="hidden">
+                    <OrganizationLogo
+                      width={56}
+                      height={56}
+                      url={logoUrl}
+                      hash={logoHash}
+                    />
+                  </Box>
+                </Box>
               </Box>
             </Flex>
             <Stack ml="1" spacing="1">

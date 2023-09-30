@@ -11,7 +11,7 @@ import { IconFolder } from "@tabler/icons-react";
 
 import { useProfile } from "../../hooks/use-profile";
 import { groupIntoTimeline } from "../../utils/groupings";
-import { ProfileLinkable } from "./study-set-link";
+import { ProfileLinkable } from "./profile-linkable";
 
 export const FoldersList = () => {
   const profile = useProfile()!;
@@ -42,7 +42,7 @@ export const FoldersList = () => {
                 url={`/@${profile.username}/folders/${x.slug ?? x.id}`}
                 numValues={x.studySets.length}
                 label="set"
-                leftIcon={<IconFolder size="18" />}
+                leftIcon={<IconFolder size="18" className="min-w-[18px]" />}
               />
             ))}
           </Stack>

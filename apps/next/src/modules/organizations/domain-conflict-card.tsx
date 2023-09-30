@@ -30,8 +30,7 @@ export const DomainConflictCard: React.FC<DomainConflictCardProps> = ({
   return (
     <SlideFade in>
       <Card
-        rounded="md"
-        variant="outline"
+        rounded="xl"
         px="4"
         py="3"
         shadow="md"

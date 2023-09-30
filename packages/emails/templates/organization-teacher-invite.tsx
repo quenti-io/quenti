@@ -14,33 +14,24 @@ import { Content } from "../components/content";
 import { Footer } from "../components/footer";
 import { Heading } from "../components/heading";
 import { MainContainer } from "../components/main-container";
+import type { OrganizationInviteEmailProps } from "./organization-invite";
 
-export interface ClassInviteEmailProps {
-  className: string;
-  url: string;
-  inviter: {
-    image: string;
-    email: string;
-    name: string | null;
-  };
-}
-
-export const ClasssInviteEmail = ({
-  className = "Math 101",
-  url = "http://localhost:3000/auth/login?callbackUrl=%2F",
+export const OrganizationTeacherInviteEmail = ({
+  orgName = "Acme, Inc.",
+  url = "http://localhost:3000/auth/signup",
   inviter = {
     image: "https://avatars.githubusercontent.com/u/1000?v=4",
     email: "john@acme.org",
     name: "John Doe",
   },
-}: ClassInviteEmailProps) => {
+}: OrganizationInviteEmailProps) => {
   return (
     <Tailwind>
       <Html>
         <Head />
         <Preview>
-          {inviter.name ?? inviter.email} has invited you to teach {className}{" "}
-          on Quenti
+          {inviter.name ?? inviter.email} has invited you to join {orgName} on
+          Quenti
         </Preview>
         <BodyContainer>
           <MainContainer>
@@ -55,8 +46,8 @@ export const ClasssInviteEmail = ({
               <strong className="text-black">
                 {inviter.name ?? inviter.email}
               </strong>{" "}
-              has invited you to teach{" "}
-              <strong className="text-black">{className}</strong> on Quenti
+              has invited you to join{" "}
+              <strong className="text-black">{orgName}</strong> on Quenti
             </Heading>
             <Content>
               {BODY_COPY_BASE}{" "}
@@ -69,7 +60,7 @@ export const ClasssInviteEmail = ({
               href={url}
               className="mt-3 rounded-md bg-[#1a5fff] px-6 py-3 text-base text-white"
             >
-              Join class
+              Get started
             </Button>
           </MainContainer>
           <Footer withLogo />
@@ -79,4 +70,4 @@ export const ClasssInviteEmail = ({
   );
 };
 
-export default ClasssInviteEmail;
+export default OrganizationTeacherInviteEmail;

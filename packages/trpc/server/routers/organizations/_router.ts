@@ -11,14 +11,15 @@ import { ZEditMemberRoleSchema } from "./edit-member-role.schema";
 import { ZGetActivitySchema } from "./get-activity.schema";
 import { ZGetClassStatisticsSchema } from "./get-class-statistics.schema";
 import { ZGetClassesSchema } from "./get-classes.schema";
-import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetUserStatisticsSchema } from "./get-user-statistics.schema";
+import { ZGetUsersSchema } from "./get-users.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZInviteMemberSchema } from "./invite-member.schema";
+import { ZInviteTeachersSchema } from "./invite-teachers.schema";
 import { ZPublishSchema } from "./publish.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
 import { ZRemoveStudentDomainSchema } from "./remove-student-domain.schema";
-import { ZRemoveStudentSchema } from "./remove-student.schema";
+import { ZRemoveUserSchema } from "./remove-user.schema";
 import { ZResendCodeSchema } from "./resend-code.schema";
 import { ZSetDomainFilterSchema } from "./set-domain-filter.schema";
 import { ZSetInviteExpirationSchema } from "./set-invite-expiration.schema";
@@ -35,7 +36,7 @@ type OrganizationsRouterHandlerCache = {
     ["get-user-statistics"]?: typeof import("./get-user-statistics.handler").getUserStatisticsHandler;
     ["get-class-statistics"]?: typeof import("./get-class-statistics.handler").getClassStatisticsHandler;
     ["get-classes"]?: typeof import("./get-classes.handler").getClassesHandler;
-    ["get-students"]?: typeof import("./get-students.handler").getStudentsHandler;
+    ["get-users"]?: typeof import("./get-users.handler").getStudentsHandler;
     create?: typeof import("./create.handler").createHandler;
     update?: typeof import("./update.handler").updateHandler;
     publish?: typeof import("./publish.handler").publishHandler;
@@ -43,19 +44,20 @@ type OrganizationsRouterHandlerCache = {
     ["upload-logo"]?: typeof import("./upload-logo.handler").uploadLogoHandler;
     ["upload-logo-complete"]?: typeof import("./upload-logo-complete.handler").uploadLogoCompleteHandler;
     ["invite-member"]?: typeof import("./invite-member.handler").inviteMemberHandler;
+    ["invite-teachers"]?: typeof import("./invite-teachers.handler").inviteTeachersHandler;
     ["create-invite"]?: typeof import("./create-invite.handler").createInviteHandler;
     ["set-invite-expiration"]?: typeof import("./set-invite-expiration.handler").setInviteExpirationHandler;
     ["accept-token"]?: typeof import("./accept-token.handler").acceptTokenHandler;
     ["accept-invite"]?: typeof import("./accept-invite.handler").acceptInviteHandler;
     ["edit-member-role"]?: typeof import("./edit-member-role.handler").editMemberRoleHandler;
     ["remove-member"]?: typeof import("./remove-member.handler").removeMemberHandler;
+    ["remove-user"]?: typeof import("./remove-user.handler").removeUserHandler;
     ["add-student-domain"]?: typeof import("./add-student-domain.handler").addStudentDomainHandler;
     ["verify-student-domain"]?: typeof import("./verify-student-domain.handler").verifyStudentDomainHandler;
     ["remove-student-domain"]?: typeof import("./remove-student-domain.handler").removeStudentDomainHandler;
     ["set-domain-filter"]?: typeof import("./set-domain-filter.handler").setDomainFilterHandler;
     ["resend-code"]?: typeof import("./resend-code.handler").resendCodeHandler;
     ["add-student"]?: typeof import("./add-student.handler").addStudentHandler;
-    ["remove-student"]?: typeof import("./remove-student.handler").removeStudentHandler;
     ["set-member-metadata"]?: typeof import("./set-member-metadata.handler").setMemberMetadataHandler;
   };
 } & { routerPath: string };
@@ -94,11 +96,11 @@ export const organizationsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "get-classes");
       return HANDLER_CACHE.handlers["get-classes"]!({ ctx, input });
     }),
-  getStudents: teacherProcedure
-    .input(ZGetStudentsSchema)
+  getUsers: teacherProcedure
+    .input(ZGetUsersSchema)
     .query(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "get-students");
-      return HANDLER_CACHE.handlers["get-students"]!({ ctx, input });
+      await loadHandler(HANDLER_CACHE, "get-users");
+      return HANDLER_CACHE.handlers["get-users"]!({ ctx, input });
     }),
   create: teacherProcedure
     .input(ZCreateSchema)
@@ -142,6 +144,12 @@ export const organizationsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "invite-member");
       return HANDLER_CACHE.handlers["invite-member"]!({ ctx, input });
     }),
+  inviteTeachers: teacherProcedure
+    .input(ZInviteTeachersSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "invite-teachers");
+      return HANDLER_CACHE.handlers["invite-teachers"]!({ ctx, input });
+    }),
   createInvite: teacherProcedure
     .input(ZCreateInviteSchema)
     .mutation(async ({ ctx, input }) => {
@@ -178,6 +186,12 @@ export const organizationsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "remove-member");
       return HANDLER_CACHE.handlers["remove-member"]!({ ctx, input });
     }),
+  removeUser: teacherProcedure
+    .input(ZRemoveUserSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "remove-user");
+      return HANDLER_CACHE.handlers["remove-user"]!({ ctx, input });
+    }),
   addStudentDomain: teacherProcedure
     .input(ZAddStudentDomainSchema)
     .mutation(async ({ ctx, input }) => {
@@ -213,12 +227,6 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "add-student");
       return HANDLER_CACHE.handlers["add-student"]!({ ctx, input });
-    }),
-  removeStudent: teacherProcedure
-    .input(ZRemoveStudentSchema)
-    .mutation(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "remove-student");
-      return HANDLER_CACHE.handlers["remove-student"]!({ ctx, input });
     }),
   setMemberMetadata: teacherProcedure
     .input(ZSetMemberMetadataSchema)

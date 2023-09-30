@@ -2,11 +2,11 @@ import { TRPCError } from "@trpc/server";
 
 import { isOrganizationMember } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
-import type { TGetStudentsSchema } from "./get-students.schema";
+import type { TGetUsersSchema } from "./get-users.schema";
 
 type GetStudentsOptions = {
   ctx: NonNullableUserContext;
-  input: TGetStudentsSchema;
+  input: TGetUsersSchema;
 };
 
 export const getStudentsHandler = async ({
@@ -23,7 +23,7 @@ export const getStudentsHandler = async ({
     where: input.query
       ? {
           organizationId: input.orgId,
-          type: "Student",
+          type: input.type,
           OR: [
             { username: { contains: input.query } },
             { name: { contains: input.query } },
@@ -32,7 +32,7 @@ export const getStudentsHandler = async ({
         }
       : {
           organizationId: input.orgId,
-          type: "Student",
+          type: input.type,
         },
     take: limit + 1,
     cursor: cursor ? { email: cursor } : undefined,
@@ -55,7 +55,7 @@ export const getStudentsHandler = async ({
   }
 
   return {
-    students: users,
+    users,
     nextCursor,
   };
 };

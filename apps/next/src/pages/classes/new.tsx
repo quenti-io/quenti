@@ -91,7 +91,7 @@ export default function NewClass() {
       currentStep={0}
     >
       <form onSubmit={createMethods.handleSubmit(onSubmit)}>
-        <Card p="8" variant="outline" shadow="lg" rounded="lg">
+        <Card p="8" variant="outline" shadow="lg" rounded="xl">
           <Stack spacing="10">
             <Stack spacing="6">
               <Stack spacing="1">

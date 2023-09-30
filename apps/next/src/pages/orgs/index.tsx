@@ -22,6 +22,8 @@ import { AuthedPage } from "../../components/authed-page";
 import { Loading } from "../../components/loading";
 import { WithFooter } from "../../components/with-footer";
 import { useMe } from "../../hooks/use-me";
+import { useStudentRedirect } from "../../hooks/use-student-redirect";
+import { useUnauthedRedirect } from "../../hooks/use-unauthed-redirect";
 import { getLayout } from "../../layouts/main-layout";
 import { OrganizationInviteScreen } from "../../modules/organizations/organization-invite-screen";
 
@@ -29,15 +31,19 @@ export default function Organizations() {
   const utils = api.useContext();
   const session = useSession();
   const router = useRouter();
-  const { data: me } = useMe();
+  const { data: me, isFetching } = useMe();
+
+  useUnauthedRedirect();
+  useStudentRedirect("/home");
 
   const [tokenChecked, setTokenChecked] = React.useState(false);
 
   const acceptToken = api.organizations.acceptToken.useMutation({
     onSuccess: async () => {
       await utils.user.me.invalidate();
+      setTokenChecked(true);
     },
-    onSettled: () => {
+    onError: () => {
       setTokenChecked(true);
     },
   });
@@ -50,7 +56,8 @@ export default function Organizations() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
 
-  if (!session?.data?.user || !me || !tokenChecked) return <Loading />;
+  if (!session?.data?.user || !me || isFetching || !tokenChecked)
+    return <Loading />;
 
   const domain = session.data.user.email!.split("@")[1]!;
 

@@ -19,7 +19,7 @@ export const ClassesGrid = () => {
       <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
         {isLoading &&
           Array.from({ length: 4 }).map((_, i) => (
-            <GridItem h="156px" key={i}>
+            <GridItem key={i} h="170px">
               <Skeleton
                 rounded="lg"
                 height="full"
@@ -29,20 +29,22 @@ export const ClassesGrid = () => {
             </GridItem>
           ))}
         {(data?.classes || []).map((class_) => (
-          <ClassCard
-            key={class_.id}
-            id={class_.id}
-            name={class_.name}
-            data={{
-              students: class_._count.members || 0,
-              sections: class_._count.sections || 0,
-              folders: class_._count.folders || 0,
-              studySets: class_._count.studySets || 0,
-            }}
-            for={class_.as}
-            logo={class_.logoUrl}
-            hash={class_.logoHash}
-          />
+          <GridItem key={class_.id}>
+            <ClassCard
+              key={class_.id}
+              id={class_.id}
+              name={class_.name}
+              data={{
+                students: class_._count.members || 0,
+                sections: class_._count.sections || 0,
+                folders: class_._count.folders || 0,
+                studySets: class_._count.studySets || 0,
+              }}
+              for={class_.as}
+              logo={class_.logoUrl}
+              hash={class_.logoHash}
+            />
+          </GridItem>
         ))}
       </Grid>
     </Stack>

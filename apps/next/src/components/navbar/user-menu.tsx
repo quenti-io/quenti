@@ -30,6 +30,7 @@ import {
 
 import { useMe } from "../../hooks/use-me";
 import { MenuOption } from "../menu-option";
+import { TeacherOnly } from "../teacher-only";
 
 export const UserMenu = () => {
   const session = useSession()!.data!;
@@ -93,7 +94,7 @@ export const UserMenu = () => {
           <MenuOption icon={<IconSettings size={18} />} label="Settings" />
         </Link>
         {me?.orgMembership && (
-          <>
+          <TeacherOnly>
             <MenuDivider />
             <Link href={`/orgs/${me.orgMembership.organization.id}`} passHref>
               <MenuOption
@@ -101,7 +102,7 @@ export const UserMenu = () => {
                 label={me.orgMembership.organization.name}
               />
             </Link>
-          </>
+          </TeacherOnly>
         )}
         <MenuDivider />
         <MenuOption

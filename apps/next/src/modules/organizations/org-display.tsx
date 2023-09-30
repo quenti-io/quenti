@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import React from "react";
 
 import {
   Box,
@@ -27,7 +28,7 @@ import { OrganizationLogo } from "./organization-logo";
 import { getBaseDomain } from "./utils/get-base-domain";
 import { useOnboardingStep } from "./utils/use-onboarding-step";
 
-export const OrgDisplay = () => {
+const OrgDisplayRaw = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const onboardingStep = useOnboardingStep();
@@ -42,7 +43,14 @@ export const OrgDisplay = () => {
   return (
     <HStack spacing="6">
       <Skeleton isLoaded={isLoaded} fitContent rounded="full">
-        <Center w="16" h="16" rounded="full" bg="white" overflow="hidden">
+        <Center
+          w="16"
+          h="16"
+          rounded="full"
+          bg="white"
+          overflow="hidden"
+          shadow="md"
+        >
           <OrganizationLogo
             width={64}
             height={64}
@@ -118,3 +126,5 @@ export const OrgDisplay = () => {
     </HStack>
   );
 };
+
+export const OrgDisplay = React.memo(OrgDisplayRaw);

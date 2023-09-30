@@ -9,6 +9,7 @@ import {
   Box,
   ButtonGroup,
   Flex,
+  HStack,
   IconButton,
   Menu,
   MenuButton,
@@ -29,17 +30,19 @@ import {
 
 import { MenuOptionPure } from "../../components/menu-option";
 
-interface OrganizationStudentProps {
+interface OrganizationUserProps {
   user: Pick<User, "id" | "name" | "username" | "email" | "image">;
   skeleton?: boolean;
   canManage?: boolean;
+  tags?: React.ReactNode;
   onRequestRemove?: (id: string) => void;
 }
 
-const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
+const OrganizationUserRaw: React.FC<OrganizationUserProps> = ({
   user,
   skeleton = false,
   canManage = false,
+  tags,
   onRequestRemove,
 }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -85,7 +88,10 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
             w="max-content"
             skeletonHeight="5"
           >
-            <Text fontWeight={600}>{user.name}</Text>
+            <HStack>
+              <Text fontWeight={600}>{user.name}</Text>
+              {tags}
+            </HStack>
           </SkeletonText>
         </Flex>
       </Td>
@@ -103,7 +109,7 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
           </SkeletonText>
         </Flex>
       </Td>
-      <Td pr="0" w="32px">
+      <Td pr="0" textAlign="right">
         <ButtonGroup
           size="sm"
           alignItems="center"
@@ -166,4 +172,4 @@ const OrganizationStudentRaw: React.FC<OrganizationStudentProps> = ({
   );
 };
 
-export const OrganizationStudent = React.memo(OrganizationStudentRaw);
+export const OrganizationUser = React.memo(OrganizationUserRaw);

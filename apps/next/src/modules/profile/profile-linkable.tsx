@@ -58,7 +58,17 @@ export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
         </Text>
         <HStack>
           {leftIcon}
-          <Heading size="md">
+          <Heading
+            size="md"
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              lineClamp: 2,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
             <LinkOverlay as={Link} href={url}>
               {title}
             </LinkOverlay>
