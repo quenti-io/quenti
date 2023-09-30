@@ -24,9 +24,11 @@ import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { plural } from "../../utils/string";
 import { AddStudentModal } from "./add-student-modal";
 import { EmptyStudentsCard } from "./empty-students-card";
+import { InviteTeachersModal } from "./invite-teachers-modal";
 import { OrganizationAdminOnly } from "./organization-admin-only";
 import { OrganizationUser } from "./organization-user";
 import { RemoveStudentModal } from "./remove-student-modal";
+import { getBaseDomain } from "./utils/get-base-domain";
 import { useUserStatistics } from "./utils/use-user-statistics";
 
 export interface OrganizationUserSearchProps {
@@ -38,6 +40,8 @@ export const OrganizationUserSearch: React.FC<OrganizationUserSearchProps> = ({
 }) => {
   const { data: org } = useOrganization();
   const me = useOrganizationMember();
+  const baseDomain = getBaseDomain(org)!;
+
   const members = org?.members || [];
   const memberIds = members.map((m) => m.userId);
 
@@ -103,10 +107,19 @@ export const OrganizationUserSearch: React.FC<OrganizationUserSearchProps> = ({
     <>
       {org && (
         <>
-          <AddStudentModal
-            isOpen={addModalOpen}
-            onClose={() => setAddModalOpen(false)}
-          />
+          {type == "Student" ? (
+            <AddStudentModal
+              isOpen={addModalOpen}
+              onClose={() => setAddModalOpen(false)}
+            />
+          ) : (
+            <InviteTeachersModal
+              isOpen={addModalOpen}
+              onClose={() => setAddModalOpen(false)}
+              orgId={org.id}
+              domain={baseDomain.domain!}
+            />
+          )}
           <RemoveStudentModal
             id={removeStudent || ""}
             isOpen={!!removeStudent}
@@ -131,7 +144,7 @@ export const OrganizationUserSearch: React.FC<OrganizationUserSearchProps> = ({
               leftIcon={<IconPlus size={18} />}
               onClick={() => setAddModalOpen(true)}
             >
-              Add
+              {type == "Student" ? "Add" : "Invite"}
             </Button>
           </OrganizationAdminOnly>
         </HStack>
