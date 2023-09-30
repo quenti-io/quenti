@@ -264,6 +264,7 @@ export const OrganizationSettings = () => {
                       as="span"
                       leftIcon={<IconUpload size={16} />}
                       cursor="pointer"
+                      isDisabled={!isAdmin}
                     >
                       Upload
                     </Button>

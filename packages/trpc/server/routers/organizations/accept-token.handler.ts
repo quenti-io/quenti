@@ -2,7 +2,10 @@ import { Prisma } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
 
-import { isInOrganizationBase } from "../../lib/queries/organizations";
+import {
+  isInOrganizationBase,
+  isOrganizationMember,
+} from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAcceptTokenSchema } from "./accept-token.schema";
 
@@ -40,6 +43,10 @@ export const acceptTokenHandler = async ({
       code: "FORBIDDEN",
       message: "user_not_in_domain",
     });
+  }
+
+  if (await isOrganizationMember(ctx.session.user.id, token.organizationId)) {
+    return;
   }
 
   try {
