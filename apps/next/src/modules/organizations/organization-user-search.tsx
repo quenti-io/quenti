@@ -27,7 +27,7 @@ import { EmptyStudentsCard } from "./empty-students-card";
 import { InviteTeachersModal } from "./invite-teachers-modal";
 import { OrganizationAdminOnly } from "./organization-admin-only";
 import { OrganizationUser } from "./organization-user";
-import { RemoveStudentModal } from "./remove-student-modal";
+import { RemoveStudentModal } from "./remove-user-modal";
 import { getBaseDomain } from "./utils/get-base-domain";
 import { useUserStatistics } from "./utils/use-user-statistics";
 

@@ -14,11 +14,15 @@ import {
   FormLabel,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 
 import { IconUpload } from "@tabler/icons-react";
 
+import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
+import { Toast } from "../../components/toast";
+import { plural } from "../../utils/string";
 
 export interface InviteTeachersModalProps {
   isOpen: boolean;
@@ -56,6 +60,8 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   orgId,
   domain,
 }) => {
+  const toast = useToast();
+
   const inviteMemberFormMethods = useForm<InviteTeachersFormInputs>({
     defaultValues: {
       emails: [],
@@ -67,7 +73,17 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   } = inviteMemberFormMethods;
 
   const inviteTeachers = api.organizations.inviteTeachers.useMutation({
-    onSuccess: () => {
+    onSuccess: ({ invited }) => {
+      if (invited > 0) {
+        toast({
+          title: `Invited ${plural(invited, "teacher")}`,
+          status: "success",
+          colorScheme: "green",
+          icon: <AnimatedCheckCircle />,
+          render: Toast,
+        });
+      }
+
       onClose();
     },
   });
@@ -84,6 +100,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
         ?.split(",")
         .map((email) => email.trim().toLowerCase());
       inviteMemberFormMethods.setValue("emails", emails);
+      textAreaRef.current!.value = emails?.join(", ") || "";
 
       importRef.current!.value = "";
     };
@@ -99,6 +116,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   };
 
   const importRef = React.useRef<HTMLInputElement | null>(null);
+  const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -123,12 +141,13 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
                     <FormControl isInvalid={!!errors.emails}>
                       <FormLabel>Invite via email</FormLabel>
                       <AutoResizeTextarea
+                        ref={textAreaRef}
                         allowTab={false}
                         placeholder={`email-one@${domain}, email-two@${domain}`}
                         minH="120px"
                         maxH="480px"
                         overflowY="auto"
-                        value={value}
+                        defaultValue={value}
                         onChange={(e) => {
                           const values = e.target.value
                             .toLowerCase()

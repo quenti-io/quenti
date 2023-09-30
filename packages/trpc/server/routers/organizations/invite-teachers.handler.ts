@@ -73,6 +73,18 @@ export const inviteTeachersHandler = async ({
     email: ctx.session.user.email!,
   };
 
+  await ctx.prisma.user.updateMany({
+    where: {
+      email: {
+        in: invites,
+      },
+      organizationId: null,
+    },
+    data: {
+      organizationId: input.orgId,
+    },
+  });
+
   await inngest.send({
     name: "orgs/invite-teachers",
     data: {
@@ -81,6 +93,8 @@ export const inviteTeachersHandler = async ({
       emails: invites,
     },
   });
+
+  return { invited: invites.length };
 };
 
 export default inviteTeachersHandler;
