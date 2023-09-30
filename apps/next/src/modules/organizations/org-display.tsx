@@ -43,7 +43,14 @@ const OrgDisplayRaw = () => {
   return (
     <HStack spacing="6">
       <Skeleton isLoaded={isLoaded} fitContent rounded="full">
-        <Center w="16" h="16" rounded="full" bg="white" overflow="hidden">
+        <Center
+          w="16"
+          h="16"
+          rounded="full"
+          bg="white"
+          overflow="hidden"
+          shadow="md"
+        >
           <OrganizationLogo
             width={64}
             height={64}
