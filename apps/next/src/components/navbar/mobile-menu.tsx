@@ -21,15 +21,18 @@ import {
   IconChevronDown,
   IconCloudDownload,
   IconFolder,
+  IconSchool,
 } from "@tabler/icons-react";
 
 import { MenuOption } from "../menu-option";
+import { TeacherOnly } from "../teacher-only";
 import { MobileUserOptions } from "./mobile-user-options";
 
 export interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   onFolderClick: () => void;
+  onClassClick: () => void;
   onImportClick: () => void;
 }
 
@@ -37,6 +40,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   isOpen,
   onClose,
   onFolderClick,
+  onClassClick,
   onImportClick,
 }) => {
   const router = useRouter();
@@ -157,6 +161,13 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                   label="Folder"
                   onClick={onFolderClick}
                 />
+                <TeacherOnly>
+                  <MenuOption
+                    icon={<IconSchool size={20} />}
+                    label="Class"
+                    onClick={onClassClick}
+                  />
+                </TeacherOnly>
               </MenuList>
             </Menu>
           )}

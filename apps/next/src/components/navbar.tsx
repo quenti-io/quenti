@@ -139,6 +139,7 @@ export const Navbar: React.FC = () => {
               isOpen={isMobileMenuOpen}
               onClose={onMobileMenuToggle}
               onFolderClick={() => setFolderModalOpen(true)}
+              onClassClick={() => void router.push("/classes/new")}
               onImportClick={() => {
                 setImportIsEdit(false);
                 setImportModalOpen(true);
