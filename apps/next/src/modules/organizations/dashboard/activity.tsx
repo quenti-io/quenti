@@ -89,6 +89,7 @@ const OrganizationActivityRaw = () => {
     { id, period: PERIODS[periodIndex]! },
     {
       enabled: !!id && !!session.data?.user,
+      refetchInterval: 60 * 1000,
       trpc: {
         context: {
           skipBatch: true,
