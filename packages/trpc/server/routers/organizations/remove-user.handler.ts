@@ -2,42 +2,53 @@ import { TRPCError } from "@trpc/server";
 
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
-import type { TRemoveStudentSchema } from "./remove-student.schema";
+import type { TRemoveUserSchema } from "./remove-user.schema";
 
-type RemoveStudentOptions = {
+type RemoveUserOptions = {
   ctx: NonNullableUserContext;
-  input: TRemoveStudentSchema;
+  input: TRemoveUserSchema;
 };
 
-export const removeStudentHandler = async ({
-  ctx,
-  input,
-}: RemoveStudentOptions) => {
+export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   if (!(await isOrganizationAdmin(ctx.session.user.id, input.orgId))) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  if (input.studentId == ctx.session.user.id)
+  if (input.userId == ctx.session.user.id)
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Cannot remove yourself",
     });
 
-  const student = await ctx.prisma.user.findFirst({
+  const user = await ctx.prisma.user.findFirst({
     where: {
-      id: input.studentId,
+      id: input.userId,
       organizationId: input.orgId,
+    },
+    select: {
+      orgMembership: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
-  if (!student)
+  if (!user)
     throw new TRPCError({
       code: "NOT_FOUND",
     });
 
+  if (user.orgMembership) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "user_is_org_member",
+    });
+  }
+
   await ctx.prisma.user.update({
     where: {
-      id: input.studentId,
+      id: input.userId,
     },
     data: {
       organizationId: null,
@@ -49,9 +60,9 @@ export const removeStudentHandler = async ({
       class: {
         orgId: input.orgId,
       },
-      userId: input.studentId,
+      userId: input.userId,
     },
   });
 };
 
-export default removeStudentHandler;
+export default removeUserHandler;

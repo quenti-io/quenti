@@ -48,7 +48,7 @@ export const RemoveStudentModal: React.FC<RemoveStudentModalProps> = ({
               onClick={() =>
                 removeStudent.mutate({
                   orgId: org!.id,
-                  studentId: id,
+                  userId: id,
                 })
               }
             >
