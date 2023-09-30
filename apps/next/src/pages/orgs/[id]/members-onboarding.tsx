@@ -65,7 +65,7 @@ export default function OrgMembersOnboarding() {
       <WizardLayout
         title="Invite members"
         seoTitle="Invite Members"
-        description="Invite additional members to join your organization."
+        description="Invite additional organization administrators to join. Members can manage organization activity, classes, teachers and students."
         steps={5}
         currentStep={1}
       >
