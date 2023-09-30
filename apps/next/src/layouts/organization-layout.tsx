@@ -26,6 +26,7 @@ import { Footer } from "../components/footer";
 import { Toast } from "../components/toast";
 import { useOrganization } from "../hooks/use-organization";
 import { useOrganizationMember } from "../hooks/use-organization-member";
+import { useStudentRedirect } from "../hooks/use-student-redirect";
 import { getBaseDomain } from "../modules/organizations/utils/get-base-domain";
 import { MainLayout } from "./main-layout";
 
@@ -35,6 +36,8 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
   const toast = useToast();
   const isUpgraded = router.query.upgrade === "success";
+
+  useStudentRedirect("/home");
 
   const { data: org, error } = useOrganization();
 

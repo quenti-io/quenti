@@ -28,7 +28,11 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     select: {
       orgMembership: {
         select: {
-          id: true,
+          organization: {
+            select: {
+              id: true,
+            },
+          },
         },
       },
     },
@@ -39,7 +43,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       code: "NOT_FOUND",
     });
 
-  if (user.orgMembership) {
+  if (user.orgMembership && user.orgMembership.organization.id == input.orgId) {
     throw new TRPCError({
       code: "PRECONDITION_FAILED",
       message: "user_is_org_member",
