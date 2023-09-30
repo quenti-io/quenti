@@ -9,6 +9,7 @@ import {
   Box,
   ButtonGroup,
   Flex,
+  HStack,
   IconButton,
   Menu,
   MenuButton,
@@ -33,6 +34,7 @@ interface OrganizationUserProps {
   user: Pick<User, "id" | "name" | "username" | "email" | "image">;
   skeleton?: boolean;
   canManage?: boolean;
+  tags?: React.ReactNode;
   onRequestRemove?: (id: string) => void;
 }
 
@@ -40,6 +42,7 @@ const OrganizationUserRaw: React.FC<OrganizationUserProps> = ({
   user,
   skeleton = false,
   canManage = false,
+  tags,
   onRequestRemove,
 }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -85,7 +88,10 @@ const OrganizationUserRaw: React.FC<OrganizationUserProps> = ({
             w="max-content"
             skeletonHeight="5"
           >
-            <Text fontWeight={600}>{user.name}</Text>
+            <HStack>
+              <Text fontWeight={600}>{user.name}</Text>
+              {tags}
+            </HStack>
           </SkeletonText>
         </Flex>
       </Td>

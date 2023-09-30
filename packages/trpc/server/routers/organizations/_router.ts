@@ -15,6 +15,7 @@ import { ZGetUserStatisticsSchema } from "./get-user-statistics.schema";
 import { ZGetUsersSchema } from "./get-users.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZInviteMemberSchema } from "./invite-member.schema";
+import { ZInviteTeachersSchema } from "./invite-teachers.schema";
 import { ZPublishSchema } from "./publish.schema";
 import { ZRemoveMemberSchema } from "./remove-member.schema";
 import { ZRemoveStudentDomainSchema } from "./remove-student-domain.schema";
@@ -43,6 +44,7 @@ type OrganizationsRouterHandlerCache = {
     ["upload-logo"]?: typeof import("./upload-logo.handler").uploadLogoHandler;
     ["upload-logo-complete"]?: typeof import("./upload-logo-complete.handler").uploadLogoCompleteHandler;
     ["invite-member"]?: typeof import("./invite-member.handler").inviteMemberHandler;
+    ["invite-teachers"]?: typeof import("./invite-teachers.handler").inviteTeachersHandler;
     ["create-invite"]?: typeof import("./create-invite.handler").createInviteHandler;
     ["set-invite-expiration"]?: typeof import("./set-invite-expiration.handler").setInviteExpirationHandler;
     ["accept-token"]?: typeof import("./accept-token.handler").acceptTokenHandler;
@@ -141,6 +143,12 @@ export const organizationsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "invite-member");
       return HANDLER_CACHE.handlers["invite-member"]!({ ctx, input });
+    }),
+  inviteTeachers: teacherProcedure
+    .input(ZInviteTeachersSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "invite-teachers");
+      return HANDLER_CACHE.handlers["invite-teachers"]!({ ctx, input });
     }),
   createInvite: teacherProcedure
     .input(ZCreateInviteSchema)

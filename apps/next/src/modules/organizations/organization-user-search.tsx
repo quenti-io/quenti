@@ -10,6 +10,7 @@ import {
   Stack,
   Table,
   TableContainer,
+  Tag,
   Text,
 } from "@chakra-ui/react";
 
@@ -37,6 +38,8 @@ export const OrganizationUserSearch: React.FC<OrganizationUserSearchProps> = ({
 }) => {
   const { data: org } = useOrganization();
   const me = useOrganizationMember();
+  const members = org?.members || [];
+  const memberIds = members.map((m) => m.userId);
 
   const [search, setSearch] = React.useState("");
   const debouncedSearch = useDebounce(search.trim(), 500);
@@ -157,6 +160,13 @@ export const OrganizationUserSearch: React.FC<OrganizationUserSearchProps> = ({
                         key={user.id}
                         canManage={isAdmin && user.id != me?.userId}
                         onRequestRemove={onRequestRemove}
+                        tags={
+                          memberIds.includes(user.id) ? (
+                            <Tag size="sm" colorScheme="blue">
+                              Member
+                            </Tag>
+                          ) : undefined
+                        }
                       />
                     ))}
                   </>
