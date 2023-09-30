@@ -6,8 +6,8 @@ import React from "react";
 import { Link } from "@quenti/components";
 
 import {
+  Box,
   Button,
-  Collapse,
   Menu,
   MenuButton,
   MenuDivider,
@@ -46,22 +46,48 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   }, [router.pathname]);
 
   const { data: session, status } = useSession()!;
-  const bgGradient = useColorModeValue(
-    "linear(to-b, gray.50, white)",
-    "linear(to-b, gray.900, gray.800)",
-  );
   const menuBg = useColorModeValue("white", "gray.800");
+
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isOpen]);
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
-    <Collapse in={isOpen}>
+    <>
+      <Box
+        position="absolute"
+        top="80px"
+        left="0"
+        w="full"
+        h="calc(100vh - 80px)"
+        pointerEvents={isOpen ? "auto" : "none"}
+        className="backdrop-blur-sm"
+        bg="rgba(247, 250, 252, 0.75)"
+        _dark={{
+          bg: "rgba(23, 25, 35, 0.75)",
+        }}
+        opacity={isOpen ? 1 : 0}
+        transition="opacity ease-in-out 200ms"
+        onClick={() => {
+          onClose();
+        }}
+      />
       <Stack
         pos="absolute"
         insetX={0}
-        bgGradient={bgGradient}
+        opacity={isOpen ? 1 : 0}
+        transition="opacity ease-in-out 200ms"
+        pointerEvents={isOpen ? "auto" : "none"}
+        className="backdrop-blur-2xl"
         px="6"
-        py="10"
+        py="6"
+        pt="10"
         spacing={8}
       >
         <Stack spacing={4}>
@@ -77,20 +103,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               }}
             >
               Home
-            </Button>
-          )}
-          {session?.user?.admin && (
-            <Button
-              variant="outline"
-              colorScheme="gray"
-              fontWeight={700}
-              fontSize="sm"
-              onClick={async () => {
-                onClose();
-                await router.push("/admin");
-              }}
-            >
-              Admin
             </Button>
           )}
           {session?.user && (
@@ -169,7 +181,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
         </Stack>
         {session?.user && <MobileUserOptions closeMenu={onClose} />}
       </Stack>
-    </Collapse>
+    </>
   );
 };
 

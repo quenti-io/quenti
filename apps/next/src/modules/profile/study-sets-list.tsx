@@ -11,7 +11,7 @@ import {
 
 import { useProfile } from "../../hooks/use-profile";
 import { groupIntoTimeline } from "../../utils/groupings";
-import { ProfileLinkable } from "./study-set-link";
+import { ProfileLinkable } from "./profile-linkable";
 
 export const StudySetsList = () => {
   const profile = useProfile()!;
