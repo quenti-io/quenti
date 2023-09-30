@@ -12,6 +12,7 @@ import ConfirmCodeEmail, {
 import OrganizationInviteEmail, {
   type OrganizationInviteEmailProps,
 } from "./templates/organization-invite";
+import OrganizationTeacherInviteEmail from "./templates/organization-teacher-invite";
 
 const NOTIFICATIONS_SENDER = `Quenti <notifications@${env.EMAIL_SENDER || ""}>`;
 
@@ -39,7 +40,7 @@ export const sendClassInviteEmail = async (
   await sendEmail({
     from: NOTIFICATIONS_SENDER,
     to: email,
-    subject: `${opts.inviter.name ?? opts.inviter.email} invited you to join ${
+    subject: `${opts.inviter.name ?? opts.inviter.email} invited you to teach ${
       opts.className
     } on Quenti`,
     react: ClasssInviteEmail(opts),
@@ -57,6 +58,20 @@ export const sendOrganizationInviteEmail = async (
       opts.orgName
     } on Quenti`,
     react: OrganizationInviteEmail(opts),
+  });
+};
+
+export const sendOrganizationTeacherInviteEmail = async (
+  email: string,
+  opts: OrganizationInviteEmailProps,
+) => {
+  await sendEmail({
+    from: NOTIFICATIONS_SENDER,
+    to: email,
+    subject: `${opts.inviter.name ?? opts.inviter.email} invited you to join ${
+      opts.orgName
+    } on Quenti`,
+    react: OrganizationTeacherInviteEmail(opts),
   });
 };
 

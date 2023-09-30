@@ -4100,19 +4100,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@manypkg/find-root@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@manypkg/find-root@npm:2.1.0"
+"@manypkg/find-root@npm:2.2.1":
+  version: 2.2.1
+  resolution: "@manypkg/find-root@npm:2.2.1"
   dependencies:
-    "@manypkg/tools": ^1.0.0
-    "@types/node": ^12.7.1
+    "@manypkg/tools": ^1.1.0
     find-up: ^4.1.0
     fs-extra: ^8.1.0
-  checksum: c42edcdfbbff6c3795bd9a8c487c125eb944a95ede9d61b5c4d81d987cb48cc3d35b8e9e4dd6fb1dede0b188ca23a6c8b5c646ed80ea7a38d4aef4b2c68b528e
+  checksum: 7f31120c3ef0711f6e65857ea232fb4f7caf4db388080e738f82d979d7f72572dae60519c8fcd45c431a8e94095b6628257fbf7373b34401359def00687bab13
   languageName: node
   linkType: hard
 
-"@manypkg/tools@npm:^1.0.0":
+"@manypkg/tools@npm:^1.1.0":
   version: 1.1.0
   resolution: "@manypkg/tools@npm:1.1.0"
   dependencies:
@@ -5797,9 +5796,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/emails@workspace:packages/emails"
   dependencies:
+    "@quenti/branding": "*"
     "@react-email/components": ^0.0.7
     "@react-email/tailwind": ^0.0.8
-    react-email: 1.9.4
+    react-email: 1.9.5
     resend: ^1.1.0
   languageName: unknown
   linkType: soft
@@ -7743,13 +7743,6 @@ __metadata:
   version: 20.4.2
   resolution: "@types/node@npm:20.4.2"
   checksum: 99e544ea7560d51f01f95627fc40394c24a13da8f041121a0da13e4ef0a2aa332932eaf9a5e8d0e30d1c07106e96a183be392cbba62e8cf0bf6a085d5c0f4149
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^12.7.1":
-  version: 12.20.55
-  resolution: "@types/node@npm:12.20.55"
-  checksum: e4f86785f4092706e0d3b0edff8dca5a13b45627e4b36700acd8dfe6ad53db71928c8dee914d4276c7fd3b6ccd829aa919811c9eb708a2c8e4c6eb3701178c37
   languageName: node
   linkType: hard
 
@@ -11772,17 +11765,6 @@ __metadata:
   version: 1.0.0
   resolution: "fs-constants@npm:1.0.0"
   checksum: 18f5b718371816155849475ac36c7d0b24d39a11d91348cfcb308b4494824413e03572c403c86d3a260e049465518c4f0d5bd00f0371cdfcad6d4f30a85b350d
-  languageName: node
-  linkType: hard
-
-"fs-extra@npm:11.1.0":
-  version: 11.1.0
-  resolution: "fs-extra@npm:11.1.0"
-  dependencies:
-    graceful-fs: ^4.2.0
-    jsonfile: ^6.0.1
-    universalify: ^2.0.0
-  checksum: 5ca476103fa1f5ff4a9b3c4f331548f8a3c1881edaae323a4415d3153b5dc11dc6a981c8d1dd93eec8367ceee27b53f8bd27eecbbf66ffcdd04927510c171e7f
   languageName: node
   linkType: hard
 
@@ -16401,19 +16383,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-email@npm:1.9.4":
-  version: 1.9.4
-  resolution: "react-email@npm:1.9.4"
+"react-email@npm:1.9.5":
+  version: 1.9.5
+  resolution: "react-email@npm:1.9.5"
   dependencies:
     "@commander-js/extra-typings": 9.4.1
-    "@manypkg/find-root": 2.1.0
+    "@manypkg/find-root": 2.2.1
     "@octokit/rest": 19.0.7
     "@react-email/render": 0.0.6
     chokidar: 3.5.3
     commander: 9.4.1
     detect-package-manager: 2.0.1
     esbuild: 0.16.4
-    fs-extra: 11.1.0
+    fs-extra: 11.1.1
     glob: 8.0.3
     log-symbols: 4.1.0
     normalize-path: 3.0.0
@@ -16423,7 +16405,7 @@ __metadata:
     tree-node-cli: 1.6.0
   bin:
     email: dist/source/index.js
-  checksum: 5309096a516b9fbbfc849cbde651bdaf113c0cb86031bd575cc172dd3539d2c1094ab13df63f2ccde7636bd5ce44b69a12a60da3326f20b28d41a0e5a48f6d61
+  checksum: 46170e283aafe494d585eaf43a080511e0e89e3b23888917a36d2a3be994f69649c047c7126a83c50e92f95c24c79d03030d19f284278e848f173df1f48cc905
   languageName: node
   linkType: hard
 

@@ -1,3 +1,6 @@
+import { sendOrganizationTeacherInviteEmail } from "@quenti/emails";
+import { env } from "@quenti/env/client";
+
 import { inngest } from "../inngest";
 
 export const sendOrgTeacherInviteEmails = inngest.createFunction(
@@ -7,7 +10,11 @@ export const sendOrgTeacherInviteEmails = inngest.createFunction(
     await Promise.all(
       event.data.emails.map((email) =>
         step.run("Send organization teacher invite email", async () => {
-          // TODO: Implement this
+          await sendOrganizationTeacherInviteEmail(email, {
+            orgName: event.data.org.name,
+            inviter: event.data.inviter,
+            url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
+          });
         }),
       ),
     );

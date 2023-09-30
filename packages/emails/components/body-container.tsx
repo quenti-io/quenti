@@ -6,7 +6,7 @@ export const BodyContainer: React.FC<React.PropsWithChildren> = ({
 }) => (
   <Body style={main}>
     <Container
-      className="mt-6 w-[620px] rounded-md border-[2px] border-solid border-gray-200 bg-white p-14 shadow-lg"
+      className="mt-6 w-[620px] rounded-xl border-[2px] border-solid border-gray-200 bg-white shadow-lg"
       style={{
         maxWidth: "90vh",
       }}

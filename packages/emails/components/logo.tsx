@@ -11,11 +11,11 @@ interface LogoProps {
 export const Logo: React.FC<LogoProps> = ({
   width = 42,
   height = 42,
-  className = "h-[42px] w-[42px] rounded-[21px]",
+  className = "h-[42px] w-[42px]",
 }) => {
   return (
     <Img
-      src={`${env.NEXT_PUBLIC_BASE_URL}/avatars/quenti.png`}
+      src={`${env.NEXT_PUBLIC_BASE_URL}/android-chrome-192x192.png`}
       width={width}
       height={height}
       alt="Quenti"
