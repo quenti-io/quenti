@@ -34,7 +34,7 @@ export const addStudentDomainHandler = async ({
     });
   }
 
-  if (env.SERVER_NAME) {
+  if (env.BYPASS_ORG_DOMAIN_BLACKLIST !== "true") {
     if (all.find((domain) => domain === input.domain)) {
       throw new TRPCError({
         code: "BAD_REQUEST",

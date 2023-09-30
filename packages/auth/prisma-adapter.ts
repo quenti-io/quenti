@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { Adapter } from "next-auth/adapters";
 
+import { env } from "@quenti/env/server";
 import { USERNAME_REPLACE_REGEXP } from "@quenti/lib/constants/characters";
 import type { PrismaClient, UserType } from "@quenti/prisma/client";
 
@@ -35,7 +36,10 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
       }
 
       const [base, domain] = data.email.split("@");
-      const all = Array.from(await import("email-providers/all.json"));
+      const all =
+        env.BYPASS_ORG_DOMAIN_BLACKLIST === "true"
+          ? []
+          : Array.from(await import("email-providers/all.json"));
       const isOrgEligible = !all.find((d) => d == domain);
 
       const associatedDomain = isOrgEligible
