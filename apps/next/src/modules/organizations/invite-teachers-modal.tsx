@@ -109,10 +109,9 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
             <Stack spacing="3">
               <Modal.Heading>Invite teachers</Modal.Heading>
               <Text>
-                Users within your organizations with emails ending in{" "}
-                <strong>@{domain}</strong> are automatically added to your
-                organization. Send out invites for your teachers to sign up on
-                Quenti.
+                Teachers within your organization with emails ending in{" "}
+                <strong>@{domain}</strong> are automatically added. Send out
+                invites for your teachers to sign up on Quenti.
               </Text>
             </Stack>
             <Stack spacing="6">
