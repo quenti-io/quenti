@@ -1,5 +1,3 @@
-import { signIn } from "next-auth/react";
-
 import { FrameLogo, Link } from "@quenti/components";
 import { GithubIcon, XIcon } from "@quenti/components/icons";
 
@@ -17,12 +15,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import {
-  IconBrandGoogle,
-  IconCopyright,
-  IconMoon,
-  IconSun,
-} from "@tabler/icons-react";
+import { IconCopyright, IconMoon, IconSun } from "@tabler/icons-react";
 
 import { MOD } from "../lib/tinykeys";
 import { Authed } from "./authed";
@@ -63,19 +56,7 @@ export const Footer = () => {
               </HStack>
             </HStack>
             <HStack spacing="4">
-              <Authed
-                fallback={
-                  <Button
-                    size="sm"
-                    display={{ base: "none", md: "flex" }}
-                    leftIcon={<IconBrandGoogle size={16} stroke="4px" />}
-                    onClick={async () => await signIn("google")}
-                  >
-                    Sign up for free
-                  </Button>
-                }
-                nullOnLoad
-              >
+              <Authed nullOnLoad>
                 <Button
                   variant="outline"
                   size="sm"

@@ -11,6 +11,7 @@ import {
   AvatarBadge,
   Box,
   Button,
+  ButtonGroup,
   Flex,
   HStack,
   IconButton,
@@ -146,27 +147,39 @@ export const Navbar: React.FC = () => {
               }}
             />
           </Box>
-          <HStack
-            as="nav"
-            spacing={4}
-            display={["none", "none", "flex"]}
-            height="12"
-          >
+          <HStack as="nav" display={["none", "none", "flex"]} height="12">
             {session?.user && <UserMenu />}
             {status !== "loading" && !session && (
-              <>
+              <ButtonGroup spacing="2">
                 <Button
-                  colorScheme="blue"
-                  variant="outline"
+                  fontWeight={600}
+                  rounded="xl"
                   as={Link}
                   href="/auth/login"
+                  variant="outline"
+                  colorScheme="gray"
+                  fontSize="sm"
                 >
                   Log in
                 </Button>
-                <Button as={Link} href="/auth/signup">
+                <Button
+                  fontWeight={600}
+                  rounded="xl"
+                  _light={{
+                    bg: "black",
+                    color: "white",
+                    _hover: {
+                      bg: "gray.800",
+                    },
+                  }}
+                  as={Link}
+                  fontSize="sm"
+                  href="/auth/signup"
+                  shadow="lg"
+                >
                   Sign up for free
                 </Button>
-              </>
+              </ButtonGroup>
             )}
           </HStack>
         </HStack>

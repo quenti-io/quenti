@@ -7,7 +7,7 @@ export const Quenti10 = () => {
     <GridItem>
       <NewsCard
         title="Quenti 1.0"
-        description="Quenti 1.0 is finally here, redesigned and rebuilt from the ground up."
+        description="Quenti has finally arrived, redesigned and rebuilt from the ground up."
         image={
           <Center overflow="hidden" w="full" h="full" position="relative">
             <Box
