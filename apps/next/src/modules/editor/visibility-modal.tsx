@@ -64,7 +64,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
             <ToggleGroup.Tab onClick={() => onChangeVisibility("Unlisted")}>
               <VisibilityOption
                 name="Unlisted"
-                description="Anyone can view and study this set via a direct link, but it will be hidden from your profile and not visible in folders."
+                description="Anyone can view and study this set via a direct link, but it will be hidden from your profile and not visible in other people's folders."
                 icon={<IconLink size={20} />}
                 selected={visibility === "Unlisted"}
               />
