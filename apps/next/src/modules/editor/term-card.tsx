@@ -190,7 +190,16 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
                   />
                 </ButtonGroup>
               </Flex>
-              <HStack px="5" pb="4" spacing={6} alignItems="start">
+              <HStack
+                px="5"
+                pb="4"
+                spacing={6}
+                alignItems="start"
+                flexDir={{
+                  base: "column",
+                  sm: "row",
+                }}
+              >
                 <Stack w="full" spacing={2}>
                   <Box pos="relative">
                     <AutoResizeTextarea
