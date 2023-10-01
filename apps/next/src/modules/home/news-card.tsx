@@ -44,9 +44,9 @@ export const NewsCard: React.FC<NewsCardProps> = ({
         )}
         <Text
           fontSize="sm"
-          color="gray.700"
+          color="gray.600"
           _dark={{
-            color: "gray.300",
+            color: "gray.400",
           }}
         >
           {description}
