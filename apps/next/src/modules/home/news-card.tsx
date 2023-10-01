@@ -33,6 +33,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({
         _dark={{
           borderColor: "gray.700",
         }}
+        userSelect="none"
       >
         {image}
       </Box>
