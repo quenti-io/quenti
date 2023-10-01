@@ -6,6 +6,7 @@ import { Link } from "@quenti/components";
 
 import {
   Button,
+  ButtonGroup,
   Flex,
   HStack,
   Heading,
@@ -42,7 +43,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
   onImportClick,
   onClassClick,
 }) => {
-  const session = useSession()!.data!;
+  const { data: session, status } = useSession()!;
   const { data: me } = useMe();
 
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -50,13 +51,18 @@ export const LeftNav: React.FC<LeftNavProps> = ({
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
-    <HStack as="nav" spacing={4} height="12">
+    <HStack as="nav" spacing="4" height="12">
       <Flex
         align="center"
         justify="space-between"
         className="nav-content__mobile"
       >
-        <HStack as={Link} href="/home" rel="home" ml="2">
+        <HStack
+          as={Link}
+          href={session?.user ? "/home" : "/"}
+          rel="home"
+          ml="2"
+        >
           <Logo boxSize="24px" />
           <Heading
             as="p"
@@ -153,7 +159,28 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           </Menu>
         </HStack>
       )}
+      {status === "unauthenticated" && (
+        <ButtonGroup display={["none", "none", "flex"]} spacing="0" ml="4">
+          <LinkButton>Features</LinkButton>
+          <LinkButton>Solutions</LinkButton>
+          <LinkButton>Pricing</LinkButton>
+        </ButtonGroup>
+      )}
     </HStack>
+  );
+};
+
+const LinkButton: React.FC<React.PropsWithChildren> = ({ children }) => {
+  return (
+    <Button
+      variant="ghost"
+      colorScheme="gray"
+      fontSize="sm"
+      color="gray.800"
+      _dark={{ color: "gray.200" }}
+    >
+      {children}
+    </Button>
   );
 };
 

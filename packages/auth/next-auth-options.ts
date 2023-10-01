@@ -102,6 +102,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/login",
     signOut: "/",
+    newUser: "/onboarding",
   },
   // Configure one or more authentication providers
   adapter: CustomPrismaAdapter(prisma),

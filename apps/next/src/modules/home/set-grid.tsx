@@ -12,6 +12,8 @@ export const SetGrid = () => {
   const { data, isLoading: recentLoading } = api.recent.get.useQuery();
   const isLoading = status == "unauthenticated" || recentLoading;
 
+  if (data && !data.entities.length) return null;
+
   return (
     <Stack spacing={6}>
       <Skeleton isLoaded={!!data} rounded="md" fitContent>

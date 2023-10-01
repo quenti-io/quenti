@@ -1,4 +1,4 @@
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -173,18 +173,25 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           )}
           {status !== "loading" && !session && (
             <>
+              <Button variant="ghost" colorScheme="gray">
+                Features
+              </Button>
+              <Button variant="ghost" colorScheme="gray">
+                Solutions
+              </Button>
+              <Button variant="ghost" colorScheme="gray">
+                Pricing
+              </Button>
               <Button
-                colorScheme="blue"
+                mt="4"
+                colorScheme="gray"
                 variant="outline"
-                onClick={async () => {
-                  await signIn("google", {
-                    callbackUrl: "/home",
-                  });
-                }}
+                as={Link}
+                href="/auth/login"
               >
                 Log in
               </Button>{" "}
-              <Button as={Link} href={"/signup"}>
+              <Button as={Link} href="/auth/signup">
                 Sign up for free
               </Button>
             </>
