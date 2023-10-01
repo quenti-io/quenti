@@ -11,12 +11,13 @@ import { WithFooter } from "../components/with-footer";
 import { getLayout } from "../layouts/main-layout";
 import { ClassesGrid } from "../modules/home/classes-grid";
 import { EmptyDashboard } from "../modules/home/empty-dashboard";
+import { News } from "../modules/home/news";
 import { SetGrid } from "../modules/home/set-grid";
 
 const Home = () => {
   const { status } = useSession();
   const { data, isLoading: recentLoading } = api.recent.get.useQuery();
-  const isEmpty = !data?.sets.length && !data?.folders.length;
+  const isEmpty = !data?.entities.length;
 
   const isLoading = status == "unauthenticated" || recentLoading;
 
@@ -29,6 +30,7 @@ const Home = () => {
             {!isLoading && isEmpty && <EmptyDashboard />}
             <SetGrid />
             <ClassesGrid />
+            <News />
           </Stack>
         </Container>
       </WithFooter>

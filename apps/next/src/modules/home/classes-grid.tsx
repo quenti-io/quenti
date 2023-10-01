@@ -9,7 +9,9 @@ import { ClassCard } from "../../components/class-card";
 export const ClassesGrid = () => {
   const { status } = useSession();
   const { data, isLoading: recentLoading } = api.recent.get.useQuery();
-  const isLoading = status == "unauthenticated" || recentLoading;
+
+  if (!data?.classes.length || recentLoading || status === "loading")
+    return null;
 
   return (
     <Stack spacing={6}>
@@ -17,17 +19,6 @@ export const ClassesGrid = () => {
         <Heading size="lg">Your classes</Heading>
       </Skeleton>
       <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
-        {isLoading &&
-          Array.from({ length: 4 }).map((_, i) => (
-            <GridItem key={i} h="170px">
-              <Skeleton
-                rounded="lg"
-                height="full"
-                border="2px"
-                borderColor="gray.700"
-              />
-            </GridItem>
-          ))}
         {(data?.classes || []).map((class_) => (
           <GridItem key={class_.id}>
             <ClassCard

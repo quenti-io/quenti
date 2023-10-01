@@ -1,153 +1,136 @@
-import React from "react";
+import { motion } from "framer-motion";
+
+import { FrameLogo, Link } from "@quenti/components";
 
 import {
   Box,
+  Button,
   Center,
-  Flex,
   HStack,
   Heading,
-  IconButton,
+  Stack,
   Text,
   VStack,
-  useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import {
+  IconBooks,
+  IconCloudDownload,
+  IconFolder,
+  IconPlus,
+} from "@tabler/icons-react";
 
-const features = [
-  {
-    src: "/media/create-set.mp4",
-    name: "Create Study Sets",
-    description: "Create your own study sets or import from Quizlet.com",
+import { menuEventChannel } from "../../events/menu";
+
+const ghost = {
+  transition: {
+    repeat: Infinity,
+    duration: 5,
+    ease: "backInOut",
   },
-  {
-    src: "/media/study-path.mp4",
-    name: "Customize Your Studying",
-    description: "Change how you answer questions, shuffle terms, and more.",
+  animate: {
+    translateY: [0, -20, 0],
   },
-  {
-    src: "/media/folders.mp4",
-    name: "Group Sets Into Folders",
-    description: "Organize your sets into folders and combine flashcards.",
+};
+const studySet = {
+  transition: {
+    repeat: Infinity,
+    duration: 4,
+    ease: "backInOut",
+    delay: 0.2,
   },
-  {
-    src: "/media/command-menu.mp4",
-    name: "Get Anywhere, From Anywhere",
-    description: "Open the command menu with Ctrl + K and start typing.",
+  animate: {
+    translateY: [0, -20, 0],
+    rotateZ: [0, -25, 0],
   },
-];
+};
+const folder = {
+  transition: {
+    repeat: Infinity,
+    duration: 4.5,
+    ease: "backInOut",
+    delay: 0.4,
+  },
+  animate: {
+    translateY: [0, -20, 0],
+    rotateZ: [0, 20, 0],
+  },
+};
 
 export const EmptyDashboard = () => {
-  const borderColor = useColorModeValue("gray.300", "gray.750");
-
-  const [page, setPage] = React.useState(0);
-  const feature = features[page]!;
-
-  const dotColor = useColorModeValue("gray.200", "gray.750");
-  const dotHover = useColorModeValue("gray.300", "gray.700");
-  const dotSelected = useColorModeValue("gray.400", "gray.600");
-
   return (
     <Center
       w="full"
-      rounded="lg"
       borderWidth="2px"
-      borderColor={borderColor}
       p="12"
-      shadow="md"
+      rounded="3xl"
+      borderColor="gray.200"
+      _dark={{
+        borderColor: "gray.750",
+      }}
+      overflow="hidden"
     >
-      <VStack spacing={8} textAlign="center">
-        <VStack>
-          <Heading>This is your dashboard</Heading>
-          <Text color="gray.500">
-            Sets and folders you&apos;ve recently viewed will show up here.
-          </Text>
-        </VStack>
-        <FeatureVideo src={feature.src} />
-        <VStack>
-          <Heading size="md">{feature.name}</Heading>
-          <Text color="gray.500">{feature.description}</Text>
-        </VStack>
-        <Flex justifyContent="space-between" w="full">
-          <IconButton
-            size="sm"
-            aria-label="Previous"
-            icon={<IconChevronLeft />}
-            variant="ghost"
+      <VStack spacing="10" position="relative" textAlign="center">
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          w="full"
+          h="500px"
+          zIndex={-1}
+          bgGradient="radial(circle at center, blue.300 10%, transparent 90%)"
+          className="blur-2xl"
+          opacity="0.3"
+          rounded="full"
+        />{" "}
+        <HStack spacing="-3" opacity="0.5" position="relative">
+          <motion.div {...studySet}>
+            <IconBooks size={30} strokeWidth="2px" opacity="0.8" />
+          </motion.div>
+          <motion.div {...ghost} className="p-3">
+            <FrameLogo width={20} height={20} />
+          </motion.div>
+          <motion.div {...folder}>
+            <IconFolder size={40} strokeWidth="2px" opacity="0.9" />
+          </motion.div>
+          <Box
+            position="absolute"
+            top="10"
+            left="0"
+            w="full"
+            h="full"
+            zIndex={-1}
+            bgGradient="linear(to-b, gray.500, transparent)"
+            opacity="0.5"
             rounded="full"
-            isDisabled={page == 0}
-            onClick={() => setPage((p) => p - 1)}
           />
-          <HStack>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Box
-                key={i}
-                rounded="full"
-                width="3"
-                height="3"
-                bg={page == i ? dotSelected : dotColor}
-                transition="all 0.2s"
-                cursor="pointer"
-                _hover={{
-                  bg: dotHover,
-                }}
-                onClick={() => {
-                  setPage(i);
-                }}
-              />
-            ))}
-          </HStack>
-          <IconButton
-            size="sm"
-            aria-label="Previous"
-            icon={<IconChevronRight />}
-            variant="ghost"
-            rounded="full"
-            isDisabled={page == features.length - 1}
-            onClick={() => setPage((p) => p + 1)}
-          />
-        </Flex>
+        </HStack>
+        <VStack px="7">
+          <Heading>Create your first study set</Heading>
+          <Text>Start learning by creating or importing a study set.</Text>
+        </VStack>
+        <Stack spacing="4">
+          <Button
+            leftIcon={<IconPlus />}
+            size="lg"
+            shadow="xl"
+            as={Link}
+            href="/create"
+          >
+            Create study set
+          </Button>
+          <Button
+            leftIcon={<IconCloudDownload />}
+            size="lg"
+            shadow="xl"
+            onClick={() => {
+              menuEventChannel.emit("openImportDialog");
+            }}
+          >
+            Import from Quizlet
+          </Button>
+        </Stack>
       </VStack>
     </Center>
-  );
-};
-
-const FeatureVideo = ({ src }: { src: string }) => {
-  const videoBg = useColorModeValue("gray.200", "gray.800");
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-
-  React.useEffect(() => {
-    videoRef.current?.setAttribute("src", src);
-  }, [src]);
-
-  return (
-    <Box
-      rounded="lg"
-      overflow="hidden"
-      shadow="2xl"
-      position="relative"
-      maxW="2xl"
-      bg={videoBg}
-      width="calc(100vw - 64px)"
-      style={{
-        paddingBottom: "calc(.5625 * 100%)",
-      }}
-    >
-      <video
-        autoPlay
-        loop
-        muted
-        ref={videoRef}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <source src={src} />
-      </video>
-    </Box>
   );
 };
