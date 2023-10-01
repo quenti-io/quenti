@@ -123,7 +123,7 @@ export const OrganizationSettings = () => {
   const isAdmin = role == "Admin" || isOwner;
 
   return (
-    <Stack spacing="8">
+    <Stack spacing="8" pb="20">
       <LeaveOrganizationModal
         isOpen={leaveOpen}
         onClose={() => {
