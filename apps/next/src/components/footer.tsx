@@ -1,5 +1,6 @@
 import { FrameLogo, Link } from "@quenti/components";
 import { GithubIcon, XIcon } from "@quenti/components/icons";
+import { SUPPORT_EMAIL } from "@quenti/lib/constants/email";
 
 import {
   Box,
@@ -110,7 +111,7 @@ export const Footer = () => {
             <FooterLink href="https://status.quenti.io" text="Status" />
             <FooterLink href="/organizations" text="Organizations" />
             <FooterLink
-              href="mailto:support@quenti.io"
+              href={`mailto:${SUPPORT_EMAIL}`}
               text="Contact support"
             />
             <FooterLink href="/privacy" text="Privacy Policy" />

@@ -1,5 +1,7 @@
 import { Head, Html, Preview, Tailwind } from "@react-email/components";
 
+import { ORG_SUPPORT_EMAIL } from "@quenti/lib/constants/email";
+
 import { BodyContainer } from "../components/body-container";
 import { Content } from "../components/content";
 import { Footer } from "../components/footer";
@@ -32,7 +34,8 @@ export const OrganizationDeletionEmail = ({
               You&apos;re receiving this email because your organization{" "}
               <strong>{orgName}</strong> has been requested for deletion. If you
               believe this was a mistake, please{" "}
-              <a href="mailto:orgs@quenti.io">contact us</a> immediately.
+              <a href={`mailto:${ORG_SUPPORT_EMAIL}`}>contact us</a>{" "}
+              immediately.
             </Content>
           </MainContainer>
           <Footer />

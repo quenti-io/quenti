@@ -24,6 +24,7 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
       id: true,
       name: true,
       published: true,
+      deletedAt: true,
       members: {
         where: {
           role: "Owner",
@@ -36,6 +37,22 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
           },
         },
       },
+    },
+  });
+
+  if (org.deletedAt) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Organization has already been requested for deletion",
+    });
+  }
+
+  await ctx.prisma.organization.update({
+    where: {
+      id: input.orgId,
+    },
+    data: {
+      deletedAt: new Date(),
     },
   });
 

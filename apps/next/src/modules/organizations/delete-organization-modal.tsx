@@ -4,8 +4,17 @@ import React from "react";
 import { Modal } from "@quenti/components/modal";
 import { api } from "@quenti/trpc";
 
-import { Button, ButtonGroup, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Input,
+  Text,
+  useColorModeValue,
+  useToast,
+} from "@chakra-ui/react";
 
+import { AnimatedCheckCircle } from "../../components/animated-icons/check";
+import { Toast } from "../../components/toast";
 import { useOrganization } from "../../hooks/use-organization";
 
 interface DeleteOrganizationModalProps {
@@ -20,12 +29,28 @@ export const DeleteOrganizationModal: React.FC<
   const { data: org } = useOrganization();
   const router = useRouter();
 
+  const toast = useToast();
+
   const apiDelete = api.organizations.delete.useMutation({
-    onSuccess: async () => {
-      await utils.user.me.invalidate();
-      await router.push("/orgs");
+    onSuccess: async ({ scheduled }) => {
+      if (!scheduled) {
+        await utils.user.me.invalidate();
+        await router.push("/orgs");
+      } else {
+        await utils.organizations.get.invalidate();
+
+        toast({
+          title: "Your organization will be deleted in 48 hours",
+          icon: <AnimatedCheckCircle />,
+          render: Toast,
+        });
+        onClose();
+      }
     },
   });
+
+  const [input, setInput] = React.useState("");
+  const isValid = input == org?.name;
 
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const mutedColor = useColorModeValue("gray.700", "gray.300");
@@ -44,25 +69,26 @@ export const DeleteOrganizationModal: React.FC<
         </Modal.Body>
         <Modal.Divider />
         <Modal.Footer>
-          <ButtonGroup>
+          <HStack spacing="4" w="full">
+            <Input
+              placeholder="Organization name"
+              w="full"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
             <Button
-              onClick={onClose}
-              ref={cancelRef}
-              isDisabled={apiDelete.isLoading}
-            >
-              Cancel
-            </Button>
-            <Button
+              isDisabled={!isValid}
               onClick={() => {
                 apiDelete.mutate({ orgId: org!.id });
               }}
               isLoading={apiDelete.isLoading}
               colorScheme="red"
-              variant="ghost"
+              variant="outline"
+              minW="max"
             >
-              Yes, delete organization
+              Delete organization
             </Button>
-          </ButtonGroup>
+          </HStack>
         </Modal.Footer>
       </Modal.Content>
     </Modal>

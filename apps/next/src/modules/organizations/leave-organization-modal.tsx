@@ -19,6 +19,7 @@ export const LeaveOrganizationModal: React.FC<RemoveMemberModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const utils = api.useContext();
   const router = useRouter();
   const toast = useToast();
 
@@ -27,12 +28,15 @@ export const LeaveOrganizationModal: React.FC<RemoveMemberModalProps> = ({
 
   const removeMember = api.organizations.removeMember.useMutation({
     onSuccess: async () => {
-      await router.push("/orgs");
+      await utils.user.me.invalidate();
+
       toast({
         title: "Left organization",
         icon: <AnimatedCheckCircle />,
         render: Toast,
       });
+
+      await router.push("/orgs");
     },
   });
 

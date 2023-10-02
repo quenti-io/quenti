@@ -73,7 +73,8 @@ export const api = createTRPCNext<AppRouter>({
               if (
                 code === "BAD_REQUEST" ||
                 code === "FORBIDDEN" ||
-                code === "UNAUTHORIZED"
+                code === "UNAUTHORIZED" ||
+                code === "NOT_FOUND"
               ) {
                 return false;
               }
