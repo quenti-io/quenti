@@ -124,6 +124,7 @@ export const ChangeUsernameInput = React.forwardRef<
                 placeholder="Enter a username"
                 bg={inputBg}
                 size="md"
+                rounded="md"
                 spellCheck={false}
                 disabled={changeUsername.isLoading}
                 px="4"

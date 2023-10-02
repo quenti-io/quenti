@@ -41,8 +41,9 @@ export const ProfileInfo = () => {
           leftIcon={<IconUser size={18} />}
           as={Link}
           href={`/@${session.user!.username}`}
+          w="max"
         >
-          Go to profile
+          View your profile
         </Button>
       }
     >

@@ -22,7 +22,7 @@ export const SectionWrapper: React.FC<
   return (
     <Grid
       gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }}
-      gap={{ base: 4, md: 16 }}
+      gap={{ base: 6, md: 16 }}
     >
       <Stack spacing={4}>
         <Stack spacing={2}>

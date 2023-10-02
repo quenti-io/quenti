@@ -13,7 +13,7 @@ export const GAccountInfo = () => {
 
   return (
     <SectionWrapper
-      heading="Google Account"
+      heading="Google account"
       description="Read-only information about your Google account"
     >
       <Stack spacing={0}>
