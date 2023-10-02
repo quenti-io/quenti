@@ -1,3 +1,4 @@
+import { sendOrganizationDeletionEmail } from "@quenti/emails";
 import { disbandOrgUsers } from "@quenti/enterprise/users";
 import { env } from "@quenti/env/server";
 import { cancelOrganizationSubscription } from "@quenti/payments";
@@ -13,6 +14,18 @@ export const scheduleOrgDeletion = inngest.createFunction(
     event: "orgs/delete",
   },
   async ({ event, step }) => {
+    await Promise.all(
+      event.data.ownerEmails.map((email) =>
+        step.run(
+          "Send organization deletion email",
+          async () =>
+            await sendOrganizationDeletionEmail(email, {
+              orgName: event.data.org.name,
+            }),
+        ),
+      ),
+    );
+
     if (env.SERVER_NAME === "production") {
       await step.sleep("48h");
     }

@@ -9,7 +9,9 @@ import ClasssInviteEmail, {
 import ConfirmCodeEmail, {
   type ConfirmCodeEmailProps,
 } from "./templates/confirm-code";
-import OrganizationDeletionEmail from "./templates/organization-deletion";
+import OrganizationDeletionEmail, {
+  type OrganizationDeletionEmailProps,
+} from "./templates/organization-deletion";
 import OrganizationInviteEmail, {
   type OrganizationInviteEmailProps,
 } from "./templates/organization-invite";
@@ -78,7 +80,7 @@ export const sendOrganizationTeacherInviteEmail = async (
 
 export const sendOrganizationDeletionEmail = async (
   email: string,
-  opts: OrganizationInviteEmailProps,
+  opts: OrganizationDeletionEmailProps,
 ) => {
   await sendEmail({
     from: NOTIFICATIONS_SENDER,
