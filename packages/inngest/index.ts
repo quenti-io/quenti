@@ -1,5 +1,6 @@
 import { collectOrganizationActivity } from "./functions/collect-organization-activity";
 import { cortexClassifyClass } from "./functions/cortex-classify-class";
+import { scheduleOrgDeletion } from "./functions/schedule-organization-deletion";
 import { sendClassInviteEmails } from "./functions/send-class-invite-emails";
 import { sendOrgInviteEmails } from "./functions/send-org-invite-emails";
 import { sendOrgTeacherInviteEmails } from "./functions/send-org-teacher-invite-emails";
@@ -32,6 +33,15 @@ type OrgInviteTeachers = {
     emails: string[];
   };
 };
+type OrgDelete = {
+  data: {
+    org: {
+      id: string;
+      name: string;
+    };
+    ownerEmails: string[];
+  };
+};
 type ClassesInviteTeachers = {
   data: {
     class: {
@@ -55,6 +65,7 @@ export type Events = {
   "cortex/classify-class": CortexClassifyClass;
   "orgs/invite-members": OrgsInviteMembers;
   "orgs/invite-teachers": OrgInviteTeachers;
+  "orgs/delete": OrgDelete;
   "classes/invite-teachers": ClassesInviteTeachers;
 };
 
@@ -63,6 +74,7 @@ export const functions = [
   // Events
   sendOrgInviteEmails,
   sendOrgTeacherInviteEmails,
+  scheduleOrgDeletion,
   sendClassInviteEmails,
   cortexClassifyClass,
   // Scheduled jobs

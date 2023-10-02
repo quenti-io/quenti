@@ -19,11 +19,13 @@ import {
   SkeletonText,
   Stack,
   Text,
+  chakra,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 
 import {
+  IconClock,
   IconFilterPlus,
   IconLogout,
   IconSettings,
@@ -37,6 +39,7 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { Toast } from "../../../components/toast";
 import { useOrganization } from "../../../hooks/use-organization";
+import { rtf } from "../../../utils/time";
 import { DeleteOrganizationModal } from "../delete-organization-modal";
 import { DomainCard } from "../domain-card";
 import { DomainFilterCard } from "../domain-filter-card";
@@ -65,6 +68,8 @@ export const OrganizationSettings = () => {
   const mutedColor = useColorModeValue("gray.600", "gray.400");
   const linkDefault = useColorModeValue("gray.700", "gray.300");
   const highlight = useColorModeValue("blue.500", "blue.200");
+
+  const deletionScheduled = !!org?.deletedAt;
 
   const [mounted, setMounted] = React.useState(false);
   const [orgName, setOrgName] = React.useState("");
@@ -121,6 +126,9 @@ export const OrganizationSettings = () => {
 
   const isOwner = role == "Owner";
   const isAdmin = role == "Admin" || isOwner;
+
+  const isOnlyOwner =
+    isOwner && org?.members.filter((x) => x.role == "Owner").length == 1;
 
   return (
     <Stack spacing="8" pb="20">
@@ -414,20 +422,83 @@ export const OrganizationSettings = () => {
         description="Actions in this area are irreversible"
         isLoaded={!!org}
       >
-        <Skeleton isLoaded={!!org} rounded="md" fitContent>
-          <Button
-            colorScheme="red"
-            variant="outline"
-            leftIcon={
-              isOwner ? <IconTrash size={18} /> : <IconLogout size={18} />
-            }
-            w="max"
-            onClick={() => (isOwner ? setDeleteOpen(true) : setLeaveOpen(true))}
-          >
-            {isOwner ? "Delete" : "Leave"} {org?.name || "Organization"}
-          </Button>
-        </Skeleton>
+        <Stack spacing="6">
+          <Skeleton isLoaded={!!org} rounded="md" fitContent>
+            <ButtonGroup spacing="3">
+              {!isOnlyOwner && (
+                <Button
+                  colorScheme="gray"
+                  variant="outline"
+                  leftIcon={<IconLogout size={18} />}
+                  w="max"
+                  onClick={() => setLeaveOpen(true)}
+                >
+                  Leave {org?.name || "Organization"}
+                </Button>
+              )}
+              {isOwner && (
+                <Button
+                  isDisabled={deletionScheduled}
+                  colorScheme="red"
+                  variant="outline"
+                  leftIcon={<IconTrash size={18} />}
+                  w="max"
+                  onClick={() => setDeleteOpen(true)}
+                >
+                  Delete {org?.name || "Organization"}
+                </Button>
+              )}
+            </ButtonGroup>
+          </Skeleton>
+          {deletionScheduled && <DeletionNotice />}
+        </Stack>
       </SettingsWrapper>
+    </Stack>
+  );
+};
+
+const DeletionNotice = () => {
+  const { data: org } = useOrganization();
+  const deletedAt = org!.deletedAt!;
+
+  const deletionDate = new Date(deletedAt).getTime();
+  const deletionPlus48Hours = deletionDate + 48 * 60 * 60 * 1000;
+  const hoursToDeletion = Math.ceil(
+    (deletionPlus48Hours - Date.now()) / (60 * 60 * 1000),
+  );
+  const formattedDeletion = rtf.format(hoursToDeletion, "hour");
+
+  const linkDefault = useColorModeValue("gray.700", "gray.300");
+  const highlight = useColorModeValue("blue.500", "blue.200");
+
+  return (
+    <Stack>
+      <HStack
+        color="red.600"
+        _dark={{
+          color: "red.200",
+        }}
+      >
+        <IconClock size={18} />
+        <Text fontWeight={600}>Scheduled for deletion</Text>
+      </HStack>
+      <Text color="gray.500">
+        Your organization will be deleted{" "}
+        <chakra.strong fontWeight={600} color={linkDefault}>
+          {formattedDeletion}
+        </chakra.strong>
+        . If you believe this was a mistake, please{" "}
+        <Link
+          href={`mailto:${ORG_SUPPORT_EMAIL}`}
+          color={linkDefault}
+          fontWeight={600}
+          transition="color 0.2s ease-in-out"
+          _hover={{ color: highlight }}
+        >
+          contact us
+        </Link>{" "}
+        immediately.
+      </Text>
     </Stack>
   );
 };

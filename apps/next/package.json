@@ -31,6 +31,7 @@
     "@quenti/auth": "*",
     "@quenti/branding": "*",
     "@quenti/components": "*",
+    "@quenti/enterprise": "*",
     "@quenti/env": "*",
     "@quenti/images": "*",
     "@quenti/inngest": "*",

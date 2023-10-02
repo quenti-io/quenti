@@ -8,6 +8,7 @@
     "@quenti/core": "*",
     "@quenti/cortex": "*",
     "@quenti/emails": "*",
+    "@quenti/enterprise": "*",
     "@quenti/inngest": "*",
     "@quenti/interfaces": "*",
     "@quenti/lib": "*",

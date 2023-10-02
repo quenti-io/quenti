@@ -17,14 +17,15 @@ export const DangerZone = () => {
         onClose={() => setDeleteModalOpen(false)}
       />
       <SectionWrapper
-        heading="Danger Zone"
-        description="Actions in this area are irreversible. Be careful."
+        heading="Danger zone"
+        description="Actions in this area are irreversible"
       >
         <Button
           colorScheme="red"
           variant="outline"
           leftIcon={<IconUserX size={18} />}
           onClick={() => setDeleteModalOpen(true)}
+          w="max"
         >
           Delete Account
         </Button>

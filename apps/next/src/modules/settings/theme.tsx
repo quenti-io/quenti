@@ -7,7 +7,7 @@ import { SettingsContext } from "../../pages/settings";
 import { ThemePreview } from "../onboarding/theme-preview";
 import { SectionWrapper } from "./section-wrapper";
 
-export const AppPreferences = () => {
+export const Theme = () => {
   const { colorMode, setColorMode } = useColorMode();
 
   const layout = React.useContext(SettingsContext)!.layout;
@@ -15,7 +15,7 @@ export const AppPreferences = () => {
   return (
     <SectionWrapper
       heading="Theme"
-      description="Change the theme for this device."
+      description="Change the theme for this device"
     >
       <VStack>
         <ToggleGroup

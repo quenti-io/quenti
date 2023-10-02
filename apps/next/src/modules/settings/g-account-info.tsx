@@ -13,11 +13,11 @@ export const GAccountInfo = () => {
 
   return (
     <SectionWrapper
-      heading="Google Account"
-      description="Read-only information about your Google account. Only you can see this."
+      heading="Google account"
+      description="Read-only information about your Google account"
     >
       <Stack spacing={0}>
-        <Text fontSize="xl" className="highlight-block">
+        <Text fontSize="xl" className="highlight-block" fontWeight={600}>
           {session.user.name}
         </Text>
         <Text fontSize="sm" className="highlight-block" color={grayText}>

@@ -6,11 +6,14 @@ import { HeadSeo } from "@quenti/components";
 import {
   Container,
   Divider,
+  HStack,
   Heading,
   Stack,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+import { IconSettings } from "@tabler/icons-react";
 
 import { PageWrapper } from "../common/page-wrapper";
 import { AuthedPage } from "../components/authed-page";
@@ -20,10 +23,10 @@ import { WithFooter } from "../components/with-footer";
 import { useMe } from "../hooks/use-me";
 import { getLayout } from "../layouts/main-layout";
 import { AccountType } from "../modules/settings/account-type";
-import { AppPreferences } from "../modules/settings/app-preferences";
 import { DangerZone } from "../modules/settings/danger-zone";
 import { GAccountInfo } from "../modules/settings/g-account-info";
 import { ProfileInfo } from "../modules/settings/profile-info";
+import { Theme } from "../modules/settings/theme";
 
 export const SettingsContext = React.createContext<{
   layout?: "mobile" | "desktop";
@@ -56,7 +59,10 @@ const SettingsInner = () => {
       <SettingsContext.Provider value={{ layout }}>
         <Container maxW="4xl">
           <Stack spacing={12}>
-            <Heading size="2xl">Settings</Heading>
+            <HStack spacing="3">
+              <IconSettings size={32} />
+              <Heading size="2xl">Settings</Heading>
+            </HStack>
             <Stack spacing={8}>
               <GAccountInfo />
               <Divider borderColor={divider} />
@@ -66,7 +72,7 @@ const SettingsInner = () => {
               </UnboundOnly>
               <ProfileInfo />
               <Divider borderColor={divider} />
-              <AppPreferences />
+              <Theme />
               <Divider borderColor={divider} />
               <DangerZone />
             </Stack>

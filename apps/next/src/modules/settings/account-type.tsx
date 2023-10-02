@@ -27,8 +27,8 @@ export const AccountType = () => {
 
   return (
     <SectionWrapper
-      heading="Account Type"
-      description="Select your account type."
+      heading="Account type"
+      description="Select your account type"
     >
       <ToggleGroup
         index={type == "Student" ? 0 : 1}

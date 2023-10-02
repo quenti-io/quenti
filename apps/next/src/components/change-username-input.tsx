@@ -48,7 +48,6 @@ export const ChangeUsernameInput = React.forwardRef<
 
     const inputBg = useColorModeValue("gray.100", "gray.750");
     const addonBg = useColorModeValue("gray.200", "gray.700");
-    const borderColor = useColorModeValue("gray.300", "gray.600");
 
     const [usernameValue, setUsernameValue] = React.useState(
       session.data!.user!.username,
@@ -66,8 +65,8 @@ export const ChangeUsernameInput = React.forwardRef<
     });
 
     const gray = useColorModeValue("gray.500", "gray.400");
-    const green = useColorModeValue("green.400", "green.300");
-    const red = useColorModeValue("red.400", "red.300");
+    const green = useColorModeValue("green.500", "green.300");
+    const red = useColorModeValue("red.500", "red.300");
 
     const isProfane = checkUsername.data?.isProfane;
     const isTooLong = usernameValue.length > 40;
@@ -109,22 +108,23 @@ export const ChangeUsernameInput = React.forwardRef<
         <HStack gap={2}>
           <Box
             w="full"
-            rounded="md"
-            borderWidth="0"
-            borderBottomWidth="2px"
+            rounded="lg"
             overflow="hidden"
+            borderWidth="2px"
             transition="border-color 0.2s ease-in-out"
-            borderColor={borderColor}
+            borderColor={addonBg}
             _focusWithin={{
-              borderColor: isInvalid ? "red.300" : "blue.300",
+              borderColor: isInvalid ? red : "blue.300",
             }}
           >
-            <InputGroup size="lg" rounded="md" background={borderColor}>
+            <InputGroup size="lg" rounded="md" background={addonBg}>
               <Input
                 fontWeight={700}
                 variant="unstyled"
                 placeholder="Enter a username"
                 bg={inputBg}
+                size="md"
+                rounded="md"
                 spellCheck={false}
                 disabled={changeUsername.isLoading}
                 px="4"
@@ -166,6 +166,8 @@ export const ChangeUsernameInput = React.forwardRef<
           {showButton && (
             <Button
               size="lg"
+              variant="outline"
+              fontSize="md"
               isDisabled={isDisabled}
               onClick={() => changeUsername.mutate({ username: usernameValue })}
               isLoading={changeUsername.isLoading}

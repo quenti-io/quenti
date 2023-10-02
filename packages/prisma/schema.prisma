@@ -120,12 +120,13 @@ model VerificationToken {
 }
 
 model Organization {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   logoUrl   String?
   logoHash  String?
-  published Boolean  @default(false)
+  published Boolean   @default(false)
+  deletedAt DateTime?
   /// @zod.custom(imports.orgMetadataSchema)
   metadata  Json?
 

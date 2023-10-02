@@ -1,11 +1,11 @@
 import all from "email-providers/all.json" assert { type: "json" };
 
 import { sendConfirmCodeEmail } from "@quenti/emails";
+import { disbandOrgUsersByDomain } from "@quenti/enterprise/users";
 import { env } from "@quenti/env/server";
 
 import { TRPCError } from "@trpc/server";
 
-import { disbandOrgUsersByDomain } from "../../lib/orgs/users";
 import { genOtp } from "../../lib/otp";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import { RateLimitType, rateLimitOrThrow } from "../../lib/rate-limit";

@@ -1,6 +1,7 @@
+import { disbandOrgUsersByDomain } from "@quenti/enterprise/users";
+
 import { TRPCError } from "@trpc/server";
 
-import { disbandOrgUsersByDomain } from "../../lib/orgs/users";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TRemoveStudentDomainSchema } from "./remove-student-domain.schema";
