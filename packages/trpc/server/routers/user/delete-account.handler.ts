@@ -17,11 +17,17 @@ export const deleteAccountHandler = async ({ ctx }: DeleteAccountOptions) => {
       message: "Unable to delete admin account.",
     });
   }
-  // TODO: Remove this
-  if (ctx.session.user.username.toLowerCase() == "quenti") {
+
+  const orgMembership = await ctx.prisma.organizationMembership.findUnique({
+    where: {
+      userId: ctx.session.user.id,
+    },
+  });
+  if (orgMembership) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Unable to delete official account.",
+      message:
+        "You are currently a member of an organization. Leave the organization first before deleting your account.",
     });
   }
 

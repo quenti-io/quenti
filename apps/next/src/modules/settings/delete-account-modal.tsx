@@ -2,17 +2,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Modal } from "@quenti/components";
 import { api } from "@quenti/trpc";
 
 import {
   Button,
-  Heading,
   Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
   Stack,
   Text,
   useColorModeValue,
@@ -32,7 +27,6 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
   const [usernameValue, setUsernameValue] = React.useState("");
 
   const red = useColorModeValue("red.500", "red.200");
-  const inputBg = useColorModeValue("gray.200", "gray.750");
 
   const deleteAccount = api.user.deleteAccount.useMutation({
     onSuccess: async () => {
@@ -43,52 +37,48 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
-      <ModalOverlay backdropFilter="blur(6px)" />
-      <ModalContent px="4" py="6" rounded="xl">
-        <ModalBody pb="8">
-          <Stack spacing={6}>
-            <Heading>Delete Account</Heading>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal.Overlay />
+      <Modal.Content>
+        <Modal.Body>
+          <Modal.Heading>Delete account</Modal.Heading>
+          <Stack spacing="4">
             <Text>
               Are you absolutely sure you want to delete your account? All of
               your sets, folders, and other data will be completely deleted.{" "}
-              <b>This action is irreversible.</b>
+              <strong>This action is irreversible.</strong>
             </Text>
-            <Text fontWeight={700} color={red}>
+            <Text fontWeight={600} color={red}>
               {deleteAccount.error
                 ? `Error: ${deleteAccount.error.message}`
                 : "Enter your username to proceed."}
             </Text>
           </Stack>
-        </ModalBody>
-        <ModalFooter>
+        </Modal.Body>
+        <Modal.Divider />
+        <Modal.Footer>
           <Stack gap={2} direction={{ base: "column", md: "row" }} w="full">
             <Input
               className="highlight-block"
-              fontWeight={700}
-              variant="flushed"
               placeholder="Username"
-              bg={inputBg}
               rounded="md"
               px="4"
               value={usernameValue}
               onChange={(e) => setUsernameValue(e.target.value)}
-              _focus={{
-                borderColor: "orange.300",
-                boxShadow: `0px 1px 0px 0px #ffa54c`,
-              }}
             />
             <Button
               px="10"
               isDisabled={usernameValue !== session.user?.username}
               isLoading={deleteAccount.isLoading}
               onClick={() => deleteAccount.mutate()}
+              variant="outline"
+              colorScheme="red"
             >
-              Delete Account
+              Delete account
             </Button>
           </Stack>
-        </ModalFooter>
-      </ModalContent>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   );
 };

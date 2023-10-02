@@ -73,7 +73,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
   const hasMembership = !!me?.orgMembership;
 
   const hasInvite = !!me?.orgInvites.length;
-  const map = computeMap(hasInvite, isBound, hasMembership, isMobile);
+  const map = computeMap(hasInvite, hasMembership, isBound, isMobile);
 
   const currentStep = router.pathname.replace("/onboarding", "");
 
