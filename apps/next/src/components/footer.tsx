@@ -177,7 +177,7 @@ const ThemeButton = ({ mode }: { mode: "light" | "dark" }) => {
         },
       }}
       transition="color 0.15s ease-in-out"
-      p="6px"
+      p="7px"
       rounded="full"
       onClick={() => setColorMode(mode)}
     >
