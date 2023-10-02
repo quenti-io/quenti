@@ -5846,6 +5846,7 @@ __metadata:
     "@quenti/emails": "*"
     "@quenti/enterprise": "*"
     "@quenti/env": "*"
+    "@quenti/payments": "*"
     "@quenti/prisma": "*"
     inngest: ^2.7.0
   languageName: unknown
@@ -5902,6 +5903,7 @@ __metadata:
     "@quenti/auth": "*"
     "@quenti/branding": "*"
     "@quenti/components": "*"
+    "@quenti/enterprise": "*"
     "@quenti/env": "*"
     "@quenti/images": "*"
     "@quenti/inngest": "*"
@@ -6001,6 +6003,7 @@ __metadata:
     "@quenti/core": "*"
     "@quenti/cortex": "*"
     "@quenti/emails": "*"
+    "@quenti/enterprise": "*"
     "@quenti/inngest": "*"
     "@quenti/integrations": "*"
     "@quenti/interfaces": "*"

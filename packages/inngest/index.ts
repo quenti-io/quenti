@@ -32,6 +32,15 @@ type OrgInviteTeachers = {
     emails: string[];
   };
 };
+type OrgDelete = {
+  data: {
+    org: {
+      id: string;
+      name: string;
+    };
+    ownerEmails: string[];
+  };
+};
 type ClassesInviteTeachers = {
   data: {
     class: {
@@ -55,6 +64,7 @@ export type Events = {
   "cortex/classify-class": CortexClassifyClass;
   "orgs/invite-members": OrgsInviteMembers;
   "orgs/invite-teachers": OrgInviteTeachers;
+  "orgs/delete": OrgDelete;
   "classes/invite-teachers": ClassesInviteTeachers;
 };
 

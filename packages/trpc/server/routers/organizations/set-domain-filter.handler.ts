@@ -1,6 +1,7 @@
+import { bulkJoinOrgUsersByFilter } from "@quenti/enterprise/users";
+
 import { TRPCError } from "@trpc/server";
 
-import { bulkJoinOrgUsersByFilter } from "../../lib/orgs/users";
 import { isOrganizationAdmin } from "../../lib/queries/organizations";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TSetDomainFilterSchema } from "./set-domain-filter.schema";

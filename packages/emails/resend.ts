@@ -9,6 +9,7 @@ import ClasssInviteEmail, {
 import ConfirmCodeEmail, {
   type ConfirmCodeEmailProps,
 } from "./templates/confirm-code";
+import OrganizationDeletionEmail from "./templates/organization-deletion";
 import OrganizationInviteEmail, {
   type OrganizationInviteEmailProps,
 } from "./templates/organization-invite";
@@ -72,6 +73,18 @@ export const sendOrganizationTeacherInviteEmail = async (
       opts.orgName
     } on Quenti`,
     react: OrganizationTeacherInviteEmail(opts),
+  });
+};
+
+export const sendOrganizationDeletionEmail = async (
+  email: string,
+  opts: OrganizationInviteEmailProps,
+) => {
+  await sendEmail({
+    from: NOTIFICATIONS_SENDER,
+    to: email,
+    subject: `[Urgent] Your organization ${opts.orgName} will be deleted in 48 hours`,
+    react: OrganizationDeletionEmail(opts),
   });
 };
 

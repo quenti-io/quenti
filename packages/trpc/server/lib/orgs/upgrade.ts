@@ -1,13 +1,13 @@
+import {
+  bulkJoinOrgMembersAsTeachers,
+  bulkJoinOrgUsers,
+  bulkJoinOrgUsersByFilter,
+} from "@quenti/enterprise/users";
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
 
 import { bulkJoinOrgClasses } from "./classes";
 import { conflictingDomains } from "./domains";
-import {
-  bulkJoinOrgMembersAsTeachers,
-  bulkJoinOrgUsers,
-  bulkJoinOrgUsersByFilter,
-} from "./users";
 
 export const upgradeOrganization = async (
   id: string,

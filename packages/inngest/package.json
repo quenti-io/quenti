@@ -7,6 +7,7 @@
     "@quenti/emails": "*",
     "@quenti/enterprise": "*",
     "@quenti/env": "*",
+    "@quenti/payments": "*",
     "@quenti/prisma": "*",
     "inngest": "^2.7.0"
   },
