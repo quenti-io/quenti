@@ -26,7 +26,7 @@ export const CorrectState: React.FC<{ guess: string }> = ({ guess }) => {
         opacity: 1,
       }}
     >
-      <Stack spacing="2" pb="53px">
+      <Stack spacing="2" pb="4">
         <GenericLabel evaluation>{remark}</GenericLabel>
         <AnswerCard text={cleanSpaces(guess)} correct />
       </Stack>

@@ -25,6 +25,7 @@ export const InteractionCard = () => {
 
   const correctColor = useColorModeValue("#38a169", "#68d391");
   const incorrectColor = useColorModeValue("#e53e3e", "#fc8181");
+  const neutralColor = useColorModeValue("#0042da", "#7ea6ff");
 
   const active = timeline[roundCounter];
   if (!active) return null;
@@ -70,7 +71,11 @@ export const InteractionCard = () => {
               background="red"
               rounded="2xl"
               boxShadow={`0 5px 60px -5px ${
-                status == "correct" ? correctColor : incorrectColor
+                status == "correct"
+                  ? correctColor
+                  : status == "incorrect"
+                  ? incorrectColor
+                  : neutralColor
               }`}
               opacity="0.2"
               zIndex={300}

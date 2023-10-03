@@ -32,6 +32,7 @@ export const StudyStarredSection = () => {
           fontWeight: 600,
         }}
         h="full"
+        w="max"
       >
         <ToggleGroup.Tab
           color={!studyStarred ? "blue.300" : undefined}
