@@ -42,8 +42,11 @@ export const InteractionCard = () => {
       <Card
         shadow="xl"
         bg="white"
+        borderWidth="2px"
+        borderColor="gray.100"
         _dark={{
           bg: "gray.750",
+          borderColor: "gray.700",
         }}
         rounded="2xl"
         position="relative"

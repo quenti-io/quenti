@@ -2,7 +2,7 @@ import React from "react";
 
 import { HeadSeo, Link } from "@quenti/components";
 
-import { Flex, Heading, IconButton } from "@chakra-ui/react";
+import { Flex, Heading, IconButton, Skeleton } from "@chakra-ui/react";
 
 import { IconArrowLeft, IconSettings } from "@tabler/icons-react";
 
@@ -29,6 +29,7 @@ export const Titlebar = () => {
       <Flex alignItems="center">
         <IconButton
           icon={<IconArrowLeft />}
+          rounded="full"
           aria-label="Back"
           variant="ghost"
           as={Link}
@@ -39,7 +40,8 @@ export const Titlebar = () => {
         </Heading>
         <IconButton
           icon={<IconSettings />}
-          aria-label="Back"
+          rounded="full"
+          aria-label="Settings"
           variant="ghost"
           onClick={() => {
             setSettingsOpen(true);
@@ -47,5 +49,33 @@ export const Titlebar = () => {
         />
       </Flex>
     </>
+  );
+};
+
+Titlebar.Skeleton = function TitlebarSkeleton() {
+  return (
+    <Flex alignItems="center">
+      <Skeleton fitContent rounded="full">
+        <IconButton
+          icon={<IconArrowLeft />}
+          rounded="full"
+          aria-label="Back"
+          variant="ghost"
+        />
+      </Skeleton>
+      <Flex flex="1" justifyContent="center">
+        <Skeleton fitContent rounded="lg">
+          <Heading size="lg">Round 1</Heading>
+        </Skeleton>
+      </Flex>
+      <Skeleton fitContent rounded="full">
+        <IconButton
+          icon={<IconSettings />}
+          rounded="full"
+          aria-label="Settings"
+          variant="ghost"
+        />
+      </Skeleton>
+    </Flex>
   );
 };

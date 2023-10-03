@@ -6,7 +6,7 @@ import { api } from "@quenti/trpc";
 
 import { Button, Center, Heading, Stack, Text, VStack } from "@chakra-ui/react";
 
-import { IconFlagCheck, IconReload } from "@tabler/icons-react";
+import { IconReload } from "@tabler/icons-react";
 
 import { ConfirmModal } from "../../components/confirm-modal";
 import { effectChannel } from "../../events/effects";
@@ -65,7 +65,6 @@ export const CompletedView = () => {
             <TermMastery />
           </Center>
           <VStack textAlign="center" spacing={6}>
-            <IconFlagCheck size={80} strokeWidth={1.5} />
             <Heading>Congratulations, you&apos;ve learned everything!</Heading>
             {canReview && (
               <Text>
