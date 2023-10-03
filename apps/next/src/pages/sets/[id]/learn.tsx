@@ -24,7 +24,7 @@ const Learn = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Learn" />
-      <HydrateSetData disallowDirty>
+      <HydrateSetData disallowDirty withDistractors>
         <CreateLearnData>
           <Container maxW="4xl">
             <Stack spacing={8}>

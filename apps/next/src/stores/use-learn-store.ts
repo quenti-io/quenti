@@ -2,22 +2,23 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-import type { Question, RoundSummary, StudiableTerm } from "@quenti/interfaces";
-import { shuffleArray, takeNRandom } from "@quenti/lib/array";
+import type {
+  Question,
+  RoundSummary,
+  StudiableTermWithDistractors,
+  TermWithDistractors,
+} from "@quenti/interfaces";
+import { shuffleArray } from "@quenti/lib/array";
 import { SPECIAL_CHAR_REGEXP } from "@quenti/lib/constants/characters";
 import { LEARN_TERMS_IN_ROUND } from "@quenti/lib/constants/learn";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
-import type {
-  LearnMode,
-  StudySetAnswerMode,
-  Term,
-} from "@quenti/prisma/client";
+import type { LearnMode, StudySetAnswerMode } from "@quenti/prisma/client";
 
 export interface LearnStoreProps {
   mode: LearnMode;
   answerMode: StudySetAnswerMode;
-  studiableTerms: StudiableTerm[];
-  allTerms: Term[];
+  studiableTerms: StudiableTermWithDistractors[];
+  allTerms: TermWithDistractors[];
   numTerms: number;
   termsThisRound: number;
   currentRound: number;
@@ -37,8 +38,8 @@ interface LearnState extends LearnStoreProps {
   initialize: (
     mode: LearnMode,
     answerMode: StudySetAnswerMode,
-    studiableTerms: StudiableTerm[],
-    allTerms: Term[],
+    studiableTerms: StudiableTermWithDistractors[],
+    allTerms: TermWithDistractors[],
     round: number,
   ) => void;
   answerCorrectly: (termId: string) => void;
@@ -57,7 +58,7 @@ export type LearnStore = ReturnType<typeof createLearnStore>;
 
 export const word = (
   mode: StudySetAnswerMode,
-  term: Pick<Term, "word" | "definition">,
+  term: Pick<TermWithDistractors, "word" | "definition">,
   type: "prompt" | "answer",
 ) => {
   if (mode == "Definition")
@@ -283,19 +284,6 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             if (x.correctness == 0) x.appearedInRound = currentRound;
           });
 
-          const allChoices: Term[] = Array.from(
-            new Set(
-              termsThisRound
-                .map((t) => state.allTerms.find((x) => x.id === t.id)!)
-                .concat(
-                  takeNRandom(
-                    state.allTerms,
-                    Math.max(termsThisRound.length, 4),
-                  ),
-                ),
-            ),
-          );
-
           const roundTimeline: Question[] = termsThisRound.map((term) => {
             const choice = term.correctness < 1;
             const answerMode: StudySetAnswerMode =
@@ -306,12 +294,14 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
                 : "Word";
 
             if (choice) {
-              const choices = shuffleArray(
-                takeNRandom(
-                  allChoices.filter((choice) => choice.id !== term.id),
-                  Math.min(3, state.allTerms.length),
-                ).concat(term),
+              const distractorIds = term.distractors
+                .filter((x) => x.type == answerMode)
+                .map((x) => x.id);
+              const distractors = state.allTerms.filter((x) =>
+                distractorIds.includes(x.id),
               );
+
+              const choices = shuffleArray(distractors.concat(term));
 
               return {
                 answerMode,
