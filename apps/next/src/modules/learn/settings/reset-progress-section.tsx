@@ -38,7 +38,7 @@ export const ResetProgressSection = () => {
         px={{ base: undefined, sm: "12" }}
         w={{ base: "max", sm: "auto" }}
         variant="ghost"
-        leftIcon={<IconReload />}
+        leftIcon={<IconReload size={18} />}
         isLoading={apiResetLearnProgress.isLoading}
         onClick={() => {
           apiResetLearnProgress.mutate({
@@ -46,7 +46,7 @@ export const ResetProgressSection = () => {
           });
         }}
       >
-        Reset Progress
+        Reset progress
       </Button>
     </Flex>
   );

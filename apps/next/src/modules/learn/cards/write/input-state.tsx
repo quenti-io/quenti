@@ -1,5 +1,6 @@
 import React from "react";
 
+import { GenericLabel } from "@quenti/components";
 import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import { placeholderLanguage } from "@quenti/core/language";
 import type { Question } from "@quenti/interfaces";
@@ -98,50 +99,51 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
 
   return (
     <Stack spacing={6}>
-      <Stack spacing={4}>
-        <Text fontWeight={600} color="gray.400">
-          Your answer
-        </Text>
-        {!!specialCharacters.length && (
-          <Box>
-            <div style={{ margin: -4, maxHeight: 128, overflowY: "auto" }}>
-              {specialCharacters.sort().map((c, i) => (
-                <CharacterButtonWrapper
-                  key={i}
-                  character={c}
-                  handler={handleClick}
-                />
-              ))}
-            </div>
-          </Box>
-        )}
-        <Input
-          ref={inputRef}
-          placeholder={`Type the ${placeholderLanguage(
-            wordLanguage,
-            definitionLanguage,
-            active.answerMode,
-          )}`}
-          py="6"
-          px="4"
-          rounded="lg"
-          fontWeight={700}
-          bg={inputBg}
-          variant="flushed"
-          _placeholder={{
-            color: placeholderColor,
-          }}
-          autoFocus
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              setTimeout(() => {
-                handleSubmit();
-              });
-            }
-          }}
-        />
+      <Stack spacing="2">
+        <GenericLabel>Your answer</GenericLabel>
+        <Stack spacing="3">
+          {!!specialCharacters.length && (
+            <Box>
+              <div style={{ margin: -4, maxHeight: 128, overflowY: "auto" }}>
+                {specialCharacters.sort().map((c, i) => (
+                  <CharacterButtonWrapper
+                    key={i}
+                    character={c}
+                    handler={handleClick}
+                  />
+                ))}
+              </div>
+            </Box>
+          )}
+          <Input
+            ref={inputRef}
+            placeholder={`Type the ${placeholderLanguage(
+              wordLanguage,
+              definitionLanguage,
+              active.answerMode,
+            )}`}
+            py="6"
+            px="4"
+            rounded="lg"
+            fontWeight={700}
+            bg={inputBg}
+            variant="flushed"
+            borderColor="transparent"
+            _placeholder={{
+              color: placeholderColor,
+            }}
+            autoFocus
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setTimeout(() => {
+                  handleSubmit();
+                });
+              }
+            }}
+          />
+        </Stack>
       </Stack>
       <Flex justifyContent="end">
         <ButtonGroup>
@@ -176,6 +178,7 @@ const CharacterButton: React.FC<{ character: string; onClick: () => void }> = ({
       variant="outline"
       display="inline-block"
       m="1"
+      colorScheme="gray"
       fontWeight={600}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}

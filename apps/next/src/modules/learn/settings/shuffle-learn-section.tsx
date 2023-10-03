@@ -66,6 +66,7 @@ export const ShuffleLearnSection = () => {
             size="sm"
             aria-label="Reshuffle"
             isDisabled={!shuffleLearn}
+            colorScheme="gray"
             rounded="full"
             icon={<IconDice5 size={18} />}
             onClick={() => {

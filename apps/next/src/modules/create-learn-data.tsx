@@ -1,6 +1,10 @@
 import React from "react";
 
-import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
+import type { TermWithDistractors } from "@quenti/interfaces";
+import type {
+  StudiableTerm,
+  StudiableTermWithDistractors,
+} from "@quenti/interfaces/studiable-term";
 
 import { useAuthedSet } from "../hooks/use-set";
 import {
@@ -53,8 +57,8 @@ export const CreateLearnData: React.FC<React.PropsWithChildren> = ({
       .initialize(
         container.learnMode,
         container.answerWith,
-        learnTerms,
-        terms,
+        learnTerms as StudiableTermWithDistractors[],
+        terms as TermWithDistractors[],
         container.learnRound,
       );
   }

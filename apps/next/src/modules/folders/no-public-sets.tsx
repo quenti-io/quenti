@@ -3,10 +3,11 @@ import { HeadSeo } from "@quenti/components";
 import { Center } from "@chakra-ui/react";
 
 import { GhostMessage } from "../../components/ghost-message";
+import { WithFooter } from "../../components/with-footer";
 
 export const NoPublicSets = () => {
   return (
-    <>
+    <WithFooter>
       <HeadSeo
         title="No Public Sets"
         nextSeoProps={{
@@ -21,6 +22,6 @@ export const NoPublicSets = () => {
           homeButton
         />
       </Center>
-    </>
+    </WithFooter>
   );
 };

@@ -1,14 +1,8 @@
 import { api } from "@quenti/trpc";
 
-import {
-  Button,
-  ButtonGroup,
-  Flex,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 
+import { ToggleGroup } from "../../../components/toggle-group";
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
 
@@ -33,9 +27,13 @@ export const MultipleAnswerModeSection: React.FC = () => {
         </Text>
       </Stack>
       <Flex justifyContent={{ base: "start", sm: "end" }}>
-        <ButtonGroup isAttached>
-          <Button
-            variant={multipleAnswerMode == "One" ? "solid" : "outline"}
+        <ToggleGroup
+          index={multipleAnswerMode == "One" ? 0 : 1}
+          tabProps={{
+            fontWeight: 600,
+          }}
+        >
+          <ToggleGroup.Tab
             onClick={() => {
               setMultipleAnswerMode("One");
               apiSetMultipleAnswerMode.mutate({
@@ -45,9 +43,8 @@ export const MultipleAnswerModeSection: React.FC = () => {
             }}
           >
             One answer
-          </Button>
-          <Button
-            variant={multipleAnswerMode == "All" ? "solid" : "outline"}
+          </ToggleGroup.Tab>
+          <ToggleGroup.Tab
             onClick={() => {
               setMultipleAnswerMode("All");
               apiSetMultipleAnswerMode.mutate({
@@ -57,8 +54,8 @@ export const MultipleAnswerModeSection: React.FC = () => {
             }}
           >
             Exact answer
-          </Button>
-        </ButtonGroup>
+          </ToggleGroup.Tab>
+        </ToggleGroup>
       </Flex>
     </Flex>
   );

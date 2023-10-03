@@ -3,10 +3,11 @@ import { HeadSeo } from "@quenti/components";
 import { Center } from "@chakra-ui/react";
 
 import { GhostMessage } from "./ghost-message";
+import { WithFooter } from "./with-footer";
 
 export const Generic404 = () => {
   return (
-    <>
+    <WithFooter>
       <HeadSeo
         title="Not Found"
         nextSeoProps={{
@@ -21,6 +22,6 @@ export const Generic404 = () => {
           homeButton
         />
       </Center>
-    </>
+    </WithFooter>
   );
 };

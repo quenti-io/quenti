@@ -1,3 +1,4 @@
+import { GenericLabel } from "@quenti/components";
 import type { Question } from "@quenti/interfaces";
 import { api } from "@quenti/trpc";
 
@@ -81,7 +82,6 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
   };
 
   const grayColor = useColorModeValue("gray.600", "gray.400");
-  const grayText = useColorModeValue("gray.600", "gray.400");
   const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
 
   return (
@@ -90,52 +90,49 @@ export const UnknownPartialState: React.FC<UnknownPartialStateProps> = ({
         onRequireOne={onRequireOne}
         onRequireAll={onRequireAll}
       />
-      <Stack spacing={4}>
-        <Text fontWeight={600} color={grayText}>
-          Your answer
-        </Text>
+      <Stack>
+        <GenericLabel>Your answer</GenericLabel>
         <Box
           w="full"
-          px="4"
+          px="5"
           py="4"
           border="2px"
-          bg={useColorModeValue("gray.200", "gray.600")}
-          borderColor={useColorModeValue("gray.300", "gray.500")}
+          borderColor={useColorModeValue("gray.200", "gray.600")}
           color={grayColor}
-          rounded="lg"
+          rounded="xl"
         >
           <Text
             whiteSpace="normal"
             color={textColor}
             textAlign="start"
-            fontWeight="normal"
+            fontWeight={500}
           >
             {guess}
           </Text>
         </Box>
       </Stack>
-      <Stack spacing={4}>
-        <Text fontWeight={600} color={grayText}>
+      <Stack>
+        <GenericLabel>
           {`Original ${
             active.answerMode == "Definition" ? "definition" : "term"
           }
           `}
-        </Text>
+        </GenericLabel>
         <Text
           whiteSpace="normal"
           color={textColor}
           textAlign="start"
-          fontWeight="normal"
+          fontWeight={500}
         >
           {word(active.answerMode, active.term, "answer")}
         </Text>
       </Stack>
       <Divider />
-      <Stack spacing={6}>
-        <Text fontWeight={600} color={textColor}>
+      <Stack>
+        <GenericLabel>
           This question seems to have multiple answers. How should we grade
           this?
-        </Text>
+        </GenericLabel>
         <Grid gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }} gap="6">
           <GridItem>
             <ChoiceOption
@@ -171,18 +168,21 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
   disabled = false,
 }) => {
   const questionNumText = useColorModeValue("gray.800", "gray.200");
-  const defaultBorder = useColorModeValue("blue.600", "blue.200");
+  const buttonBorder = useColorModeValue("gray.200", "gray.600");
+  const defaultBorder = useColorModeValue("gray.300", "gray.500");
   const textColor = useColorModeValue("black", "white");
 
   return (
     <Button
       w="full"
       variant="outline"
-      bg="transparent"
-      border="2px"
       px="8"
       py="5"
       h="full"
+      rounded="xl"
+      borderWidth="2px"
+      colorScheme="gray"
+      borderColor={buttonBorder}
       isDisabled={disabled}
       onClick={onSelect}
     >
@@ -197,7 +197,12 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
           alignItems="center"
           justifyContent="center"
         >
-          <Text fontSize="xs" lineHeight={0} color={questionNumText}>
+          <Text
+            fontSize="11px"
+            lineHeight={0}
+            color={questionNumText}
+            fontFamily="heading"
+          >
             {i + 1}
           </Text>
         </Flex>
@@ -206,7 +211,7 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
           color={textColor}
           whiteSpace="normal"
           textAlign="start"
-          fontWeight="normal"
+          fontWeight={500}
         >
           {text}
         </Text>

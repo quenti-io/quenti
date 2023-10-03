@@ -3,10 +3,11 @@ import { HeadSeo } from "@quenti/components";
 import { Center } from "@chakra-ui/react";
 
 import { GhostMessage } from "../../components/ghost-message";
+import { WithFooter } from "../../components/with-footer";
 
 export const SetPrivate = () => {
   return (
-    <>
+    <WithFooter>
       <HeadSeo
         title="Set Private"
         nextSeoProps={{
@@ -21,7 +22,7 @@ export const SetPrivate = () => {
           homeButton
         />
       </Center>
-    </>
+    </WithFooter>
   );
 };
 

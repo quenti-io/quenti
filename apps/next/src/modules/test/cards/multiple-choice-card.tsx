@@ -1,11 +1,8 @@
 import React from "react";
 
+import { GenericLabel } from "@quenti/components";
 import { ScriptFormatter } from "@quenti/components/script-formatter";
-import {
-  Clickable,
-  GenericLabel,
-  PromptDisplay,
-} from "@quenti/components/test";
+import { Clickable, PromptDisplay } from "@quenti/components/test";
 import type { MultipleChoiceData } from "@quenti/interfaces";
 
 import { Box, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";

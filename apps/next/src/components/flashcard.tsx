@@ -150,7 +150,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             w="full"
             size="lg"
             variant="outline"
-            colorScheme={variant == "sortable" ? "red" : "blue"}
+            colorScheme={variant == "sortable" ? "red" : "gray"}
             borderColor={buttonBorder}
             isDisabled={variant == "default" && index === 0}
             onClick={(e) => {
@@ -166,7 +166,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             w="full"
             size="lg"
             variant="outline"
-            colorScheme={variant == "sortable" ? "green" : "blue"}
+            colorScheme={variant == "sortable" ? "green" : "gray"}
             borderColor={buttonBorder}
             isDisabled={variant == "default" && index === numTerms - 1}
             onClick={(e) => {

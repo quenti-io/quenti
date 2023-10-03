@@ -3,11 +3,14 @@ import { motion, useAnimationControls } from "framer-motion";
 import levenshtein from "js-levenshtein";
 import React from "react";
 
+import { GenericLabel } from "@quenti/components";
 import type { Question } from "@quenti/interfaces";
 import { getRandom } from "@quenti/lib/array";
 import { api } from "@quenti/trpc";
 
-import { Button, Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Button, Flex, Stack } from "@chakra-ui/react";
+
+import { IconProgressCheck } from "@tabler/icons-react";
 
 import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useAuthedSet } from "../../../../hooks/use-set";
@@ -32,8 +35,6 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
   const put = api.studiableTerms.put.useMutation();
 
   const controls = useAnimationControls();
-  const colorScheme = useColorModeValue("red.600", "red.200");
-  const grayText = useColorModeValue("gray.600", "gray.400");
 
   const fullStackRef = React.useRef<HTMLDivElement>(null);
   const stackRef = React.useRef<HTMLDivElement>(null);
@@ -88,26 +89,35 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
       animate={controls}
     >
       <Stack spacing={6} marginTop="0" ref={fullStackRef} pb="2">
-        <Stack spacing={4} ref={stackRef} marginTop="0">
+        <Stack spacing="2" ref={stackRef} marginTop="0">
           <Flex
             justifyContent="space-between"
             alignItems={{ base: "flex-start", md: "center" }}
             flexDir={{ base: "column", md: "row" }}
             w="full"
-            gap={{ base: 2, md: 4 }}
+            gap={{ base: 0, md: 4 }}
           >
-            <Text fontWeight={600} color={guess ? colorScheme : grayText}>
+            <GenericLabel evaluation={guess ? false : undefined}>
               {guess ? remark : "You skipped this term"}
-            </Text>
+            </GenericLabel>
             {guess && (
               <Button
                 size="sm"
                 flexShrink="0"
                 variant="ghost"
+                fontSize="xs"
                 onClick={handleOverrideCorrect}
-                px={{ base: 0, md: 3 }}
+                px={{ base: 0, md: 2 }}
+                leftIcon={
+                  <IconProgressCheck
+                    style={{
+                      marginRight: -4,
+                    }}
+                    size={16}
+                  />
+                }
               >
-                Override: I was correct
+                Override - I was correct
               </Button>
             )}
           </Flex>
@@ -121,10 +131,8 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { delay: 1 } }}
         >
-          <Stack spacing={4}>
-            <Text fontWeight={600} color={grayText}>
-              Correct answer
-            </Text>
+          <Stack>
+            <GenericLabel>Correct answer</GenericLabel>
             <AnswerCard
               text={
                 <>

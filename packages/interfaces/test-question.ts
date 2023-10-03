@@ -1,16 +1,7 @@
 import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
 
 import type { CortexGraderResponse } from "./cortex";
-
-export type Distractor = {
-  id: string;
-  type: "Word" | "Definition";
-  word: string;
-  definition: string;
-};
-export type TermWithDistractors = Term & {
-  distractors: Distractor[];
-};
+import type { Distractor } from "./distractors";
 
 export enum TestQuestionType {
   TrueFalse = "TrueFalse",

@@ -4,7 +4,7 @@ import { HeadSeo } from "@quenti/components";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import { api } from "@quenti/trpc";
 
-import { Container, Stack } from "@chakra-ui/react";
+import { Container, Skeleton, Stack } from "@chakra-ui/react";
 
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
@@ -24,9 +24,20 @@ const Learn = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Learn" />
-      <HydrateSetData disallowDirty>
+      <HydrateSetData
+        disallowDirty
+        withDistractors
+        placeholder={
+          <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
+            <Stack spacing="8" w="full">
+              <Titlebar.Skeleton />
+              <Skeleton w="full" h={{ base: 571, md: 467 }} rounded="2xl" />
+            </Stack>
+          </Container>
+        }
+      >
         <CreateLearnData>
-          <Container maxW="4xl">
+          <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
             <Stack spacing={8}>
               <Titlebar />
               <LearnContainer />

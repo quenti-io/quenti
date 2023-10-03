@@ -1,7 +1,7 @@
+import { GenericLabel } from "@quenti/components";
 import {
   Clickable,
   EvaluatedTrue,
-  GenericLabel,
   PromptDisplay,
 } from "@quenti/components/test";
 import type { TrueFalseData } from "@quenti/interfaces";
