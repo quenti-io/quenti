@@ -89,11 +89,16 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
       ...DEFAULT_PROPS,
       ...initProps,
       initialize: (mode, answerMode, studiableTerms, allTerms, round) => {
+        const words =
+          answerMode != "Both"
+            ? studiableTerms.map((x) => word(answerMode, x, "answer"))
+            : studiableTerms.map((x) => [x.word, x.definition]).flat();
+
         const specialCharacters = Array.from(
           new Set(
-            studiableTerms
-              .map((x) =>
-                [...word(answerMode, x, "answer").matchAll(SPECIAL_CHAR_REGEXP)]
+            words
+              .map((word) =>
+                [...word.matchAll(SPECIAL_CHAR_REGEXP)]
                   .map((x) => Array.from(x))
                   .flat(),
               )
