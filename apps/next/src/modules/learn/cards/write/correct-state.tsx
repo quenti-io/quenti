@@ -1,17 +1,17 @@
 import { motion } from "framer-motion";
 import React from "react";
 
+import { GenericLabel } from "@quenti/components";
 import { cleanSpaces } from "@quenti/core/evaluator";
 import { getRandom } from "@quenti/lib/array";
 
-import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 
 import { useLearnContext } from "../../../../stores/use-learn-store";
 import { AnswerCard } from "./answer-card";
 
 export const CorrectState: React.FC<{ guess: string }> = ({ guess }) => {
   const feedbackBank = useLearnContext((s) => s.feedbackBank);
-  const colorScheme = useColorModeValue("green.600", "green.200");
 
   const [remark] = React.useState(getRandom(feedbackBank.correct));
 
@@ -26,10 +26,8 @@ export const CorrectState: React.FC<{ guess: string }> = ({ guess }) => {
         opacity: 1,
       }}
     >
-      <Stack spacing={4} pb="53px">
-        <Text fontWeight={600} color={colorScheme}>
-          {remark}
-        </Text>
+      <Stack spacing="2" pb="53px">
+        <GenericLabel evaluation>{remark}</GenericLabel>
         <AnswerCard text={cleanSpaces(guess)} correct />
       </Stack>
     </motion.div>

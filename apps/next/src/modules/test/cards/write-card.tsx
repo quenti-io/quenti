@@ -1,7 +1,7 @@
+import { GenericLabel } from "@quenti/components";
 import {
   EvaluatedFalse,
   EvaluatedTrue,
-  GenericLabel,
   PromptDisplay,
 } from "@quenti/components/test";
 import { placeholderLanguage } from "@quenti/core";

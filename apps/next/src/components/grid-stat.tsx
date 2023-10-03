@@ -20,17 +20,16 @@ export const GridStat: React.FC<GridStatProps> = ({ value, label, bg }) => {
     <GridItem>
       <Card
         bg={bg ?? defaultBg}
+        pt="3"
         pb="4"
         shadow="lg"
         rounded="2xl"
-        borderWidth="2px"
-        borderColor={useColorModeValue("gray.100", "gray.700")}
-        borderBottomColor="orange.300"
         borderBottomWidth="3px"
+        borderColor="orange.300"
       >
         <Stat textAlign="center">
           <StatNumber
-            fontSize={{ base: "3xl", sm: "4xl", md: "5xl" }}
+            fontSize={{ base: "3xl", md: "4xl" }}
             fontFamily="Outfit"
             fontWeight={800}
           >

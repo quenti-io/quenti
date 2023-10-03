@@ -6,17 +6,20 @@ import { api } from "@quenti/trpc";
 
 import { Button, Center, Heading, Stack, Text, VStack } from "@chakra-ui/react";
 
-import { IconReload } from "@tabler/icons-react";
+import { IconFlagCheck, IconReload } from "@tabler/icons-react";
 
 import { ConfirmModal } from "../../components/confirm-modal";
+import { effectChannel } from "../../events/effects";
 import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
+import { plural } from "../../utils/string";
 import { TermMastery } from "./term-mastery";
 
 export const CompletedView = () => {
   const { id, container } = useAuthedSet();
   const router = useRouter();
-  const numTerms = useLearnContext((s) => s.allTerms).length;
+  const numTerms = useLearnContext((s) => s.studiableTerms).length;
+  const hasMissedTerms = useLearnContext((s) => s.hasMissedTerms) === true;
 
   const resetProgress = api.container.resetLearnProgress.useMutation({
     onSuccess() {
@@ -29,7 +32,13 @@ export const CompletedView = () => {
     },
   });
 
+  React.useEffect(() => {
+    effectChannel.emit("confetti");
+  }, []);
+
   const [resetModalOpen, setResetModalOpen] = React.useState(false);
+
+  const canReview = container.learnMode == "Learn" && hasMissedTerms;
 
   return (
     <>
@@ -44,8 +53,8 @@ export const CompletedView = () => {
         heading="Reset Progress"
         body={
           <Text>
-            You are about to reset your progress for <b>{numTerms}</b> term
-            {numTerms != 1 ? "s" : ""}. This action cannot be undone.
+            Are you sure you want to reset your progress for{" "}
+            {plural(numTerms, "term")}?
           </Text>
         }
         isLoading={resetProgress.isLoading}
@@ -55,41 +64,40 @@ export const CompletedView = () => {
           <Center>
             <TermMastery />
           </Center>
-          <Stack textAlign="center" spacing={6}>
+          <VStack textAlign="center" spacing={6}>
+            <IconFlagCheck size={80} strokeWidth={1.5} />
             <Heading>Congratulations, you&apos;ve learned everything!</Heading>
-            {container.learnMode == "Learn" && (
-              <Text fontSize="lg">
+            {canReview && (
+              <Text>
                 Keep reviewing your most missed terms to make sure they stick.
               </Text>
             )}
-          </Stack>
+          </VStack>
           <Center>
-            <VStack w="max" gap={1}>
-              {container.learnMode == "Learn" ? (
+            <VStack w="max" spacing="3">
+              {canReview ? (
                 <Button
-                  size="lg"
                   isLoading={beginReview.isLoading}
                   onClick={async () => {
                     await beginReview.mutateAsync({ entityId: id });
                   }}
                 >
-                  Review Missed Terms
+                  Review missed terms
                 </Button>
               ) : (
-                <Button size="lg" as={Link} href={`/${id}`} w="full">
+                <Button as={Link} href={`/${id}`} w="full">
                   Finish Learn
                 </Button>
               )}
               <Button
-                size="lg"
                 variant="ghost"
                 w="full"
-                leftIcon={<IconReload />}
+                leftIcon={<IconReload size={18} />}
                 onClick={() => {
                   setResetModalOpen(true);
                 }}
               >
-                Reset Progress
+                Reset progress
               </Button>
             </VStack>
           </Center>

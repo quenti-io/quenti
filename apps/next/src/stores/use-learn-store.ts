@@ -31,6 +31,7 @@ export interface LearnStoreProps {
   status?: "correct" | "incorrect" | "unknownPartial";
   roundSummary?: RoundSummary;
   completed: boolean;
+  hasMissedTerms?: boolean;
   prevTermWasIncorrect?: boolean;
 }
 
@@ -184,7 +185,12 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
           const masteredCount = state.studiableTerms.filter(
             (x) => x.correctness == 2,
           ).length;
-          if (masteredCount == state.numTerms) return { completed: true };
+          if (masteredCount == state.numTerms) {
+            const hasMissedTerms = !!state.studiableTerms.find(
+              (x) => x.incorrectCount > 0,
+            );
+            return { completed: true, hasMissedTerms };
+          }
 
           if (state.roundProgress === state.termsThisRound - 1) {
             return {
@@ -319,6 +325,10 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             }
           });
 
+          const hasMissedTerms = !!state.studiableTerms.find(
+            (x) => x.incorrectCount > 0,
+          );
+
           return {
             roundSummary: undefined,
             termsThisRound: termsThisRound.length,
@@ -328,6 +338,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             answered: undefined,
             status: undefined,
             completed: !termsThisRound.length,
+            hasMissedTerms,
             currentRound,
           };
         });

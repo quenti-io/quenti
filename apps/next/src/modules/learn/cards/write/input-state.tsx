@@ -1,5 +1,6 @@
 import React from "react";
 
+import { GenericLabel } from "@quenti/components";
 import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import { placeholderLanguage } from "@quenti/core/language";
 import type { Question } from "@quenti/interfaces";
@@ -98,10 +99,8 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
 
   return (
     <Stack spacing={6}>
-      <Stack spacing={4}>
-        <Text fontWeight={600} color="gray.400">
-          Your answer
-        </Text>
+      <Stack spacing="2">
+        <GenericLabel>Your answer</GenericLabel>
         {!!specialCharacters.length && (
           <Box>
             <div style={{ margin: -4, maxHeight: 128, overflowY: "auto" }}>
@@ -128,6 +127,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
           fontWeight={700}
           bg={inputBg}
           variant="flushed"
+          borderColor="transparent"
           _placeholder={{
             color: placeholderColor,
           }}

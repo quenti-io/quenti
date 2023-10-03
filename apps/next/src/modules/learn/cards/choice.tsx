@@ -1,5 +1,6 @@
 import React from "react";
 
+import { GenericLabel } from "@quenti/components";
 import type { Question } from "@quenti/interfaces";
 import { getRandom } from "@quenti/lib/array";
 import type { Term } from "@quenti/prisma/client";
@@ -10,6 +11,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -85,7 +87,22 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
   const isHighlightedTerm = (id: string) =>
     isCorrectTerm(id) || isIncorrectTerm(id);
 
-  const colorForTerm = (id: string) => {
+  const questionNumText = useColorModeValue("gray.800", "gray.200");
+  const defaultBorder = useColorModeValue("gray.300", "gray.500");
+  const buttonBorder = useColorModeValue("gray.200", "gray.600");
+  const greenText = useColorModeValue("green.600", "green.200");
+  const redText = useColorModeValue("red.600", "red.200");
+  const greenBorder = useColorModeValue(
+    "rgba(47, 133, 90, 0.2)",
+    "rgba(154, 230, 180, 0.2)",
+  );
+  const redBorder = useColorModeValue(
+    "rgba(197, 48, 48, 0.2)",
+    "rgba(252, 129, 129, 0.2)",
+  );
+  const textColor = useColorModeValue("gray.900", "gray.50");
+
+  const colorSchemeForTerm = (id: string) => {
     if (!answered) return "gray";
 
     if (isCorrectTerm(id)) return "green";
@@ -93,15 +110,18 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
 
     return "gray";
   };
+  const colorForTerm = (id: string) => {
+    const scheme = colorSchemeForTerm(id);
 
-  const questionNumText = useColorModeValue("gray.800", "gray.200");
-  const defaultBorder = useColorModeValue("gray.300", "gray.500");
-  const buttonBorder = useColorModeValue("gray.200", "gray.600");
-  const correctBg = useColorModeValue("green.200", "green.600");
-  const greenText = useColorModeValue("green.600", "green.200");
-  const redText = useColorModeValue("red.600", "red.200");
-  const textColor = useColorModeValue("black", "white");
-  const highlightWeight = useColorModeValue("500", "200");
+    switch (scheme) {
+      case "green":
+        return greenBorder;
+      case "red":
+        return redBorder;
+      case "gray":
+        return buttonBorder;
+    }
+  };
 
   const text =
     status == "correct"
@@ -113,19 +133,16 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
         }`;
 
   return (
-    <>
-      <Text
-        fontWeight={600}
-        color={
-          status == "correct"
-            ? greenText
-            : status == "incorrect"
-            ? redText
+    <Stack spacing="3">
+      <GenericLabel
+        evaluation={
+          status && status !== "unknownPartial"
+            ? status == "correct"
             : undefined
         }
       >
         {text}
-      </Text>
+      </GenericLabel>
       <Grid gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }} gap="6">
         <ChoiceShortcutLayer
           choose={(i) => {
@@ -139,17 +156,12 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
               variant="outline"
               rounded="xl"
               pointerEvents={answered ? "none" : "auto"}
-              bg={isCorrectTerm(choice.id) ? correctBg : "transparent"}
               borderWidth="2px"
-              borderColor={
-                colorForTerm(choice.id) !== "gray"
-                  ? `${colorForTerm(choice.id)}.${highlightWeight}`
-                  : buttonBorder
-              }
+              borderColor={colorForTerm(choice.id)}
               px="8"
               py="5"
               h="full"
-              colorScheme={colorForTerm(choice.id)}
+              colorScheme={colorSchemeForTerm(choice.id)}
               isDisabled={
                 !!answered &&
                 choice.id !== active.term.id &&
@@ -169,7 +181,12 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Text fontSize="xs" lineHeight={0} color={questionNumText}>
+                    <Text
+                      fontSize="11px"
+                      lineHeight={0}
+                      color={questionNumText}
+                      fontFamily="heading"
+                    >
                       {i + 1}
                     </Text>
                   </Flex>
@@ -184,11 +201,20 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
                 )}
                 <Text
                   size="lg"
-                  color={textColor}
+                  color={
+                    isHighlightedTerm(choice.id)
+                      ? isCorrectTerm(choice.id)
+                        ? greenText
+                        : redText
+                      : textColor
+                  }
                   whiteSpace="pre-wrap"
                   overflowWrap="anywhere"
                   textAlign="start"
-                  fontWeight="normal"
+                  fontWeight={
+                    500
+                    // isHighlightedTerm(choice.id) ? "semibold" : "normal"
+                  }
                 >
                   <ScriptFormatter>
                     {word(active.answerMode, choice, "answer")}
@@ -199,6 +225,6 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
           </GridItem>
         ))}
       </Grid>
-    </>
+    </Stack>
   );
 };

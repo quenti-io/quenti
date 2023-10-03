@@ -1,24 +1,36 @@
 import { motion } from "framer-motion";
 
-import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Box, HStack, Heading, Stack } from "@chakra-ui/react";
 
-import { GenericTermCard } from "../../components/generic-term-card";
+import { IconKeyframes } from "@tabler/icons-react";
+
 import { useLearnContext } from "../../stores/use-learn-store";
+import { DisplayableTermPure } from "../main/displayable-term";
 import { TermMastery } from "./term-mastery";
 
 export const RoundSummary = () => {
   const roundSummary = useLearnContext((s) => s.roundSummary)!;
   const progressPercent = roundSummary.progress / roundSummary.totalTerms;
 
-  const bgColor = useColorModeValue("gray.300", "gray.700");
-
   return (
     <Stack spacing={12}>
       <Stack spacing={6}>
-        <Heading size="md">
-          {roundSummary.progress} / {roundSummary.totalTerms} terms
-        </Heading>
-        <Box h="2" w="full" rounded="full" bg={bgColor} overflow="hidden">
+        <HStack>
+          <Heading size="lg">
+            {roundSummary.progress} / {roundSummary.totalTerms}
+          </Heading>
+          <Heading size="md">terms</Heading>
+        </HStack>
+        <Box
+          h="1"
+          w="full"
+          rounded="full"
+          bg="gray.200"
+          _dark={{
+            bg: "gray.750",
+          }}
+          overflow="hidden"
+        >
           <motion.div
             style={{
               height: "100%",
@@ -38,10 +50,13 @@ export const RoundSummary = () => {
       </Stack>
       <TermMastery />
       <Stack spacing={6} pb="32">
-        <Heading size="lg">Terms studied this round</Heading>
+        <HStack>
+          <IconKeyframes size={18} />
+          <Heading size="md">Terms studied this round</Heading>
+        </HStack>
         <Stack spacing="14px">
           {roundSummary?.termsThisRound.map((term) => (
-            <GenericTermCard term={term} key={term.id} />
+            <DisplayableTermPure term={term} key={term.id} />
           ))}
         </Stack>
       </Stack>

@@ -2,14 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { api } from "@quenti/trpc";
 
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Text } from "@chakra-ui/react";
 
 import { useAuthedSet } from "../../hooks/use-set";
 import { useLearnContext } from "../../stores/use-learn-store";
@@ -49,9 +42,6 @@ export const ActionBar = () => {
     status == "incorrect" ? handleAcknowledgeIncorrect() : nextRound();
   };
 
-  const backgroundColor = useColorModeValue("gray.100", "gray.800");
-  const textColor = useColorModeValue("gray.600", "gray.400");
-
   return (
     <>
       {visible && <AnyKeyPressLayer onSubmit={handleAction} />}
@@ -63,13 +53,22 @@ export const ActionBar = () => {
             animate={{ translateY: 0 }}
             exit={{ translateY: 80 }}
           >
-            <Box w="full" bg={backgroundColor}>
+            <Box
+              w="full"
+              bg="white"
+              borderTopWidth="2px"
+              borderTopColor="gray.100"
+              _dark={{
+                bg: "gray.800",
+                borderTopColor: "gray.750",
+              }}
+            >
               <Container maxW="4xl" py="4">
                 <Flex alignItems="center" justifyContent="space-between">
                   <Text
                     fontSize="md"
-                    color={textColor}
-                    fontWeight={600}
+                    color="gray.500"
+                    fontWeight={500}
                     display={{ base: "none", md: "flex" }}
                   >
                     Press any key to continue
@@ -77,6 +76,7 @@ export const ActionBar = () => {
                   <Button
                     w={{ base: "full", md: "auto" }}
                     onClick={handleAction}
+                    fontSize="sm"
                   >
                     Continue
                     {roundSummary && ` to round ${roundSummary.round + 2}`}

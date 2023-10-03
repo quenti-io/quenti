@@ -19,12 +19,22 @@ export const AnswerCard: React.FC<AnswerCardProps> = ({
   skipped = false,
   showIcon = true,
 }) => {
-  const correctBg = useColorModeValue("green.200", "green.600");
-  const correctColor = useColorModeValue("green.500", "green.200");
-  const incorrectColor = useColorModeValue("red.500", "red.200");
+  // const correctColor = useColorModeValue("green.500", "green.200");
+  // const incorrectColor = useColorModeValue("red.500", "red.200");
 
-  const grayColor = useColorModeValue("gray.500", "gray.400");
-  const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
+  const greenText = useColorModeValue("green.600", "green.200");
+  const redText = useColorModeValue("red.600", "red.200");
+  const correctColor = useColorModeValue(
+    "rgba(47, 133, 90, 0.2)",
+    "rgba(154, 230, 180, 0.2)",
+  );
+  const incorrectColor = useColorModeValue(
+    "rgba(197, 48, 48, 0.2)",
+    "rgba(252, 129, 129, 0.2)",
+  );
+
+  const skipBorderColor = useColorModeValue("gray.200", "gray.600");
+  const grayColor = useColorModeValue("gray.600", "gray.300");
 
   return (
     <Box
@@ -32,11 +42,10 @@ export const AnswerCard: React.FC<AnswerCardProps> = ({
       px="8"
       py="4"
       border="2px"
-      bg={correct ? correctBg : "transparent"}
       borderColor={
-        correct ? correctColor : !skipped ? incorrectColor : grayColor
+        correct ? correctColor : !skipped ? incorrectColor : skipBorderColor
       }
-      color={correct ? correctColor : !skipped ? incorrectColor : grayColor}
+      color={correct ? greenText : !skipped ? redText : grayColor}
       rounded="xl"
     >
       <Flex alignItems="center" w="full" gap={4}>
@@ -49,9 +58,9 @@ export const AnswerCard: React.FC<AnswerCardProps> = ({
         )}
         <Text
           whiteSpace="normal"
-          color={!skipped ? textColor : grayColor}
+          color={!skipped ? (correct ? greenText : redText) : grayColor}
           textAlign="start"
-          fontWeight="normal"
+          fontWeight={500}
         >
           {typeof text === "string" ? (
             <ScriptFormatter>{text}</ScriptFormatter>
