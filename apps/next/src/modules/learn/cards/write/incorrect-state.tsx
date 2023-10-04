@@ -14,7 +14,8 @@ import { IconProgressCheck } from "@tabler/icons-react";
 
 import { ScriptFormatter } from "../../../../components/script-formatter";
 import { useAuthedSet } from "../../../../hooks/use-set";
-import { useLearnContext, word } from "../../../../stores/use-learn-store";
+import { useLearnContext } from "../../../../stores/use-learn-store";
+import { word } from "../../../../utils/terms";
 import { AnswerCard } from "./answer-card";
 
 export interface IncorrectStateProps {

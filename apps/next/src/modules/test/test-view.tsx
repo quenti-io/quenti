@@ -1,3 +1,4 @@
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -26,6 +27,7 @@ interface TestViewProps {
 export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
   const { id, title } = useSetFolderUnison();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const store = React.useContext(TestContext)!;
   const outline = useTestContext((s) => s.outline);
@@ -44,6 +46,14 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
       setEnter(true);
     }, 500);
   };
+
+  React.useEffect(() => {
+    if (!searchParams.get("count"))
+      setTimeout(() => {
+        setSettingsOpen(true);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

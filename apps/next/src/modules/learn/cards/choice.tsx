@@ -21,7 +21,8 @@ import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { ScriptFormatter } from "../../../components/script-formatter";
 import { useAuthedSet } from "../../../hooks/use-set";
-import { useLearnContext, word } from "../../../stores/use-learn-store";
+import { useLearnContext } from "../../../stores/use-learn-store";
+import { word } from "../../../utils/terms";
 
 interface ChoiceCardProps {
   active: Question;

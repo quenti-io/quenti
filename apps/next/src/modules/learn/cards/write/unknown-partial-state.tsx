@@ -17,7 +17,8 @@ import {
 import { useAuthedSet } from "../../../../hooks/use-set";
 import { useShortcut } from "../../../../hooks/use-shortcut";
 import { useContainerContext } from "../../../../stores/use-container-store";
-import { useLearnContext, word } from "../../../../stores/use-learn-store";
+import { useLearnContext } from "../../../../stores/use-learn-store";
+import { word } from "../../../../utils/terms";
 
 export interface UnknownPartialStateProps {
   active: Question;

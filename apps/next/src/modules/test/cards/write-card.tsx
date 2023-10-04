@@ -1,3 +1,5 @@
+import React from "react";
+
 import { GenericLabel } from "@quenti/components";
 import {
   EvaluatedFalse,
@@ -7,10 +9,11 @@ import {
 import { placeholderLanguage } from "@quenti/core";
 import type { WriteData } from "@quenti/interfaces";
 
-import { HStack, Input, Stack, useColorModeValue } from "@chakra-ui/react";
+import { Box, HStack, Input, Stack, useColorModeValue } from "@chakra-ui/react";
 
-import { word } from "../../../stores/use-learn-store";
+import { CharacterButtonWrapper } from "../../../components/special-characters";
 import { useTestContext } from "../../../stores/use-test-store";
+import { word } from "../../../utils/terms";
 import { CortexGraded } from "../cortex-graded";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
@@ -23,12 +26,31 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
   const answerQuestion = useTestContext((s) => s.answerQuestion);
   const clearAnswer = useTestContext((s) => s.clearAnswer);
   const onAnswerDelegate = useTestContext((s) => s.onAnswerDelegate);
-
-  const inputBg = useColorModeValue("gray.100", "gray.700");
-  const placeholderColor = useColorModeValue("gray.600", "gray.400");
+  const specialCharacters = useTestContext((s) => s.specialCharacters);
 
   const evaluation = result ? data.evaluation : undefined;
   const remark = result ? remarks?.[0] : undefined;
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleClick = (c: string) => {
+    const value = answer || "";
+    const cursorPosition = inputRef.current!.selectionStart || value.length;
+    const textBeforeCursor = value.substring(0, cursorPosition);
+    const textAfterCursor = value.substring(cursorPosition);
+    answerQuestion(i, textBeforeCursor + c + textAfterCursor, true, true);
+
+    inputRef.current?.focus();
+    requestAnimationFrame(() => {
+      inputRef.current?.setSelectionRange(
+        cursorPosition + 1,
+        cursorPosition + 1,
+      );
+    });
+  };
+
+  const inputBg = useColorModeValue("gray.100", "gray.700");
+  const placeholderColor = useColorModeValue("gray.600", "gray.400");
 
   return (
     <>
@@ -78,34 +100,51 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
             </Stack>
           )
         ) : (
-          <Input
-            id={`write-card-input-${i}`}
-            placeholder={`Type the ${placeholderLanguage(
-              wordLanguage,
-              definitionLanguage,
-              question.answerMode,
-            )}`}
-            py="6"
-            px="4"
-            rounded="lg"
-            fontWeight={700}
-            bg={inputBg}
-            variant="flushed"
-            _placeholder={{
-              color: placeholderColor,
-            }}
-            value={answer}
-            onChange={(e) => {
-              if (e.target.value.trim().length > 0) {
-                answerQuestion(i, e.target.value, true, true);
-              } else clearAnswer(i);
-            }}
-            onKeyDown={(e) => {
-              if (e.key == "Enter") {
-                onAnswerDelegate(i);
-              }
-            }}
-          />
+          <Stack spacing="3">
+            {!!specialCharacters.length && (
+              <Box>
+                <div style={{ margin: -4, maxHeight: 128, overflowY: "auto" }}>
+                  {specialCharacters.sort().map((c, i) => (
+                    <CharacterButtonWrapper
+                      key={i}
+                      character={c}
+                      handler={handleClick}
+                    />
+                  ))}
+                </div>
+              </Box>
+            )}
+
+            <Input
+              ref={inputRef}
+              id={`write-card-input-${i}`}
+              placeholder={`Type the ${placeholderLanguage(
+                wordLanguage,
+                definitionLanguage,
+                question.answerMode,
+              )}`}
+              py="6"
+              px="4"
+              rounded="lg"
+              fontWeight={700}
+              bg={inputBg}
+              variant="flushed"
+              _placeholder={{
+                color: placeholderColor,
+              }}
+              value={answer}
+              onChange={(e) => {
+                if (e.target.value.trim().length > 0) {
+                  answerQuestion(i, e.target.value, true, true);
+                } else clearAnswer(i);
+              }}
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  onAnswerDelegate(i);
+                }
+              }}
+            />
+          </Stack>
         )}
       </Stack>
     </>

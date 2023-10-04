@@ -15,7 +15,7 @@ export const getQuestionTypeName = (type: TestQuestionType) => {
     case TestQuestionType.MultipleChoice:
       return "Multiple choice";
     case TestQuestionType.Match:
-      return "Match";
+      return "Matching";
     case TestQuestionType.Write:
       return "Write";
   }

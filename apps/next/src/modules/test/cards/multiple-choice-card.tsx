@@ -9,8 +9,8 @@ import { Box, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
 import { IconCircleCheckFilled, IconCircleX } from "@tabler/icons-react";
 
-import { word } from "../../../stores/use-learn-store";
 import { useTestContext } from "../../../stores/use-test-store";
+import { word } from "../../../utils/terms";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 

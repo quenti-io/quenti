@@ -22,6 +22,7 @@ import {
   type WriteData,
 } from "@quenti/interfaces";
 import { getRandom, shuffleArray, takeNRandom } from "@quenti/lib/array";
+import { SPECIAL_CHAR_REGEXP } from "@quenti/lib/constants/characters";
 import {
   CORRECT,
   CORRECT_IS_SIMILAR,
@@ -30,6 +31,8 @@ import {
   TRUE_FALSE_INCORRECT_IS_TRUE,
 } from "@quenti/lib/constants/remarks";
 import type { StudySetAnswerMode } from "@quenti/prisma/client";
+
+import { word } from "../utils/terms";
 
 export type OutlineEntry = {
   type: TestQuestionType;
@@ -150,6 +153,25 @@ export const createTestStore = (
             starredTerms.includes(t.id),
           );
 
+        const words =
+          answerMode != "Both"
+            ? initialTerms.map((x) => word(answerMode, x, "answer"))
+            : initialTerms.map((x) => [x.word, x.definition]).flat();
+
+        const specialCharacters = Array.from(
+          new Set(
+            words
+              .map((word) =>
+                [...word.matchAll(SPECIAL_CHAR_REGEXP)]
+                  .map((x) => Array.from(x))
+                  .flat(),
+              )
+              .flat()
+              .map((x) => x.split(""))
+              .flat(),
+          ),
+        );
+
         let pool = shuffleArray(initialTerms);
 
         const typeOrder = Object.values(TestQuestionType);
@@ -269,6 +291,7 @@ export const createTestStore = (
           answerMode,
           outline: consolidated,
           timeline,
+          specialCharacters,
           startedAt: new Date(),
           endedAt: undefined,
         });
