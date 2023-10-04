@@ -14,6 +14,8 @@ import { LEARN_TERMS_IN_ROUND } from "@quenti/lib/constants/learn";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import type { LearnMode, StudySetAnswerMode } from "@quenti/prisma/client";
 
+import { word } from "../utils/terms";
+
 export interface LearnStoreProps {
   mode: LearnMode;
   answerMode: StudySetAnswerMode;
@@ -56,16 +58,6 @@ interface LearnState extends LearnStoreProps {
 }
 
 export type LearnStore = ReturnType<typeof createLearnStore>;
-
-export const word = (
-  mode: StudySetAnswerMode,
-  term: Pick<TermWithDistractors, "word" | "definition">,
-  type: "prompt" | "answer",
-) => {
-  if (mode == "Definition")
-    return type == "prompt" ? term.word : term.definition;
-  else return type == "prompt" ? term.definition : term.word;
-};
 
 export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
   const DEFAULT_PROPS: LearnStoreProps = {

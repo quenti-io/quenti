@@ -11,7 +11,8 @@ import {
 } from "@chakra-ui/react";
 
 import { ScriptFormatter } from "../../components/script-formatter";
-import { useLearnContext, word } from "../../stores/use-learn-store";
+import { useLearnContext } from "../../stores/use-learn-store";
+import { word } from "../../utils/terms";
 import { ChoiceCard } from "./cards/choice";
 import { WriteCard } from "./cards/write";
 
