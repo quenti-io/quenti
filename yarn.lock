@@ -5769,6 +5769,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@quenti/console@*, @quenti/console@workspace:packages/console":
+  version: 0.0.0-use.local
+  resolution: "@quenti/console@workspace:packages/console"
+  languageName: unknown
+  linkType: soft
+
 "@quenti/core@*, @quenti/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@quenti/core@workspace:packages/core"
@@ -5904,6 +5910,7 @@ __metadata:
     "@quenti/auth": "*"
     "@quenti/branding": "*"
     "@quenti/components": "*"
+    "@quenti/console": "*"
     "@quenti/enterprise": "*"
     "@quenti/env": "*"
     "@quenti/images": "*"
@@ -5970,6 +5977,9 @@ __metadata:
     use-fit-text: ^2.4.0
     zod: ^3.22.2
     zustand: ^4.4.1
+  dependenciesMeta:
+    "@quenti/console":
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -6001,6 +6011,7 @@ __metadata:
   dependencies:
     "@2toad/profanity": ^2.2.0
     "@quenti/auth": "*"
+    "@quenti/console": "*"
     "@quenti/core": "*"
     "@quenti/cortex": "*"
     "@quenti/emails": "*"
@@ -6019,6 +6030,8 @@ __metadata:
     superjson: ^1.13.1
     zod: ^3.22.2
   dependenciesMeta:
+    "@quenti/console":
+      optional: true
     "@quenti/integrations":
       optional: true
   languageName: unknown

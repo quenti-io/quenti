@@ -23,6 +23,7 @@
     "zod": "^3.22.2"
   },
   "optionalDependencies": {
+    "@quenti/console": "*",
     "@quenti/integrations": "*"
   },
   "scripts": {

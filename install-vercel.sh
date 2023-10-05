@@ -37,3 +37,4 @@ install () {
 
 install "github.com/quenti-io/website" "packages/website"
 install "github.com/quenti-io/integrations" "packages/integrations"
+install "github.com/quenti-io/console" "packages/console"
