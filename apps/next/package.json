@@ -80,6 +80,9 @@
     "zod": "^3.22.2",
     "zustand": "^4.4.1"
   },
+  "optionalDependencies": {
+    "@quenti/console": "*"
+  },
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
     "@types/aos": "^3.0.4",

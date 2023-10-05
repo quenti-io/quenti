@@ -32,6 +32,14 @@ if (process.env.USERS_BUCKET_URL)
 if (process.env.ASSETS_BUCKET_URL)
   domains.push(new URL(process.env.ASSETS_BUCKET_URL).host);
 
+const getConsoleRewrites = async () => {
+  try {
+    return (await import("@quenti/console/next.mjs")).INTERNAL_REWRITES;
+  } catch {
+    return [];
+  }
+};
+
 /** @type {import("next").NextConfig} */
 let config = {
   generateBuildId: () => nextBuildId({ dir: __dirname }),
@@ -68,6 +76,7 @@ let config = {
     "@quenti/website",
   ],
   rewrites: async () => [
+    ...(await getConsoleRewrites()),
     {
       source: "/:id(_[a-zA-Z0-9]{10})",
       destination: "/share-resolver/:id",
