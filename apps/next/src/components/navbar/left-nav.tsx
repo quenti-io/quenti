@@ -93,7 +93,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
                   href={
                     me.orgMembership
                       ? `/orgs/${me.orgMembership.organization.id}`
-                      : "/orgs"
+                      : "/organizations"
                   }
                   variant="ghost"
                   fontWeight={700}

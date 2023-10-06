@@ -73,6 +73,11 @@ export const Navbar: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onClassClick = () => {
+    if (user?.organizationId) void router.push("/classes/new");
+    else menuEventChannel.emit("openCreateClassNotice");
+  };
+
   return (
     <>
       <CreateFolderModal
@@ -106,7 +111,7 @@ export const Navbar: React.FC = () => {
               setImportIsEdit(false);
               setImportModalOpen(true);
             }}
-            onClassClick={() => void router.push("/classes/new")}
+            onClassClick={onClassClick}
           />
           <Box display={["block", "block", "none"]}>
             <HStack>
@@ -140,7 +145,7 @@ export const Navbar: React.FC = () => {
               isOpen={isMobileMenuOpen}
               onClose={onMobileMenuToggle}
               onFolderClick={() => setFolderModalOpen(true)}
-              onClassClick={() => void router.push("/classes/new")}
+              onClassClick={onClassClick}
               onImportClick={() => {
                 setImportIsEdit(false);
                 setImportModalOpen(true);

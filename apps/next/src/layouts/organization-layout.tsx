@@ -48,7 +48,7 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
 
     if (error.data?.httpStatus == 404) {
       void (async () => {
-        await router.push("/orgs");
+        await router.push("/home");
       })();
 
       toast({

@@ -3,11 +3,13 @@ import {
   Heading as ChakraHeading,
   Modal as ChakraModal,
   ModalBody as ChakraModalBody,
+  ModalCloseButton as ChakraModalCloseButton,
   ModalContent as ChakraModalContent,
   ModalFooter as ChakraModalFooter,
   ModalOverlay as ChakraModalOverlay,
   type ComponentWithAs,
   type HeadingProps,
+  type ModalCloseButtonProps,
   type ModalContentProps,
   type ModalProps,
   Stack,
@@ -77,6 +79,10 @@ const Footer = function ModalFooter({
   );
 };
 
+const CloseButton = forwardRef<ModalCloseButtonProps, "button">((props) => {
+  return <ChakraModalCloseButton rounded="full" top={4} right={4} {...props} />;
+});
+
 export const Modal = forwardRef<ModalProps, "div">(
   ({ isOpen, onClose, children, ...props }) => {
     return (
@@ -99,6 +105,7 @@ export const Modal = forwardRef<ModalProps, "div">(
   Divider: typeof Divider;
   BodySeparator: typeof BodySeparator;
   Footer: typeof Footer;
+  CloseButton: typeof CloseButton;
 };
 
 const Overlay = function ModalOverlay() {
@@ -116,3 +123,4 @@ Modal.Heading = Heading;
 Modal.Divider = Divider;
 Modal.BodySeparator = BodySeparator;
 Modal.Footer = Footer;
+Modal.CloseButton = CloseButton;
