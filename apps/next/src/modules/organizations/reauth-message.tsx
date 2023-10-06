@@ -1,4 +1,5 @@
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import { Link } from "@quenti/components";
 
@@ -23,6 +24,7 @@ export const ReauthMessage: React.FC<ReauthMessage> = ({
   title,
   message = "Sign in with your school/work email to get started.",
 }) => {
+  const router = useRouter();
   const { data: session } = useSession();
 
   return (
@@ -79,7 +81,7 @@ export const ReauthMessage: React.FC<ReauthMessage> = ({
               py="6"
               onClick={async () => {
                 await signOut({
-                  callbackUrl: "/auth/login?callbackUrl=/orgs/new",
+                  callbackUrl: `/auth/login?callbackUrl=${router.asPath}`,
                 });
               }}
             >

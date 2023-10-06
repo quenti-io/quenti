@@ -2,137 +2,111 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
-import { HeadSeo, Link } from "@quenti/components";
 import { api } from "@quenti/trpc";
 
-import {
-  Button,
-  Container,
-  Heading,
-  SlideFade,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-
-import { IconExternalLink, IconPlus } from "@tabler/icons-react";
+import { useToast } from "@chakra-ui/react";
 
 import { PageWrapper } from "../../common/page-wrapper";
-import { AuthedPage } from "../../components/authed-page";
+import { AnimatedXCircle } from "../../components/animated-icons/x";
 import { Loading } from "../../components/loading";
-import { WithFooter } from "../../components/with-footer";
+import { Toast } from "../../components/toast";
 import { useMe } from "../../hooks/use-me";
-import { useStudentRedirect } from "../../hooks/use-student-redirect";
 import { useUnauthedRedirect } from "../../hooks/use-unauthed-redirect";
 import { getLayout } from "../../layouts/main-layout";
 import { OrganizationInviteScreen } from "../../modules/organizations/organization-invite-screen";
+import { ReauthMessage } from "../../modules/organizations/reauth-message";
 
 export default function Organizations() {
   const utils = api.useContext();
   const session = useSession();
   const router = useRouter();
+  const toast = useToast();
   const { data: me, isFetching } = useMe();
 
   useUnauthedRedirect();
-  useStudentRedirect("/home");
 
   const [tokenChecked, setTokenChecked] = React.useState(false);
+  const [outsideDomainError, setOutsideDomainError] = React.useState(false);
 
   const acceptToken = api.organizations.acceptToken.useMutation({
     onSuccess: async () => {
       await utils.user.me.invalidate();
       setTokenChecked(true);
     },
-    onError: () => {
+    onError: (e) => {
+      setOutsideDomainError(e.message == "user_not_in_domain");
       setTokenChecked(true);
     },
   });
 
+  const invalidateUser = async () => {
+    const event = new Event("visibilitychange");
+    document.dispatchEvent(event);
+    await utils.user.me.invalidate();
+  };
+
+  const setUserType = api.user.setUserType.useMutation({
+    onSuccess: async () => {
+      await invalidateUser();
+    },
+    onError: async () => {
+      toast({
+        title: "You don't have access to this organization",
+        status: "error",
+        icon: <AnimatedXCircle />,
+        colorScheme: "red",
+        render: Toast,
+      });
+
+      await router.push("/home");
+    },
+  });
+
   React.useEffect(() => {
-    if (!router.isReady) return;
-    if (router.query.token)
+    if (!router.isReady || !session.data?.user || !me || me?.orgMembership)
+      return;
+
+    if (router.query.token) {
+      if (session.data.user.type == "Student")
+        setUserType.mutate({
+          type: "Teacher",
+        });
+
       acceptToken.mutate({ token: router.query.token as string });
-    else setTokenChecked(true);
+    } else setTokenChecked(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady]);
+  }, [session.data?.user, me, router.isReady]);
 
-  if (!session?.data?.user || !me || isFetching || !tokenChecked)
-    return <Loading />;
+  React.useEffect(() => {
+    if (!me?.orgMembership) return;
+    void router.push(`/orgs/${me.orgMembership.organization.id}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [me?.orgMembership]);
 
-  const domain = session.data.user.email!.split("@")[1]!;
+  const isLoading =
+    !session?.data?.user ||
+    !me ||
+    me.orgMembership ||
+    isFetching ||
+    !tokenChecked;
 
-  if (!!me?.orgInvites.length) return <OrganizationInviteScreen />;
+  const hasInvite = !!me?.orgInvites.length;
 
-  return (
-    <AuthedPage>
-      <HeadSeo title="Organizations" />
-      <WithFooter>
-        <SlideFade
-          in={true}
-          offsetY="20px"
-          delay={0.2}
-          transition={{
-            enter: {
-              duration: 0.3,
-            },
-          }}
-        >
-          <Container maxW="4xl" mt="20">
-            <VStack spacing="12">
-              <VStack spacing="6">
-                <Heading
-                  as="h1"
-                  fontSize={["4xl", "4xl", "5xl", "7xl"]}
-                  textAlign="center"
-                  maxW="1000px"
-                  bgGradient="linear(to-r, blue.300, purple.300)"
-                  bgClip="text"
-                  data-aos="fade-up"
-                >
-                  Manage your school with Quenti
-                </Heading>
-                <Text fontSize="xl" textAlign="center">
-                  Quenti&apos;s organizations give you a powerful set of tools
-                  for managing your school&apos;s classes, teachers and
-                  students. Get started by creating an organization for{" "}
-                  <strong>{domain}</strong>.
-                </Text>
-              </VStack>
-              <Stack
-                direction={{ base: "column", sm: "row" }}
-                data-aos="fade-up"
-                data-aos-delay="200"
-              >
-                <Button
-                  size="lg"
-                  height="4rem"
-                  px="2rem"
-                  leftIcon={<IconPlus />}
-                  as={Link}
-                  href={
-                    me?.orgMembership
-                      ? `/orgs/${me.orgMembership.organization.id}`
-                      : "/orgs/new"
-                  }
-                >
-                  Get started
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="lg"
-                  height="4rem"
-                  px="2rem"
-                  rightIcon={<IconExternalLink />}
-                >
-                  Learn more
-                </Button>
-              </Stack>
-            </VStack>
-          </Container>
-        </SlideFade>
-      </WithFooter>
-    </AuthedPage>
-  );
+  React.useEffect(() => {
+    if (isLoading || hasInvite || outsideDomainError) return;
+    void router.push("/orgs/new");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, hasInvite, outsideDomainError]);
+
+  if (outsideDomainError)
+    return (
+      <ReauthMessage
+        title="You can't join this organization"
+        message="Sign in with your organization's school/work email to proceed."
+      />
+    );
+  if (hasInvite) return <OrganizationInviteScreen />;
+  return <Loading />;
 }
 
 Organizations.PageWrapper = PageWrapper;

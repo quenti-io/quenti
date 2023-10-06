@@ -36,7 +36,7 @@ export const LeaveOrganizationModal: React.FC<RemoveMemberModalProps> = ({
         render: Toast,
       });
 
-      await router.push("/orgs");
+      await router.push("/home");
     },
   });
 
@@ -51,11 +51,13 @@ export const LeaveOrganizationModal: React.FC<RemoveMemberModalProps> = ({
         <Modal.Divider />
         <Modal.Footer>
           <ButtonGroup>
-            <Button variant="ghost" onClick={onClose}>
+            <Button variant="ghost" onClick={onClose} colorScheme="gray">
               Cancel
             </Button>
             <Button
               isLoading={removeMember.isLoading}
+              variant="outline"
+              colorScheme="red"
               onClick={() =>
                 removeMember.mutate({
                   orgId: org!.id,
