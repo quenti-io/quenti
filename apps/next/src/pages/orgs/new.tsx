@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,9 +24,13 @@ import {
 import { IconArrowRight, IconUpload } from "@tabler/icons-react";
 
 import { PageWrapper } from "../../common/page-wrapper";
+import { Loading } from "../../components/loading";
 import { WizardLayout } from "../../components/wizard-layout";
+import { useMe } from "../../hooks/use-me";
+import { useUnauthedRedirect } from "../../hooks/use-unauthed-redirect";
 import { getLayout } from "../../layouts/main-layout";
 import { useTelemetry } from "../../lib/telemetry";
+import { NotOrgEligible } from "../../modules/organizations/not-org-eligible";
 import { OrganizationLogo } from "../../modules/organizations/organization-logo";
 import { useOrgLogoUpload } from "../../modules/organizations/use-org-logo-upload";
 
@@ -42,7 +48,11 @@ interface NewOrganizationFormInput {
 export default function NewOrganization() {
   const utils = api.useContext();
   const router = useRouter();
+  const { data: session, status } = useSession();
   const { event } = useTelemetry();
+  const { data: me } = useMe();
+
+  useUnauthedRedirect();
 
   const sendEvent = (id: string, name: string) => {
     void event("class_created", { id, name });
@@ -52,16 +62,25 @@ export default function NewOrganization() {
     onComplete: async (orgId) => {
       sendEvent(orgId, create.variables?.name || "");
       await router.push(`/orgs/${orgId}/members-onboarding`);
+      await invalidateUser();
     },
   });
 
+  const invalidateUser = async () => {
+    const event = new Event("visibilitychange");
+    document.dispatchEvent(event);
+    await utils.user.me.invalidate();
+  };
+
+  const setUserType = api.user.setUserType.useMutation();
+
   const create = api.organizations.create.useMutation({
     onSuccess: async (data) => {
-      await utils.user.me.invalidate();
-
       if (!file) {
         sendEvent(data.id, data.name);
         await router.push(`/orgs/${data.id}/members-onboarding`);
+        await invalidateUser();
+
         return;
       }
       await uploadLogo.mutateAsync({ orgId: data.id });
@@ -88,8 +107,22 @@ export default function NewOrganization() {
   } = newOrganizationFormMethods;
 
   const onSubmit: SubmitHandler<NewOrganizationFormInput> = async (data) => {
+    if (session?.user?.type == "Student") {
+      await setUserType.mutateAsync({ type: "Teacher" });
+    }
     await create.mutateAsync(data);
   };
+
+  React.useEffect(() => {
+    if (!me?.orgMembership) return;
+    void router.push(`/orgs/${me.orgMembership.organization.id}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [me?.orgMembership]);
+
+  if (status != "authenticated" || !me || me.orgMembership) return <Loading />;
+  if (session?.user?.organizationId) return <NotOrgEligible type="existing" />;
+  if (session?.user?.isOrgEligible === false)
+    return <NotOrgEligible type="ineligible" />;
 
   return (
     <WizardLayout
@@ -190,7 +223,7 @@ export default function NewOrganization() {
                 w="full"
                 rightIcon={<IconArrowRight size="18" />}
                 type="submit"
-                isLoading={create.isLoading}
+                isLoading={setUserType.isLoading || create.isLoading}
                 fontSize="sm"
               >
                 Continue

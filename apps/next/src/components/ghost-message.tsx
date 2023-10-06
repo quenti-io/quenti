@@ -40,7 +40,7 @@ const rightGhost = {
 
 interface GhostMessageProps {
   message: string;
-  subheading?: string;
+  subheading?: string | React.ReactNode;
   homeButton?: boolean;
 }
 

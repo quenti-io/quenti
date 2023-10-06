@@ -7,7 +7,7 @@ export const WithFooter: React.FC<React.PropsWithChildren> = ({ children }) => {
     <div>
       <div
         style={{
-          minHeight: "calc(100vh - 112px)",
+          minHeight: "calc(100vh - 120px)",
           marginTop: "40px",
           paddingBottom: "120px",
         }}
