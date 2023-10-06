@@ -5,10 +5,6 @@ import { env } from "@quenti/env/server";
 import { USERNAME_REPLACE_REGEXP } from "@quenti/lib/constants/characters";
 import type { PrismaClient, UserType } from "@quenti/prisma/client";
 
-import pjson from "../../apps/next/package.json";
-
-const version = pjson.version;
-
 export function CustomPrismaAdapter(p: PrismaClient): Adapter {
   return {
     ...PrismaAdapter(p),
@@ -73,7 +69,6 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
         data: {
           ...data,
           username: uniqueUsername,
-          changelogVersion: version,
           organizationId: associatedDomain?.orgId,
           isOrgEligible,
           type: userType,

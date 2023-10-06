@@ -79,9 +79,7 @@ model User {
   flags               Int       @default(0)
   /// @zod.custom(imports.userMetadataSchema)
   metadata            Json?
-  enableUsageData     Boolean   @default(true)
   completedOnboarding Boolean   @default(false)
-  changelogVersion    String
   isOrgEligible       Boolean   @default(false)
   organizationId      String?
 

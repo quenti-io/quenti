@@ -16,9 +16,7 @@ declare module "next-auth" {
       admin: boolean;
       banned: boolean;
       flags: number;
-      enableUsageData: boolean;
       completedOnboarding: boolean;
-      changelogVersion: string;
       organizationId: string | null;
       isOrgEligible: boolean;
     } & DefaultSession["user"];
@@ -34,9 +32,7 @@ declare module "next-auth" {
     displayName: boolean;
     bannedAt: Date | null;
     flags: number;
-    enableUsageData: boolean;
     completedOnboarding: boolean;
-    changelogVersion: string;
     organizationId: string | null;
     isOrgEligible: boolean;
   }

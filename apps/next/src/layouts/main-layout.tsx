@@ -10,10 +10,6 @@ const GlobalShortcutLayer = dynamic(
   () => import("../components/global-shortcut-layer"),
   { ssr: false },
 );
-const ChangelogContainer = dynamic(
-  () => import("../modules/changelog/changelog-container"),
-  { ssr: false },
-);
 const SignupModal = dynamic(() => import("../components/signup-modal"), {
   ssr: false,
 });
@@ -77,7 +73,6 @@ export const MainLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
       <GlobalShortcutLayer />
       <SignupModal />
       <CreateClassNotice />
-      <ChangelogContainer />
       {confetti && <ConfettiLayer />}
       {children}
     </>
