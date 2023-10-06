@@ -27,7 +27,7 @@ export const DangerZone = () => {
           onClick={() => setDeleteModalOpen(true)}
           w="max"
         >
-          Delete Account
+          Delete account
         </Button>
       </SectionWrapper>
     </>

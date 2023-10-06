@@ -51,6 +51,7 @@ export const env = createEnv({
     CLICKHOUSE_PASSWORD: z.string().optional(),
     SERVER_NAME: z.enum(["production", "staging"]).optional(),
     BYPASS_ORG_DOMAIN_BLACKLIST: z.string().optional(),
+    ENABLE_EMAIL_WHITELIST: z.string().optional(),
   },
   skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
 });

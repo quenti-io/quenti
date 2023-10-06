@@ -86,22 +86,24 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             Home
           </Button>
           <TeacherOnly>
-            <UnboundOnly strict>
-              <Button
-                as={Link}
-                href={
-                  me.orgMembership
-                    ? `/orgs/${me.orgMembership.organization.id}`
-                    : "/orgs"
-                }
-                variant="ghost"
-                fontWeight={700}
-                fontSize="sm"
-                leftIcon={<IconSparkles size={18} />}
-              >
-                Upgrade
-              </Button>
-            </UnboundOnly>
+            {session.user?.isOrgEligible && (
+              <UnboundOnly strict>
+                <Button
+                  as={Link}
+                  href={
+                    me.orgMembership
+                      ? `/orgs/${me.orgMembership.organization.id}`
+                      : "/organizations"
+                  }
+                  variant="ghost"
+                  fontWeight={700}
+                  fontSize="sm"
+                  leftIcon={<IconSparkles size={18} />}
+                >
+                  Upgrade
+                </Button>
+              </UnboundOnly>
+            )}
           </TeacherOnly>
           <Menu
             placement="bottom-start"

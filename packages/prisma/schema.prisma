@@ -79,9 +79,7 @@ model User {
   flags               Int       @default(0)
   /// @zod.custom(imports.userMetadataSchema)
   metadata            Json?
-  enableUsageData     Boolean   @default(true)
   completedOnboarding Boolean   @default(false)
-  changelogVersion    String
   isOrgEligible       Boolean   @default(false)
   organizationId      String?
 
@@ -312,22 +310,8 @@ model Assignment {
   @@index([sectionId])
 }
 
-model AllowedEmailRegex {
-  regex     String   @id @unique
-  label     String
-  createdAt DateTime @default(now())
-}
-
 model WhitelistedEmail {
   email     String   @id @unique
-  createdAt DateTime @default(now())
-}
-
-model RecentFailedLogin {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  image     String?
   createdAt DateTime @default(now())
 }
 

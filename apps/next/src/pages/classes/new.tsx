@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -23,6 +25,7 @@ import { IconArrowRight, IconUpload } from "@tabler/icons-react";
 
 import { PageWrapper } from "../../common/page-wrapper";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
+import { Loading } from "../../components/loading";
 import { WizardLayout } from "../../components/wizard-layout";
 import { useStudentRedirect } from "../../hooks/use-student-redirect";
 import { getLayout } from "../../layouts/main-layout";
@@ -46,6 +49,7 @@ const schema = z.object({
 export default function NewClass() {
   const router = useRouter();
   const { event } = useTelemetry();
+  const { data: session } = useSession();
 
   useStudentRedirect("/home");
 
@@ -81,6 +85,14 @@ export default function NewClass() {
   const onSubmit: SubmitHandler<CreateClassFormInputs> = async (data) => {
     await create.mutateAsync(data);
   };
+
+  React.useEffect(() => {
+    if (!session?.user || session.user.organizationId) return;
+    void router.push("/home");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user]);
+
+  if (!session?.user || !session.user.organizationId) return <Loading />;
 
   return (
     <WizardLayout

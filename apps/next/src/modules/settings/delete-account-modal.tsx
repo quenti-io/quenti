@@ -45,7 +45,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
           <Stack spacing="4">
             <Text>
               Are you absolutely sure you want to delete your account? All of
-              your sets, folders, and other data will be completely deleted.{" "}
+              your sets, folders and other data will be completely deleted.{" "}
               <strong>This action is irreversible.</strong>
             </Text>
             <Text fontWeight={600} color={red}>

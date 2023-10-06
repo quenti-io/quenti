@@ -3,7 +3,6 @@ import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { ZChangeUsernameSchema } from "./change-username.schema";
 import { ZCheckUsernameSchema } from "./check-username.schema";
 import { ZSetDisplayNameSchema } from "./set-display-name.schema";
-import { ZSetEnableUsageDataSchema } from "./set-enable-usage-data.schema";
 import { ZSetUserTypeSchema } from "./set-user-type.schema";
 
 type UserRouterHandlerCache = {
@@ -16,8 +15,6 @@ type UserRouterHandlerCache = {
     ["complete-onboarding"]?: typeof import("./complete-onboarding.handler").completeOnboardingHandler;
     ["upload-avatar"]?: typeof import("./upload-avatar.handler").uploadAvatarHandler;
     ["upload-avatar-complete"]?: typeof import("./upload-avatar-complete.handler").uploadAvatarCompleteHandler;
-    ["view-changelog"]?: typeof import("./view-changelog.handler").viewChangelogHandler;
-    ["set-enable-usage-data"]?: typeof import("./set-enable-usage-data.handler").setEnableUsageDataHandler;
     ["delete-account"]?: typeof import("./delete-account.handler").deleteAccountHandler;
   };
 } & { routerPath: string };
@@ -68,16 +65,6 @@ export const userRouter = createTRPCRouter({
     await loadHandler(HANDLER_CACHE, "upload-avatar-complete");
     return HANDLER_CACHE.handlers["upload-avatar-complete"]!({ ctx });
   }),
-  viewChangelog: protectedProcedure.mutation(async ({ ctx }) => {
-    await loadHandler(HANDLER_CACHE, "view-changelog");
-    return HANDLER_CACHE.handlers["view-changelog"]!({ ctx });
-  }),
-  setEnableUsageData: protectedProcedure
-    .input(ZSetEnableUsageDataSchema)
-    .mutation(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "set-enable-usage-data");
-      return HANDLER_CACHE.handlers["set-enable-usage-data"]!({ ctx, input });
-    }),
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "delete-account");
     return HANDLER_CACHE.handlers["delete-account"]!({ ctx });
