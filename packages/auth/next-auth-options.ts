@@ -44,58 +44,17 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
     async signIn({ user }) {
-      const regexes = await prisma.allowedEmailRegex.findMany();
-
-      const matchedRegex = regexes.some((r) => {
-        try {
-          const regex = new RegExp(r.regex, "g");
-          return regex.test(user.email || "");
-        } catch {
-          return false;
-        }
-      });
-
-      const emailAllowed =
-        matchedRegex ||
-        !!(await prisma.whitelistedEmail.findUnique({
-          where: {
-            email: user.email || "",
-          },
-        }));
-
-      const bypass =
-        user.email == env.ADMIN_EMAIL ||
-        (user.username && user.username.toLowerCase() == "quenti");
-
-      if (!emailAllowed && !bypass) {
-        const tenRecent = await prisma.recentFailedLogin.findMany({
-          take: 10,
-          orderBy: {
-            createdAt: "desc",
-          },
-        });
-        await prisma.recentFailedLogin.deleteMany({
-          where: {
-            NOT: {
-              id: {
-                in: tenRecent.map((r) => r.id),
-              },
+      if (env.ENABLE_EMAIL_WHITELIST === "true") {
+        if (
+          !(await prisma.whitelistedEmail.findUnique({
+            where: {
+              email: user.email!,
             },
-          },
-        });
-
-        if (!tenRecent.find((r) => r.email == user.email)) {
-          await prisma.recentFailedLogin.create({
-            data: {
-              email: user.email || "",
-              name: user.name,
-              image: user.image,
-            },
-          });
-        }
-
-        return "/unauthorized";
+          }))
+        )
+          return "/unauthorized";
       }
+
       return true;
     },
   },

@@ -312,22 +312,8 @@ model Assignment {
   @@index([sectionId])
 }
 
-model AllowedEmailRegex {
-  regex     String   @id @unique
-  label     String
-  createdAt DateTime @default(now())
-}
-
 model WhitelistedEmail {
   email     String   @id @unique
-  createdAt DateTime @default(now())
-}
-
-model RecentFailedLogin {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  image     String?
   createdAt DateTime @default(now())
 }
 
