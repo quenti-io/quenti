@@ -30,8 +30,8 @@ import { useMe } from "../../hooks/use-me";
 import { useUnauthedRedirect } from "../../hooks/use-unauthed-redirect";
 import { getLayout } from "../../layouts/main-layout";
 import { useTelemetry } from "../../lib/telemetry";
-import { NotOrgEligible } from "../../modules/organizations/not-org-eligible";
 import { OrganizationLogo } from "../../modules/organizations/organization-logo";
+import { ReauthMessage } from "../../modules/organizations/reauth-message";
 import { useOrgLogoUpload } from "../../modules/organizations/use-org-logo-upload";
 
 const schema = z.object({
@@ -120,9 +120,15 @@ export default function NewOrganization() {
   }, [me?.orgMembership]);
 
   if (status != "authenticated" || !me || me.orgMembership) return <Loading />;
-  if (session?.user?.organizationId) return <NotOrgEligible type="existing" />;
+  if (session?.user?.organizationId)
+    return (
+      <ReauthMessage
+        title="You're already in an organization"
+        message="Sign in with another school/work email to get started."
+      />
+    );
   if (session?.user?.isOrgEligible === false)
-    return <NotOrgEligible type="ineligible" />;
+    return <ReauthMessage title="Manage your school with Quenti" />;
 
   return (
     <WizardLayout
