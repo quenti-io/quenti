@@ -5,7 +5,14 @@ import { ScriptFormatter } from "@quenti/components/script-formatter";
 import { Clickable, PromptDisplay } from "@quenti/components/test";
 import type { MultipleChoiceData } from "@quenti/interfaces";
 
-import { Box, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  GridItem,
+  HStack,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import { IconCircleCheckFilled, IconCircleX } from "@tabler/icons-react";
 
@@ -72,42 +79,44 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
         </GenericLabel>
         <SimpleGrid columns={{ base: 1, sm: 2 }} gap={{ base: 4, md: 6 }}>
           {data.choices.map((choice) => (
-            <Clickable
-              key={choice.id}
-              isSelected={answered && data.answer == choice.id}
-              disabled={result}
-              evaluation={evaluateTerm(choice.id)}
-              onClick={() => {
-                if (data.answer !== choice.id)
-                  answerQuestion<MultipleChoiceData>(i, choice.id);
-                else clearAnswer(i);
-              }}
-            >
-              <Wrapper evaluation={evaluateTerm(choice.id)}>
-                <Text
-                  size="lg"
-                  whiteSpace="pre-wrap"
-                  textAlign="start"
-                  overflowWrap="anywhere"
-                  fontWeight={
-                    evaluateTerm(choice.id) !== undefined ? 500 : "normal"
-                  }
-                  style={
-                    result
-                      ? {
-                          cursor: "text",
-                          pointerEvents: "auto",
-                          userSelect: "text",
-                        }
-                      : {}
-                  }
-                >
-                  <ScriptFormatter>
-                    {word(question.answerMode, choice, "answer")}
-                  </ScriptFormatter>
-                </Text>
-              </Wrapper>
-            </Clickable>
+            <GridItem key={choice.id} h="auto">
+              <Clickable
+                key={choice.id}
+                isSelected={answered && data.answer == choice.id}
+                disabled={result}
+                evaluation={evaluateTerm(choice.id)}
+                onClick={() => {
+                  if (data.answer !== choice.id)
+                    answerQuestion<MultipleChoiceData>(i, choice.id);
+                  else clearAnswer(i);
+                }}
+              >
+                <Wrapper evaluation={evaluateTerm(choice.id)}>
+                  <Text
+                    size="lg"
+                    whiteSpace="pre-wrap"
+                    textAlign="start"
+                    overflowWrap="anywhere"
+                    fontWeight={
+                      evaluateTerm(choice.id) !== undefined ? 500 : "normal"
+                    }
+                    style={
+                      result
+                        ? {
+                            cursor: "text",
+                            pointerEvents: "auto",
+                            userSelect: "text",
+                          }
+                        : {}
+                    }
+                  >
+                    <ScriptFormatter>
+                      {word(question.answerMode, choice, "answer")}
+                    </ScriptFormatter>
+                  </Text>
+                </Wrapper>
+              </Clickable>
+            </GridItem>
           ))}
         </SimpleGrid>
       </Stack>
