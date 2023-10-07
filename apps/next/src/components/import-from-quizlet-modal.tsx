@@ -147,7 +147,7 @@ export const ImportFromQuizletModal: React.FC<ImportFromQuizletModalProps> = ({
     },
   });
 
-  const isLoading = fromUrl.isLoading || false;
+  const isLoading = fromUrl.isLoading;
 
   const defaultMessage = "Hang on while we fetch your set...";
   const [message, setMessage] = React.useState(defaultMessage);
