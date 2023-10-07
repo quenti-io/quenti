@@ -67,9 +67,7 @@ const TestContainer = () => {
         new Date().getTime() - store.getState().endedAt!.getTime(),
       );
     },
-    retry: (count) => {
-      return count <= 3;
-    },
+    retry: (count) => count <= 3,
   });
 
   const stateSubmit = (
