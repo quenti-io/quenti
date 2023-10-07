@@ -67,7 +67,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
             />
             <Button
               px="10"
-              isDisabled={usernameValue !== session.user?.username}
+              isDisabled={usernameValue !== session!.user?.username}
               isLoading={deleteAccount.isLoading}
               onClick={() => deleteAccount.mutate()}
               variant="outline"
