@@ -99,7 +99,9 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
                     Nothing to add
                   </Heading>
                 </HStack>
-                <Text color="gray.500">That&apos;s kinda sad.</Text>
+                <Text color="gray.500">
+                  Your study material will show up here.
+                </Text>
               </VStack>
             </Center>
           )}

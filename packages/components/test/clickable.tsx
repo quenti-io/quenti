@@ -45,7 +45,7 @@ export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
       }
       px={hasIcon ? 4 : 6}
       py="4"
-      h="max"
+      h="full"
       colorScheme={
         evaluation !== undefined
           ? evaluation

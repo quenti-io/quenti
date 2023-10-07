@@ -6,7 +6,15 @@ import {
 } from "@quenti/components/test";
 import type { TrueFalseData } from "@quenti/interfaces";
 
-import { Box, Grid, HStack, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  HStack,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import {
   IconCircleCheck,
@@ -80,44 +88,48 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
           {remark?.remark ?? "Choose an answer"}
         </GenericLabel>
         <SimpleGrid columns={2} gap={{ base: 4, md: 6 }}>
-          <Clickable
-            hasIcon
-            disabled={result}
-            isSelected={trueSelected}
-            evaluation={trueSelected ? evaluation : undefined}
-            onClick={() => {
-              if (!trueSelected) answerQuestion<TrueFalseData>(i, true);
-              else clearAnswer(i);
-            }}
-          >
-            <HStack>
-              {trueSelected ? (
-                <IconCircleCheckFilled size={18} />
-              ) : (
-                <IconCircleCheck size={18} />
-              )}
-              <Text>True</Text>
-            </HStack>
-          </Clickable>
-          <Clickable
-            hasIcon
-            disabled={result}
-            isSelected={falseSelected}
-            evaluation={falseSelected ? evaluation : undefined}
-            onClick={() => {
-              if (!falseSelected) answerQuestion<TrueFalseData>(i, false);
-              else clearAnswer(i);
-            }}
-          >
-            <HStack>
-              {falseSelected ? (
-                <IconCircleXFilled size={18} />
-              ) : (
-                <IconCircleX size={18} />
-              )}
-              <Text>False</Text>
-            </HStack>
-          </Clickable>
+          <GridItem>
+            <Clickable
+              hasIcon
+              disabled={result}
+              isSelected={trueSelected}
+              evaluation={trueSelected ? evaluation : undefined}
+              onClick={() => {
+                if (!trueSelected) answerQuestion<TrueFalseData>(i, true);
+                else clearAnswer(i);
+              }}
+            >
+              <HStack>
+                {trueSelected ? (
+                  <IconCircleCheckFilled size={18} />
+                ) : (
+                  <IconCircleCheck size={18} />
+                )}
+                <Text>True</Text>
+              </HStack>
+            </Clickable>
+          </GridItem>
+          <GridItem>
+            <Clickable
+              hasIcon
+              disabled={result}
+              isSelected={falseSelected}
+              evaluation={falseSelected ? evaluation : undefined}
+              onClick={() => {
+                if (!falseSelected) answerQuestion<TrueFalseData>(i, false);
+                else clearAnswer(i);
+              }}
+            >
+              <HStack>
+                {falseSelected ? (
+                  <IconCircleXFilled size={18} />
+                ) : (
+                  <IconCircleX size={18} />
+                )}
+                <Text>False</Text>
+              </HStack>
+            </Clickable>
+          </GridItem>
         </SimpleGrid>
       </Stack>
       {result && !!data.distractor && (

@@ -1,5 +1,5 @@
 export interface EntailmentResult {
-  label: "ENTAILMENT" | "CONTRADICTION" | "NEUTRAL";
+  label: "entailment" | "contradiction" | "neutral";
   score: number;
 }
 

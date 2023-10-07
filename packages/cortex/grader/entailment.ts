@@ -7,7 +7,7 @@ export const bulkProcessEntailment = async (
 ): Promise<EntailmentResult[]> => {
   if (!Hf)
     return new Promise((resolve) =>
-      resolve(Array(pairs.length).fill({ label: "NEUTRAL", score: 0 })),
+      resolve(Array(pairs.length).fill({ label: "neutral", score: 0 })),
     );
 
   return await Promise.all(
@@ -19,18 +19,20 @@ const processEntailment = async (
   answer: string,
   input: string,
 ): Promise<EntailmentResult> => {
-  const terminate = (text: string) => (text.endsWith(".") ? text : text + ".");
+  const sanitize = (text: string) =>
+    text.trim().replace("[CLS]", "").replace("[SEP]", "");
 
   const results = await Hf!.request({
     // @ts-expect-error Argument of type
-    inputs: `${terminate(answer)} ${terminate(input)}`,
+    inputs: `[CLS] ${sanitize(answer)} [SEP] ${sanitize(input)}`,
   });
+  console.log("RESULTS", results);
   const sorted = (
     results as { label: EntailmentResult["label"]; score: number }[]
   ).sort((a, b) => b.score - a.score);
 
   const result = sorted[0];
-  if (!result) return { label: "NEUTRAL", score: 0 };
+  if (!result) return { label: "neutral", score: 0 };
 
   return result;
 };
