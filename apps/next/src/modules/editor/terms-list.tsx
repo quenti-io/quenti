@@ -17,11 +17,12 @@ import {
 } from "@dnd-kit/sortable";
 import React from "react";
 
+import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
+
 import { Button, Stack } from "@chakra-ui/react";
 
 import { IconPlus } from "@tabler/icons-react";
 
-import { useShortcut } from "../../hooks/use-shortcut";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { LanguageMenuWrapper } from "./language-menu";
 import { SortableTermCard } from "./sortable-term-card";
