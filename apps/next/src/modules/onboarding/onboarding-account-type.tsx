@@ -28,6 +28,8 @@ const AccountType = () => {
 
   const hasOrgInvites = router.query.orgInvites === "true";
 
+  const [loading, setLoading] = React.useState(false);
+
   const setUserType = api.user.setUserType.useMutation({
     onSuccess: () => {
       const event = new Event("visibilitychange");
@@ -46,8 +48,9 @@ const AccountType = () => {
       seoTitle="Account Type"
       description="You can change this later in settings."
       defaultNext={false}
-      nextLoading={setUserType.isLoading}
+      nextLoading={loading}
       onNext={async () => {
+        setLoading(true);
         await setUserType.mutateAsync({
           type,
         });
