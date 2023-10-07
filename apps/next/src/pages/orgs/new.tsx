@@ -48,7 +48,7 @@ interface NewOrganizationFormInput {
 export default function NewOrganization() {
   const utils = api.useContext();
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const { event } = useTelemetry();
   const { data: me } = useMe();
 
@@ -67,8 +67,7 @@ export default function NewOrganization() {
   });
 
   const invalidateUser = async () => {
-    const event = new Event("visibilitychange");
-    document.dispatchEvent(event);
+    await update();
     await utils.user.me.invalidate();
   };
 

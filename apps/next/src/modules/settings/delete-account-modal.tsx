@@ -23,7 +23,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
   onClose,
 }) => {
   const router = useRouter();
-  const session = useSession()!.data!;
+  const { data: session, update } = useSession()!;
   const [usernameValue, setUsernameValue] = React.useState("");
 
   const red = useColorModeValue("red.500", "red.200");
@@ -31,8 +31,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
   const deleteAccount = api.user.deleteAccount.useMutation({
     onSuccess: async () => {
       await router.push("/");
-      const event = new Event("visibilitychange");
-      document.dispatchEvent(event);
+      await update();
     },
   });
 

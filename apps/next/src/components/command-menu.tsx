@@ -27,7 +27,7 @@ import {
 
 import {
   IconBooks,
-  IconBuilding,
+  IconBuildingSkyscraper,
   IconCloudDownload,
   IconFolder,
   IconFolderPlus,
@@ -45,6 +45,7 @@ import {
 import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
 import { useIsTeacher } from "../hooks/use-is-teacher";
+import { useMe } from "../hooks/use-me";
 import { useShortcut } from "../hooks/use-shortcut";
 import { plural } from "../utils/string";
 
@@ -82,6 +83,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
 }) => {
   const router = useRouter();
   const session = useSession();
+  const { data: me } = useMe();
   const devActions = useDevActions();
   const isTeacher = useIsTeacher();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -228,11 +230,11 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           shouldShow: () => window.location.pathname !== "/admin",
         });
       }
-      if (session.data?.user?.type == "Teacher") {
+      if (me && me.orgMembership) {
         total.push({
-          icon: <IconBuilding />,
-          name: "Organizations",
-          label: "Navigate to your organizations",
+          icon: <IconBuildingSkyscraper />,
+          name: me.orgMembership.organization.name,
+          label: "Navigate to your organization",
           action: (ctrl) => openLink(`/orgs`, ctrl),
           shouldShow: () => window.location.pathname !== "/orgs",
         });
