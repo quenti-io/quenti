@@ -48,7 +48,7 @@ export const bulkGradeAnswers = async (
     evaluations[index] = {
       ...evaluations[index]!,
       entailment: value,
-      evaluation: value.label === "ENTAILMENT",
+      evaluation: value.label === "entailment",
     };
   }
 
