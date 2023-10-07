@@ -173,16 +173,16 @@ const TestContainer = () => {
       <ConfirmModal
         isOpen={hasUnansweredOpen}
         onClose={() => setHasUnansweredOpen(false)}
-        actionText="Submit anyway"
+        actionText="Review questions"
+        cancelText="Submit anyway"
         heading="Some questions are unanswered"
         body="Do you want to review your unanswered questions or submit the test now?"
-        cancelText="Review questions"
         onCancel={() => {
-          scrollToFirstUnanswered();
+          void onSubmit(true);
         }}
         onConfirm={() => {
           setHasUnansweredOpen(false);
-          void onSubmit(true);
+          scrollToFirstUnanswered();
         }}
         finalFocusRef={finalRef}
       />

@@ -25,7 +25,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconAdjustmentsHorizontal, IconX } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 
 import { SelectAnswerMode } from "../../components/select-answer-mode";
 import { ToggleGroup } from "../../components/toggle-group";
@@ -65,10 +65,7 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
       <Modal.Content>
         <Modal.Body>
           <Flex justifyContent="space-between">
-            <HStack spacing="3">
-              <IconAdjustmentsHorizontal size={24} />
-              <Modal.Heading size="xl">Set up your test</Modal.Heading>
-            </HStack>
+            <Modal.Heading size="xl">Set up your test</Modal.Heading>
             <IconButton
               rounded="full"
               aria-label="Close"

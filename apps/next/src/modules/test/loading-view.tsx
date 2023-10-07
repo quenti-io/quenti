@@ -1,3 +1,8 @@
+import React from "react";
+
+import { getRandom } from "@quenti/lib/array";
+import { GRADING_MESSAGES } from "@quenti/lib/constants/remarks";
+
 import {
   Box,
   Center,
@@ -62,7 +67,9 @@ const blueBlob = keyframes({
   },
 });
 
-export const LoadingView = () => {
+const LoadingViewRaw = () => {
+  const [remark] = React.useState(getRandom(GRADING_MESSAGES));
+
   return (
     <Center position="fixed" top="20" w="100vw" height="calc(100vh - 160px)">
       <Center position="relative" h="300px">
@@ -153,7 +160,7 @@ export const LoadingView = () => {
                 color: "gray.300",
               }}
             >
-              Think you got it this time?
+              {remark}
             </Text>
           </SlideFade>
         </VStack>
@@ -161,3 +168,5 @@ export const LoadingView = () => {
     </Center>
   );
 };
+
+export const LoadingView = React.memo(LoadingViewRaw);

@@ -33,3 +33,14 @@ export const CORRECT_IS_SIMILAR = [
   "Similar, fair enough.",
   "Similar, we'll take it.",
 ];
+
+export const GRADING_MESSAGES = [
+  "Think you got it this time?",
+  "Did you nail it this time?",
+  "Test-topping performance?",
+  "Ready to see how you did?",
+  "We're brewing up your score, hang tight.",
+  "Turning the gears, give us a second.",
+  "We're getting your results, just a moment.",
+  "Analyzing your responses, hang tight.",
+];

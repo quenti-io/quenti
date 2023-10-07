@@ -121,6 +121,7 @@ export const InputState: React.FC<InputStateProps> = ({ active, onSubmit }) => {
               definitionLanguage,
               active.answerMode,
             )}`}
+            autoComplete="off"
             py="6"
             px="4"
             rounded="lg"

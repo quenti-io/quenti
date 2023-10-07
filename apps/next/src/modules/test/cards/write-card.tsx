@@ -117,6 +117,7 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
 
             <Input
               ref={inputRef}
+              autoComplete="off"
               id={`write-card-input-${i}`}
               placeholder={`Type the ${placeholderLanguage(
                 wordLanguage,

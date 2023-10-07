@@ -14,7 +14,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { IconArrowUp, IconReport } from "@tabler/icons-react";
+import { IconArrowUp, IconRotateClockwise2 } from "@tabler/icons-react";
 
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useTestContext } from "../../stores/use-test-store";
@@ -51,7 +51,11 @@ export const ResultsView = () => {
         >
           <Heading>Your results</Heading>
           <ButtonGroup>
-            <Button leftIcon={<IconReport size={18} />} onClick={() => reset()}>
+            <Button
+              leftIcon={<IconRotateClockwise2 size={18} />}
+              onClick={() => reset()}
+              variant="outline"
+            >
               New test
             </Button>
             <Button
