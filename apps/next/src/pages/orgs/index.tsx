@@ -40,8 +40,7 @@ export default function Organizations() {
   });
 
   const invalidateUser = async () => {
-    const event = new Event("visibilitychange");
-    document.dispatchEvent(event);
+    await session.update();
     await utils.user.me.invalidate();
   };
 

@@ -12,12 +12,11 @@ import { ToggleGroup } from "../../components/toggle-group";
 import { SectionWrapper } from "./section-wrapper";
 
 export const AccountType = () => {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   const setUserType = api.user.setUserType.useMutation({
-    onSuccess: () => {
-      const event = new Event("visibilitychange");
-      document.dispatchEvent(event);
+    onSuccess: async () => {
+      await update();
     },
   });
 

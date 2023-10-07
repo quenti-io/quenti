@@ -9,16 +9,15 @@ import { PresentWrapper, useNextStep } from "./present-wrapper";
 
 export const OnboardingDone = () => {
   const { event } = useTelemetry();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const next = useNextStep();
 
   const [startedLoading, setStartedLoading] = React.useState(false);
 
   const completeOnboarding = api.user.completeOnboarding.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       void event("onboarding_completed", {});
-      const docEvent = new Event("visibilitychange");
-      document.dispatchEvent(docEvent);
+      await update();
     },
   });
 

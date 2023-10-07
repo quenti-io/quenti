@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import React from "react";
 
 import { env } from "@quenti/env/client";
@@ -18,14 +19,14 @@ export const UploadAvatarModal: React.FC<UploadAvatarModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { update } = useSession();
   const toast = useToast();
 
   const [buffer, setBuffer] = React.useState<ArrayBuffer | null>(null);
 
   const uploadComplete = api.user.uploadAvatarComplete.useMutation({
-    onSuccess: () => {
-      const event = new Event("visibilitychange");
-      document.dispatchEvent(event);
+    onSuccess: async () => {
+      await update();
       onClose();
     },
   });
