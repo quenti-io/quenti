@@ -4,6 +4,7 @@ import React from "react";
 
 import { env } from "@quenti/env/client";
 import { avatarUrl } from "@quenti/lib/avatar";
+import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 import type { User } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
@@ -46,7 +47,6 @@ import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
 import { useIsTeacher } from "../hooks/use-is-teacher";
 import { useMe } from "../hooks/use-me";
-import { useShortcut } from "../hooks/use-shortcut";
 import { plural } from "../utils/string";
 
 export interface CommandMenuProps {

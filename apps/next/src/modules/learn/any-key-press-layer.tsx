@@ -1,4 +1,4 @@
-import { useShortcut } from "../../hooks/use-shortcut";
+import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 
 export const AnyKeyPressLayer = ({ onSubmit }: { onSubmit: () => void }) => {
   useShortcut([], onSubmit, {

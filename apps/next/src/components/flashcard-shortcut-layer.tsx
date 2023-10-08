@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useShortcut } from "../hooks/use-shortcut";
+import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 
 export interface FlashcardShorcutLayerProps {
   triggerFlip: () => void;

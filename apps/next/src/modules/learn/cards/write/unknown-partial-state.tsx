@@ -1,5 +1,6 @@
 import { GenericLabel } from "@quenti/components";
 import type { Question } from "@quenti/interfaces";
+import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 import { api } from "@quenti/trpc";
 
 import {
@@ -15,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 
 import { useAuthedSet } from "../../../../hooks/use-set";
-import { useShortcut } from "../../../../hooks/use-shortcut";
 import { useContainerContext } from "../../../../stores/use-container-store";
 import { useLearnContext } from "../../../../stores/use-learn-store";
 import { word } from "../../../../utils/terms";
