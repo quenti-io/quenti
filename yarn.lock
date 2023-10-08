@@ -5761,7 +5761,7 @@ __metadata:
     "@quenti/env": "*"
     "@quenti/interfaces": "*"
     "@quenti/lib": "*"
-    "@tabler/icons-react": ^2.35.0
+    "@tabler/icons-react": ^2.38.0
     "@types/lodash.merge": ^4.6.7
     lodash.merge: ^4.6.2
     next: ^13.5.2
@@ -5920,7 +5920,7 @@ __metadata:
     "@quenti/payments": "*"
     "@quenti/prisma": "*"
     "@quenti/trpc": "*"
-    "@tabler/icons-react": ^2.35.0
+    "@tabler/icons-react": ^2.38.0
     "@tanstack/react-query": ^4.35.3
     "@tanstack/react-virtual": ^3.0.0-alpha.0
     "@tremor/react": ^3.7.9
@@ -6054,8 +6054,10 @@ __metadata:
     "@quenti/branding": "*"
     "@quenti/components": "*"
     "@quenti/interfaces": "*"
-    "@tabler/icons-react": ^2.35.0
+    "@tabler/icons-react": ^2.38.0
     keen-slider: ^6.8.6
+    react-fast-marquee: ^1.6.1
+    react-parallax-tilt: ^1.7.170
   languageName: unknown
   linkType: soft
 
@@ -7026,22 +7028,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tabler/icons-react@npm:^2.35.0":
-  version: 2.35.0
-  resolution: "@tabler/icons-react@npm:2.35.0"
+"@tabler/icons-react@npm:^2.38.0":
+  version: 2.38.0
+  resolution: "@tabler/icons-react@npm:2.38.0"
   dependencies:
-    "@tabler/icons": 2.35.0
+    "@tabler/icons": 2.38.0
     prop-types: ^15.7.2
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: f3c13cf02d66639c7e1be9c542d647637f7bf729cd62ec11314c5db004d15dc763f45a61be0ece52413ff44f2e8221dba1c616d555facc89c51193b5ad460263
+  checksum: 82ff7c59c365b4b7cb74e511cdc5cb1630915d7aa7e9522483aed307d9688a6b8b8510a3765aef3e8694483ea44ef32232285b9e5b0ebe1c2beddbd7f619167a
   languageName: node
   linkType: hard
 
-"@tabler/icons@npm:2.35.0":
-  version: 2.35.0
-  resolution: "@tabler/icons@npm:2.35.0"
-  checksum: add0bd055e66397ed54237245b2fa785ebc10cc35f71c7023ef396b634c8aeb104a2b12cd657e257e9ac5a517a93c9759f5545f5dda09281fb9189e5b3bc5694
+"@tabler/icons@npm:2.38.0":
+  version: 2.38.0
+  resolution: "@tabler/icons@npm:2.38.0"
+  checksum: 030af0ed999103334a9d823aae7069a308b2fffb79b89ac6b7a46ba27eed4f9527b07c77c961c688234808ba93bc1e7b7c401dfff3e386cf342e426754ceb096
   languageName: node
   linkType: hard
 
@@ -16433,6 +16435,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-fast-marquee@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "react-fast-marquee@npm:1.6.1"
+  peerDependencies:
+    react: ">= 16.8.0 || 18.0.0"
+    react-dom: ">= 16.8.0 || 18.0.0"
+  checksum: 35cb639d516ed87d950757ac80ca1ef84b63b64be8400802514225b4566870ead21a6cddcfe1bdd805724a0e173718dde4a9a4162efbabbfee6b6adc490a6eab
+  languageName: node
+  linkType: hard
+
 "react-focus-lock@npm:^2.9.4":
   version: 2.9.4
   resolution: "react-focus-lock@npm:2.9.4"
@@ -16480,6 +16492,16 @@ __metadata:
   version: 3.0.4
   resolution: "react-lifecycles-compat@npm:3.0.4"
   checksum: a904b0fc0a8eeb15a148c9feb7bc17cec7ef96e71188280061fc340043fd6d8ee3ff233381f0e8f95c1cf926210b2c4a31f38182c8f35ac55057e453d6df204f
+  languageName: node
+  linkType: hard
+
+"react-parallax-tilt@npm:^1.7.170":
+  version: 1.7.170
+  resolution: "react-parallax-tilt@npm:1.7.170"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 9b32d67608df0be044fb66ad643bfd80ad001fd9c578b503922ec479536479bfcb6a0edf6e54470a2cac3e4d154459d7233adf27a271c309ad8f23f5bfd94295
   languageName: node
   linkType: hard
 

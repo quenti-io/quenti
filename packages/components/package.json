@@ -8,7 +8,7 @@
     "@quenti/env": "*",
     "@quenti/interfaces": "*",
     "@quenti/lib": "*",
-    "@tabler/icons-react": "^2.35.0",
+    "@tabler/icons-react": "^2.38.0",
     "lodash.merge": "^4.6.2",
     "next": "^13.5.2",
     "next-seo": "^6.1.0"
