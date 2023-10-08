@@ -6057,7 +6057,6 @@ __metadata:
     "@tabler/icons-react": ^2.38.0
     keen-slider: ^6.8.6
     react-fast-marquee: ^1.6.1
-    react-parallax-tilt: ^1.7.170
   languageName: unknown
   linkType: soft
 
@@ -16492,16 +16491,6 @@ __metadata:
   version: 3.0.4
   resolution: "react-lifecycles-compat@npm:3.0.4"
   checksum: a904b0fc0a8eeb15a148c9feb7bc17cec7ef96e71188280061fc340043fd6d8ee3ff233381f0e8f95c1cf926210b2c4a31f38182c8f35ac55057e453d6df204f
-  languageName: node
-  linkType: hard
-
-"react-parallax-tilt@npm:^1.7.170":
-  version: 1.7.170
-  resolution: "react-parallax-tilt@npm:1.7.170"
-  peerDependencies:
-    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: 9b32d67608df0be044fb66ad643bfd80ad001fd9c578b503922ec479536479bfcb6a0edf6e54470a2cac3e4d154459d7233adf27a271c309ad8f23f5bfd94295
   languageName: node
   linkType: hard
 
