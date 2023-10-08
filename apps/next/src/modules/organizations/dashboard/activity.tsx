@@ -249,6 +249,7 @@ const OrganizationActivityRaw = () => {
           colors={["blue", "orange"]}
           showLegend={false}
           allowDecimals={false}
+          showAnimation={true}
         />
         {initialized && chartData.length <= 1 && (
           <Center

@@ -4,7 +4,7 @@ import { prisma } from "@quenti/prisma";
 import { inngest } from "../inngest";
 
 export const cortexClassifyClass = inngest.createFunction(
-  { name: "Cortex classify class" },
+  { id: "cortex-classify-class" },
   { event: "cortex/classify-class" },
   async ({ event }) => {
     const result = await classifyClass(event.data.name);

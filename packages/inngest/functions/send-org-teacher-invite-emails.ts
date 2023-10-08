@@ -4,7 +4,7 @@ import { env } from "@quenti/env/client";
 import { inngest } from "../inngest";
 
 export const sendOrgTeacherInviteEmails = inngest.createFunction(
-  { name: "Send organization teacher invite emails" },
+  { id: "send-org-teacher-invite-emails" },
   { event: "orgs/invite-teachers" },
   async ({ event, step }) => {
     await Promise.all(
