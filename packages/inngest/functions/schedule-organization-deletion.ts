@@ -8,7 +8,7 @@ import { inngest } from "../inngest";
 
 export const scheduleOrgDeletion = inngest.createFunction(
   {
-    name: "Schedule organization deletion",
+    id: "schedule-org-deletion",
   },
   {
     event: "orgs/delete",
@@ -27,7 +27,7 @@ export const scheduleOrgDeletion = inngest.createFunction(
     );
 
     if (env.SERVER_NAME === "production") {
-      await step.sleep("48h");
+      await step.sleep("wait-48-hours", "48h");
     }
 
     await cancelOrganizationSubscription(event.data.org.id);

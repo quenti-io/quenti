@@ -39,7 +39,7 @@ export const getShareIdHandler = async ({ ctx, input }: GetShareIdOptions) => {
       },
       create: {
         entityId: input.studySetId,
-        id: shortId() as string,
+        id: shortId.rnd(),
         type: "StudySet",
       },
       update: {},

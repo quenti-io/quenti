@@ -9,7 +9,7 @@
     "@quenti/env": "*",
     "@quenti/payments": "*",
     "@quenti/prisma": "*",
-    "inngest": "^2.7.0"
+    "inngest": "^3.0.2"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",

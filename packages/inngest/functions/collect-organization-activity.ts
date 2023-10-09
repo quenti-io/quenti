@@ -4,7 +4,7 @@ import { prisma } from "@quenti/prisma";
 import { inngest } from "../inngest";
 
 export const collectOrganizationActivity = inngest.createFunction(
-  { name: "Collect organization activity" },
+  { id: "collect-organization-activity" },
   { cron: "*/5 * * * *" },
   async ({ step }) => {
     const organizations = await step.run("Get published organizations", () =>

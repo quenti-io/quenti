@@ -30,7 +30,7 @@ export const getShareIdHandler = async ({ ctx, input }: GetShareIdOptions) => {
         },
         create: {
           entityId: input.folderId,
-          id: shortId() as string,
+          id: shortId.rnd(),
           type: "Folder",
         },
         update: {},
@@ -77,7 +77,7 @@ export const getShareIdHandler = async ({ ctx, input }: GetShareIdOptions) => {
         },
         create: {
           entityId: folder.id,
-          id: shortId() as string,
+          id: shortId.rnd(),
           type: "Folder",
         },
         update: {},

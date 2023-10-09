@@ -1,4 +1,4 @@
-import { withHighlightConfig } from "@highlight-run/next/server";
+import { withHighlightConfig } from "@highlight-run/next/config";
 import { withAxiom } from "next-axiom";
 import nextBuildId from "next-build-id";
 import { dirname } from "path";

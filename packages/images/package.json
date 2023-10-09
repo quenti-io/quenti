@@ -15,6 +15,6 @@
     "thumbhash": "^0.1.1"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.2"
+    "@types/jsonwebtoken": "^9.0.3"
   }
 }
