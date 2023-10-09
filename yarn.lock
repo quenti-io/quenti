@@ -6529,6 +6529,7 @@ __metadata:
     "@quenti/components": "*"
     "@quenti/interfaces": "*"
     "@tabler/icons-react": ^2.38.0
+    framer-motion: ^10.16.4
     keen-slider: ^6.8.6
     react-fast-marquee: ^1.6.1
   languageName: unknown
