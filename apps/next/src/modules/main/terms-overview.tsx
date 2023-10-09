@@ -73,8 +73,8 @@ export const TermsOverview = () => {
           gap="6"
         >
           <Heading size="md">
-            <HStack spacing="2">
-              <HStack spacing="1" fontSize="3xl">
+            <HStack spacing="3">
+              <HStack fontSize="3xl">
                 <IconKeyframes size={28} />
                 <>{terms.length}</>
               </HStack>
