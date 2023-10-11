@@ -1,9 +1,9 @@
-import { Pricing } from "@quenti/website/pricing";
+import { Organizations } from "@quenti/website/organizations";
 
 import { PageWrapper } from "../common/page-wrapper";
 
 const Page = () => {
-  return <Pricing />;
+  return <Organizations />;
 };
 
 Page.PageWrapper = PageWrapper;
