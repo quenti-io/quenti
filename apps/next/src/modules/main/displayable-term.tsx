@@ -122,18 +122,12 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 onChange={(e) => setEditWord(e.target.value)}
                 w="full"
                 variant="flushed"
-                fontWeight={500}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") doEdit();
                 }}
               />
             ) : (
-              <Text
-                w="full"
-                whiteSpace="pre-wrap"
-                overflowWrap="anywhere"
-                fontWeight={500}
-              >
+              <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
                 <ScriptFormatter>{editWord}</ScriptFormatter>
               </Text>
             )}
@@ -145,18 +139,12 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 onChange={(e) => setEditDefinition(e.target.value)}
                 w="full"
                 variant="flushed"
-                fontWeight={500}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") doEdit();
                 }}
               />
             ) : (
-              <Text
-                w="full"
-                whiteSpace="pre-wrap"
-                overflowWrap="anywhere"
-                fontWeight={500}
-              >
+              <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
                 <ScriptFormatter>{editDefinition}</ScriptFormatter>
               </Text>
             )}
