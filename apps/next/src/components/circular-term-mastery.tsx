@@ -5,7 +5,6 @@ import {
   CircularProgress,
   CircularProgressLabel,
   HStack,
-  Heading,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -33,8 +32,7 @@ export const CircularTermMastery: React.FC<CircularTermMasteryProps> = ({
         value={perc}
         color="blue.300"
         trackColor="orange.300"
-        // @ts-expect-error type '{ base: string; sm: string; }' is not assignable...
-        size={{ base: "100px", sm: "140px" }}
+        size="100px"
         w="max"
         thickness="4px"
       >
@@ -47,14 +45,6 @@ export const CircularTermMastery: React.FC<CircularTermMasteryProps> = ({
         </CircularProgressLabel>
       </CircularProgress>
       <HStack spacing={4}>
-        <Stack>
-          <Heading size="md" color="blue.300">
-            Know
-          </Heading>
-          <Heading size="md" color="orange.300">
-            Still Learning
-          </Heading>
-        </Stack>
         <Stack>
           <Center
             color="blue.300"
@@ -82,6 +72,17 @@ export const CircularTermMastery: React.FC<CircularTermMasteryProps> = ({
               {stillLearning}
             </Text>
           </Center>
+        </Stack>
+        <Stack
+          fontSize="md"
+          fontWeight={700}
+          color="gray.800"
+          _dark={{
+            color: "gray.50",
+          }}
+        >
+          <Text>Know</Text>
+          <Text>Still learning</Text>
         </Stack>
       </HStack>
     </HStack>

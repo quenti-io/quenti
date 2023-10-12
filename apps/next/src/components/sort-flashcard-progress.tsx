@@ -94,8 +94,8 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
         <Grid gridTemplateColumns={{ base: "1fr", xl: "1fr 1fr" }} gap="8">
           <GridItem>
             <Stack spacing={6} h="full">
-              <Heading size="md">Your Results</Heading>
-              <Card bg={cardBg} rounded="xl" shadow="lg" h="full">
+              <Heading size="md">Your results</Heading>
+              <Card bg={cardBg} rounded="2xl" shadow="lg" h="full">
                 <Center w="full" h="full" p="4">
                   <CircularTermMastery
                     known={known}
@@ -107,12 +107,12 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
           </GridItem>
           <GridItem>
             <Stack spacing={6}>
-              {!stillLearning ? (
-                <Heading>You&apos;ve reviewed all cards!</Heading>
-              ) : (
-                <Heading size="md">Next Steps</Heading>
-              )}
-              <Stack spacing={4}>
+              <Heading size="md">
+                {!stillLearning
+                  ? "You've reviewed all the cards!"
+                  : "Next steps"}
+              </Heading>
+              <Stack spacing="4">
                 {!!stillLearning ? (
                   <Actionable
                     name="Keep reviewing"
@@ -156,10 +156,10 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
       <Flex
         justifyContent="space-between"
         pt="6"
-        flexDir={{ base: "column", sm: "row" }}
+        flexDir={{ base: "column", md: "row" }}
       >
         <Button
-          size={{ base: "md", sm: "sm" }}
+          size={{ base: "md", md: "sm" }}
           leftIcon={<IconArrowLeft size={18} />}
           variant="ghost"
           onClick={goBack}
@@ -168,7 +168,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
         </Button>
         {!!stillLearning && (
           <Button
-            display={{ base: "none", sm: "inherit" }}
+            display={{ base: "none", md: "inherit" }}
             size="sm"
             rightIcon={<IconArrowRight size={18} />}
             variant="ghost"
@@ -204,9 +204,9 @@ const Actionable: React.FC<ActionableProps> = ({
   return (
     <LinkBox
       bg={bg}
-      rounded="lg"
-      py="4"
-      px={{ base: "3", sm: "6" }}
+      rounded="2xl"
+      py="5"
+      px="6"
       borderBottomWidth="3px"
       h="full"
       borderColor={borderColor}
@@ -214,7 +214,7 @@ const Actionable: React.FC<ActionableProps> = ({
       transition="all ease-in-out 150ms"
       _hover={{
         transform: "translateY(-2px)",
-        borderBottomColor: "blue.300",
+        borderBottomColor: "blue.200",
       }}
       cursor="pointer"
       onClick={onClick}
@@ -223,12 +223,12 @@ const Actionable: React.FC<ActionableProps> = ({
         <HStack>
           <Box
             display={{ base: "none", sm: "inherit" }}
-            color="blue.300"
-            mr={4}
+            color="blue.200"
+            mr="3"
           >
-            <Icon size={40} />
+            <Icon size={32} />
           </Box>
-          <Stack>
+          <Stack spacing="2">
             <Flex alignItems="center" gap={3}>
               <Box display={{ base: "inherit", sm: "none" }} color="blue.300">
                 <Icon />
