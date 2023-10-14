@@ -91,11 +91,11 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
     () => (
       <Card
         ref={ref}
-        px={{ base: 0, sm: 4 }}
+        px={{ base: 0, sm: "22px" }}
         py={{ base: 0, sm: 5 }}
         overflow="hidden"
-        shadow="sm"
-        borderWidth="1px"
+        shadow="0 2px 6px -4px rgba(0, 0, 0, 0.1), 0 2px 4px -4px rgba(0, 0, 0, 0.06)"
+        borderWidth="1.5px"
         borderColor="gray.100"
         rounded="xl"
         _dark={{

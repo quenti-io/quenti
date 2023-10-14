@@ -1,4 +1,4 @@
-import { formatScripts } from "../apps/next/src/utils/text";
+import { formatScripts } from "../apps/next/src/utils/scripts";
 
 describe("test script formatting", () => {
   test("string with no formatting should be unchanged", () => {
