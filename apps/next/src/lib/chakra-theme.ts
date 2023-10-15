@@ -8,8 +8,8 @@ import { type StyleFunctionProps, mode } from "@chakra-ui/theme-tools";
 const config = { initialColorMode: "light", useSystemColorMode: false };
 
 const fonts = {
-  heading: "Outfit,Helvetica Neue,Helvetica,Arial,sans-serif",
-  body: "Open Sans",
+  heading: "Outfit,Arial,Helvetica Neue,Helvetica,Arial,sans-serif",
+  body: "Open Sans,Segoe UI,Arial,sans-serif",
 };
 
 const colors = {
