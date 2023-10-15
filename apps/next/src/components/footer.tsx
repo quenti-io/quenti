@@ -217,7 +217,7 @@ const SocialLink: React.FC<React.PropsWithChildren<{ href: string }>> = ({
 
 const FooterLink: React.FC<FooterLinkProps> = ({ href, text }) => {
   return (
-    <Link href={href}>
+    <Link href={href} w="max">
       <Text
         color="gray.500"
         transition="all ease-in-out 150ms"

@@ -14,6 +14,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../../common/lazy-wrapper";
 import { PageWrapper } from "../../common/page-wrapper";
 import { WithFooter } from "../../components/with-footer";
 import { getLayout } from "../../layouts/main-layout";
@@ -30,33 +31,35 @@ const UserPage = ({ user }: inferSSRProps<typeof getServerSideProps>) => {
   return (
     <>
       {user && <HeadSeo title={user.name ?? user.username} profile={user} />}
-      <HydrateProfileData fallback={<ProfileLoading />}>
-        <WithFooter>
-          <Container maxW="4xl">
-            <Stack spacing={12}>
-              <ProfileArea />
-              <Tabs borderColor={borderColor}>
-                <TabList gap="6">
-                  <Tab px="0" bg="none" fontWeight={600}>
-                    Study sets
-                  </Tab>
-                  <Tab px="0" bg="none" fontWeight={600}>
-                    Folders
-                  </Tab>
-                </TabList>
-                <TabPanels mt="10">
-                  <TabPanel px="0">
-                    <StudySetsList />
-                  </TabPanel>
-                  <TabPanel px="0">
-                    <FoldersList />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </Stack>
-          </Container>
-        </WithFooter>
-      </HydrateProfileData>
+      <LazyWrapper>
+        <HydrateProfileData fallback={<ProfileLoading />}>
+          <WithFooter>
+            <Container maxW="4xl">
+              <Stack spacing={12}>
+                <ProfileArea />
+                <Tabs borderColor={borderColor}>
+                  <TabList gap="6">
+                    <Tab px="0" bg="none" fontWeight={600}>
+                      Study sets
+                    </Tab>
+                    <Tab px="0" bg="none" fontWeight={600}>
+                      Folders
+                    </Tab>
+                  </TabList>
+                  <TabPanels mt="10">
+                    <TabPanel px="0">
+                      <StudySetsList />
+                    </TabPanel>
+                    <TabPanel px="0">
+                      <FoldersList />
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              </Stack>
+            </Container>
+          </WithFooter>
+        </HydrateProfileData>
+      </LazyWrapper>
     </>
   );
 };

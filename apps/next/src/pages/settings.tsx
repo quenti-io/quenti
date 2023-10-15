@@ -15,6 +15,7 @@ import {
 
 import { IconSettings } from "@tabler/icons-react";
 
+import { LazyWrapper } from "../common/lazy-wrapper";
 import { PageWrapper } from "../common/page-wrapper";
 import { AuthedPage } from "../components/authed-page";
 import { Loading } from "../components/loading";
@@ -36,7 +37,9 @@ const Settings = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Settings" />
-      <SettingsInner />
+      <LazyWrapper>
+        <SettingsInner />
+      </LazyWrapper>
     </AuthedPage>
   );
 };

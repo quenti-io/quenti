@@ -7,6 +7,7 @@ import { HeadSeo } from "@quenti/components";
 import { Button, Heading, Text, VStack } from "@chakra-ui/react";
 
 import { Logo } from "../../../../../packages/components/logo";
+import { LazyWrapper } from "../../common/lazy-wrapper";
 import { useTelemetry } from "../../lib/telemetry";
 import { PresentWrapper, useNextStep } from "./present-wrapper";
 
@@ -39,9 +40,11 @@ export const OnboardingIntro = () => {
           nofollow: true,
         }}
       />
-      <PresentWrapper>
-        <Intro />
-      </PresentWrapper>
+      <LazyWrapper>
+        <PresentWrapper>
+          <Intro />
+        </PresentWrapper>
+      </LazyWrapper>
     </>
   );
 };

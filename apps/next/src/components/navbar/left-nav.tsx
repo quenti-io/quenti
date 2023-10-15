@@ -67,7 +67,10 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           <Heading
             as="p"
             fontSize="2xl"
-            color={useColorModeValue("black", "white")}
+            color="black"
+            _dark={{
+              color: "white",
+            }}
           >
             Quenti
           </Heading>

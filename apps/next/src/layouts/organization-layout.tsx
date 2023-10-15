@@ -19,6 +19,7 @@ import {
 
 import { IconAlertCircleFilled } from "@tabler/icons-react";
 
+import { LazyWrapper } from "../common/lazy-wrapper";
 import { AnimatedXCircle } from "../components/animated-icons/x";
 import { AuthedPage } from "../components/authed-page";
 import { ConfettiLayer } from "../components/confetti-layer";
@@ -75,26 +76,28 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
             nofollow: true,
           }}
         />
-        <Box pb="30" style={{ minHeight: "calc(100vh - 80px)" }}>
-          <Tabs
-            borderColor={borderColor}
-            size="sm"
-            index={index}
-            isManual
-            overflow="hidden"
-          >
-            <Box pb="2" overflowX="auto">
-              <OrganizationTabList />
-            </Box>
+        <LazyWrapper>
+          <Box pb="30" style={{ minHeight: "calc(100vh - 80px)" }}>
+            <Tabs
+              borderColor={borderColor}
+              size="sm"
+              index={index}
+              isManual
+              overflow="hidden"
+            >
+              <Box pb="2" overflowX="auto">
+                <OrganizationTabList />
+              </Box>
+              <Container maxW="6xl" overflow="hidden">
+                <TabPanels mt="10">{children}</TabPanels>
+              </Container>
+            </Tabs>
             <Container maxW="6xl" overflow="hidden">
-              <TabPanels mt="10">{children}</TabPanels>
+              {isLoaded && isUpgraded && org.published && <ConfettiLayer />}
             </Container>
-          </Tabs>
-          <Container maxW="6xl" overflow="hidden">
-            {isLoaded && isUpgraded && org.published && <ConfettiLayer />}
-          </Container>
-        </Box>
-        <Footer />
+          </Box>
+          <Footer />
+        </LazyWrapper>
       </MainLayout>
     </AuthedPage>
   );
