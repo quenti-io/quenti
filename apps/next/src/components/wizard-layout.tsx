@@ -12,6 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../common/lazy-wrapper";
 import { AuthedPage } from "./authed-page";
 import { SegmentedProgress } from "./segmented-progress";
 
@@ -59,45 +60,47 @@ export const WizardLayout: React.FC<
           }}
         />
       )}
-      <Container maxW="2xl" pb="20">
-        <Stack>
-          <Stack spacing="8" p="8">
-            <Stack>
-              <Text color={text} fontSize="sm" fontWeight={600}>
-                Step {currentStep + 1} of {steps}
-              </Text>
-              <SegmentedProgress steps={steps} currentStep={currentStep} />
+      <LazyWrapper>
+        <Container maxW="2xl" pb="20">
+          <Stack>
+            <Stack spacing="8" p="8">
+              <Stack>
+                <Text color={text} fontSize="sm" fontWeight={600}>
+                  Step {currentStep + 1} of {steps}
+                </Text>
+                <SegmentedProgress steps={steps} currentStep={currentStep} />
+              </Stack>
+              <Stack spacing="4">
+                <Heading size="lg">{title}</Heading>
+                {enableSkeleton ? (
+                  <Skeleton isLoaded={isLoaded} fitContent>
+                    {description}
+                  </Skeleton>
+                ) : (
+                  description
+                )}
+              </Stack>
             </Stack>
-            <Stack spacing="4">
-              <Heading size="lg">{title}</Heading>
-              {enableSkeleton ? (
-                <Skeleton isLoaded={isLoaded} fitContent>
-                  {description}
-                </Skeleton>
-              ) : (
-                description
-              )}
-            </Stack>
+            <SlideFade
+              initial={{
+                opacity: 0,
+                transform: "translateY(-20px)",
+              }}
+              animate={
+                cardIn
+                  ? {
+                      opacity: 1,
+                      transform: "translateY(0)",
+                    }
+                  : undefined
+              }
+              in={cardIn}
+            >
+              {children}
+            </SlideFade>
           </Stack>
-          <SlideFade
-            initial={{
-              opacity: 0,
-              transform: "translateY(-20px)",
-            }}
-            animate={
-              cardIn
-                ? {
-                    opacity: 1,
-                    transform: "translateY(0)",
-                  }
-                : undefined
-            }
-            in={cardIn}
-          >
-            {children}
-          </SlideFade>
-        </Stack>
-      </Container>
+        </Container>
+      </LazyWrapper>
     </AuthedPage>
   );
 };

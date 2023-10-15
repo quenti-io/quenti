@@ -5,6 +5,7 @@ import { api } from "@quenti/trpc";
 
 import { Container, Stack } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../common/lazy-wrapper";
 import { PageWrapper } from "../common/page-wrapper";
 import { AuthedPage } from "../components/authed-page";
 import { WithFooter } from "../components/with-footer";
@@ -24,16 +25,18 @@ const Home = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Home" />
-      <WithFooter>
-        <Container maxW="7xl">
-          <Stack spacing={12}>
-            {!isLoading && isEmpty && <EmptyDashboard />}
-            <SetGrid />
-            <ClassesGrid />
-            <News />
-          </Stack>
-        </Container>
-      </WithFooter>
+      <LazyWrapper>
+        <WithFooter>
+          <Container maxW="7xl">
+            <Stack spacing={12}>
+              {!isLoading && isEmpty && <EmptyDashboard />}
+              <SetGrid />
+              <ClassesGrid />
+              <News />
+            </Stack>
+          </Container>
+        </WithFooter>
+      </LazyWrapper>
     </AuthedPage>
   );
 };

@@ -5,6 +5,7 @@ import { HeadSeo } from "@quenti/components";
 
 import { Container, Stack } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../../../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../../../common/page-wrapper";
 import { getLayout } from "../../../../../layouts/main-layout";
 import { ControlsBar } from "../../../../../modules/flashcards/controls-bar";
@@ -23,28 +24,35 @@ const FolderStudyFlashcards = () => {
   return (
     <>
       <HeadSeo title="Flashcards" />
-      <HydrateFolderData
-        withTerms
-        fallback={
-          <FlashcardsLoading
-            titlePlaceholder={(slug || "Placeholder Title").replace("-", "")}
+      <LazyWrapper>
+        <HydrateFolderData
+          withTerms
+          fallback={
+            <FlashcardsLoading
+              titlePlaceholder={(slug || "Placeholder Title").replace("-", "")}
+            />
+          }
+        >
+          <FlashcardsSettingsModal
+            isOpen={settingsOpen}
+            onClose={() => setSettingsOpen(false)}
           />
-        }
-      >
-        <FlashcardsSettingsModal
-          isOpen={settingsOpen}
-          onClose={() => setSettingsOpen(false)}
-        />
-        <Container maxW="full" h="calc(100vh - 80px)" overflow="hidden" px="0">
-          <Container maxW="7xl" h="calc(100vh - 180px)">
-            <Stack spacing={6}>
-              <TitleBar />
-              <FlashcardArea />
-              <ControlsBar onSettingsClick={() => setSettingsOpen(true)} />
-            </Stack>
+          <Container
+            maxW="full"
+            h="calc(100vh - 80px)"
+            overflow="hidden"
+            px="0"
+          >
+            <Container maxW="7xl" h="calc(100vh - 180px)">
+              <Stack spacing={6}>
+                <TitleBar />
+                <FlashcardArea />
+                <ControlsBar onSettingsClick={() => setSettingsOpen(true)} />
+              </Stack>
+            </Container>
           </Container>
-        </Container>
-      </HydrateFolderData>
+        </HydrateFolderData>
+      </LazyWrapper>
     </>
   );
 };

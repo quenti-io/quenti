@@ -21,6 +21,7 @@ import {
 import { IconBrandGoogle } from "@tabler/icons-react";
 
 import { Logo } from "../../../../packages/components/logo";
+import { LazyWrapper } from "../common/lazy-wrapper";
 import { useTelemetry } from "../lib/telemetry";
 import { getSafeRedirectUrl } from "../lib/urls";
 import { Loading } from "./loading";
@@ -61,114 +62,116 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
   return (
     <>
       <HeadSeo title={mode == "login" ? "Log in" : "Sign up"} />
-      <Center h="100vh" w="full" position="relative">
-        <Fade
-          in
-          transition={{
-            enter: {
-              duration: 1.5,
-              delay: 0.2,
-              ease: "easeOut",
-            },
-          }}
-        >
-          <Box
-            position="absolute"
-            top="0"
-            left="0"
-            w="full"
-            h="50vh"
-            opacity={gradientOpacity}
-            bgGradient={gradient}
-          />
-        </Fade>
-        {!loading ? (
-          <Container w="sm" zIndex={10}>
-            <Fade
-              in
-              initial={{
-                opacity: -1,
-                transform: "translateY(-16px)",
-              }}
-              animate={{
-                opacity: 1,
-                transform: "translateY(0)",
-                transition: {
-                  delay: 0.1,
-                  duration: 0.3,
-                  ease: "easeOut",
-                },
-              }}
-            >
-              <VStack spacing="8">
-                <Logo width={24} height={24} />
-                <Heading fontSize="24px" textAlign="center">
-                  {mode == "signup"
-                    ? "Create your Quenti account"
-                    : "Welcome back"}
-                </Heading>
-                <Stack spacing="3" w="full">
-                  <Button
-                    size="lg"
-                    fontSize="sm"
-                    leftIcon={<IconBrandGoogle size={18} strokeWidth={4} />}
-                    onClick={async () => {
-                      if (mode == "signup") {
-                        await event("signup", {});
-                      } else {
-                        await event("login", {});
-                      }
-
-                      await signIn("google", {
-                        callbackUrl: safeCallbackUrl,
-                        redirect: false,
-                      });
-                    }}
-                  >
-                    Sign {verb} with Google
-                  </Button>
-                  <Tooltip label="Coming soon">
+      <LazyWrapper>
+        <Center h="100vh" w="full" position="relative">
+          <Fade
+            in
+            transition={{
+              enter: {
+                duration: 1.5,
+                delay: 0.2,
+                ease: "easeOut",
+              },
+            }}
+          >
+            <Box
+              position="absolute"
+              top="0"
+              left="0"
+              w="full"
+              h="50vh"
+              opacity={gradientOpacity}
+              bgGradient={gradient}
+            />
+          </Fade>
+          {!loading ? (
+            <Container w="sm" zIndex={10}>
+              <Fade
+                in
+                initial={{
+                  opacity: -1,
+                  transform: "translateY(-16px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  transform: "translateY(0)",
+                  transition: {
+                    delay: 0.1,
+                    duration: 0.3,
+                    ease: "easeOut",
+                  },
+                }}
+              >
+                <VStack spacing="8">
+                  <Logo width={24} height={24} />
+                  <Heading fontSize="24px" textAlign="center">
+                    {mode == "signup"
+                      ? "Create your Quenti account"
+                      : "Welcome back"}
+                  </Heading>
+                  <Stack spacing="3" w="full">
                     <Button
                       size="lg"
                       fontSize="sm"
-                      variant="outline"
-                      colorScheme="gray"
-                      cursor="not-allowed"
+                      leftIcon={<IconBrandGoogle size={18} strokeWidth={4} />}
+                      onClick={async () => {
+                        if (mode == "signup") {
+                          await event("signup", {});
+                        } else {
+                          await event("login", {});
+                        }
+
+                        await signIn("google", {
+                          callbackUrl: safeCallbackUrl,
+                          redirect: false,
+                        });
+                      }}
                     >
-                      Sign {verb} with email
+                      Sign {verb} with Google
                     </Button>
-                  </Tooltip>
-                </Stack>
-                {mode == "signup" && (
-                  <Text textAlign="center" fontSize="sm" color={termsColor}>
-                    By signing up, you agree to the{" "}
-                    <Link
-                      href="/terms"
-                      _hover={{
-                        textDecoration: "underline",
-                      }}
-                    >
-                      Privacy Policy
-                    </Link>{" "}
-                    and{" "}
-                    <Link
-                      href="/terms"
-                      _hover={{
-                        textDecoration: "underline",
-                      }}
-                    >
-                      Terms of Service
-                    </Link>
-                    .
-                  </Text>
-                )}
-              </VStack>
-            </Fade>
-          </Container>
-        ) : (
-          <Loading />
-        )}
-      </Center>
+                    <Tooltip label="Coming soon">
+                      <Button
+                        size="lg"
+                        fontSize="sm"
+                        variant="outline"
+                        colorScheme="gray"
+                        cursor="not-allowed"
+                      >
+                        Sign {verb} with email
+                      </Button>
+                    </Tooltip>
+                  </Stack>
+                  {mode == "signup" && (
+                    <Text textAlign="center" fontSize="sm" color={termsColor}>
+                      By signing up, you agree to the{" "}
+                      <Link
+                        href="/terms"
+                        _hover={{
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Privacy Policy
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        href="/terms"
+                        _hover={{
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Terms of Service
+                      </Link>
+                      .
+                    </Text>
+                  )}
+                </VStack>
+              </Fade>
+            </Container>
+          ) : (
+            <Loading />
+          )}
+        </Center>
+      </LazyWrapper>
     </>
   );
 };

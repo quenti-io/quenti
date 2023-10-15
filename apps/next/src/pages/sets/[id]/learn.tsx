@@ -6,6 +6,7 @@ import { api } from "@quenti/trpc";
 
 import { Container, Skeleton, Stack } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
 import { useSet } from "../../../hooks/use-set";
@@ -24,28 +25,30 @@ const Learn = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Learn" />
-      <HydrateSetData
-        disallowDirty
-        withDistractors
-        placeholder={
-          <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
-            <Stack spacing="8" w="full">
-              <Titlebar.Skeleton />
-              <Skeleton w="full" h={{ base: 571, md: 467 }} rounded="2xl" />
-            </Stack>
-          </Container>
-        }
-      >
-        <CreateLearnData>
-          <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
-            <Stack spacing={8}>
-              <Titlebar />
-              <LearnContainer />
-            </Stack>
-          </Container>
-          <ActionBar />
-        </CreateLearnData>
-      </HydrateSetData>
+      <LazyWrapper>
+        <HydrateSetData
+          disallowDirty
+          withDistractors
+          placeholder={
+            <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
+              <Stack spacing="8" w="full">
+                <Titlebar.Skeleton />
+                <Skeleton w="full" h={{ base: 571, md: 467 }} rounded="2xl" />
+              </Stack>
+            </Container>
+          }
+        >
+          <CreateLearnData>
+            <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
+              <Stack spacing={8}>
+                <Titlebar />
+                <LearnContainer />
+              </Stack>
+            </Container>
+            <ActionBar />
+          </CreateLearnData>
+        </HydrateSetData>
+      </LazyWrapper>
     </AuthedPage>
   );
 };

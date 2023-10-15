@@ -12,31 +12,27 @@ const HighlightInit = dynamic(
   () => import("@highlight-run/next/client").then((mod) => mod.HighlightInit),
   { ssr: false },
 );
-const SessionProvider = dynamic(
-  () => import("next-auth/react").then((mod) => mod.SessionProvider),
-  { ssr: false },
-);
 const Analytics = dynamic(
   () => import("@vercel/analytics/react").then((mod) => mod.Analytics),
   { ssr: false },
-);
-const HistoryProvider = dynamic(
-  () =>
-    import("../modules/history-provider").then((mod) => mod.HistoryProvider),
-  { ssr: false },
-);
-
-const TelemetryProvider = dynamic(
-  () => import("../lib/telemetry").then((mod) => mod.TelemetryProvider),
-  {
-    ssr: false,
-  },
 );
 const IdentifyUser = dynamic(
   () => import("../lib/telemetry").then((mod) => mod.IdentifyUser),
   {
     ssr: false,
   },
+);
+
+// We can't use no-ssr boundary splitting for providers with children otherwise SEO and rendering will be broken
+// Unfortunately, our bundle size is a bit larger but ttfb is still decent
+const HistoryProvider = dynamic(() =>
+  import("../modules/history-provider").then((mod) => mod.HistoryProvider),
+);
+const TelemetryProvider = dynamic(() =>
+  import("../lib/telemetry").then((mod) => mod.TelemetryProvider),
+);
+const SessionProvider = dynamic(() =>
+  import("next-auth/react").then((mod) => mod.SessionProvider),
 );
 
 export { reportWebVitals } from "next-axiom";

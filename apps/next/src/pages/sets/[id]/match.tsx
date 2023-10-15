@@ -1,5 +1,6 @@
 import { HeadSeo } from "@quenti/components";
 
+import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
 import { getLayout } from "../../../layouts/main-layout";
@@ -11,11 +12,13 @@ const Match = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Match" />
-      <HydrateSetData disallowDirty>
-        <CreateMatchData>
-          <MatchContainer />
-        </CreateMatchData>
-      </HydrateSetData>
+      <LazyWrapper>
+        <HydrateSetData disallowDirty>
+          <CreateMatchData>
+            <MatchContainer />
+          </CreateMatchData>
+        </HydrateSetData>
+      </LazyWrapper>
     </AuthedPage>
   );
 };

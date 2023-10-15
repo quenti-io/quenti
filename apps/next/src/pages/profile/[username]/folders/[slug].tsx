@@ -5,6 +5,7 @@ import { prisma } from "@quenti/prisma";
 
 import { Container, Flex, Stack } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../../common/page-wrapper";
 import { WithFooter } from "../../../../components/with-footer";
 import { getLayout } from "../../../../layouts/main-layout";
@@ -36,29 +37,31 @@ const FolderPage = ({ folder }: inferSSRProps<typeof getServerSideProps>) => {
           },
         }}
       />
-      <HydrateFolderData fallback={<FolderLoading />}>
-        <WithFooter>
-          <Container maxW="7xl">
-            <Stack spacing={12}>
-              <Stack spacing="0">
-                <FolderHeading />
-                <FolderDescription />
-              </Stack>
-              <Flex
-                gap={8}
-                flexDir={{ base: "column", lg: "row" }}
-                alignItems="stretch"
-                w="full"
-              >
-                <LinkArea />
-                <Flex flex="1">
-                  <FolderSets />
+      <LazyWrapper>
+        <HydrateFolderData fallback={<FolderLoading />}>
+          <WithFooter>
+            <Container maxW="7xl">
+              <Stack spacing={12}>
+                <Stack spacing="0">
+                  <FolderHeading />
+                  <FolderDescription />
+                </Stack>
+                <Flex
+                  gap={8}
+                  flexDir={{ base: "column", lg: "row" }}
+                  alignItems="stretch"
+                  w="full"
+                >
+                  <LinkArea />
+                  <Flex flex="1">
+                    <FolderSets />
+                  </Flex>
                 </Flex>
-              </Flex>
-            </Stack>
-          </Container>
-        </WithFooter>
-      </HydrateFolderData>
+              </Stack>
+            </Container>
+          </WithFooter>
+        </HydrateFolderData>
+      </LazyWrapper>
     </>
   );
 };

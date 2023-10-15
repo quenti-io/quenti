@@ -5,6 +5,7 @@ import { HeadSeo } from "@quenti/components";
 
 import { Container } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
 import { WithFooter } from "../../../components/with-footer";
@@ -29,13 +30,15 @@ const Edit = () => {
           nofollow: true,
         }}
       />
-      <WithFooter>
-        <Container maxW="7xl">
-          <HydrateEditSetData>
-            <EditorWrapper />
-          </HydrateEditSetData>
-        </Container>
-      </WithFooter>
+      <LazyWrapper>
+        <WithFooter>
+          <Container maxW="7xl">
+            <HydrateEditSetData>
+              <EditorWrapper />
+            </HydrateEditSetData>
+          </Container>
+        </WithFooter>
+      </LazyWrapper>
     </AuthedPage>
   );
 };

@@ -7,6 +7,7 @@ import { api } from "@quenti/trpc";
 
 import { Container } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../common/lazy-wrapper";
 import { PageWrapper } from "../common/page-wrapper";
 import { AuthedPage } from "../components/authed-page";
 import { WithFooter } from "../components/with-footer";
@@ -22,13 +23,15 @@ const Create = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Create a new set" />
-      <WithFooter>
-        <Container maxW="7xl">
-          <HydrateAutoSaveData>
-            <EditorWrapper />
-          </HydrateAutoSaveData>
-        </Container>
-      </WithFooter>
+      <LazyWrapper>
+        <WithFooter>
+          <Container maxW="7xl">
+            <HydrateAutoSaveData>
+              <EditorWrapper />
+            </HydrateAutoSaveData>
+          </Container>
+        </WithFooter>
+      </LazyWrapper>
     </AuthedPage>
   );
 };

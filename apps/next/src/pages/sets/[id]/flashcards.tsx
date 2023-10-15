@@ -4,6 +4,7 @@ import { HeadSeo } from "@quenti/components";
 
 import { Container, Stack } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { getLayout } from "../../../layouts/main-layout";
 import { ControlsBar } from "../../../modules/flashcards/controls-bar";
@@ -19,27 +20,29 @@ const Flashcards = () => {
   return (
     <>
       <HeadSeo title="Flashcards" />
-      <HydrateSetData isPublic placeholder={<FlashcardsLoading />}>
-        <FlashcardsSettingsModal
-          isOpen={settingsOpen}
-          onClose={() => setSettingsOpen(false)}
-        />
-        <Container
-          maxW="full"
-          h="calc(100vh - 80px)"
-          minHeight="720px"
-          px="0"
-          overflow="hidden"
-        >
-          <Container maxW="7xl" h="calc(100vh - 180px)" minHeight="620px">
-            <Stack spacing={6}>
-              <TitleBar />
-              <FlashcardArea />
-              <ControlsBar onSettingsClick={() => setSettingsOpen(true)} />
-            </Stack>
+      <LazyWrapper>
+        <HydrateSetData isPublic placeholder={<FlashcardsLoading />}>
+          <FlashcardsSettingsModal
+            isOpen={settingsOpen}
+            onClose={() => setSettingsOpen(false)}
+          />
+          <Container
+            maxW="full"
+            h="calc(100vh - 80px)"
+            minHeight="720px"
+            px="0"
+            overflow="hidden"
+          >
+            <Container maxW="7xl" h="calc(100vh - 180px)" minHeight="620px">
+              <Stack spacing={6}>
+                <TitleBar />
+                <FlashcardArea />
+                <ControlsBar onSettingsClick={() => setSettingsOpen(true)} />
+              </Stack>
+            </Container>
           </Container>
-        </Container>
-      </HydrateSetData>
+        </HydrateSetData>
+      </LazyWrapper>
     </>
   );
 };

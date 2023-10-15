@@ -7,6 +7,7 @@ import { api } from "@quenti/trpc";
 
 import { Container } from "@chakra-ui/react";
 
+import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
 import { ConfirmModal } from "../../../components/confirm-modal";
@@ -24,17 +25,19 @@ const Test = () => {
   return (
     <AuthedPage>
       <HeadSeo title="Test" />
-      <HydrateSetData
-        disallowDirty
-        withDistractors
-        placeholder={<TestLoading />}
-      >
-        <SeoWrapper>
-          <CreateTestData>
-            <TestContainer />
-          </CreateTestData>
-        </SeoWrapper>
-      </HydrateSetData>
+      <LazyWrapper>
+        <HydrateSetData
+          disallowDirty
+          withDistractors
+          placeholder={<TestLoading />}
+        >
+          <SeoWrapper>
+            <CreateTestData>
+              <TestContainer />
+            </CreateTestData>
+          </SeoWrapper>
+        </HydrateSetData>
+      </LazyWrapper>
     </AuthedPage>
   );
 };
