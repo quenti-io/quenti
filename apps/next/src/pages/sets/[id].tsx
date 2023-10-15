@@ -5,6 +5,7 @@ import { HeadSeo } from "@quenti/components";
 import { prisma } from "@quenti/prisma";
 import type { GetServerSidePropsContext } from "@quenti/types";
 
+import { LazyWrapper } from "../../common/lazy-wrapper";
 import { PageWrapper } from "../../common/page-wrapper";
 import { getLayout } from "../../layouts/main-layout";
 import type { inferSSRProps } from "../../lib/infer-ssr-props";
@@ -16,11 +17,8 @@ const Set404 = dynamic(() => import("../../modules/main/set-404"), {
   ssr: false,
 });
 
-const InternalSet = dynamic(
-  () => import("../../components/internal-set").then((mod) => mod.default),
-  {
-    ssr: false,
-  },
+const InternalSet = dynamic(() =>
+  import("../../components/internal-set").then((mod) => mod.default),
 );
 
 const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
@@ -47,13 +45,15 @@ const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
           nofollow: set.visibility != "Public",
         }}
       />
-      <InternalSet />
+      <LazyWrapper>
+        <InternalSet />
+      </LazyWrapper>
     </>
   );
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  // ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
+  ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
 
   const session = await getServerAuthSession(ctx);
   const userId = session?.user?.id;
