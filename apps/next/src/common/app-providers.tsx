@@ -1,6 +1,9 @@
+import { H } from "@highlight-run/next/client";
 import type { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import type { AppProps as NextAppProps } from "next/app";
 import dynamic from "next/dynamic";
+import React from "react";
 
 import { env } from "@quenti/env/client";
 
@@ -67,6 +70,7 @@ export const AppProviders = (props: AppPropsWithChildren) => {
     >
       <TelemetryProvider>
         <HighlightInit
+          manualStart
           excludedHostnames={["localhost"]}
           projectId={env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID}
           tracingOrigins
@@ -77,6 +81,7 @@ export const AppProviders = (props: AppPropsWithChildren) => {
           environment={env.NEXT_PUBLIC_DEPLOYMENT}
         />
         <SessionProvider session={props.pageProps.session ?? undefined}>
+          <SessionListener />
           <IdentifyUser />
           <HistoryProvider>{props.children}</HistoryProvider>
         </SessionProvider>
@@ -90,4 +95,17 @@ export const AppProviders = (props: AppPropsWithChildren) => {
       />
     </ChakraProvider>
   );
+};
+
+const SessionListener = () => {
+  const { status } = useSession();
+
+  React.useEffect(() => {
+    if (status !== "authenticated") return;
+    try {
+      H.start();
+    } catch {}
+  }, [status]);
+
+  return <></>;
 };
