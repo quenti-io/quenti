@@ -1,3 +1,5 @@
+import { Open_Sans, Outfit } from "next/font/google";
+
 import {
   type ChakraProps,
   type ChakraTheme,
@@ -5,11 +7,22 @@ import {
 } from "@chakra-ui/react";
 import { type StyleFunctionProps, mode } from "@chakra-ui/theme-tools";
 
+const outfit = Outfit({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+const openSans = Open_Sans({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 const config = { initialColorMode: "light", useSystemColorMode: false };
 
 const fonts = {
-  heading: "Outfit,Arial,Helvetica Neue,Helvetica,Arial,sans-serif",
-  body: "Open Sans,Segoe UI,Arial,sans-serif",
+  heading: outfit.style.fontFamily,
+  body: openSans.style.fontFamily,
 };
 
 const colors = {
