@@ -7,7 +7,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query as { id: string };
 
   await collectOrganizationActivity(id);
-  res.status(200);
+
+  return res.status(200).json({ id });
 };
 
 export default verifySignature(handler);

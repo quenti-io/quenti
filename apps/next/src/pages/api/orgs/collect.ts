@@ -6,13 +6,9 @@ import { env as clientEnv } from "@quenti/env/client";
 import { env as serverEnv } from "@quenti/env/server";
 import { prisma } from "@quenti/prisma";
 
-const c = serverEnv.QSTASH_TOKEN
-  ? new Client({
-      token: serverEnv.QSTASH_TOKEN,
-    })
-  : null;
-
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!serverEnv.QSTASH_TOKEN) return res.status(204);
+
   const orgs = await prisma.organization.findMany({
     where: {
       published: true,
@@ -22,16 +18,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
+  const c = new Client({
+    token: serverEnv.QSTASH_TOKEN,
+  });
+
   await Promise.all(
-    orgs.map(
-      ({ id }) =>
-        c?.publish({
-          url: `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/orgs/${id}/collect`,
-        }),
+    orgs.map(({ id }) =>
+      c.publish({
+        url: `${clientEnv.NEXT_PUBLIC_BASE_URL}/api/orgs/${id}/collect`,
+      }),
     ),
   );
 
-  res.status(200);
+  res.status(200).json({ ids: orgs.map(({ id }) => id) });
 };
 
 export default verifySignature(handler);
