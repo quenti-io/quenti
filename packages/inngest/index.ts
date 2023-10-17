@@ -1,3 +1,6 @@
+import { env } from "@quenti/env/server";
+
+import { collectOrganizationActivity } from "./functions/collect-organization-activity";
 import { cortexClassifyClass } from "./functions/cortex-classify-class";
 import { scheduleOrgDeletion } from "./functions/schedule-organization-deletion";
 import { sendClassInviteEmails } from "./functions/send-class-invite-emails";
@@ -77,5 +80,5 @@ export const functions = [
   sendClassInviteEmails,
   cortexClassifyClass,
   // Scheduled jobs
-  // collectOrganizationActivity,
-];
+  !env.SERVER_NAME ? collectOrganizationActivity : [],
+].flat();
