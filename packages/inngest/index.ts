@@ -80,5 +80,5 @@ export const functions = [
   sendClassInviteEmails,
   cortexClassifyClass,
   // Scheduled jobs
-  !env.SERVER_NAME ? collectOrganizationActivity : [],
+  env.ENABLE_CLICKHOUSE === "true" ? collectOrganizationActivity : [],
 ].flat();
