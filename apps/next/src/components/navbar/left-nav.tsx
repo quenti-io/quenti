@@ -180,7 +180,7 @@ const LinkButton: React.FC<React.PropsWithChildren> = ({ children }) => {
     <Button
       variant="ghost"
       colorScheme="gray"
-      fontSize="sm"
+      fontSize="md"
       color="gray.800"
       _dark={{ color: "gray.200" }}
     >
