@@ -47,6 +47,7 @@ export const env = createEnv({
     USERS_BUCKET_URL: z.string().url().optional(),
     ASSETS_BUCKET_NAME: z.string().optional(),
     ASSETS_BUCKET_URL: z.string().url().optional(),
+    ENABLE_CLICKHOUSE: z.string().optional(),
     CLICKHOUSE_HOST: z.string().url().optional(),
     CLICKHOUSE_USER: z.string().optional(),
     CLICKHOUSE_PASSWORD: z.string().optional(),
