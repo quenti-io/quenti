@@ -36,6 +36,7 @@ export const env = createEnv({
     STRIPE_ORG_MONTHLY_PRICE_ID: z.string().optional(),
     UPSTASH_REDIS_REST_URL: z.string().optional(),
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+    QSTASH_TOKEN: z.string().optional(),
     COHERE_API_KEY: z.string().optional(),
     HUGGINGFACE_ENDPOINT: z.string().url().optional(),
     HUGGINGFACE_API_KEY: z.string().optional(),
