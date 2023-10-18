@@ -2,9 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
 import { getServerAuthSession } from "@quenti/auth";
+import { APP_URL } from "@quenti/lib/constants/url";
 import { getStripeCustomerIdFromUserId, stripe } from "@quenti/payments";
-
-import { BASE_URL } from "../../../../../packages/lib/constants/url";
 
 const querySchema = z.object({
   orgId: z.string().cuid2(),
@@ -32,7 +31,7 @@ export default async function handler(
 
   const stripeSession = await stripe.billingPortal.sessions.create({
     customer: customerId,
-    return_url: `${BASE_URL}/orgs/${orgId}/billing`,
+    return_url: `${APP_URL}/orgs/${orgId}/billing`,
   });
 
   return res.redirect(302, stripeSession.url);

@@ -13,7 +13,7 @@ export const sendOrgTeacherInviteEmails = inngest.createFunction(
           await sendOrganizationTeacherInviteEmail(email, {
             orgName: event.data.org.name,
             inviter: event.data.inviter,
-            url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
+            url: `${env.NEXT_PUBLIC_APP_URL}/auth/signup`,
           });
         }),
       ),

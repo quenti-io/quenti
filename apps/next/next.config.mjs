@@ -78,6 +78,10 @@ let config = {
   rewrites: async () => [
     ...(await getConsoleRewrites()),
     {
+      source: "/",
+      destination: "/home",
+    },
+    {
       source: "/:id(_[a-zA-Z0-9]{10})",
       destination: "/share-resolver/:id",
     },

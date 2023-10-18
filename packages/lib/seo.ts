@@ -3,8 +3,8 @@ import type { EntityType } from "@quenti/prisma/client";
 
 import { truncateOnWord } from "./text";
 
-export const SEO_IMAGE_DEFAULT = `${env.NEXT_PUBLIC_BASE_URL}/og-image.png`;
-export const SEO_IMAGE_OG = `${env.NEXT_PUBLIC_BASE_URL}/api/og`;
+export const SEO_IMAGE_DEFAULT = `${env.NEXT_PUBLIC_APP_URL}/og-image.png`;
+export const SEO_IMAGE_OG = `${env.NEXT_PUBLIC_APP_URL}/api/og`;
 
 export interface EntityImageProps {
   type: EntityType;

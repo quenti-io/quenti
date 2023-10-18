@@ -7,25 +7,25 @@ import {
 } from "@chakra-ui/react";
 import { type StyleFunctionProps, mode } from "@chakra-ui/theme-tools";
 
-const outfit = Outfit({
+export const outfit = Outfit({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
 });
-const openSans = Open_Sans({
+export const openSans = Open_Sans({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
 });
 
-const config = { initialColorMode: "light", useSystemColorMode: false };
+export const config = { initialColorMode: "light", useSystemColorMode: false };
 
-const fonts = {
+export const fonts = {
   heading: outfit.style.fontFamily,
   body: openSans.style.fontFamily,
 };
 
-const colors = {
+export const colors = {
   blue: {
     50: "#e0edff",
     100: "#b0caff",
@@ -69,17 +69,7 @@ const colors = {
   },
 };
 
-const breakpoints = {
-  base: "0em", // 0px
-  sm: "30em", // ~480px. em is a relative unit and is dependant on the font-size.
-  md: "48em", // ~768px
-  lg: "62em", // ~992px
-  lgm: "72em", // ~1152px
-  xl: "80em", // ~1280px
-  "2xl": "96em", // ~1536px
-};
-
-const components = {
+export const components = {
   Button: {
     defaultProps: {
       colorScheme: "blue",
@@ -207,7 +197,7 @@ const components = {
   },
 };
 
-const styles = {
+export const styles = {
   global: (props: ChakraProps) => ({
     body: {
       bg: mode("gray.50", "gray.1000")(props),
@@ -221,5 +211,4 @@ export const theme = extendTheme({
   colors,
   config,
   styles,
-  breakpoints,
 }) as ChakraTheme;

@@ -15,7 +15,7 @@ export const Logo: React.FC<LogoProps> = ({
 }) => {
   return (
     <Img
-      src={`${env.NEXT_PUBLIC_BASE_URL}/android-chrome-192x192.png`}
+      src={`${env.NEXT_PUBLIC_APP_URL}/android-chrome-192x192.png`}
       width={width}
       height={height}
       alt="Quenti"

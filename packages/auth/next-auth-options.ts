@@ -1,8 +1,8 @@
 import { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-import { env as clientEnv } from "@quenti/env/client";
 import { env } from "@quenti/env/server";
+import { APP_URL } from "@quenti/lib/constants/url";
 import { prisma } from "@quenti/prisma";
 
 import pjson from "../../apps/next/package.json";
@@ -34,11 +34,7 @@ export const authOptions: NextAuthOptions = {
       // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       // Allows callback URLs on the same domain
-      else if (
-        new URL(url).hostname ===
-        new URL(clientEnv.NEXT_PUBLIC_BASE_URL).hostname
-      )
-        return url;
+      else if (new URL(url).hostname === new URL(APP_URL).hostname) return url;
       return baseUrl;
     },
     async signIn({ user }) {

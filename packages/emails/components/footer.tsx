@@ -1,6 +1,6 @@
 import { Hr, Link } from "@react-email/components";
 
-import { env } from "@quenti/env/client";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import { Logo } from "./logo";
 
@@ -13,10 +13,7 @@ export const Footer: React.FC<FooterProps> = ({ withLogo = false }) => {
     <div>
       <Hr className="w-full border-[2px] border-gray-200" />
       <div className="flex px-8 pb-5 pt-3">
-        <Link
-          href={env.NEXT_PUBLIC_BASE_URL}
-          className="w-1/2 text-sm text-gray-400"
-        >
+        <Link href={WEBSITE_URL} className="w-1/2 text-sm text-gray-400">
           Quenti
         </Link>
         {withLogo && (

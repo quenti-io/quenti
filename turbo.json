@@ -25,7 +25,7 @@
   "globalDependencies": [
     "**/.env",
     "yarn.lock",
-    "packages/website/**/*",
+    "packages/console/**/*",
     "packages/integrations/**/*"
   ],
   "globalEnv": [
@@ -38,7 +38,8 @@
     "ASSETS_BUCKET_URL",
     "SKIP_ENV_VALIDATION",
     "ANALYZE",
-    "NEXT_PUBLIC_BASE_URL",
+    "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_WEBSITE_URL",
     "NEXT_PUBLIC_DEPLOYMENT",
     "NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID",
     "NEXT_PUBLIC_BETTERUPTIME_ID",

@@ -3,6 +3,7 @@ import NextLink from "next/link";
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import {
   Button,
@@ -96,7 +97,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
                   href={
                     me.orgMembership
                       ? `/orgs/${me.orgMembership.organization.id}`
-                      : "/organizations"
+                      : `${WEBSITE_URL}/organizations`
                   }
                   variant="ghost"
                   fontWeight={700}

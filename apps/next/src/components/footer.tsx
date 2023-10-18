@@ -1,6 +1,7 @@
 import { FrameLogo, Link } from "@quenti/components";
 import { GithubIcon, XIcon } from "@quenti/components/icons";
 import { SUPPORT_EMAIL } from "@quenti/lib/constants/email";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import {
   Box,
@@ -102,20 +103,23 @@ export const Footer = () => {
             <Box display={{ base: "none", lg: "inherit" }}>
               <SocialLinksContainer />
             </Box>
-            <FooterLink href="/" text="Home" />
-            <FooterLink href="/pricing" text="Pricing" />
+            <FooterLink href={WEBSITE_URL} text="Home" />
+            <FooterLink href={`${WEBSITE_URL}/pricing`} text="Pricing" />
             <FooterLink
               href="https://github.com/quenti-io/quenti"
               text="Open source"
             />
             <FooterLink href="https://status.quenti.io" text="Status" />
-            <FooterLink href="/organizations" text="Organizations" />
+            <FooterLink
+              href={`${WEBSITE_URL}/organizations`}
+              text="Organizations"
+            />
             <FooterLink
               href={`mailto:${SUPPORT_EMAIL}`}
               text="Contact support"
             />
-            <FooterLink href="/privacy" text="Privacy Policy" />
-            <FooterLink href="/terms" text="Terms of Service" />
+            <FooterLink href={`${WEBSITE_URL}/privacy`} text="Privacy Policy" />
+            <FooterLink href={`${WEBSITE_URL}/terms`} text="Terms of Service" />
             <FooterLink
               href="https://github.com/quenti-io/quenti/blob/main/LICENSE"
               text="License"

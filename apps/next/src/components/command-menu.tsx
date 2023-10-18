@@ -4,6 +4,7 @@ import React from "react";
 
 import { env } from "@quenti/env/client";
 import { avatarUrl } from "@quenti/lib/avatar";
+import { APP_URL } from "@quenti/lib/constants/url";
 import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 import type { User } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
@@ -92,7 +93,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
   const onSet = router.pathname == "/sets/[id]";
   const onFolder = router.pathname == "/profile/[username]/folders/[slug]";
 
-  const url = (id: string) => `${env.NEXT_PUBLIC_BASE_URL}/_${id}`;
+  const url = (id: string) => `${APP_URL}/_${id}`;
   const onSuccess = (id: string) => {
     void (async () => {
       await navigator.clipboard.writeText(url(id));

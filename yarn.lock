@@ -7418,19 +7418,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quenti/website@workspace:packages/website":
+"@quenti/website@workspace:apps/website":
   version: 0.0.0-use.local
-  resolution: "@quenti/website@workspace:packages/website"
+  resolution: "@quenti/website@workspace:apps/website"
   dependencies:
     "@calcom/embed-react": ^1.3.0
     "@chakra-ui/react": ^2.8.1
+    "@emotion/react": ^11.11.1
+    "@emotion/styled": ^11.11.0
     "@quenti/branding": "*"
     "@quenti/components": "*"
-    "@quenti/interfaces": "*"
+    "@quenti/env": "*"
+    "@quenti/lib": "*"
+    "@t3-oss/env-nextjs": ^0.7.0
     "@tabler/icons-react": ^2.38.0
+    "@tremor/react": ^3.8.2
+    "@vercel/analytics": ^1.1.0
     framer-motion: ^10.16.4
     keen-slider: ^6.8.6
+    next: ^13.5.4
+    next-build-id: ^3.0.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
     react-fast-marquee: ^1.6.2
+    zod: ^3.22.4
   languageName: unknown
   linkType: soft
 

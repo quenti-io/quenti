@@ -35,6 +35,6 @@ install () {
   rm -rf tmp
 }
 
-install "github.com/quenti-io/website" "packages/website"
+install "github.com/quenti-io/website" "apps/website"
 install "github.com/quenti-io/integrations" "packages/integrations"
 install "github.com/quenti-io/console" "packages/console"
