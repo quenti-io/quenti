@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { ORG_SUPPORT_EMAIL } from "@quenti/lib/constants/email";
+import { APP_URL } from "@quenti/lib/constants/url";
 import type { MembershipRole } from "@quenti/prisma/client";
 
 import {
@@ -17,8 +19,6 @@ import {
 
 import { IconExternalLink } from "@tabler/icons-react";
 
-import { ORG_SUPPORT_EMAIL } from "../../../../../../packages/lib/constants/email";
-import { BASE_URL } from "../../../../../../packages/lib/constants/url";
 import { useOrganization } from "../../../hooks/use-organization";
 import { useOrganizationMember } from "../../../hooks/use-organization-member";
 import { SettingsWrapper } from "../settings-wrapper";
@@ -117,7 +117,7 @@ export const OrganizationBilling = () => {
         <Skeleton rounded="md" fitContent h="max-content" isLoaded={!!org}>
           <Button
             as={Link}
-            href={`${BASE_URL}/api/billing?orgId=${org?.id || ""}`}
+            href={`${APP_URL}/api/billing?orgId=${org?.id || ""}`}
             leftIcon={<IconExternalLink size={18} />}
             w="max"
             variant="ghost"

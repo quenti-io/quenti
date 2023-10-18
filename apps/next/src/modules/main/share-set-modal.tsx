@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "@quenti/components";
 import { Modal } from "@quenti/components/modal";
-import { env } from "@quenti/env/client";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 import { api } from "@quenti/trpc";
 
 import {
@@ -39,7 +39,7 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
       enabled: isOpen && visibility !== "Private",
     },
   );
-  const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
+  const url = `${WEBSITE_URL}/_${getShareId.data || ""}`;
 
   const copy = async () => {
     await navigator.clipboard.writeText(url);

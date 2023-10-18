@@ -3,7 +3,7 @@ import { NextSeo, type NextSeoProps } from "next-seo";
 import { usePathname } from "next/navigation";
 
 import { BODY_COPY_SEO } from "@quenti/branding";
-import { env } from "@quenti/env/client";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 import {
   type EntityImageProps,
   type ProfileImageProps,
@@ -78,7 +78,7 @@ export const HeadSeo: React.FC<HeadSeoProps> = ({
   const path = usePathname();
   const defaultCanonical = canonicalUrl({
     path,
-    origin: env.NEXT_PUBLIC_BASE_URL,
+    origin: WEBSITE_URL,
   });
 
   const title = `${_title}${!hideTitleSuffix ? " | Quenti" : ""}`;

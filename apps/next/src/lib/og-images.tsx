@@ -27,14 +27,14 @@ const ImageWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
           top: 0,
           left: 0,
         }}
-        src={`${env.NEXT_PUBLIC_BASE_URL}/og-background.png`}
+        src={`${env.NEXT_PUBLIC_APP_URL}/og-background.png`}
       />
       {children}
       <img
         tw="absolute bottom-0"
         width={1200}
         height={8}
-        src={`${env.NEXT_PUBLIC_BASE_URL}/og-line.png`}
+        src={`${env.NEXT_PUBLIC_APP_URL}/og-line.png`}
       />
     </div>
   );
@@ -112,7 +112,7 @@ export const EntityImage: React.FC<EntityImageProps> = ({
           <img
             width="44"
             height="44"
-            src={`${env.NEXT_PUBLIC_BASE_URL}/avatars/quenti.png`}
+            src={`${env.NEXT_PUBLIC_APP_URL}/avatars/quenti.png`}
             tw="rounded-full"
           />
           <div
@@ -157,7 +157,7 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({
         <img
           width="44"
           height="44"
-          src={`${env.NEXT_PUBLIC_BASE_URL}/avatars/quenti.png`}
+          src={`${env.NEXT_PUBLIC_APP_URL}/avatars/quenti.png`}
           tw="rounded-full"
         />
         <div

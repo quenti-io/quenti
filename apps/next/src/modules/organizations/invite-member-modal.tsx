@@ -110,7 +110,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
 
   const copyInviteLink = async (providedToken?: string) => {
     await navigator.clipboard.writeText(
-      `${env.NEXT_PUBLIC_BASE_URL}/orgs?token=${providedToken || token || ""}`,
+      `${env.NEXT_PUBLIC_APP_URL}/orgs?token=${providedToken || token || ""}`,
     );
     toast({
       title: "Invite link copied to clipboard",

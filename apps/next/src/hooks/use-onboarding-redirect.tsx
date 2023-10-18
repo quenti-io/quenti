@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
-import { BASE_URL } from "@quenti/lib/constants/url";
+import { APP_URL } from "@quenti/lib/constants/url";
 
 export const useOnboardingRedirect = () => {
   const { data: session, status } = useSession();
@@ -14,7 +14,7 @@ export const useOnboardingRedirect = () => {
       const params = new URLSearchParams();
       params.set(
         "callbackUrl",
-        `${BASE_URL}${window.location.pathname}${window.location.search}`,
+        `${APP_URL}${window.location.pathname}${window.location.search}`,
       );
       void router.replace(`/onboarding?${params.toString()}`);
     }

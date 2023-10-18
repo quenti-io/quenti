@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Modal } from "@quenti/components/modal";
-import { env } from "@quenti/env/client";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 import { api } from "@quenti/trpc";
 
 import { Button, HStack, Input, Skeleton, useToast } from "@chakra-ui/react";
@@ -28,7 +28,7 @@ export const ShareFolderModal: React.FC<ShareFolderModalProps> = ({
       enabled: isOpen,
     },
   );
-  const url = `${env.NEXT_PUBLIC_BASE_URL}/_${getShareId.data || ""}`;
+  const url = `${WEBSITE_URL}/_${getShareId.data || ""}`;
 
   const copy = async () => {
     await navigator.clipboard.writeText(url);

@@ -1,7 +1,7 @@
 import { log } from "next-axiom";
 
 import { env } from "@quenti/env/server";
-import { BASE_URL } from "@quenti/lib/constants/url";
+import { APP_URL } from "@quenti/lib/constants/url";
 import { getErrorFromUnknown } from "@quenti/lib/error";
 import { prisma } from "@quenti/prisma";
 import { orgMetadataSchema } from "@quenti/prisma/zod-schemas";
@@ -28,14 +28,14 @@ export const checkRequiresPayment = async (orgId: string) => {
   if (session.payment_status !== "paid") return { callback: null };
 
   return {
-    callback: `${BASE_URL}/api/orgs/${orgId}/upgrade?session_id=${metadata.paymentId}`,
+    callback: `${APP_URL}/api/orgs/${orgId}/upgrade?session_id=${metadata.paymentId}`,
   };
 };
 
 export const purchaseOrganizationSubscription = async ({
   orgId,
   userId,
-  cancelUrl = `${BASE_URL}/orgs/${orgId}/publish`,
+  cancelUrl = `${APP_URL}/orgs/${orgId}/publish`,
 }: OrganizationSubscriptionOptions) => {
   const { callback } = await checkRequiresPayment(orgId);
   if (callback) return { callback };
@@ -44,7 +44,7 @@ export const purchaseOrganizationSubscription = async ({
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: "subscription",
-    success_url: `${BASE_URL}/api/orgs/${orgId}/upgrade?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${APP_URL}/api/orgs/${orgId}/upgrade?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: cancelUrl,
     line_items: [
       {

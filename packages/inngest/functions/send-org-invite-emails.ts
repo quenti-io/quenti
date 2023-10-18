@@ -16,7 +16,7 @@ export const sendOrgInviteEmails = inngest.createFunction(
               orgName: event.data.org.name,
               inviter: event.data.inviter,
               // Onboarding fetches the pending invite so we can use the regular signup flow
-              url: `${env.NEXT_PUBLIC_BASE_URL}/auth/signup`,
+              url: `${env.NEXT_PUBLIC_APP_URL}/auth/signup`,
             }),
         ),
       ),
@@ -30,7 +30,7 @@ export const sendOrgInviteEmails = inngest.createFunction(
             await sendOrganizationInviteEmail(email, {
               orgName: event.data.org.name,
               inviter: event.data.inviter,
-              url: `${env.NEXT_PUBLIC_BASE_URL}/auth/login?callbackUrl=/orgs`,
+              url: `${env.NEXT_PUBLIC_APP_URL}/auth/login?callbackUrl=/orgs`,
             }),
         ),
       ),

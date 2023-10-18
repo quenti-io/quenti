@@ -1,18 +1,17 @@
 [![og:image](./apps/next/public/og-image.png)](https://quenti)
 
-> Tired of Quizlet showing ads and only giving you a few practice rounds for free? Stop wasting your time getting bombarded by premium offers, and resume studying today.
+The modern learning platform designed to let you study anything.
 
 ## The Stack
 
-- [Create T3 App](https://create.t3.gg)
 - [Next.js](https://nextjs.org)
 - [tRPC](https://trpc.io)
-- [NextAuth.js](https://next-auth.js.org)
+- [NextAuth](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
 - [Chakra UI](https://chakra-ui.com)
-- [TypeScript](https://www.typescriptlang.org)
-- [PostgreSQL](https://www.postgresql.org)
+- [MySQL](http://mysql.org/)
 - [Zustand](https://github.com/pmndrs/zustand)
+- [ClickHouse](https://clickhouse.tech/)
 
 ## Running Locally
 
@@ -21,7 +20,7 @@ Get up and running by following these steps.
 ### Prerequisites
 
 - Node.js 18.x
-- PostgreSQL
+- MySQL
 - Yarn
 - Docker and docker-compose _(recommended)_
 
@@ -30,7 +29,7 @@ Get up and running by following these steps.
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/miapolis/quenti
+   git clone https://github.com/quenti-io/quenti
    ```
 
 2. Go to the project folder
@@ -49,6 +48,7 @@ Get up and running by following these steps.
 
    - Copy `.env.example` to `.env`
    - Use `openssl rand -base64 32` to generate a key for `NEXTAUTH_SECRET` and set it as the value in `.env`
+   - Use `openssl rand -base64 24` to generate a key for `QUENTI_ENCRYPTION_KEY` and set it as the value in `.env`
    - You'll need to create a Google OAuth client ID from the [Google API Console](https://console.developers.google.com/). There are plenty of guides for this, like [this one from LogRocket](https://blog.logrocket.com/nextauth-js-for-next-js-client-side-authentication/#create-a-google-oauth-app) embedded:
 
      > ![Google OAuth Client Screenshot](https://files.readme.io/eca93af-GCPStep2OAuth.png)
@@ -67,19 +67,10 @@ Get up and running by following these steps.
 
      ![ID and Secret Screenshot](https://files.readme.io/a136be9-GCPOAuthstep5.png)
 
-   - Create an account on [ScraperAPI](https://www.scraperapi.com) and copy the API key to `SCRAPER_API_KEY`
-   - Lastly, set `ADMIN_EMAIL` equal to the email address of the Google account you wish to have admin privileges
-
-5. Start up a local postgres instance with
+5. Start up a local MySQL database with
 
    ```sh
-   docker-compose -f docker-compose.postgres.yml up
-   ```
-
-6. Set up the database
-
-   ```sh
-   yarn db-setup
+   docker-compose -f docker-compose.mysql.yml up
    ```
 
 ### Running

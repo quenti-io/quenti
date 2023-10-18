@@ -1,5 +1,5 @@
 import { IS_PAYMENT_ENABLED } from "@quenti/lib/constants/payments";
-import { BASE_URL } from "@quenti/lib/constants/url";
+import { APP_URL } from "@quenti/lib/constants/url";
 import { purchaseOrganizationSubscription } from "@quenti/payments";
 
 import { TRPCError } from "@trpc/server";
@@ -71,7 +71,7 @@ export const publishHandler = async ({ ctx, input }: PublishOptions) => {
   await upgradeOrganization(org.id, ctx.session.user.id);
 
   return {
-    callback: `${BASE_URL}/orgs/${org.id}?upgrade=success`,
+    callback: `${APP_URL}/orgs/${org.id}?upgrade=success`,
   };
 };
 
