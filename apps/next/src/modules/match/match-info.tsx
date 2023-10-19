@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { outfit } from "@quenti/lib/chakra-theme";
 import { api } from "@quenti/trpc";
 
 import {
@@ -40,7 +41,11 @@ export const MatchStat: React.FC<MatchStatProps> = ({ value, label }) => {
         <StatLabel color={text} fontWeight={700}>
           {label}
         </StatLabel>
-        <StatNumber fontSize="4xl" fontFamily="Outfit" fontWeight={800}>
+        <StatNumber
+          fontSize="4xl"
+          fontFamily={outfit.style.fontFamily}
+          fontWeight={800}
+        >
           {value}
         </StatNumber>
       </Stat>

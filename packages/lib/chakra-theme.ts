@@ -11,11 +11,13 @@ export const outfit = Outfit({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-outfit",
 });
 export const openSans = Open_Sans({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-open-sans",
 });
 
 export const config = { initialColorMode: "light", useSystemColorMode: false };

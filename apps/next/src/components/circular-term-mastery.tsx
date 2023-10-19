@@ -1,5 +1,7 @@
 import React from "react";
 
+import { outfit } from "@quenti/lib/chakra-theme";
+
 import {
   Center,
   CircularProgress,
@@ -37,7 +39,7 @@ export const CircularTermMastery: React.FC<CircularTermMasteryProps> = ({
         thickness="4px"
       >
         <CircularProgressLabel
-          fontFamily="Outfit"
+          fontFamily={outfit.style.fontFamily}
           fontSize="xl"
           fontWeight={700}
         >
@@ -55,7 +57,11 @@ export const CircularTermMastery: React.FC<CircularTermMasteryProps> = ({
             w="max"
             shadow="sm"
           >
-            <Text fontFamily="Outfit" fontSize="sm" fontWeight={700}>
+            <Text
+              fontFamily={outfit.style.fontFamily}
+              fontSize="sm"
+              fontWeight={700}
+            >
               {known}
             </Text>
           </Center>
@@ -68,7 +74,11 @@ export const CircularTermMastery: React.FC<CircularTermMasteryProps> = ({
             w="max"
             shadow="sm"
           >
-            <Text fontFamily="Outfit" fontSize="sm" fontWeight={700}>
+            <Text
+              fontFamily={outfit.style.fontFamily}
+              fontSize="sm"
+              fontWeight={700}
+            >
               {stillLearning}
             </Text>
           </Center>
