@@ -24,6 +24,8 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
     { studySetId: id },
     {
       enabled: !!id,
+      staleTime: 0,
+      cacheTime: 0,
       onError: (e) => {
         if (e.data?.httpStatus == 403) {
           void (async () => {
