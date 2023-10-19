@@ -1,6 +1,7 @@
 import React from "react";
 import useFitText from "use-fit-text";
 
+import { outfit } from "@quenti/lib/chakra-theme";
 import type { Term } from "@quenti/prisma/client";
 
 import {
@@ -211,7 +212,7 @@ const ShrinkableText: React.FC<{
           : undefined,
         fontSize: (36 * parseFloat(fontSize.replace("%", ""))) / 100,
         fontWeight: 400,
-        fontFamily: "Outfit",
+        fontFamily: outfit.style.fontFamily,
         whiteSpace: "pre-wrap",
         display: "table-cell",
         verticalAlign: "middle",
