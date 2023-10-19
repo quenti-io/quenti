@@ -19,7 +19,6 @@
   "dependencies": {
     "@prisma/client": "^5.4.2",
     "@quenti/env": "*",
-    "prisma-kysely": "^1.5.0",
     "zod": "^3.22.4",
     "zod-prisma": "^0.5.4"
   },
