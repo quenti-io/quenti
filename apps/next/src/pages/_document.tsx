@@ -1,7 +1,7 @@
 import { Head, Html, Main, NextScript } from "next/document";
 
 import { env } from "@quenti/env/client";
-import { theme } from "@quenti/lib/chakra-theme";
+import { openSans, outfit, theme } from "@quenti/lib/chakra-theme";
 
 import { ColorModeScript } from "@chakra-ui/react";
 
@@ -9,7 +9,9 @@ const Document = () => {
   return (
     <Html>
       <Head />
-      <body className="overflow-x-hidden bg-gray-50 dark:bg-gray-900">
+      <body
+        className={`overflow-x-hidden bg-gray-50 dark:bg-gray-900 ${outfit.variable} ${openSans.variable}`}
+      >
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Main />
         <NextScript />

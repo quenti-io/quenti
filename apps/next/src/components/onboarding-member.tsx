@@ -1,5 +1,7 @@
 import React from "react";
 
+import { outfit } from "@quenti/lib/chakra-theme";
+
 import {
   Avatar,
   Flex,
@@ -47,7 +49,7 @@ export const OnboardingMember: React.FC<OnboardingMemberProps> = ({
       <Stack spacing="0">
         <Skeleton isLoaded={isLoaded} fitContent>
           <HStack>
-            <Text fontWeight={700} fontFamily="Outfit">
+            <Text fontWeight={700} fontFamily={outfit.style.fontFamily}>
               {nameOrEmail || "placeholder text"}
             </Text>
             {isMe && (

@@ -1,3 +1,5 @@
+import { outfit } from "@quenti/lib/chakra-theme";
+
 import {
   Card,
   GridItem,
@@ -30,7 +32,7 @@ export const GridStat: React.FC<GridStatProps> = ({ value, label, bg }) => {
         <Stat textAlign="center">
           <StatNumber
             fontSize={{ base: "3xl", md: "4xl" }}
-            fontFamily="Outfit"
+            fontFamily={outfit.style.fontFamily}
             fontWeight={800}
           >
             {value}

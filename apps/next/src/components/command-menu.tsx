@@ -4,6 +4,7 @@ import React from "react";
 
 import { env } from "@quenti/env/client";
 import { avatarUrl } from "@quenti/lib/avatar";
+import { outfit } from "@quenti/lib/chakra-theme";
 import { APP_URL } from "@quenti/lib/constants/url";
 import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 import type { User } from "@quenti/prisma/client";
@@ -546,7 +547,7 @@ const OptionComp: React.FC<OptionCompProps> = ({
         <Text
           fontSize="lg"
           fontWeight={600}
-          fontFamily="Outfit"
+          fontFamily={outfit.style.fontFamily}
           whiteSpace="nowrap"
           overflow="hidden"
           textOverflow="ellipsis"

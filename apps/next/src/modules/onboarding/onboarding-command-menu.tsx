@@ -1,5 +1,7 @@
 import React from "react";
 
+import { outfit } from "@quenti/lib/chakra-theme";
+
 import {
   Card,
   Heading,
@@ -63,7 +65,7 @@ export const OnboardingCommandMenu = () => {
               </Text>
               <Heading size="3xl" color={mutedColor} userSelect="none">
                 <Kbd
-                  fontFamily="Outfit"
+                  fontFamily={outfit.style.fontFamily}
                   px="4"
                   py="1"
                   shadow="lg"
@@ -81,7 +83,7 @@ export const OnboardingCommandMenu = () => {
                   {MOD == "Control" ? "Ctrl" : "⌘"}
                 </Kbd>{" "}
                 <Kbd
-                  fontFamily="Outfit"
+                  fontFamily={outfit.style.fontFamily}
                   px="5"
                   py="1"
                   shadow="lg"

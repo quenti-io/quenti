@@ -1,3 +1,5 @@
+import { outfit } from "@quenti/lib/chakra-theme";
+
 import {
   Box,
   Center,
@@ -37,7 +39,11 @@ export const IntroducingCortex = () => {
                   <Box color="gray.500">
                     <IconLayoutGrid size={18} />
                   </Box>
-                  <Text fontWeight={700} fontFamily="Outfit" fontSize="sm">
+                  <Text
+                    fontWeight={700}
+                    fontFamily={outfit.style.fontFamily}
+                    fontSize="sm"
+                  >
                     6 / 7
                   </Text>
                 </HStack>
@@ -45,7 +51,11 @@ export const IntroducingCortex = () => {
                   <Box color="gray.500">
                     <IconPencil size={18} />
                   </Box>
-                  <Text fontWeight={700} fontFamily="Outfit" fontSize="sm">
+                  <Text
+                    fontWeight={700}
+                    fontFamily={outfit.style.fontFamily}
+                    fontSize="sm"
+                  >
                     3 / 4
                   </Text>
                 </HStack>

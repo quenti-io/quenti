@@ -4,6 +4,7 @@ import {
   getQuestionTypeIcon,
   getQuestionTypeName,
 } from "@quenti/components/utils";
+import { outfit } from "@quenti/lib/chakra-theme";
 
 import {
   Box,
@@ -111,7 +112,7 @@ export const ResultsCard = () => {
             justifySelf={{ base: "end", md: undefined }}
           >
             <CircularProgressLabel
-              fontFamily="Outfit"
+              fontFamily={outfit.style.fontFamily}
               fontSize="xl"
               fontWeight={700}
             >
