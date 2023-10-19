@@ -126,7 +126,7 @@ let config = {
       destination: "/sets/:id/test",
     },
   ],
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: false,
 };
 
 if (shouldAnalyzeBundles) {
@@ -134,8 +134,6 @@ if (shouldAnalyzeBundles) {
 } else {
   config = withHighlightConfig(withAxiom(config), {
     appVersion,
-    configureHighlightProxy: true,
-    uploadSourceMaps: false,
   });
 }
 

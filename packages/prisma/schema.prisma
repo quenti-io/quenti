@@ -5,12 +5,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator kysely {
-  provider = "prisma-kysely"
-  output   = "./"
-  fileName = "./kysely-types.ts"
-}
-
 generator zod {
   provider      = "zod-prisma"
   output        = "./zod"
