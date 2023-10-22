@@ -1,0 +1,33 @@
+{
+  "name": "@quenti/trpc",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@2toad/profanity": "^2.2.0",
+    "@quenti/auth": "*",
+    "@quenti/core": "*",
+    "@quenti/cortex": "*",
+    "@quenti/emails": "*",
+    "@quenti/enterprise": "*",
+    "@quenti/inngest": "*",
+    "@quenti/interfaces": "*",
+    "@quenti/lib": "*",
+    "@quenti/payments": "*",
+    "@quenti/prisma": "*",
+    "@trpc/client": "^10.41.0",
+    "@trpc/next": "^10.41.0",
+    "@trpc/react-query": "^10.41.0",
+    "@trpc/server": "^10.41.0",
+    "email-providers": "^2.0.1",
+    "superjson": "^1.13.1",
+    "zod": "^3.22.4"
+  },
+  "optionalDependencies": {
+    "@quenti/console": "*",
+    "@quenti/integrations": "*"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  }
+}

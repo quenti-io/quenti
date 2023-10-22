@@ -1,9 +1,51 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "build": {
-      "outputs": [".next/**", "!.next/cache/**"]
+    "@quenti/next#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["DATABASE_URL"]
     },
-    "lint": {}
-  }
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"],
+      "inputs": ["**/*", "!apps/cdn/**"]
+    },
+    "start": {
+      "outputs": ["dist/**", "build/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "passThroughEnv": ["ANALYZE"]
+    },
+    "dev": {
+      "cache": false
+    }
+  },
+  "globalDependencies": [
+    "**/.env",
+    "yarn.lock",
+    "packages/console/**/*",
+    "packages/integrations/**/*"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "PORT",
+    "VERCEL",
+    "VERCEL_URL",
+    "STRIPE_PRIVATE_KEY",
+    "USERS_BUCKET_URL",
+    "ASSETS_BUCKET_URL",
+    "SKIP_ENV_VALIDATION",
+    "ANALYZE",
+    "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_WEBSITE_URL",
+    "NEXT_PUBLIC_DEPLOYMENT",
+    "NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID",
+    "NEXT_PUBLIC_BETTERUPTIME_ID",
+    "NEXT_PUBLIC_STRIPE_PUBLIC_KEY",
+    "NEXT_PUBLIC_CDN_WORKER_ENDPOINT",
+    "NEXT_PUBLIC_TELEMETRY_HOST",
+    "NEXT_PUBLIC_TELEMETRY_KEY"
+  ]
 }

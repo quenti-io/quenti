@@ -1,0 +1,603 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider      = "zod-prisma"
+  output        = "./zod"
+  imports       = "./zod-schemas"
+  relationModel = "default"
+}
+
+datasource db {
+  provider     = "mysql"
+  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// Necessary for Next auth
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum UserType {
+  Student
+  Teacher
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  name                String?
+  username            String    @unique
+  email               String    @unique
+  emailVerified       DateTime?
+  image               String?
+  type                UserType  @default(Student)
+  verified            Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  lastSeenAt          DateTime  @default(now())
+  bannedAt            DateTime?
+  displayName         Boolean   @default(true)
+  flags               Int       @default(0)
+  /// @zod.custom(imports.userMetadataSchema)
+  metadata            Json?
+  completedOnboarding Boolean   @default(false)
+  isOrgEligible       Boolean   @default(false)
+  organizationId      String?
+
+  accounts       Account[]
+  sessions       Session[]
+  studySets      StudySet[]
+  folders        Folder[]
+  setAutoSave    SetAutoSave?
+  containers     Container[]
+  starredTerms   StarredTerm[]
+  studiableTerms StudiableTerm[]
+  organization   Organization?               @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  orgMembership  OrganizationMembership?
+  orgInvites     PendingOrganizationInvite[]
+  highscores     Highscore[]
+  classes        ClassMembership[]
+  classInvites   PendingClassInvite[]
+  classBans      ClassBan[]
+
+  @@index([organizationId])
+  @@index([type])
+}
+
+model VerificationToken {
+  identifier     String
+  token          String        @unique
+  expires        DateTime
+  expiresInDays  Int?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organizationId String?       @unique
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([identifier, token])
+  @@index([token])
+}
+
+model Organization {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  logoUrl   String?
+  logoHash  String?
+  published Boolean   @default(false)
+  deletedAt DateTime?
+  /// @zod.custom(imports.orgMetadataSchema)
+  metadata  Json?
+
+  domains        OrganizationDomain[]
+  members        OrganizationMembership[]
+  users          User[]
+  inviteToken    VerificationToken?
+  pendingInvites PendingOrganizationInvite[]
+  classes        Class[]
+}
+
+enum OrganizationDomainType {
+  Base
+  Student
+}
+
+model OrganizationDomain {
+  id              String                 @id @default(cuid())
+  orgId           String
+  type            OrganizationDomainType
+  requestedDomain String
+  domain          String?                @unique
+  verifiedEmail   String
+  otpHash         String?
+  verifiedAt      DateTime?
+  filter          String?
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, type])
+  @@unique([orgId, requestedDomain])
+  @@index([orgId])
+}
+
+enum MembershipRole {
+  Member
+  Admin
+  Owner
+}
+
+model OrganizationMembership {
+  id       String         @id @default(cuid())
+  orgId    String
+  userId   String         @unique
+  role     MembershipRole
+  /// @zod.custom(imports.orgMembershipMetadata)
+  metadata Json?
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+}
+
+model PendingOrganizationInvite {
+  id     String         @id @default(cuid())
+  orgId  String
+  userId String?
+  email  String
+  role   MembershipRole
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([orgId, email])
+  @@unique([orgId, userId])
+  @@index([email])
+  @@index([orgId])
+  @@index([userId])
+}
+
+model Class {
+  id             String  @id @default(cuid())
+  name           String
+  description    String
+  orgId          String?
+  logoUrl        String?
+  logoHash       String?
+  bannerUrl      String?
+  bannerHash     String?
+  cortexCategory String?
+  cortexCourse   String?
+
+  organization Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  members      ClassMembership[]
+  invites      PendingClassInvite[]
+  sections     Section[]
+  studySets    StudySetsOnClasses[]
+  folders      FoldersOnClasses[]
+  assignments  Assignment[]
+  bans         ClassBan[]
+
+  @@index([orgId])
+}
+
+model Section {
+  id      String @id @default(cuid())
+  classId String
+  name    String
+
+  class       Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  students    ClassMembership[]
+  assignments Assignment[]
+
+  @@unique([classId, name])
+  @@index([classId])
+}
+
+enum ClassMembershipType {
+  Student
+  Teacher
+}
+
+model ClassMembership {
+  id        String              @id @default(cuid())
+  classId   String
+  userId    String
+  email     String
+  type      ClassMembershipType
+  viewedAt  DateTime?
+  sectionId String?
+
+  class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  section Section? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+
+  @@unique([classId, userId])
+  @@unique([email, classId])
+  @@index([classId])
+  @@index([userId])
+  @@index([sectionId])
+}
+
+model ClassBan {
+  id      String  @id @default(cuid())
+  classId String
+  userId  String?
+  // Preserve the email in case the user deletes their account to evade the ban
+  email   String
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  // The ban still applies even if the user deletes their account
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([classId, userId])
+  @@unique([email, classId])
+  @@index([classId])
+  @@index([userId])
+}
+
+model PendingClassInvite {
+  id        String              @id @default(cuid())
+  classId   String
+  userId    String?
+  email     String
+  type      ClassMembershipType
+  sectionId String?
+
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, email])
+  @@index([classId])
+  @@index([userId])
+  @@index([email])
+}
+
+model Assignment {
+  id          String    @id @default(cuid())
+  classId     String
+  sectionId   String
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  availableAt DateTime?
+  dueAt       DateTime?
+
+  class     Class                    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  section   Section                  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  studySets StudySetsOnAssignments[]
+
+  @@index([classId])
+  @@index([sectionId])
+}
+
+model WhitelistedEmail {
+  email     String   @id @unique
+  createdAt DateTime @default(now())
+}
+
+model StudySet {
+  id                 String                   @id @default(cuid())
+  userId             String
+  user               User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime                 @default(now())
+  savedAt            DateTime                 @default(now()) @updatedAt
+  title              String                   @db.VarChar(255)
+  description        String                   @db.VarChar(2000)
+  tags               Json                     @default("[]")
+  visibility         StudySetVisibility       @default(Public)
+  wordLanguage       String                   @default("en")
+  definitionLanguage String                   @default("en")
+  cortexStale        Boolean                  @default(true)
+  terms              Term[]
+  distractors        Distractor[]
+  containers         Container[]
+  folders            StudySetsOnFolders[]
+  leaderboards       Leaderboard[]
+  classes            StudySetsOnClasses[]
+  assignments        StudySetsOnAssignments[]
+
+  @@unique([id, userId])
+  @@index([userId])
+}
+
+enum StudySetVisibility {
+  Private
+  Unlisted
+  Public
+}
+
+model Folder {
+  id           String               @id @default(cuid())
+  createdAt    DateTime             @default(now())
+  userId       String
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String               @db.VarChar(255)
+  slug         String?
+  description  String               @db.VarChar(2000)
+  studySets    StudySetsOnFolders[]
+  containers   Container[]
+  leaderboards Leaderboard[]
+  classes      FoldersOnClasses[]
+
+  @@unique([id, userId])
+  @@unique([userId, slug])
+}
+
+model StudySetsOnFolders {
+  studySetId String
+  folderId   String
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  folder     Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, folderId])
+  @@index([studySetId])
+  @@index([folderId])
+}
+
+model StudySetsOnClasses {
+  studySetId String
+  classId    String
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, classId])
+  @@index([studySetId])
+  @@index([classId])
+}
+
+model FoldersOnClasses {
+  folderId String
+  classId  String
+  folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  class    Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([folderId, classId])
+  @@index([folderId])
+  @@index([classId])
+}
+
+model StudySetsOnAssignments {
+  studySetId   String
+  assignmentId String
+  studySet     StudySet   @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, assignmentId])
+  @@index([studySetId])
+  @@index([assignmentId])
+}
+
+model SetAutoSave {
+  userId             String             @id
+  savedAt            DateTime           @updatedAt
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title              String             @db.VarChar(255)
+  description        String             @db.VarChar(2000)
+  tags               Json               @default("[]")
+  visibility         StudySetVisibility @default(Public)
+  wordLanguage       String             @default("en")
+  definitionLanguage String             @default("en")
+  autoSaveTerms      AutoSaveTerm[]
+
+  @@index([userId])
+}
+
+model Term {
+  id         String   @id @default(cuid())
+  word       String   @db.VarChar(1000)
+  definition String   @db.VarChar(1000)
+  rank       Int
+  studySetId String
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+
+  starredTerms   StarredTerm[]
+  studiableTerms StudiableTerm[]
+  distractors    Distractor[]    @relation("distractor-term-id")
+  distracting    Distractor[]    @relation("distractor-distractor-id")
+
+  @@unique([id, studySetId])
+  @@index([studySetId])
+}
+
+enum DistractorType {
+  Word
+  Definition
+}
+
+model Distractor {
+  id            String         @id @default(cuid())
+  studySetId    String
+  termId        String
+  distractingId String
+  type          DistractorType
+
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  term       Term     @relation(name: "distractor-term-id", fields: [termId], references: [id], onDelete: Cascade)
+  distractor Term     @relation(name: "distractor-distractor-id", fields: [distractingId], references: [id], onDelete: Cascade)
+
+  @@index([studySetId])
+  @@index([termId])
+  @@index([distractingId])
+}
+
+model AutoSaveTerm {
+  id            String      @id @default(cuid())
+  word          String      @db.VarChar(1000)
+  definition    String      @db.VarChar(1000)
+  rank          Int
+  setAutoSaveId String
+  setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
+
+  @@index([setAutoSaveId])
+}
+
+model Leaderboard {
+  id       String          @id @default(cuid())
+  entityId String
+  type     LeaderboardType
+
+  studySet   StudySet?   @relation(fields: [entityId], references: [id], map: "leaderboard_study_set", onDelete: Cascade)
+  folder     Folder?     @relation(fields: [entityId], references: [id], map: "leaderboard_folder", onDelete: Cascade)
+  highscores Highscore[]
+
+  @@unique([entityId, type])
+  @@index([entityId])
+}
+
+model Highscore {
+  leaderboardId String
+  userId        String
+  time          Int
+  timestamp     DateTime @updatedAt
+  eligible      Boolean  @default(true)
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id], onDelete: Cascade)
+
+  @@id([leaderboardId, userId, eligible])
+  @@index([userId])
+  @@index([leaderboardId])
+}
+
+model EntityShare {
+  id       String     @id
+  entityId String     @unique
+  type     EntityType
+}
+
+enum EntityType {
+  StudySet
+  Folder
+}
+
+enum StudiableMode {
+  Flashcards
+  Learn
+}
+
+enum LearnMode {
+  Learn
+  Review
+}
+
+enum LeaderboardType {
+  Match
+}
+
+enum StudySetAnswerMode {
+  Word
+  Definition
+  Both
+}
+
+enum LimitedStudySetAnswerMode {
+  Word
+  Definition
+}
+
+enum MultipleAnswerMode {
+  One
+  All
+  Unknown
+}
+
+enum ContainerType {
+  StudySet
+  Folder
+}
+
+model Container {
+  id                   String                    @id @default(cuid())
+  entityId             String
+  type                 ContainerType
+  userId               String
+  viewedAt             DateTime
+  user                 User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shuffleFlashcards    Boolean                   @default(false)
+  learnRound           Int                       @default(0)
+  learnMode            LearnMode                 @default(Learn)
+  shuffleLearn         Boolean                   @default(false)
+  studyStarred         Boolean                   @default(false)
+  answerWith           StudySetAnswerMode        @default(Word)
+  multipleAnswerMode   MultipleAnswerMode        @default(Unknown)
+  extendedFeedbackBank Boolean                   @default(false)
+  enableCardsSorting   Boolean                   @default(false)
+  cardsRound           Int                       @default(0)
+  cardsStudyStarred    Boolean                   @default(false)
+  cardsAnswerWith      LimitedStudySetAnswerMode @default(Definition)
+  matchStudyStarred    Boolean                   @default(false)
+
+  starredTerms   StarredTerm[]
+  studiableTerms StudiableTerm[]
+  studySet       StudySet?       @relation(fields: [entityId], references: [id], map: "container_study_set", onDelete: Cascade)
+  folder         Folder?         @relation(fields: [entityId], references: [id], map: "container_folder", onDelete: Cascade)
+
+  @@unique([userId, entityId, type])
+  @@index([entityId])
+}
+
+model StudiableTerm {
+  userId          String
+  termId          String
+  containerId     String
+  mode            StudiableMode @default(Learn)
+  correctness     Int
+  appearedInRound Int?
+  incorrectCount  Int           @default(0)
+  studiableRank   Int?
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  term      Term      @relation(fields: [termId], references: [id], onDelete: Cascade)
+  container Container @relation(fields: [containerId], references: [id], onDelete: Cascade)
+
+  // Full composite primary key will always be used for lookups
+  @@id([userId, containerId, termId, mode])
+  @@index([containerId])
+}
+
+model StarredTerm {
+  userId      String
+  termId      String
+  containerId String
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  term      Term      @relation(fields: [termId], references: [id], onDelete: Cascade)
+  container Container @relation(fields: [containerId], references: [id], onDelete: Cascade)
+
+  @@id([userId, termId])
+  @@index([containerId])
+}

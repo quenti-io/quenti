@@ -1,0 +1,31 @@
+{
+  "name": "@quenti/prisma",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.d.ts",
+  "files": [
+    "client",
+    "zod-schemas.ts"
+  ],
+  "scripts": {
+    "clean": "rm -rf .turbo && rm -rf node_modules",
+    "db:push": "yarn prisma db push",
+    "db:seed": "yarn prisma db seed",
+    "db:studio": "yarn prisma studio",
+    "generate": "prisma generate",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.4.2",
+    "@quenti/env": "*",
+    "zod": "^3.22.4",
+    "zod-prisma": "^0.5.4"
+  },
+  "devDependencies": {
+    "prisma": "^5.4.2"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma-seed.ts"
+  }
+}

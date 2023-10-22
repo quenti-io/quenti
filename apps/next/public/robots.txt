@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /api
+
+Allow: /api/og

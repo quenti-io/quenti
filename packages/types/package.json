@@ -1,0 +1,12 @@
+{
+  "name": "@quenti/types",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@quenti/prisma": "*"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  }
+}

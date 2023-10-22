@@ -1,0 +1,13 @@
+{
+  "name": "@quenti/env",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@t3-oss/env-nextjs": "^0.7.0",
+    "zod": "^3.22.4"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  }
+}

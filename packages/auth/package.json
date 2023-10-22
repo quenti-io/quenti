@@ -1,0 +1,14 @@
+{
+  "name": "@quenti/auth",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@quenti/env": "*",
+    "@quenti/lib": "*",
+    "@quenti/prisma": "*"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  }
+}

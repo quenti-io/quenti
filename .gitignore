@@ -5,12 +5,22 @@ node_modules
 /.pnp
 .pnp.js
 
+# yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # testing
 /coverage
 
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
+/prisma/zod
 
 # next.js
 /.next/
@@ -43,5 +53,8 @@ yarn-error.log*
 
 # Local Netlify folder
 .netlify
+
+# React email
+.react-email
 
 .turbo

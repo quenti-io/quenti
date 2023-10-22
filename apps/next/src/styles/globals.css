@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.betteruptime-announcement {
+  position: relative !important;
+  font-family: "Open Sans" !important;
+  font-weight: 500;
+  background: #1a202c !important;
+  border-bottom: solid 2px #4a556833;
+}
+
+.betteruptime-announcement__message {
+  max-width: 1000px !important;
+}
+
+.betteruptime-announcement__close {
+  display: none !important;
+}
+.betteruptime-announcement__placeholder {
+  display: none !important;
+}
+
+.betteruptime-announcement__message p::before {
+  content: "📢";
+  margin-right: 8px;
+}
+
+@media all {
+  .page-break {
+    display: none;
+  }
+}
+
+@media print {
+  html,
+  body {
+    height: initial !important;
+    overflow: initial !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@media print {
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+
+  .no-break {
+    page-break-inside: avoid;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 20mm;
+}

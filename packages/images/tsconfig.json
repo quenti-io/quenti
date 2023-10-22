@@ -1,0 +1,4 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["server", "react", "../types/next-auth.d.ts"]
+}

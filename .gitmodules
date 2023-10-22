@@ -1,0 +1,9 @@
+[submodule "website"]
+	path = apps/website
+	url = git@github.com:quenti-io/website.git
+[submodule "integrations"]
+	path = packages/integrations
+	url = git@github.com:quenti-io/integrations
+[submodule "console"]
+	path = packages/console
+	url = git@github.com:quenti-io/console

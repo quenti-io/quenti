@@ -1,0 +1,18 @@
+{
+  "name": "@quenti/inngest",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@quenti/cortex": "*",
+    "@quenti/emails": "*",
+    "@quenti/enterprise": "*",
+    "@quenti/env": "*",
+    "@quenti/payments": "*",
+    "@quenti/prisma": "*",
+    "inngest": "^3.0.2"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  }
+}

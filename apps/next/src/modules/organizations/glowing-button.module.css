@@ -1,0 +1,83 @@
+@property --rotate {
+  syntax: "<angle>";
+  initial-value: 132deg;
+  inherits: false;
+}
+
+.cardWrapper {
+  --card-height: 8rem;
+  --card-width: 100%;
+  transition: transform 0.5s ease-out;
+}
+
+.cardWrapper:hover {
+  transform: scale(1.05);
+}
+
+.card {
+  width: var(--card-width);
+  height: var(--card-height);
+  padding: 2px;
+  position: relative;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  cursor: pointer;
+}
+
+.card:hover:after {
+  opacity: 1;
+}
+
+.card::before {
+  content: "";
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  border-radius: 14px;
+  background-image: linear-gradient(
+    var(--rotate),
+    #7ea6ff,
+    #0042da 43%,
+    #ffbf7d
+  );
+  position: absolute;
+  z-index: -1;
+  top: -2px;
+  left: -2px;
+  animation: spin 2.5s linear infinite;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.card::after {
+  position: absolute;
+  content: "";
+  top: calc(var(--card-height) / 6);
+  left: 0;
+  right: 0;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  transform: scale(0.8);
+  filter: blur(60px);
+  background-image: linear-gradient(
+    var(--rotate),
+    #7ea6ff,
+    #0042da 43%,
+    #ffbf7d
+  );
+  opacity: 0.3;
+  transition: opacity 0.5s;
+  animation: spin 2.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    --rotate: 0deg;
+  }
+  100% {
+    --rotate: 360deg;
+  }
+}
