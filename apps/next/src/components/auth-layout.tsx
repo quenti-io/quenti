@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { HeadSeo, Link } from "@quenti/components";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import {
   Box,
@@ -145,7 +146,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                     <Text textAlign="center" fontSize="sm" color={termsColor}>
                       By signing up, you agree to the{" "}
                       <Link
-                        href="/terms"
+                        href={`${WEBSITE_URL}/terms`}
                         _hover={{
                           textDecoration: "underline",
                         }}
@@ -154,7 +155,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                       </Link>{" "}
                       and{" "}
                       <Link
-                        href="/terms"
+                        href={`${WEBSITE_URL}/privacy`}
                         _hover={{
                           textDecoration: "underline",
                         }}
