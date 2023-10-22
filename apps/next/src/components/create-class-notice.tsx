@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { Link, Modal } from "@quenti/components";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import { Button, VStack } from "@chakra-ui/react";
 
@@ -38,7 +39,7 @@ export const CreateClassNotice = () => {
                   Classes are not yet available for personal accounts. Create
                   and publish an organization to gain access to classes.{" "}
                   <Link
-                    href="/organizations"
+                    href={`${WEBSITE_URL}/organizations`}
                     fontWeight={600}
                     transition="color 0.2s ease-in-out"
                     color="gray.600"

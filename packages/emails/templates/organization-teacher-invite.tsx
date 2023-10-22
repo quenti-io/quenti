@@ -51,7 +51,10 @@ export const OrganizationTeacherInviteEmail = ({
             </Heading>
             <Content>
               {BODY_COPY_BASE}{" "}
-              <a href="https://quenti.io/teachers" className="text-blue-500">
+              <a
+                href="https://quenti.io/organizations"
+                className="text-blue-500"
+              >
                 Learn more
               </a>
               .
