@@ -1,48 +1,11 @@
-import { HeadSeo } from "@quenti/components";
-
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { ErrorPage } from "@quenti/components/error-page";
 
 import { PageWrapper } from "../common/page-wrapper";
+import { getLayout } from "../layouts/main-layout";
 
-export default function Error() {
-  return (
-    <>
-      <HeadSeo
-        title="Oh Snap!"
-        nextSeoProps={{
-          noindex: true,
-          nofollow: true,
-        }}
-      />
-      <Center height="calc(100vh - 120px)">
-        <VStack textAlign="center" px="4">
-          <Heading
-            fontSize={{ base: "6xl", md: "8xl", lg: "9xl" }}
-            bgGradient="linear(to-r, blue.300, purple.300)"
-            bgClip="text"
-          >
-            Oh Snap!
-          </Heading>
-          <VStack spacing={6}>
-            <Text
-              fontSize={{ base: "md", sm: "lg" }}
-              color="gray.500"
-              fontWeight={600}
-            >
-              An error occured on this page that we couldn&apos;t handle.
-            </Text>
-            <Button
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Reload
-            </Button>
-          </VStack>
-        </VStack>
-      </Center>
-    </>
-  );
+export default function Page() {
+  return <ErrorPage />;
 }
 
-Error.PageWrapper = PageWrapper;
+Page.PageWrapper = PageWrapper;
+Page.getLayout = getLayout;

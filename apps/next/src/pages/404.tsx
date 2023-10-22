@@ -1,40 +1,11 @@
-import { HeadSeo } from "@quenti/components";
-
-import { Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { NotFoundPage } from "@quenti/components/404";
 
 import { PageWrapper } from "../common/page-wrapper";
-import { StaticWrapper } from "../components/static-wrapper";
+import { getLayout } from "../layouts/main-layout";
 
-export default function NotFound() {
-  return (
-    <StaticWrapper>
-      <HeadSeo
-        title="404: This page does not exist"
-        nextSeoProps={{
-          noindex: true,
-          nofollow: true,
-        }}
-      />
-      <Center height="calc(100vh - 120px)">
-        <VStack color="whiteAlpha.900">
-          <Heading
-            fontSize="9xl"
-            bgGradient="linear(to-r, blue.300, purple.300)"
-            bgClip="text"
-          >
-            404
-          </Heading>
-          <Text
-            fontSize={{ base: "md", sm: "lg" }}
-            color="gray.500"
-            fontWeight={600}
-          >
-            We couldn&apos;t find that page on this server.
-          </Text>
-        </VStack>
-      </Center>
-    </StaticWrapper>
-  );
+export default function Page() {
+  return <NotFoundPage navbarHeight={80} ignoreMargin bgHsl="204, 45%, 98%" />;
 }
 
-NotFound.PageWrapper = PageWrapper;
+Page.PageWrapper = PageWrapper;
+Page.getLayout = getLayout;
