@@ -40,7 +40,7 @@ export const Footer = () => {
         <Stack spacing="8">
           <Flex justifyContent="space-between" alignItems="center">
             <HStack spacing="3">
-              <Link href="/">
+              <Link href={WEBSITE_URL}>
                 <HStack>
                   <FrameLogo width="18px" height="18px" />
                   <Heading size="md">Quenti</Heading>
