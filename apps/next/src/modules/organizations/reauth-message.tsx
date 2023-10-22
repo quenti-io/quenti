@@ -2,6 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { Link } from "@quenti/components";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import {
   Button,
@@ -38,7 +39,7 @@ export const ReauthMessage: React.FC<ReauthMessage> = ({
                 <>
                   {message}{" "}
                   <Link
-                    href="/organizations"
+                    href={`${WEBSITE_URL}/organizations`}
                     fontWeight={600}
                     transition="color 0.2s ease-in-out"
                     color="gray.600"
