@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconBrandTwitterFilled } from "@tabler/icons-react";
+import { IconBrandX } from "@tabler/icons-react";
 
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";
@@ -43,7 +43,7 @@ export const OnboardingSubscribe = () => {
             }}
           >
             <Stack spacing="0">
-              <Heading fontSize="md">Follow us on Twitter</Heading>
+              <Heading fontSize="md">Follow us on X</Heading>
               <Text fontSize="sm" color={muted}>
                 Features, tips, tricks, etc.
               </Text>
@@ -51,7 +51,7 @@ export const OnboardingSubscribe = () => {
             <Button
               as={Link}
               href="https://twitter.com/quentiapp"
-              leftIcon={<IconBrandTwitterFilled size={18} />}
+              leftIcon={<IconBrandX size={18} />}
               w={{ base: "full", md: "auto" }}
             >
               @quentiapp
