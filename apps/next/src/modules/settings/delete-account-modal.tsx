@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { Modal } from "@quenti/components";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 import { api } from "@quenti/trpc";
 
 import {
@@ -30,7 +31,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
 
   const deleteAccount = api.user.deleteAccount.useMutation({
     onSuccess: async () => {
-      await router.push("/");
+      await router.push(WEBSITE_URL);
       await update();
     },
   });

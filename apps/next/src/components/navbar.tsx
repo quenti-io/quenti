@@ -180,7 +180,6 @@ export const Navbar: React.FC = () => {
                   as={Link}
                   fontSize="sm"
                   href="/auth/signup"
-                  shadow="lg"
                 >
                   Sign up for free
                 </Button>

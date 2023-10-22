@@ -60,7 +60,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
       >
         <HStack
           as={Link}
-          href={session?.user ? "/home" : "/"}
+          href={session?.user ? "/home" : WEBSITE_URL}
           rel="home"
           ml="2"
         >
@@ -167,22 +167,29 @@ export const LeftNav: React.FC<LeftNavProps> = ({
       )}
       {status === "unauthenticated" && (
         <ButtonGroup display={["none", "none", "flex"]} spacing="0" ml="4">
-          <LinkButton>Features</LinkButton>
-          <LinkButton>Solutions</LinkButton>
-          <LinkButton>Pricing</LinkButton>
+          <LinkButton href={`${WEBSITE_URL}/features`}>Features</LinkButton>
+          <LinkButton href={`${WEBSITE_URL}/organizations`}>
+            Organizations
+          </LinkButton>
+          <LinkButton href={`${WEBSITE_URL}/pricing`}>Pricing</LinkButton>
         </ButtonGroup>
       )}
     </HStack>
   );
 };
 
-const LinkButton: React.FC<React.PropsWithChildren> = ({ children }) => {
+const LinkButton: React.FC<React.PropsWithChildren<{ href: string }>> = ({
+  children,
+  href,
+}) => {
   return (
     <Button
       variant="ghost"
       colorScheme="gray"
       fontSize="md"
       color="gray.800"
+      as={Link}
+      href={href}
       _dark={{ color: "gray.200" }}
     >
       {children}

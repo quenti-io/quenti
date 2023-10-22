@@ -5,6 +5,7 @@ import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 import { api } from "@quenti/trpc";
 
 import {
@@ -219,7 +220,9 @@ export default function NewOrganization() {
               <Button
                 variant="outline"
                 w="full"
-                onClick={() => router.back()}
+                onClick={() => {
+                  void router.push(`${WEBSITE_URL}/organizations`);
+                }}
                 fontSize="sm"
               >
                 Cancel

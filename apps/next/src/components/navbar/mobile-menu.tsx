@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import {
   Box,
@@ -173,13 +174,28 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           )}
           {status !== "loading" && !session && (
             <>
-              <Button variant="ghost" colorScheme="gray">
+              <Button
+                variant="ghost"
+                colorScheme="gray"
+                as={Link}
+                href={`${WEBSITE_URL}/features`}
+              >
                 Features
               </Button>
-              <Button variant="ghost" colorScheme="gray">
+              <Button
+                variant="ghost"
+                colorScheme="gray"
+                as={Link}
+                href={`${WEBSITE_URL}/features`}
+              >
                 Solutions
               </Button>
-              <Button variant="ghost" colorScheme="gray">
+              <Button
+                variant="ghost"
+                colorScheme="gray"
+                as={Link}
+                href={`${WEBSITE_URL}/pricing`}
+              >
                 Pricing
               </Button>
               <Button
