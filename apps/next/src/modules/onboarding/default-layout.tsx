@@ -2,13 +2,7 @@ import React from "react";
 
 import { HeadSeo } from "@quenti/components";
 
-import {
-  Button,
-  Heading,
-  Text,
-  VStack,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, Heading, Text, VStack } from "@chakra-ui/react";
 
 import GlobalShortcutLayer from "../../components/global-shortcut-layer";
 import { useNextStep } from "./present-wrapper";
@@ -41,10 +35,8 @@ export const DefaultLayout: React.FC<
 }) => {
   const next = useNextStep();
 
-  const text = useColorModeValue("gray.700", "gray.300");
-
   return (
-    <>
+    <Box>
       <HeadSeo
         title={seoTitle}
         description={description?.toLocaleString()}
@@ -59,7 +51,14 @@ export const DefaultLayout: React.FC<
           <Heading size="lg" textAlign="center">
             {heading}
           </Heading>
-          <Text color={text} fontSize="sm" textAlign="center">
+          <Text
+            color="gray.700"
+            _dark={{
+              color: "gray.300",
+            }}
+            fontSize="sm"
+            textAlign="center"
+          >
             {description}
           </Text>
         </VStack>
@@ -78,6 +77,6 @@ export const DefaultLayout: React.FC<
           {action}
         </Button>
       </VStack>
-    </>
+    </Box>
   );
 };
