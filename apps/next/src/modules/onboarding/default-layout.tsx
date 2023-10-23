@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components";
@@ -11,13 +10,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { LazyWrapper } from "../../common/lazy-wrapper";
+import GlobalShortcutLayer from "../../components/global-shortcut-layer";
 import { useNextStep } from "./present-wrapper";
-
-const GlobalShortcutLayer = dynamic(
-  () => import("../../components/global-shortcut-layer"),
-  { ssr: false },
-);
 
 interface DefaultLayoutProps {
   heading: string;
@@ -59,33 +53,31 @@ export const DefaultLayout: React.FC<
           nofollow: true,
         }}
       />
-      <LazyWrapper>
-        <GlobalShortcutLayer />
-        <VStack spacing="12" px="4">
-          <VStack spacing="4">
-            <Heading size="lg" textAlign="center">
-              {heading}
-            </Heading>
-            <Text color={text} fontSize="sm" textAlign="center">
-              {description}
-            </Text>
-          </VStack>
-          {children}
-          <Button
-            w="72"
-            size={{ base: "md", md: "lg" }}
-            onClick={async () => {
-              await onNext?.();
-              if (defaultNext) next();
-            }}
-            isDisabled={nextDisabled}
-            isLoading={nextLoading}
-            variant={nextVariant}
-          >
-            {action}
-          </Button>
+      <GlobalShortcutLayer />
+      <VStack spacing="12" px="4">
+        <VStack spacing="4">
+          <Heading size="lg" textAlign="center">
+            {heading}
+          </Heading>
+          <Text color={text} fontSize="sm" textAlign="center">
+            {description}
+          </Text>
         </VStack>
-      </LazyWrapper>
+        {children}
+        <Button
+          w="72"
+          size={{ base: "md", md: "lg" }}
+          onClick={async () => {
+            await onNext?.();
+            if (defaultNext) next();
+          }}
+          isDisabled={nextDisabled}
+          isLoading={nextLoading}
+          variant={nextVariant}
+        >
+          {action}
+        </Button>
+      </VStack>
     </>
   );
 };
