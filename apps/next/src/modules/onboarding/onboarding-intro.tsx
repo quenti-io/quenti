@@ -4,7 +4,7 @@ import React from "react";
 import { BODY_COPY_BASE } from "@quenti/branding";
 import { HeadSeo } from "@quenti/components";
 
-import { Button, Heading, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, Text, VStack } from "@chakra-ui/react";
 
 import { Logo } from "../../../../../packages/components/logo";
 import { LazyWrapper } from "../../common/lazy-wrapper";
@@ -31,7 +31,7 @@ export const OnboardingIntro = () => {
   }, []);
 
   return (
-    <>
+    <Box>
       <HeadSeo
         title="Welcome to Quenti"
         hideTitleSuffix
@@ -45,7 +45,7 @@ export const OnboardingIntro = () => {
           <Intro />
         </PresentWrapper>
       </LazyWrapper>
-    </>
+    </Box>
   );
 };
 
