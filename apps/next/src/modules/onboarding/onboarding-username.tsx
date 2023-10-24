@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import React from "react";
 
 import { VStack } from "@chakra-ui/react";
@@ -9,8 +8,6 @@ import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";
 
 export const OnboardingUsername = () => {
-  const { update } = useSession();
-
   const [disabled, setDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -28,9 +25,6 @@ export const OnboardingUsername = () => {
           <ChangeUsernameInput
             showButton={false}
             disabledIfUnchanged={false}
-            onChange={async () => {
-              await update();
-            }}
             onActionStateChange={(disabled) => setDisabled(disabled)}
             onLoadingChange={(loading) => setLoading(loading)}
           />

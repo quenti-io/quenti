@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+
 import { api } from "@quenti/trpc";
 
 import { Stack } from "@chakra-ui/react";
@@ -10,17 +12,26 @@ import { PresentWrapper, useNextStep } from "./present-wrapper";
 export const OnboardingInvite = () => {
   const utils = api.useContext();
   const { data: me } = useMe();
+  const { data: session } = useSession();
+
   const next = useNextStep();
   const invite =
     me?.orgInvites.find((i) => i.organization.published)?.organization ||
     me?.orgInvites[0]?.organization;
 
+  const setUserType = api.user.setUserType.useMutation();
   const acceptInvite = api.organizations.acceptInvite.useMutation({
     onSuccess: async () => {
       await utils.user.me.invalidate();
       next();
     },
   });
+
+  const ensureIsTeacher = async () => {
+    if (session?.user?.type == "Student") {
+      await setUserType.mutateAsync({ type: "Teacher" });
+    }
+  };
 
   return (
     <PresentWrapper>
@@ -30,8 +41,9 @@ export const OnboardingInvite = () => {
         description="You've been invited to join the following organization:"
         action="Accept invite"
         nextDisabled={!invite}
-        nextLoading={acceptInvite.isLoading}
+        nextLoading={setUserType.isLoading || acceptInvite.isLoading}
         onNext={async () => {
+          await ensureIsTeacher();
           await acceptInvite.mutateAsync({
             accept: true,
             orgId: invite!.id,

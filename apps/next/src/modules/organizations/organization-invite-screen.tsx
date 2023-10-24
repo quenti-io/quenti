@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { api } from "@quenti/trpc";
@@ -24,6 +25,7 @@ export const OrganizationInviteScreen = () => {
   const utils = api.useContext();
   const router = useRouter();
   const { data: me } = useMe();
+  const { data: session } = useSession();
 
   const invite =
     me?.orgInvites.find((i) => i.organization.published)?.organization ||
@@ -31,6 +33,7 @@ export const OrganizationInviteScreen = () => {
 
   const toast = useToast();
 
+  const setUserType = api.user.setUserType.useMutation();
   const acceptInvite = api.organizations.acceptInvite.useMutation({
     onSuccess: async () => {
       if (acceptInvite.variables?.accept) {
@@ -49,6 +52,12 @@ export const OrganizationInviteScreen = () => {
       await utils.user.me.invalidate();
     },
   });
+
+  const ensureIsTeacher = async () => {
+    if (session?.user?.type == "Student") {
+      await setUserType.mutateAsync({ type: "Teacher" });
+    }
+  };
 
   const muted = useColorModeValue("gray.700", "gray.300");
 
@@ -80,8 +89,10 @@ export const OrganizationInviteScreen = () => {
               isLoading={
                 acceptInvite.isLoading && acceptInvite.variables?.accept
               }
-              onClick={() => {
-                acceptInvite.mutate({
+              onClick={async () => {
+                await ensureIsTeacher();
+
+                await acceptInvite.mutateAsync({
                   accept: true,
                   orgId: invite.id,
                 });
@@ -94,8 +105,10 @@ export const OrganizationInviteScreen = () => {
               isLoading={
                 acceptInvite.isLoading && !acceptInvite.variables?.accept
               }
-              onClick={() => {
-                acceptInvite.mutate({
+              onClick={async () => {
+                await ensureIsTeacher();
+
+                await acceptInvite.mutateAsync({
                   accept: false,
                   orgId: invite.id,
                 });
