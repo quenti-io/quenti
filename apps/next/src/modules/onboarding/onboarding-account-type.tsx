@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -24,7 +23,6 @@ export const OnboardingAccountType = () => {
 const AccountType = () => {
   const router = useRouter();
   const next = useNextStep();
-  const { update } = useSession();
 
   const textHighlight = useColorModeValue("blue.500", "blue.300");
 
@@ -33,10 +31,7 @@ const AccountType = () => {
   const [loading, setLoading] = React.useState(false);
 
   const setUserType = api.user.setUserType.useMutation({
-    onSuccess: async () => {
-      await update();
-      next();
-    },
+    onSuccess: () => next(),
   });
 
   const [type, setType] = React.useState<UserType>(
