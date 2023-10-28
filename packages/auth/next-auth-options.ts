@@ -6,6 +6,7 @@ import { APP_URL } from "@quenti/lib/constants/url";
 import { prisma } from "@quenti/prisma";
 
 import pjson from "../../apps/next/package.json";
+import { sendVerificationRequest } from "./magic-link";
 import { CustomPrismaAdapter } from "./prisma-adapter";
 
 const version = pjson.version;
@@ -56,6 +57,8 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/login",
     signOut: "/",
     newUser: "/onboarding",
+    verifyRequest: "/auth/verify",
+    error: "/auth/error",
   },
   // Configure one or more authentication providers
   adapter: CustomPrismaAdapter(prisma),
@@ -64,6 +67,12 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
+    // @ts-expect-error Type '"email"' is not assignable
+    {
+      id: "magic",
+      type: "email",
+      sendVerificationRequest,
+    },
     /**
      * ...add more providers here
      *
