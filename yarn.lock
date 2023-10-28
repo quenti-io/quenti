@@ -5835,6 +5835,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quenti/auth@workspace:packages/auth"
   dependencies:
+    "@quenti/emails": "*"
     "@quenti/env": "*"
     "@quenti/lib": "*"
     "@quenti/prisma": "*"
@@ -6046,7 +6047,7 @@ __metadata:
     micro: ^10.0.1
     nanoid: ^5.0.1
     next: ^13.5.6
-    next-auth: ^4.24.3
+    next-auth: ^4.24.4
     next-axiom: ^0.18.0
     next-build-id: ^3.0.0
     otp-generator: ^4.0.1
@@ -14797,9 +14798,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:^4.24.3":
-  version: 4.24.3
-  resolution: "next-auth@npm:4.24.3"
+"next-auth@npm:^4.24.4":
+  version: 4.24.4
+  resolution: "next-auth@npm:4.24.4"
   dependencies:
     "@babel/runtime": ^7.20.13
     "@panva/hkdf": ^1.0.2
@@ -14811,14 +14812,14 @@ __metadata:
     preact-render-to-string: ^5.1.19
     uuid: ^8.3.2
   peerDependencies:
-    next: ^12.2.5 || ^13
+    next: ^12.2.5 || ^13 || ^14
     nodemailer: ^6.6.5
     react: ^17.0.2 || ^18
     react-dom: ^17.0.2 || ^18
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: b69daef2784f4013dee2fba2abb76eefc3c1c64c6b58c5a954b291bb387311af039faf9b15a85649e0e813a6c720764c1e959dc792051b441800a23a6be7cb11
+  checksum: 93d14137609f0759da35173b648f882d505b6a04d1366f73ddabd8cf88c4198439960c1167c3ace0c09396aea26d3d4a9996e7f29db3c4a1b1db46ceb9b323e2
   languageName: node
   linkType: hard
 

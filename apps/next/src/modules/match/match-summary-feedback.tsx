@@ -71,7 +71,7 @@ const leaderboardSummary = (
       <>
         Now see if you can beat{" "}
         <UsernameLink username={successor.user.username} color="blue.300" />
-        &apos;{!successor.user.username.toLowerCase().endsWith("s")
+        &apos;{!successor.user.username?.toLowerCase().endsWith("s")
           ? "s"
           : ""}{" "}
         time of {formatDeciseconds(successor.time)} seconds.

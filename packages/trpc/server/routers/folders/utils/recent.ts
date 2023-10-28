@@ -52,7 +52,7 @@ export const getRecentFolders = async (
     ...x,
     viewedAt: recentContainers.find((e) => e.entityId === x.id)!.viewedAt,
     user: {
-      username: x.user.username,
+      username: x.user.username!,
       image: x.user.image,
     },
   }));

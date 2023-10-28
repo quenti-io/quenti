@@ -10,7 +10,7 @@ export interface FolderCardProps {
   folder: Pick<Folder, "id" | "title" | "slug">;
   numSets: number;
   user: {
-    username: string;
+    username: string | null;
     image: string | null;
   };
   removable?: boolean;

@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@quenti/emails": "*",
     "@quenti/env": "*",
     "@quenti/lib": "*",
     "@quenti/prisma": "*"
