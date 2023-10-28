@@ -24,8 +24,8 @@ import { Button, Stack } from "@chakra-ui/react";
 import { IconPlus } from "@tabler/icons-react";
 
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
+import { SortableTermCard } from "./card/sortable-term-card";
 import { LanguageMenuWrapper } from "./language-menu";
-import { SortableTermCard } from "./sortable-term-card";
 import { TermCardGap } from "./term-card-gap";
 
 export const TermsList = () => {

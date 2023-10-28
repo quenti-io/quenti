@@ -1,5 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import React from "react";
 
 import type { Language } from "@quenti/core/language";
 import type { AutoSaveTerm, Term } from "@quenti/prisma/client";
@@ -31,6 +32,10 @@ export const SortableTermCard: React.FC<SortableTermCardProps> = (props) => {
     zIndex: props.isDragging ? 200 : undefined,
     opacity: props.isDragging ? 0.75 : undefined,
   };
+
+  React.useEffect(() => {
+    console.log("REMOVE");
+  }, []);
 
   return (
     <TermCard
