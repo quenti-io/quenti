@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        session.user.username = user.username;
+        session.user.username = user.username || "";
         session.user.displayName = user.displayName;
         session.user.admin = user.email == env.ADMIN_EMAIL;
         session.user.type = user.type;
@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     // @ts-expect-error Type '"email"' is not assignable
     {

@@ -44,7 +44,7 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
   const addonBg = useColorModeValue("gray.200", "gray.700");
 
   const [usernameValue, setUsernameValue] = React.useState(
-    session.data!.user!.username,
+    session.data!.user!.username || "",
   );
   const usernameRef = React.useRef(usernameValue);
   usernameRef.current = usernameValue;
@@ -69,7 +69,8 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
   const isTooLong = usernameValue.length > 40;
   const isTaken = checkUsername.data?.available === false;
   const isInvalid =
-    !USERNAME_REGEXP.test(usernameValue) || isProfane || isTooLong;
+    !!usernameValue.length &&
+    (!USERNAME_REGEXP.test(usernameValue) || isProfane || isTooLong);
 
   const isDisabled =
     isInvalid ||

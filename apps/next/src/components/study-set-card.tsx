@@ -9,7 +9,7 @@ export interface StudySetCardProps {
   studySet: Pick<StudySet, "id" | "title" | "visibility">;
   numTerms: number;
   user: {
-    username: string;
+    username: string | null;
     image: string | null;
   };
   verified?: boolean;

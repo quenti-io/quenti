@@ -67,7 +67,7 @@ export const OrganizationMembers = () => {
     return (
       m.user.name?.toLowerCase().includes(refined) ||
       m.user.email?.toLowerCase().includes(refined) ||
-      m.user.username.toLowerCase().includes(refined)
+      m.user.username?.toLowerCase().includes(refined)
     );
   };
 

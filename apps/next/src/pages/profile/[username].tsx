@@ -89,7 +89,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       user: user
         ? {
             id: user.id,
-            username: user.username,
+            username: user.username!,
             image: user.image ?? "",
             name: user.displayName ? user.name : null,
             verified: user.verified,

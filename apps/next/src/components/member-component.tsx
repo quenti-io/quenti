@@ -164,7 +164,7 @@ export const MemberComponentRaw: React.FC<MemberComponentProps> = ({
                 overflow="hidden"
                 textOverflow="ellipsis"
               >
-                {user?.name || email}
+                {user?.name || user?.username || email}
               </Text>
               <Tags />
             </HStack>

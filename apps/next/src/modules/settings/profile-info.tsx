@@ -82,19 +82,21 @@ export const ProfileInfo = () => {
           </Stack>
         </HStack>
         <Divider borderColor={divider} />
-        <HStack spacing={4}>
-          <Switch
-            size="lg"
-            isChecked={checked}
-            onChange={(e) => {
-              setChecked(e.target.checked);
-              setDisplayName.mutate({ displayName: e.target.checked });
-            }}
-          />
-          <Text color={grayText} fontSize="sm">
-            Display your real name on your profile
-          </Text>
-        </HStack>
+        {session?.user?.name && (
+          <HStack spacing={4}>
+            <Switch
+              size="lg"
+              isChecked={checked}
+              onChange={(e) => {
+                setChecked(e.target.checked);
+                setDisplayName.mutate({ displayName: e.target.checked });
+              }}
+            />
+            <Text color={grayText} fontSize="sm">
+              Display your real name on your profile
+            </Text>
+          </HStack>
+        )}
         <Stack spacing={2}>
           <Text color={grayText} fontSize="sm">
             Change username

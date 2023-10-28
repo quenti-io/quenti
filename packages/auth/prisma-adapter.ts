@@ -9,26 +9,33 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
   return {
     ...PrismaAdapter(p),
     createUser: async (data) => {
-      const name = data.name!;
-      const sanitized = name.replace(USERNAME_REPLACE_REGEXP, "");
+      const name = data.name;
 
-      const existing = (
-        await p.user.findMany({
-          where: {
-            username: {
-              startsWith: sanitized,
+      let uniqueUsername = null;
+      if (name) {
+        const sanitized = name.replace(USERNAME_REPLACE_REGEXP, "");
+        uniqueUsername = sanitized;
+
+        const existing = (
+          await p.user.findMany({
+            where: {
+              username: {
+                not: null,
+                startsWith: sanitized,
+              },
             },
-          },
-        })
-      ).map((user) => user.username.toLowerCase());
+          })
+        ).map((user) => user.username?.toLowerCase());
 
-      let uniqueUsername = sanitized;
-      if (existing.length) {
-        let suffix = "1";
-        while (existing.some((u) => u === (sanitized + suffix).toLowerCase())) {
-          suffix = (Number(suffix) + 1).toString();
+        if (existing.length) {
+          let suffix = "1";
+          while (
+            existing.some((u) => u === (sanitized + suffix).toLowerCase())
+          ) {
+            suffix = (Number(suffix) + 1).toString();
+          }
+          uniqueUsername = sanitized + suffix;
         }
-        uniqueUsername = sanitized + suffix;
       }
 
       const [base, domain] = data.email.split("@");
@@ -70,6 +77,7 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
           ...data,
           username: uniqueUsername,
           organizationId: associatedDomain?.orgId,
+          displayName: !!data.name,
           isOrgEligible,
           type: userType,
         },

@@ -34,7 +34,7 @@ export interface GenericCardProps {
   itemsLabel: string;
   url: string;
   user: {
-    username: string;
+    username: string | null;
     image: string | null;
   };
   reverseTitle?: boolean;
