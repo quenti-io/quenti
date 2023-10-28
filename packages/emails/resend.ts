@@ -9,6 +9,9 @@ import ClasssInviteEmail, {
 import ConfirmCodeEmail, {
   type ConfirmCodeEmailProps,
 } from "./templates/confirm-code";
+import MagicLinkEmail, {
+  type MagicLinkEmailProps,
+} from "./templates/magic-link";
 import OrganizationDeletionEmail, {
   type OrganizationDeletionEmailProps,
 } from "./templates/organization-deletion";
@@ -34,6 +37,18 @@ export const sendEmail = async (opts: CreateEmailOptions) => {
     return;
   }
   await resend.sendEmail({ ...opts, to: to(opts.to) });
+};
+
+export const sendMagicLinkEmail = async (
+  email: string,
+  opts: MagicLinkEmailProps,
+) => {
+  await sendEmail({
+    from: NOTIFICATIONS_SENDER,
+    to: email,
+    subject: `Sign in to Quenti`,
+    react: MagicLinkEmail(opts),
+  });
 };
 
 export const sendClassInviteEmail = async (

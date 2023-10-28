@@ -114,17 +114,36 @@ const lastSeenUpdateInterval = 60 * 1000;
 // ...approximately 31,038 active users would have to use the serverless function for the memory usage to increase by just 1 MB
 const userMap = new Map<string, number>();
 
+export const enforceBasicAuth = t.middleware(({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user)
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  if (ctx.session.user.banned)
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "You are banned." });
+
+  const userLogger = ctx.req.log.with({
+    user: ctx.session.user,
+  });
+  ctx.req.log = userLogger;
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
 /**
  * Reusable middleware that enforces users are logged in before running the
  * procedure
  */
 export const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  if (!ctx.session || !ctx.session.user)
     throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
-  if (ctx.session.user.banned) {
+  if (ctx.session.user.banned)
     throw new TRPCError({ code: "UNAUTHORIZED", message: "You are banned." });
-  }
+  if (!ctx.session.user.username)
+    throw new TRPCError({ code: "PRECONDITION_FAILED" });
 
   const userLogger = ctx.req.log.with({
     user: ctx.session.user,
@@ -164,6 +183,7 @@ const enforceEnabledFeatures = (features: EnabledFeature[]) =>
     return next();
   });
 
+export const onboardingProcedure = t.procedure.use(enforceBasicAuth);
 /**
  * Protected (authed) procedure
  *

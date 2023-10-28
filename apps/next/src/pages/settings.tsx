@@ -23,9 +23,9 @@ import { UnboundOnly } from "../components/unbound-only";
 import { WithFooter } from "../components/with-footer";
 import { useMe } from "../hooks/use-me";
 import { getLayout } from "../layouts/main-layout";
+import { AccountInfo } from "../modules/settings/account-info";
 import { AccountType } from "../modules/settings/account-type";
 import { DangerZone } from "../modules/settings/danger-zone";
-import { GAccountInfo } from "../modules/settings/g-account-info";
 import { ProfileInfo } from "../modules/settings/profile-info";
 import { Theme } from "../modules/settings/theme";
 
@@ -67,7 +67,7 @@ const SettingsInner = () => {
               <Heading size="2xl">Settings</Heading>
             </HStack>
             <Stack spacing={8}>
-              <GAccountInfo />
+              <AccountInfo />
               <Divider borderColor={divider} />
               <UnboundOnly strict>
                 <AccountType />

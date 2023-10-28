@@ -153,6 +153,7 @@ export const PresentWrapper: React.FC<React.PropsWithChildren> = ({
               steps={map.length}
               currentStep={map.indexOf(currentStep)}
               clickable
+              disableFrom={!me.username ? 3 : undefined}
               onClick={async (i) => {
                 await router.replace({
                   pathname: `/onboarding${map[i]!}`,

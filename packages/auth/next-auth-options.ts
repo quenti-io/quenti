@@ -6,6 +6,7 @@ import { APP_URL } from "@quenti/lib/constants/url";
 import { prisma } from "@quenti/prisma";
 
 import pjson from "../../apps/next/package.json";
+import { sendVerificationRequest } from "./magic-link";
 import { CustomPrismaAdapter } from "./prisma-adapter";
 
 const version = pjson.version;
@@ -16,7 +17,7 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        session.user.username = user.username;
+        session.user.username = user.username || "";
         session.user.displayName = user.displayName;
         session.user.admin = user.email == env.ADMIN_EMAIL;
         session.user.type = user.type;
@@ -56,6 +57,8 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/login",
     signOut: "/",
     newUser: "/onboarding",
+    verifyRequest: "/auth/verify",
+    error: "/auth/error",
   },
   // Configure one or more authentication providers
   adapter: CustomPrismaAdapter(prisma),
@@ -63,7 +66,14 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
+    // @ts-expect-error Type '"email"' is not assignable
+    {
+      id: "magic",
+      type: "email",
+      sendVerificationRequest,
+    },
     /**
      * ...add more providers here
      *

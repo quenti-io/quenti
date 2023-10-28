@@ -67,7 +67,7 @@ export const getRecentStudySets = async (
       ...set,
       viewedAt: recentContainers.find((e) => e.entityId === set.id)!.viewedAt,
       user: {
-        username: set.user.username,
+        username: set.user.username!,
         image: set.user.image!,
       },
     }));

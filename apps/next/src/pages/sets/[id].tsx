@@ -36,7 +36,7 @@ const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
           description: set.description,
           numItems: set._count.terms,
           user: {
-            username: set.user.username,
+            username: set.user.username!,
             image: set.user.image || "",
           },
         }}

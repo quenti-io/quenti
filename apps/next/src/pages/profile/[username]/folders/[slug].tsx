@@ -32,7 +32,7 @@ const FolderPage = ({ folder }: inferSSRProps<typeof getServerSideProps>) => {
           description: folder.description,
           numItems: folder._count.studySets,
           user: {
-            username: folder.user.username,
+            username: folder.user.username!,
             image: folder.user.image || "",
           },
         }}

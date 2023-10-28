@@ -7,6 +7,7 @@ interface SegmentedProgressProps {
   steps: number;
   currentStep: number;
   clickable?: boolean;
+  disableFrom?: number;
   onClick?: (step: number) => void;
 }
 
@@ -14,6 +15,7 @@ export const SegmentedProgress: React.FC<SegmentedProgressProps> = ({
   steps,
   currentStep,
   clickable = false,
+  disableFrom,
   onClick,
 }) => {
   const [currentHover, setCurrentHover] = React.useState<number | null>(null);
@@ -25,7 +27,7 @@ export const SegmentedProgress: React.FC<SegmentedProgressProps> = ({
           key={i}
           step={i}
           currentStep={currentStep}
-          clickable={clickable}
+          clickable={clickable && (!disableFrom || i < disableFrom)}
           width={
             i == currentHover
               ? "120%"
@@ -40,11 +42,14 @@ export const SegmentedProgress: React.FC<SegmentedProgressProps> = ({
           }
           height={i == currentHover ? "12px" : "6px"}
           onHover={(hover) => {
-            if (!clickable) return;
+            if (!clickable || (disableFrom && i >= disableFrom)) return;
             if (hover) setCurrentHover(i);
             else setCurrentHover(null);
           }}
-          onClick={() => onClick?.(i)}
+          onClick={() => {
+            if (!clickable || (disableFrom && i >= disableFrom)) return;
+            onClick?.(i);
+          }}
         />
       ))}
     </HStack>

@@ -1,5 +1,9 @@
 import { loadHandler } from "../../lib/load-handler";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  onboardingProcedure,
+  protectedProcedure,
+} from "../../trpc";
 import { ZChangeUsernameSchema } from "./change-username.schema";
 import { ZCheckUsernameSchema } from "./check-username.schema";
 import { ZSetDisplayNameSchema } from "./set-display-name.schema";
@@ -25,17 +29,17 @@ const HANDLER_CACHE: UserRouterHandlerCache = {
 };
 
 export const userRouter = createTRPCRouter({
-  me: protectedProcedure.query(async ({ ctx }) => {
+  me: onboardingProcedure.query(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "me");
     return HANDLER_CACHE.handlers.me!({ ctx });
   }),
-  checkUsername: protectedProcedure
+  checkUsername: onboardingProcedure
     .input(ZCheckUsernameSchema)
     .query(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "check-username");
       return HANDLER_CACHE.handlers["check-username"]!({ ctx, input });
     }),
-  changeUsername: protectedProcedure
+  changeUsername: onboardingProcedure
     .input(ZChangeUsernameSchema)
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "change-username");
@@ -47,7 +51,7 @@ export const userRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "set-display-name");
       return HANDLER_CACHE.handlers["set-display-name"]!({ ctx, input });
     }),
-  setUserType: protectedProcedure
+  setUserType: onboardingProcedure
     .input(ZSetUserTypeSchema)
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "set-user-type");
@@ -65,7 +69,7 @@ export const userRouter = createTRPCRouter({
     await loadHandler(HANDLER_CACHE, "upload-avatar-complete");
     return HANDLER_CACHE.handlers["upload-avatar-complete"]!({ ctx });
   }),
-  deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
+  deleteAccount: onboardingProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "delete-account");
     return HANDLER_CACHE.handlers["delete-account"]!({ ctx });
   }),
