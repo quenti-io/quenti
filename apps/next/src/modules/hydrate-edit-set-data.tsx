@@ -2,10 +2,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { richTextToHtml } from "@quenti/lib/editor";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
 import { useLoading } from "../hooks/use-loading";
 import {
+  type ClientTerm,
   type SetEditorStore,
   SetEditorStoreContext,
   createSetEditorStore,
@@ -111,6 +113,7 @@ const ContextLayer: React.FC<
     storeRef.current = createSetEditorStore(
       {
         ...data,
+        terms: data.terms as ClientTerm[],
         mode: "edit",
         serverTerms: data.terms.map((x) => x.id),
       },
@@ -129,7 +132,13 @@ const ContextLayer: React.FC<
           if (state.serverTerms.includes(termId))
             apiDeleteTerm.mutate({ termId, studySetId: data.id });
         },
-        editTerm: (termId, word, definition) => {
+        editTerm: (
+          termId,
+          word,
+          definition,
+          wordRichText,
+          definitionRichText,
+        ) => {
           const state = storeRef.current!.getState();
 
           if (state.serverTerms.includes(termId)) {
@@ -138,6 +147,12 @@ const ContextLayer: React.FC<
               studySetId: data.id,
               word,
               definition,
+              wordRichText: wordRichText
+                ? richTextToHtml(wordRichText)
+                : undefined,
+              definitionRichText: definitionRichText
+                ? richTextToHtml(definitionRichText)
+                : undefined,
             });
           } else {
             apiAddTerm.mutate({

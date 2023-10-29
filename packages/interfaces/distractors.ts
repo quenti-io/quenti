@@ -1,3 +1,5 @@
+import type { JSONContent } from "@tiptap/react";
+
 import type { Term } from ".prisma/client";
 
 export type Distractor = {
@@ -5,6 +7,8 @@ export type Distractor = {
   type: "Word" | "Definition";
   word: string;
   definition: string;
+  wordRichText?: JSONContent | null;
+  definitionRichText?: JSONContent | null;
 };
 
 export type TermWithDistractors = Term & {
