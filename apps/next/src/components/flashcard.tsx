@@ -29,7 +29,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import { Display } from "./display";
+import { Display } from "@quenti/components/display";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {

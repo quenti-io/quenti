@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 
+import { Display } from "@quenti/components/display";
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
@@ -18,7 +19,6 @@ import {
 import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { Display } from "../../components/display";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";

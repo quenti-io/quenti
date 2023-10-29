@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 
+import { Display } from "@quenti/components/display";
+
 import {
   Box,
   Card,
@@ -10,7 +12,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { Display } from "../../components/display";
 import { useLearnContext } from "../../stores/use-learn-store";
 import { richWord } from "../../utils/terms";
 import { ChoiceCard } from "./cards/choice";

@@ -59,6 +59,8 @@ const distractorsArgs = Prisma.validator<Prisma.Term$distractorsArgs>()({
         id: true,
         word: true,
         definition: true,
+        wordRichText: true,
+        definitionRichText: true,
       },
     },
   },
