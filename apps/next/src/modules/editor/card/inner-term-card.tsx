@@ -3,7 +3,7 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import TextExtension from "@tiptap/extension-text";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import React from "react";
 
 import { languageName } from "@quenti/core/language";
@@ -72,8 +72,6 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   }, [setInitialized]);
 
   const cardRef = React.useRef<HTMLDivElement>(null);
-  const wordRef = React.useRef<HTMLTextAreaElement>(null);
-  const definitionRef = React.useRef<HTMLTextAreaElement>(null);
 
   const [wordFocused, setWordFocused] = React.useState(false);
   const [definitionFocused, setDefinitionFocused] = React.useState(false);
@@ -99,19 +97,21 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     ...editorConfig(term.rank + 1),
     content: plainTextToHtml(term.word),
   });
-  const editorRef = React.useRef(wordEditor);
-  editorRef.current = wordEditor;
+  const wordRef = React.useRef(wordEditor);
+  wordRef.current = wordEditor;
 
   const definitionEditor = useEditor({
     ...editorConfig(term.rank + 2),
     content: plainTextToHtml(term.definition),
   });
+  const definitionRef = React.useRef(definitionEditor);
+  definitionRef.current = definitionEditor;
 
   React.useEffect(() => {
     if (justCreated) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          editorRef.current?.chain().focus();
+          wordRef.current?.chain().focus();
         });
       });
     }
@@ -147,34 +147,17 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const mutedText = useColorModeValue("gray.500", "gray.400");
   const borderColor = useColorModeValue("gray.50", "gray.700");
 
-  const handleInsert = (
-    c: string,
-    ref: React.RefObject<HTMLTextAreaElement>,
-  ) => {
-    const el = ref.current;
-    if (!el) return;
-
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const value = el.value;
-
-    const before = value.substring(0, start);
-    const after = value.substring(end, value.length);
-
-    el.value = before + c + after;
-    el.selectionStart = el.selectionEnd = start + c.length;
-    el.focus();
-
-    // if (ref === wordRef) setWord(el.value);
-    // else setDefinition(el.value);
+  const handleInsert = (c: string, editor: Editor) => {
+    const cursor = editor.state.selection.$anchor.pos;
+    editor.commands.insertContentAt(cursor, c);
   };
 
   const insertWord = React.useCallback(
-    (c: string) => handleInsert(c, wordRef),
+    (c: string) => handleInsert(c, wordRef.current!),
     [],
   );
   const insertDefinition = React.useCallback(
-    (c: string) => handleInsert(c, definitionRef),
+    (c: string) => handleInsert(c, definitionRef.current!),
     [],
   );
 
