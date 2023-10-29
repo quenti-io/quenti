@@ -64,8 +64,8 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
         style={props.style}
       >
         <Box ref={innerRef}>
-          {visible ? (
-            <InnerTermCard {...props} ref={ref} />
+          {visible || props.justCreated ? (
+            <InnerTermCard {...props} />
           ) : (
             <DeloadedCard
               word={props.term.word}

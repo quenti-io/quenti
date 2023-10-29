@@ -11,6 +11,7 @@ export interface SortableTermCardProps {
   isCurrent: boolean;
   isDragging: boolean;
   justCreated: boolean;
+  isLast: boolean;
   term: Term | AutoSaveTerm;
   deletable: boolean;
   wordLanguage: Language;

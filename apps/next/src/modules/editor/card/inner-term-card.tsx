@@ -23,10 +23,10 @@ import {
 
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 
+import { getPlainText, plainTextToHtml } from "../../../utils/editor";
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { DeloadedDisplayable } from "./deloaded-card";
 import type { SortableTermCardProps } from "./sortable-term-card";
-import type { TermCardRef } from "./term-card";
 
 export interface InnerTermCardProps extends SortableTermCardProps {
   attributes: DraggableAttributes;
@@ -38,50 +38,35 @@ const editorConfig = (tabIndex: number): Parameters<typeof useEditor>[0] => ({
   editorProps: {
     attributes: {
       tabindex: `${tabIndex}`,
-      class: `focus:outline-none py-[7px] border-b-[1px] border-b-[var(--chakra-colors-gray-600)] focus:border-b-[var(--chakra-colors-blue-300)]`,
+      class: `focus:outline-none py-[7px] border-b-[1px] border-b-[var(--chakra-colors-gray-200)] dark:border-b-[var(--chakra-colors-gray-600)] focus:border-b-[var(--chakra-colors-blue-300)]`,
     },
   },
 });
 
-export const InnerTermCardRaw = React.forwardRef<
-  TermCardRef,
-  InnerTermCardProps
->(function Internal(
-  {
-    isCurrent,
-    term,
-    deletable,
-    justCreated,
-    wordLanguage,
-    definitionLanguage,
-    openMenu,
-    editTerm,
-    deleteTerm,
-    anyFocus,
-    onTabOff,
-    attributes,
-    listeners,
-  },
-  ref,
-) {
+export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
+  isCurrent,
+  term,
+  deletable,
+  justCreated,
+  isLast,
+  wordLanguage,
+  definitionLanguage,
+  openMenu,
+  editTerm,
+  deleteTerm,
+  anyFocus,
+  onTabOff,
+  attributes,
+  listeners,
+}) => {
   const [initialized, setInitialized] = React.useState(false);
   React.useEffect(() => {
     setInitialized(true);
   }, [setInitialized]);
 
+  const cardRef = React.useRef<HTMLDivElement>(null);
   const wordRef = React.useRef<HTMLTextAreaElement>(null);
   const definitionRef = React.useRef<HTMLTextAreaElement>(null);
-
-  React.useEffect(() => {
-    if (justCreated) {
-      requestAnimationFrame(() => {
-        wordRef.current?.focus();
-      });
-    }
-  }, [justCreated]);
-
-  const [word, setWord] = React.useState(term.word);
-  const [definition, setDefinition] = React.useState(term.definition);
 
   const [wordFocused, setWordFocused] = React.useState(false);
   const [definitionFocused, setDefinitionFocused] = React.useState(false);
@@ -96,11 +81,6 @@ export const InnerTermCardRaw = React.forwardRef<
     }
   }, [wordFocused, definitionFocused, anyFocus]);
 
-  React.useEffect(() => {
-    setWord(term.word);
-    setDefinition(term.definition);
-  }, [term.word, term.definition]);
-
   const placeholderTerm =
     wordLanguage != definitionLanguage ? languageName(wordLanguage) : "term";
   const placeholderDefinition =
@@ -110,12 +90,32 @@ export const InnerTermCardRaw = React.forwardRef<
 
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
-    content: word,
+    content: plainTextToHtml(term.word),
   });
+  const editorRef = React.useRef(wordEditor);
+  editorRef.current = wordEditor;
+
   const definitionEditor = useEditor({
     ...editorConfig(term.rank + 2),
-    content: definition,
+    content: plainTextToHtml(term.definition),
   });
+
+  React.useEffect(() => {
+    if (justCreated) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          editorRef.current?.chain().focus();
+        });
+      });
+    }
+  }, [justCreated]);
+
+  React.useEffect(() => {
+    if (!initialized) return;
+    wordEditor?.commands.setContent(plainTextToHtml(term.word));
+    definitionEditor?.commands.setContent(plainTextToHtml(term.definition));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [term.word, term.definition]);
 
   const LanguageButton = ({ type }: { type: "word" | "definition" }) => {
     if (!isCurrent || lastFocused !== type) return null;
@@ -158,8 +158,8 @@ export const InnerTermCardRaw = React.forwardRef<
     el.selectionStart = el.selectionEnd = start + c.length;
     el.focus();
 
-    if (ref === wordRef) setWord(el.value);
-    else setDefinition(el.value);
+    // if (ref === wordRef) setWord(el.value);
+    // else setDefinition(el.value);
   };
 
   const insertWord = React.useCallback(
@@ -171,8 +171,21 @@ export const InnerTermCardRaw = React.forwardRef<
     [],
   );
 
+  const getEditorPlainTexts = () => {
+    const word = getPlainText(wordEditor!.getJSON());
+    const definition = getPlainText(definitionEditor!.getJSON());
+    return { word, definition };
+  };
+
+  const editIfDirty = (focused: boolean) => {
+    const { word, definition } = getEditorPlainTexts();
+    if ((word !== term.word || definition !== term.definition) && !focused) {
+      editTerm(term.id, word, definition);
+    }
+  };
+
   return (
-    <Stack>
+    <Stack ref={cardRef}>
       <Flex
         align="center"
         borderBottom="2px"
@@ -214,13 +227,20 @@ export const InnerTermCardRaw = React.forwardRef<
       >
         <Stack w="full" spacing={2}>
           <Box pos="relative" onFocusCapture={() => setWordFocused(true)}>
-            {initialized ? (
+            {initialized || justCreated ? (
               <EditorContent
                 editor={wordEditor}
                 placeholder={`Enter ${placeholderTerm}`}
                 onFocus={() => setWordFocused(true)}
                 onBlur={() => {
                   setWordFocused(false);
+                  // Timeout is neccesary if clicked to or tabbed immediately
+                  setTimeout(() => {
+                    setDefinitionFocused((focused) => {
+                      editIfDirty(focused);
+                      return focused;
+                    });
+                  });
                 }}
               />
             ) : (
@@ -244,7 +264,7 @@ export const InnerTermCardRaw = React.forwardRef<
         </Stack>
         <Stack w="full" spacing={2}>
           <Box pos="relative">
-            {initialized ? (
+            {initialized || justCreated ? (
               <EditorContent
                 height="40px"
                 style={{
@@ -255,6 +275,18 @@ export const InnerTermCardRaw = React.forwardRef<
                 onFocus={() => setDefinitionFocused(true)}
                 onBlur={() => {
                   setDefinitionFocused(false);
+                  setTimeout(() => {
+                    setWordFocused((focused) => {
+                      editIfDirty(focused);
+                      return focused;
+                    });
+                  });
+                }}
+                onKeyDown={(e) => {
+                  if (isLast && e.key == "Tab" && !e.shiftKey) {
+                    e.preventDefault();
+                    onTabOff();
+                  }
                 }}
               />
             ) : (
@@ -279,6 +311,6 @@ export const InnerTermCardRaw = React.forwardRef<
       </HStack>
     </Stack>
   );
-});
+};
 
 export const InnerTermCard = React.memo(InnerTermCardRaw);

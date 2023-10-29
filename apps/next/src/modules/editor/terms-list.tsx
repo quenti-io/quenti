@@ -142,6 +142,7 @@ export const TermsList = () => {
                       justCreated={lastCreated === term.id}
                       isDragging={currentDrag === term.id}
                       isCurrent={current === term.id}
+                      isLast={i === terms.length - 1}
                       deletable={terms.length > 1}
                       key={term.id}
                       term={term}

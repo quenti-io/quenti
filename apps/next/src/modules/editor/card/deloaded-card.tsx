@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Box, HStack, Stack, Text } from "@chakra-ui/react";
 
 interface DeloadedCardProps {
@@ -5,7 +7,7 @@ interface DeloadedCardProps {
   definition: string;
 }
 
-export const DeloadedCard: React.FC<DeloadedCardProps> = ({
+export const DeloadedCardRaw: React.FC<DeloadedCardProps> = ({
   word,
   definition,
 }) => {
@@ -38,12 +40,14 @@ export const DeloadedCard: React.FC<DeloadedCardProps> = ({
   );
 };
 
+export const DeloadedCard = React.memo(DeloadedCardRaw);
+
 export const DeloadedDisplayable: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   return (
     <Box borderBottomWidth="1px" borderColor="transparent" py="7px">
-      <Text>{children}</Text>
+      <Text whiteSpace="pre-wrap">{children}</Text>
     </Box>
   );
 };
