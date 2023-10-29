@@ -1,6 +1,11 @@
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import { type Editor, EditorContent, useEditor } from "@tiptap/react";
+import {
+  type Editor,
+  EditorContent,
+  type JSONContent,
+  useEditor,
+} from "@tiptap/react";
 import React from "react";
 
 import { languageName } from "@quenti/core/language";
@@ -82,9 +87,18 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
       ? languageName(definitionLanguage)
       : "definition";
 
+  const [wordEmpty, setWordEmpty] = React.useState(false);
+  const [definitionEmpty, setDefinitionEmpty] = React.useState(false);
+
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
     content: editorInput(term, "word"),
+    onUpdate: ({ editor }) => {
+      setWordEmpty(editor.isEmpty);
+    },
+    onCreate: ({ editor }) => {
+      setWordEmpty(editor.isEmpty);
+    },
   });
   const wordRef = React.useRef(wordEditor);
   wordRef.current = wordEditor;
@@ -92,6 +106,12 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const definitionEditor = useEditor({
     ...editorConfig(term.rank + 2),
     content: editorInput(term, "definition"),
+    onUpdate: ({ editor }) => {
+      setDefinitionEmpty(editor.isEmpty);
+    },
+    onCreate: ({ editor }) => {
+      setDefinitionEmpty(editor.isEmpty);
+    },
   });
   const definitionRef = React.useRef(definitionEditor);
   definitionRef.current = definitionEditor;
@@ -171,14 +191,23 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     const wordRichText = hasRichText(wordJson, word);
     const definitionRichText = hasRichText(definitionJson, definition);
 
-    console.log("editIfDirty", {
-      word,
-      definition,
-      wordRichText: wordRichText ? wordJson : undefined,
-      definitionRichText: definitionRichText ? definitionJson : undefined,
-    });
+    const compareJson = (
+      one?: JSONContent | JSON | null,
+      two?: JSONContent | JSON | null,
+    ) => {
+      const left = JSON.stringify(one || "");
+      const right = JSON.stringify(two || "");
+      return left === right;
+    };
 
-    if ((word !== term.word || definition !== term.definition) && !focused) {
+    if (
+      (word !== term.word ||
+        definition !== term.definition ||
+        (wordRichText && !compareJson(wordJson, term.wordRichText)) ||
+        (definitionRichText &&
+          !compareJson(definitionJson, term.definitionRichText))) &&
+      !focused
+    ) {
       editTerm(
         term.id,
         word,
@@ -278,7 +307,6 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             {initialized || justCreated ? (
               <EditorContent
                 editor={wordEditor}
-                placeholder={`Enter ${placeholderTerm}`}
                 onFocus={() => setWordFocused(true)}
                 onBlur={() => {
                   setWordFocused(false);
@@ -290,7 +318,19 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                     });
                   });
                 }}
-              />
+              >
+                {wordEmpty && (
+                  <Text
+                    position="absolute"
+                    top="7px"
+                    left="0"
+                    color="gray.500"
+                    className="editor-placeholder"
+                  >
+                    Enter {placeholderTerm}
+                  </Text>
+                )}
+              </EditorContent>
             ) : (
               <DeloadedDisplayable>{term.word}</DeloadedDisplayable>
             )}
@@ -314,7 +354,6 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
           <Box pos="relative">
             {initialized || justCreated ? (
               <EditorContent
-                height="40px"
                 editor={definitionEditor}
                 placeholder={`Enter ${placeholderDefinition}`}
                 onFocus={() => setDefinitionFocused(true)}
@@ -333,7 +372,19 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                     onTabOff();
                   }
                 }}
-              />
+              >
+                {definitionEmpty && (
+                  <Text
+                    position="absolute"
+                    top="7px"
+                    left="0"
+                    color="gray.500"
+                    className="editor-placeholder"
+                  >
+                    Enter {placeholderDefinition}
+                  </Text>
+                )}
+              </EditorContent>
             ) : (
               <DeloadedDisplayable>{term.definition}</DeloadedDisplayable>
             )}

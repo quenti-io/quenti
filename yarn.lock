@@ -6030,6 +6030,7 @@ __metadata:
     "@tiptap/extension-highlight": ^2.1.12
     "@tiptap/extension-history": ^2.1.12
     "@tiptap/extension-italic": ^2.1.12
+    "@tiptap/extension-placeholder": ^2.1.12
     "@tiptap/extension-strike": ^2.1.12
     "@tiptap/extension-typography": ^2.1.12
     "@tiptap/extension-underline": ^2.1.12
@@ -7458,6 +7459,16 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^2.0.0
   checksum: 95b0d778569af8a27ba9e4a4cb630c08bef3d771e9bf73c49d1cca9d57d66718e2bd7c21433a8d041833b09c652951e3ada443fb586f92000ae4f3fa3149168d
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-placeholder@npm:^2.1.12":
+  version: 2.1.12
+  resolution: "@tiptap/extension-placeholder@npm:2.1.12"
+  peerDependencies:
+    "@tiptap/core": ^2.0.0
+    "@tiptap/pm": ^2.0.0
+  checksum: 939dde2a316bf55d19772a415e90758bb2ba29dc85bac1fa92d6b999696fa795a63de064bbd5fec7376c11e3c9e1b718ae58dd38632fdc2a9cfc22fdce833ca4
   languageName: node
   linkType: hard
 

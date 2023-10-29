@@ -46,7 +46,7 @@ export const DeloadedDisplayable: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   return (
-    <Box borderBottomWidth="1px" borderColor="transparent" py="7px">
+    <Box borderBottomWidth="1px" borderColor="transparent" py="7px" minH="39px">
       <Text whiteSpace="pre-wrap">{children}</Text>
     </Box>
   );

@@ -2,6 +2,7 @@ import type { JSONContent } from "@tiptap/react";
 import React from "react";
 import useFitText from "use-fit-text";
 
+import { Display } from "@quenti/components/display";
 import { outfit } from "@quenti/lib/chakra-theme";
 import type { Term } from "@quenti/prisma/client";
 
@@ -29,7 +30,6 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import { Display } from "@quenti/components/display";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {

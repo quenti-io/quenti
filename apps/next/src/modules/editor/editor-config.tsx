@@ -8,7 +8,7 @@ import Strike from "@tiptap/extension-strike";
 import Text from "@tiptap/extension-text";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
-import { type useEditor } from "@tiptap/react";
+import type { Extension, useEditor } from "@tiptap/react";
 
 import { EmojiReplacer } from "./extensions/emoji-replacer";
 
@@ -21,6 +21,7 @@ const boxShadow =
 
 export const editorConfig = (
   tabIndex?: number,
+  extensions?: Extension[],
 ): Parameters<typeof useEditor>[0] => ({
   extensions: [
     Document,
@@ -36,6 +37,7 @@ export const editorConfig = (
     History.configure({
       depth: 20,
     }),
+    ...(extensions || []),
   ],
   editorProps: {
     attributes: {
