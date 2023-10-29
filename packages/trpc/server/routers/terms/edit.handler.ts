@@ -1,4 +1,5 @@
 import { getPlainText, getRichTextJson } from "@quenti/lib/editor";
+import { Prisma } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
 
@@ -44,17 +45,15 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     definitionRichText = json;
   }
 
-  console.log("WORD RICH TEXT", wordRichText);
-
   word = profanity.censor(word.slice(0, MAX_TERM));
   definition = profanity.censor(definition.slice(0, MAX_TERM));
 
   wordRichText = wordRichText
     ? (censorRichText(wordRichText) as object)
-    : undefined;
+    : Prisma.JsonNull;
   definitionRichText = definitionRichText
     ? (censorRichText(definitionRichText) as object)
-    : undefined;
+    : Prisma.JsonNull;
 
   const term = await ctx.prisma.term.update({
     where: {

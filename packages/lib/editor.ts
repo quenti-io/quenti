@@ -42,8 +42,11 @@ export const plainTextToHtml = (text: string): string => {
   return paragraphs.join("");
 };
 
-export const richTextToHtml = (json: JSONContent): string => {
-  return generateHTML(json, SERIALIZABLE_EXTENSIONS);
+export const richTextToHtml = (json: JSONContent, breaks = false): string => {
+  const raw = generateHTML(json, SERIALIZABLE_EXTENSIONS);
+  if (!breaks) return raw;
+  // Replace empty paragraphs with breaks
+  return raw.replace(/<p><\/p>/g, "<p><br></p>");
 };
 
 export const getRichTextJson = (html: string) => {

@@ -1,7 +1,10 @@
+import type { JSONContent } from "@tiptap/react";
 import React from "react";
 import useFitText from "use-fit-text";
+import { filterXSS } from "xss";
 
 import { outfit } from "@quenti/lib/chakra-theme";
+import { richTextToHtml } from "@quenti/lib/editor";
 import type { Term } from "@quenti/prisma/client";
 
 import {
@@ -143,6 +146,11 @@ export const Flashcard: React.FC<FlashcardProps> = ({
         <Center flex={1} my="4" ref={containerRef} overflowY="auto">
           <PureShrinkableText
             text={isFlipped ? term.definition : term.word}
+            richText={
+              (isFlipped
+                ? term.definitionRichText
+                : term.wordRichText) as JSONContent
+            }
             container={containerRef}
           />
         </Center>
@@ -197,8 +205,9 @@ export const Flashcard: React.FC<FlashcardProps> = ({
 
 const ShrinkableText: React.FC<{
   text: string;
+  richText?: JSONContent;
   container: React.RefObject<HTMLDivElement>;
-}> = ({ text, container }) => {
+}> = ({ text, richText, container }) => {
   const { fontSize, ref } = useFitText({
     minFontSize: 50,
   });
@@ -220,7 +229,15 @@ const ShrinkableText: React.FC<{
         overflowWrap: "anywhere",
       }}
     >
-      <ScriptFormatter>{text}</ScriptFormatter>
+      {richText ? (
+        <p
+          dangerouslySetInnerHTML={{
+            __html: filterXSS(richTextToHtml(richText, true)),
+          }}
+        />
+      ) : (
+        <ScriptFormatter>{text}</ScriptFormatter>
+      )}
     </span>
   );
 };
