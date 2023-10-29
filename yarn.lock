@@ -6028,7 +6028,9 @@ __metadata:
     "@tanstack/react-virtual": ^3.0.0-beta.65
     "@tiptap/extension-bold": ^2.1.12
     "@tiptap/extension-highlight": ^2.1.12
+    "@tiptap/extension-history": ^2.1.12
     "@tiptap/extension-italic": ^2.1.12
+    "@tiptap/extension-strike": ^2.1.12
     "@tiptap/extension-typography": ^2.1.12
     "@tiptap/extension-underline": ^2.1.12
     "@tiptap/pm": ^2.1.12
