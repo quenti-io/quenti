@@ -1,3 +1,5 @@
+import type { JSONContent } from "@tiptap/react";
+
 import { bulkGenerateDistractors } from "@quenti/cortex/distractors";
 
 import { TRPCError } from "@trpc/server";
@@ -61,11 +63,24 @@ export const createFromAutosaveHandler = async ({
       userId: ctx.session.user.id,
       terms: {
         createMany: {
-          data: autoSave.autoSaveTerms.map((term) => ({
-            word: profanity.censor(term.word.slice(0, MAX_TERM)),
-            definition: profanity.censor(term.definition.slice(0, MAX_TERM)),
-            rank: term.rank,
-          })),
+          data: autoSave.autoSaveTerms.map((term) => {
+            const word = profanity.censor(term.word.slice(0, MAX_TERM));
+            const definition = profanity.censor(
+              term.definition.slice(0, MAX_TERM),
+            );
+
+            return {
+              word,
+              definition,
+              wordRichText: term.wordRichText
+                ? censorRichText(term.wordRichText as JSONContent)
+                : undefined,
+              definitionRichText: term.definitionRichText
+                ? censorRichText(term.definitionRichText as JSONContent)
+                : undefined,
+              rank: term.rank,
+            };
+          }),
         },
       },
       cortexStale: false,
@@ -95,6 +110,25 @@ export const createFromAutosaveHandler = async ({
   });
 
   return studySet;
+};
+
+const censorRichText = (json: JSONContent): JSONContent => {
+  return {
+    ...json,
+    content: json.content?.map((node) => {
+      if (node.type === "text" && node.text) {
+        return {
+          ...node,
+          text: profanity.censor(node.text),
+        };
+      }
+      if (node.type === "paragraph") {
+        return censorRichText(node);
+      }
+
+      return node;
+    }),
+  };
 };
 
 export default createFromAutosaveHandler;

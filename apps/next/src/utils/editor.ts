@@ -9,16 +9,20 @@ import Underline from "@tiptap/extension-underline";
 import { generateHTML } from "@tiptap/html";
 import type { JSONContent } from "@tiptap/react";
 
-export const getPlainText = (json: JSONContent): string => {
-  return json.content
-    ? json.content
-        .map((node) => {
-          if (node.type === "text") return node.text;
-          if (node.type === "paragraph") return getPlainText(node);
-          return "";
-        })
-        .join("\n")
-    : "";
+export const getPlainText = (json: JSONContent, delimeter = "\n"): string => {
+  return (
+    json.content
+      ?.map((node) => {
+        if (node.type === "text" && node.text) {
+          return node.text;
+        }
+        if (node.type === "paragraph") {
+          return getPlainText(node, "");
+        }
+        return "";
+      })
+      .join(delimeter) || ""
+  );
 };
 
 export const plainTextToHtml = (text: string): string => {
