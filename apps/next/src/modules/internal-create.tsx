@@ -8,6 +8,7 @@ import {
   SetEditorStoreContext,
   useSetEditorContext,
 } from "../stores/use-set-editor-store";
+import { richTextToHtml } from "../utils/editor";
 import { HydrateAutoSaveData } from "./hydrate-auto-save-data";
 import { SetEditorPure } from "./set-editor";
 
@@ -54,6 +55,12 @@ const PropertiesListener = () => {
         .map((x) => ({
           word: x.word,
           definition: x.definition,
+          wordRichText: x.wordRichText
+            ? richTextToHtml(x.wordRichText)
+            : undefined,
+          definitionRichText: x.definitionRichText
+            ? richTextToHtml(x.definitionRichText)
+            : undefined,
         })),
     });
   };

@@ -6133,6 +6133,7 @@ __metadata:
     "@quenti/lib": "*"
     "@quenti/payments": "*"
     "@quenti/prisma": "*"
+    "@tiptap/html": ^2.1.12
     "@trpc/client": ^10.41.0
     "@trpc/next": ^10.41.0
     "@trpc/react-query": ^10.41.0
@@ -7492,6 +7493,18 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^2.0.0
   checksum: 652b5903b1033d979dc4de673b1445e400bfe61a8be0d4fd4fd81e74b5c44d6324cc3e8421b14ada1e2ac3891173a9c21a85c0867977f83a9c386b43087d416d
+  languageName: node
+  linkType: hard
+
+"@tiptap/html@npm:^2.1.12":
+  version: 2.1.12
+  resolution: "@tiptap/html@npm:2.1.12"
+  dependencies:
+    zeed-dom: ^0.9.19
+  peerDependencies:
+    "@tiptap/core": ^2.0.0
+    "@tiptap/pm": ^2.0.0
+  checksum: 7c976c831973ab26a2853d318ab7674bc744f55901fef872769579e10966d7547321e0706eaf45c0dda177e821aefd7762ff2c8754a039c589391efebb20f472
   languageName: node
   linkType: hard
 
@@ -19908,6 +19921,15 @@ __metadata:
   version: 0.3.3
   resolution: "yoga-wasm-web@npm:0.3.3"
   checksum: ff65192a832975ff531a1b6eae160c2da859c250feaa58b6389b684f9b48f53fda849a7ea49d12d241198309e671e6bd230a44e7155af9573d7843ac48831c98
+  languageName: node
+  linkType: hard
+
+"zeed-dom@npm:^0.9.19":
+  version: 0.9.26
+  resolution: "zeed-dom@npm:0.9.26"
+  dependencies:
+    css-what: ^6.1.0
+  checksum: 32ca777ff0f4cdbe2e2aecfa33d306a45bf5e7d998405985f81b7fca4a89bfdee33d5d467c1b5a6049b601ad2c86843787d0b428ccb0482f421c982f17e29505
   languageName: node
   linkType: hard
 

@@ -27,7 +27,7 @@ import {
   IconUnderline,
 } from "@tabler/icons-react";
 
-import { getPlainText, plainTextToHtml } from "../../../utils/editor";
+import { editorInput, getPlainText, hasRichText } from "../../../utils/editor";
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";
@@ -84,14 +84,14 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
 
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
-    content: plainTextToHtml(term.word),
+    content: editorInput(term, "word"),
   });
   const wordRef = React.useRef(wordEditor);
   wordRef.current = wordEditor;
 
   const definitionEditor = useEditor({
     ...editorConfig(term.rank + 2),
-    content: plainTextToHtml(term.definition),
+    content: editorInput(term, "definition"),
   });
   const definitionRef = React.useRef(definitionEditor);
   definitionRef.current = definitionEditor;
@@ -114,8 +114,8 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
 
   React.useEffect(() => {
     if (!initialized) return;
-    wordEditor?.commands.setContent(plainTextToHtml(term.word));
-    definitionEditor?.commands.setContent(plainTextToHtml(term.definition));
+    wordEditor?.commands.setContent(editorInput(term, "word"));
+    definitionEditor?.commands.setContent(editorInput(term, "definition"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term.word, term.definition]);
 
@@ -157,15 +157,35 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   );
 
   const getEditorPlainTexts = () => {
-    const word = getPlainText(wordEditor!.getJSON());
-    const definition = getPlainText(definitionEditor!.getJSON());
-    return { word, definition };
+    const wordJson = wordEditor!.getJSON();
+    const definitionJson = definitionEditor!.getJSON();
+    const word = getPlainText(wordJson);
+    const definition = getPlainText(definitionJson);
+    return { word, definition, wordJson, definitionJson };
   };
 
   const editIfDirty = (focused: boolean) => {
-    const { word, definition } = getEditorPlainTexts();
+    const { word, definition, wordJson, definitionJson } =
+      getEditorPlainTexts();
+
+    const wordRichText = hasRichText(wordJson, word);
+    const definitionRichText = hasRichText(definitionJson, definition);
+
+    console.log("editIfDirty", {
+      word,
+      definition,
+      wordRichText: wordRichText ? wordJson : undefined,
+      definitionRichText: definitionRichText ? definitionJson : undefined,
+    });
+
     if ((word !== term.word || definition !== term.definition) && !focused) {
-      editTerm(term.id, word, definition);
+      editTerm(
+        term.id,
+        word,
+        definition,
+        wordRichText ? (wordJson as JSON) : undefined,
+        definitionRichText ? (definitionJson as JSON) : undefined,
+      );
     }
   };
 

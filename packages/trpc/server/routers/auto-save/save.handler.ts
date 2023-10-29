@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 
+import { getRichTextJSON } from "../../lib/editor";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TSaveSchema } from "./save.schema";
 
@@ -30,6 +31,12 @@ export const saveHandler = async ({ ctx, input }: SaveOptions) => {
             id: term.id,
             definition: term.definition,
             word: term.word,
+            wordRichText: term.wordRichText
+              ? (getRichTextJSON(term.wordRichText) as object)
+              : undefined,
+            definitionRichText: term.definitionRichText
+              ? (getRichTextJSON(term.definitionRichText) as object)
+              : undefined,
             rank: i,
           })),
         },
@@ -49,6 +56,12 @@ export const saveHandler = async ({ ctx, input }: SaveOptions) => {
             id: term.id,
             definition: term.definition,
             word: term.word,
+            wordRichText: term.wordRichText
+              ? (getRichTextJSON(term.wordRichText) as object)
+              : undefined,
+            definitionRichText: term.definitionRichText
+              ? (getRichTextJSON(term.definitionRichText) as object)
+              : undefined,
             rank: i,
           })),
         },

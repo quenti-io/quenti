@@ -457,12 +457,14 @@ model Distractor {
 }
 
 model AutoSaveTerm {
-  id            String      @id @default(cuid())
-  word          String      @db.VarChar(1000)
-  definition    String      @db.VarChar(1000)
-  rank          Int
-  setAutoSaveId String
-  setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
+  id                 String      @id @default(cuid())
+  word               String      @db.VarChar(1000)
+  definition         String      @db.VarChar(1000)
+  wordRichText       Json?
+  definitionRichText Json?
+  rank               Int
+  setAutoSaveId      String
+  setAutoSave        SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
 
   @@index([setAutoSaveId])
 }
