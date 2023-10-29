@@ -227,7 +227,9 @@ export const createSetEditorStore = (
             terms: state.terms.map((term) => ({
               ...term,
               word: term.definition,
+              wordRichText: term.definitionRichText,
               definition: term.word,
+              definitionRichText: term.wordRichText,
             })),
           };
         });
