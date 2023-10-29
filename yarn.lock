@@ -6029,6 +6029,7 @@ __metadata:
     "@tiptap/extension-bold": ^2.1.12
     "@tiptap/extension-highlight": ^2.1.12
     "@tiptap/extension-italic": ^2.1.12
+    "@tiptap/extension-typography": ^2.1.12
     "@tiptap/extension-underline": ^2.1.12
     "@tiptap/pm": ^2.1.12
     "@tiptap/react": ^2.1.12
@@ -7471,6 +7472,15 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^2.0.0
   checksum: 289bc3c35dcf51d400e4cb5311eeb9af56fe54f8a0f9da2024ff38445390ee62929e88d1d8e93557b2a99888c4073d0700dd2b224653427a71c83700a73e6dd0
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-typography@npm:^2.1.12":
+  version: 2.1.12
+  resolution: "@tiptap/extension-typography@npm:2.1.12"
+  peerDependencies:
+    "@tiptap/core": ^2.0.0
+  checksum: 7bcd8e017ae5a3c1929d8e1e4785b17e5be1666de893dc5e285fccfbe03f7c0134be386f35d364ad7b01edaf6c55cbd641dd97831d7770d318bfc0539253c47d
   languageName: node
   linkType: hard
 

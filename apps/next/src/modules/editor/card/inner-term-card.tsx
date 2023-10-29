@@ -1,8 +1,5 @@
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import Document from "@tiptap/extension-document";
-import Paragraph from "@tiptap/extension-paragraph";
-import TextExtension from "@tiptap/extension-text";
 import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import React from "react";
 
@@ -25,6 +22,7 @@ import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 
 import { getPlainText, plainTextToHtml } from "../../../utils/editor";
 import { CharacterSuggestionsPure } from "../character-suggestions";
+import { editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
@@ -32,23 +30,6 @@ export interface InnerTermCardProps extends SortableTermCardProps {
   attributes: DraggableAttributes;
   listeners: SyntheticListenerMap | undefined;
 }
-
-const grayBorder = "border-b-[var(--chakra-colors-gray-200)]";
-const darkGrayBorder = "dark:border-b-[var(--chakra-colors-gray-600)]";
-const blueBorder = "focus:border-b-[var(--chakra-colors-blue-300)]";
-const darkBlueBorder = "dark:focus:border-b-[var(--chakra-colors-blue-300)]";
-const boxShadow =
-  "focus:shadow-[0px_1px_0px_0px_var(--chakra-colors-blue-300)]";
-
-const editorConfig = (tabIndex: number): Parameters<typeof useEditor>[0] => ({
-  extensions: [Document, Paragraph, TextExtension],
-  editorProps: {
-    attributes: {
-      tabindex: `${tabIndex}`,
-      class: `focus:outline-none py-[7px] border-b-[1px] transition-[border,box-shadow] ${grayBorder} ${darkGrayBorder} ${blueBorder} ${darkBlueBorder} ${boxShadow}`,
-    },
-  },
-});
 
 export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   isCurrent,

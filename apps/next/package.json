@@ -46,6 +46,7 @@
     "@tiptap/extension-bold": "^2.1.12",
     "@tiptap/extension-highlight": "^2.1.12",
     "@tiptap/extension-italic": "^2.1.12",
+    "@tiptap/extension-typography": "^2.1.12",
     "@tiptap/extension-underline": "^2.1.12",
     "@tiptap/pm": "^2.1.12",
     "@tiptap/react": "^2.1.12",
