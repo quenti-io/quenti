@@ -11,7 +11,7 @@ import {
   MAX_TERM,
   MAX_TITLE,
 } from "../../common/constants";
-import { profanity } from "../../common/profanity";
+import { censorRichText, profanity } from "../../common/profanity";
 import type { NonNullableUserContext } from "../../lib/types";
 
 type CreateFromAutosaveOptions = {
@@ -110,25 +110,6 @@ export const createFromAutosaveHandler = async ({
   });
 
   return studySet;
-};
-
-const censorRichText = (json: JSONContent): JSONContent => {
-  return {
-    ...json,
-    content: json.content?.map((node) => {
-      if (node.type === "text" && node.text) {
-        return {
-          ...node,
-          text: profanity.censor(node.text),
-        };
-      }
-      if (node.type === "paragraph") {
-        return censorRichText(node);
-      }
-
-      return node;
-    }),
-  };
 };
 
 export default createFromAutosaveHandler;

@@ -1,5 +1,9 @@
+import { getPlainText, getRichTextJson } from "@quenti/lib/editor";
+
 import { TRPCError } from "@trpc/server";
 
+import { MAX_TERM } from "../../common/constants";
+import { censorRichText, profanity } from "../../common/profanity";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TEditSchema } from "./edit.schema";
 
@@ -22,6 +26,36 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     });
   }
 
+  let word = input.word;
+  let definition = input.definition;
+  let wordRichText = null;
+  let definitionRichText = null;
+
+  if (input.wordRichText) {
+    const json = getRichTextJson(input.wordRichText);
+    const plainText = getPlainText(json);
+    word = plainText;
+    wordRichText = json;
+  }
+  if (input.definitionRichText) {
+    const json = getRichTextJson(input.definitionRichText);
+    const plainText = getPlainText(json);
+    definition = plainText;
+    definitionRichText = json;
+  }
+
+  console.log("WORD RICH TEXT", wordRichText);
+
+  word = profanity.censor(word.slice(0, MAX_TERM));
+  definition = profanity.censor(definition.slice(0, MAX_TERM));
+
+  wordRichText = wordRichText
+    ? (censorRichText(wordRichText) as object)
+    : undefined;
+  definitionRichText = definitionRichText
+    ? (censorRichText(definitionRichText) as object)
+    : undefined;
+
   const term = await ctx.prisma.term.update({
     where: {
       id_studySetId: {
@@ -30,8 +64,10 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       },
     },
     data: {
-      word: input.word,
-      definition: input.definition,
+      word,
+      definition,
+      wordRichText,
+      definitionRichText,
       studySet: {
         update: {
           cortexStale: true,

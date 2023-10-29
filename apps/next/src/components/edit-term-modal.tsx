@@ -1,6 +1,8 @@
+import type { JSONContent } from "@tiptap/react";
 import React from "react";
 
 import { Modal } from "@quenti/components/modal";
+import { richTextToHtml } from "@quenti/lib/editor";
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
@@ -83,6 +85,12 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
                   ...term,
                   word,
                   definition,
+                  wordRichText: term.wordRichText
+                    ? richTextToHtml(term.wordRichText as JSONContent)
+                    : undefined,
+                  definitionRichText: term.definitionRichText
+                    ? richTextToHtml(term.definitionRichText as JSONContent)
+                    : undefined,
                 });
               }}
               isLoading={edit.isLoading}

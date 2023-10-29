@@ -4,6 +4,7 @@ import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import React from "react";
 
 import { languageName } from "@quenti/core/language";
+import { editorInput, getPlainText, hasRichText } from "@quenti/lib/editor";
 
 import {
   Box,
@@ -27,7 +28,6 @@ import {
   IconUnderline,
 } from "@tabler/icons-react";
 
-import { editorInput, getPlainText, hasRichText } from "../../../utils/editor";
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";

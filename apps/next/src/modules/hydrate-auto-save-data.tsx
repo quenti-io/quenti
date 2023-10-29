@@ -6,6 +6,7 @@ import { type RouterOutputs, api } from "@quenti/trpc";
 import { useLoading } from "../hooks/use-loading";
 import { useTelemetry } from "../lib/telemetry";
 import {
+  type ClientAutoSaveTerm,
   type SetEditorStore,
   SetEditorStoreContext,
   createSetEditorStore,
@@ -57,7 +58,7 @@ const ContextLayer: React.FC<
     storeRef.current = createSetEditorStore(
       {
         ...data,
-        terms: data.autoSaveTerms,
+        terms: data.autoSaveTerms as ClientAutoSaveTerm[],
       },
       {
         onComplete: () => {

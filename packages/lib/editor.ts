@@ -6,8 +6,19 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Strike from "@tiptap/extension-strike";
 import Text from "@tiptap/extension-text";
 import Underline from "@tiptap/extension-underline";
-import { generateHTML } from "@tiptap/html";
+import { generateHTML, generateJSON } from "@tiptap/html";
 import type { JSONContent } from "@tiptap/react";
+
+export const SERIALIZABLE_EXTENSIONS = [
+  Document,
+  Paragraph,
+  Text,
+  Bold,
+  Italic,
+  Strike,
+  Underline,
+  Highlight,
+];
 
 export const getPlainText = (json: JSONContent, delimeter = "\n"): string => {
   return (
@@ -32,16 +43,11 @@ export const plainTextToHtml = (text: string): string => {
 };
 
 export const richTextToHtml = (json: JSONContent): string => {
-  return generateHTML(json, [
-    Document,
-    Paragraph,
-    Text,
-    Bold,
-    Italic,
-    Strike,
-    Underline,
-    Highlight,
-  ]);
+  return generateHTML(json, SERIALIZABLE_EXTENSIONS);
+};
+
+export const getRichTextJson = (html: string) => {
+  return generateJSON(html, SERIALIZABLE_EXTENSIONS) as JSON;
 };
 
 export const hasRichText = (json: JSONContent, plainText: string): boolean => {

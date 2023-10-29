@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 
-import { getRichTextJSON } from "../../lib/editor";
+import { getRichTextJson } from "@quenti/lib/editor";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TSaveSchema } from "./save.schema";
 
@@ -32,10 +33,10 @@ export const saveHandler = async ({ ctx, input }: SaveOptions) => {
             definition: term.definition,
             word: term.word,
             wordRichText: term.wordRichText
-              ? (getRichTextJSON(term.wordRichText) as object)
+              ? (getRichTextJson(term.wordRichText) as object)
               : undefined,
             definitionRichText: term.definitionRichText
-              ? (getRichTextJSON(term.definitionRichText) as object)
+              ? (getRichTextJson(term.definitionRichText) as object)
               : undefined,
             rank: i,
           })),
@@ -57,10 +58,10 @@ export const saveHandler = async ({ ctx, input }: SaveOptions) => {
             definition: term.definition,
             word: term.word,
             wordRichText: term.wordRichText
-              ? (getRichTextJSON(term.wordRichText) as object)
+              ? (getRichTextJson(term.wordRichText) as object)
               : undefined,
             definitionRichText: term.definitionRichText
-              ? (getRichTextJSON(term.definitionRichText) as object)
+              ? (getRichTextJson(term.definitionRichText) as object)
               : undefined,
             rank: i,
           })),

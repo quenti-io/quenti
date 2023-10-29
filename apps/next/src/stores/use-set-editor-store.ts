@@ -188,7 +188,13 @@ export const createSetEditorStore = (
             ),
           };
         });
-        behaviors?.editTerm?.(id, word, definition);
+        behaviors?.editTerm?.(
+          id,
+          word,
+          definition,
+          wordRichText,
+          definitionRichText,
+        );
       },
       changeTermId: (oldId: string, newId: string) => {
         set((state) => {

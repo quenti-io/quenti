@@ -2,13 +2,13 @@ import debounce from "lodash.debounce";
 import React from "react";
 import { shallow } from "zustand/shallow";
 
+import { richTextToHtml } from "@quenti/lib/editor";
 import { api } from "@quenti/trpc";
 
 import {
   SetEditorStoreContext,
   useSetEditorContext,
 } from "../stores/use-set-editor-store";
-import { richTextToHtml } from "../utils/editor";
 import { HydrateAutoSaveData } from "./hydrate-auto-save-data";
 import { SetEditorPure } from "./set-editor";
 

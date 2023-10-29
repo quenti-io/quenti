@@ -1,4 +1,5 @@
 import { Profanity, ProfanityOptions } from "@2toad/profanity";
+import type { JSONContent } from "@tiptap/react";
 
 const options = new ProfanityOptions();
 options.grawlix = "****";
@@ -65,3 +66,22 @@ usernameProfanity.removeWords(
     "spac", // e.g. space, spacious, etc.
   ]),
 );
+
+export const censorRichText = (json: JSONContent): JSONContent => {
+  return {
+    ...json,
+    content: json.content?.map((node) => {
+      if (node.type === "text" && node.text) {
+        return {
+          ...node,
+          text: profanity.censor(node.text),
+        };
+      }
+      if (node.type === "paragraph") {
+        return censorRichText(node);
+      }
+
+      return node;
+    }),
+  };
+};
