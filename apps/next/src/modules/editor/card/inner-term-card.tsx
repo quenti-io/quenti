@@ -203,8 +203,9 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     if (
       (word !== term.word ||
         definition !== term.definition ||
-        (wordRichText && !compareJson(wordJson, term.wordRichText)) ||
-        (definitionRichText &&
+        ((wordRichText || term.wordRichText) &&
+          !compareJson(wordJson, term.wordRichText)) ||
+        ((definitionRichText || term.definitionRichText) &&
           !compareJson(definitionJson, term.definitionRichText))) &&
       !focused
     ) {
