@@ -18,7 +18,7 @@ import {
 import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
-import { ScriptFormatter } from "../../components/script-formatter";
+import { Display } from "../../components/display";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
@@ -128,7 +128,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               />
             ) : (
               <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
-                <ScriptFormatter>{editWord}</ScriptFormatter>
+                <Display text={editWord} richText={term.wordRichText} />
               </Text>
             )}
             <Box bg={divider} h="full" rounded="full" w="4px" />
@@ -145,7 +145,10 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               />
             ) : (
               <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
-                <ScriptFormatter>{editDefinition}</ScriptFormatter>
+                <Display
+                  text={editDefinition}
+                  richText={term.definitionRichText}
+                />
               </Text>
             )}
           </Flex>

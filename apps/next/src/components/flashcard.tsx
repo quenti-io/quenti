@@ -1,10 +1,8 @@
 import type { JSONContent } from "@tiptap/react";
 import React from "react";
 import useFitText from "use-fit-text";
-import { filterXSS } from "xss";
 
 import { outfit } from "@quenti/lib/chakra-theme";
-import { richTextToHtml } from "@quenti/lib/editor";
 import type { Term } from "@quenti/prisma/client";
 
 import {
@@ -31,7 +29,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import { ScriptFormatter } from "./script-formatter";
+import { Display } from "./display";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {
@@ -229,15 +227,7 @@ const ShrinkableText: React.FC<{
         overflowWrap: "anywhere",
       }}
     >
-      {richText ? (
-        <p
-          dangerouslySetInnerHTML={{
-            __html: filterXSS(richTextToHtml(richText, true)),
-          }}
-        />
-      ) : (
-        <ScriptFormatter>{text}</ScriptFormatter>
-      )}
+      <Display text={text} richText={richText} />
     </span>
   );
 };
