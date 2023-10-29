@@ -33,15 +33,15 @@ export interface InnerTermCardProps extends SortableTermCardProps {
   listeners: SyntheticListenerMap | undefined;
 }
 
-const editorConfig: Parameters<typeof useEditor>[0] = {
+const editorConfig = (tabIndex: number): Parameters<typeof useEditor>[0] => ({
   extensions: [Document, Paragraph, TextExtension],
   editorProps: {
     attributes: {
-      class:
-        "focus:outline-none py-[7px] border-b-[1px] border-b-[var(--chakra-colors-gray-600)] focus:border-b-[var(--chakra-colors-blue-300)]",
+      tabindex: `${tabIndex}`,
+      class: `focus:outline-none py-[7px] border-b-[1px] border-b-[var(--chakra-colors-gray-600)] focus:border-b-[var(--chakra-colors-blue-300)]`,
     },
   },
-};
+});
 
 export const InnerTermCardRaw = React.forwardRef<
   TermCardRef,
@@ -109,11 +109,11 @@ export const InnerTermCardRaw = React.forwardRef<
       : "definition";
 
   const wordEditor = useEditor({
-    ...editorConfig,
+    ...editorConfig(term.rank + 1),
     content: word,
   });
   const definitionEditor = useEditor({
-    ...editorConfig,
+    ...editorConfig(term.rank + 2),
     content: definition,
   });
 
@@ -219,7 +219,6 @@ export const InnerTermCardRaw = React.forwardRef<
                 editor={wordEditor}
                 placeholder={`Enter ${placeholderTerm}`}
                 onFocus={() => setWordFocused(true)}
-                tabIndex={term.rank + 1}
                 onBlur={() => {
                   setWordFocused(false);
                 }}
@@ -254,7 +253,6 @@ export const InnerTermCardRaw = React.forwardRef<
                 editor={definitionEditor}
                 placeholder={`Enter ${placeholderDefinition}`}
                 onFocus={() => setDefinitionFocused(true)}
-                tabIndex={term.rank + 2}
                 onBlur={() => {
                   setDefinitionFocused(false);
                 }}

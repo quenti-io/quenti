@@ -33,10 +33,6 @@ export const SortableTermCard: React.FC<SortableTermCardProps> = (props) => {
     opacity: props.isDragging ? 0.75 : undefined,
   };
 
-  React.useEffect(() => {
-    console.log("REMOVE");
-  }, []);
-
   return (
     <TermCard
       {...props}

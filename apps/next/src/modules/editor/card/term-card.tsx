@@ -18,12 +18,17 @@ export interface TermCardProps extends SortableTermCardProps {
 
 export type TermCardRef = HTMLDivElement;
 
+const padNextFour = (ranks: number[]) => {
+  const last = ranks[ranks.length - 1]!;
+  return [...ranks, last + 1, last + 2, last + 3, last + 4];
+};
+
 export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
   function TermCardInner(props, ref) {
     const innerRef = React.useRef<HTMLDivElement>(null);
     const inView = useInView(innerRef);
     const visible = useSetEditorContext((s) =>
-      s.visibleTerms.includes(props.term.id),
+      padNextFour(s.visibleTerms).includes(props.term.rank),
     );
     const hideTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -32,11 +37,11 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     React.useEffect(() => {
       if (inView) {
         if (hideTimeout.current) clearTimeout(hideTimeout.current);
-        setTermVisible(props.term.id, inView);
+        setTermVisible(props.term.rank, inView);
       } else {
         hideTimeout.current = setTimeout(() => {
-          setTermVisible(props.term.id, false);
-        }, 1000);
+          setTermVisible(props.term.rank, false);
+        }, 300);
       }
 
       return () => {

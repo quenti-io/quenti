@@ -24,7 +24,7 @@ interface SetEditorProps {
   visibility: StudySetVisibility;
   terms: (Term | AutoSaveTerm)[];
   serverTerms: string[];
-  visibleTerms: string[];
+  visibleTerms: number[];
   lastCreated?: string;
 }
 
@@ -48,7 +48,7 @@ interface SetEditorState extends SetEditorProps {
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
   removeServerTerm: (term: string) => void;
-  setTermVisible: (id: string, visible: boolean) => void;
+  setTermVisible: (rank: number, visible: boolean) => void;
   setLastCreated: (id: string) => void;
   onSubscribeDelegate: () => void;
   onComplete: () => void;
@@ -213,15 +213,21 @@ export const createSetEditorStore = (
         });
         behaviors?.removeServerTerm?.(term);
       },
-      setTermVisible: (id: string, visible: boolean) => {
+      setTermVisible: (rank: number, visible: boolean) => {
         set((state) => {
+          if (!visible && !state.visibleTerms.includes(rank)) return {};
+
+          const terms = (
+            visible
+              ? [...new Set([...state.visibleTerms, rank])]
+              : state.visibleTerms.filter((t) => t != rank)
+          ).sort((a, b) => a - b);
+
           return {
-            visibleTerms: visible
-              ? [...new Set([...state.visibleTerms, id])]
-              : state.visibleTerms.filter((t) => t !== id),
+            visibleTerms: terms,
           };
         });
-        behaviors?.setTermVisible?.(id, visible);
+        behaviors?.setTermVisible?.(rank, visible);
       },
       setLastCreated: (id: string) => {
         set({ lastCreated: id });
