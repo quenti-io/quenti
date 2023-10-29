@@ -10,3 +10,21 @@ export const word = (
     return type == "prompt" ? term.word : term.definition;
   else return type == "prompt" ? term.definition : term.word;
 };
+
+export const richWord = (
+  mode: StudySetAnswerMode,
+  term: Pick<
+    TermWithDistractors,
+    "word" | "definition" | "wordRichText" | "definitionRichText"
+  >,
+  type: "prompt" | "answer",
+) => {
+  if (mode == "Definition")
+    return type == "prompt"
+      ? { text: term.word, richText: term.wordRichText }
+      : { text: term.definition, richText: term.definitionRichText };
+  else
+    return type == "prompt"
+      ? { text: term.definition, richText: term.definitionRichText }
+      : { text: term.word, richText: term.wordRichText };
+};

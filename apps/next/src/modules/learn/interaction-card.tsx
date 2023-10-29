@@ -10,9 +10,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { ScriptFormatter } from "../../components/script-formatter";
+import { Display } from "../../components/display";
 import { useLearnContext } from "../../stores/use-learn-store";
-import { word } from "../../utils/terms";
+import { richWord } from "../../utils/terms";
 import { ChoiceCard } from "./cards/choice";
 import { WriteCard } from "./cards/write";
 
@@ -131,9 +131,9 @@ export const InteractionCard = () => {
             </HStack>
             <Box minH={{ base: "60px", md: "140px" }}>
               <Text fontSize="xl" whiteSpace="pre-wrap" overflowWrap="anywhere">
-                <ScriptFormatter>
-                  {word(active.answerMode, active.term, "prompt")}
-                </ScriptFormatter>
+                <Display
+                  {...richWord(active.answerMode, active.term, "prompt")}
+                />
               </Text>
             </Box>
             {active.type == "choice" ? (
