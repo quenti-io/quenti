@@ -40,10 +40,12 @@ export const generateMcqQuestion = (
   term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
 ): TestQuestion<MultipleChoiceData> => {
+  const mode = getAnswerMode(answerMode);
+
   const choices = shuffleArray([
     term,
     ...term.distractors
-      .filter((d) => d.type == answerMode)
+      .filter((d) => d.type == mode)
       .map((d) => ({
         id: d.id,
         word: d.word,
@@ -53,7 +55,7 @@ export const generateMcqQuestion = (
 
   return {
     type: TestQuestionType.MultipleChoice,
-    answerMode: getAnswerMode(answerMode),
+    answerMode: mode,
     data: {
       term,
       choices,
