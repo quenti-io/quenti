@@ -3,10 +3,32 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@quenti/env": "*"
+    "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/theme-tools": "^2.1.1",
+    "@quenti/env": "workspace:*",
+    "@quenti/prisma": "workspace:*",
+    "@tiptap/core": "^2.1.12",
+    "@tiptap/html": "^2.1.12",
+    "@tiptap/react": "^2.1.12",
+    "@tiptap/extension-bold": "^2.1.12",
+    "@tiptap/extension-document": "^2.1.12",
+    "@tiptap/extension-highlight": "^2.1.12",
+    "@tiptap/extension-history": "^2.1.12",
+    "@tiptap/extension-italic": "^2.1.12",
+    "@tiptap/extension-paragraph": "^2.1.12",
+    "@tiptap/extension-placeholder": "^2.1.12",
+    "@tiptap/extension-strike": "^2.1.12",
+    "@tiptap/extension-text": "^2.1.12",
+    "@tiptap/extension-typography": "^2.1.12",
+    "@tiptap/extension-underline": "^2.1.12",
+    "next": "^13.5.6",
+    "react": "^18.2.0"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.30"
   }
 }

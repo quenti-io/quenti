@@ -24,7 +24,7 @@
   },
   "globalDependencies": [
     "**/.env",
-    "yarn.lock",
+    "pnpm-lock.yaml",
     "packages/console/**/*",
     "packages/integrations/**/*"
   ],

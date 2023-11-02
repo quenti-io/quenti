@@ -1,5 +1,3 @@
-import { HeadSeo, Link } from "@quenti/components";
-import { FrameErrorLogo } from "@quenti/components/frame-error-logo";
 import { SUPPORT_EMAIL } from "@quenti/lib/constants/email";
 
 import {
@@ -13,6 +11,10 @@ import {
 } from "@chakra-ui/react";
 
 import { IconRotateClockwise2 } from "@tabler/icons-react";
+
+import { FrameErrorLogo } from "./frame-error-logo";
+import { HeadSeo } from "./head-seo";
+import { Link } from "./link";
 
 const bgHsl = "204, 45%, 98%";
 const darkBgHsl = "230, 21%, 11%";

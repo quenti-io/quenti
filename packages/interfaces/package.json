@@ -4,6 +4,12 @@
   "private": true,
   "main": "./index.ts",
   "types": "./index.ts",
+  "dependencies": {
+    "@quenti/prisma": "workspace:*"
+  },
+  "devDependencies": {
+    "@tiptap/react": "^2.1.12"
+  },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
