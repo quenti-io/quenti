@@ -2,7 +2,7 @@ import type { JSONContent } from "@tiptap/react";
 import React from "react";
 import { filterXSS } from "xss";
 
-import { ScriptFormatter } from "@quenti/components";
+import { ScriptFormatter } from "./script-formatter";
 import { richTextToHtml } from "@quenti/lib/editor";
 import type { Prisma } from "@quenti/prisma/client";
 

@@ -41,7 +41,8 @@
     "@quenti/integrations": "workspace:*"
   },
   "devDependencies": {
-    "@types/otp-generator": "^4.0.1"
+    "@types/otp-generator": "^4.0.1",
+    "@tiptap/react": "^2.1.12"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
