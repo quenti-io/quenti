@@ -1,7 +1,6 @@
 node_modules/
 .next/
 .turbo/
-.yarn/
 public
 **/**/node_modules
 **/**/.next

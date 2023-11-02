@@ -19,7 +19,6 @@ export const env = createEnv({
     QUENTI_ENCRYPTION_KEY: z.string().length(32),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
-    ADMIN_EMAIL: z.string().email(),
     METRICS_API_USER: z.string(),
     METRICS_API_PASSWORD: z.string(),
     RESEND_API_KEY: z.string().optional(),

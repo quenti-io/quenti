@@ -1,4 +1,4 @@
-import type { Term } from ".prisma/client";
+import type { Term } from "@quenti/prisma/client";
 
 export type Distractor = {
   id: string;

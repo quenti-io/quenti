@@ -73,6 +73,11 @@ Get up and running by following these steps.
    docker-compose -f docker-compose.mysql.yml up
    ```
 
+6. Push schema changes and generate all of the tables
+   ```sh
+   yarn prisma db:push
+   ```
+
 ### Running
 
 Start a development server with

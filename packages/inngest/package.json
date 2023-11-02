@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@quenti/cortex": "*",
-    "@quenti/emails": "*",
-    "@quenti/enterprise": "*",
-    "@quenti/env": "*",
-    "@quenti/payments": "*",
-    "@quenti/prisma": "*",
+    "@quenti/cortex": "workspace:*",
+    "@quenti/emails": "workspace:*",
+    "@quenti/enterprise": "workspace:*",
+    "@quenti/env": "workspace:*",
+    "@quenti/payments": "workspace:*",
+    "@quenti/prisma": "workspace:*",
     "inngest": "^3.0.2"
   },
   "scripts": {
