@@ -195,18 +195,6 @@ export const onboardingProcedure = t.procedure.use(enforceBasicAuth);
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
-const enforceUserIsAdmin = enforceUserIsAuthed.unstable_pipe(
-  ({ ctx, next }) => {
-    if (ctx.session?.user?.email !== env.ADMIN_EMAIL) {
-      throw new TRPCError({ code: "FORBIDDEN" });
-    }
-
-    return next();
-  },
-);
-
-export const adminProcedure = protectedProcedure.use(enforceUserIsAdmin);
-
 export const enforceUserIsTeacher = enforceUserIsAuthed.unstable_pipe(
   ({ ctx, next }) => {
     if (ctx.session.user.type !== "Teacher") {

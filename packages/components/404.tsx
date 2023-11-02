@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { FrameLogo, HeadSeo } from "@quenti/components";
 import { SUPPORT_EMAIL } from "@quenti/lib/constants/email";
 
 import {
@@ -12,6 +11,9 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+
+import { FrameLogo } from "./frame-logo";
+import { HeadSeo } from "./head-seo";
 
 export interface NotFoundPageProps {
   navbarHeight: number;

@@ -10,22 +10,19 @@
   ],
   "scripts": {
     "clean": "rm -rf .turbo && rm -rf node_modules",
-    "db:push": "yarn prisma db push",
-    "db:seed": "yarn prisma db seed",
-    "db:studio": "yarn prisma studio",
+    "db:push": "pnpm prisma db push",
+    "db:seed": "pnpm prisma db seed",
+    "db:studio": "pnpm prisma studio",
     "generate": "prisma generate",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.4.2",
-    "@quenti/env": "*",
+    "@quenti/env": "workspace:*",
     "zod": "^3.22.4",
     "zod-prisma": "^0.5.4"
   },
   "devDependencies": {
     "prisma": "^5.4.2"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma-seed.ts"
   }
 }

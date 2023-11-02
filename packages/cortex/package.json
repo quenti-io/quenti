@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "@huggingface/inference": "^2.6.1",
-    "@quenti/env": "*",
-    "@quenti/interfaces": "*",
-    "@quenti/lib": "*",
-    "@quenti/prisma": "*",
+    "@quenti/env": "workspace:*",
+    "@quenti/interfaces": "workspace:*",
+    "@quenti/lib": "workspace:*",
+    "@quenti/prisma": "workspace:*",
     "cohere-ai": "^6.2.2",
     "ml-distance": "^4.0.1"
   }
