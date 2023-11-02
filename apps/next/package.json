@@ -8,8 +8,7 @@
     "lint": "next lint",
     "lint:report": "eslint . --format json --output-file ../../lint-results/next.json",
     "start": "next start",
-    "theme": "chakra-cli tokens src/lib/chakra-theme.ts",
-    "upload-sourcemaps": "npx @highlight-run/sourcemap-uploader upload --path=\".next\" -k ${HIGHLIGHT_SOURCEMAP_UPLOAD_API_KEY}"
+    "theme": "chakra-cli tokens src/lib/chakra-theme.ts"
   },
   "dependencies": {
     "@chakra-ui/clickable": "^2.1.0",
@@ -70,10 +69,11 @@
     "react": "^18.2.0",
     "react-canvas-confetti": "^1.4.0",
     "react-dom": "^18.2.0",
-    "satori": "^0.10.9",
     "react-hook-form": "^7.47.0",
     "react-to-print": "^2.14.15",
     "react-top-loading-bar": "^2.3.1",
+    "satori": "^0.10.9",
+    "sharp": "^0.32.6",
     "superjson": "^1.13.1",
     "thumbhash": "^0.1.1",
     "use-fit-text": "^2.4.0",
@@ -94,6 +94,7 @@
     "@types/react": "^18.2.30",
     "@types/react-dom": "^18.2.14",
     "autoprefixer": "^10.4.14",
+    "encoding": "^0.1.13",
     "env-cmd": "^10.1.0",
     "postcss": "^8.4.24",
     "prettier-plugin-tailwindcss": "^0.5.4",
