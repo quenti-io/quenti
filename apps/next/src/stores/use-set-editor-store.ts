@@ -10,6 +10,18 @@ import type {
   Term,
 } from "@quenti/prisma/client";
 
+export type ClientTerm = Omit<Term, "wordRichText" | "definitionRichText"> & {
+  wordRichText?: JSON | null;
+  definitionRichText?: JSON | null;
+};
+export type ClientAutoSaveTerm = Omit<
+  AutoSaveTerm,
+  "wordRichText" | "definitionRichText"
+> & {
+  wordRichText?: JSON | null;
+  definitionRichText?: JSON | null;
+};
+
 interface SetEditorProps {
   mode: "create" | "edit";
   isSaving: boolean;
@@ -22,8 +34,9 @@ interface SetEditorProps {
   wordLanguage: Language;
   definitionLanguage: Language;
   visibility: StudySetVisibility;
-  terms: (Term | AutoSaveTerm)[];
+  terms: (ClientTerm | ClientAutoSaveTerm)[];
   serverTerms: string[];
+  visibleTerms: number[];
   lastCreated?: string;
 }
 
@@ -42,11 +55,18 @@ interface SetEditorState extends SetEditorProps {
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
   deleteTerm: (id: string) => void;
   changeTermId: (oldId: string, newId: string) => void;
-  editTerm: (id: string, word: string, definition: string) => void;
+  editTerm: (
+    id: string,
+    word: string,
+    definition: string,
+    wordRichText?: JSON,
+    definitionRichText?: JSON,
+  ) => void;
   reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
   removeServerTerm: (term: string) => void;
+  setTermVisible: (rank: number, visible: boolean) => void;
   setLastCreated: (id: string) => void;
   onSubscribeDelegate: () => void;
   onComplete: () => void;
@@ -68,6 +88,7 @@ export const createSetEditorStore = (
     wordLanguage: "en",
     definitionLanguage: "en",
     tags: [],
+    visibleTerms: [],
     visibility: "Public",
     terms: [],
     serverTerms: [],
@@ -90,10 +111,12 @@ export const createSetEditorStore = (
       setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
       addTerm: (rank: number) => {
         set((state) => {
-          const term: AutoSaveTerm = {
+          const term: ClientAutoSaveTerm = {
             id: nanoid(),
             word: "",
             definition: "",
+            wordRichText: null,
+            definitionRichText: null,
             setAutoSaveId: "",
             rank,
           };
@@ -120,6 +143,8 @@ export const createSetEditorStore = (
             id: nanoid(),
             word: term.word,
             definition: term.definition,
+            wordRichText: null,
+            definitionRichText: null,
             setAutoSaveId: "",
             rank: filtered.length + i,
           }));
@@ -147,15 +172,29 @@ export const createSetEditorStore = (
         });
         behaviors?.deleteTerm?.(id);
       },
-      editTerm: (id: string, word: string, definition: string) => {
+      editTerm: (
+        id: string,
+        word: string,
+        definition: string,
+        wordRichText?: JSON,
+        definitionRichText?: JSON,
+      ) => {
         set((state) => {
           return {
             terms: state.terms.map((t) =>
-              t.id === id ? { ...t, word, definition } : t,
+              t.id === id
+                ? { ...t, word, definition, wordRichText, definitionRichText }
+                : t,
             ),
           };
         });
-        behaviors?.editTerm?.(id, word, definition);
+        behaviors?.editTerm?.(
+          id,
+          word,
+          definition,
+          wordRichText,
+          definitionRichText,
+        );
       },
       changeTermId: (oldId: string, newId: string) => {
         set((state) => {
@@ -188,7 +227,9 @@ export const createSetEditorStore = (
             terms: state.terms.map((term) => ({
               ...term,
               word: term.definition,
+              wordRichText: term.definitionRichText,
               definition: term.word,
+              definitionRichText: term.wordRichText,
             })),
           };
         });
@@ -209,6 +250,22 @@ export const createSetEditorStore = (
           };
         });
         behaviors?.removeServerTerm?.(term);
+      },
+      setTermVisible: (rank: number, visible: boolean) => {
+        set((state) => {
+          if (!visible && !state.visibleTerms.includes(rank)) return {};
+
+          const terms = (
+            visible
+              ? [...new Set([...state.visibleTerms, rank])]
+              : state.visibleTerms.filter((t) => t != rank)
+          ).sort((a, b) => a - b);
+
+          return {
+            visibleTerms: terms,
+          };
+        });
+        behaviors?.setTermVisible?.(rank, visible);
       },
       setLastCreated: (id: string) => {
         set({ lastCreated: id });

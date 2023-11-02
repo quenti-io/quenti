@@ -24,8 +24,8 @@ import { Button, Stack } from "@chakra-ui/react";
 import { IconPlus } from "@tabler/icons-react";
 
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
+import { SortableTermCard } from "./card/sortable-term-card";
 import { LanguageMenuWrapper } from "./language-menu";
-import { SortableTermCard } from "./sortable-term-card";
 import { TermCardGap } from "./term-card-gap";
 
 export const TermsList = () => {
@@ -142,6 +142,7 @@ export const TermsList = () => {
                       justCreated={lastCreated === term.id}
                       isDragging={currentDrag === term.id}
                       isCurrent={current === term.id}
+                      isLast={i === terms.length - 1}
                       deletable={terms.length > 1}
                       key={term.id}
                       term={term}

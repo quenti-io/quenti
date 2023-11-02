@@ -418,12 +418,14 @@ model SetAutoSave {
 }
 
 model Term {
-  id         String   @id @default(cuid())
-  word       String   @db.VarChar(1000)
-  definition String   @db.VarChar(1000)
-  rank       Int
-  studySetId String
-  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  id                 String   @id @default(cuid())
+  word               String   @db.VarChar(1000)
+  definition         String   @db.VarChar(1000)
+  wordRichText       Json?
+  definitionRichText Json?
+  rank               Int
+  studySetId         String
+  studySet           StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
@@ -456,12 +458,14 @@ model Distractor {
 }
 
 model AutoSaveTerm {
-  id            String      @id @default(cuid())
-  word          String      @db.VarChar(1000)
-  definition    String      @db.VarChar(1000)
-  rank          Int
-  setAutoSaveId String
-  setAutoSave   SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
+  id                 String      @id @default(cuid())
+  word               String      @db.VarChar(1000)
+  definition         String      @db.VarChar(1000)
+  wordRichText       Json?
+  definitionRichText Json?
+  rank               Int
+  setAutoSaveId      String
+  setAutoSave        SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)
 
   @@index([setAutoSaveId])
 }

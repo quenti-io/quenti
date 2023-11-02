@@ -17,6 +17,7 @@
     "@quenti/payments": "workspace:*",
     "@quenti/prisma": "workspace:*",
     "@quenti/types": "workspace:*",
+    "@tiptap/html": "^2.1.12",
     "@trpc/client": "^10.41.0",
     "@trpc/next": "^10.41.0",
     "@trpc/react-query": "^10.41.0",

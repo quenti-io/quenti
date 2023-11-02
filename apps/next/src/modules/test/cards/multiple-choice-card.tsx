@@ -2,7 +2,8 @@ import React from "react";
 
 import { GenericLabel } from "@quenti/components";
 import { ScriptFormatter } from "@quenti/components/script-formatter";
-import { Clickable, PromptDisplay } from "@quenti/components/test";
+import { Clickable } from "@quenti/components/test";
+import { RichPromptDisplay } from "@quenti/components/test/rich-prompt-display";
 import type { MultipleChoiceData } from "@quenti/interfaces";
 
 import {
@@ -17,7 +18,7 @@ import {
 import { IconCircleCheckFilled, IconCircleX } from "@tabler/icons-react";
 
 import { useTestContext } from "../../../stores/use-test-store";
-import { word } from "../../../utils/terms";
+import { richWord, word } from "../../../utils/terms";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 
@@ -66,9 +67,9 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
 
   return (
     <>
-      <PromptDisplay
+      <RichPromptDisplay
         label={question.answerMode == "Definition" ? "Term" : "Definition"}
-        content={word(question.answerMode, data.term, "prompt")}
+        {...richWord(question.answerMode, data.term, "prompt")}
       />
       <Stack spacing="2">
         <GenericLabel evaluation={evaluation}>

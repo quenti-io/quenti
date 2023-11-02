@@ -1,11 +1,8 @@
 import React from "react";
 
 import { GenericLabel } from "@quenti/components";
-import {
-  EvaluatedFalse,
-  EvaluatedTrue,
-  PromptDisplay,
-} from "@quenti/components/test";
+import { EvaluatedFalse, EvaluatedTrue } from "@quenti/components/test";
+import { RichPromptDisplay } from "@quenti/components/test/rich-prompt-display";
 import { placeholderLanguage } from "@quenti/core";
 import type { WriteData } from "@quenti/interfaces";
 
@@ -13,7 +10,7 @@ import { Box, HStack, Input, Stack, useColorModeValue } from "@chakra-ui/react";
 
 import { CharacterButtonWrapper } from "../../../components/special-characters";
 import { useTestContext } from "../../../stores/use-test-store";
-import { word } from "../../../utils/terms";
+import { richWord, word } from "../../../utils/terms";
 import { CortexGraded } from "../cortex-graded";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
@@ -54,9 +51,9 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
 
   return (
     <>
-      <PromptDisplay
+      <RichPromptDisplay
         label={question.answerMode == "Definition" ? "Term" : "Definition"}
-        content={word(question.answerMode, data.term, "prompt")}
+        {...richWord(question.answerMode, data.term, "prompt")}
       />
       <Stack>
         <HStack justifyContent="space-between" pr="2">

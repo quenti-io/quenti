@@ -1,21 +1,32 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import React from "react";
 
 import type { Language } from "@quenti/core/language";
-import type { AutoSaveTerm, Term } from "@quenti/prisma/client";
 
+import type {
+  ClientAutoSaveTerm,
+  ClientTerm,
+} from "../../../stores/use-set-editor-store";
 import { TermCard } from "./term-card";
 
 export interface SortableTermCardProps {
   isCurrent: boolean;
   isDragging: boolean;
   justCreated: boolean;
-  term: Term | AutoSaveTerm;
+  isLast: boolean;
+  term: ClientTerm | ClientAutoSaveTerm;
   deletable: boolean;
   wordLanguage: Language;
   definitionLanguage: Language;
   openMenu: (type: "word" | "definition") => void;
-  editTerm: (id: string, word: string, definition: string) => void;
+  editTerm: (
+    id: string,
+    word: string,
+    definition: string,
+    wordRichText?: JSON,
+    definitionRichText?: JSON,
+  ) => void;
   deleteTerm: (id: string) => void;
   anyFocus: () => void;
   onTabOff: () => void;
