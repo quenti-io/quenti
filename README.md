@@ -1,6 +1,6 @@
-[![og:image](./apps/next/public/og-image.png)](https://quenti)
+[![og:image](./apps/next/public/og-image.png)](https://quenti.io)
 
-The modern learning platform designed to let you study anything.
+The open-source Quizlet alternative.
 
 ## The Stack
 
@@ -21,7 +21,7 @@ Get up and running by following these steps.
 
 - Node.js 18.x
 - MySQL
-- Yarn
+- Pnpm
 - Docker and docker-compose _(recommended)_
 
 ### Setup
@@ -38,10 +38,10 @@ Get up and running by following these steps.
    cd quenti
    ```
 
-3. Install dependencies with yarn
+3. Install dependencies with pnpm
 
    ```sh
-   yarn
+   pnpm i
    ```
 
 4. Set up the `.env` file
@@ -73,9 +73,9 @@ Get up and running by following these steps.
    docker-compose -f docker-compose.mysql.yml up
    ```
 
-6. Push schema changes and generate all of the tables
+6. Push schema changes and generate the Prisma client
    ```sh
-   yarn prisma db:push
+   pnpm prisma db:push
    ```
 
 ### Running
@@ -83,14 +83,14 @@ Get up and running by following these steps.
 Start a development server with
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 or create and start a production build with
 
 ```
-yarn build
-yarn start
+pnpm build
+pnpm start
 ```
 
 Navigate to http://localhost:3000 and Quenti should be up and running!
