@@ -1,22 +1,27 @@
 {
   "name": "quenti-monorepo",
   "private": true,
+  "workspaces": [
+    "apps/next",
+    "apps/website",
+    "packages/*"
+  ],
   "scripts": {
     "build": "dotenv -- turbo build --filter @quenti/next...",
     "clean": "find . -name node_modules -o -name .next -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "clean:workspaces": "turbo clean",
-    "db:setup": "dotenv -- pnpm prisma seed",
+    "db:setup": "dotenv -- yarn prisma seed",
     "db:generate": "dotenv -- turbo db:generate",
     "db:push": "dotenv -- turbo db:push db:generate",
-    "db:studio": "dotenv -- pnpm -F db dev",
+    "db:studio": "dotenv -- yarn -F db dev",
     "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\"",
     "lint": "dotenv -- turbo lint",
     "lint:fix": "turbo lint:fix",
     "type-check": "turbo type-check",
     "dev": "dotenv -- turbo dev --scope \"@quenti/next\"",
     "start": "dotenv -- turbo start --scope \"@quenti/next\"",
-    "next": "dotenv -- pnpm --filter @quenti/next",
-    "prisma": "dotenv -- pnpm --filter @quenti/prisma",
+    "next": "dotenv -- yarn workspace @quenti/next",
+    "prisma": "dotenv -- yarn workspace @quenti/prisma",
     "install-vercel": "sh ./install-vercel.sh",
     "email-dev": "dotenv -- npx email dev --dir packages/emails/templates --port 3001",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts",
@@ -24,6 +29,7 @@
     "stripe-webhook": "stripe listen --forward-to localhost:3000/api/stripe/webhook"
   },
   "dependencies": {
+    "@prisma/client": "5.5.2",
     "eslint-config-next": "^13.5.2",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-turbo": "^1.10.14",
@@ -40,6 +46,7 @@
     "eslint": "^8.50.0",
     "jest": "^29.6.0",
     "prettier": "^3.0.3",
+    "prisma": "5.5.2",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
   },
@@ -49,5 +56,6 @@
   "engines": {
     "node": ">=18.x",
     "npm": ">=7.0.0"
-  }
+  },
+  "packageManager": "yarn@4.0.1"
 }

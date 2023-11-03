@@ -6,8 +6,8 @@
   "types": "./index.ts",
   "dependencies": {
     "@quenti/branding": "workspace:*",
-    "@quenti/lib": "workspace:*",
     "@quenti/env": "workspace:*",
+    "@quenti/lib": "workspace:*",
     "@react-email/components": "^0.0.7",
     "@react-email/tailwind": "^0.0.9",
     "react": "^18.2.0",
