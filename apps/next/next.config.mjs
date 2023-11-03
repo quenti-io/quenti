@@ -43,6 +43,12 @@ const getConsoleRewrites = async () => {
 let config = {
   generateBuildId: () => nextBuildId({ dir: __dirname }),
   experimental: {
+    optimizePackageImports: [
+      "@quenti/components",
+      "@tabler/icons-react",
+      "@chakra-ui/react",
+      "@tremor/react",
+    ],
     instrumentationHook: true,
     // Tommy, I love you so much https://holocron.so/blog/optimizing-next.js-cold-starts-for-vercel
     esmExternals: false,

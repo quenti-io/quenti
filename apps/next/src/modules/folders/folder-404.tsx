@@ -25,3 +25,5 @@ export const Folder404 = () => {
     </WithFooter>
   );
 };
+
+export default Folder404;

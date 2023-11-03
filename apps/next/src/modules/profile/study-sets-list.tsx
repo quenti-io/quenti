@@ -100,7 +100,7 @@ StudySetsList.Skeleton = function StudySetsListSkeleton() {
   return (
     <Stack spacing={8}>
       <Group heading="Today" numSets={3} />
-      <Group heading="Yesterday" numSets={2} />
+      <Group heading="Yesterday" numSets={5} />
     </Stack>
   );
 };

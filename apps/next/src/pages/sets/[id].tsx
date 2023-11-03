@@ -17,9 +17,7 @@ const Set404 = dynamic(() => import("../../modules/main/set-404"), {
   ssr: false,
 });
 
-const InternalSet = dynamic(() =>
-  import("../../components/internal-set").then((mod) => mod.default),
-);
+const InternalSet = dynamic(() => import("../../components/internal-set"));
 
 const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
   if (isPrivate) return <SetPrivate />;
@@ -53,8 +51,6 @@ const Set = ({ set, isPrivate }: inferSSRProps<typeof getServerSideProps>) => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
-
   const session = await getServerAuthSession(ctx);
   const userId = session?.user?.id;
 
