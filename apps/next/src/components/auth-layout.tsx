@@ -25,7 +25,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconBrandGoogle, IconWand } from "@tabler/icons-react";
+import { IconBrandGoogleFilled, IconWand } from "@tabler/icons-react";
 
 import { Logo } from "../../../../packages/components/logo";
 import { LazyWrapper } from "../common/lazy-wrapper";
@@ -180,9 +180,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                           size="lg"
                           fontSize="sm"
                           shadow="0 4px 6px -1px rgba(0, 0, 0, 0.04),0 2px 4px -1px rgba(0, 0, 0, 0.01)"
-                          leftIcon={
-                            <IconBrandGoogle size={18} strokeWidth={4} />
-                          }
+                          leftIcon={<IconBrandGoogleFilled size={18} />}
                           onClick={async () => {
                             if (mode == "signup") {
                               await event("signup", {});
