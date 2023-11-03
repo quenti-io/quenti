@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 import { getServerAuthSession } from "@quenti/auth";
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 import { prisma } from "@quenti/prisma";
 import type { GetServerSidePropsContext } from "@quenti/types";
 

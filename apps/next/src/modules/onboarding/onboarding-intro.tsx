@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import React from "react";
 
 import { BODY_COPY_BASE } from "@quenti/branding";
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 
 import { Box, Button, Heading, Text, VStack } from "@chakra-ui/react";
 

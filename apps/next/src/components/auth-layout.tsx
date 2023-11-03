@@ -5,7 +5,8 @@ import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { HeadSeo, Link } from "@quenti/components";
+import { Link } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 import { WEBSITE_URL } from "@quenti/lib/constants/url";
 
 import {

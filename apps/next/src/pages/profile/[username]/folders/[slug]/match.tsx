@@ -1,4 +1,4 @@
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 
 import { LazyWrapper } from "../../../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../../../common/page-wrapper";

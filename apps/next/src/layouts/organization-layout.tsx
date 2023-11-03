@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-import { HeadSeo, Link } from "@quenti/components";
+import { Link } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 
 import {
   Box,
@@ -20,9 +21,10 @@ import {
 import { IconAlertCircleFilled } from "@tabler/icons-react";
 
 import { LazyWrapper } from "../common/lazy-wrapper";
+import { ToastWrapper } from "../common/toast-wrapper";
 import { AnimatedXCircle } from "../components/animated-icons/x";
 import { AuthedPage } from "../components/authed-page";
-import { ConfettiLayer } from "../components/confetti-layer";
+import { ConfettiPlayer } from "../components/confetti-layer";
 import { Footer } from "../components/footer";
 import { Toast } from "../components/toast";
 import { useOrganization } from "../hooks/use-organization";
@@ -77,25 +79,27 @@ export const OrganizationLayout: React.FC<React.PropsWithChildren> = ({
           }}
         />
         <LazyWrapper>
-          <Box pb="30" style={{ minHeight: "calc(100vh - 80px)" }}>
-            <Tabs
-              borderColor={borderColor}
-              size="sm"
-              index={index}
-              isManual
-              overflow="hidden"
-            >
-              <Box pb="2" overflowX="auto">
-                <OrganizationTabList />
-              </Box>
+          <ToastWrapper>
+            <Box pb="30" style={{ minHeight: "calc(100vh - 80px)" }}>
+              <Tabs
+                borderColor={borderColor}
+                size="sm"
+                index={index}
+                isManual
+                overflow="hidden"
+              >
+                <Box pb="2" overflowX="auto">
+                  <OrganizationTabList />
+                </Box>
+                <Container maxW="6xl" overflow="hidden">
+                  <TabPanels mt="10">{children}</TabPanels>
+                </Container>
+              </Tabs>
               <Container maxW="6xl" overflow="hidden">
-                <TabPanels mt="10">{children}</TabPanels>
+                {isLoaded && isUpgraded && org.published && <ConfettiPlayer />}
               </Container>
-            </Tabs>
-            <Container maxW="6xl" overflow="hidden">
-              {isLoaded && isUpgraded && org.published && <ConfettiLayer />}
-            </Container>
-          </Box>
+            </Box>
+          </ToastWrapper>
           <Footer />
         </LazyWrapper>
       </MainLayout>

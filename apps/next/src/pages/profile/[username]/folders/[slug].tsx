@@ -1,6 +1,6 @@
 import type { GetServerSidePropsContext } from "next";
 
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 import { prisma } from "@quenti/prisma";
 
 import { Container, Flex, Stack } from "@chakra-ui/react";
