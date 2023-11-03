@@ -41,7 +41,7 @@ Get up and running by following these steps.
 3. Install dependencies with yarn
 
    ```sh
-   yarn i
+   yarn
    ```
 
 4. Set up the `.env` file
