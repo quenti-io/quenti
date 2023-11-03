@@ -14,6 +14,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
+import { ToastWrapper } from "../common/toast-wrapper";
 import { useSet } from "../hooks/use-set";
 import { AnimatedCheckCircle } from "./animated-icons/check";
 import { Toast } from "./toast";
@@ -72,60 +73,67 @@ export const ExportTermsModal: React.FC<ExportTermsModalProps> = ({
   };
 
   return (
-    <Modal onClose={onClose} isOpen={isOpen} size="2xl" scrollBehavior="inside">
-      <Modal.Overlay />
-      <Modal.Content>
-        <Modal.Body>
-          <Modal.Heading>Export terms</Modal.Heading>
-          <Flex gap={4}>
-            <Stack w="full">
-              <Stack spacing={0}>
-                <Text fontWeight={700}>In between terms</Text>
-                <Text fontSize="sm" color={grayText}>
-                  Defaults to tab
-                </Text>
+    <ToastWrapper>
+      <Modal
+        onClose={onClose}
+        isOpen={isOpen}
+        size="2xl"
+        scrollBehavior="inside"
+      >
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Body>
+            <Modal.Heading>Export terms</Modal.Heading>
+            <Flex gap={4}>
+              <Stack w="full">
+                <Stack spacing={0}>
+                  <Text fontWeight={700}>In between terms</Text>
+                  <Text fontSize="sm" color={grayText}>
+                    Defaults to tab
+                  </Text>
+                </Stack>
+                <Input
+                  variant="flushed"
+                  placeholder="Tab"
+                  value={_termDelimiter}
+                  onChange={(e) => setTermDelimiter(e.target.value)}
+                />
               </Stack>
-              <Input
-                variant="flushed"
-                placeholder="Tab"
-                value={_termDelimiter}
-                onChange={(e) => setTermDelimiter(e.target.value)}
+              <Stack w="full">
+                <Stack spacing={0}>
+                  <Text fontWeight={700}>In between cards</Text>
+                  <Text fontSize="sm" color={grayText}>
+                    Defaults to newline
+                  </Text>
+                </Stack>
+                <Input
+                  variant="flushed"
+                  placeholder="Newline"
+                  value={_cardDelimiter}
+                  onChange={(e) => setCardDelimiter(e.target.value)}
+                />
+              </Stack>
+            </Flex>
+            <Stack spacing={6}>
+              <Textarea
+                bg={textareaBg}
+                height={300}
+                value={result}
+                resize="none"
               />
             </Stack>
-            <Stack w="full">
-              <Stack spacing={0}>
-                <Text fontWeight={700}>In between cards</Text>
-                <Text fontSize="sm" color={grayText}>
-                  Defaults to newline
-                </Text>
-              </Stack>
-              <Input
-                variant="flushed"
-                placeholder="Newline"
-                value={_cardDelimiter}
-                onChange={(e) => setCardDelimiter(e.target.value)}
-              />
-            </Stack>
-          </Flex>
-          <Stack spacing={6}>
-            <Textarea
-              bg={textareaBg}
-              height={300}
-              value={result}
-              resize="none"
-            />
-          </Stack>
-        </Modal.Body>
-        <Modal.Divider />
-        <Modal.Footer>
-          <ButtonGroup>
-            <Button variant="ghost" colorScheme="gray" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button onClick={handleCopy}>Copy</Button>
-          </ButtonGroup>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
+          </Modal.Body>
+          <Modal.Divider />
+          <Modal.Footer>
+            <ButtonGroup>
+              <Button variant="ghost" colorScheme="gray" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button onClick={handleCopy}>Copy</Button>
+            </ButtonGroup>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+    </ToastWrapper>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "zustand/shallow";
 
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 
 import {
   SetEditorStoreContext,

@@ -13,7 +13,6 @@ declare module "next-auth" {
       username: string;
       type: UserType;
       displayName: boolean;
-      admin: boolean;
       banned: boolean;
       flags: number;
       completedOnboarding: boolean;

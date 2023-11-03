@@ -5,8 +5,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "dependencies": {
-    "@quenti/lib": "workspace:*",
     "@quenti/interfaces": "workspace:*",
+    "@quenti/lib": "workspace:*",
     "@quenti/prisma": "workspace:*"
   },
   "scripts": {

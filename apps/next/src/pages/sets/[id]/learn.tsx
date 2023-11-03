@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import { api } from "@quenti/trpc";
 

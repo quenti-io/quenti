@@ -1,4 +1,0 @@
-packages:
-  - "apps/next"
-  - "apps/website"
-  - "packages/*"

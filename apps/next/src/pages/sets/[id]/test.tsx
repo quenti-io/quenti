@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import { TestQuestionType, type WriteData } from "@quenti/interfaces";
 import { api } from "@quenti/trpc";
