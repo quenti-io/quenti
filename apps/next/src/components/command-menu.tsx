@@ -42,7 +42,6 @@ import {
   IconSettings,
   IconSun,
   IconUser,
-  IconUserCircle,
 } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
@@ -223,15 +222,6 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
         action: (ctrl) => openLink(`/home`, ctrl),
         shouldShow: () => window.location.pathname !== "/home",
       });
-      if (session.data?.user?.admin) {
-        total.push({
-          icon: <IconUserCircle />,
-          name: "Admin",
-          label: "Navigate to admin panel",
-          action: (ctrl) => openLink(`/admin`, ctrl),
-          shouldShow: () => window.location.pathname !== "/admin",
-        });
-      }
       if (me && me.orgMembership) {
         total.push({
           icon: <IconBuildingSkyscraper />,

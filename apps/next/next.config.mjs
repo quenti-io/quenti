@@ -16,10 +16,9 @@ import "@quenti/env/server/server.mjs";
 import pjson from "./package.json" assert { type: "json" };
 
 const shouldAnalyzeBundles = process.env.ANALYZE === "true";
-
-const withBundleAnalyzer = shouldAnalyzeBundles
-  ? (await import("@next/bundle-analyzer")).default
-  : () => undefined;
+const withBundleAnalyzer = (await import("@next/bundle-analyzer")).default({
+  enabled: shouldAnalyzeBundles,
+});
 
 const appVersion = pjson.version;
 
@@ -44,6 +43,12 @@ const getConsoleRewrites = async () => {
 let config = {
   generateBuildId: () => nextBuildId({ dir: __dirname }),
   experimental: {
+    optimizePackageImports: [
+      "@quenti/components",
+      "@tabler/icons-react",
+      "@chakra-ui/react",
+      "@tremor/react",
+    ],
     instrumentationHook: true,
     // Tommy, I love you so much https://holocron.so/blog/optimizing-next.js-cold-starts-for-vercel
     esmExternals: false,
@@ -129,12 +134,11 @@ let config = {
   productionBrowserSourceMaps: false,
 };
 
+config = withHighlightConfig(withAxiom(config), {
+  appVersion,
+});
 if (shouldAnalyzeBundles) {
   config = withBundleAnalyzer(config);
-} else {
-  config = withHighlightConfig(withAxiom(config), {
-    appVersion,
-  });
 }
 
 export default config;

@@ -21,7 +21,7 @@ Get up and running by following these steps.
 
 - Node.js 18.x
 - MySQL
-- Pnpm
+- yarn
 - Docker and docker-compose _(recommended)_
 
 ### Setup
@@ -38,10 +38,10 @@ Get up and running by following these steps.
    cd quenti
    ```
 
-3. Install dependencies with pnpm
+3. Install dependencies with yarn
 
    ```sh
-   pnpm i
+   yarn
    ```
 
 4. Set up the `.env` file
@@ -75,7 +75,7 @@ Get up and running by following these steps.
 
 6. Push schema changes and generate the Prisma client
    ```sh
-   pnpm prisma db:push
+   yarn prisma db:push
    ```
 
 ### Running
@@ -83,14 +83,14 @@ Get up and running by following these steps.
 Start a development server with
 
 ```sh
-pnpm dev
+yarn dev
 ```
 
 or create and start a production build with
 
 ```
-pnpm build
-pnpm start
+yarn build
+yarn start
 ```
 
 Navigate to http://localhost:3000 and Quenti should be up and running!

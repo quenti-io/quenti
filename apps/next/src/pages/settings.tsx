@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 
 import {
   Container,
