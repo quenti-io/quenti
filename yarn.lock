@@ -5450,7 +5450,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quenti/console@workspace:*, @quenti/console@workspace:packages/console":
+"@quenti/console@workspace:packages/console":
   version: 0.0.0-use.local
   resolution: "@quenti/console@workspace:packages/console"
   languageName: unknown
@@ -5551,7 +5551,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quenti/integrations@workspace:*, @quenti/integrations@workspace:packages/integrations":
+"@quenti/integrations@workspace:packages/integrations":
   version: 0.0.0-use.local
   resolution: "@quenti/integrations@workspace:packages/integrations"
   dependencies:
@@ -5629,7 +5629,6 @@ __metadata:
     "@quenti/auth": "workspace:*"
     "@quenti/branding": "workspace:*"
     "@quenti/components": "workspace:*"
-    "@quenti/console": "workspace:*"
     "@quenti/core": "workspace:*"
     "@quenti/enterprise": "workspace:*"
     "@quenti/env": "workspace:*"
@@ -5708,9 +5707,6 @@ __metadata:
     use-fit-text: "npm:^2.4.0"
     zod: "npm:^3.22.4"
     zustand: "npm:^4.4.3"
-  dependenciesMeta:
-    "@quenti/console":
-      optional: true
   languageName: unknown
   linkType: soft
 
@@ -5748,7 +5744,6 @@ __metadata:
   dependencies:
     "@2toad/profanity": "npm:^2.2.0"
     "@quenti/auth": "workspace:*"
-    "@quenti/console": "workspace:*"
     "@quenti/core": "workspace:*"
     "@quenti/cortex": "workspace:*"
     "@quenti/emails": "workspace:*"
@@ -5756,7 +5751,6 @@ __metadata:
     "@quenti/env": "workspace:*"
     "@quenti/images": "workspace:*"
     "@quenti/inngest": "workspace:*"
-    "@quenti/integrations": "workspace:*"
     "@quenti/interfaces": "workspace:*"
     "@quenti/lib": "workspace:*"
     "@quenti/payments": "workspace:*"
@@ -5782,11 +5776,6 @@ __metadata:
     slugify: "npm:^1.6.6"
     superjson: "npm:^1.13.1"
     zod: "npm:^3.22.4"
-  dependenciesMeta:
-    "@quenti/console":
-      optional: true
-    "@quenti/integrations":
-      optional: true
   languageName: unknown
   linkType: soft
 
