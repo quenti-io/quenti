@@ -95,9 +95,6 @@
     "zod": "^3.22.4",
     "zustand": "^4.4.3"
   },
-  "optionalDependencies": {
-    "@quenti/console": "workspace:*"
-  },
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
     "@headlessui/tailwindcss": "^0.2.0",
