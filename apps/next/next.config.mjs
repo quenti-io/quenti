@@ -75,6 +75,17 @@ let config = {
     "@quenti/types",
     "@quenti/website",
   ],
+  headers: async () => [
+    {
+      source: "/auth/:path*",
+      headers: [
+        {
+          key: "X-Frame-Options",
+          value: "DENY",
+        },
+      ],
+    },
+  ],
   rewrites: async () => [
     ...(await getConsoleRewrites()),
     {
