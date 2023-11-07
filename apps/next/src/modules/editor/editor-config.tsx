@@ -1,6 +1,5 @@
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
-import Highlight from "@tiptap/extension-highlight";
 import History from "@tiptap/extension-history";
 import Italic from "@tiptap/extension-italic";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -9,6 +8,8 @@ import Text from "@tiptap/extension-text";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
 import type { Extension, useEditor } from "@tiptap/react";
+
+import { HighlightExtension } from "@quenti/lib/editor";
 
 import { EmojiReplacer } from "./extensions/emoji-replacer";
 
@@ -32,7 +33,9 @@ export const editorConfig = (
     Italic,
     Strike,
     Underline,
-    Highlight,
+    HighlightExtension.configure({
+      multicolor: true,
+    }),
     EmojiReplacer,
     History.configure({
       depth: 20,

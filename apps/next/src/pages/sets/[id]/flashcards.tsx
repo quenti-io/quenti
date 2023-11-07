@@ -4,6 +4,7 @@ import { HeadSeo } from "@quenti/components/head-seo";
 
 import { Container, Stack } from "@chakra-ui/react";
 
+import { EditorGlobalStyles } from "../../../common/editor-global-styles";
 import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { getLayout } from "../../../layouts/main-layout";
@@ -21,6 +22,7 @@ const Flashcards = () => {
     <>
       <HeadSeo title="Flashcards" />
       <LazyWrapper>
+        <EditorGlobalStyles />
         <HydrateSetData isPublic placeholder={<FlashcardsLoading />}>
           <FlashcardsSettingsModal
             isOpen={settingsOpen}

@@ -36,6 +36,7 @@ import {
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";
+import { HighlightColorPopover } from "./highlight-color-popover";
 import { RichTextProperty } from "./rich-text-property";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
@@ -245,7 +246,6 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
               bg: "gray.800",
             }}
             p="4px"
-            px="6px"
             rounded="full"
           >
             <RichTextProperty
@@ -274,6 +274,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
               onClick={() => activeEditor?.chain().focus().toggleStrike().run()}
               isActive={activeEditor?.isActive("strike")}
             />
+            <HighlightColorPopover activeEditor={activeEditor} />
           </ButtonGroup>
         )}
         <ButtonGroup size="sm">
