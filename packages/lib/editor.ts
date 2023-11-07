@@ -1,4 +1,3 @@
-import { mergeAttributes } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import HighlightRaw from "@tiptap/extension-highlight";
@@ -13,9 +12,6 @@ import type { JSONContent } from "@tiptap/react";
 // Glad you're here! https://arc.net/e/D8FDAA6B-8BCD-4D3B-AAE5-4A6756C42D45
 export const HighlightExtension = HighlightRaw.extend({
   priority: 200,
-  renderHTML({ HTMLAttributes }) {
-    return ["mark", mergeAttributes(HTMLAttributes), 0];
-  },
 });
 
 export const SERIALIZABLE_EXTENSIONS = [
