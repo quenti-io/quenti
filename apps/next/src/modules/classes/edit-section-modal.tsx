@@ -29,7 +29,7 @@ export const EditSectionModal: React.FC<EditSectionModalProps> = ({
   onClose,
   sectionId,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data } = useClass();
   const section = data?.sections?.find((s) => s.id === sectionId);
 

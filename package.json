@@ -34,7 +34,8 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-turbo": "^1.10.14",
     "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-unused-imports": "^3.0.0"
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "turbo": "^1.10.16"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",

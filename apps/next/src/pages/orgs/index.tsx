@@ -17,7 +17,7 @@ import { OrganizationInviteScreen } from "../../modules/organizations/organizati
 import { ReauthMessage } from "../../modules/organizations/reauth-message";
 
 export default function Organizations() {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const session = useSession();
   const router = useRouter();
   const toast = useToast();

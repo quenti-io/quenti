@@ -29,7 +29,7 @@ export const RemoveTeacherModal: React.FC<RemoveTeacherModalProps> = ({
   member,
 }) => {
   const { data: class_ } = useClass();
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const removeMembers = api.classes.removeMembers.useMutation({
     onSuccess: async () => {

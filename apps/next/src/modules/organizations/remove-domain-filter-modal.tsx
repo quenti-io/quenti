@@ -14,7 +14,7 @@ export const RemoveDomainFilterModal: React.FC<
 > = ({ isOpen, onClose }) => {
   const { data: org } = useOrganization();
   const domain = getBaseDomain(org);
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const setDomainFilter = api.organizations.setDomainFilter.useMutation({
     onSuccess: async () => {

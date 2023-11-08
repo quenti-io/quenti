@@ -20,7 +20,7 @@ export const DomainFilterModal: React.FC<DomainFilterModalProps> = ({
   filter,
   update,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const formRef = React.useRef<HTMLFormElement>(null);
   const [loading, setLoading] = React.useState(false);

@@ -27,7 +27,7 @@ export const EditMemberModal: React.FC<EditMemberModalProps> = ({
 }) => {
   const { data: org } = useOrganization();
   const me = useOrganizationMember();
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const myRole = me?.role || "Member";
 
   const [role, setRole] = React.useState<MembershipRole>(_role);

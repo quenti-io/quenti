@@ -1,6 +1,6 @@
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
-import Highlight from "@tiptap/extension-highlight";
+import HighlightRaw from "@tiptap/extension-highlight";
 import Italic from "@tiptap/extension-italic";
 import Paragraph from "@tiptap/extension-paragraph";
 import Strike from "@tiptap/extension-strike";
@@ -8,6 +8,11 @@ import Text from "@tiptap/extension-text";
 import Underline from "@tiptap/extension-underline";
 import { generateHTML, generateJSON } from "@tiptap/html";
 import type { JSONContent } from "@tiptap/react";
+
+// Glad you're here! https://arc.net/e/D8FDAA6B-8BCD-4D3B-AAE5-4A6756C42D45
+export const HighlightExtension = HighlightRaw.extend({
+  priority: 200,
+});
 
 export const SERIALIZABLE_EXTENSIONS = [
   Document,
@@ -17,8 +22,25 @@ export const SERIALIZABLE_EXTENSIONS = [
   Italic,
   Strike,
   Underline,
-  Highlight,
+  HighlightExtension.configure({
+    multicolor: true,
+    HTMLAttributes: {
+      class: "highlight",
+    },
+  }),
 ];
+
+export const A = "7F";
+
+export enum Highlight {
+  Red = "#FC8181",
+  Orange = "#F6AD55",
+  Yellow = "#F6E05E",
+  Green = "#68D391",
+  Blue = "#63B3ED",
+  Purple = "#B794F4",
+  Pink = "#F687B3",
+}
 
 export const getPlainText = (json: JSONContent, delimeter = "\n"): string => {
   return (

@@ -42,7 +42,7 @@ export const ChangeSectionModal: React.FC<ChangeSectionModalProps> = ({
   onClose,
   members,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: class_ } = useClass();
 
   const multiple = !members.length || members.length > 1;
