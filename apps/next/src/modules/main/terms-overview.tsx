@@ -26,7 +26,7 @@ import {
 import { ToggleGroup } from "../../components/toggle-group";
 import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
-import { DisplayableTermPure } from "./displayable-term";
+import { TermWrapper } from "./term-wrapper";
 import { TermsSortSelect } from "./terms-sort-select";
 
 interface TermsOverviewContextProps {
@@ -251,6 +251,11 @@ interface TermsListProps {
 }
 
 const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
+  const session = useSession();
+  const { userId } = useSet();
+
+  const creator = session.data?.user?.id === userId;
+
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const internalSort =
     sortOrder || terms.sort((a, b) => a.rank - b.rank).map((x) => x.id);
@@ -271,7 +276,7 @@ const TermsList: React.FC<TermsListProps> = ({ terms, sortOrder, slice }) => {
           )
           .slice(0, showSlice || terms.length)
           .map((term) => (
-            <DisplayableTermPure term={term} key={term.id} />
+            <TermWrapper term={term} key={term.id} creator={creator} />
           ))}
       </Stack>
       {showSlice !== undefined && showSlice < terms.length && (

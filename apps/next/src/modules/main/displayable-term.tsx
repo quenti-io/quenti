@@ -1,7 +1,14 @@
+import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
 import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Display } from "@quenti/components/display";
+import {
+  editorInput,
+  getPlainText,
+  hasRichText,
+  richTextToHtml,
+} from "@quenti/lib/editor";
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
@@ -11,19 +18,20 @@ import {
   Flex,
   HStack,
   IconButton,
+  Stack,
   Text,
-  useColorMode,
-  useColorModeValue,
 } from "@chakra-ui/react";
 
 import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
-import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
+import type { ClientTerm } from "../../stores/use-set-editor-store";
+import { RichTextBar } from "../editor/card/rich-text-bar";
+import { editorConfig } from "../editor/editor-config";
 
 export interface DisplayableTermProps {
   term: Term;
@@ -46,18 +54,14 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const [editWord, setEditWord] = React.useState(term.word);
-  const wordRef = React.useRef(editWord);
-  wordRef.current = editWord;
-
-  const [editDefinition, setEditDefinition] = React.useState(term.definition);
-  const definitionRef = React.useRef(editDefinition);
-  definitionRef.current = editDefinition;
-
-  React.useEffect(() => {
-    setEditWord(term.word);
-    setEditDefinition(term.definition);
-  }, [term.word, term.definition]);
+  const wordEditor = useEditor({
+    ...editorConfig(term.rank + 1),
+    content: editorInput(term as ClientTerm, "word"),
+  });
+  const definitionEditor = useEditor({
+    ...editorConfig(term.rank + 1),
+    content: editorInput(term as ClientTerm, "definition"),
+  });
 
   const edit = api.terms.edit.useMutation({
     async onSuccess() {
@@ -65,16 +69,57 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
     },
   });
 
+  const [cache, setCache] = React.useState({
+    word: term.word,
+    definition: term.definition,
+    wordRichText: term.wordRichText as JSONContent | null,
+    definitionRichText: term.definitionRichText as JSONContent | null,
+  });
+
+  React.useEffect(() => {
+    setCache({
+      word: term.word,
+      definition: term.definition,
+      wordRichText: term.wordRichText as JSONContent | null,
+      definitionRichText: term.definitionRichText as JSONContent | null,
+    });
+  }, [term.word, term.definition, term.wordRichText, term.definitionRichText]);
+
+  const getEditorPlainTexts = () => {
+    const wordJson = wordEditor!.getJSON();
+    const definitionJson = definitionEditor!.getJSON();
+    const word = getPlainText(wordJson);
+    const definition = getPlainText(definitionJson);
+    return { word, definition, wordJson, definitionJson };
+  };
+
   const doEdit = () => {
     setIsEditing((e) => {
       if (e) {
-        void (async () =>
-          await edit.mutateAsync({
-            id: term.id,
-            studySetId: term.studySetId,
-            word: wordRef.current,
-            definition: definitionRef.current,
-          }))();
+        const { word, definition, wordJson, definitionJson } =
+          getEditorPlainTexts();
+
+        const wordRichText = hasRichText(wordJson, word);
+        const definitionRichText = hasRichText(definitionJson, definition);
+
+        const values = {
+          word,
+          definition,
+          wordRichText: wordRichText ? wordJson : null,
+          definitionRichText: definitionRichText ? definitionJson : null,
+        };
+
+        setCache(values);
+
+        void edit.mutateAsync({
+          id: term.id,
+          studySetId: term.studySetId,
+          ...values,
+          wordRichText: wordRichText ? richTextToHtml(wordJson) : undefined,
+          definitionRichText: definitionRichText
+            ? richTextToHtml(definitionJson)
+            : undefined,
+        });
       }
 
       return false;
@@ -83,148 +128,146 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const ref = useOutsideClick(doEdit);
 
-  const { colorMode } = useColorMode();
-  const divider = useColorModeValue("gray.200", "gray.600");
-  const horizontalDivider = useColorModeValue("gray.100", "gray.700");
-
-  return React.useMemo(
-    () => (
-      <Card
-        ref={ref}
-        px={{ base: 0, sm: "22px" }}
-        py={{ base: 0, sm: 5 }}
-        overflow="hidden"
-        shadow="0 2px 6px -4px rgba(0, 0, 0, 0.1), 0 2px 4px -4px rgba(0, 0, 0, 0.06)"
-        borderWidth="1.5px"
-        borderColor="gray.100"
-        rounded="xl"
-        _dark={{
-          bg: "gray.750",
-          borderColor: "gray.700",
-        }}
+  return (
+    <Card
+      ref={ref}
+      px={{ base: 0, sm: "22px" }}
+      py={{ base: 0, sm: 5 }}
+      shadow="0 2px 6px -4px rgba(0, 0, 0, 0.1), 0 2px 4px -4px rgba(0, 0, 0, 0.06)"
+      borderWidth="1.5px"
+      transition="border-color 0.15s ease-in-out"
+      borderColor={isEditing ? "blue.100" : "gray.100"}
+      rounded="xl"
+      _dark={{
+        bg: "gray.750",
+        borderColor: isEditing ? "#4b83ff50" : "gray.700",
+      }}
+    >
+      <Flex
+        flexDir={["column-reverse", "row", "row"]}
+        alignItems="stretch"
+        gap={[0, 6, 6]}
       >
         <Flex
-          flexDir={["column-reverse", "row", "row"]}
-          alignItems="stretch"
-          gap={[0, 6, 6]}
+          w="full"
+          flexDir={["column", "row", "row"]}
+          gap={[2, 6, 6]}
+          px={{ base: 3, sm: 0 }}
+          py={{ base: 3, sm: 0 }}
         >
-          <Flex
-            w="full"
-            flexDir={["column", "row", "row"]}
-            gap={[2, 6, 6]}
-            px={{ base: 3, sm: 0 }}
-            py={{ base: 3, sm: 0 }}
-          >
-            {isEditing ? (
-              <AutoResizeTextarea
-                allowTab={false}
-                value={editWord}
-                onChange={(e) => setEditWord(e.target.value)}
-                w="full"
-                variant="flushed"
+          {isEditing ? (
+            <Stack w="full">
+              <RichTextBar activeEditor={wordEditor} />
+              <EditorContent
+                editor={wordEditor}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") doEdit();
+                  if ([" ", "ArrowRight", "ArrowLeft"].includes(e.key))
+                    e.stopPropagation();
                 }}
               />
-            ) : (
-              <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
-                <Display text={editWord} richText={term.wordRichText} />
-              </Text>
-            )}
-            <Box bg={divider} h="full" rounded="full" w="4px" />
-            {isEditing ? (
-              <AutoResizeTextarea
-                allowTab={false}
-                value={editDefinition}
-                onChange={(e) => setEditDefinition(e.target.value)}
-                w="full"
-                variant="flushed"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") doEdit();
-                }}
-              />
-            ) : (
-              <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
-                <Display
-                  text={editDefinition}
-                  richText={term.definitionRichText}
-                />
-              </Text>
-            )}
-          </Flex>
+            </Stack>
+          ) : (
+            <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+              <Display text={cache.word} richText={cache.wordRichText} />
+            </Text>
+          )}
           <Box
+            bg="gray.200"
+            _dark={{
+              bg: "gray.600",
+            }}
             h="full"
-            px={{ base: 1, sm: 0 }}
-            py={{ base: 2, sm: 0 }}
-            borderBottomWidth={{ base: 2, sm: 0 }}
-            borderBottomColor={{ base: horizontalDivider, sm: "none" }}
-          >
-            <Flex w="full" justifyContent="end">
-              <HStack
-                spacing={1}
-                height="24px"
-                justifyContent={{ base: "space-between", sm: "end" }}
-                w="full"
-              >
-                <SetCreatorOnly fallback={<Box />}>
-                  <IconButton
-                    size={{ base: "sm", sm: undefined }}
-                    transform={{ base: "scale(0.8)", sm: "scale(1)" }}
-                    icon={<IconEditCircle size={18} />}
-                    variant={isEditing ? "solid" : "ghost"}
-                    aria-label="Edit"
-                    rounded="full"
-                    onClick={() => {
-                      if (isEditing) {
-                        edit.mutate({
-                          id: term.id,
-                          studySetId: term.studySetId,
-                          word: editWord,
-                          definition: editDefinition,
-                        });
-                      }
-                      setIsEditing(!isEditing);
-                    }}
-                  />
-                </SetCreatorOnly>
+            rounded="full"
+            w="4px"
+          />
+          {isEditing ? (
+            <Stack w="full">
+              <RichTextBar activeEditor={definitionEditor} />
+              <EditorContent
+                editor={definitionEditor}
+                onKeyDown={(e) => {
+                  if ([" ", "ArrowRight", "ArrowLeft"].includes(e.key))
+                    e.stopPropagation();
+                }}
+              />
+            </Stack>
+          ) : (
+            <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+              <Display
+                text={cache.definition}
+                richText={cache.definitionRichText}
+              />
+            </Text>
+          )}
+        </Flex>
+        <Box
+          h="full"
+          px={{ base: 1, sm: 0 }}
+          py={{ base: 2, sm: 0 }}
+          borderBottomWidth={{ base: 2, sm: 0 }}
+          borderBottomColor={{ base: "gray.100", sm: "none" }}
+          _dark={{
+            borderBottomColor: { base: "gray.700", sm: "none" },
+          }}
+        >
+          <Flex w="full" justifyContent="end">
+            <HStack
+              spacing={1}
+              height="24px"
+              justifyContent={{ base: "space-between", sm: "end" }}
+              w="full"
+            >
+              <SetCreatorOnly fallback={<Box />}>
                 <IconButton
                   size={{ base: "sm", sm: undefined }}
                   transform={{ base: "scale(0.8)", sm: "scale(1)" }}
-                  icon={<Star size={18} />}
-                  variant="ghost"
+                  icon={<IconEditCircle size={18} />}
+                  variant={isEditing ? "solid" : "ghost"}
                   aria-label="Edit"
                   rounded="full"
                   onClick={() => {
-                    if (!authed) {
-                      menuEventChannel.emit("openSignup", {
-                        message:
-                          "Create an account for free to customize and star terms",
-                      });
-                      return;
+                    if (isEditing) {
+                      doEdit();
                     }
-
-                    if (!starred) {
-                      starTerm(term.id);
-                      starMutation.mutate({
-                        termId: term.id,
-                        containerId: container!.id,
-                      });
-                    } else {
-                      unstarTerm(term.id);
-                      unstarMutation.mutate({
-                        termId: term.id,
-                      });
-                    }
+                    setIsEditing(!isEditing);
                   }}
                 />
-              </HStack>
-            </Flex>
-          </Box>
-        </Flex>
-      </Card>
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [term, starred, isEditing, editWord, editDefinition, colorMode],
+              </SetCreatorOnly>
+              <IconButton
+                size={{ base: "sm", sm: undefined }}
+                transform={{ base: "scale(0.8)", sm: "scale(1)" }}
+                icon={<Star size={18} />}
+                variant="ghost"
+                aria-label="Edit"
+                rounded="full"
+                onClick={() => {
+                  if (!authed) {
+                    menuEventChannel.emit("openSignup", {
+                      message:
+                        "Create an account for free to customize and star terms",
+                    });
+                    return;
+                  }
+
+                  if (!starred) {
+                    starTerm(term.id);
+                    starMutation.mutate({
+                      termId: term.id,
+                      containerId: container!.id,
+                    });
+                  } else {
+                    unstarTerm(term.id);
+                    unstarMutation.mutate({
+                      termId: term.id,
+                    });
+                  }
+                }}
+              />
+            </HStack>
+          </Flex>
+        </Box>
+      </Flex>
+    </Card>
   );
 };
 

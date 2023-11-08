@@ -43,6 +43,7 @@ export const HighlightColorPopover: React.FC<HighlightColorPopoverProps> = ({
         placement="top"
         closeOnBlur={false}
         computePositionOnMount
+        flip={false}
         // Solution to prevent focus trapping blurring editor
         trigger="hover"
         returnFocusOnClose={false}
