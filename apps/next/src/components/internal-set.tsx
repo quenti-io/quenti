@@ -1,5 +1,6 @@
 import { Container, Stack } from "@chakra-ui/react";
 
+import { EditorGlobalStyles } from "../common/editor-global-styles";
 import HydrateSetData from "../modules/hydrate-set-data";
 import { DescriptionArea } from "../modules/main/description-area";
 import { FlashcardPreview } from "../modules/main/flashcard-preview";
@@ -11,6 +12,7 @@ import { WithFooter } from "./with-footer";
 const InternalSet = () => {
   return (
     <HydrateSetData placeholder={<SetLoading />} isPublic>
+      <EditorGlobalStyles />
       <WithFooter>
         <Container maxW="7xl">
           <Stack spacing={10}>

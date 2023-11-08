@@ -27,7 +27,7 @@ export const AddSectionModal: React.FC<AddSectionModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data } = useClass();
 
   const createSection = api.classes.createSection.useMutation({

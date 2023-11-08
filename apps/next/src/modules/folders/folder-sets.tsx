@@ -13,7 +13,7 @@ import { useFolder } from "../../hooks/use-folder";
 import { FolderCreatorOnly } from "./folder-creator-only";
 
 export const FolderSets = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const session = useSession();
   const folder = useFolder();
 

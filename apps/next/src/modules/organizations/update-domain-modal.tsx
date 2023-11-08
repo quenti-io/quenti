@@ -59,7 +59,7 @@ const UpdateDomainContainer: React.FC<UpdateDomainContainerProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const formRef = React.useRef<HTMLFormElement>(null);
   const { data: org } = useOrganization();
   const studentDomain = org?.domains.find((d) => d.type == "Student");
@@ -110,7 +110,7 @@ interface VerifyEmailContainerProps {
 const VerifyEmailContainer: React.FC<VerifyEmailContainerProps> = ({
   onClose,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: org } = useOrganization();
   const studentDomain = org?.domains.find((d) => d.type == "Student");
   const muted = useColorModeValue("gray.700", "gray.300");

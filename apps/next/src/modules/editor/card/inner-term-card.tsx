@@ -24,19 +24,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import {
-  IconBold,
-  IconGripHorizontal,
-  IconItalic,
-  IconStrikethrough,
-  IconTrash,
-  IconUnderline,
-} from "@tabler/icons-react";
+import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";
-import { RichTextProperty } from "./rich-text-property";
+import { RichTextBar } from "./rich-text-bar";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
 export interface InnerTermCardProps extends SortableTermCardProps {
@@ -233,49 +226,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
         <Text fontWeight={700} fontFamily="heading" w="72px">
           {term.rank + 1}
         </Text>
-        {isCurrent && (
-          <ButtonGroup
-            size="xs"
-            variant="ghost"
-            colorScheme="gray"
-            spacing="1"
-            bg="gray.50"
-            shadow="sm"
-            _dark={{
-              bg: "gray.800",
-            }}
-            p="4px"
-            px="6px"
-            rounded="full"
-          >
-            <RichTextProperty
-              icon={IconBold}
-              label="Bold"
-              onClick={() => activeEditor?.chain().focus().toggleBold().run()}
-              isActive={activeEditor?.isActive("bold")}
-            />
-            <RichTextProperty
-              icon={IconItalic}
-              label="Italic"
-              onClick={() => activeEditor?.chain().focus().toggleItalic().run()}
-              isActive={activeEditor?.isActive("italic")}
-            />
-            <RichTextProperty
-              icon={IconUnderline}
-              label="Underline"
-              onClick={() =>
-                activeEditor?.chain().focus().toggleUnderline().run()
-              }
-              isActive={activeEditor?.isActive("underline")}
-            />
-            <RichTextProperty
-              icon={IconStrikethrough}
-              label="Strikethrough"
-              onClick={() => activeEditor?.chain().focus().toggleStrike().run()}
-              isActive={activeEditor?.isActive("strike")}
-            />
-          </ButtonGroup>
-        )}
+        {isCurrent && <RichTextBar activeEditor={activeEditor} />}
         <ButtonGroup size="sm">
           <IconButton
             icon={<IconGripHorizontal size={18} />}

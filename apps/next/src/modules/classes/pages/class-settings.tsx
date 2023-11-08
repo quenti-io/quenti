@@ -40,7 +40,7 @@ import { useClassLogoUpload } from "../use-class-logo-upload";
 import { useProtectedRedirect } from "../use-protected-redirect";
 
 export const ClassSettings = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data } = useClass();
   const router = useRouter();
   const toast = useToast();

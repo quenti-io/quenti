@@ -2,6 +2,7 @@ import React from "react";
 
 import { Stack } from "@chakra-ui/react";
 
+import { EditorGlobalStyles } from "../common/editor-global-styles";
 import { ImportTermsModal } from "../components/import-terms-modal";
 import { useSetEditorContext } from "../stores/use-set-editor-store";
 import { ButtonArea } from "./editor/button-area";
@@ -28,6 +29,7 @@ export const SetEditor = () => {
       <TopBar />
       <TitleProperties />
       <ButtonArea onImportOpen={() => setImportOpen(true)} />
+      <EditorGlobalStyles />
       <TermsListPure />
     </Stack>
   );

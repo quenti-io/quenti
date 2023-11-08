@@ -47,7 +47,7 @@ export const AddStudentModal: React.FC<AddStudentModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: org } = useOrganization();
   const baseDomain = getBaseDomain(org)!;
   const studentDomain = org?.domains.find((d) => d.type == "Student");

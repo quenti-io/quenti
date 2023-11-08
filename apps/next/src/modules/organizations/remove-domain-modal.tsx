@@ -18,7 +18,7 @@ export const RemoveDomainModal: React.FC<RemoveDomainModalProps> = ({
   id,
   domain,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: org } = useOrganization();
 
   const removeStudentDomain = api.organizations.removeStudentDomain.useMutation(
