@@ -1,6 +1,6 @@
 import type { Editor } from "@tiptap/core";
 
-import { ButtonGroup } from "@chakra-ui/react";
+import { ButtonGroup, type ButtonGroupProps } from "@chakra-ui/react";
 
 import {
   IconBold,
@@ -16,7 +16,10 @@ export interface RichTextBarProps {
   activeEditor: Editor | null;
 }
 
-export const RichTextBar: React.FC<RichTextBarProps> = ({ activeEditor }) => {
+export const RichTextBar: React.FC<RichTextBarProps & ButtonGroupProps> = ({
+  activeEditor,
+  ...props
+}) => {
   return (
     <ButtonGroup
       w="max"
@@ -31,6 +34,7 @@ export const RichTextBar: React.FC<RichTextBarProps> = ({ activeEditor }) => {
       }}
       p="4px"
       rounded="full"
+      {...props}
     >
       <RichTextProperty
         icon={IconBold}
