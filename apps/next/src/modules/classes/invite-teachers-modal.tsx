@@ -56,7 +56,7 @@ export const InviteTeachersModal: React.FC<InviteTeachersModalProps> = ({
   onClose,
 }) => {
   const router = useRouter();
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: class_ } = useClass();
   const domain = getBaseDomain(class_?.organization ?? undefined);
 

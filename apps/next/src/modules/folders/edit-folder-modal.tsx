@@ -19,7 +19,7 @@ export const EditFolderModal: React.FC<EditFolderModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const router = useRouter();
   const session = useSession();
   const folder = useFolder();

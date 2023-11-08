@@ -34,7 +34,7 @@ export const RemoveStudentsModal: React.FC<RemoveStudentsModalProps> = ({
   members,
 }) => {
   const { data: class_ } = useClass();
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const multiple = !members.length || members.length > 1;
 
   const removeMembers = api.classes.removeMembers.useMutation({

@@ -22,7 +22,7 @@ import { AddToFolderModal } from "./add-to-folder-modal";
 import { ShareSetModal } from "./share-set-modal";
 
 export const ActionArea = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { id } = useSet();
 
   const [addToFolder, setAddToFolder] = React.useState(false);

@@ -45,7 +45,7 @@ const schema = z.object({
 });
 
 export default function CreateSections() {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data } = useClass();
   const router = useRouter();
   useProtectedRedirect();

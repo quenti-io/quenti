@@ -39,7 +39,7 @@ export interface DisplayableTermProps {
 
 export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const authed = useSession().status == "authenticated";
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const starMutation = api.container.starTerm.useMutation();
   const unstarMutation = api.container.unstarTerm.useMutation();

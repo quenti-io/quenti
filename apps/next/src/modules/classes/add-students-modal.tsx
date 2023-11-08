@@ -64,7 +64,7 @@ export const AddStudentsModal: React.FC<AddStudentsModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const [index, setIndex] = React.useState(0);
 

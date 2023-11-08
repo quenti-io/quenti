@@ -19,7 +19,7 @@ export const RemoveStudentModal: React.FC<RemoveUserModalProps> = ({
   id,
 }) => {
   const { data: org } = useOrganization();
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const [error, setError] = React.useState<string | null>(null);
 

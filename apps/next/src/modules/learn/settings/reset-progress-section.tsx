@@ -12,7 +12,7 @@ import { LearnSettingsModalContext } from "../learn-settings-modal";
 
 export const ResetProgressSection = () => {
   const { id } = useSet();
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
   const { onClose, dirtyOnReset } = React.useContext(LearnSettingsModalContext);
