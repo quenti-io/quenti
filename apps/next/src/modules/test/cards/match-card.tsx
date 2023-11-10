@@ -427,7 +427,6 @@ const InternalWrapper: React.FC<
           colorScheme="gray"
           rounded="full"
           onClick={(e) => {
-            console.log("CLICK", e);
             e.preventDefault();
             e.stopPropagation();
             onRemove();
