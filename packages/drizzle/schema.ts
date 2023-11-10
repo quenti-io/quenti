@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   index,
   mysqlEnum,
   mysqlTable,
@@ -51,6 +52,13 @@ export const folder = mysqlTable(
     };
   },
 );
+
+export const folderRelations = relations(folder, ({ one }) => ({
+  user: one(user, {
+    fields: [folder.userId],
+    references: [user.id],
+  }),
+}));
 
 export const studySet = mysqlTable(
   "StudySet",
@@ -125,7 +133,10 @@ export const user = mysqlTable(
   {
     id: varchar("id", { length: 191 }).notNull(),
     username: varchar("username", { length: 191 }),
+    name: varchar("name", { length: 191 }),
     image: varchar("image", { length: 191 }),
+    displayName: boolean("displayName").notNull().default(true),
+    verified: boolean("verified").notNull().default(false),
   },
   (table) => {
     return {

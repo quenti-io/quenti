@@ -2,7 +2,8 @@ import type { GetServerSidePropsContext } from "next";
 import dynamic from "next/dynamic";
 
 import { HeadSeo } from "@quenti/components/head-seo";
-import { prisma } from "@quenti/prisma";
+import { db, eq } from "@quenti/drizzle";
+import { user as userTable } from "@quenti/drizzle/schema";
 
 import { LazyWrapper } from "../../common/lazy-wrapper";
 import { PageWrapper } from "../../common/page-wrapper";
@@ -12,6 +13,8 @@ import type { inferSSRProps } from "../../lib/infer-ssr-props";
 const InternalProfile = dynamic(
   () => import("../../components/internal-profile"),
 );
+
+export const runtime = "experimental-edge";
 
 const UserPage = ({ user }: inferSSRProps<typeof getServerSideProps>) => {
   return (
@@ -25,14 +28,14 @@ const UserPage = ({ user }: inferSSRProps<typeof getServerSideProps>) => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  if (!db) return { props: { user: null } };
+
   const _username = ctx.query?.username as string;
   const username = _username.substring(1);
 
-  const user = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
+  const user = await db?.query.user.findFirst({
+    where: eq(userTable.username, username),
+    columns: {
       id: true,
       username: true,
       image: true,
