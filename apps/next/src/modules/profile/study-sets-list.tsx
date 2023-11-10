@@ -2,7 +2,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Skeleton,
   SkeletonText,
   Stack,
   Text,
@@ -70,8 +69,13 @@ StudySetsList.Skeleton = function StudySetsListSkeleton() {
   }) => (
     <Stack spacing={6}>
       <Flex gap={4} alignItems="center">
-        <Flex h="28.8px">
-          <SkeletonText noOfLines={1} skeletonHeight="6">
+        <Flex h="28.8px" alignItems="center">
+          <SkeletonText
+            noOfLines={1}
+            skeletonHeight="26px"
+            rounded="md"
+            overflow="hidden"
+          >
             <Heading fontSize="2xl" whiteSpace="nowrap">
               {heading}
             </Heading>
@@ -80,21 +84,11 @@ StudySetsList.Skeleton = function StudySetsListSkeleton() {
         <Divider borderColor={dividerColor} />
       </Flex>
       <Stack spacing={4}>
-        {Array.from({ length: numSets }, (_, i) => SetSkeleton(i))}
+        {Array.from({ length: numSets }, (_, i) => (
+          <ProfileLinkable.Skeleton key={i} />
+        ))}
       </Stack>
     </Stack>
-  );
-
-  const SetSkeleton = (key: number) => (
-    <Skeleton rounded="lg" key={key}>
-      <ProfileLinkable
-        title={"Loading study set"}
-        url={`/${"set"}`}
-        visibility={"Public"}
-        numValues={12}
-        label="term"
-      />
-    </Skeleton>
   );
 
   return (

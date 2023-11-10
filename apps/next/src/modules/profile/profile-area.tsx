@@ -69,11 +69,16 @@ ProfileArea.Skeleton = function ProfileAreaSkeleton() {
         <Avatar size="lg" />
       </Skeleton>
       <Flex flexDir="column" justifyContent="space-between" h="16">
-        <Skeleton fitContent>
-          <Heading w="max-content">Firstname Last</Heading>
+        <Skeleton fitContent rounded="md">
+          <Heading w="max-content">Placholder Name</Heading>
         </Skeleton>
         <Flex alignItems="center" h="14px">
-          <SkeletonText noOfLines={1} skeletonHeight="12px">
+          <SkeletonText
+            noOfLines={1}
+            skeletonHeight="12px"
+            rounded="4px"
+            overflow="hidden"
+          >
             <Text lineHeight="none" fontSize="sm" w="max-content">
               {username ? username.replace("@", "") : "username"}
             </Text>
