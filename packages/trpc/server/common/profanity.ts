@@ -83,12 +83,10 @@ export const censorRichText = (json: JSONContent): JSONContent => {
 };
 
 const internalCensor = (
-  _index: number,
+  index: number,
   censored: string,
   json: JSONContent,
 ): JSONContent => {
-  let index = _index;
-
   return {
     ...json,
     content: json.content?.map((node) => {
