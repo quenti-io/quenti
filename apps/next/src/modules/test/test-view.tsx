@@ -7,7 +7,6 @@ import {
   Button,
   Fade,
   Heading,
-  Skeleton,
   SlideFade,
   Stack,
   VStack,
@@ -17,6 +16,7 @@ import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { TestContext, useTestContext } from "../../stores/use-test-store";
 import { TestCardGap } from "./card-gap";
 import { CardWrapper } from "./card-wrapper";
+import { QuestionSkeleton } from "./test-loading";
 import { TestSettingsModal } from "./test-settings-modal";
 import { pushQueryParams } from "./utils/url-params";
 
@@ -33,6 +33,9 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
   const outline = useTestContext((s) => s.outline);
   const questionCount = useTestContext((s) => s.questionCount);
   const reset = useTestContext((s) => s.reset);
+  const allAnswered = useTestContext((s) =>
+    s.timeline.every((q) => q.answered),
+  );
 
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const [enter, setEnter] = React.useState(true);
@@ -90,12 +93,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
                   count={1}
                   skeleton
                 />
-                <Skeleton
-                  key={i}
-                  rounded="2xl"
-                  w="full"
-                  h={{ base: "376px", sm: "245px", md: "340px" }}
-                />
+                <QuestionSkeleton />
               </React.Fragment>
             ))}
           </Stack>
@@ -182,7 +180,12 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
               <Heading size="md" m="0">
                 Ready to submit your test?
               </Heading>
-              <Button size="lg" fontSize="md" onClick={onSubmit}>
+              <Button
+                size="lg"
+                fontSize="md"
+                onClick={onSubmit}
+                variant={allAnswered ? "solid" : "outline"}
+              >
                 Check answers
               </Button>
             </VStack>
