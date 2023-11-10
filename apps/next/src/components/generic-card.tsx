@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Link } from "@quenti/components";
+import { Link } from "@quenti/components/link";
 import { avatarUrl } from "@quenti/lib/avatar";
 
 import {
   Avatar,
   Box,
+  Card,
   Flex,
   HStack,
   Heading,
@@ -14,6 +15,7 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Skeleton,
   Stack,
   Text,
   useColorModeValue,
@@ -45,7 +47,7 @@ export interface GenericCardProps {
   onRemove?: () => void;
 }
 
-export const GenericCard: React.FC<GenericCardProps> = ({
+export const GenericCard = ({
   title,
   numItems,
   itemsLabel,
@@ -57,7 +59,7 @@ export const GenericCard: React.FC<GenericCardProps> = ({
   verified = false,
   removable = false,
   onRemove,
-}) => {
+}: GenericCardProps) => {
   const termsTextColor = useColorModeValue("gray.600", "gray.400");
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
@@ -162,5 +164,45 @@ export const GenericCard: React.FC<GenericCardProps> = ({
         </Flex>
       </Flex>
     </LinkBox>
+  );
+};
+
+GenericCard.Skeleton = function GenericCardSkeleton() {
+  return (
+    <Card
+      rounded="lg"
+      height="full"
+      borderWidth="2px"
+      borderColor="gray.200"
+      _dark={{
+        bg: "gray.800",
+        borderColor: "gray.700",
+      }}
+      shadow="lg"
+      p="5"
+    >
+      <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
+        <Stack spacing={2}>
+          <Skeleton rounded="lg" fitContent>
+            <Heading size="md">Set Placeholder Title</Heading>
+          </Skeleton>
+          <Flex alignItems="center" h="21px">
+            <Skeleton rounded="4px" fitContent h="14px">
+              <Text fontSize="sm">100 terms</Text>
+            </Skeleton>
+          </Flex>
+        </Stack>
+        <HStack>
+          <Skeleton rounded="full" w="24px" h="24px" />
+          <Flex alignItems="center" h="21px">
+            <Skeleton rounded="4px" fitContent h="14px">
+              <Text fontSize="sm" fontWeight={600}>
+                placeholder
+              </Text>
+            </Skeleton>
+          </Flex>
+        </HStack>
+      </Flex>
+    </Card>
   );
 };
