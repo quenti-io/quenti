@@ -139,10 +139,19 @@ const ContextLayer: React.FC<
           termId,
           word,
           definition,
-          wordRichText,
-          definitionRichText,
+          wordRichText_,
+          definitionRichText_,
         ) => {
           const state = storeRef.current!.getState();
+
+          const { wordRichText, definitionRichText } = {
+            wordRichText: wordRichText_
+              ? richTextToHtml(wordRichText_)
+              : undefined,
+            definitionRichText: definitionRichText_
+              ? richTextToHtml(definitionRichText_)
+              : undefined,
+          };
 
           if (state.serverTerms.includes(termId)) {
             apiEditTerm.mutate({
@@ -150,12 +159,8 @@ const ContextLayer: React.FC<
               studySetId: data.id,
               word,
               definition,
-              wordRichText: wordRichText
-                ? richTextToHtml(wordRichText)
-                : undefined,
-              definitionRichText: definitionRichText
-                ? richTextToHtml(definitionRichText)
-                : undefined,
+              wordRichText,
+              definitionRichText,
             });
           } else {
             apiAddTerm.mutate({
@@ -163,6 +168,8 @@ const ContextLayer: React.FC<
               term: {
                 word,
                 definition,
+                wordRichText,
+                definitionRichText,
                 rank: state.terms
                   .filter(
                     (x) => state.serverTerms.includes(x.id) || x.id === termId,
