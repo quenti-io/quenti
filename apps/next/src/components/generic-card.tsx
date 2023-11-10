@@ -183,19 +183,19 @@ GenericCard.Skeleton = function GenericCardSkeleton() {
     >
       <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
         <Stack spacing={2}>
-          <Skeleton rounded="lg" fitContent>
+          <Skeleton rounded="lg" fitContent variant="refined">
             <Heading size="md">Set Placeholder Title</Heading>
           </Skeleton>
           <Flex alignItems="center" h="21px">
-            <Skeleton rounded="4px" fitContent h="14px">
+            <Skeleton rounded="4px" fitContent h="14px" variant="refined">
               <Text fontSize="sm">100 terms</Text>
             </Skeleton>
           </Flex>
         </Stack>
         <HStack>
-          <Skeleton rounded="full" w="24px" h="24px" />
+          <Skeleton rounded="full" w="24px" h="24px" variant="refined" />
           <Flex alignItems="center" h="21px">
-            <Skeleton rounded="4px" fitContent h="14px">
+            <Skeleton rounded="4px" fitContent h="14px" variant="refined">
               <Text fontSize="sm" fontWeight={600}>
                 placeholder
               </Text>

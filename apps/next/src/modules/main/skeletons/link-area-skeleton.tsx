@@ -28,8 +28,14 @@ export const LinkAreaSkeletonRaw = () => {
             }}
           >
             <HStack spacing="3">
-              <Skeleton w="6" h="6" rounded="lg" />
-              <Skeleton h="14px" rounded="md" fitContent>
+              <Skeleton
+                w="6"
+                h="6"
+                rounded="lg"
+                variant="refined"
+                opacity="0.35"
+              />
+              <Skeleton h="14px" rounded="md" fitContent variant="refined">
                 <Heading size="sm">{title}</Heading>
               </Skeleton>
             </HStack>

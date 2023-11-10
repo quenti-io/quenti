@@ -85,8 +85,18 @@ const card = defineStyle({
   },
   opacity: 1,
 });
+const refined = defineStyle({
+  [$startColor.variable]: "colors.gray.100",
+  [$endColor.variable]: "colors.gray.400",
+  _dark: {
+    [$startColor.variable]: "colors.gray.750",
+    [$endColor.variable]: "colors.gray.500",
+  },
+  opacity: 0.7,
+});
+
 const skeletonTheme = defineStyleConfig({
-  variants: { card },
+  variants: { card, refined },
 });
 
 export const components = {
