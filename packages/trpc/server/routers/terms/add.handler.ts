@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TAddSchema } from "./add.schema";
+import { serialize } from "./utils/serialize";
 
 type AddOptions = {
   ctx: NonNullableUserContext;
@@ -23,7 +24,16 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
     });
   }
 
-  // censorup all ranks so that all values are consecutive
+  const { plainText: word, richText: wordRichText } = serialize(
+    input.term.word,
+    input.term.wordRichText,
+  );
+  const { plainText: definition, richText: definitionRichText } = serialize(
+    input.term.definition,
+    input.term.definitionRichText,
+  );
+
+  // Censorup all ranks so that all values are consecutive
   await ctx.prisma.term.updateMany({
     where: {
       studySetId: input.studySetId,
@@ -40,8 +50,12 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
 
   const created = await ctx.prisma.term.create({
     data: {
-      ...input.term,
       studySetId: input.studySetId,
+      rank: input.term.rank,
+      word,
+      definition,
+      wordRichText,
+      definitionRichText,
     },
   });
 
