@@ -2,7 +2,9 @@ import React from "react";
 
 import type { Term } from "@quenti/prisma/client";
 
-import { Box, Card, Flex, Text } from "@chakra-ui/react";
+import { Box, Card, Center, Flex, HStack, Text } from "@chakra-ui/react";
+
+import { IconStar } from "@tabler/icons-react";
 
 interface DeloadedTermProps {
   term: Term;
@@ -65,7 +67,25 @@ export const DeloadedTermRaw: React.FC<DeloadedTermProps> = ({
             borderBottomColor: { base: "gray.700", sm: "none" },
           }}
         >
-          <Flex w={creator ? "68px" : "32px"} justifyContent="end" />
+          <HStack
+            spacing={1}
+            height="24px"
+            justifyContent={{ base: "space-between", sm: "end" }}
+            w="full"
+            color="blue.600"
+            _dark={{
+              color: "blue.200",
+            }}
+          >
+            {creator && (
+              <Center w="8" h="8">
+                <IconStar size={18} />
+              </Center>
+            )}
+            <Center w="8" h="8">
+              <IconStar size={18} />
+            </Center>
+          </HStack>
         </Box>
       </Flex>
     </Card>

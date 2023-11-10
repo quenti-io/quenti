@@ -22,6 +22,7 @@
     "start": "dotenv -- turbo start --scope \"@quenti/next\"",
     "next": "dotenv -- yarn workspace @quenti/next",
     "prisma": "dotenv -- yarn workspace @quenti/prisma",
+    "drizzle": "dotenv -- yarn workspace @quenti/drizzle",
     "install-vercel": "sh ./install-vercel.sh",
     "email-dev": "dotenv -- npx email dev --dir packages/emails/templates --port 3001",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts",
@@ -34,7 +35,8 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-turbo": "^1.10.14",
     "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-unused-imports": "^3.0.0"
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "turbo": "^1.10.16"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
