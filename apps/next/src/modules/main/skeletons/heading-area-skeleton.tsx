@@ -5,13 +5,13 @@ import { Flex, HStack, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
 export const HeadingAreaSkeletonRaw = () => {
   return (
     <Stack spacing={4}>
-      <Skeleton fitContent>
+      <Skeleton fitContent rounded="lg">
         <Heading size="2xl">Placeholder Set Title</Heading>
       </Skeleton>
       <Flex justifyContent="space-between" maxW="1000px" h="32px">
         <HStack fontWeight={600} spacing={2}>
           <Skeleton w="18px" h="18px" rounded="full" />
-          <Skeleton fitContent h="18px">
+          <Skeleton fitContent h="18px" rounded="md">
             <HStack>
               <Text>Public</Text>
               <Text>•</Text>

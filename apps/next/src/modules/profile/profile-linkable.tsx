@@ -3,13 +3,14 @@ import type { StudySetVisibility } from "@quenti/prisma/client";
 
 import {
   Box,
+  Flex,
   HStack,
   Heading,
   LinkBox,
   LinkOverlay,
+  Skeleton,
   Stack,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 
 import { visibilityIcon } from "../../common/visibility-icon";
@@ -24,36 +25,45 @@ interface ProfileLinkableProps {
   leftIcon?: React.ReactNode;
 }
 
-export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
+export const ProfileLinkable = ({
   title,
   url,
   numValues,
   label,
   visibility,
   leftIcon,
-}) => {
-  const linkBg = useColorModeValue("white", "gray.800");
-  const mutedText = useColorModeValue("gray.600", "gray.400");
-  const linkBorder = useColorModeValue("gray.200", "gray.700");
-
+}: ProfileLinkableProps) => {
   return (
     <LinkBox
       as="article"
       h="full"
       rounded="lg"
       p="4"
-      bg={linkBg}
-      borderColor={linkBorder}
+      bg="white"
       borderWidth="2px"
-      shadow="md"
-      transition="all ease-in-out 150ms"
+      borderColor="gray.200"
       _hover={{
         transform: "translateY(-2px)",
         borderBottomColor: "blue.300",
       }}
+      _dark={{
+        bg: "gray.800",
+        borderColor: "gray.700",
+        _hover: {
+          borderBottomColor: "blue.300",
+        },
+      }}
+      shadow="md"
+      transition="all ease-in-out 150ms"
     >
       <Stack spacing={2}>
-        <Text fontSize="sm" color={mutedText}>
+        <Text
+          fontSize="sm"
+          color="gray.600"
+          _dark={{
+            color: "gray.400",
+          }}
+        >
           {plural(numValues, label)}
         </Text>
         <HStack>
@@ -81,5 +91,34 @@ export const ProfileLinkable: React.FC<ProfileLinkableProps> = ({
         </HStack>
       </Stack>
     </LinkBox>
+  );
+};
+
+ProfileLinkable.Skeleton = function ProfileLinkableSkeleton() {
+  return (
+    <Box
+      h="full"
+      rounded="lg"
+      p="4"
+      bg="white"
+      borderWidth="2px"
+      borderColor="gray.200"
+      _dark={{
+        bg: "gray.800",
+        borderColor: "gray.700",
+      }}
+      shadow="md"
+    >
+      <Stack spacing={2}>
+        <Flex alignItems="center" h="21px">
+          <Skeleton rounded="4px" fitContent h="14px">
+            <Text fontSize="sm">10 terms</Text>
+          </Skeleton>
+        </Flex>
+        <Skeleton fitContent rounded="md">
+          <Heading size="md">Placeholder Set Title</Heading>
+        </Skeleton>
+      </Stack>
+    </Box>
   );
 };

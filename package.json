@@ -21,6 +21,7 @@
     "dev": "dotenv -- turbo dev --scope \"@quenti/next\"",
     "start": "dotenv -- turbo start --scope \"@quenti/next\"",
     "next": "dotenv -- yarn workspace @quenti/next",
+    "website": "dotenv -- yarn workspace @quenti/website",
     "prisma": "dotenv -- yarn workspace @quenti/prisma",
     "drizzle": "dotenv -- yarn workspace @quenti/drizzle",
     "install-vercel": "sh ./install-vercel.sh",

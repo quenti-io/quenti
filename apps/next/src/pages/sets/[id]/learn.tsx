@@ -4,7 +4,7 @@ import { HeadSeo } from "@quenti/components/head-seo";
 import { CORRECT, INCORRECT } from "@quenti/lib/constants/remarks";
 import { api } from "@quenti/trpc";
 
-import { Container, Skeleton, Stack } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 
 import { EditorGlobalStyles } from "../../../common/editor-global-styles";
 import { LazyWrapper } from "../../../common/lazy-wrapper";
@@ -17,6 +17,7 @@ import { HydrateSetData } from "../../../modules/hydrate-set-data";
 import { ActionBar } from "../../../modules/learn/action-bar";
 import { CompletedView } from "../../../modules/learn/completed-view";
 import { InteractionCard } from "../../../modules/learn/interaction-card";
+import { LearnLoading } from "../../../modules/learn/learn-loading";
 import { RoundSummary } from "../../../modules/learn/round-summary";
 import { Titlebar } from "../../../modules/learn/titlebar";
 import { useContainerContext } from "../../../stores/use-container-store";
@@ -35,7 +36,7 @@ const Learn = () => {
             <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
               <Stack spacing="8" w="full">
                 <Titlebar.Skeleton />
-                <Skeleton w="full" h={{ base: 571, md: 467 }} rounded="2xl" />
+                <LearnLoading />
               </Stack>
             </Container>
           }

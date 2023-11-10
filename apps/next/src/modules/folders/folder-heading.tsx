@@ -170,7 +170,12 @@ FolderHeading.Skeleton = function FolderHeadingSkeleton() {
 
   const TextWrapper = ({ children }: { children: React.ReactNode }) => (
     <Flex alignItems="center" h="6">
-      <SkeletonText noOfLines={1} skeletonHeight="18px">
+      <SkeletonText
+        noOfLines={1}
+        skeletonHeight="18px"
+        rounded="4px"
+        overflow="hidden"
+      >
         {children}
       </SkeletonText>
     </Flex>
@@ -185,7 +190,12 @@ FolderHeading.Skeleton = function FolderHeadingSkeleton() {
     >
       <Stack spacing="3">
         <Flex alignItems="center" h="12">
-          <SkeletonText noOfLines={1} skeletonHeight="44px">
+          <SkeletonText
+            noOfLines={1}
+            skeletonHeight="44px"
+            rounded="lg"
+            overflow="hidden"
+          >
             <Heading size="2xl">
               {((slug || "Folder Title") as string).replace("-", " ")}
             </Heading>
