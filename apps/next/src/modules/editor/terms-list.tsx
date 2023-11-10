@@ -15,6 +15,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { AnimatePresence } from "framer-motion";
 import React from "react";
 
 import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
@@ -134,34 +135,36 @@ export const TermsList = () => {
               items={items}
               strategy={verticalListSortingStrategy}
             >
-              {items
-                .sort((a, b) => a.rank - b.rank)
-                .map((term, i) => (
-                  <React.Fragment key={i}>
-                    <SortableTermCard
-                      justCreated={lastCreated === term.id}
-                      isDragging={currentDrag === term.id}
-                      isCurrent={current === term.id}
-                      isLast={i === terms.length - 1}
-                      deletable={terms.length > 1}
-                      key={term.id}
-                      term={term}
-                      wordLanguage={wordLanguage}
-                      definitionLanguage={definitionLanguage}
-                      openMenu={(type) => {
-                        setActive(type);
-                        setMenuOpen(true);
-                      }}
-                      editTerm={editTerm}
-                      deleteTerm={deleteTerm}
-                      onTabOff={() => {
-                        if (i === terms.length - 1) addTerm(terms.length);
-                      }}
-                      anyFocus={() => setCurrent(term.id)}
-                    />
-                    <TermCardGap index={i} />
-                  </React.Fragment>
-                ))}
+              <AnimatePresence>
+                {items
+                  .sort((a, b) => a.rank - b.rank)
+                  .map((term, i) => (
+                    <React.Fragment key={term.clientKey}>
+                      <SortableTermCard
+                        justCreated={lastCreated === term.clientKey}
+                        isDragging={currentDrag === term.clientKey}
+                        isCurrent={current === term.clientKey}
+                        isLast={i === terms.length - 1}
+                        deletable={terms.length > 1}
+                        key={term.clientKey}
+                        term={term}
+                        wordLanguage={wordLanguage}
+                        definitionLanguage={definitionLanguage}
+                        openMenu={(type) => {
+                          setActive(type);
+                          setMenuOpen(true);
+                        }}
+                        editTerm={editTerm}
+                        deleteTerm={deleteTerm}
+                        onTabOff={() => {
+                          if (i === terms.length - 1) addTerm(terms.length);
+                        }}
+                        anyFocus={() => setCurrent(term.clientKey)}
+                      />
+                      <TermCardGap index={i} />
+                    </React.Fragment>
+                  ))}
+              </AnimatePresence>
             </SortableContext>
           </DndContext>
         </LanguageMenuWrapper>

@@ -66,7 +66,7 @@ const ContextLayer: React.FC<
     onSuccess: (data) => {
       const state = storeRef.current!.getState();
 
-      state.changeTermId(
+      state.setServerTermId(
         state.terms.find((x) => !state.serverTerms.includes(x.id))!.id,
         data.id,
       );
@@ -113,7 +113,10 @@ const ContextLayer: React.FC<
     storeRef.current = createSetEditorStore(
       {
         ...data,
-        terms: data.terms as ClientTerm[],
+        terms: data.terms.map((x) => ({
+          ...x,
+          clientKey: x.id,
+        })) as ClientTerm[],
         mode: "edit",
         serverTerms: data.terms.map((x) => x.id),
       },

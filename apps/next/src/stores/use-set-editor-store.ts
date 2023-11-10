@@ -11,6 +11,7 @@ import type {
 } from "@quenti/prisma/client";
 
 export type ClientTerm = Omit<Term, "wordRichText" | "definitionRichText"> & {
+  clientKey: string;
   wordRichText?: JSON | null;
   definitionRichText?: JSON | null;
 };
@@ -18,6 +19,7 @@ export type ClientAutoSaveTerm = Omit<
   AutoSaveTerm,
   "wordRichText" | "definitionRichText"
 > & {
+  clientKey: string;
   wordRichText?: JSON | null;
   definitionRichText?: JSON | null;
 };
@@ -38,6 +40,7 @@ interface SetEditorProps {
   serverTerms: string[];
   visibleTerms: number[];
   lastCreated?: string;
+  currentActiveRank?: number;
 }
 
 interface SetEditorState extends SetEditorProps {
@@ -54,7 +57,7 @@ interface SetEditorState extends SetEditorProps {
   addTerm: (rank: number) => void;
   bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
   deleteTerm: (id: string) => void;
-  changeTermId: (oldId: string, newId: string) => void;
+  setServerTermId: (oldId: string, serverId: string) => void;
   editTerm: (
     id: string,
     word: string,
@@ -68,6 +71,7 @@ interface SetEditorState extends SetEditorProps {
   removeServerTerm: (term: string) => void;
   setTermVisible: (rank: number, visible: boolean) => void;
   setLastCreated: (id: string) => void;
+  setCurrentActiveRank: (id: number) => void;
   onSubscribeDelegate: () => void;
   onComplete: () => void;
 }
@@ -111,8 +115,11 @@ export const createSetEditorStore = (
       setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
       addTerm: (rank: number) => {
         set((state) => {
+          const clientKey = nanoid();
+
           const term: ClientAutoSaveTerm = {
-            id: nanoid(),
+            id: clientKey,
+            clientKey,
             word: "",
             definition: "",
             wordRichText: null,
@@ -139,15 +146,20 @@ export const createSetEditorStore = (
             .filter((x) => !!x.word.length || !!x.definition.length)
             .map((x, i) => ({ ...x, rank: i }));
 
-          const newTerms = terms.map((term, i) => ({
-            id: nanoid(),
-            word: term.word,
-            definition: term.definition,
-            wordRichText: null,
-            definitionRichText: null,
-            setAutoSaveId: "",
-            rank: filtered.length + i,
-          }));
+          const newTerms = terms.map((term, i) => {
+            const clientKey = nanoid();
+
+            return {
+              id: clientKey,
+              clientKey,
+              word: term.word,
+              definition: term.definition,
+              wordRichText: null,
+              definitionRichText: null,
+              setAutoSaveId: "",
+              rank: filtered.length + i,
+            };
+          });
 
           return {
             terms: [...filtered, ...newTerms],
@@ -196,15 +208,15 @@ export const createSetEditorStore = (
           definitionRichText,
         );
       },
-      changeTermId: (oldId: string, newId: string) => {
+      setServerTermId: (oldId: string, serverId: string) => {
         set((state) => {
           return {
             terms: state.terms.map((t) =>
-              t.id === oldId ? { ...t, id: newId } : t,
+              t.id === oldId ? { ...t, id: serverId } : t,
             ),
           };
         });
-        behaviors?.changeTermId?.(oldId, newId);
+        behaviors?.setServerTermId?.(oldId, serverId);
       },
       reorderTerm: (id: string, rank: number) => {
         set((state) => {
@@ -270,6 +282,10 @@ export const createSetEditorStore = (
       setLastCreated: (id: string) => {
         set({ lastCreated: id });
         behaviors?.setLastCreated?.(id);
+      },
+      setCurrentActiveRank: (rank: number) => {
+        set({ currentActiveRank: rank });
+        behaviors?.setCurrentActiveRank?.(rank);
       },
       onSubscribeDelegate: () => {
         behaviors?.onSubscribeDelegate?.();

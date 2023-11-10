@@ -58,7 +58,10 @@ const ContextLayer: React.FC<
     storeRef.current = createSetEditorStore(
       {
         ...data,
-        terms: data.autoSaveTerms as ClientAutoSaveTerm[],
+        terms: data.autoSaveTerms.map((x) => ({
+          ...x,
+          clientKey: x.id,
+        })) as ClientAutoSaveTerm[],
       },
       {
         onComplete: () => {
