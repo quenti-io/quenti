@@ -12,6 +12,12 @@ import type { JSONContent } from "@tiptap/react";
 // Glad you're here! https://arc.net/e/D8FDAA6B-8BCD-4D3B-AAE5-4A6756C42D45
 export const HighlightExtension = HighlightRaw.extend({
   priority: 200,
+  addKeyboardShortcuts() {
+    return {
+      "Mod-Shift-h": () =>
+        this.editor.commands.toggleHighlight({ color: Highlight.Yellow + A }),
+    };
+  },
 });
 
 export const SERIALIZABLE_EXTENSIONS = [
