@@ -3,9 +3,11 @@ import { Open_Sans, Outfit } from "next/font/google";
 import {
   type ChakraProps,
   type ChakraTheme,
+  defineStyle,
+  defineStyleConfig,
   extendTheme,
 } from "@chakra-ui/react";
-import { type StyleFunctionProps, mode } from "@chakra-ui/theme-tools";
+import { type StyleFunctionProps, cssVar, mode } from "@chakra-ui/theme-tools";
 
 export const outfit = Outfit({
   weight: ["400", "500", "600", "700"],
@@ -70,6 +72,22 @@ export const colors = {
     1000: "#171923",
   },
 };
+
+const $startColor = cssVar("skeleton-start-color");
+const $endColor = cssVar("skeleton-end-color");
+
+const card = defineStyle({
+  [$startColor.variable]: "colors.white",
+  [$endColor.variable]: "colors.white",
+  _dark: {
+    [$startColor.variable]: "colors.gray.700",
+    [$endColor.variable]: "colors.gray.700",
+  },
+  opacity: 1,
+});
+const skeletonTheme = defineStyleConfig({
+  variants: { card },
+});
 
 export const components = {
   Button: {
@@ -180,6 +198,7 @@ export const components = {
       },
     }),
   },
+  Skeleton: skeletonTheme,
   Checkbox: {
     baseStyle: () => ({
       control: {

@@ -4,9 +4,9 @@ import { Box, Card, Progress, Skeleton } from "@chakra-ui/react";
 
 export const LoadingFlashcard: React.FC<{ h?: string }> = ({ h }) => {
   return (
-    <Box position="relative" rounded="xl" overflow="hidden">
-      <Skeleton rounded="xl">
-        <Card w="full" minH={h} rounded="xl" shadow="none" border="2px" />
+    <Box position="relative" rounded="xl" overflow="hidden" shadow="xl">
+      <Skeleton rounded="xl" variant="card">
+        <Card w="full" minH={h} rounded="xl" border="2px" />
       </Skeleton>
       <Progress
         position="absolute"

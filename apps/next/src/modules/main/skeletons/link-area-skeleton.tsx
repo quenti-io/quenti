@@ -11,7 +11,15 @@ export const LinkAreaSkeletonRaw = () => {
       columns={{ base: 2, md: 3, lg: 1 }}
     >
       {Array.from({ length: 6 }).map((_, i) => (
-        <Skeleton key={i} rounded="xl" h="59px" />
+        <Skeleton
+          key={i}
+          rounded="xl"
+          h="59px"
+          variant="card"
+          shadow="md"
+          startColor="gray.750"
+          endColor="gray.750"
+        />
       ))}
     </SimpleGrid>
   );
