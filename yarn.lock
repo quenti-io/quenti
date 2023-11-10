@@ -5480,6 +5480,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@quenti/drizzle@workspace:*, @quenti/drizzle@workspace:packages/drizzle":
+  version: 0.0.0-use.local
+  resolution: "@quenti/drizzle@workspace:packages/drizzle"
+  dependencies:
+    "@planetscale/database": "npm:^1.11.0"
+    "@quenti/env": "workspace:*"
+    drizzle-orm: "npm:^0.29.0"
+  languageName: unknown
+  linkType: soft
+
 "@quenti/emails@workspace:*, @quenti/emails@workspace:packages/emails":
   version: 0.0.0-use.local
   resolution: "@quenti/emails@workspace:packages/emails"
@@ -5630,6 +5640,7 @@ __metadata:
     "@quenti/branding": "workspace:*"
     "@quenti/components": "workspace:*"
     "@quenti/core": "workspace:*"
+    "@quenti/drizzle": "workspace:*"
     "@quenti/enterprise": "workspace:*"
     "@quenti/env": "workspace:*"
     "@quenti/images": "workspace:*"
@@ -10512,6 +10523,72 @@ __metadata:
   version: 16.3.1
   resolution: "dotenv@npm:16.3.1"
   checksum: b95ff1bbe624ead85a3cd70dbd827e8e06d5f05f716f2d0cbc476532d54c7c9469c3bc4dd93ea519f6ad711cb522c00ac9a62b6eb340d5affae8008facc3fbd7
+  languageName: node
+  linkType: hard
+
+"drizzle-orm@npm:^0.29.0":
+  version: 0.29.0
+  resolution: "drizzle-orm@npm:0.29.0"
+  peerDependencies:
+    "@aws-sdk/client-rds-data": ">=3"
+    "@cloudflare/workers-types": ">=3"
+    "@libsql/client": "*"
+    "@neondatabase/serverless": ">=0.1"
+    "@opentelemetry/api": ^1.4.1
+    "@planetscale/database": ">=1"
+    "@types/better-sqlite3": "*"
+    "@types/pg": "*"
+    "@types/sql.js": "*"
+    "@vercel/postgres": "*"
+    better-sqlite3: ">=7"
+    bun-types: "*"
+    knex: "*"
+    kysely: "*"
+    mysql2: ">=2"
+    pg: ">=8"
+    postgres: ">=3"
+    sql.js: ">=1"
+    sqlite3: ">=5"
+  peerDependenciesMeta:
+    "@aws-sdk/client-rds-data":
+      optional: true
+    "@cloudflare/workers-types":
+      optional: true
+    "@libsql/client":
+      optional: true
+    "@neondatabase/serverless":
+      optional: true
+    "@opentelemetry/api":
+      optional: true
+    "@planetscale/database":
+      optional: true
+    "@types/better-sqlite3":
+      optional: true
+    "@types/pg":
+      optional: true
+    "@types/sql.js":
+      optional: true
+    "@vercel/postgres":
+      optional: true
+    better-sqlite3:
+      optional: true
+    bun-types:
+      optional: true
+    knex:
+      optional: true
+    kysely:
+      optional: true
+    mysql2:
+      optional: true
+    pg:
+      optional: true
+    postgres:
+      optional: true
+    sql.js:
+      optional: true
+    sqlite3:
+      optional: true
+  checksum: 8c4a3d05f98cff8ec8b1e65a04baced3d826df3b6ac029779c3fbf78c47b8ec277162f971b5217ee2c6b75d401bb2c392d2dc50fb93f5c017f11f734047e1261
   languageName: node
   linkType: hard
 

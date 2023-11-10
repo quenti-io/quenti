@@ -74,6 +74,7 @@ let config = {
     "@quenti/payments",
     "@quenti/enterprise",
     "@quenti/prisma",
+    "@quenti/drizzle",
     "@quenti/trpc",
     "@quenti/inngest",
     "@quenti/integrations",
