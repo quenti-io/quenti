@@ -18,16 +18,16 @@
     "@quenti/prisma": "workspace:*",
     "@quenti/types": "workspace:*",
     "@tiptap/html": "^2.1.12",
-    "@trpc/client": "^10.41.0",
-    "@trpc/next": "^10.41.0",
-    "@trpc/react-query": "^10.41.0",
-    "@trpc/server": "^10.41.0",
+    "@trpc/client": "^10.43.3",
+    "@trpc/next": "^10.43.3",
+    "@trpc/react-query": "^10.43.3",
+    "@trpc/server": "^10.43.3",
     "@upstash/ratelimit": "^0.4.4",
     "@upstash/redis": "^1.22.1",
     "email-providers": "^2.0.1",
-    "nanoid": "^5.0.1",
-    "next": "^14.0.1",
-    "next-auth": "^4.24.4",
+    "nanoid": "^5.0.3",
+    "next": "^14.0.2",
+    "next-auth": "^4.24.5",
     "next-axiom": "^0.18.0",
     "otp-generator": "^4.0.1",
     "prom-client": "^14.2.0",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@tiptap/react": "^2.1.12",
-    "@types/otp-generator": "^4.0.1"
+    "@types/otp-generator": "^4.0.2"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
