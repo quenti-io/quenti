@@ -17,7 +17,7 @@ export const generateEmbeddings = async (
 const generateEmbeddingsBatch = async (
   terms: string[],
 ): Promise<number[][]> => {
-  console.log(`Embedding batch of ${terms.length} terms`);
+  const start = Date.now();
 
   if (!env.COHERE_API_KEY) return [];
 
@@ -31,7 +31,7 @@ const generateEmbeddingsBatch = async (
     );
   }
 
-  console.log(`Done (${terms.length})`);
+  const elapsed = Date.now() - start;
 
   return response.body.embeddings;
 };
