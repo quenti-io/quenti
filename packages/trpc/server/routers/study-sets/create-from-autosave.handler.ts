@@ -99,6 +99,8 @@ export const createFromAutosaveHandler = async ({
     },
   });
 
+  const start = Date.now();
+
   const distractors = await bulkGenerateDistractors(studySet.terms);
   await ctx.prisma.distractor.createMany({
     data: distractors.map((d) => ({
@@ -107,6 +109,14 @@ export const createFromAutosaveHandler = async ({
       distractingId: d.distractorId,
       studySetId: studySet.id,
     })),
+  });
+
+  ctx.req.log.debug("cortex.bulkGenerateDistractors", {
+    studySetId: studySet.id,
+    terms: studySet.terms.length,
+    distractors: distractors.length,
+    batches: Math.ceil(studySet.terms.length / 96),
+    elapsed: Date.now() - start,
   });
 
   return studySet;

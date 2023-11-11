@@ -8,8 +8,8 @@
     "@quenti/lib": "workspace:*",
     "@quenti/prisma": "workspace:*",
     "email-providers": "^2.0.1",
-    "next": "^14.0.1",
-    "next-auth": "^4.24.4"
+    "next": "^14.0.2",
+    "next-auth": "^4.24.5"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",

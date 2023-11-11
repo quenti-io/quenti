@@ -43,4 +43,6 @@ export const regenerateCortex = async (id: string) => {
       cortexStale: false,
     },
   });
+
+  return distractors;
 };

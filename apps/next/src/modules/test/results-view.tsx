@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+import { log } from "next-axiom";
 import React from "react";
 
 import { Link } from "@quenti/components";
@@ -21,18 +23,39 @@ import {
 } from "@tabler/icons-react";
 
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
+import { useSet } from "../../hooks/use-set";
 import { useTestContext } from "../../stores/use-test-store";
 import { TestCardGapRaw } from "./card-gap";
 import { CardWrapper } from "./card-wrapper";
 import { ResultsCard } from "./results-card";
 
 export const ResultsView = () => {
+  const session = useSession();
+  const { id } = useSet();
   const result = useTestContext((s) => s.result!);
   const questionCount = useTestContext((s) => s.questionCount);
   const outline = useTestContext((s) => s.outline);
   const reset = useTestContext((s) => s.reset);
+  const [startedAt, endedAt] = useTestContext((s) => [s.startedAt, s.endedAt]);
 
   const rootUrl = useEntityRootUrl();
+
+  React.useEffect(() => {
+    log.info("test.results", {
+      userId: session.data?.user?.id,
+      studySetId: id,
+      result: {
+        score: result.score,
+        byType: result.byType,
+      },
+      questionCount,
+      startedAt,
+      endedAt,
+      elapsed:
+        (endedAt || new Date()).getTime() - (startedAt || new Date()).getTime(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Stack spacing="6">

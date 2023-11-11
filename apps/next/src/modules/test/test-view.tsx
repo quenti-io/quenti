@@ -51,7 +51,7 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
   };
 
   React.useEffect(() => {
-    if (!searchParams.get("count"))
+    if (!searchParams?.get("count"))
       setTimeout(() => {
         setSettingsOpen(true);
       });
