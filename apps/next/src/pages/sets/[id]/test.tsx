@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+import { log } from "next-axiom";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
@@ -12,6 +14,7 @@ import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
 import { ConfirmModal } from "../../../components/confirm-modal";
+import { useSet } from "../../../hooks/use-set";
 import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { getLayout } from "../../../layouts/main-layout";
 import { CreateTestData } from "../../../modules/create-test-data";
@@ -56,6 +59,8 @@ const SeoWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 };
 
 const TestContainer = () => {
+  const session = useSession();
+  const { id } = useSet();
   const store = React.useContext(TestContext)!;
   const result = useTestContext((s) => s.result);
   const setEndedAt = useTestContext((s) => s.setEndedAt);
@@ -173,6 +178,14 @@ const TestContainer = () => {
       await bulkGrade.mutateAsync({ answers: cortexEligible });
     }
   };
+
+  React.useEffect(() => {
+    log.info("test.identify", {
+      userId: session.data?.user?.id,
+      studySetId: id,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AuthedPage>

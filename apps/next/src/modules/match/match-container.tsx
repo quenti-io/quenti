@@ -1,4 +1,6 @@
 import { AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { log } from "next-axiom";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
@@ -16,7 +18,8 @@ import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
   const history = useHistory();
-  const { title } = useSetFolderUnison();
+  const session = useSession();
+  const { title, id, type } = useSetFolderUnison();
   const terms = useMatchContext((state) => state.terms);
   const summary = useMatchContext((state) => state.roundSummary);
   const completed = useMatchContext((state) => state.completed);
@@ -71,6 +74,12 @@ export const MatchContainer = () => {
     const reloaded = history.length <= 1;
     setReloaded(reloaded);
     if (reloaded) nextRound();
+
+    log.info("match.identify", {
+      userId: session.data?.user?.id,
+      entityId: id,
+      type,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

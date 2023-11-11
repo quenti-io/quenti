@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+import { log } from "next-axiom";
 import React from "react";
 
 import { GenericLabel } from "@quenti/components";
@@ -29,12 +31,15 @@ interface ChoiceCardProps {
 }
 
 export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
+  const session = useSession();
   const { container } = useAuthedSet();
   const answered = useLearnContext((s) => s.answered);
   const status = useLearnContext((s) => s.status);
   const answerCorrectly = useLearnContext((s) => s.answerCorrectly);
   const answerIncorrectly = useLearnContext((s) => s.answerIncorrectly);
   const feedbackBank = useLearnContext((s) => s.feedbackBank);
+
+  const [start] = React.useState(Date.now());
 
   const getCorrect = () => getRandom(feedbackBank.correct)!;
   const getIncorrect = () => getRandom(feedbackBank.incorrect)!;
@@ -55,30 +60,44 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
   const put = api.studiableTerms.put.useMutation();
 
   const choose = (term: Term) => {
+    const elapsed = Date.now() - start;
+
     if (term.id === active.term.id) {
       answerCorrectly(term.id);
 
-      void (async () =>
-        await put.mutateAsync({
-          id: active.term.id,
-          containerId: container.id,
-          mode: "Learn",
-          correctness: 1,
-          appearedInRound: active.term.appearedInRound || 0,
-          incorrectCount: active.term.incorrectCount,
-        }))();
+      put.mutate({
+        id: active.term.id,
+        containerId: container.id,
+        mode: "Learn",
+        correctness: 1,
+        appearedInRound: active.term.appearedInRound || 0,
+        incorrectCount: active.term.incorrectCount,
+      });
+
+      log.info("learn.choice.correct", {
+        userId: session.data?.user?.id,
+        containerId: container.id,
+        termId: active.term.id,
+        elapsed,
+      });
     } else {
       answerIncorrectly(term.id);
 
-      void (async () =>
-        await put.mutateAsync({
-          id: active.term.id,
-          containerId: container.id,
-          mode: "Learn",
-          correctness: -1,
-          appearedInRound: active.term.appearedInRound || 0,
-          incorrectCount: active.term.incorrectCount + 1,
-        }))();
+      put.mutate({
+        id: active.term.id,
+        containerId: container.id,
+        mode: "Learn",
+        correctness: -1,
+        appearedInRound: active.term.appearedInRound || 0,
+        incorrectCount: active.term.incorrectCount + 1,
+      });
+
+      log.info("learn.choice.incorrect", {
+        userId: session.data?.user?.id,
+        containerId: container.id,
+        termId: active.term.id,
+        elapsed,
+      });
     }
   };
 
