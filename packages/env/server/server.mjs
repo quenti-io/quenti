@@ -4,7 +4,8 @@ import { z } from "zod";
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
-    NODE_ENV: z.enum(["development", "test", "production"]),
+    PLANETSCALE: z.string().optional(),
+    NODE_ENV: z.enum(["development", "test", "production"]).optional(),
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string().min(1)
@@ -19,7 +20,6 @@ export const env = createEnv({
     QUENTI_ENCRYPTION_KEY: z.string().length(32),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
-    ADMIN_EMAIL: z.string().email(),
     METRICS_API_USER: z.string(),
     METRICS_API_PASSWORD: z.string(),
     RESEND_API_KEY: z.string().optional(),

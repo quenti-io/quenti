@@ -22,7 +22,7 @@ import { useMe } from "../../hooks/use-me";
 import { OrganizationCard } from "./organization-card";
 
 export const OrganizationInviteScreen = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const router = useRouter();
   const { data: me } = useMe();
   const { data: session } = useSession();

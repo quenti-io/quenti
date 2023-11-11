@@ -1,4 +1,4 @@
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 
 import { Center } from "@chakra-ui/react";
 
@@ -25,3 +25,5 @@ export const Folder404 = () => {
     </WithFooter>
   );
 };
+
+export default Folder404;

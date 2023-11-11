@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 
 import { Box, Button, Heading, Text, VStack } from "@chakra-ui/react";
 

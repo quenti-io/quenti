@@ -4,9 +4,10 @@
   "private": true,
   "dependencies": {
     "@clickhouse/client": "^0.2.2",
-    "@quenti/core": "*",
-    "@quenti/env": "*",
-    "@quenti/prisma": "*"
+    "@quenti/core": "workspace:*",
+    "@quenti/env": "workspace:*",
+    "@quenti/prisma": "workspace:*",
+    "@upstash/redis": "^1.22.1"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",

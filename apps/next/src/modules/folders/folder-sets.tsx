@@ -3,17 +3,18 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
-import { Button, Grid, GridItem, Skeleton } from "@chakra-ui/react";
+import { Button, Grid, GridItem } from "@chakra-ui/react";
 
 import { IconPlus } from "@tabler/icons-react";
 
 import { AddEntitiesModal } from "../../components/add-entities-modal";
+import { GenericCard } from "../../components/generic-card";
 import { StudySetCard } from "../../components/study-set-card";
 import { useFolder } from "../../hooks/use-folder";
 import { FolderCreatorOnly } from "./folder-creator-only";
 
 export const FolderSets = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const session = useSession();
   const folder = useFolder();
 
@@ -116,20 +117,7 @@ FolderSets.Skeleton = function FolderSetsSkeleton() {
     >
       {Array.from({ length: 6 }).map((_, i) => (
         <GridItem key={i}>
-          <Skeleton rounded="lg">
-            <StudySetCard
-              studySet={{
-                id: "",
-                title: "Study set",
-                visibility: "Public",
-              }}
-              user={{
-                image: "",
-                username: "username",
-              }}
-              numTerms={12}
-            />
-          </Skeleton>
+          <GenericCard.Skeleton />
         </GridItem>
       ))}
     </Grid>

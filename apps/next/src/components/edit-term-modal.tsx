@@ -1,13 +1,22 @@
+import { EditorContent, useEditor } from "@tiptap/react";
 import React from "react";
 
 import { Modal } from "@quenti/components/modal";
+import {
+  editorInput,
+  getPlainText,
+  hasRichText,
+  richTextToHtml,
+} from "@quenti/lib/editor";
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import { Button, ButtonGroup, Stack } from "@chakra-ui/react";
 
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
-import { AutoResizeTextarea } from "./auto-resize-textarea";
+import { RichTextBar } from "../modules/editor/card/rich-text-bar";
+import { editorConfig } from "../modules/editor/editor-config";
+import type { ClientTerm } from "../stores/use-set-editor-store";
 
 export interface EditTermModalProps {
   term: Term | null;
@@ -22,19 +31,32 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   onClose,
   onDefinition,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { type } = useSetFolderUnison();
 
-  const [word, setWord] = React.useState("");
-  const [definition, setDefinition] = React.useState("");
-
-  const initialRef = React.useRef(null);
+  const wordEditor = useEditor({
+    ...editorConfig(),
+    content: term ? editorInput(term as ClientTerm, "word") : "",
+  });
+  const definitionEditor = useEditor({
+    ...editorConfig(),
+    content: term ? editorInput(term as ClientTerm, "definition") : "",
+  });
 
   React.useEffect(() => {
     if (!term || !isOpen) return;
 
-    setWord(term.word);
-    setDefinition(term.definition);
+    wordEditor?.commands.setContent(editorInput(term as ClientTerm, "word"));
+    definitionEditor?.commands.setContent(
+      editorInput(term as ClientTerm, "definition"),
+    );
+
+    if (onDefinition) {
+      definitionEditor?.commands.focus();
+    } else {
+      wordEditor?.commands.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term, isOpen]);
 
   const edit = api.terms.edit.useMutation({
@@ -49,25 +71,43 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   });
 
   return (
-    <Modal onClose={onClose} isOpen={isOpen} initialFocusRef={initialRef}>
+    <Modal onClose={onClose} isOpen={isOpen}>
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
           <Modal.Heading>Edit term</Modal.Heading>
-          <AutoResizeTextarea
-            allowTab={false}
-            value={word}
-            w="full"
-            onChange={(e) => setWord(e.target.value)}
-            ref={!onDefinition ? initialRef : null}
-          />
-          <AutoResizeTextarea
-            allowTab={false}
-            value={definition}
-            w="full"
-            onChange={(e) => setDefinition(e.target.value)}
-            ref={onDefinition ? initialRef : null}
-          />
+          <Stack w="full">
+            <RichTextBar
+              activeEditor={wordEditor}
+              bg="gray.100"
+              _dark={{
+                bg: "gray.900",
+              }}
+            />
+            <EditorContent
+              editor={wordEditor}
+              onKeyDown={(e) => {
+                if ([" ", "ArrowRight", "ArrowLeft"].includes(e.key))
+                  e.stopPropagation();
+              }}
+            />
+          </Stack>
+          <Stack w="full">
+            <RichTextBar
+              activeEditor={definitionEditor}
+              bg="gray.100"
+              _dark={{
+                bg: "gray.900",
+              }}
+            />
+            <EditorContent
+              editor={definitionEditor}
+              onKeyDown={(e) => {
+                if ([" ", "ArrowRight", "ArrowLeft"].includes(e.key))
+                  e.stopPropagation();
+              }}
+            />
+          </Stack>
         </Modal.Body>
         <Modal.Divider />
         <Modal.Footer>
@@ -79,10 +119,27 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
               onClick={() => {
                 if (!term) return;
 
+                const wordJson = wordEditor!.getJSON();
+                const definitionJson = definitionEditor!.getJSON();
+                const word = getPlainText(wordJson);
+                const definition = getPlainText(definitionJson);
+
+                const wordRichText = hasRichText(wordJson, word);
+                const definitionRichText = hasRichText(
+                  definitionJson,
+                  definition,
+                );
+
                 edit.mutate({
                   ...term,
                   word,
                   definition,
+                  wordRichText: wordRichText
+                    ? richTextToHtml(wordJson)
+                    : undefined,
+                  definitionRichText: definitionRichText
+                    ? richTextToHtml(definitionJson)
+                    : undefined,
                 });
               }}
               isLoading={edit.isLoading}

@@ -79,7 +79,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   token,
 }) => {
   const me = useOrganizationMember();
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const toast = useToast();
 
   const inviteMemberFormMethods = useForm<InviteMemberFormInputs>({

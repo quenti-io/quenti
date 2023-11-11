@@ -133,7 +133,15 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
               {previewTerms.map(({ word, definition }, i) => (
                 <GenericTermCard
                   key={i}
-                  term={{ word, definition, id: "", studySetId: "", rank: i }}
+                  term={{
+                    word,
+                    definition,
+                    wordRichText: null,
+                    definitionRichText: null,
+                    id: "",
+                    studySetId: "",
+                    rank: i,
+                  }}
                   variantBg
                 />
               ))}

@@ -5,8 +5,9 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "dependencies": {
-    "@quenti/lib": "*",
-    "@quenti/prisma": "*"
+    "@quenti/interfaces": "workspace:*",
+    "@quenti/lib": "workspace:*",
+    "@quenti/prisma": "workspace:*"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",

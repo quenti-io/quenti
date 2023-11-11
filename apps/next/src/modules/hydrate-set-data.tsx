@@ -102,7 +102,7 @@ export const HydrateSetData: React.FC<
   };
 
   if (error?.data?.httpStatus == 404) return <Set404 />;
-  if (error?.data?.httpStatus == 403) return <SetPrivate />;
+  if ([401, 403].includes(error?.data?.httpStatus || 0)) return <SetPrivate />;
   if (
     status == "loading" ||
     (!isPublic && !session) ||

@@ -1,2 +1,2 @@
 zod/
-kysely-types.ts
+.prisma

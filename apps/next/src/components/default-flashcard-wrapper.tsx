@@ -55,7 +55,7 @@ export const DefaultFlashcardWrapper = () => {
     await controls.start({
       rotateX: 90,
       transition: {
-        duration: 0.15,
+        duration: 0.125,
       },
     });
 
@@ -67,7 +67,7 @@ export const DefaultFlashcardWrapper = () => {
     await controls.start({
       rotateX: 0,
       transition: {
-        duration: 0.15,
+        duration: 0.125,
       },
     });
   };

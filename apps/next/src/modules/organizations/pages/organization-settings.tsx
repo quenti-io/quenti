@@ -55,7 +55,7 @@ import { useOrgLogoUpload } from "../use-org-logo-upload";
 import { getBaseDomain } from "../utils/get-base-domain";
 
 export const OrganizationSettings = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: session } = useSession();
 
   const { data: org } = useOrganization();

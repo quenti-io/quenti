@@ -8,13 +8,19 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.418.0",
-    "@quenti/components": "*",
-    "@quenti/env": "*",
+    "@chakra-ui/react": "^2.8.1",
+    "@quenti/components": "workspace:*",
+    "@quenti/env": "workspace:*",
+    "@quenti/lib": "workspace:*",
+    "@tabler/icons-react": "^2.38.0",
     "jsonwebtoken": "^9.0.2",
+    "react": "^18.2.0",
     "react-easy-crop": "^5.0.2",
+    "sharp": "^0.32.6",
     "thumbhash": "^0.1.1"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.4"
+    "@types/jsonwebtoken": "^9.0.4",
+    "@types/react": "^18.2.30"
   }
 }

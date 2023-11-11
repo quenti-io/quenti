@@ -10,7 +10,7 @@ import { DefaultLayout } from "./default-layout";
 import { PresentWrapper, useNextStep } from "./present-wrapper";
 
 export const OnboardingInvite = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: me } = useMe();
   const { data: session } = useSession();
 

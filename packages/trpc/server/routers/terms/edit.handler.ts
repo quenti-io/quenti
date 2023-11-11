@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TEditSchema } from "./edit.schema";
+import { serialize } from "./utils/serialize";
 
 type EditOptions = {
   ctx: NonNullableUserContext;
@@ -22,6 +23,15 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     });
   }
 
+  const { plainText: word, richText: wordRichText } = serialize(
+    input.word,
+    input.wordRichText,
+  );
+  const { plainText: definition, richText: definitionRichText } = serialize(
+    input.definition,
+    input.definitionRichText,
+  );
+
   const term = await ctx.prisma.term.update({
     where: {
       id_studySetId: {
@@ -30,8 +40,10 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       },
     },
     data: {
-      word: input.word,
-      definition: input.definition,
+      word,
+      definition,
+      wordRichText,
+      definitionRichText,
       studySet: {
         update: {
           cortexStale: true,

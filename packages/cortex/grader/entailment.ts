@@ -26,7 +26,6 @@ const processEntailment = async (
     // @ts-expect-error Argument of type
     inputs: `[CLS] ${sanitize(answer)} [SEP] ${sanitize(input)}`,
   });
-  console.log("RESULTS", results);
   const sorted = (
     results as { label: EntailmentResult["label"]; score: number }[]
   ).sort((a, b) => b.score - a.score);

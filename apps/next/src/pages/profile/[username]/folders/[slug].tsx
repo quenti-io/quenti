@@ -1,22 +1,26 @@
 import type { GetServerSidePropsContext } from "next";
+import dynamic from "next/dynamic";
 
-import { HeadSeo } from "@quenti/components";
-import { prisma } from "@quenti/prisma";
-
-import { Container, Flex, Stack } from "@chakra-ui/react";
+import { HeadSeo } from "@quenti/components/head-seo";
+import { and, db, eq, or, sql } from "@quenti/drizzle";
+import { folder, studySetsOnFolders, user } from "@quenti/drizzle/schema";
 
 import { LazyWrapper } from "../../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../../common/page-wrapper";
-import { WithFooter } from "../../../../components/with-footer";
 import { getLayout } from "../../../../layouts/main-layout";
 import type { inferSSRProps } from "../../../../lib/infer-ssr-props";
-import { Folder404 } from "../../../../modules/folders/folder-404";
-import { FolderDescription } from "../../../../modules/folders/folder-description";
-import { FolderHeading } from "../../../../modules/folders/folder-heading";
-import { FolderLoading } from "../../../../modules/folders/folder-loading";
-import { FolderSets } from "../../../../modules/folders/folder-sets";
-import { LinkArea } from "../../../../modules/folders/link-area";
-import { HydrateFolderData } from "../../../../modules/hydrate-folder-data";
+
+const Folder404 = dynamic(
+  () => import("../../../../modules/folders/folder-404"),
+  {
+    ssr: false,
+  },
+);
+const InternalFolder = dynamic(
+  () => import("../../../../components/internal-folder"),
+);
+
+export const runtime = "experimental-edge";
 
 const FolderPage = ({ folder }: inferSSRProps<typeof getServerSideProps>) => {
   if (!folder) return <Folder404 />;
@@ -30,7 +34,7 @@ const FolderPage = ({ folder }: inferSSRProps<typeof getServerSideProps>) => {
           type: "Folder",
           title: folder.title,
           description: folder.description,
-          numItems: folder._count.studySets,
+          numItems: folder.studySets,
           user: {
             username: folder.user.username!,
             image: folder.user.image || "",
@@ -38,29 +42,7 @@ const FolderPage = ({ folder }: inferSSRProps<typeof getServerSideProps>) => {
         }}
       />
       <LazyWrapper>
-        <HydrateFolderData fallback={<FolderLoading />}>
-          <WithFooter>
-            <Container maxW="7xl">
-              <Stack spacing={12}>
-                <Stack spacing="0">
-                  <FolderHeading />
-                  <FolderDescription />
-                </Stack>
-                <Flex
-                  gap={8}
-                  flexDir={{ base: "column", lg: "row" }}
-                  alignItems="stretch"
-                  w="full"
-                >
-                  <LinkArea />
-                  <Flex flex="1">
-                    <FolderSets />
-                  </Flex>
-                </Flex>
-              </Stack>
-            </Container>
-          </WithFooter>
-        </HydrateFolderData>
+        <InternalFolder />
       </LazyWrapper>
     </>
   );
@@ -70,53 +52,51 @@ FolderPage.PageWrapper = PageWrapper;
 FolderPage.getLayout = getLayout;
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
+  if (!db) return { props: { set: null } };
 
   const username = (ctx.query?.username as string).substring(1);
   const idOrSlug = ctx.query?.slug as string;
 
-  const user = await prisma.user.findUnique({
-    where: {
-      username,
-    },
+  const target = await db.query.user.findFirst({
+    where: eq(user.username, username),
   });
 
-  if (!user) return { props: { folder: null } };
+  if (!target) return { props: { folder: null } };
 
-  const folder = await prisma.folder.findFirst({
-    where: {
-      OR: [
-        {
-          userId: user.id,
-          slug: idOrSlug,
-        },
-        {
-          userId: user.id,
-          id: idOrSlug,
-        },
-      ],
-    },
-    select: {
+  const targetFolder = await db.query.folder.findFirst({
+    where: and(
+      eq(folder.userId, target.id),
+      or(eq(folder.id, idOrSlug), eq(folder.slug, idOrSlug)),
+    ),
+    columns: {
       id: true,
       title: true,
       description: true,
+    },
+    with: {
       user: {
-        select: {
+        columns: {
           username: true,
           image: true,
         },
       },
-      _count: {
-        select: {
-          studySets: true,
-        },
-      },
     },
   });
 
+  if (!targetFolder) return { props: { folder: null } };
+
+  const { count } = (
+    await db
+      .select({
+        count: sql<number>`cast(count(${studySetsOnFolders.studySetId}) as unsigned)`,
+      })
+      .from(studySetsOnFolders)
+      .where(eq(studySetsOnFolders.folderId, targetFolder.id))
+  )[0]!;
+
   return {
     props: {
-      folder,
+      folder: { ...targetFolder, studySets: count },
     },
   };
 };

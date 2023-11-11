@@ -2,10 +2,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { richTextToHtml } from "@quenti/lib/editor";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
 import { useLoading } from "../hooks/use-loading";
 import {
+  type ClientTerm,
   type SetEditorStore,
   SetEditorStoreContext,
   createSetEditorStore,
@@ -64,7 +66,7 @@ const ContextLayer: React.FC<
     onSuccess: (data) => {
       const state = storeRef.current!.getState();
 
-      state.changeTermId(
+      state.setServerTermId(
         state.terms.find((x) => !state.serverTerms.includes(x.id))!.id,
         data.id,
       );
@@ -111,6 +113,10 @@ const ContextLayer: React.FC<
     storeRef.current = createSetEditorStore(
       {
         ...data,
+        terms: data.terms.map((x) => ({
+          ...x,
+          clientKey: x.id,
+        })) as ClientTerm[],
         mode: "edit",
         serverTerms: data.terms.map((x) => x.id),
       },
@@ -129,8 +135,23 @@ const ContextLayer: React.FC<
           if (state.serverTerms.includes(termId))
             apiDeleteTerm.mutate({ termId, studySetId: data.id });
         },
-        editTerm: (termId, word, definition) => {
+        editTerm: (
+          termId,
+          word,
+          definition,
+          wordRichText_,
+          definitionRichText_,
+        ) => {
           const state = storeRef.current!.getState();
+
+          const { wordRichText, definitionRichText } = {
+            wordRichText: wordRichText_
+              ? richTextToHtml(wordRichText_)
+              : undefined,
+            definitionRichText: definitionRichText_
+              ? richTextToHtml(definitionRichText_)
+              : undefined,
+          };
 
           if (state.serverTerms.includes(termId)) {
             apiEditTerm.mutate({
@@ -138,6 +159,8 @@ const ContextLayer: React.FC<
               studySetId: data.id,
               word,
               definition,
+              wordRichText,
+              definitionRichText,
             });
           } else {
             apiAddTerm.mutate({
@@ -145,6 +168,8 @@ const ContextLayer: React.FC<
               term: {
                 word,
                 definition,
+                wordRichText,
+                definitionRichText,
                 rank: state.terms
                   .filter(
                     (x) => state.serverTerms.includes(x.id) || x.id === termId,

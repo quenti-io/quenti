@@ -19,7 +19,7 @@ export const LeaveOrganizationModal: React.FC<RemoveMemberModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const router = useRouter();
   const toast = useToast();
 

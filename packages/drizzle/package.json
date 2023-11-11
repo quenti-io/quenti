@@ -1,0 +1,12 @@
+{
+  "name": "@quenti/drizzle",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.d.ts",
+  "dependencies": {
+    "@planetscale/database": "^1.11.0",
+    "@quenti/env": "workspace:*",
+    "drizzle-orm": "^0.29.0"
+  }
+}

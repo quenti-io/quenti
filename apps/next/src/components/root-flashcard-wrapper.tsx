@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import React from "react";
 
 import type { Term } from "@quenti/prisma/client";
@@ -11,9 +12,13 @@ import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
 import { useContainerContext } from "../stores/use-container-store";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
-import { EditTermModal } from "./edit-term-modal";
 import { LoadingFlashcard } from "./loading-flashcard";
 import { SortFlashcardWrapper } from "./sort-flashcard-wrapper";
+
+const EditTermModal = dynamic(
+  () => import("./edit-term-modal").then((mod) => mod.EditTermModal),
+  { ssr: false },
+);
 
 export interface RootFlashcardWrapperProps {
   terms: Term[];

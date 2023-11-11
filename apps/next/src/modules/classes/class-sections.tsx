@@ -16,7 +16,7 @@ import { SectionCard } from "./section-card";
 import { useProtectedRedirect } from "./use-protected-redirect";
 
 export const ClassSections = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data } = useClass();
   const isLoaded = useProtectedRedirect();
 

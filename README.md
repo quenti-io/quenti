@@ -1,6 +1,6 @@
-[![og:image](./apps/next/public/og-image.png)](https://quenti)
+[![og:image](./apps/next/public/og-image.png)](https://quenti.io)
 
-The modern learning platform designed to let you study anything.
+The open-source Quizlet alternative.
 
 ## The Stack
 
@@ -21,7 +21,7 @@ Get up and running by following these steps.
 
 - Node.js 18.x
 - MySQL
-- Yarn
+- yarn
 - Docker and docker-compose _(recommended)_
 
 ### Setup
@@ -71,6 +71,11 @@ Get up and running by following these steps.
 
    ```sh
    docker-compose -f docker-compose.mysql.yml up
+   ```
+
+6. Push schema changes and generate the Prisma client
+   ```sh
+   yarn prisma db:push
    ```
 
 ### Running

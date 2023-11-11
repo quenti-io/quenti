@@ -47,7 +47,7 @@ interface NewOrganizationFormInput {
 }
 
 export default function NewOrganization() {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const router = useRouter();
   const { data: session, status, update } = useSession();
   const { event } = useTelemetry();

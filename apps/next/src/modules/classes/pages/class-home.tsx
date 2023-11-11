@@ -13,7 +13,7 @@ import { ClassEmpty } from "../class-empty";
 import { EntityGroup } from "../entity-group";
 
 export const ClassHome = () => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data } = useClass();
   const isTeacher = useIsClassTeacher();
 

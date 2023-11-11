@@ -1,6 +1,8 @@
 import React from "react";
 import ReactCanvasConfetti from "react-canvas-confetti";
 
+import { effectChannel } from "../events/effects";
+
 const getAnimationSettings = (angle: number, originX: number) => {
   return {
     particleCount: 3,
@@ -12,6 +14,26 @@ const getAnimationSettings = (angle: number, originX: number) => {
 };
 
 export const ConfettiLayer = () => {
+  const [confetti, setConfetti] = React.useState(false);
+
+  React.useEffect(() => {
+    const prepareConfetti = () => setConfetti(false);
+    const handleConfetti = () => setConfetti(true);
+
+    effectChannel.on("prepareConfetti", prepareConfetti);
+    effectChannel.on("confetti", handleConfetti);
+    return () => {
+      effectChannel.off("prepareConfetti", prepareConfetti);
+      effectChannel.off("confetti", handleConfetti);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!confetti) return null;
+  return <ConfettiPlayer />;
+};
+
+export const ConfettiPlayer = () => {
   const refAnimationInstance = React.useRef<confetti.CreateTypes | null>(null);
 
   const getInstance = React.useCallback((instance) => {

@@ -25,7 +25,7 @@ interface DeleteOrganizationModalProps {
 export const DeleteOrganizationModal: React.FC<
   DeleteOrganizationModalProps
 > = ({ isOpen, onClose }) => {
-  const utils = api.useContext();
+  const utils = api.useUtils();
   const { data: org } = useOrganization();
   const router = useRouter();
 

@@ -1,9 +1,6 @@
 import { GenericLabel } from "@quenti/components";
-import {
-  Clickable,
-  EvaluatedTrue,
-  PromptDisplay,
-} from "@quenti/components/test";
+import { Clickable, EvaluatedTrue } from "@quenti/components/test";
+import { RichPromptDisplay } from "@quenti/components/test/rich-prompt-display";
 import type { TrueFalseData } from "@quenti/interfaces";
 
 import {
@@ -24,7 +21,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useTestContext } from "../../../stores/use-test-store";
-import { word } from "../../../utils/terms";
+import { richWord, word } from "../../../utils/terms";
 import { useCardSelector } from "../use-card-selector";
 import type { CardProps } from "./common";
 
@@ -32,8 +29,8 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
   const { question, data, answer, remarks } = useCardSelector<TrueFalseData>(i);
 
   const rightSide = data.distractor
-    ? word(question.answerMode, data.distractor, "answer")
-    : word(question.answerMode, data.term, "answer");
+    ? richWord(question.answerMode, data.distractor, "answer")
+    : richWord(question.answerMode, data.term, "answer");
 
   const answerQuestion = useTestContext((s) => s.answerQuestion);
   const clearAnswer = useTestContext((s) => s.clearAnswer);
@@ -54,9 +51,9 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
         gap={{ base: 1, md: 3 }}
       >
         <Box w="full" pr={{ base: 0, sm: "4" }}>
-          <PromptDisplay
+          <RichPromptDisplay
             label={question.answerMode == "Definition" ? "Term" : "Definition"}
-            content={word(question.answerMode, data.term, "prompt")}
+            {...richWord(question.answerMode, data.term, "prompt")}
           />
         </Box>
         <Box
@@ -77,9 +74,9 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
           }}
         />
         <Box w="full" pl={{ base: 0, sm: 4 }}>
-          <PromptDisplay
+          <RichPromptDisplay
             label={question.answerMode == "Definition" ? "Definition" : "Term"}
-            content={rightSide}
+            {...rightSide}
           />
         </Box>
       </Grid>

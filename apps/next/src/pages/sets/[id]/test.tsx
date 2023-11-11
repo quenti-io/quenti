@@ -1,12 +1,13 @@
 import React from "react";
 
-import { HeadSeo } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 import { EvaluationResult, evaluate } from "@quenti/core/evaluator";
 import { TestQuestionType, type WriteData } from "@quenti/interfaces";
 import { api } from "@quenti/trpc";
 
 import { Container } from "@chakra-ui/react";
 
+import { EditorGlobalStyles } from "../../../common/editor-global-styles";
 import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
@@ -26,6 +27,7 @@ const Test = () => {
     <AuthedPage>
       <HeadSeo title="Test" />
       <LazyWrapper>
+        <EditorGlobalStyles />
         <HydrateSetData
           disallowDirty
           withDistractors

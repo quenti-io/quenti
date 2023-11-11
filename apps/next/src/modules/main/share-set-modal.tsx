@@ -17,6 +17,7 @@ import {
 
 import { IconEditCircle, IconLock } from "@tabler/icons-react";
 
+import { ToastWrapper } from "../../common/toast-wrapper";
 import { AnimatedCheckCircle } from "../../components/animated-icons/check";
 import { Toast } from "../../components/toast";
 import { useSet } from "../../hooks/use-set";
@@ -57,59 +58,65 @@ export const ShareSetModal: React.FC<ShareSetModalProps> = ({
   const mutedColor = useColorModeValue("gray.700", "gray.300");
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <Modal.Overlay />
-      <Modal.Content>
-        <Modal.Body>
-          <Modal.Heading>
-            <HStack>
-              {visibility == "Private" && <IconLock size={32} />}
-              <>
-                {visibility == "Private"
-                  ? "This set is private"
-                  : "Share this set"}
-              </>
-            </HStack>
-          </Modal.Heading>
-          {visibility !== "Private" ? (
-            <HStack spacing="3" pb="4">
-              <Skeleton width="full" rounded="lg" isLoaded={!!getShareId.data}>
-                <Input
-                  spellCheck={false}
-                  fontWeight={600}
-                  value={getShareId.isLoading ? "Loading..." : url}
-                />
-              </Skeleton>
-              <Skeleton rounded="lg" isLoaded={!!getShareId.data}>
-                <Button onClick={copy} variant="outline">
-                  Copy link
+    <ToastWrapper>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal.Overlay />
+        <Modal.Content>
+          <Modal.Body>
+            <Modal.Heading>
+              <HStack>
+                {visibility == "Private" && <IconLock size={32} />}
+                <>
+                  {visibility == "Private"
+                    ? "This set is private"
+                    : "Share this set"}
+                </>
+              </HStack>
+            </Modal.Heading>
+            {visibility !== "Private" ? (
+              <HStack spacing="3" pb="4">
+                <Skeleton
+                  width="full"
+                  rounded="lg"
+                  isLoaded={!!getShareId.data}
+                >
+                  <Input
+                    spellCheck={false}
+                    fontWeight={600}
+                    value={getShareId.isLoading ? "Loading..." : url}
+                  />
+                </Skeleton>
+                <Skeleton rounded="lg" isLoaded={!!getShareId.data}>
+                  <Button onClick={copy} variant="outline">
+                    Copy link
+                  </Button>
+                </Skeleton>
+              </HStack>
+            ) : (
+              <Text color={mutedColor}>
+                You need to edit and un-private this set before you can share it
+                with anyone.
+              </Text>
+            )}
+          </Modal.Body>
+          {visibility == "Private" ? (
+            <>
+              <Modal.Divider />
+              <Modal.Footer>
+                <Button
+                  leftIcon={<IconEditCircle size={18} />}
+                  as={Link}
+                  href={`/${id}/edit`}
+                >
+                  Edit set
                 </Button>
-              </Skeleton>
-            </HStack>
+              </Modal.Footer>
+            </>
           ) : (
-            <Text color={mutedColor}>
-              You need to edit and un-private this set before you can share it
-              with anyone.
-            </Text>
+            <></>
           )}
-        </Modal.Body>
-        {visibility == "Private" ? (
-          <>
-            <Modal.Divider />
-            <Modal.Footer>
-              <Button
-                leftIcon={<IconEditCircle size={18} />}
-                as={Link}
-                href={`/${id}/edit`}
-              >
-                Edit set
-              </Button>
-            </Modal.Footer>
-          </>
-        ) : (
-          <></>
-        )}
-      </Modal.Content>
-    </Modal>
+        </Modal.Content>
+      </Modal>
+    </ToastWrapper>
   );
 };
