@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+import { log } from "next-axiom";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
@@ -10,7 +12,7 @@ import { EditorGlobalStyles } from "../../../common/editor-global-styles";
 import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
-import { useSet } from "../../../hooks/use-set";
+import { useAuthedSet, useSet } from "../../../hooks/use-set";
 import { getLayout } from "../../../layouts/main-layout";
 import { CreateLearnData } from "../../../modules/create-learn-data";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
@@ -58,6 +60,8 @@ const Learn = () => {
 
 const LearnContainer = () => {
   const { id } = useSet();
+  const session = useSession();
+  const { container } = useAuthedSet();
   const extendedFeedbackBank = useContainerContext(
     (s) => s.extendedFeedbackBank,
   );
@@ -73,12 +77,27 @@ const LearnContainer = () => {
   React.useEffect(() => {
     if (!roundSummary) return;
 
-    void (async () =>
-      await completeLearnRound.mutateAsync({
-        entityId: id,
-      }))();
+    completeLearnRound.mutate({
+      entityId: id,
+    });
+
+    log.info("learn.completeRound", {
+      userId: session.data?.user?.id,
+      containerId: container.id,
+      summary: roundSummary,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roundSummary, id]);
+
+  React.useEffect(() => {
+    if (!session.data?.user?.id) return;
+
+    log.info("learn.identify", {
+      userId: session.data?.user?.id,
+      containerId: container.id,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session.data?.user?.id]);
 
   React.useEffect(() => {
     if (!discoverable.data || !extendedFeedbackBank) return;

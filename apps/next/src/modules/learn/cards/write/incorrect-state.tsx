@@ -1,6 +1,8 @@
 import { diffChars } from "diff";
 import { motion, useAnimationControls } from "framer-motion";
 import levenshtein from "js-levenshtein";
+import { useSession } from "next-auth/react";
+import { log } from "next-axiom";
 import React from "react";
 
 import { GenericLabel } from "@quenti/components";
@@ -27,6 +29,7 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
   active,
   guess,
 }) => {
+  const session = useSession();
   const { container } = useAuthedSet();
   const overrideCorrect = useLearnContext((s) => s.overrideCorrect);
 
@@ -45,15 +48,22 @@ export const IncorrectState: React.FC<IncorrectStateProps> = ({
   const handleOverrideCorrect = () => {
     overrideCorrect();
 
-    void (async () =>
-      await put.mutateAsync({
-        id: active.term.id,
-        containerId: container.id,
-        mode: "Learn",
-        correctness: 2,
-        appearedInRound: active.term.appearedInRound || 0,
-        incorrectCount: active.term.incorrectCount,
-      }))();
+    log.info("learn.write.overrideCorrect", {
+      userId: session.data?.user?.id,
+      containerId: container.id,
+      termId: active.term.id,
+      guess,
+      answer: word(active.answerMode, active.term, "answer"),
+    });
+
+    put.mutate({
+      id: active.term.id,
+      containerId: container.id,
+      mode: "Learn",
+      correctness: 2,
+      appearedInRound: active.term.appearedInRound || 0,
+      incorrectCount: active.term.incorrectCount,
+    });
   };
 
   React.useEffect(() => {
