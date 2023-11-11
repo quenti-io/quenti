@@ -422,6 +422,7 @@ model Term {
   definition         String   @db.VarChar(1000)
   wordRichText       Json?
   definitionRichText Json?
+  assetUrl           String?
   rank               Int
   studySetId         String
   studySet           StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
