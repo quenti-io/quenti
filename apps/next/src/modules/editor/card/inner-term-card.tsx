@@ -6,6 +6,7 @@ import {
   type JSONContent,
   useEditor,
 } from "@tiptap/react";
+import { motion } from "framer-motion";
 import React from "react";
 
 import { languageName } from "@quenti/core/language";
@@ -26,11 +27,14 @@ import {
 
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 
+import { useSetEditorContext } from "../../../stores/use-set-editor-store";
 import { CharacterSuggestionsPure } from "../character-suggestions";
-import { editorConfig } from "../editor-config";
+import { editorAttributes, editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";
 import { RichTextBar } from "./rich-text-bar";
 import type { SortableTermCardProps } from "./sortable-term-card";
+
+const MotionStack = motion(Stack);
 
 export interface InnerTermCardProps extends SortableTermCardProps {
   attributes: DraggableAttributes;
@@ -83,6 +87,8 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const [wordEmpty, setWordEmpty] = React.useState(false);
   const [definitionEmpty, setDefinitionEmpty] = React.useState(false);
 
+  const setCurrentActive = useSetEditorContext((s) => s.setCurrentActiveRank);
+
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
     content: editorInput(term, "word"),
@@ -91,6 +97,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     },
     onCreate: ({ editor }) => {
       setWordEmpty(editor.isEmpty);
+      if (justCreated) editor.chain().focus();
     },
   });
   const wordRef = React.useRef(wordEditor);
@@ -116,14 +123,9 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     : null;
 
   React.useEffect(() => {
-    if (justCreated) {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          wordRef.current?.chain().focus();
-        });
-      });
-    }
-  }, [justCreated]);
+    if (wordFocused || definitionFocused) setCurrentActive(term.rank);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wordFocused, definitionFocused]);
 
   React.useEffect(() => {
     if (!initialized) return;
@@ -131,6 +133,19 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     definitionEditor?.commands.setContent(editorInput(term, "definition"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term.word, term.definition]);
+
+  React.useEffect(() => {
+    wordRef.current?.setOptions({
+      editorProps: {
+        attributes: editorAttributes(term.rank + 1),
+      },
+    });
+    definitionRef.current?.setOptions({
+      editorProps: {
+        attributes: editorAttributes(term.rank + 2),
+      },
+    });
+  }, [term.rank]);
 
   const LanguageButton = ({ type }: { type: "word" | "definition" }) => {
     if (!isCurrent || lastFocused !== type) return null;
@@ -213,7 +228,15 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   };
 
   return (
-    <Stack ref={cardRef}>
+    <MotionStack
+      ref={cardRef}
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+    >
       <Flex
         align="center"
         borderBottom="2px"
@@ -278,6 +301,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                     left="0"
                     color="gray.500"
                     className="editor-placeholder"
+                    pointerEvents="none"
                   >
                     Enter {placeholderTerm}
                   </Text>
@@ -332,6 +356,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                     left="0"
                     color="gray.500"
                     className="editor-placeholder"
+                    pointerEvents="none"
                   >
                     Enter {placeholderDefinition}
                   </Text>
@@ -357,7 +382,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
           </Flex>
         </Stack>
       </HStack>
-    </Stack>
+    </MotionStack>
   );
 };
 

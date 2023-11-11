@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, HStack, Stack, Text } from "@chakra-ui/react";
+import { Box, Card, HStack, Stack, Text } from "@chakra-ui/react";
 
 interface DeloadedCardProps {
   word: string;
@@ -12,7 +12,16 @@ export const DeloadedCardRaw: React.FC<DeloadedCardProps> = ({
   definition,
 }) => {
   return (
-    <>
+    <Card
+      rounded="xl"
+      borderWidth="2px"
+      bg="white"
+      borderColor="gray.50"
+      _dark={{
+        bg: "gray.750",
+        borderColor: "gray.700",
+      }}
+    >
       <Box h="54px" />
       <HStack
         pt="2"
@@ -36,7 +45,7 @@ export const DeloadedCardRaw: React.FC<DeloadedCardProps> = ({
           <Box h="6" />
         </Stack>
       </HStack>
-    </>
+    </Card>
   );
 };
 

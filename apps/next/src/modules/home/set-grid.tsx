@@ -5,6 +5,7 @@ import { api } from "@quenti/trpc";
 import { Grid, GridItem, Heading, Skeleton, Stack } from "@chakra-ui/react";
 
 import { FolderCard } from "../../components/folder-card";
+import { GenericCard } from "../../components/generic-card";
 import { StudySetCard } from "../../components/study-set-card";
 
 export const SetGrid = () => {
@@ -23,12 +24,7 @@ export const SetGrid = () => {
         {isLoading &&
           Array.from({ length: 16 }).map((_, i) => (
             <GridItem h="156px" key={i}>
-              <Skeleton
-                rounded="lg"
-                height="full"
-                border="2px"
-                borderColor="gray.700"
-              />
+              <GenericCard.Skeleton />
             </GridItem>
           ))}
         {(data?.entities || []).map((item) => (

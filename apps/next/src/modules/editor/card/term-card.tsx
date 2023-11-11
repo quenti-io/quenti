@@ -1,6 +1,6 @@
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
-import { useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import React from "react";
 
 import { Box, Card } from "@chakra-ui/react";
@@ -23,12 +23,17 @@ const padNextFour = (ranks: number[]) => {
   return [...ranks, last + 1, last + 2, last + 3, last + 4];
 };
 
+const MotionCard = motion(Card);
+
 export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
   function TermCardInner(props, ref) {
     const innerRef = React.useRef<HTMLDivElement>(null);
     const inView = useInView(innerRef);
-    const visible = useSetEditorContext((s) =>
-      padNextFour(s.visibleTerms).includes(props.term.rank),
+    const visible = useSetEditorContext(
+      (s) =>
+        padNextFour(s.visibleTerms).includes(props.term.rank) ||
+        // Pad two terms above and below for the current rank, in case the user tabs up or down
+        Math.abs(props.term.rank - (s.currentActiveRank || 0)) <= 2,
     );
     const hideTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -51,21 +56,27 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     }, [inView]);
 
     return (
-      <Card
-        ref={ref}
-        rounded="xl"
-        borderWidth="2px"
-        bg="white"
-        borderColor="gray.50"
-        _dark={{
-          bg: "gray.750",
-          borderColor: "gray.700",
-        }}
-        style={props.style}
-      >
+      <Box ref={ref} style={props.style}>
         <Box ref={innerRef}>
           {visible || props.justCreated ? (
-            <InnerTermCard {...props} />
+            <MotionCard
+              rounded="xl"
+              borderWidth="2px"
+              bg="white"
+              borderColor="gray.50"
+              _dark={{
+                bg: "gray.750",
+                borderColor: "gray.700",
+              }}
+              initial={{
+                scale: props.justCreated ? 0.9 : 1,
+                opacity: props.justCreated ? 0.5 : 1,
+              }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <InnerTermCard {...props} />
+            </MotionCard>
           ) : (
             <DeloadedCard
               word={props.term.word}
@@ -73,7 +84,7 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
             />
           )}
         </Box>
-      </Card>
+      </Box>
     );
   },
 );

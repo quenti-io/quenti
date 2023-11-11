@@ -42,6 +42,8 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
   onClose,
   onReset,
 }) => {
+  const startRef = React.useRef<HTMLButtonElement>(null);
+
   const questionCount = useTestContext((s) => s.settings.questionCount);
   const allTerms = useTestContext((s) => s.allTerms.length);
   const starredTerms = useTestContext((s) => s.starredTerms.length);
@@ -60,7 +62,12 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInTop">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      motionPreset="slideInTop"
+      initialFocusRef={startRef}
+    >
       <Modal.Overlay />
       <Modal.Content>
         <Modal.Body>
@@ -213,6 +220,7 @@ export const TestSettingsModal: React.FC<TestSettingsModalProps> = ({
         <Modal.Footer>
           <ButtonWrapper>
             <Button
+              ref={startRef}
               isDisabled={!enabled}
               onClick={() => {
                 onReset();

@@ -20,6 +20,11 @@ const darkBlueBorder = "dark:focus:border-b-[var(--chakra-colors-blue-300)]";
 const boxShadow =
   "focus:shadow-[0px_1px_0px_0px_var(--chakra-colors-blue-300)]";
 
+export const editorAttributes = (tabIndex?: number) => ({
+  class: `focus:outline-none py-[7px] border-b-[1px] transition-[border,box-shadow] ${grayBorder} ${darkGrayBorder} ${blueBorder} ${darkBlueBorder} ${boxShadow}`,
+  ...(tabIndex !== undefined ? { tabindex: `${tabIndex}` } : {}),
+});
+
 export const editorConfig = (
   tabIndex?: number,
   extensions?: Extension[],
@@ -43,9 +48,6 @@ export const editorConfig = (
     ...(extensions || []),
   ],
   editorProps: {
-    attributes: {
-      class: `focus:outline-none py-[7px] border-b-[1px] transition-[border,box-shadow] ${grayBorder} ${darkGrayBorder} ${blueBorder} ${darkBlueBorder} ${boxShadow}`,
-      ...(tabIndex !== undefined ? { tabindex: `${tabIndex}` } : {}),
-    },
+    attributes: editorAttributes(tabIndex),
   },
 });
