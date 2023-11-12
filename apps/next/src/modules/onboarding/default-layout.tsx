@@ -74,7 +74,11 @@ export const DefaultLayout: React.FC<
           isLoading={nextLoading}
           variant={nextVariant}
         >
-          {action}
+          {/* `Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.` causing onboardings to literally crash */}
+          {/* This is an absolutely insane bug that took 2 months for me to figure out. Solution: wrap button contents in a span tag */}
+          {/* https://github.com/facebook/react/issues/11538#issuecomment-390386520 */}
+          {/* https://github.com/facebook/react/issues/11538#issuecomment-1708344166 */}
+          <span>{action}</span>
         </Button>
       </VStack>
     </Box>
