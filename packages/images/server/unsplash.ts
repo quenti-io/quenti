@@ -42,6 +42,7 @@ export const searchPhotos = async (
   const result = await unsplash?.search.getPhotos({
     query,
     perPage: 7,
+    contentFilter: "high",
   });
 
   if (storeCache) {

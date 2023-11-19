@@ -73,6 +73,8 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   const rightColor = useColorModeValue("green.500", "green.200");
   const buttonBorder = useColorModeValue("gray.300", "gray.500");
 
+  const containerHeight = term.assetUrl ? "50%" : undefined;
+
   return (
     <Card w="full" h={h} rounded="xl" shadow="xl" overflow="hidden">
       <Box
@@ -142,9 +144,24 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             </HStack>
           </Flex>
         </Grid>
-        <Center flex={1} my="4" ref={containerRef} overflowY="auto">
-          <Flex w="full" h="full">
-            <Center flex="1">
+        <Center flex={1} my="4" overflowY="auto">
+          <Flex
+            w="full"
+            h="full"
+            flexDir={{
+              base: "column-reverse",
+              md: "row",
+            }}
+          >
+            <Center
+              flex="1"
+              height={{
+                base: containerHeight,
+                md: "100%",
+              }}
+              ref={containerRef}
+              p="3"
+            >
               <PureShrinkableText
                 text={isFlipped ? term.definition : term.word}
                 richText={
@@ -156,7 +173,14 @@ export const Flashcard: React.FC<FlashcardProps> = ({
               />
             </Center>
             {term.assetUrl && isFlipped && (
-              <Center flex="1" p="3">
+              <Center
+                flex="1"
+                p="3"
+                height={{
+                  base: containerHeight,
+                  md: "100%",
+                }}
+              >
                 <PhotoView
                   src={term.assetUrl}
                   borderRadius={8}

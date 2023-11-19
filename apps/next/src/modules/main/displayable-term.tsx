@@ -24,6 +24,7 @@ import {
 
 import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
+import { PhotoView } from "../../components/photo-view/photo-view";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
@@ -131,8 +132,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   return (
     <Card
       ref={ref}
-      px={{ base: 0, sm: "22px" }}
-      py={{ base: 0, sm: 5 }}
+      px={{ base: 0, md: "22px" }}
+      py={{ base: 0, md: 5 }}
       shadow="0 2px 6px -4px rgba(0, 0, 0, 0.1), 0 2px 4px -4px rgba(0, 0, 0, 0.06)"
       borderWidth="1.5px"
       transition="border-color 0.15s ease-in-out"
@@ -144,16 +145,16 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
       }}
     >
       <Flex
-        flexDir={["column-reverse", "row", "row"]}
+        flexDir={{ base: "column-reverse", md: "row" }}
         alignItems="stretch"
-        gap={[0, 6, 6]}
+        gap={{ base: 0, md: 6 }}
       >
         <Flex
           w="full"
-          flexDir={["column", "row", "row"]}
-          gap={[2, 6, 6]}
-          px={{ base: 3, sm: 0 }}
-          py={{ base: 3, sm: 0 }}
+          flexDir={{ base: "column", md: "row" }}
+          gap={{ base: 2, md: 6 }}
+          px={{ base: 3, md: 0 }}
+          py={{ base: 3, md: 0 }}
         >
           {isEditing ? (
             <Stack w="full">
@@ -199,28 +200,54 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               />
             </Text>
           )}
+          <Box minW="100px">
+            {term.assetUrl && (
+              <Box minW="100px" h="80px" mt={{ base: 3, md: 0 }}>
+                <PhotoView
+                  src={term.assetUrl}
+                  id={`displayable-term-${term.id}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    width={100}
+                    height={80}
+                    alt="Term asset"
+                    src={term.assetUrl}
+                    style={{
+                      cursor: "zoom-in",
+                      width: 100,
+                      height: 80,
+                      objectFit: "cover",
+                      aspectRatio: "5 / 4",
+                      borderRadius: "6px",
+                    }}
+                  />
+                </PhotoView>
+              </Box>
+            )}
+          </Box>
         </Flex>
         <Box
           h="full"
-          px={{ base: 1, sm: 0 }}
-          py={{ base: 2, sm: 0 }}
-          borderBottomWidth={{ base: 2, sm: 0 }}
-          borderBottomColor={{ base: "gray.100", sm: "none" }}
+          px={{ base: 1, md: 0 }}
+          py={{ base: 2, md: 0 }}
+          borderBottomWidth={{ base: 2, md: 0 }}
+          borderBottomColor={{ base: "gray.100", md: "none" }}
           _dark={{
-            borderBottomColor: { base: "gray.700", sm: "none" },
+            borderBottomColor: { base: "gray.700", md: "none" },
           }}
         >
           <Flex w="full" justifyContent="end">
             <HStack
               spacing={1}
               height="24px"
-              justifyContent={{ base: "space-between", sm: "end" }}
+              justifyContent={{ base: "space-between", md: "end" }}
               w="full"
             >
               <SetCreatorOnly fallback={<Box />}>
                 <IconButton
-                  size={{ base: "sm", sm: undefined }}
-                  transform={{ base: "scale(0.8)", sm: "scale(1)" }}
+                  size={{ base: "sm", md: undefined }}
+                  transform={{ base: "scale(0.8)", md: "scale(1)" }}
                   icon={<IconEditCircle size={18} />}
                   variant={isEditing ? "solid" : "ghost"}
                   aria-label="Edit"
@@ -234,8 +261,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 />
               </SetCreatorOnly>
               <IconButton
-                size={{ base: "sm", sm: undefined }}
-                transform={{ base: "scale(0.8)", sm: "scale(1)" }}
+                size={{ base: "sm", md: undefined }}
+                transform={{ base: "scale(0.8)", md: "scale(1)" }}
                 icon={<Star size={18} />}
                 variant="ghost"
                 aria-label="Edit"
