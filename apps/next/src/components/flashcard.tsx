@@ -30,6 +30,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
+import { PhotoView } from "./photo-view/photo-view";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {
@@ -142,15 +143,40 @@ export const Flashcard: React.FC<FlashcardProps> = ({
           </Flex>
         </Grid>
         <Center flex={1} my="4" ref={containerRef} overflowY="auto">
-          <PureShrinkableText
-            text={isFlipped ? term.definition : term.word}
-            richText={
-              (isFlipped
-                ? term.definitionRichText
-                : term.wordRichText) as JSONContent
-            }
-            container={containerRef}
-          />
+          <Flex w="full" h="full">
+            <Center flex="1">
+              <PureShrinkableText
+                text={isFlipped ? term.definition : term.word}
+                richText={
+                  (isFlipped
+                    ? term.definitionRichText
+                    : term.wordRichText) as JSONContent
+                }
+                container={containerRef}
+              />
+            </Center>
+            {term.assetUrl && isFlipped && (
+              <Center flex="1" p="3">
+                <PhotoView
+                  src={term.assetUrl}
+                  borderRadius={8}
+                  id={`flashcard-${term.id}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={term.assetUrl}
+                    alt="Term asset"
+                    style={{
+                      cursor: "zoom-in",
+                      borderRadius: "8px",
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                    }}
+                  />
+                </PhotoView>
+              </Center>
+            )}
+          </Flex>
         </Center>
         <HStack spacing={4}>
           <Button

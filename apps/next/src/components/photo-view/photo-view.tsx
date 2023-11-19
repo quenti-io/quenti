@@ -21,7 +21,10 @@ export const PhotoView: React.FC<PhotoViewProps> = ({
   if (children) {
     return Children.only(
       cloneElement(children, {
-        onClick: () => context.show(src, id, borderRadius),
+        onClick: (e: React.MouseEvent) => {
+          e.stopPropagation();
+          context.show(src, id, borderRadius);
+        },
         ref: originRef,
         id,
       }),
