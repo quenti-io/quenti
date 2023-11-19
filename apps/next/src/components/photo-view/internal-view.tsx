@@ -1,0 +1,47 @@
+import { Center, useColorModeValue } from "@chakra-ui/react";
+
+import { PhotoContainer } from "./photo-container";
+import { PhotoPortal } from "./photo-portal";
+
+interface InternalViewProps {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+  currentId?: string;
+  currentSrc?: string;
+  borderRadius: number;
+}
+
+export const InternalView: React.FC<InternalViewProps> = ({
+  visible,
+  setVisible,
+  currentId,
+  currentSrc,
+  borderRadius,
+}) => {
+  return (
+    <PhotoPortal pointerEvents={visible ? "auto" : "none"}>
+      <Center
+        w="full"
+        h="full"
+        bg=""
+        backdropFilter="blur(8px)"
+        backgroundColor={useColorModeValue(
+          "rgba(247, 250, 252, 75%)",
+          "rgba(23, 25, 35, 40%)",
+        )}
+        transition="opacity 0.2s ease-in-out"
+        opacity={visible ? 1 : 0}
+        onClick={() => {
+          setVisible(false);
+        }}
+      >
+        <PhotoContainer
+          visible={visible}
+          src={currentSrc}
+          originId={currentId}
+          borderRadius={borderRadius}
+        />
+      </Center>
+    </PhotoPortal>
+  );
+};

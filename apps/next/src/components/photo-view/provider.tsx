@@ -1,9 +1,12 @@
+import dynamic from "next/dynamic";
 import React from "react";
 
-import { Center, useColorModeValue } from "@chakra-ui/react";
-
-import { PhotoContainer } from "./photo-container";
-import { PhotoPortal } from "./photo-portal";
+const InternalView = dynamic(
+  () => import("./internal-view").then((mod) => mod.InternalView),
+  {
+    ssr: false,
+  },
+);
 
 interface PhotoViewContextProps {
   show: (src: string, id: string, borderRadius?: number) => void;
@@ -32,30 +35,13 @@ export const PhotoViewProvider: React.FC<React.PropsWithChildren> = ({
         },
       }}
     >
-      <PhotoPortal pointerEvents={visible ? "auto" : "none"}>
-        <Center
-          w="full"
-          h="full"
-          bg=""
-          backdropFilter="blur(8px)"
-          backgroundColor={useColorModeValue(
-            "rgba(247, 250, 252, 75%)",
-            "rgba(23, 25, 35, 40%)",
-          )}
-          transition="opacity 0.2s ease-in-out"
-          opacity={visible ? 1 : 0}
-          onClick={() => {
-            setVisible(false);
-          }}
-        >
-          <PhotoContainer
-            visible={visible}
-            src={currentSrc}
-            originId={currentId}
-            borderRadius={borderRadius}
-          />
-        </Center>
-      </PhotoPortal>
+      <InternalView
+        visible={visible}
+        setVisible={setVisible}
+        currentId={currentId}
+        currentSrc={currentSrc}
+        borderRadius={borderRadius}
+      />
       {children}
     </PhotoViewContext.Provider>
   );

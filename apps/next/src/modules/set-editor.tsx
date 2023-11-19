@@ -4,7 +4,6 @@ import { Stack } from "@chakra-ui/react";
 
 import { EditorGlobalStyles } from "../common/editor-global-styles";
 import { ImportTermsModal } from "../components/import-terms-modal";
-import { PhotoViewProvider } from "../components/photo-view/provider";
 import { SearchImagesModal } from "../components/search-images-modal";
 import { editorEventChannel } from "../events/editor";
 import { useSetEditorContext } from "../stores/use-set-editor-store";
@@ -28,31 +27,29 @@ export const SetEditor = () => {
   }, []);
 
   return (
-    <PhotoViewProvider>
-      <Stack spacing={8}>
-        <ImportTermsModal
-          isOpen={importOpen}
-          onClose={() => {
-            setImportOpen(false);
-          }}
-          onImport={(terms) => {
-            bulkAddTerms(terms);
-            setImportOpen(false);
-          }}
-        />
-        <SearchImagesModal
-          isOpen={searchImagesOpen}
-          onClose={() => {
-            setSearchImagesOpen(false);
-          }}
-        />
-        <TopBar />
-        <TitleProperties />
-        <ButtonArea onImportOpen={() => setImportOpen(true)} />
-        <EditorGlobalStyles />
-        <TermsListPure />
-      </Stack>
-    </PhotoViewProvider>
+    <Stack spacing={8}>
+      <ImportTermsModal
+        isOpen={importOpen}
+        onClose={() => {
+          setImportOpen(false);
+        }}
+        onImport={(terms) => {
+          bulkAddTerms(terms);
+          setImportOpen(false);
+        }}
+      />
+      <SearchImagesModal
+        isOpen={searchImagesOpen}
+        onClose={() => {
+          setSearchImagesOpen(false);
+        }}
+      />
+      <TopBar />
+      <TitleProperties />
+      <ButtonArea onImportOpen={() => setImportOpen(true)} />
+      <EditorGlobalStyles />
+      <TermsListPure />
+    </Stack>
   );
 };
 

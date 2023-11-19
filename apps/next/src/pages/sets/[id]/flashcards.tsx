@@ -7,7 +7,6 @@ import { Container, Stack } from "@chakra-ui/react";
 import { EditorGlobalStyles } from "../../../common/editor-global-styles";
 import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
-import { PhotoViewProvider } from "../../../components/photo-view/provider";
 import { getLayout } from "../../../layouts/main-layout";
 import { ControlsBar } from "../../../modules/flashcards/controls-bar";
 import { FlashcardArea } from "../../../modules/flashcards/flashcard-area";
@@ -20,7 +19,7 @@ const Flashcards = () => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
   return (
-    <PhotoViewProvider>
+    <>
       <HeadSeo title="Flashcards" />
       <LazyWrapper>
         <EditorGlobalStyles />
@@ -46,7 +45,7 @@ const Flashcards = () => {
           </Container>
         </HydrateSetData>
       </LazyWrapper>
-    </PhotoViewProvider>
+    </>
   );
 };
 
