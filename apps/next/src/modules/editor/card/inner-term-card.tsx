@@ -427,6 +427,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                 },
               }}
               onClick={() => {
+                editIfDirty(false);
                 editorEventChannel.emit("openSearchImages", `term:${term.id}`);
               }}
             />

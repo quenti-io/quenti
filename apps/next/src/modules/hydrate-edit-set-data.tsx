@@ -121,11 +121,15 @@ const ContextLayer: React.FC<
       if (!args.contextId || !args.contextId.startsWith("term:")) return;
       const id = args.contextId.replace("term:", "");
 
-      storeRef.current!.getState().setImage(id, args.optimisticUrl);
+      const term = storeRef
+        .current!.getState()
+        .terms.find((x) => x.id === id || x.clientKey === id)!;
+
+      storeRef.current!.getState().setImage(term.id, args.optimisticUrl);
 
       apiSetImage.mutate({
         studySetId: data.id,
-        id,
+        id: term.id,
         ...args,
       });
     };
