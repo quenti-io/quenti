@@ -48,6 +48,7 @@ const termsSelect = Prisma.validator<Prisma.TermSelect>()({
   definition: true,
   wordRichText: true,
   definitionRichText: true,
+  assetUrl: true,
   studySetId: true,
 });
 

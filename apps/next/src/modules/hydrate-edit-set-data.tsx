@@ -5,6 +5,7 @@ import React from "react";
 import { richTextToHtml } from "@quenti/lib/editor";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
+import { editorEventChannel } from "../events/editor";
 import { useLoading } from "../hooks/use-loading";
 import {
   type ClientTerm,
@@ -87,6 +88,7 @@ const ContextLayer: React.FC<
   });
   const apiEditTerm = api.terms.edit.useMutation();
   const apiBulkEdit = api.terms.bulkEdit.useMutation();
+  const apiSetImage = api.terms.setImage.useMutation();
   const apiReorderTerm = api.terms.reorder.useMutation();
 
   const isSaving =
@@ -108,6 +110,32 @@ const ContextLayer: React.FC<
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSaving]);
+
+  React.useEffect(() => {
+    const setImage = (args: {
+      contextId?: string;
+      optimisticUrl: string;
+      query: string;
+      index: number;
+    }) => {
+      if (!args.contextId || !args.contextId.startsWith("term:")) return;
+      const id = args.contextId.replace("term:", "");
+
+      storeRef.current!.getState().setImage(id, args.optimisticUrl);
+
+      apiSetImage.mutate({
+        studySetId: data.id,
+        id,
+        ...args,
+      });
+    };
+
+    editorEventChannel.on("imageSelected", setImage);
+    return () => {
+      editorEventChannel.off("imageSelected", setImage);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!storeRef.current) {
     storeRef.current = createSetEditorStore(

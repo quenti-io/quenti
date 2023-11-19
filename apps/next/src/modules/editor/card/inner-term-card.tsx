@@ -25,8 +25,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
+import {
+  IconGripHorizontal,
+  IconPhotoPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 
+import { PhotoView } from "../../../components/photo-view/photo-view";
+import { editorEventChannel } from "../../../events/editor";
 import { useSetEditorContext } from "../../../stores/use-set-editor-store";
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { editorAttributes, editorConfig } from "../editor-config";
@@ -274,7 +280,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
         alignItems="start"
         flexDir={{
           base: "column",
-          sm: "row",
+          sd: "row",
         }}
       >
         <Stack w="full" spacing={2}>
@@ -381,6 +387,51 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             <LanguageButtonPure type="definition" />
           </Flex>
         </Stack>
+        <Box mt="1" minW="80px" h="60px">
+          {term.assetUrl ? (
+            <PhotoView
+              src={term.assetUrl}
+              id={`term-asset-${term.id}`}
+              borderRadius={12}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                width="80x"
+                height="60px"
+                src={term.assetUrl}
+                alt={`Image for ${term.definition}`}
+                style={{
+                  objectFit: "cover",
+                  width: "80px",
+                  height: "60px",
+                  borderRadius: "0.75rem",
+                }}
+              />
+            </PhotoView>
+          ) : (
+            <IconButton
+              aria-label="Add image"
+              icon={<IconPhotoPlus size={18} />}
+              w="80px"
+              h="60px"
+              variant="outline"
+              colorScheme="gray"
+              color="gray.600"
+              borderColor="gray.200"
+              rounded="xl"
+              _dark={{
+                borderColor: "gray.600",
+                color: "gray.400",
+                _hover: {
+                  background: "gray.700",
+                },
+              }}
+              onClick={() => {
+                editorEventChannel.emit("openSearchImages", `term:${term.id}`);
+              }}
+            />
+          )}
+        </Box>
       </HStack>
     </MotionStack>
   );

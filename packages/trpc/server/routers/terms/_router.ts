@@ -6,6 +6,7 @@ import { ZBulkEditSchema } from "./bulk-edit.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZEditSchema } from "./edit.schema";
 import { ZReorderSchema } from "./reorder.schema";
+import { ZSetImageSchema } from "./set-image.schema";
 
 type TermsRouterHandlerCache = {
   handlers: {
@@ -14,6 +15,7 @@ type TermsRouterHandlerCache = {
     reorder?: typeof import("./reorder.handler").reorderHandler;
     edit?: typeof import("./edit.handler").editHandler;
     ["bulk-edit"]?: typeof import("./bulk-edit.handler").bulkEditHandler;
+    ["set-image"]?: typeof import("./set-image.handler").setImageHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
   };
 } & { routerPath: string };
@@ -51,6 +53,12 @@ export const termsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "bulk-edit");
       return HANDLER_CACHE.handlers["bulk-edit"]!({ ctx, input });
+    }),
+  setImage: protectedProcedure
+    .input(ZSetImageSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "set-image");
+      return HANDLER_CACHE.handlers["set-image"]!({ ctx, input });
     }),
   delete: protectedProcedure
     .input(ZDeleteSchema)

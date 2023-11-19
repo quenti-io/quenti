@@ -422,7 +422,7 @@ model Term {
   definition         String   @db.VarChar(1000)
   wordRichText       Json?
   definitionRichText Json?
-  assetUrl           String?
+  assetUrl           String?  @db.VarChar(255)
   rank               Int
   studySetId         String
   studySet           StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
@@ -463,6 +463,7 @@ model AutoSaveTerm {
   definition         String      @db.VarChar(1000)
   wordRichText       Json?
   definitionRichText Json?
+  assetUrl           String?     @db.VarChar(255)
   rank               Int
   setAutoSaveId      String
   setAutoSave        SetAutoSave @relation(fields: [setAutoSaveId], references: [userId], onDelete: Cascade)

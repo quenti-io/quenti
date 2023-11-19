@@ -65,6 +65,7 @@ interface SetEditorState extends SetEditorProps {
     wordRichText?: JSON,
     definitionRichText?: JSON,
   ) => void;
+  setImage: (id: string, assetUrl: string) => void;
   reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
@@ -124,6 +125,7 @@ export const createSetEditorStore = (
             definition: "",
             wordRichText: null,
             definitionRichText: null,
+            assetUrl: null,
             setAutoSaveId: "",
             rank,
           };
@@ -156,6 +158,7 @@ export const createSetEditorStore = (
               definition: term.definition,
               wordRichText: null,
               definitionRichText: null,
+              assetUrl: null,
               setAutoSaveId: "",
               rank: filtered.length + i,
             };
@@ -207,6 +210,16 @@ export const createSetEditorStore = (
           wordRichText,
           definitionRichText,
         );
+      },
+      setImage: (id: string, assetUrl: string) => {
+        set((state) => {
+          return {
+            terms: state.terms.map((t) =>
+              t.id === id ? { ...t, assetUrl } : t,
+            ),
+          };
+        });
+        behaviors?.setImage?.(id, assetUrl);
       },
       setServerTermId: (oldId: string, serverId: string) => {
         set((state) => {
