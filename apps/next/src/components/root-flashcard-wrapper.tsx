@@ -5,7 +5,7 @@ import React from "react";
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
-import { Box, useBreakpointValue } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import { menuEventChannel } from "../events/menu";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
