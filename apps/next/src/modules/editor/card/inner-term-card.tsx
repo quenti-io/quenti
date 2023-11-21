@@ -27,6 +27,7 @@ import {
 
 import {
   IconGripHorizontal,
+  IconPhotoMinus,
   IconPhotoPlus,
   IconTrash,
 } from "@tabler/icons-react";
@@ -387,27 +388,53 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             <LanguageButtonPure type="definition" />
           </Flex>
         </Stack>
-        <Box mt="1" minW="80px" h="60px">
+        <Box mt="1" minW="80px" h="60px" position="relative">
           {term.assetUrl ? (
-            <PhotoView
-              src={term.assetUrl}
-              id={`term-asset-${term.id}`}
-              borderRadius={12}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                width="80x"
-                height="60px"
+            <>
+              <PhotoView
                 src={term.assetUrl}
-                alt={`Image for ${term.definition}`}
-                style={{
-                  objectFit: "cover",
-                  width: "80px",
-                  height: "60px",
-                  borderRadius: "0.75rem",
+                id={`term-asset-${term.id}`}
+                borderRadius={12}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  width="80x"
+                  height="60px"
+                  src={term.assetUrl}
+                  alt={`Image for ${term.definition}`}
+                  style={{
+                    cursor: "zoom-in",
+                    objectFit: "cover",
+                    width: "80px",
+                    height: "60px",
+                    borderRadius: "0.75rem",
+                  }}
+                />
+              </PhotoView>
+              <IconButton
+                aria-label="Remove image"
+                icon={<IconPhotoMinus size={18} />}
+                size="sm"
+                position="absolute"
+                top="-1"
+                right="-1"
+                variant="solid"
+                shadow="md"
+                bg="rgb(255, 255, 255, 0.85)"
+                _hover={{
+                  bg: "rgba(237, 242, 247, 0.85)",
                 }}
+                color="gray.900"
+                _dark={{
+                  bg: "rgb(45, 55, 72, 0.75)",
+                  color: "gray.50",
+                  _hover: {
+                    bg: "rgba(74, 85, 104, 0.75)",
+                  },
+                }}
+                backdropFilter="blur(6px)"
               />
-            </PhotoView>
+            </>
           ) : (
             <IconButton
               aria-label="Add image"
