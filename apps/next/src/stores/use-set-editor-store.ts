@@ -66,6 +66,7 @@ interface SetEditorState extends SetEditorProps {
     definitionRichText?: JSON,
   ) => void;
   setImage: (id: string, assetUrl: string) => void;
+  removeImage: (id: string) => void;
   reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
@@ -220,6 +221,16 @@ export const createSetEditorStore = (
           };
         });
         behaviors?.setImage?.(id, assetUrl);
+      },
+      removeImage: (id: string) => {
+        set((state) => {
+          return {
+            terms: state.terms.map((t) =>
+              t.id === id ? { ...t, assetUrl: null } : t,
+            ),
+          };
+        });
+        behaviors?.removeImage?.(id);
       },
       setServerTermId: (oldId: string, serverId: string) => {
         set((state) => {

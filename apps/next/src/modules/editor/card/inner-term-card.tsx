@@ -95,6 +95,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const [definitionEmpty, setDefinitionEmpty] = React.useState(false);
 
   const setCurrentActive = useSetEditorContext((s) => s.setCurrentActiveRank);
+  const removeImage = useSetEditorContext((s) => s.removeImage);
 
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
@@ -433,6 +434,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                   },
                 }}
                 backdropFilter="blur(6px)"
+                onClick={() => removeImage(term.id)}
               />
             </>
           ) : (

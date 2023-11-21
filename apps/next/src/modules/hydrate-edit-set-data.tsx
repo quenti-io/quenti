@@ -89,6 +89,7 @@ const ContextLayer: React.FC<
   const apiEditTerm = api.terms.edit.useMutation();
   const apiBulkEdit = api.terms.bulkEdit.useMutation();
   const apiSetImage = api.terms.setImage.useMutation();
+  const apiRemoveImage = api.terms.removeImage.useMutation();
   const apiReorderTerm = api.terms.reorder.useMutation();
 
   const isSaving =
@@ -211,6 +212,12 @@ const ContextLayer: React.FC<
               },
             });
           }
+        },
+        removeImage: (id) => {
+          apiRemoveImage.mutate({
+            studySetId: data.id,
+            id,
+          });
         },
         reorderTerm: (termId, rank) => {
           void (async () => {
