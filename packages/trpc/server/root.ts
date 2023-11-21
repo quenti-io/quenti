@@ -1,4 +1,3 @@
-import { autoSaveRouter } from "./routers/auto-save/_router";
 import { classesRouter } from "./routers/classes/_router";
 import { containerRouter } from "./routers/container/_router";
 import { cortexRouter } from "./routers/cortex/_router";
@@ -34,7 +33,6 @@ export const appRouter = createTRPCRouter({
   cortex: cortexRouter,
   leaderboard: leaderboardRouter,
   recent: recentRouter,
-  autoSave: autoSaveRouter,
   import: importRouter,
   images: imagesRouter,
   classes: classesRouter,
