@@ -13,57 +13,65 @@ import {
 } from "../../common/constants";
 import { censorRichText, profanity } from "../../common/profanity";
 import type { NonNullableUserContext } from "../../lib/types";
+import type { TCreateSchema } from "./create.schema";
+import { studySetSelect, termsSelect } from "./queries";
 
-type CreateFromAutosaveOptions = {
+type CreateOptions = {
   ctx: NonNullableUserContext;
+  input: TCreateSchema;
 };
 
-export const createFromAutosaveHandler = async ({
-  ctx,
-}: CreateFromAutosaveOptions) => {
-  const autoSave = await ctx.prisma.setAutoSave.findFirst({
+export const createHandler = async ({ ctx, input }: CreateOptions) => {
+  const autosave = await ctx.prisma.studySet.findFirst({
     where: {
+      id: input.id,
       userId: ctx.session.user.id,
+      created: false,
     },
-    include: {
-      autoSaveTerms: true,
+    select: {
+      ...studySetSelect,
+      created: true,
+      terms: {
+        select: termsSelect,
+      },
     },
   });
 
-  if (!autoSave) {
+  if (!autosave) {
     throw new TRPCError({
       code: "NOT_FOUND",
     });
   }
 
-  if (!autoSave.title.trim().length) {
+  if (!autosave.title.trim().length) {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Set title is required.",
     });
   }
 
-  await ctx.prisma.setAutoSave.delete({
+  const created = await ctx.prisma.studySet.update({
     where: {
-      userId: ctx.session.user.id,
+      id: input.id,
     },
-  });
-
-  const tags = autoSave.tags as string[];
-  const studySet = await ctx.prisma.studySet.create({
     data: {
-      title: profanity.censor(autoSave.title.slice(0, MAX_TITLE)),
-      description: profanity.censor(autoSave.description.slice(0, MAX_DESC)),
-      tags: tags
+      created: true,
+      title: profanity.censor(autosave.title.slice(0, MAX_TITLE)),
+      description: profanity.censor(autosave.description.slice(0, MAX_DESC)),
+      tags: (autosave.tags as string[])
         .slice(0, MAX_NUM_TAGS)
         .map((x) => profanity.censor(x.slice(0, MAX_CHARS_TAGS))),
-      wordLanguage: autoSave.wordLanguage,
-      definitionLanguage: autoSave.definitionLanguage,
-      visibility: autoSave.visibility,
-      userId: ctx.session.user.id,
+      wordLanguage: autosave.wordLanguage,
+      definitionLanguage: autosave.definitionLanguage,
+      visibility: autosave.visibility,
       terms: {
-        createMany: {
-          data: autoSave.autoSaveTerms.map((term) => {
+        updateMany: {
+          where: {
+            id: {
+              in: autosave.terms.map((term) => term.id),
+            },
+          },
+          data: autosave.terms.map((term) => {
             const word = profanity.censor(term.word.slice(0, MAX_TERM));
             const definition = profanity.censor(
               term.definition.slice(0, MAX_TERM),
@@ -101,25 +109,25 @@ export const createFromAutosaveHandler = async ({
 
   const start = Date.now();
 
-  const distractors = await bulkGenerateDistractors(studySet.terms);
+  const distractors = await bulkGenerateDistractors(created.terms);
   await ctx.prisma.distractor.createMany({
     data: distractors.map((d) => ({
       type: d.type == "word" ? "Word" : "Definition",
       termId: d.termId,
       distractingId: d.distractorId,
-      studySetId: studySet.id,
+      studySetId: created.id,
     })),
   });
 
   ctx.req.log.debug("cortex.bulkGenerateDistractors", {
-    studySetId: studySet.id,
-    terms: studySet.terms.length,
+    studySetId: created.id,
+    terms: created.terms.length,
     distractors: distractors.length,
-    batches: Math.ceil(studySet.terms.length / 96),
+    batches: Math.ceil(created.terms.length / 96),
     elapsed: Date.now() - start,
   });
 
-  return studySet;
+  return created;
 };
 
-export default createFromAutosaveHandler;
+export default createHandler;
