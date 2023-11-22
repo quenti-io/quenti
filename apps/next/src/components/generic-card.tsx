@@ -159,6 +159,7 @@ export const GenericCard = ({
                   py={0}
                   overflow="hidden"
                   display={menuOpen ? "block" : "none"}
+                  minW="124px"
                 >
                   <MenuOption
                     icon={<IconTrash size={20} />}
