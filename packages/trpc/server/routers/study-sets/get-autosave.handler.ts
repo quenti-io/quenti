@@ -1,3 +1,5 @@
+import { Language } from "@quenti/core";
+
 import type { NonNullableUserContext } from "../../lib/types";
 import { studySetSelect, termsSelect } from "./queries";
 
@@ -50,7 +52,18 @@ export const getAutosaveHandler = async ({ ctx }: GetAutosaveOptions) => {
     });
   }
 
-  return set;
+  return {
+    ...set,
+    user: {
+      username: set.user.username,
+      image: set.user.image!,
+      verified: set.user.verified,
+      name: set.user.displayName ? set.user.name : undefined,
+    },
+    tags: set.tags as string[],
+    wordLanguage: set.wordLanguage as Language,
+    definitionLanguage: set.definitionLanguage as Language,
+  };
 };
 
 export default getAutosaveHandler;

@@ -47,7 +47,7 @@ export const studySetsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "get-public");
       return HANDLER_CACHE.handlers["get-public"]!({ ctx, input });
     }),
-  getAutoSave: protectedProcedure.query(async ({ ctx }) => {
+  getAutosave: protectedProcedure.query(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "get-autosave");
     return HANDLER_CACHE.handlers["get-autosave"]!({ ctx });
   }),

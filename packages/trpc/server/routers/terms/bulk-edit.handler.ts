@@ -1,12 +1,10 @@
-import { Prisma } from "@quenti/prisma/client";
-
 import { TRPCError } from "@trpc/server";
 
-import { MAX_TERM } from "../../common/constants";
-import { profanity } from "../../common/profanity";
 import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBulkEditSchema } from "./bulk-edit.schema";
+import { bulkUpdateTerms } from "./mutations/update";
+import { serialize } from "./utils/serialize";
 
 type BulkEditOptions = {
   ctx: NonNullableUserContext;
@@ -42,38 +40,33 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
     });
   }
 
-  const sanitize = (s: string) =>
-    studySet.created ? profanity.censor(s.slice(0, MAX_TERM)) : s;
-
   const terms = studySet.terms.map((term) => {
     const t = input.terms.find((t) => t.id === term.id);
+    if (!t) throw new TRPCError({ code: "BAD_REQUEST" });
+
+    const { plainText: word, richText: wordRichText } = serialize(
+      t.word,
+      t.wordRichText,
+      studySet.created,
+    );
+    const { plainText: definition, richText: definitionRichText } = serialize(
+      t.definition,
+      t.definitionRichText,
+      studySet.created,
+    );
+
     return {
       ...term,
-      ...(t
-        ? {
-            word: sanitize(t.word),
-            definition: sanitize(t.definition),
-          }
-        : {}),
+      ...{
+        word,
+        wordRichText,
+        definition,
+        definitionRichText,
+      },
     };
   });
 
-  const vals = terms.map((term) => [
-    term.id,
-    term.word,
-    term.definition,
-    term.rank,
-    studySet.id,
-  ]);
-
-  const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
-  const query = Prisma.sql`
-    INSERT INTO Term (id, word, definition, \`rank\`, studySetId)
-    VALUES ${Prisma.join(formatted)}
-    ON DUPLICATE KEY UPDATE word = VALUES(word), definition = VALUES(definition)
-  `;
-
-  await ctx.prisma.$executeRaw(query);
+  await bulkUpdateTerms(terms, studySet.id);
 
   await markCortexStale(input.studySetId);
 };

@@ -1,5 +1,3 @@
-import type { JSONContent } from "@tiptap/react";
-
 import { bulkGenerateDistractors } from "@quenti/cortex/distractors";
 
 import { TRPCError } from "@trpc/server";
@@ -8,11 +6,11 @@ import {
   MAX_CHARS_TAGS,
   MAX_DESC,
   MAX_NUM_TAGS,
-  MAX_TERM,
   MAX_TITLE,
 } from "../../common/constants";
-import { censorRichText, profanity } from "../../common/profanity";
+import { profanity } from "../../common/profanity";
 import type { NonNullableUserContext } from "../../lib/types";
+import { bulkUpdateTerms } from "../terms/mutations/update";
 import type { TCreateSchema } from "./create.schema";
 import { studySetSelect, termsSelect } from "./queries";
 
@@ -64,33 +62,6 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       wordLanguage: autosave.wordLanguage,
       definitionLanguage: autosave.definitionLanguage,
       visibility: autosave.visibility,
-      terms: {
-        updateMany: {
-          where: {
-            id: {
-              in: autosave.terms.map((term) => term.id),
-            },
-          },
-          data: autosave.terms.map((term) => {
-            const word = profanity.censor(term.word.slice(0, MAX_TERM));
-            const definition = profanity.censor(
-              term.definition.slice(0, MAX_TERM),
-            );
-
-            return {
-              word,
-              definition,
-              wordRichText: term.wordRichText
-                ? censorRichText(term.wordRichText as JSONContent)
-                : undefined,
-              definitionRichText: term.definitionRichText
-                ? censorRichText(term.definitionRichText as JSONContent)
-                : undefined,
-              rank: term.rank,
-            };
-          }),
-        },
-      },
       cortexStale: false,
     },
     select: {
@@ -106,6 +77,8 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       },
     },
   });
+
+  await bulkUpdateTerms(autosave.terms, autosave.id);
 
   const start = Date.now();
 

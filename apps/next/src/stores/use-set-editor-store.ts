@@ -4,20 +4,11 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
 import type { Language } from "@quenti/core/language";
-import type {
-  AutoSaveTerm,
-  StudySetVisibility,
-  Term,
-} from "@quenti/prisma/client";
+import type { StudySetVisibility, Term } from "@quenti/prisma/client";
 
-export type ClientTerm = Omit<Term, "wordRichText" | "definitionRichText"> & {
-  clientKey: string;
-  wordRichText?: JSON | null;
-  definitionRichText?: JSON | null;
-};
-export type ClientAutoSaveTerm = Omit<
-  AutoSaveTerm,
-  "wordRichText" | "definitionRichText"
+export type ClientTerm = Omit<
+  Term,
+  "studySetId" | "wordRichText" | "definitionRichText"
 > & {
   clientKey: string;
   wordRichText?: JSON | null;
@@ -36,7 +27,7 @@ interface SetEditorProps {
   wordLanguage: Language;
   definitionLanguage: Language;
   visibility: StudySetVisibility;
-  terms: (ClientTerm | ClientAutoSaveTerm)[];
+  terms: ClientTerm[];
   serverTerms: string[];
   visibleTerms: number[];
   lastCreated?: string;
@@ -119,7 +110,7 @@ export const createSetEditorStore = (
         set((state) => {
           const clientKey = nanoid();
 
-          const term: ClientAutoSaveTerm = {
+          const term: ClientTerm = {
             id: clientKey,
             clientKey,
             word: "",
@@ -127,7 +118,6 @@ export const createSetEditorStore = (
             wordRichText: null,
             definitionRichText: null,
             assetUrl: null,
-            setAutoSaveId: "",
             rank,
           };
 
@@ -160,7 +150,6 @@ export const createSetEditorStore = (
               wordRichText: null,
               definitionRichText: null,
               assetUrl: null,
-              setAutoSaveId: "",
               rank: filtered.length + i,
             };
           });
