@@ -1,20 +1,26 @@
-import { Language } from "@quenti/core";
+import type { Language } from "@quenti/core";
+
+import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
+import type { TGetAutosaveSchema } from "./get-autosave.schema";
 import { studySetSelect, termsSelect } from "./queries";
 
 type GetAutosaveOptions = {
   ctx: NonNullableUserContext;
+  input: TGetAutosaveSchema;
 };
 
-export const getAutosaveHandler = async ({ ctx }: GetAutosaveOptions) => {
-  let set = await ctx.prisma.studySet.findFirst({
+const getAutosaveById = async (
+  prisma: NonNullableUserContext["prisma"],
+  id: string,
+  userId: string,
+) => {
+  const autosave = await prisma.studySet.findUnique({
     where: {
-      userId: ctx.session.user.id,
+      id,
+      userId,
       created: false,
-    },
-    orderBy: {
-      createdAt: "desc",
     },
     select: {
       ...studySetSelect,
@@ -25,8 +31,40 @@ export const getAutosaveHandler = async ({ ctx }: GetAutosaveOptions) => {
     },
   });
 
-  if (!set) {
-    set = await ctx.prisma.studySet.create({
+  if (!autosave) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+    });
+  }
+
+  return autosave;
+};
+
+export const getAutosaveHandler = async ({
+  ctx,
+  input,
+}: GetAutosaveOptions) => {
+  let autosave = !input.id
+    ? await ctx.prisma.studySet.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          created: false,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          ...studySetSelect,
+          created: true,
+          terms: {
+            select: termsSelect,
+          },
+        },
+      })
+    : await getAutosaveById(ctx.prisma, input.id, ctx.session.user.id);
+
+  if (!autosave) {
+    autosave = await ctx.prisma.studySet.create({
       data: {
         title: "",
         description: "",
@@ -53,16 +91,16 @@ export const getAutosaveHandler = async ({ ctx }: GetAutosaveOptions) => {
   }
 
   return {
-    ...set,
+    ...autosave,
     user: {
-      username: set.user.username,
-      image: set.user.image!,
-      verified: set.user.verified,
-      name: set.user.displayName ? set.user.name : undefined,
+      username: autosave.user.username,
+      image: autosave.user.image!,
+      verified: autosave.user.verified,
+      name: autosave.user.displayName ? autosave.user.name : undefined,
     },
-    tags: set.tags as string[],
-    wordLanguage: set.wordLanguage as Language,
-    definitionLanguage: set.definitionLanguage as Language,
+    tags: autosave.tags as string[],
+    wordLanguage: autosave.wordLanguage as Language,
+    definitionLanguage: autosave.definitionLanguage as Language,
   };
 };
 

@@ -8,6 +8,7 @@ import { ZByIdSchema } from "./by-id.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZEditSchema } from "./edit.schema";
+import { ZGetAutosaveSchema } from "./get-autosave.schema";
 import { ZGetPublicSchema } from "./get-public.schema";
 import { ZGetShareIdSchema } from "./get-share-id.schema";
 import { ZRecentSchema } from "./recent.schema";
@@ -47,10 +48,12 @@ export const studySetsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "get-public");
       return HANDLER_CACHE.handlers["get-public"]!({ ctx, input });
     }),
-  getAutosave: protectedProcedure.query(async ({ ctx }) => {
-    await loadHandler(HANDLER_CACHE, "get-autosave");
-    return HANDLER_CACHE.handlers["get-autosave"]!({ ctx });
-  }),
+  getAutosave: protectedProcedure
+    .input(ZGetAutosaveSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-autosave");
+      return HANDLER_CACHE.handlers["get-autosave"]!({ ctx, input });
+    }),
   getShareId: publicProcedure
     .input(ZGetShareIdSchema)
     .query(async ({ ctx, input }) => {

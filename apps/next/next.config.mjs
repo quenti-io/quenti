@@ -127,6 +127,10 @@ let config = {
       destination: "/sets/:id/edit",
     },
     {
+      source: "/:id(c[a-z0-9]{24})/create",
+      destination: "/sets/:id/create",
+    },
+    {
       source: "/:id(c[a-z0-9]{24})/flashcards",
       destination: "/sets/:id/flashcards",
     },

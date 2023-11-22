@@ -68,8 +68,10 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
 
   if (!studySet.created) {
     throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Study set has not been created.",
+      code:
+        ctx.session.user.id === studySet.userId
+          ? "PRECONDITION_FAILED"
+          : "NOT_FOUND",
     });
   }
 
