@@ -43,6 +43,7 @@ import {
   IconSun,
   IconUser,
 } from "@tabler/icons-react";
+import { IconProgress } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
@@ -170,6 +171,37 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
             viewedAt: folder.viewedAt,
           },
           shouldShow: () => !window.location.pathname.startsWith(url),
+        });
+      }
+      for (const draft of data.drafts) {
+        total.push({
+          icon: <IconProgress />,
+          name: draft.title,
+          searchableName: draft.title
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""),
+          action: (ctrl) => openLink(`/${draft.id}/create`, ctrl),
+          sortableDate: draft.savedAt,
+          entity: {
+            id: draft.id,
+            name: draft.title,
+            type: "set",
+            author: draft.user,
+            viewedAt: draft.savedAt,
+          },
+          shouldShow: () => {
+            const path = window.location.pathname;
+            if (path == `/${draft.id}/create`) return false;
+            if (path == "/create") {
+              const latest = data.drafts.sort(
+                (a, b) =>
+                  new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime(),
+              )[0];
+              if (latest?.id == draft.id) return false;
+            }
+
+            return true;
+          },
         });
       }
       for (const class_ of data.classes) {

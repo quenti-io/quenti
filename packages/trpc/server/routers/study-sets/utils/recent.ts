@@ -86,6 +86,31 @@ export const getRecentDrafts = async (prisma: PrismaClient, userId: string) => {
       where: {
         userId: userId,
         created: false,
+        OR: [
+          {
+            title: {
+              not: "",
+            },
+          },
+          {
+            terms: {
+              some: {
+                OR: [
+                  {
+                    word: {
+                      not: "",
+                    },
+                  },
+                  {
+                    definition: {
+                      not: "",
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       select: {
         id: true,
