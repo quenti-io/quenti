@@ -14,9 +14,14 @@ export const getShareIdHandler = async ({ ctx, input }: GetShareIdOptions) => {
     where: {
       id: input.studySetId,
     },
+    select: {
+      userId: true,
+      visibility: true,
+      created: true,
+    },
   });
 
-  if (!studySet) {
+  if (!studySet || !studySet.created) {
     throw new TRPCError({
       code: "NOT_FOUND",
     });

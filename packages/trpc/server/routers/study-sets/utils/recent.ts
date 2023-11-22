@@ -10,20 +10,9 @@ export const getRecentStudySets = async (
       userId: userId,
       type: "StudySet",
       NOT: {
-        OR: [
-          {
-            entityId: {
-              in: exclude ?? [],
-            },
-          },
-          {
-            studySet: {
-              user: {
-                username: "Quizlet",
-              },
-            },
-          },
-        ],
+        entityId: {
+          in: exclude ?? [],
+        },
       },
       studySet: {
         OR: [
@@ -37,6 +26,10 @@ export const getRecentStudySets = async (
           },
         ],
       },
+    },
+    select: {
+      entityId: true,
+      viewedAt: true,
     },
     orderBy: {
       viewedAt: "desc",
@@ -52,8 +45,22 @@ export const getRecentStudySets = async (
           in: containerIds,
         },
       },
-      include: {
-        user: true,
+      select: {
+        id: true,
+        userId: true,
+        createdAt: true,
+        title: true,
+        description: true,
+        tags: true,
+        visibility: true,
+        wordLanguage: true,
+        definitionLanguage: true,
+        user: {
+          select: {
+            username: true,
+            image: true,
+          },
+        },
         _count: {
           select: {
             terms: true,

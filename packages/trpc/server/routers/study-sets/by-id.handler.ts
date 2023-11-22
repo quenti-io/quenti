@@ -22,6 +22,7 @@ const get = async (id: string) => {
     },
     select: {
       ...studySetSelect,
+      created: true,
       terms: {
         select: termsSelect,
       },
@@ -36,6 +37,7 @@ const getWithDistractors = async (id: string) => {
     },
     select: {
       ...studySetSelect,
+      created: true,
       terms: {
         select: {
           ...termsSelect,
@@ -61,6 +63,13 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
   if (!studySet) {
     throw new TRPCError({
       code: "NOT_FOUND",
+    });
+  }
+
+  if (!studySet.created) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Study set is not yet created.",
     });
   }
 
