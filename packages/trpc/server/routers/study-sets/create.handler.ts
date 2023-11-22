@@ -6,9 +6,10 @@ import {
   MAX_CHARS_TAGS,
   MAX_DESC,
   MAX_NUM_TAGS,
+  MAX_TERM,
   MAX_TITLE,
 } from "../../common/constants";
-import { profanity } from "../../common/profanity";
+import { censorRichText, profanity } from "../../common/profanity";
 import type { NonNullableUserContext } from "../../lib/types";
 import { bulkUpdateTerms } from "../terms/mutations/update";
 import type { TCreateSchema } from "./create.schema";
@@ -78,7 +79,21 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     },
   });
 
-  await bulkUpdateTerms(autosave.terms, autosave.id);
+  const terms = autosave.terms.map((term) => {
+    return {
+      ...term,
+      word: profanity.censor(term.word.slice(0, MAX_TERM)),
+      definition: profanity.censor(term.definition.slice(0, MAX_TERM)),
+      wordRichText: term.wordRichText
+        ? censorRichText(term.wordRichText as object)
+        : null,
+      definitionRichText: term.definitionRichText
+        ? censorRichText(term.definitionRichText as object)
+        : null,
+    };
+  });
+
+  await bulkUpdateTerms(terms, autosave.id);
 
   const start = Date.now();
 

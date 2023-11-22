@@ -57,12 +57,10 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
 
     return {
       ...term,
-      ...{
-        word,
-        wordRichText,
-        definition,
-        definitionRichText,
-      },
+      word,
+      wordRichText,
+      definition,
+      definitionRichText,
     };
   });
 
