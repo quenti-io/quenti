@@ -73,8 +73,9 @@ export const TopBar = () => {
     },
   });
   const createAutosave = api.studySets.createAutosave.useMutation({
-    onSuccess: () => {
-      editorEventChannel.emit("refresh");
+    onSuccess: async () => {
+      if (router.pathname == "/create") editorEventChannel.emit("refresh");
+      else await router.push("/create");
     },
   });
 
