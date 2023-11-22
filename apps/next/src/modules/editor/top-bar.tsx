@@ -1,10 +1,15 @@
 import React from "react";
 
 import {
+  Box,
   Button,
   Flex,
   HStack,
   Heading,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
   Skeleton,
   Spinner,
   Stack,
@@ -12,8 +17,14 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconEditCircle } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconEditCircle,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 
+import { MenuOption } from "../../components/menu-option";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 import { getRelativeTime } from "../../utils/time";
@@ -24,7 +35,7 @@ export const TopBar = () => {
   const setIsLoading = useSetEditorContext((s) => s.setIsLoading);
   const saveError = useSetEditorContext((s) => s.saveError);
   const savedAt = useSetEditorContext((s) => s.savedAt);
-  const numTerms = useSetEditorContext((s) => s.terms.length);
+  const numTerms = useSetEditorContext((s) => s.serverTerms.length);
   const onComplete = useSetEditorContext((s) => s.onComplete);
 
   const isSaving = useSetEditorContext((s) => s.isSaving);
@@ -82,23 +93,53 @@ export const TopBar = () => {
             </Text>
           </HStack>
         </Stack>
-        <Button
-          fontWeight={700}
-          isLoading={isLoading}
-          onClick={() => {
-            setIsLoading(true);
+        <HStack spacing="1">
+          <Button
+            fontWeight={700}
+            isLoading={isLoading}
+            onClick={() => {
+              setIsLoading(true);
 
-            const complete = () => {
-              setTimeout(() => {
-                if (!isSavingRef.current) onComplete();
-                else complete();
-              }, 100);
-            };
-            complete();
-          }}
-        >
-          {mode == "edit" ? "Done" : "Create"}
-        </Button>
+              const complete = () => {
+                setTimeout(() => {
+                  if (!isSavingRef.current) onComplete();
+                  else complete();
+                }, 100);
+              };
+              complete();
+            }}
+          >
+            {mode == "edit" ? "Done" : "Create"}
+          </Button>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              size="sm"
+              variant="ghost"
+              colorScheme="gray"
+            >
+              <Box w="8" display="flex" justifyContent="center">
+                <IconDotsVertical size="18" />
+              </Box>
+            </MenuButton>
+            <MenuList
+              py={0}
+              overflow="hidden"
+              minW="auto"
+              w="40"
+              shadow="lg"
+              mt="2"
+            >
+              {mode == "create" && (
+                <MenuOption icon={<IconPlus size={18} />} label="New draft" />
+              )}
+              <MenuOption
+                icon={<IconTrash size={18} />}
+                label={mode == "create" ? "Discard draft" : "Delete set"}
+              />
+            </MenuList>
+          </Menu>
+        </HStack>
       </Flex>
     </HStack>
   );
@@ -116,7 +157,7 @@ TopBar.Skeleton = function TopBarSkeleton() {
       ml={{ base: "-8px", sm: "-20px" }}
       borderWidth="2px"
     >
-      <HStack py="3" px="5" rounded="xl">
+      <HStack py="4" px="5" rounded="xl">
         <Stack>
           <HStack>
             <Heading fontSize="lg">Create new set</Heading>
