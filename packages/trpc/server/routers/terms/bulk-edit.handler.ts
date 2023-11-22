@@ -2,6 +2,8 @@ import { Prisma } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
 
+import { MAX_TERM } from "../../common/constants";
+import { profanity } from "../../common/profanity";
 import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBulkEditSchema } from "./bulk-edit.schema";
@@ -17,7 +19,9 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
       id: input.studySetId,
       userId: ctx.session.user.id,
     },
-    include: {
+    select: {
+      id: true,
+      created: true,
       terms: {
         where: {
           id: {
@@ -38,10 +42,21 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
     });
   }
 
-  const terms = studySet.terms.map((term) => ({
-    ...term,
-    ...input.terms.find((t) => t.id === term.id),
-  }));
+  const sanitize = (s: string) =>
+    studySet.created ? profanity.censor(s.slice(0, MAX_TERM)) : s;
+
+  const terms = studySet.terms.map((term) => {
+    const t = input.terms.find((t) => t.id === term.id);
+    return {
+      ...term,
+      ...(t
+        ? {
+            word: sanitize(t.word),
+            definition: sanitize(t.definition),
+          }
+        : {}),
+    };
+  });
 
   const vals = terms.map((term) => [
     term.id,

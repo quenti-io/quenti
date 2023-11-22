@@ -37,7 +37,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     },
   });
 
-  if (!autosave) {
+  if (!autosave || autosave.created) {
     throw new TRPCError({
       code: "NOT_FOUND",
     });

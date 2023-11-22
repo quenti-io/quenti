@@ -69,7 +69,7 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
   if (!studySet.created) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: "Study set is not yet created.",
+      message: "Study set has not been created.",
     });
   }
 
