@@ -3,6 +3,7 @@ import React from "react";
 
 import { Modal } from "@quenti/components/modal";
 import {
+  type EditorTerm,
   editorInput,
   getPlainText,
   hasRichText,
@@ -16,7 +17,6 @@ import { Button, ButtonGroup, Stack } from "@chakra-ui/react";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { RichTextBar } from "../modules/editor/card/rich-text-bar";
 import { editorConfig } from "../modules/editor/editor-config";
-import type { ClientTerm } from "../stores/use-set-editor-store";
 
 export interface EditTermModalProps {
   term: Term | null;
@@ -36,19 +36,19 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
 
   const wordEditor = useEditor({
     ...editorConfig(),
-    content: term ? editorInput(term as ClientTerm, "word") : "",
+    content: term ? editorInput(term as EditorTerm, "word") : "",
   });
   const definitionEditor = useEditor({
     ...editorConfig(),
-    content: term ? editorInput(term as ClientTerm, "definition") : "",
+    content: term ? editorInput(term as EditorTerm, "definition") : "",
   });
 
   React.useEffect(() => {
     if (!term || !isOpen) return;
 
-    wordEditor?.commands.setContent(editorInput(term as ClientTerm, "word"));
+    wordEditor?.commands.setContent(editorInput(term as EditorTerm, "word"));
     definitionEditor?.commands.setContent(
-      editorInput(term as ClientTerm, "definition"),
+      editorInput(term as EditorTerm, "definition"),
     );
 
     if (onDefinition) {

@@ -4,6 +4,7 @@ import React from "react";
 
 import { Display } from "@quenti/components/display";
 import {
+  type EditorTerm,
   editorInput,
   getPlainText,
   hasRichText,
@@ -30,7 +31,6 @@ import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
-import type { ClientTerm } from "../../stores/use-set-editor-store";
 import { RichTextBar } from "../editor/card/rich-text-bar";
 import { editorConfig } from "../editor/editor-config";
 
@@ -57,11 +57,11 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
-    content: editorInput(term as ClientTerm, "word"),
+    content: editorInput(term as EditorTerm, "word"),
   });
   const definitionEditor = useEditor({
     ...editorConfig(term.rank + 1),
-    content: editorInput(term as ClientTerm, "definition"),
+    content: editorInput(term as EditorTerm, "definition"),
   });
 
   const edit = api.terms.edit.useMutation({

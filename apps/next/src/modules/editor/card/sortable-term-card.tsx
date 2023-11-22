@@ -4,10 +4,7 @@ import React from "react";
 
 import type { Language } from "@quenti/core/language";
 
-import type {
-  ClientAutoSaveTerm,
-  ClientTerm,
-} from "../../../stores/use-set-editor-store";
+import type { ClientTerm } from "../../../stores/use-set-editor-store";
 import { TermCard } from "./term-card";
 
 export interface SortableTermCardProps {
@@ -15,7 +12,7 @@ export interface SortableTermCardProps {
   isDragging: boolean;
   justCreated: boolean;
   isLast: boolean;
-  term: ClientTerm | ClientAutoSaveTerm;
+  term: ClientTerm;
   deletable: boolean;
   wordLanguage: Language;
   definitionLanguage: Language;
