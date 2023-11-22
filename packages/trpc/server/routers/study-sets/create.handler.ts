@@ -55,6 +55,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     },
     data: {
       created: true,
+      createdAt: new Date(),
       title: profanity.censor(autosave.title.slice(0, MAX_TITLE)),
       description: profanity.censor(autosave.description.slice(0, MAX_DESC)),
       tags: (autosave.tags as string[])

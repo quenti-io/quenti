@@ -24,9 +24,9 @@ export const HydrateEditSetData: React.FC<React.PropsWithChildren> = ({
       cacheTime: 0,
       onError: (e) => {
         if (e.data?.httpStatus == 403) {
-          void (async () => {
-            await router.push("/[id]", `/${id}`);
-          })();
+          void router.push("/[id]", `/${id}`);
+        } else if (e.data?.httpStatus == 412) {
+          void router.push(`/${id}/create`);
         }
       },
       onSuccess: (data) => {

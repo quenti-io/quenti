@@ -23,7 +23,6 @@ export const TopBar = () => {
   const isLoading = useSetEditorContext((s) => s.isLoading);
   const setIsLoading = useSetEditorContext((s) => s.setIsLoading);
   const saveError = useSetEditorContext((s) => s.saveError);
-  const setSaveError = useSetEditorContext((s) => s.setSaveError);
   const savedAt = useSetEditorContext((s) => s.savedAt);
   const numTerms = useSetEditorContext((s) => s.terms.length);
   const onComplete = useSetEditorContext((s) => s.onComplete);
@@ -42,16 +41,12 @@ export const TopBar = () => {
         getRelativeTime(savedAt) || "just now"
       }`;
 
-  React.useEffect(() => {
-    setSaveError(undefined);
-  }, [setSaveError, isSaving]);
-
   const errorColor = useColorModeValue("red.500", "red.300");
   const errorState = saveError && !isSaving;
 
   return (
     <HStack
-      py="3"
+      py="4"
       px="5"
       bg={bg}
       rounded="xl"
@@ -70,7 +65,7 @@ export const TopBar = () => {
     >
       <Flex align="center" justify="space-between" w="full">
         <Stack>
-          <HStack>
+          <HStack spacing="10px">
             <IconEditCircle size={18} />
             <Heading fontSize="lg">
               {mode == "create" ? "Create a new set" : "Edit set"}
@@ -91,7 +86,7 @@ export const TopBar = () => {
           fontWeight={700}
           isLoading={isLoading}
           onClick={() => {
-            if (mode == "edit") setIsLoading(true);
+            setIsLoading(true);
 
             const complete = () => {
               setTimeout(() => {

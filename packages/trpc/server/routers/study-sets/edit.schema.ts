@@ -14,7 +14,7 @@ import { profanity } from "../../common/profanity";
 export const ZEditSchema = z
   .object({
     id: z.string(),
-    title: z.string().trim().min(1),
+    title: z.string().trim(),
     description: z.string(),
     tags: z.array(z.string()),
     wordLanguage: z.enum(LANGUAGE_VALUES),

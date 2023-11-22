@@ -29,8 +29,28 @@ export const EditorContextLayer: React.FC<
     onSuccess: async (data) => {
       await router.push(`/${data.id}`);
     },
+    onError: (e) => {
+      const state = storeRef.current!.getState();
+
+      state.setIsLoading(false);
+      state.setSaveError(
+        e.message || "An unknown error occurred. Please try again.",
+      );
+    },
   });
-  const apiEditSet = api.studySets.edit.useMutation();
+  const apiEditSet = api.studySets.edit.useMutation({
+    onSuccess: () => {
+      storeRef.current!.getState().setSaveError(undefined);
+    },
+    onError: (e) => {
+      const state = storeRef.current!.getState();
+
+      state.setIsLoading(false);
+      state.setSaveError(
+        e.message || "An unknown error occurred. Please try again.",
+      );
+    },
+  });
   const apiAddTerm = api.terms.add.useMutation({
     onSuccess: (data) => {
       const state = storeRef.current!.getState();

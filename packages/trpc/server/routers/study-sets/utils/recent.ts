@@ -79,3 +79,46 @@ export const getRecentStudySets = async (
       },
     }));
 };
+
+export const getRecentDrafts = async (prisma: PrismaClient, userId: string) => {
+  return (
+    await prisma.studySet.findMany({
+      where: {
+        userId: userId,
+        created: false,
+      },
+      select: {
+        id: true,
+        userId: true,
+        title: true,
+        description: true,
+        savedAt: true,
+        createdAt: true,
+        tags: true,
+        visibility: true,
+        wordLanguage: true,
+        definitionLanguage: true,
+        user: {
+          select: {
+            username: true,
+            image: true,
+          },
+        },
+        _count: {
+          select: {
+            terms: true,
+          },
+        },
+      },
+      orderBy: {
+        savedAt: "desc",
+      },
+    })
+  ).map((set) => ({
+    ...set,
+    user: {
+      username: set.user.username!,
+      image: set.user.image!,
+    },
+  }));
+};
