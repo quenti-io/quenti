@@ -16,6 +16,7 @@ export type ClientTerm = Omit<
 };
 
 interface SetEditorProps {
+  id: string;
   mode: "create" | "edit";
   isSaving: boolean;
   isLoading: boolean;
@@ -76,6 +77,7 @@ export const createSetEditorStore = (
   behaviors?: Partial<SetEditorState>,
 ) => {
   const DEFAULT_PROPS: SetEditorProps = {
+    id: "",
     mode: "create",
     isSaving: false,
     isLoading: false,

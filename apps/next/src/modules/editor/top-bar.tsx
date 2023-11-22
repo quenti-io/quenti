@@ -1,4 +1,7 @@
+import { useRouter } from "next/router";
 import React from "react";
+
+import { api } from "@quenti/trpc";
 
 import {
   Box,
@@ -24,12 +27,16 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 
+import { ConfirmModal } from "../../components/confirm-modal";
 import { MenuOption } from "../../components/menu-option";
+import { editorEventChannel } from "../../events/editor";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 import { getRelativeTime } from "../../utils/time";
 
 export const TopBar = () => {
+  const router = useRouter();
+  const id = useSetEditorContext((s) => s.id);
   const mode = useSetEditorContext((s) => s.mode);
   const isLoading = useSetEditorContext((s) => s.isLoading);
   const setIsLoading = useSetEditorContext((s) => s.setIsLoading);
@@ -52,8 +59,24 @@ export const TopBar = () => {
         getRelativeTime(savedAt) || "just now"
       }`;
 
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+
   const errorColor = useColorModeValue("red.500", "red.300");
   const errorState = saveError && !isSaving;
+
+  const deleteSet = api.studySets.delete.useMutation({
+    onSuccess: async () => {
+      if (mode == "edit") await router.push("/home");
+      else {
+        editorEventChannel.emit("refresh");
+      }
+    },
+  });
+  const createAutosave = api.studySets.createAutosave.useMutation({
+    onSuccess: () => {
+      editorEventChannel.emit("refresh");
+    },
+  });
 
   return (
     <HStack
@@ -74,6 +97,29 @@ export const TopBar = () => {
       }}
       shadow="xl"
     >
+      <ConfirmModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        heading={mode == "edit" ? "Delete this set?" : "Discard this draft?"}
+        body={
+          mode == "edit" ? (
+            <Text>
+              Are you absolutely sure you want to delete this set and all
+              associated data? This action cannot be undone.
+            </Text>
+          ) : (
+            "Are you sure you want to discard this draft? This action cannot be undone."
+          )
+        }
+        actionText={mode == "edit" ? "Delete" : "Discard"}
+        onConfirm={() => {
+          deleteSet.mutate({
+            studySetId: id,
+          });
+        }}
+        isLoading={deleteSet.isLoading}
+        destructive
+      />
       <Flex align="center" justify="space-between" w="full">
         <Stack>
           <HStack spacing="10px">
@@ -131,11 +177,18 @@ export const TopBar = () => {
               mt="2"
             >
               {mode == "create" && (
-                <MenuOption icon={<IconPlus size={18} />} label="New draft" />
+                <MenuOption
+                  icon={<IconPlus size={18} />}
+                  label="New draft"
+                  onClick={() => {
+                    createAutosave.mutate();
+                  }}
+                />
               )}
               <MenuOption
                 icon={<IconTrash size={18} />}
                 label={mode == "create" ? "Discard draft" : "Delete set"}
+                onClick={() => setDeleteOpen(true)}
               />
             </MenuList>
           </Menu>

@@ -19,6 +19,7 @@ type StudySetsRouterHandlerCache = {
     ["by-id"]?: typeof import("./by-id.handler").byIdHandler;
     ["get-public"]?: typeof import("./get-public.handler").getPublicHandler;
     ["get-autosave"]?: typeof import("./get-autosave.handler").getAutosaveHandler;
+    ["create-autosave"]?: typeof import("./create-autosave.handler").createAutosaveHandler;
     ["get-share-id"]?: typeof import("./get-share-id.handler").getShareIdHandler;
     create?: typeof import("./create.handler").createHandler;
     edit?: typeof import("./edit.handler").editHandler;
@@ -54,6 +55,10 @@ export const studySetsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "get-autosave");
       return HANDLER_CACHE.handlers["get-autosave"]!({ ctx, input });
     }),
+  createAutosave: protectedProcedure.mutation(async ({ ctx }) => {
+    await loadHandler(HANDLER_CACHE, "create-autosave");
+    return HANDLER_CACHE.handlers["create-autosave"]!({ ctx });
+  }),
   getShareId: publicProcedure
     .input(ZGetShareIdSchema)
     .query(async ({ ctx, input }) => {
