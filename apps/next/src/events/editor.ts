@@ -6,6 +6,7 @@ export const editorEventChannel = eventBus<{
   requestUploadUrl: (contextId?: string) => void;
   startUpload: (jwt: string) => void;
   uploadComplete: (contextId?: string) => void;
+  propagateImageUrl: (args: { id: string; url: string }) => void;
   imageSelected: (args: {
     contextId?: string;
     optimisticUrl: string;

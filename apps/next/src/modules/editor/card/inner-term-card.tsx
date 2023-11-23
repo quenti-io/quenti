@@ -25,12 +25,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import {
-  IconGripHorizontal,
-  IconPhotoMinus,
-  IconPhotoPlus,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 
 import { PhotoView } from "../../../components/photo-view/photo-view";
 import { editorEventChannel } from "../../../events/editor";
@@ -38,6 +33,7 @@ import { useSetEditorContext } from "../../../stores/use-set-editor-store";
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { editorAttributes, editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";
+import { AddImageButton, RemoveImageButton } from "./image-components";
 import { RichTextBar } from "./rich-text-bar";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
@@ -413,49 +409,10 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                   }}
                 />
               </PhotoView>
-              <IconButton
-                aria-label="Remove image"
-                icon={<IconPhotoMinus size={18} />}
-                size="sm"
-                position="absolute"
-                top="-1"
-                right="-1"
-                variant="solid"
-                shadow="md"
-                bg="rgb(255, 255, 255, 0.85)"
-                _hover={{
-                  bg: "rgba(237, 242, 247, 0.85)",
-                }}
-                color="gray.900"
-                _dark={{
-                  bg: "rgb(45, 55, 72, 0.75)",
-                  color: "gray.50",
-                  _hover: {
-                    bg: "rgba(74, 85, 104, 0.75)",
-                  },
-                }}
-                backdropFilter="blur(6px)"
-                onClick={() => removeImage(term.id)}
-              />
+              <RemoveImageButton onClick={() => removeImage(term.id)} />
             </>
           ) : (
-            <IconButton
-              aria-label="Add image"
-              icon={<IconPhotoPlus size={18} />}
-              w="80px"
-              h="60px"
-              variant="outline"
-              colorScheme="gray"
-              color="gray.600"
-              borderColor="gray.200"
-              rounded="xl"
-              _dark={{
-                borderColor: "gray.600",
-                color: "gray.400",
-                _hover: {
-                  background: "gray.700",
-                },
-              }}
+            <AddImageButton
               onClick={() => {
                 editIfDirty(false, true);
                 editorEventChannel.emit("openSearchImages", `term:${term.id}`);

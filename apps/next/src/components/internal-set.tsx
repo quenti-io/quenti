@@ -7,6 +7,7 @@ import { FlashcardPreview } from "../modules/main/flashcard-preview";
 import { HeadingArea } from "../modules/main/heading-area";
 import { SetLoading } from "../modules/main/set-loading";
 import { TermsOverview } from "../modules/main/terms-overview";
+import { TermImageLayer } from "../modules/term-image-layer";
 import { PhotoViewProvider } from "./photo-view/provider";
 import { WithFooter } from "./with-footer";
 
@@ -15,6 +16,7 @@ const InternalSet = () => {
     <PhotoViewProvider>
       <HydrateSetData placeholder={<SetLoading />} isPublic>
         <EditorGlobalStyles />
+        <TermImageLayer />
         <WithFooter>
           <Container maxW="7xl">
             <Stack spacing={10}>

@@ -27,10 +27,15 @@ import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
 import { PhotoView } from "../../components/photo-view/photo-view";
 import { SetCreatorOnly } from "../../components/set-creator-only";
+import { editorEventChannel } from "../../events/editor";
 import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
+import {
+  AddImageButton,
+  RemoveImageButton,
+} from "../editor/card/image-components";
 import { RichTextBar } from "../editor/card/rich-text-bar";
 import { editorConfig } from "../editor/editor-config";
 
@@ -44,6 +49,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const starMutation = api.container.starTerm.useMutation();
   const unstarMutation = api.container.unstarTerm.useMutation();
+  const removeImage = api.terms.removeImage.useMutation();
 
   const { container } = useSet();
   const starredTerms = useContainerContext((s) => s.starredTerms);
@@ -54,6 +60,19 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const Star = starred ? IconStarFilled : IconStar;
 
   const [isEditing, setIsEditing] = React.useState(false);
+  const [assetUrl, setAssetUrl] = React.useState(term.assetUrl);
+
+  React.useEffect(() => {
+    const handle = (args: { id: string; url: string }) => {
+      if (args.id == term.id) setAssetUrl(args.url);
+    };
+
+    editorEventChannel.on("propagateImageUrl", handle);
+    return () => {
+      editorEventChannel.off("propagateImageUrl", handle);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
@@ -201,18 +220,20 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
             </Text>
           )}
           <Box minW="100px">
-            {term.assetUrl && (
-              <Box minW="100px" h="80px" mt={{ base: 3, md: 0 }}>
-                <PhotoView
-                  src={term.assetUrl}
-                  id={`displayable-term-${term.id}`}
-                >
+            {assetUrl && (
+              <Box
+                minW="100px"
+                h="80px"
+                mt={{ base: 3, md: 0 }}
+                position="relative"
+              >
+                <PhotoView src={assetUrl} id={`displayable-term-${term.id}`}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     width={100}
                     height={80}
                     alt="Term asset"
-                    src={term.assetUrl}
+                    src={assetUrl}
                     style={{
                       cursor: "zoom-in",
                       width: 100,
@@ -223,7 +244,30 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                     }}
                   />
                 </PhotoView>
+                {isEditing && (
+                  <RemoveImageButton
+                    onClick={() => {
+                      setAssetUrl(null);
+                      removeImage.mutate({
+                        id: term.id,
+                        studySetId: term.studySetId,
+                      });
+                    }}
+                  />
+                )}
               </Box>
+            )}
+            {isEditing && !assetUrl && (
+              <AddImageButton
+                w="100px"
+                h="80px"
+                onClick={() => {
+                  editorEventChannel.emit(
+                    "openSearchImages",
+                    `term:${term.id}`,
+                  );
+                }}
+              />
             )}
           </Box>
         </Flex>

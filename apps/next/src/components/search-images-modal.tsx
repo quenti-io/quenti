@@ -72,7 +72,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
     accept: {
       "image/png": [".png", ".jpg", ".jpeg", ".gif"],
     },
-    // maxSize: 5 * 1000000, // 5mb
+    maxSize: 5 * 1000000,
     maxFiles: 1,
     onDropAccepted: (files) => {
       start(files[0]!);
@@ -201,6 +201,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             "rgba(247, 250, 252, 75%)",
             "rgba(23, 25, 35, 40%)",
           )}
+          onClick={(e) => e.preventDefault()}
         />
         <ModalContent bg="transparent" shadow="none">
           <ModalBody
@@ -218,11 +219,12 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             _active={{
               transform: "scale(0.97)",
             }}
+            onClick={(e) => e.preventDefault()}
           >
             <Box py="4" px="5">
               <Input
                 ref={inputRef}
-                placeholder="Search for an image..."
+                placeholder="Search for an image"
                 size="sm"
                 variant="unstyled"
                 fontSize="xl"
