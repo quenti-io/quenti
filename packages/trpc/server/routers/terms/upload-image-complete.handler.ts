@@ -43,6 +43,8 @@ export const uploadImageCompleteHandler = async ({
       assetUrl: url,
     },
   });
+
+  return { url };
 };
 
 export default uploadImageCompleteHandler;

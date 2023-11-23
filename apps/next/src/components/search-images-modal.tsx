@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { env } from "@quenti/env/client";
 import { useDebounce } from "@quenti/lib/hooks/use-debounce";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
@@ -16,6 +17,7 @@ import {
   ModalOverlay,
   SimpleGrid,
   Skeleton,
+  Spinner,
   Text,
   VStack,
   useColorModeValue,
@@ -24,6 +26,7 @@ import {
 import { IconCloudUpload } from "@tabler/icons-react";
 
 import { editorEventChannel } from "../events/editor";
+import { useDropzone } from "../hooks/use-dropzone";
 
 interface SearchImagesModalProps {
   isOpen: boolean;
@@ -45,18 +48,57 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
   onClose,
 }) => {
   const [currentContext, setCurrentContext] = React.useState<string>();
+  const currentContextRef = React.useRef(currentContext);
+  currentContextRef.current = currentContext;
+
   const [query, setQuery] = React.useState("");
   const debouncedQuery = useDebounce(query, 500);
+
+  const [fileName, setFileName] = React.useState<string | null>(null);
+  const [progress, setProgress] = React.useState<number | null>(null);
+
+  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
+    accept: {
+      "image/png": [".png", ".jpg", ".jpeg", ".gif"],
+    },
+    maxSize: 5 * 1000000, // 5mb
+    maxFiles: 1,
+    disabled: !!fileName,
+    onDropAccepted: (files) => {
+      setFileName(files[0]!.name);
+      editorEventChannel.emit("requestUploadUrl", currentContext);
+    },
+  });
+
+  const acceptedFilesRef = React.useRef(acceptedFiles);
+  acceptedFilesRef.current = acceptedFiles;
 
   React.useEffect(() => {
     const setContext = (id?: string) => {
       setCurrentContext(id);
     };
 
+    const upload = (jwt?: string) => {
+      void (async () => {
+        if (!jwt) return;
+
+        const file = acceptedFilesRef.current[0];
+        if (!file) return;
+
+        await doUpload(jwt, file);
+        editorEventChannel.emit("uploadComplete", currentContextRef.current);
+        setFileName(null);
+        onClose();
+      })();
+    };
+
     editorEventChannel.on("openSearchImages", setContext);
+    editorEventChannel.on("startUpload", upload);
     return () => {
       editorEventChannel.off("openSearchImages", setContext);
+      editorEventChannel.off("startUpload", upload);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { data, isFetching } = api.images.search.useQuery(
@@ -67,6 +109,27 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       enabled: !!debouncedQuery.length,
     },
   );
+
+  const doUpload = async (jwt: string, blob: unknown) => {
+    return new Promise((resolve) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.open("PUT", `${env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT}/terms`, true);
+      xhr.setRequestHeader("Authorization", `Bearer ${jwt}`);
+
+      xhr.upload.addEventListener("progress", (e) => {
+        if (e.lengthComputable) {
+          const progress = e.loaded / e.total;
+          setProgress(progress);
+        }
+      });
+      xhr.addEventListener("loadend", () => {
+        resolve(xhr.readyState === 4 && xhr.status === 200);
+      });
+
+      xhr.send(blob as XMLHttpRequestBodyInit);
+    });
+  };
 
   const expanded = !!data || isFetching;
 
@@ -175,24 +238,51 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             px="6"
             mx="6"
             py="10"
+            position="relative"
             rounded="xl"
             borderWidth="2px"
             bg="rgba(247, 250, 252, 40%)"
             borderColor="gray.100"
+            overflow="hidden"
             _dark={{
               bg: "rgba(23, 25, 35, 30%)",
               borderColor: "gray.750",
             }}
+            {...getRootProps()}
           >
-            <VStack spacing="1">
-              <HStack color="gray.500" spacing="3">
-                <IconCloudUpload />
-                <Text fontWeight={600}>Upload your own image</Text>
-              </HStack>
-              <Text fontSize="xs" color="gray.500">
-                Drop files here
-              </Text>
-            </VStack>
+            <Box
+              position="absolute"
+              top="0"
+              left="0"
+              bg="gray.100"
+              _dark={{
+                bg: "gray.750",
+              }}
+              h="full"
+              w={progress ? `${progress * 100}%` : 0}
+              opacity={0.5}
+            />
+            <input {...getInputProps()} />
+            {fileName ? (
+              <Center h="46px" zIndex={10}>
+                <HStack spacing="3">
+                  <Spinner size="xs" color="blue.300" />
+                  <Text fontSize="sm" fontWeight={600}>
+                    {fileName}
+                  </Text>
+                </HStack>
+              </Center>
+            ) : (
+              <VStack spacing="1" zIndex={10}>
+                <HStack color="gray.500" spacing="3">
+                  <IconCloudUpload />
+                  <Text fontWeight={600}>Upload your own image</Text>
+                </HStack>
+                <Text fontSize="xs" color="gray.500">
+                  Drop files here
+                </Text>
+              </VStack>
+            )}
           </Center>
         </ModalContent>
       </Modal>

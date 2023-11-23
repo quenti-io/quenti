@@ -80,6 +80,19 @@ export const EditorContextLayer: React.FC<
   const apiRemoveImage = api.terms.removeImage.useMutation();
   const apiReorderTerm = api.terms.reorder.useMutation();
 
+  const apiUploadImage = api.terms.uploadImage.useMutation({
+    onSuccess: (jwt) => {
+      editorEventChannel.emit("startUpload", jwt);
+    },
+  });
+  const apiUploadImageComplete = api.terms.uploadImageComplete.useMutation({
+    onSuccess: (data, { termId }) => {
+      if (!data?.url) return;
+      const state = storeRef.current!.getState();
+      state.setImage(termId, data.url);
+    },
+  });
+
   const isSaving =
     apiEditSet.isLoading ||
     apiAddTerm.isLoading ||
@@ -101,14 +114,42 @@ export const EditorContextLayer: React.FC<
   }, [isSaving]);
 
   React.useEffect(() => {
+    const getTermId = (contextId?: string) => {
+      if (!contextId || !contextId.startsWith("term:")) return null;
+      const id = contextId.replace("term:", "");
+      return id;
+    };
+
+    const requestUploadUrl = (contextId?: string) => {
+      const termId = getTermId(contextId);
+      if (!termId) return;
+
+      const setId = storeRef.current!.getState().id;
+      apiUploadImage.mutate({
+        studySetId: setId,
+        termId,
+      });
+    };
+
+    const complete = (contextId?: string) => {
+      const termId = getTermId(contextId);
+      if (!termId) return;
+
+      const setId = storeRef.current!.getState().id;
+      apiUploadImageComplete.mutate({
+        studySetId: setId,
+        termId,
+      });
+    };
+
     const setImage = (args: {
       contextId?: string;
       optimisticUrl: string;
-      query: string;
-      index: number;
+      query?: string;
+      index?: number;
     }) => {
-      if (!args.contextId || !args.contextId.startsWith("term:")) return;
-      const id = args.contextId.replace("term:", "");
+      const id = getTermId(args.contextId);
+      if (!id) return;
 
       const term = storeRef
         .current!.getState()
@@ -116,16 +157,23 @@ export const EditorContextLayer: React.FC<
 
       storeRef.current!.getState().setImage(term.id, args.optimisticUrl);
 
-      apiSetImage.mutate({
-        studySetId: data.id,
-        id: term.id,
-        ...args,
-      });
+      if (args.query !== undefined && args.index !== undefined) {
+        apiSetImage.mutate({
+          studySetId: data.id,
+          id: term.id,
+          query: args.query,
+          index: args.index,
+        });
+      }
     };
 
     editorEventChannel.on("imageSelected", setImage);
+    editorEventChannel.on("requestUploadUrl", requestUploadUrl);
+    editorEventChannel.on("uploadComplete", complete);
     return () => {
       editorEventChannel.off("imageSelected", setImage);
+      editorEventChannel.off("requestUploadUrl", requestUploadUrl);
+      editorEventChannel.off("uploadComplete", complete);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
