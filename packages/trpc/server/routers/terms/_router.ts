@@ -8,6 +8,7 @@ import { ZEditSchema } from "./edit.schema";
 import { ZRemoveImageSchema } from "./remove-image.schema";
 import { ZReorderSchema } from "./reorder.schema";
 import { ZSetImageSchema } from "./set-image.schema";
+import { ZUploadImageSchema } from "./upload-image.schema";
 
 type TermsRouterHandlerCache = {
   handlers: {
@@ -17,6 +18,8 @@ type TermsRouterHandlerCache = {
     edit?: typeof import("./edit.handler").editHandler;
     ["bulk-edit"]?: typeof import("./bulk-edit.handler").bulkEditHandler;
     ["set-image"]?: typeof import("./set-image.handler").setImageHandler;
+    ["upload-image"]?: typeof import("./upload-image.handler").uploadImageHandler;
+    ["upload-image-complete"]?: typeof import("./upload-image-complete.handler").uploadImageCompleteHandler;
     ["remove-image"]?: typeof import("./remove-image.handler").removeImageHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
   };
@@ -61,6 +64,18 @@ export const termsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "set-image");
       return HANDLER_CACHE.handlers["set-image"]!({ ctx, input });
+    }),
+  uploadImage: protectedProcedure
+    .input(ZUploadImageSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-image");
+      return HANDLER_CACHE.handlers["upload-image"]!({ ctx, input });
+    }),
+  uploadImageComplete: protectedProcedure
+    .input(ZUploadImageSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-image-complete");
+      return HANDLER_CACHE.handlers["upload-image-complete"]!({ ctx, input });
     }),
   removeImage: protectedProcedure
     .input(ZRemoveImageSchema)
