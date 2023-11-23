@@ -52,6 +52,8 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
   currentContextRef.current = currentContext;
 
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
   const [query, setQuery] = React.useState("");
   const debouncedQuery = useDebounce(query, 500);
 
@@ -70,9 +72,8 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
     accept: {
       "image/png": [".png", ".jpg", ".jpeg", ".gif"],
     },
-    maxSize: 5 * 1000000, // 5mb
+    // maxSize: 5 * 1000000, // 5mb
     maxFiles: 1,
-    disabled: !!file,
     onDropAccepted: (files) => {
       start(files[0]!);
     },
@@ -91,6 +92,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
         editorEventChannel.emit("uploadComplete", currentContextRef.current);
 
         setFile(null);
+        setProgress(null);
         onClose();
       })();
     };
@@ -115,7 +117,11 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
 
   React.useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
-      if (document.activeElement !== rootRef.current) return;
+      if (
+        document.activeElement !== rootRef.current &&
+        document.activeElement !== inputRef.current
+      )
+        return;
 
       const getFilesFromClipboardEvent = (event: ClipboardEvent) => {
         const dataTransferItems = event.clipboardData?.items;
@@ -133,7 +139,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       };
 
       const pastedFiles = getFilesFromClipboardEvent(event);
-      if (!pastedFiles) return;
+      if (!pastedFiles?.length) return;
 
       start(pastedFiles[0]!);
     };
@@ -208,9 +214,14 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             rounded="xl"
             borderColor={borderColor}
             shadow="xl"
+            transition="transform 0.15s ease-in-out"
+            _active={{
+              transform: "scale(0.97)",
+            }}
           >
             <Box py="4" px="5">
               <Input
+                ref={inputRef}
                 placeholder="Search for an image..."
                 size="sm"
                 variant="unstyled"
@@ -274,15 +285,24 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             py="10"
             position="relative"
             rounded="xl"
+            overflow="hidden"
             borderWidth="2px"
+            transition="border-color 0.2s ease-in-out"
             bg="rgba(247, 250, 252, 40%)"
             borderColor="gray.100"
-            overflow="hidden"
+            _hover={{
+              borderColor: "gray.200",
+            }}
             _dark={{
               bg: "rgba(23, 25, 35, 30%)",
               borderColor: "gray.750",
+              _hover: {
+                borderColor: "gray.700",
+              },
             }}
             {...getRootProps()}
+            cursor="pointer"
+            role="group"
             ref={rootRef}
           >
             <Box
@@ -295,6 +315,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
               }}
               h="full"
               w={progress ? `${progress * 100}%` : 0}
+              className="transition-[width] duration-300"
               opacity={0.5}
             />
             <input {...getInputProps()} />
@@ -309,12 +330,22 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
               </Center>
             ) : (
               <VStack spacing="1" zIndex={10}>
-                <HStack color="gray.500" spacing="3">
+                <HStack
+                  color="gray.500"
+                  spacing="3"
+                  transition="color 0.2s ease-in-out"
+                  _groupHover={{
+                    color: "gray.800",
+                    _dark: {
+                      color: "gray.200",
+                    },
+                  }}
+                >
                   <IconCloudUpload />
-                  <Text fontWeight={600}>Upload your own image</Text>
+                  <Text fontWeight={600}>Upload an image</Text>
                 </HStack>
                 <Text fontSize="xs" color="gray.500">
-                  Drop files here
+                  Drop or paste files here
                 </Text>
               </VStack>
             )}
