@@ -48,11 +48,13 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
       t.word,
       t.wordRichText,
       studySet.created,
+      true,
     );
     const { plainText: definition, richText: definitionRichText } = serialize(
       t.definition,
       t.definitionRichText,
       studySet.created,
+      true,
     );
 
     return {

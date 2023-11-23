@@ -9,6 +9,7 @@ export const serialize = (
   plainText: string,
   richTextHtml?: string,
   sanitize = true,
+  raw = false,
 ) => {
   let text = plainText;
   let richText = null;
@@ -23,6 +24,8 @@ export const serialize = (
     text = profanity.censor(text.slice(0, MAX_TERM));
     richText = richText
       ? (censorRichText(richText) as object)
+      : raw
+      ? null
       : Prisma.JsonNull;
   }
 
