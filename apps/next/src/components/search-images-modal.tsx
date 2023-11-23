@@ -51,27 +51,32 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
   const currentContextRef = React.useRef(currentContext);
   currentContextRef.current = currentContext;
 
+  const rootRef = React.useRef<HTMLDivElement>(null);
   const [query, setQuery] = React.useState("");
   const debouncedQuery = useDebounce(query, 500);
 
-  const [fileName, setFileName] = React.useState<string | null>(null);
+  const [file, setFile] = React.useState<File | null>(null);
+  const fileRef = React.useRef(file);
+  fileRef.current = file;
+
   const [progress, setProgress] = React.useState<number | null>(null);
 
-  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
+  const start = (file: File) => {
+    setFile(file);
+    editorEventChannel.emit("requestUploadUrl", currentContextRef.current);
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/png": [".png", ".jpg", ".jpeg", ".gif"],
     },
     maxSize: 5 * 1000000, // 5mb
     maxFiles: 1,
-    disabled: !!fileName,
+    disabled: !!file,
     onDropAccepted: (files) => {
-      setFileName(files[0]!.name);
-      editorEventChannel.emit("requestUploadUrl", currentContext);
+      start(files[0]!);
     },
   });
-
-  const acceptedFilesRef = React.useRef(acceptedFiles);
-  acceptedFilesRef.current = acceptedFiles;
 
   React.useEffect(() => {
     const setContext = (id?: string) => {
@@ -82,12 +87,10 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       void (async () => {
         if (!jwt) return;
 
-        const file = acceptedFilesRef.current[0];
-        if (!file) return;
-
-        await doUpload(jwt, file);
+        await doUpload(jwt, fileRef.current!);
         editorEventChannel.emit("uploadComplete", currentContextRef.current);
-        setFileName(null);
+
+        setFile(null);
         onClose();
       })();
     };
@@ -109,6 +112,37 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       enabled: !!debouncedQuery.length,
     },
   );
+
+  React.useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      if (document.activeElement !== rootRef.current) return;
+
+      const getFilesFromClipboardEvent = (event: ClipboardEvent) => {
+        const dataTransferItems = event.clipboardData?.items;
+        if (!dataTransferItems) return;
+
+        const files = Array.from(dataTransferItems).reduce<File[]>(
+          (acc, curr) => {
+            const f = curr.getAsFile();
+            return f ? [...acc, f] : acc;
+          },
+          [],
+        );
+
+        return files;
+      };
+
+      const pastedFiles = getFilesFromClipboardEvent(event);
+      if (!pastedFiles) return;
+
+      start(pastedFiles[0]!);
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => {
+      window.removeEventListener("paste", handlePaste);
+    };
+  }, []);
 
   const doUpload = async (jwt: string, blob: unknown) => {
     return new Promise((resolve) => {
@@ -249,6 +283,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
               borderColor: "gray.750",
             }}
             {...getRootProps()}
+            ref={rootRef}
           >
             <Box
               position="absolute"
@@ -263,12 +298,12 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
               opacity={0.5}
             />
             <input {...getInputProps()} />
-            {fileName ? (
+            {file ? (
               <Center h="46px" zIndex={10}>
                 <HStack spacing="3">
                   <Spinner size="xs" color="blue.300" />
                   <Text fontSize="sm" fontWeight={600}>
-                    {fileName}
+                    {file.name}
                   </Text>
                 </HStack>
               </Center>
