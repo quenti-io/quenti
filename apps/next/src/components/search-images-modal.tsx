@@ -6,7 +6,9 @@ import { type RouterOutputs, api } from "@quenti/trpc";
 
 import {
   Box,
+  Center,
   GridItem,
+  HStack,
   Input,
   Modal,
   ModalBody,
@@ -15,8 +17,11 @@ import {
   SimpleGrid,
   Skeleton,
   Text,
+  VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
+
+import { IconCloudUpload } from "@tabler/icons-react";
 
 import { editorEventChannel } from "../events/editor";
 
@@ -54,7 +59,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
     };
   }, []);
 
-  const { data } = api.images.search.useQuery(
+  const { data, isFetching } = api.images.search.useQuery(
     {
       query: debouncedQuery,
     },
@@ -62,6 +67,8 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       enabled: !!debouncedQuery.length,
     },
   );
+
+  const expanded = !!data || isFetching;
 
   const borderColor = useColorModeValue("gray.200", "gray.750");
 
@@ -103,14 +110,9 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             borderWidth="2px"
             rounded="xl"
             borderColor={borderColor}
-            shadow="2xl"
+            shadow="xl"
           >
-            <Box
-              py="4"
-              px="5"
-              borderBottomWidth="2px"
-              borderBottomColor={borderColor}
-            >
+            <Box py="4" px="5">
               <Input
                 placeholder="Search for an image..."
                 size="sm"
@@ -125,14 +127,28 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
                 onChange={(e) => setQuery(e.target.value)}
               />
             </Box>
-            <SimpleGrid columns={5} gap="2" p="2">
-              <GridItem colSpan={2}>
-                <Thumbnail index={0} />
-              </GridItem>
-              <DoubleRow />
-              <DoubleRow offset={2} />
-              <DoubleRow offset={4} />
-            </SimpleGrid>
+            <Box
+              overflow="hidden"
+              h={expanded ? 235 : 0}
+              className="transition-[height] duration-500"
+            >
+              <SimpleGrid
+                columns={5}
+                gap="2"
+                p="2"
+                borderTopWidth="2px"
+                borderTopColor={borderColor}
+                opacity={expanded ? 1 : 0}
+                className="transition-opacity duration-500"
+              >
+                <GridItem colSpan={2}>
+                  <Thumbnail index={0} />
+                </GridItem>
+                <DoubleRow />
+                <DoubleRow offset={2} />
+                <DoubleRow offset={4} />
+              </SimpleGrid>
+            </Box>
           </ModalBody>
           <Text mt="3" fontSize="xs" ml="3" color="gray.500" opacity={0.75}>
             Images by{" "}
@@ -154,6 +170,30 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
               Unsplash
             </Link>
           </Text>
+          <Center
+            mt="6"
+            px="6"
+            mx="6"
+            py="10"
+            rounded="xl"
+            borderWidth="2px"
+            bg="rgba(247, 250, 252, 40%)"
+            borderColor="gray.100"
+            _dark={{
+              bg: "rgba(23, 25, 35, 30%)",
+              borderColor: "gray.750",
+            }}
+          >
+            <VStack spacing="1">
+              <HStack color="gray.500" spacing="3">
+                <IconCloudUpload />
+                <Text fontWeight={600}>Upload your own image</Text>
+              </HStack>
+              <Text fontSize="xs" color="gray.500">
+                Drop files here
+              </Text>
+            </VStack>
+          </Center>
         </ModalContent>
       </Modal>
     </ResultsContext.Provider>
