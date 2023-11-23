@@ -117,7 +117,12 @@ export const EditorContextLayer: React.FC<
     const getTermId = (contextId?: string) => {
       if (!contextId || !contextId.startsWith("term:")) return null;
       const id = contextId.replace("term:", "");
-      return id;
+
+      const term = storeRef
+        .current!.getState()
+        .terms.find((x) => x.id === id || x.clientKey === id)!;
+
+      return term.id;
     };
 
     const requestUploadUrl = (contextId?: string) => {
@@ -151,16 +156,12 @@ export const EditorContextLayer: React.FC<
       const id = getTermId(args.contextId);
       if (!id) return;
 
-      const term = storeRef
-        .current!.getState()
-        .terms.find((x) => x.id === id || x.clientKey === id)!;
-
-      storeRef.current!.getState().setImage(term.id, args.optimisticUrl);
+      storeRef.current!.getState().setImage(id, args.optimisticUrl);
 
       if (args.query !== undefined && args.index !== undefined) {
         apiSetImage.mutate({
           studySetId: data.id,
-          id: term.id,
+          id,
           query: args.query,
           index: args.index,
         });

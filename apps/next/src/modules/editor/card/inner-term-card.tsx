@@ -200,7 +200,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     return { word, definition, wordJson, definitionJson };
   };
 
-  const editIfDirty = (focused: boolean) => {
+  const editIfDirty = (focused: boolean, force = false) => {
     const { word, definition, wordJson, definitionJson } =
       getEditorPlainTexts();
 
@@ -217,13 +217,14 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     };
 
     if (
-      (word !== term.word ||
+      force ||
+      ((word !== term.word ||
         definition !== term.definition ||
         ((wordRichText || term.wordRichText) &&
           !compareJson(wordJson, term.wordRichText)) ||
         ((definitionRichText || term.definitionRichText) &&
           !compareJson(definitionJson, term.definitionRichText))) &&
-      !focused
+        !focused)
     ) {
       editTerm(
         term.id,
@@ -456,7 +457,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                 },
               }}
               onClick={() => {
-                editIfDirty(false);
+                editIfDirty(false, true);
                 editorEventChannel.emit("openSearchImages", `term:${term.id}`);
               }}
             />
