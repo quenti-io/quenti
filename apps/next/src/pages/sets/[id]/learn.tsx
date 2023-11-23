@@ -22,6 +22,7 @@ import { InteractionCard } from "../../../modules/learn/interaction-card";
 import { LearnLoading } from "../../../modules/learn/learn-loading";
 import { RoundSummary } from "../../../modules/learn/round-summary";
 import { Titlebar } from "../../../modules/learn/titlebar";
+import { TermImageLayer } from "../../../modules/term-image-layer";
 import { useContainerContext } from "../../../stores/use-container-store";
 import { useLearnContext } from "../../../stores/use-learn-store";
 
@@ -44,6 +45,7 @@ const Learn = () => {
           }
         >
           <CreateLearnData>
+            <TermImageLayer />
             <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
               <Stack spacing={8}>
                 <Titlebar />
