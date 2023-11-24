@@ -90,6 +90,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const [wordEmpty, setWordEmpty] = React.useState(false);
   const [definitionEmpty, setDefinitionEmpty] = React.useState(false);
 
+  const id = useSetEditorContext((s) => s.id);
   const setCurrentActive = useSetEditorContext((s) => s.setCurrentActiveRank);
   const removeImage = useSetEditorContext((s) => s.removeImage);
 
@@ -415,7 +416,10 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             <AddImageButton
               onClick={() => {
                 editIfDirty(false, true);
-                editorEventChannel.emit("openSearchImages", `term:${term.id}`);
+                editorEventChannel.emit("openSearchImages", {
+                  termId: term.id,
+                  studySetId: id,
+                });
               }}
             />
           )}

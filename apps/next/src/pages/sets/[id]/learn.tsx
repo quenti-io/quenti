@@ -32,6 +32,7 @@ const Learn = () => {
       <HeadSeo title="Learn" />
       <LazyWrapper>
         <EditorGlobalStyles />
+        <TermImageLayer />
         <HydrateSetData
           disallowDirty
           withDistractors
@@ -45,7 +46,6 @@ const Learn = () => {
           }
         >
           <CreateLearnData>
-            <TermImageLayer />
             <Container maxW="4xl" mt={{ base: 0, md: 10 }}>
               <Stack spacing={8}>
                 <Titlebar />

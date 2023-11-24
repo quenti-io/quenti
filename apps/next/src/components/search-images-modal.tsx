@@ -25,7 +25,7 @@ import {
 
 import { IconCloudUpload } from "@tabler/icons-react";
 
-import { editorEventChannel } from "../events/editor";
+import { type Context, editorEventChannel } from "../events/editor";
 import { useDropzone } from "../hooks/use-dropzone";
 
 interface SearchImagesModalProps {
@@ -47,7 +47,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [currentContext, setCurrentContext] = React.useState<string>();
+  const [currentContext, setCurrentContext] = React.useState<Context>();
   const currentContextRef = React.useRef(currentContext);
   currentContextRef.current = currentContext;
 
@@ -65,7 +65,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
 
   const start = (file: File) => {
     setFile(file);
-    editorEventChannel.emit("requestUploadUrl", currentContextRef.current);
+    editorEventChannel.emit("requestUploadUrl", currentContextRef.current!);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -80,16 +80,12 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
   });
 
   React.useEffect(() => {
-    const setContext = (id?: string) => {
-      setCurrentContext(id);
-    };
-
     const upload = (jwt?: string) => {
       void (async () => {
         if (!jwt) return;
 
         await doUpload(jwt, fileRef.current!);
-        editorEventChannel.emit("uploadComplete", currentContextRef.current);
+        editorEventChannel.emit("uploadComplete", currentContextRef.current!);
 
         setFile(null);
         setProgress(null);
@@ -97,10 +93,10 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       })();
     };
 
-    editorEventChannel.on("openSearchImages", setContext);
+    editorEventChannel.on("openSearchImages", setCurrentContext);
     editorEventChannel.on("startUpload", upload);
     return () => {
-      editorEventChannel.off("openSearchImages", setContext);
+      editorEventChannel.off("openSearchImages", setCurrentContext);
       editorEventChannel.off("startUpload", upload);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,7 +180,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
           if (!url) return;
 
           editorEventChannel.emit("imageSelected", {
-            contextId: currentContext,
+            context: currentContext!,
             optimisticUrl: url,
             query: debouncedQuery,
             index,

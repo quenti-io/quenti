@@ -1,14 +1,19 @@
 import { eventBus } from "../lib/event-bus";
 
+export type Context = {
+  termId: string;
+  studySetId: string;
+};
+
 export const editorEventChannel = eventBus<{
   refresh: () => void;
-  openSearchImages: (contextId?: string) => void;
-  requestUploadUrl: (contextId?: string) => void;
+  openSearchImages: (context: Context) => void;
+  requestUploadUrl: (context: Context) => void;
   startUpload: (jwt: string) => void;
-  uploadComplete: (contextId?: string) => void;
+  uploadComplete: (context: Context) => void;
   propagateImageUrl: (args: { id: string; url: string }) => void;
   imageSelected: (args: {
-    contextId?: string;
+    context: Context;
     optimisticUrl: string;
     query?: string;
     index?: number;

@@ -24,8 +24,8 @@ const Flashcards = () => {
       <HeadSeo title="Flashcards" />
       <LazyWrapper>
         <EditorGlobalStyles />
+        <TermImageLayer />
         <HydrateSetData isPublic placeholder={<FlashcardsLoading />}>
-          <TermImageLayer />
           <FlashcardsSettingsModal
             isOpen={settingsOpen}
             onClose={() => setSettingsOpen(false)}

@@ -3,8 +3,7 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
-import { editorEventChannel } from "../events/editor";
-import { useSet } from "../hooks/use-set";
+import { type Context, editorEventChannel } from "../events/editor";
 
 const SearchImagesModal = dynamic(
   () =>
@@ -17,8 +16,6 @@ const SearchImagesModal = dynamic(
 );
 
 export const TermImageLayer = () => {
-  const { id } = useSet();
-
   const [modalOpen, setModalOpen] = React.useState(false);
 
   const apiSetImage = api.terms.setImage.useMutation();
@@ -41,50 +38,27 @@ export const TermImageLayer = () => {
   React.useEffect(() => {
     const open = () => setModalOpen(true);
 
-    const getTermId = (contextId?: string) => {
-      if (!contextId || !contextId.startsWith("term:")) return null;
-      const id = contextId.replace("term:", "");
-      return id;
-    };
+    const requestUploadUrl = (context: Context) =>
+      apiUploadImage.mutate(context);
 
-    const requestUploadUrl = (contextId?: string) => {
-      const termId = getTermId(contextId);
-      if (!termId) return;
-
-      apiUploadImage.mutate({
-        studySetId: id,
-        termId,
-      });
-    };
-
-    const complete = (contextId?: string) => {
-      const termId = getTermId(contextId);
-      if (!termId) return;
-
-      apiUploadImageComplete.mutate({
-        studySetId: id,
-        termId,
-      });
-    };
+    const complete = (context: Context) =>
+      apiUploadImageComplete.mutate(context);
 
     const setImage = (args: {
-      contextId?: string;
+      context: Context;
       optimisticUrl: string;
       query?: string;
       index?: number;
     }) => {
-      const termId = getTermId(args.contextId);
-      if (!termId) return;
-
       editorEventChannel.emit("propagateImageUrl", {
-        id: termId,
+        id: args.context.termId,
         url: args.optimisticUrl,
       });
 
       if (args.query !== undefined && args.index !== undefined) {
         apiSetImage.mutate({
-          studySetId: id,
-          id: termId,
+          studySetId: args.context.studySetId,
+          id: args.context.termId,
           query: args.query,
           index: args.index,
         });

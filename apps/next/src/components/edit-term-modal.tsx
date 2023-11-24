@@ -166,7 +166,10 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
               h="80px"
               onClick={() => {
                 if (!term) return;
-                editorEventChannel.emit("openSearchImages", `term:${term.id}`);
+                editorEventChannel.emit("openSearchImages", {
+                  termId: term.id,
+                  studySetId: term.studySetId,
+                });
               }}
             />
           )}

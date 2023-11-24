@@ -87,7 +87,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
           width: `calc(100% * ${index + 1} / ${numTerms})`,
         }}
       />
-      <Flex flexDir="column" h="full" p="8">
+      <Flex flexDir="column" h="calc(100% - 8px)" p="8">
         <Grid templateColumns="1fr 1fr 1fr">
           <HStack h="max" alignItems="start">
             {variant == "sortable" && (
@@ -240,7 +240,6 @@ export const Flashcard: React.FC<FlashcardProps> = ({
       <Box
         bg="orange.300"
         height="1"
-        minH="1"
         style={{
           visibility: isFlipped ? "visible" : "hidden",
           transition: "width 0.1s ease-in-out",

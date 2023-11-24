@@ -262,10 +262,10 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 w="100px"
                 h="80px"
                 onClick={() => {
-                  editorEventChannel.emit(
-                    "openSearchImages",
-                    `term:${term.id}`,
-                  );
+                  editorEventChannel.emit("openSearchImages", {
+                    termId: term.id,
+                    studySetId: term.studySetId,
+                  });
                 }}
               />
             )}
