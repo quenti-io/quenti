@@ -3,6 +3,7 @@ import React from "react";
 
 import { Modal } from "@quenti/components/modal";
 import {
+  type EditorTerm,
   editorInput,
   getPlainText,
   hasRichText,
@@ -11,12 +12,18 @@ import {
 import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
-import { Button, ButtonGroup, Stack } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Stack } from "@chakra-ui/react";
 
+import { resize } from "../common/cdn-loaders";
+import { editorEventChannel } from "../events/editor";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
+import {
+  AddImageButton,
+  RemoveImageButton,
+} from "../modules/editor/card/image-components";
 import { RichTextBar } from "../modules/editor/card/rich-text-bar";
 import { editorConfig } from "../modules/editor/editor-config";
-import type { ClientTerm } from "../stores/use-set-editor-store";
+import { PhotoView } from "./photo-view/photo-view";
 
 export interface EditTermModalProps {
   term: Term | null;
@@ -34,22 +41,25 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   const utils = api.useUtils();
   const { type } = useSetFolderUnison();
 
+  const [assetUrl, setAssetUrl] = React.useState<string | null>(null);
+
   const wordEditor = useEditor({
     ...editorConfig(),
-    content: term ? editorInput(term as ClientTerm, "word") : "",
+    content: term ? editorInput(term as EditorTerm, "word") : "",
   });
   const definitionEditor = useEditor({
     ...editorConfig(),
-    content: term ? editorInput(term as ClientTerm, "definition") : "",
+    content: term ? editorInput(term as EditorTerm, "definition") : "",
   });
 
   React.useEffect(() => {
     if (!term || !isOpen) return;
 
-    wordEditor?.commands.setContent(editorInput(term as ClientTerm, "word"));
+    wordEditor?.commands.setContent(editorInput(term as EditorTerm, "word"));
     definitionEditor?.commands.setContent(
-      editorInput(term as ClientTerm, "definition"),
+      editorInput(term as EditorTerm, "definition"),
     );
+    setAssetUrl(term.assetUrl);
 
     if (onDefinition) {
       definitionEditor?.commands.focus();
@@ -58,6 +68,20 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term, isOpen]);
+
+  React.useEffect(() => {
+    const handle = (args: { id: string; url: string }) => {
+      if (isOpen && args.id == term?.id) {
+        setAssetUrl(args.url);
+      }
+    };
+
+    editorEventChannel.on("propagateImageUrl", handle);
+    return () => {
+      editorEventChannel.off("propagateImageUrl", handle);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   const edit = api.terms.edit.useMutation({
     async onSuccess() {
@@ -69,6 +93,8 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
       }
     },
   });
+
+  const removeImage = api.terms.removeImage.useMutation();
 
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
@@ -108,6 +134,49 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
               }}
             />
           </Stack>
+          {assetUrl ? (
+            <Box w="100px" h="80px" mt={{ base: 3, md: 0 }} position="relative">
+              <PhotoView
+                src={resize({ src: assetUrl, width: 500 })}
+                id={`edit-term-modal-${term?.id}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  width={100}
+                  height={80}
+                  alt="Term asset"
+                  src={resize({ src: assetUrl, width: 500 })}
+                  style={{
+                    cursor: "zoom-in",
+                    width: 100,
+                    height: 80,
+                    objectFit: "cover",
+                    aspectRatio: "5 / 4",
+                    borderRadius: "6px",
+                  }}
+                />
+              </PhotoView>
+              <RemoveImageButton
+                onClick={() => {
+                  if (!term) return;
+
+                  setAssetUrl(null);
+                }}
+              />
+            </Box>
+          ) : (
+            <AddImageButton
+              w="100px"
+              h="80px"
+              onClick={() => {
+                if (!term) return;
+                editorEventChannel.emit("openSearchImages", {
+                  termId: term.id,
+                  studySetId: term.studySetId,
+                });
+              }}
+            />
+          )}
         </Modal.Body>
         <Modal.Divider />
         <Modal.Footer>
@@ -130,6 +199,13 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
                   definition,
                 );
 
+                if (!assetUrl && term.assetUrl) {
+                  removeImage.mutate({
+                    id: term.id,
+                    studySetId: term.studySetId,
+                  });
+                }
+
                 edit.mutate({
                   ...term,
                   word,
@@ -142,7 +218,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
                     : undefined,
                 });
               }}
-              isLoading={edit.isLoading}
+              isLoading={edit.isLoading || removeImage.isLoading}
             >
               Save
             </Button>

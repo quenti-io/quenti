@@ -16,6 +16,9 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
       id: input.studySetId,
       userId: ctx.session.user.id,
     },
+    select: {
+      created: true,
+    },
   });
 
   if (!studySet) {
@@ -27,10 +30,12 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
   const { plainText: word, richText: wordRichText } = serialize(
     input.term.word,
     input.term.wordRichText,
+    studySet.created,
   );
   const { plainText: definition, richText: definitionRichText } = serialize(
     input.term.definition,
     input.term.definitionRichText,
+    studySet.created,
   );
 
   // Censorup all ranks so that all values are consecutive

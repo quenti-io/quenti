@@ -2,12 +2,18 @@ import React from "react";
 
 import type { StudySet } from "@quenti/prisma/client";
 
+import { HStack, Text } from "@chakra-ui/react";
+
+import { IconPointFilled, IconProgress } from "@tabler/icons-react";
+
 import { visibilityIcon } from "../common/visibility-icon";
+import { plural } from "../utils/string";
 import { GenericCard } from "./generic-card";
 
 export interface StudySetCardProps {
   studySet: Pick<StudySet, "id" | "title" | "visibility">;
   numTerms: number;
+  draft?: boolean;
   user: {
     username: string | null;
     image: string | null;
@@ -20,6 +26,7 @@ export interface StudySetCardProps {
 export const StudySetCard: React.FC<StudySetCardProps> = ({
   studySet,
   numTerms,
+  draft,
   user,
   verified = false,
   removable = false,
@@ -27,10 +34,23 @@ export const StudySetCard: React.FC<StudySetCardProps> = ({
 }) => {
   return (
     <GenericCard
-      title={studySet.title}
+      title={studySet.title || "Untitled"}
       numItems={numTerms}
-      url={`/${studySet.id}`}
+      url={!draft ? `/${studySet.id}` : `/${studySet.id}/create`}
       itemsLabel={"term"}
+      label={
+        draft ? (
+          <>
+            <IconProgress size={16} />
+            <HStack spacing="1" fontSize="sm">
+              <Text>Draft</Text>
+              <IconPointFilled size={8} />
+              <Text>{plural(numTerms, "term")}</Text>
+            </HStack>
+          </>
+        ) : undefined
+      }
+      reverseTitle={draft}
       rightIcon={
         studySet.visibility !== "Public"
           ? visibilityIcon(studySet.visibility, 16)

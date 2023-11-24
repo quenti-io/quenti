@@ -7,6 +7,7 @@ export const ASSETS_BUCKET = env.ASSETS_BUCKET_NAME || "assets";
 
 export * from "./avatars";
 export * from "./assets";
+export * from "./terms";
 export * from "./thumbhash";
 
 const hasEnv =

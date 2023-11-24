@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Box,
   Flex,
   HStack,
   Heading,
@@ -22,6 +23,7 @@ export const TitleProperties = () => {
   const _description = useSetEditorContext((s) => s.description);
   const tags = useSetEditorContext((s) => s.tags);
   const numTerms = useSetEditorContext((s) => s.terms.length);
+  const saveError = useSetEditorContext((s) => s.saveError);
   const apiSetTitle = useSetEditorContext((s) => s.setTitle);
   const apiSetDescription = useSetEditorContext((s) => s.setDescription);
   const setTags = useSetEditorContext((s) => s.setTags);
@@ -39,21 +41,38 @@ export const TitleProperties = () => {
   return (
     <Stack spacing={6}>
       <Stack spacing={0}>
-        <Input
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          onBlur={() => {
-            apiSetTitle(title);
-          }}
-          placeholder="Set Title"
-          variant="unstyled"
-          fontSize={["2xl", "3xl", "5xl"]}
-          fontFamily="heading"
-          fontWeight={700}
-        />
-        <Text color="gray.400">{plural(numTerms, "term")}</Text>
+        <Box position="relative">
+          <Input
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            onBlur={() => {
+              apiSetTitle(title);
+            }}
+            placeholder="Set Title"
+            variant="unstyled"
+            fontSize={["2xl", "3xl", "5xl"]}
+            fontFamily="heading"
+            fontWeight={700}
+          />
+          <Box
+            position="absolute"
+            top="50%"
+            transform="translateY(-50%)"
+            opacity={saveError ? 1 : 0}
+            transition="opacity 0.2s ease-in-out"
+            left="-6"
+            w="10px"
+            h="10px"
+            rounded="full"
+            bg="red.500"
+            _dark={{
+              bg: "red.300",
+            }}
+          />
+        </Box>
+        <Text color="gray.400">{plural(numTerms, "term")}</Text>B
       </Stack>
       <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
         <AutoResizeTextarea

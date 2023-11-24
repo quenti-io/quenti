@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 
+import { useDebounce } from "@quenti/lib/hooks/use-debounce";
 import { api } from "@quenti/trpc";
 
 import {
@@ -17,7 +18,6 @@ import {
 
 import { USERNAME_REGEXP } from "../../../../packages/lib/constants/characters";
 import { mutationEventChannel } from "../events/mutation";
-import { useDebounce } from "../hooks/use-debounce";
 import { AnimatedCheckCircle } from "./animated-icons/check";
 import { AnimatedXCircle } from "./animated-icons/x";
 

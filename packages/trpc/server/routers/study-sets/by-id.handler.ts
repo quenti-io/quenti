@@ -1,70 +1,19 @@
 import type { Language } from "@quenti/core";
 import type { Widen } from "@quenti/lib/widen";
 import { prisma } from "@quenti/prisma";
-import {
-  Prisma,
-  type StarredTerm,
-  type StudiableTerm,
-} from "@quenti/prisma/client";
+import { type StarredTerm, type StudiableTerm } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
 
 import { regenerateCortex } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TByIdSchema } from "./by-id.schema";
+import { distractorsArgs, studySetSelect, termsSelect } from "./queries";
 
 type ByIdOptions = {
   ctx: NonNullableUserContext;
   input: TByIdSchema;
 };
-
-const studySetSelect = Prisma.validator<Prisma.StudySetSelect>()({
-  id: true,
-  userId: true,
-  createdAt: true,
-  savedAt: true,
-  title: true,
-  description: true,
-  cortexStale: true,
-  tags: true,
-  visibility: true,
-  wordLanguage: true,
-  definitionLanguage: true,
-  user: {
-    select: {
-      username: true,
-      name: true,
-      displayName: true,
-      image: true,
-      verified: true,
-    },
-  },
-});
-
-const termsSelect = Prisma.validator<Prisma.TermSelect>()({
-  id: true,
-  rank: true,
-  word: true,
-  definition: true,
-  wordRichText: true,
-  definitionRichText: true,
-  studySetId: true,
-});
-
-const distractorsArgs = Prisma.validator<Prisma.Term$distractorsArgs>()({
-  select: {
-    type: true,
-    distractor: {
-      select: {
-        id: true,
-        word: true,
-        definition: true,
-        wordRichText: true,
-        definitionRichText: true,
-      },
-    },
-  },
-});
 
 const get = async (id: string) => {
   return await prisma.studySet.findUnique({
@@ -73,6 +22,7 @@ const get = async (id: string) => {
     },
     select: {
       ...studySetSelect,
+      created: true,
       terms: {
         select: termsSelect,
       },
@@ -87,6 +37,7 @@ const getWithDistractors = async (id: string) => {
     },
     select: {
       ...studySetSelect,
+      created: true,
       terms: {
         select: {
           ...termsSelect,
@@ -112,6 +63,15 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
   if (!studySet) {
     throw new TRPCError({
       code: "NOT_FOUND",
+    });
+  }
+
+  if (!studySet.created) {
+    throw new TRPCError({
+      code:
+        ctx.session.user.id === studySet.userId
+          ? "PRECONDITION_FAILED"
+          : "NOT_FOUND",
     });
   }
 

@@ -63,10 +63,17 @@ export const addEntitiesHandler = async ({
       select: {
         id: true,
         userId: true,
+        created: true,
         visibility: true,
       },
     });
 
+    if (studySets.find((x) => !x.created)) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Cannot add drafts to a class",
+      });
+    }
     if (
       studySets.find(
         (x) => x.visibility == "Private" && x.userId !== ctx.session.user.id,

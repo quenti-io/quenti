@@ -34,6 +34,7 @@ export interface GenericCardProps {
   title: string;
   numItems: number;
   itemsLabel: string;
+  label?: React.ReactNode;
   url: string;
   user: {
     username: string | null;
@@ -51,6 +52,7 @@ export const GenericCard = ({
   title,
   numItems,
   itemsLabel,
+  label,
   url,
   user,
   reverseTitle = false,
@@ -104,11 +106,17 @@ export const GenericCard = ({
               {title}
             </LinkOverlay>
           </Heading>
-          <HStack spacing="2" color={termsTextColor}>
-            {leftIcon}
-            <Text fontSize="sm">{plural(numItems, itemsLabel)}</Text>
-            {rightIcon}
-          </HStack>
+          {!label ? (
+            <HStack spacing="2" color={termsTextColor}>
+              {leftIcon}
+              <Text fontSize="sm">{plural(numItems, itemsLabel)}</Text>
+              {rightIcon}
+            </HStack>
+          ) : (
+            <HStack spacing="2" color={termsTextColor}>
+              {label}
+            </HStack>
+          )}
         </Stack>
         <Flex justifyContent="space-between">
           <HStack spacing={2}>
@@ -151,6 +159,7 @@ export const GenericCard = ({
                   py={0}
                   overflow="hidden"
                   display={menuOpen ? "block" : "none"}
+                  minW="124px"
                 >
                   <MenuOption
                     icon={<IconTrash size={20} />}

@@ -30,6 +30,8 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
+import { resize } from "../common/cdn-loaders";
+import { PhotoView } from "./photo-view/photo-view";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {
@@ -72,6 +74,8 @@ export const Flashcard: React.FC<FlashcardProps> = ({
   const rightColor = useColorModeValue("green.500", "green.200");
   const buttonBorder = useColorModeValue("gray.300", "gray.500");
 
+  const containerHeight = term.assetUrl ? "50%" : undefined;
+
   return (
     <Card w="full" h={h} rounded="xl" shadow="xl" overflow="hidden">
       <Box
@@ -84,7 +88,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
           width: `calc(100% * ${index + 1} / ${numTerms})`,
         }}
       />
-      <Flex flexDir="column" h="full" p="8">
+      <Flex flexDir="column" h="calc(100% - 8px)" p="8">
         <Grid templateColumns="1fr 1fr 1fr">
           <HStack h="max" alignItems="start">
             {variant == "sortable" && (
@@ -141,16 +145,63 @@ export const Flashcard: React.FC<FlashcardProps> = ({
             </HStack>
           </Flex>
         </Grid>
-        <Center flex={1} my="4" ref={containerRef} overflowY="auto">
-          <PureShrinkableText
-            text={isFlipped ? term.definition : term.word}
-            richText={
-              (isFlipped
-                ? term.definitionRichText
-                : term.wordRichText) as JSONContent
-            }
-            container={containerRef}
-          />
+        <Center flex={1} my="4" overflowY="auto">
+          <Flex
+            w="full"
+            h="full"
+            flexDir={{
+              base: "column-reverse",
+              md: "row",
+            }}
+          >
+            <Center
+              flex="1"
+              height={{
+                base: containerHeight,
+                md: "100%",
+              }}
+              ref={containerRef}
+              p="3"
+            >
+              <PureShrinkableText
+                text={isFlipped ? term.definition : term.word}
+                richText={
+                  (isFlipped
+                    ? term.definitionRichText
+                    : term.wordRichText) as JSONContent
+                }
+                container={containerRef}
+              />
+            </Center>
+            {term.assetUrl && isFlipped && (
+              <Center
+                flex="1"
+                p="3"
+                height={{
+                  base: containerHeight,
+                  md: "100%",
+                }}
+              >
+                <PhotoView
+                  src={resize({ src: term.assetUrl, width: 500 })}
+                  borderRadius={8}
+                  id={`flashcard-${term.id}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resize({ src: term.assetUrl, width: 500 })}
+                    alt="Term asset"
+                    style={{
+                      cursor: "zoom-in",
+                      borderRadius: "8px",
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                    }}
+                  />
+                </PhotoView>
+              </Center>
+            )}
+          </Flex>
         </Center>
         <HStack spacing={4}>
           <Button
@@ -190,7 +241,6 @@ export const Flashcard: React.FC<FlashcardProps> = ({
       <Box
         bg="orange.300"
         height="1"
-        minH="1"
         style={{
           visibility: isFlipped ? "visible" : "hidden",
           transition: "width 0.1s ease-in-out",

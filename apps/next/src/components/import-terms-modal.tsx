@@ -138,6 +138,7 @@ export const ImportTermsModal: React.FC<ImportTermsModalProps> = ({
                     definition,
                     wordRichText: null,
                     definitionRichText: null,
+                    assetUrl: null,
                     id: "",
                     studySetId: "",
                     rank: i,

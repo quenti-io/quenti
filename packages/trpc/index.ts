@@ -71,10 +71,15 @@ export const api = createTRPCNext<AppRouter>({
               const code = err?.data?.code;
 
               if (
-                code === "BAD_REQUEST" ||
-                code === "FORBIDDEN" ||
-                code === "UNAUTHORIZED" ||
-                code === "NOT_FOUND"
+                (
+                  [
+                    "BAD_REQUEST",
+                    "FORBIDDEN",
+                    "UNAUTHORIZED",
+                    "NOT_FOUND",
+                    "PRECONDITION_FAILED",
+                  ] as (typeof code)[]
+                ).includes(code)
               ) {
                 return false;
               }

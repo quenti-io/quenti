@@ -32,6 +32,7 @@ export const SetGrid = () => {
             {item.type == "set" ? (
               <StudySetCard
                 studySet={{ ...item, visibility: item.visibility! }}
+                draft={item.draft}
                 numTerms={item.numItems}
                 user={item.user}
               />

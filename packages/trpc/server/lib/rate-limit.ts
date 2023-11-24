@@ -23,6 +23,7 @@ export enum RateLimitType {
   FanOut = "fanOut",
   Verify = "verify",
   Strict = "strict",
+  Rare = "rare",
   Slowmode = "slowmode",
 }
 
@@ -56,6 +57,12 @@ export const rateLimiter = () => {
       analytics: true,
       prefix: "ratelimit:verify",
       limiter: Ratelimit.fixedWindow(10, "1h"),
+    }),
+    rare: new Ratelimit({
+      redis,
+      analytics: true,
+      prefix: "ratelimit:rare",
+      limiter: Ratelimit.fixedWindow(2, "1h"),
     }),
     strict: new Ratelimit({
       redis,

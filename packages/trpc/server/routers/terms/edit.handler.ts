@@ -15,6 +15,9 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       id: input.studySetId,
       userId: ctx.session.user.id,
     },
+    select: {
+      created: true,
+    },
   });
 
   if (!studySet) {
@@ -26,10 +29,12 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
   const { plainText: word, richText: wordRichText } = serialize(
     input.word,
     input.wordRichText,
+    studySet.created,
   );
   const { plainText: definition, richText: definitionRichText } = serialize(
     input.definition,
     input.definitionRichText,
+    studySet.created,
   );
 
   const term = await ctx.prisma.term.update({

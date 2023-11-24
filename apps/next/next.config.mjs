@@ -25,7 +25,7 @@ const appVersion = pjson.version;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const domains = ["lh3.googleusercontent.com"];
+const domains = ["lh3.googleusercontent.com", "images.unsplash.com"];
 if (process.env.USERS_BUCKET_URL)
   domains.push(new URL(process.env.USERS_BUCKET_URL).host);
 if (process.env.ASSETS_BUCKET_URL)
@@ -125,6 +125,10 @@ let config = {
     {
       source: "/:id(c[a-z0-9]{24})/edit",
       destination: "/sets/:id/edit",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})/create",
+      destination: "/sets/:id/create",
     },
     {
       source: "/:id(c[a-z0-9]{24})/flashcards",
