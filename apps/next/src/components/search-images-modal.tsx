@@ -1,3 +1,4 @@
+import Compressor from "compressorjs";
 import React from "react";
 
 import { Link } from "@quenti/components";
@@ -61,21 +62,29 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
   const debouncedQuery = useDebounce(query, 500);
 
   const [file, setFile] = React.useState<File | null>(null);
+  const [fileName, setFileName] = React.useState<string | null>(null);
   const fileRef = React.useRef(file);
   fileRef.current = file;
 
   const [progress, setProgress] = React.useState<number | null>(null);
 
   const start = (file: File) => {
-    setFile(file);
-    editorEventChannel.emit("requestUploadUrl", currentContextRef.current!);
+    setFileName(file.name);
+
+    new Compressor(file, {
+      quality: 0.6,
+      convertSize: 500_000,
+      success: (result) => {
+        setFile(result as File);
+        editorEventChannel.emit("requestUploadUrl", currentContextRef.current!);
+      },
+    });
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/png": [".png", ".jpg", ".jpeg", ".gif"],
     },
-    maxSize: 5 * 1000000,
     maxFiles: 1,
     onDropAccepted: (files) => {
       start(files[0]!);
@@ -91,6 +100,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
         editorEventChannel.emit("uploadComplete", currentContextRef.current!);
 
         setFile(null);
+        setFileName(null);
         setProgress(null);
         onClose();
       })();
@@ -318,12 +328,12 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
               opacity={0.5}
             />
             <input {...getInputProps()} />
-            {file ? (
+            {fileName ? (
               <Center h="46px" zIndex={10}>
                 <HStack spacing="3">
                   <Spinner size="xs" color="blue.300" />
                   <Text fontSize="sm" fontWeight={600}>
-                    {file.name}
+                    {fileName}
                   </Text>
                 </HStack>
               </Center>
