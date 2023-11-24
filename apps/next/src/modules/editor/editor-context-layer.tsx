@@ -4,7 +4,7 @@ import React from "react";
 import { richTextToHtml } from "@quenti/lib/editor";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
-import { editorEventChannel } from "../../events/editor";
+import { type Context, editorEventChannel } from "../../events/editor";
 import {
   type ClientTerm,
   type SetEditorStore,
@@ -114,54 +114,35 @@ export const EditorContextLayer: React.FC<
   }, [isSaving]);
 
   React.useEffect(() => {
-    const getTermId = (contextId?: string) => {
-      if (!contextId || !contextId.startsWith("term:")) return null;
-      const id = contextId.replace("term:", "");
-
+    // Needed because IDs may be innacurate at the time the modal is opened
+    const transform = (c: Context) => {
       const term = storeRef
         .current!.getState()
-        .terms.find((x) => x.id === id || x.clientKey === id)!;
+        .terms.find((x) => x.id === c.termId || x.clientKey === c.termId)!;
 
-      return term.id;
+      return { termId: term.id, studySetId: c.studySetId };
     };
 
-    const requestUploadUrl = (contextId?: string) => {
-      const termId = getTermId(contextId);
-      if (!termId) return;
+    const requestUploadUrl = (context: Context) =>
+      apiUploadImage.mutate(transform(context));
 
-      const setId = storeRef.current!.getState().id;
-      apiUploadImage.mutate({
-        studySetId: setId,
-        termId,
-      });
-    };
-
-    const complete = (contextId?: string) => {
-      const termId = getTermId(contextId);
-      if (!termId) return;
-
-      const setId = storeRef.current!.getState().id;
-      apiUploadImageComplete.mutate({
-        studySetId: setId,
-        termId,
-      });
-    };
+    const complete = (context: Context) =>
+      apiUploadImageComplete.mutate(transform(context));
 
     const setImage = (args: {
-      contextId?: string;
+      context: Context;
       optimisticUrl: string;
       query?: string;
       index?: number;
     }) => {
-      const id = getTermId(args.contextId);
-      if (!id) return;
+      const context = transform(args.context);
 
-      storeRef.current!.getState().setImage(id, args.optimisticUrl);
+      storeRef.current!.getState().setImage(context.termId, args.optimisticUrl);
 
       if (args.query !== undefined && args.index !== undefined) {
         apiSetImage.mutate({
-          studySetId: data.id,
-          id,
+          studySetId: context.studySetId,
+          id: context.termId,
           query: args.query,
           index: args.index,
         });
