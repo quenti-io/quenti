@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { BgGradient } from "@quenti/components/bg-gradient";
 import { env } from "@quenti/env/client";
 import { useDebounce } from "@quenti/lib/hooks/use-debounce";
 import { type RouterOutputs, api } from "@quenti/trpc";
@@ -11,6 +12,8 @@ import {
   GridItem,
   HStack,
   Input,
+  LinkBox,
+  LinkOverlay,
   Modal,
   ModalBody,
   ModalContent,
@@ -197,7 +200,6 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             "rgba(247, 250, 252, 75%)",
             "rgba(23, 25, 35, 40%)",
           )}
-          onClick={(e) => e.preventDefault()}
         />
         <ModalContent bg="transparent" shadow="none">
           <ModalBody
@@ -215,7 +217,6 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
             _active={{
               transform: "scale(0.97)",
             }}
-            onClick={(e) => e.preventDefault()}
           >
             <Box py="4" px="5">
               <Input
@@ -389,7 +390,10 @@ const Thumbnail: React.FC<{ index: number }> = ({ index }) => {
           role="group"
           cursor="pointer"
           bg={image.color || "transparent"}
-          onClick={() => onClick(index)}
+          onClick={(e) => {
+            if (e.target instanceof HTMLAnchorElement) return;
+            onClick(index);
+          }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -402,6 +406,40 @@ const Thumbnail: React.FC<{ index: number }> = ({ index }) => {
               objectFit: "cover",
             }}
           />
+          <LinkBox
+            as={BgGradient}
+            position="absolute"
+            bottom="0"
+            left="0"
+            w="full"
+            px="7px"
+            py="1"
+            pt="10"
+            hsl="230, 21%, 11%"
+            transition="opacity 0.2s ease-in-out"
+            opacity={0}
+            _groupHover={{
+              opacity: 1,
+            }}
+          >
+            <LinkOverlay
+              as={Link}
+              href={`${image.user.links.html}?utm_source=quenti&utm_medium=referral`}
+              overflow="hidden"
+              target="_blank"
+            >
+              <Text
+                fontSize="10px"
+                color="gray.50"
+                fontWeight={500}
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                {image.user.first_name} {image.user.last_name}
+              </Text>
+            </LinkOverlay>
+          </LinkBox>
           <Box
             position="absolute"
             top="0"
