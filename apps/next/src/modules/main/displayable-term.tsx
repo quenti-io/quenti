@@ -25,6 +25,7 @@ import {
 
 import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
+import { resize } from "../../common/cdn-loaders";
 import { PhotoView } from "../../components/photo-view/photo-view";
 import { SetCreatorOnly } from "../../components/set-creator-only";
 import { editorEventChannel } from "../../events/editor";
@@ -233,7 +234,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                     width={100}
                     height={80}
                     alt="Term asset"
-                    src={assetUrl}
+                    src={resize({ src: assetUrl, width: 400 })}
                     style={{
                       cursor: "zoom-in",
                       width: 100,

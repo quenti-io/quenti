@@ -30,6 +30,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
+import { resize } from "../common/cdn-loaders";
 import { PhotoView } from "./photo-view/photo-view";
 import { SetCreatorOnly } from "./set-creator-only";
 
@@ -188,7 +189,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={term.assetUrl}
+                    src={resize({ src: term.assetUrl, width: 400 })}
                     alt="Term asset"
                     style={{
                       cursor: "zoom-in",

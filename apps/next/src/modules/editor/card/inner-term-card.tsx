@@ -27,6 +27,7 @@ import {
 
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 
+import { resize } from "../../../common/cdn-loaders";
 import { PhotoView } from "../../../components/photo-view/photo-view";
 import { editorEventChannel } from "../../../events/editor";
 import { useSetEditorContext } from "../../../stores/use-set-editor-store";
@@ -399,7 +400,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                 <img
                   width="80x"
                   height="60px"
-                  src={term.assetUrl}
+                  src={resize({ src: term.assetUrl, width: 400 })}
                   alt={`Image for ${term.definition}`}
                   style={{
                     cursor: "zoom-in",

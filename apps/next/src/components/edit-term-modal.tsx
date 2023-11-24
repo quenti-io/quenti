@@ -14,6 +14,7 @@ import { api } from "@quenti/trpc";
 
 import { Box, Button, ButtonGroup, Stack } from "@chakra-ui/react";
 
+import { resize } from "../common/cdn-loaders";
 import { editorEventChannel } from "../events/editor";
 import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import {
@@ -141,7 +142,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
                   width={100}
                   height={80}
                   alt="Term asset"
-                  src={assetUrl}
+                  src={resize({ src: assetUrl, width: 400 })}
                   style={{
                     cursor: "zoom-in",
                     width: 100,
