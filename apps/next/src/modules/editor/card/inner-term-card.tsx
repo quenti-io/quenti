@@ -392,7 +392,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
           {term.assetUrl ? (
             <>
               <PhotoView
-                src={term.assetUrl}
+                src={resize({ src: term.assetUrl, width: 500 })}
                 id={`term-asset-${term.id}`}
                 borderRadius={12}
               >
@@ -400,7 +400,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                 <img
                   width="80x"
                   height="60px"
-                  src={resize({ src: term.assetUrl, width: 400 })}
+                  src={resize({ src: term.assetUrl, width: 500 })}
                   alt={`Image for ${term.definition}`}
                   style={{
                     cursor: "zoom-in",

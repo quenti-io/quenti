@@ -183,13 +183,13 @@ export const Flashcard: React.FC<FlashcardProps> = ({
                 }}
               >
                 <PhotoView
-                  src={term.assetUrl}
+                  src={resize({ src: term.assetUrl, width: 500 })}
                   borderRadius={8}
                   id={`flashcard-${term.id}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={resize({ src: term.assetUrl, width: 400 })}
+                    src={resize({ src: term.assetUrl, width: 500 })}
                     alt="Term asset"
                     style={{
                       cursor: "zoom-in",
