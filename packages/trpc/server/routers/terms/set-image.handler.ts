@@ -1,3 +1,5 @@
+import { triggerDownload } from "@quenti/images/server/unsplash";
+
 import { TRPCError } from "@trpc/server";
 
 import { getCachedPhoto } from "../../lib/images/photo";
@@ -25,8 +27,8 @@ export const setImageHandler = async ({ ctx, input }: SetImageOptions) => {
       code: "NOT_FOUND",
     });
   }
-
   const photo = await getCachedPhoto(ctx, input.query, input.index);
+  await triggerDownload(photo.links.download_location);
 
   return await ctx.prisma.term.update({
     where: {

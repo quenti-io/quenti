@@ -51,3 +51,9 @@ export const searchPhotos = async (
 
   return result;
 };
+
+export const triggerDownload = async (url: string) => {
+  await unsplash?.photos.trackDownload({
+    downloadLocation: url,
+  });
+};
