@@ -1,3 +1,5 @@
+import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
+
 import { Center, useColorModeValue } from "@chakra-ui/react";
 
 import { PhotoContainer } from "./photo-container";
@@ -35,6 +37,7 @@ export const InternalView: React.FC<InternalViewProps> = ({
           setVisible(false);
         }}
       >
+        {visible && <EscLayer onClose={() => setVisible(false)} />}
         <PhotoContainer
           visible={visible}
           src={currentSrc}
@@ -44,4 +47,10 @@ export const InternalView: React.FC<InternalViewProps> = ({
       </Center>
     </PhotoPortal>
   );
+};
+
+const EscLayer: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  useShortcut(["Escape"], onClose, { ctrlKey: false, allowInput: false });
+
+  return null;
 };
