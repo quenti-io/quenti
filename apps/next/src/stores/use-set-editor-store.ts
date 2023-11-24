@@ -47,7 +47,10 @@ interface SetEditorState extends SetEditorProps {
   setDefinitionLanguage: (definitionLanguage: Language) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: (rank: number) => void;
-  bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
+  bulkAddTerms: (
+    terms: { word: string; definition: string }[],
+    deleted?: string[],
+  ) => void;
   deleteTerm: (id: string) => void;
   setServerTermId: (oldId: string, serverId: string) => void;
   editTerm: (
@@ -62,7 +65,7 @@ interface SetEditorState extends SetEditorProps {
   reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
-  removeServerTerm: (term: string) => void;
+  removeServerTerms: (term: string[]) => void;
   setTermVisible: (rank: number, visible: boolean) => void;
   setLastCreated: (id: string) => void;
   setCurrentActiveRank: (id: number) => void;
@@ -136,9 +139,15 @@ export const createSetEditorStore = (
         behaviors?.addTerm?.(rank);
       },
       bulkAddTerms: (terms: { word: string; definition: string }[]) => {
+        const deleted = new Array<string>();
+
         set((state) => {
           const filtered = state.terms
-            .filter((x) => !!x.word.length || !!x.definition.length)
+            .filter((x) => {
+              const keep = !!x.word.length || !!x.definition.length;
+              if (!keep && state.serverTerms.includes(x.id)) deleted.push(x.id);
+              return keep;
+            })
             .map((x, i) => ({ ...x, rank: i }));
 
           const newTerms = terms.map((term, i) => {
@@ -160,7 +169,8 @@ export const createSetEditorStore = (
             terms: [...filtered, ...newTerms],
           };
         });
-        behaviors?.bulkAddTerms?.(terms);
+
+        behaviors?.bulkAddTerms?.(terms, deleted);
       },
       deleteTerm: (id: string) => {
         set((state) => {
@@ -270,13 +280,13 @@ export const createSetEditorStore = (
         });
         behaviors?.addServerTerms?.(terms);
       },
-      removeServerTerm: (term: string) => {
+      removeServerTerms: (terms: string[]) => {
         set((state) => {
           return {
-            serverTerms: state.serverTerms.filter((t) => t !== term),
+            serverTerms: state.serverTerms.filter((t) => !terms.includes(t)),
           };
         });
-        behaviors?.removeServerTerm?.(term);
+        behaviors?.removeServerTerms?.(terms);
       },
       setTermVisible: (rank: number, visible: boolean) => {
         set((state) => {

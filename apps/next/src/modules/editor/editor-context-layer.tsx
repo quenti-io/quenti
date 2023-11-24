@@ -68,10 +68,16 @@ export const EditorContextLayer: React.FC<
       state.addServerTerms(data.map((x) => x.id));
     },
   });
+  const apiBulkDeleteTerms = api.terms.bulkDelete.useMutation({
+    onSuccess: (_, { terms }) => {
+      const state = storeRef.current!.getState();
+      state.removeServerTerms(terms);
+    },
+  });
   const apiDeleteTerm = api.terms.delete.useMutation({
     onSuccess: (data) => {
       const state = storeRef.current!.getState();
-      state.removeServerTerm(data.deleted);
+      state.removeServerTerms([data.deleted]);
     },
   });
   const apiEditTerm = api.terms.edit.useMutation();
@@ -97,6 +103,7 @@ export const EditorContextLayer: React.FC<
     apiEditSet.isLoading ||
     apiAddTerm.isLoading ||
     apiBulkAddTerms.isLoading ||
+    apiBulkDeleteTerms.isLoading ||
     apiDeleteTerm.isLoading ||
     apiEditTerm.isLoading ||
     apiBulkEdit.isLoading ||
@@ -172,9 +179,16 @@ export const EditorContextLayer: React.FC<
         serverTerms: data.terms.map((x) => x.id),
       },
       {
-        bulkAddTerms: (terms) => {
+        bulkAddTerms: (terms, deleted) => {
           void (async () => {
-            await apiBulkAddTerms.mutateAsync({
+            if (!!deleted?.length) {
+              await apiBulkDeleteTerms.mutateAsync({
+                studySetId: data.id,
+                terms: deleted,
+              });
+            }
+
+            apiBulkAddTerms.mutate({
               studySetId: data.id,
               terms,
             });
