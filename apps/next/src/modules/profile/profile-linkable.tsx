@@ -53,6 +53,15 @@ export const ProfileLinkable = ({
           borderBottomColor: "blue.300",
         },
       }}
+      sx={{
+        "&:has(:focus-visible)": {
+          borderColor: "blue.300",
+          transform: "translateY(-2px)",
+          _dark: {
+            borderColor: "blue.300",
+          },
+        },
+      }}
       shadow="md"
       transition="all ease-in-out 150ms"
     >

@@ -64,6 +64,10 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const [assetUrl, setAssetUrl] = React.useState(term.assetUrl);
 
   React.useEffect(() => {
+    setAssetUrl(term.assetUrl);
+  }, [term.assetUrl]);
+
+  React.useEffect(() => {
     const handle = (args: { id: string; url: string }) => {
       if (args.id == term.id) setAssetUrl(args.url);
     };

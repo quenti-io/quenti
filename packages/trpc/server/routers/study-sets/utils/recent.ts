@@ -138,6 +138,7 @@ export const getRecentDrafts = async (prisma: PrismaClient, userId: string) => {
       orderBy: {
         savedAt: "desc",
       },
+      take: 16,
     })
   ).map((set) => ({
     ...set,

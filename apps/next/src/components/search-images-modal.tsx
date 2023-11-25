@@ -10,6 +10,7 @@ import { type RouterOutputs, api } from "@quenti/trpc";
 import {
   Box,
   Center,
+  Fade,
   GridItem,
   HStack,
   Input,
@@ -19,16 +20,18 @@ import {
   ModalOverlay,
   SimpleGrid,
   Skeleton,
-  Spinner,
+  Stack,
   Text,
   VStack,
+  keyframes,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconCloudUpload } from "@tabler/icons-react";
+import { IconAlertCircle, IconCloudUpload } from "@tabler/icons-react";
 
 import { type Context, editorEventChannel } from "../events/editor";
 import { useDropzone } from "../hooks/use-dropzone";
+import { AnimatedCloudUpload } from "./animated-icons/upload";
 
 interface SearchImagesModalProps {
   isOpen: boolean;
@@ -59,6 +62,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
   const [query, setQuery] = React.useState("");
   const debouncedQuery = useDebounce(query, 500);
 
+  const [uploadError, setUploadError] = React.useState<string | null>(null);
   const [file, setFile] = React.useState<File | null>(null);
   const [fileName, setFileName] = React.useState<string | null>(null);
   const fileRef = React.useRef(file);
@@ -66,7 +70,14 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
 
   const [progress, setProgress] = React.useState<number | null>(null);
 
+  const reset = () => {
+    setFile(null);
+    setFileName(null);
+    setProgress(null);
+  };
+
   const start = (file: File) => {
+    setUploadError(null);
     setFileName(file.name);
 
     new Compressor(file, {
@@ -74,6 +85,12 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       convertSize: 500_000,
       success: (result) => {
         setFile(result as File);
+        if (result.size > 5_000_000) {
+          setUploadError("That file is too large to upload (> 5 MB)");
+          reset();
+          return;
+        }
+
         editorEventChannel.emit("requestUploadUrl", currentContextRef.current!);
       },
     });
@@ -94,12 +111,18 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       void (async () => {
         if (!jwt) return;
 
-        await doUpload(jwt, fileRef.current!);
+        const result = (await doUpload(jwt, fileRef.current!)) as boolean;
+        if (!result) {
+          setUploadError(
+            "Something went wrong while uploading. Please try again.",
+          );
+          reset();
+          return;
+        }
+
         editorEventChannel.emit("uploadComplete", currentContextRef.current!);
 
-        setFile(null);
-        setFileName(null);
-        setProgress(null);
+        reset();
         onClose();
       })();
     };
@@ -155,6 +178,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
     return () => {
       window.removeEventListener("paste", handlePaste);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const doUpload = async (jwt: string, blob: unknown) => {
@@ -285,81 +309,175 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
               Unsplash
             </Link>
           </Text>
-          <Center
-            mt="6"
-            px="6"
-            mx="6"
-            py="10"
-            position="relative"
-            rounded="xl"
-            overflow="hidden"
-            borderWidth="2px"
-            transition="border-color 0.2s ease-in-out"
-            bg="rgba(247, 250, 252, 40%)"
-            borderColor="gray.100"
-            _hover={{
-              borderColor: "gray.200",
-            }}
-            _dark={{
-              bg: "rgba(23, 25, 35, 30%)",
-              borderColor: "gray.750",
-              _hover: {
-                borderColor: "gray.700",
-              },
-            }}
-            {...getRootProps()}
-            cursor="pointer"
-            role="group"
-            ref={rootRef}
-          >
-            <Box
-              position="absolute"
-              top="0"
-              left="0"
-              bg="gray.100"
-              _dark={{
-                bg: "gray.750",
+          <VStack mt="6" mx="6" position="relative">
+            <Center
+              w="full"
+              px="6"
+              py="10"
+              position="relative"
+              rounded="xl"
+              overflow="hidden"
+              borderWidth="2px"
+              transition="border-color 0.2s ease-in-out"
+              bg="rgba(247, 250, 252, 40%)"
+              borderColor="gray.100"
+              _hover={{
+                borderColor: "gray.200",
               }}
-              h="full"
-              w={progress ? `${progress * 100}%` : 0}
-              className="transition-[width] duration-300"
-              opacity={0.5}
-            />
-            <input {...getInputProps()} />
-            {fileName ? (
-              <Center h="46px" zIndex={10}>
-                <HStack spacing="3">
-                  <Spinner size="xs" color="blue.300" />
-                  <Text fontSize="sm" fontWeight={600}>
-                    {fileName}
+              _dark={{
+                bg: "rgba(23, 25, 35, 30%)",
+                borderColor: "gray.750",
+                _hover: {
+                  borderColor: "gray.700",
+                },
+              }}
+              {...getRootProps()}
+              cursor="pointer"
+              role="group"
+              ref={rootRef}
+            >
+              <Box
+                position="absolute"
+                top="0"
+                left="0"
+                bg="gray.100"
+                _dark={{
+                  bg: "gray.750",
+                }}
+                h="full"
+                w={progress ? `${progress * 100}%` : 0}
+                className="transition-[width] duration-700"
+                opacity={0.5}
+              />
+              <input {...getInputProps()} />
+              {fileName ? (
+                <Center h="46px" zIndex={10}>
+                  <HStack spacing="3">
+                    <Box
+                      color="blue.600"
+                      _dark={{
+                        color: "blue.100",
+                      }}
+                      position="relative"
+                    >
+                      <Fade
+                        in
+                        transition={{
+                          enter: {
+                            duration: 1.5,
+                          },
+                        }}
+                      >
+                        <UploadDots />
+                      </Fade>
+                      <AnimatedCloudUpload size={32} />
+                    </Box>
+                    <Text fontSize="sm" fontWeight={600}>
+                      {fileName}
+                    </Text>
+                  </HStack>
+                </Center>
+              ) : (
+                <VStack spacing="1" zIndex={10}>
+                  <HStack
+                    color="gray.500"
+                    spacing="3"
+                    transition="color 0.2s ease-in-out"
+                    _groupHover={{
+                      color: "gray.800",
+                      _dark: {
+                        color: "gray.200",
+                      },
+                    }}
+                  >
+                    <IconCloudUpload />
+                    <Text fontWeight={600}>Upload an image</Text>
+                  </HStack>
+                  <Text fontSize="xs" color="gray.500">
+                    Drop or paste files here
                   </Text>
-                </HStack>
-              </Center>
-            ) : (
-              <VStack spacing="1" zIndex={10}>
-                <HStack
-                  color="gray.500"
-                  spacing="3"
-                  transition="color 0.2s ease-in-out"
-                  _groupHover={{
-                    color: "gray.800",
-                    _dark: {
-                      color: "gray.200",
-                    },
-                  }}
-                >
-                  <IconCloudUpload />
-                  <Text fontWeight={600}>Upload an image</Text>
-                </HStack>
-                <Text fontSize="xs" color="gray.500">
-                  Drop or paste files here
-                </Text>
+                </VStack>
+              )}
+            </Center>
+            {uploadError && (
+              <VStack
+                position="absolute"
+                top="100%"
+                mt="3"
+                left="50%"
+                transform="translateX(-50%)"
+                w="full"
+              >
+                <Fade in>
+                  <HStack
+                    color="red.500"
+                    spacing="2"
+                    _dark={{
+                      color: "red.300",
+                    }}
+                  >
+                    <Box minW={4}>
+                      <IconAlertCircle size={16} />
+                    </Box>
+                    <Text fontSize="sm" fontWeight={500}>
+                      {uploadError}
+                    </Text>
+                  </HStack>
+                </Fade>
               </VStack>
             )}
-          </Center>
+          </VStack>
         </ModalContent>
       </Modal>
     </ResultsContext.Provider>
+  );
+};
+
+const dot = keyframes({
+  "0%": {
+    transform: "translateY(42px)",
+  },
+  "100%": {
+    transform: "translateY(-42px)",
+  },
+});
+
+const UploadDots = () => {
+  return (
+    <HStack
+      position="absolute"
+      top="50%"
+      left="50%"
+      transform="translate(-50%, -50%)"
+      opacity={0.2}
+      spacing="0"
+    >
+      <UploadColumn opacity={0.3} transform="translateY(6px)" />
+      <UploadColumn opacity={0.7} speed={0.75} />
+      <UploadColumn opacity={0.3} transform="translateY(6px)" />
+    </HStack>
+  );
+};
+
+const UploadColumn: React.FC<{
+  speed?: number;
+  opacity: number;
+  transform?: string;
+}> = ({ opacity, speed = 1, transform }) => {
+  return (
+    <Stack spacing="0" opacity={opacity} transform={transform}>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <Box key={i} p="2">
+          <Box
+            w="5px"
+            h="5px"
+            rounded="full"
+            bg="currentcolor"
+            animation={`${dot} ${speed}s infinite linear`}
+          />
+        </Box>
+      ))}
+    </Stack>
   );
 };
 
