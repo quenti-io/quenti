@@ -86,9 +86,11 @@ export const GenericCard = ({
         transform: "translateY(-2px)",
         borderBottomColor: "blue.300",
       }}
-      _focusWithin={{
-        transform: "translateY(-2px)",
-        borderColor: "blue.300",
+      sx={{
+        "&:has(:focus-visible)": {
+          transform: "translateY(-2px)",
+          borderColor: "blue.300",
+        },
       }}
     >
       <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
