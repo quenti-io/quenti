@@ -17,6 +17,7 @@ import {
 
 import { IconCircleCheckFilled, IconCircleX } from "@tabler/icons-react";
 
+import { SquareAssetPreview } from "../../../components/terms/square-asset-preview";
 import { useTestContext } from "../../../stores/use-test-store";
 import { richWord, word } from "../../../utils/terms";
 import { useCardSelector } from "../use-card-selector";
@@ -38,7 +39,7 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
     const Icon = evaluation ? IconCircleCheckFilled : IconCircleX;
 
     return (
-      <HStack>
+      <HStack w="full">
         {evaluation !== undefined && (
           <Box>
             <Icon size={18} />
@@ -69,6 +70,16 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
     <>
       <RichPromptDisplay
         label={question.answerMode == "Definition" ? "Term" : "Definition"}
+        extra={
+          question.answerMode == "Word" &&
+          data.term.assetUrl && (
+            <SquareAssetPreview
+              rounded={8}
+              size={100}
+              src={data.term.assetUrl || ""}
+            />
+          )
+        }
         {...richWord(question.answerMode, data.term, "prompt")}
       />
       <Stack spacing="2">
@@ -93,28 +104,37 @@ export const MultipleChoiceCard: React.FC<CardProps> = ({ i, result }) => {
                 }}
               >
                 <Wrapper evaluation={evaluateTerm(choice.id)}>
-                  <Text
-                    size="lg"
-                    whiteSpace="pre-wrap"
-                    textAlign="start"
-                    overflowWrap="anywhere"
-                    fontWeight={
-                      evaluateTerm(choice.id) !== undefined ? 500 : "normal"
-                    }
-                    style={
-                      result
-                        ? {
-                            cursor: "text",
-                            pointerEvents: "auto",
-                            userSelect: "text",
-                          }
-                        : {}
-                    }
-                  >
-                    <ScriptFormatter>
-                      {word(question.answerMode, choice, "answer")}
-                    </ScriptFormatter>
-                  </Text>
+                  <HStack justifyContent="space-between" gap="4" w="full">
+                    <Text
+                      size="lg"
+                      whiteSpace="pre-wrap"
+                      textAlign="start"
+                      overflowWrap="anywhere"
+                      fontWeight={
+                        evaluateTerm(choice.id) !== undefined ? 500 : "normal"
+                      }
+                      style={
+                        result
+                          ? {
+                              cursor: "text",
+                              pointerEvents: "auto",
+                              userSelect: "text",
+                            }
+                          : {}
+                      }
+                    >
+                      <ScriptFormatter>
+                        {word(question.answerMode, choice, "answer")}
+                      </ScriptFormatter>
+                    </Text>
+                    {question.answerMode == "Definition" && choice.assetUrl && (
+                      <SquareAssetPreview
+                        rounded={8}
+                        size={60}
+                        src={choice.assetUrl}
+                      />
+                    )}
+                  </HStack>
                 </Wrapper>
               </Clickable>
             </GridItem>

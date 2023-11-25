@@ -24,6 +24,7 @@ export const SquareAssetPreview: React.FC<SquareAssetPreviewProps> = ({
         alt="Image preview"
         style={{
           cursor: "zoom-in",
+          pointerEvents: "all",
           objectFit: "cover",
           width: size,
           height: size,

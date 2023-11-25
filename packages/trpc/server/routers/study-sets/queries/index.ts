@@ -44,6 +44,7 @@ export const distractorsArgs = Prisma.validator<Prisma.Term$distractorsArgs>()({
         definition: true,
         wordRichText: true,
         definitionRichText: true,
+        assetUrl: true,
       },
     },
   },

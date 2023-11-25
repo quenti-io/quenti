@@ -50,6 +50,7 @@ export const generateMcqQuestion = (
         id: d.id,
         word: d.word,
         definition: d.definition,
+        assetUrl: d.assetUrl,
       })),
   ]);
 
