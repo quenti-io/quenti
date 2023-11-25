@@ -188,7 +188,12 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               />
             </Stack>
           ) : (
-            <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+            <Text
+              w="full"
+              whiteSpace="pre-wrap"
+              overflowWrap="anywhere"
+              lineHeight={1.6}
+            >
               <Display text={cache.word} richText={cache.wordRichText} />
             </Text>
           )}
@@ -213,7 +218,12 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               />
             </Stack>
           ) : (
-            <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+            <Text
+              w="full"
+              whiteSpace="pre-wrap"
+              overflowWrap="anywhere"
+              lineHeight={1.6}
+            >
               <Display
                 text={cache.definition}
                 richText={cache.definitionRichText}

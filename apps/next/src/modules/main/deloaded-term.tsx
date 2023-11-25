@@ -41,7 +41,12 @@ export const DeloadedTermRaw: React.FC<DeloadedTermProps> = ({
           px={{ base: 3, md: 0 }}
           py={{ base: 3, md: 0 }}
         >
-          <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+          <Text
+            w="full"
+            whiteSpace="pre-wrap"
+            overflowWrap="anywhere"
+            lineHeight={1.6}
+          >
             {term.word}
           </Text>
           <Box
@@ -53,7 +58,12 @@ export const DeloadedTermRaw: React.FC<DeloadedTermProps> = ({
             rounded="full"
             w="4px"
           />
-          <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+          <Text
+            w="full"
+            whiteSpace="pre-wrap"
+            overflowWrap="anywhere"
+            lineHeight={1.6}
+          >
             {term.definition}
           </Text>
           <Box minW="100px">
