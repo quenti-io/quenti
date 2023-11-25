@@ -26,7 +26,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconBrandGoogleFilled, IconWand } from "@tabler/icons-react";
+import {
+  IconBrandGoogleFilled,
+  IconPinned,
+  IconWand,
+} from "@tabler/icons-react";
 
 import { Logo } from "../../../../packages/components/logo";
 import { LazyWrapper } from "../common/lazy-wrapper";
@@ -79,7 +83,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
 
   const calculateMargin = () => {
     const vh = window.innerHeight;
-    const margin = vh / 2 - 150;
+    const margin = vh / 2 - 200;
     return margin;
   };
 
@@ -285,8 +289,28 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                         </Box>
                       </Stack>
                     </form>
+                    <Flex gap="6px" ml="-2px">
+                      <Box mt="2px">
+                        <IconPinned size={18} />
+                      </Box>
+                      <Stack spacing="1">
+                        <Text fontWeight={700} fontSize="sm">
+                          If Google has blocked your school&apos;s access
+                        </Text>
+                        <Text fontSize="sm" color="gray.500">
+                          No worries, sign {verb} with email instead, and
+                          we&apos;ll send you a link to instantly log in.
+                        </Text>
+                      </Stack>
+                    </Flex>
                     {mode == "signup" && (
-                      <Text textAlign="center" fontSize="sm" color={termsColor}>
+                      <Text
+                        textAlign="center"
+                        fontSize="xs"
+                        color={termsColor}
+                        maxW="260px"
+                        mt="-4"
+                      >
                         By signing up, you agree to the{" "}
                         <Link
                           href={`${WEBSITE_URL}/terms`}
