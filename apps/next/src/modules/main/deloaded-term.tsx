@@ -50,9 +50,9 @@ export const DeloadedTermRaw: React.FC<DeloadedTermProps> = ({
             {term.word}
           </Text>
           <Box
-            bg="gray.200"
+            bg="gray.100"
             _dark={{
-              bg: "gray.600",
+              bg: "gray.700",
             }}
             h="full"
             rounded="full"
