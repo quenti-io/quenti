@@ -24,6 +24,7 @@ export const EventListener: React.FC<{
       const base: Omit<MatchItem, "type" | "word" | "zIndex"> = {
         id: term.id,
         completed: false,
+        assetUrl: term.assetUrl,
         width: 200,
         height: 60,
         x: 0,

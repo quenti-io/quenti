@@ -83,6 +83,10 @@ export const MatchContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  React.useEffect(() => {
+    console.log("TERMS", terms);
+  }, [terms]);
+
   return (
     <>
       <HeadSeo title={`Match: ${title}`} />

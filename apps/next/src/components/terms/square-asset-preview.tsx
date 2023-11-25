@@ -5,12 +5,14 @@ export interface SquareAssetPreviewProps {
   src: string;
   rounded: number;
   size: number;
+  disablePointerEvents?: boolean;
 }
 
 export const SquareAssetPreview: React.FC<SquareAssetPreviewProps> = ({
   src,
   rounded,
   size,
+  disablePointerEvents,
 }) => {
   const url = resize({ src, width: 500 });
 
@@ -24,7 +26,7 @@ export const SquareAssetPreview: React.FC<SquareAssetPreviewProps> = ({
         alt="Image preview"
         style={{
           cursor: "zoom-in",
-          pointerEvents: "all",
+          pointerEvents: disablePointerEvents ? "none" : "all",
           objectFit: "cover",
           width: size,
           height: size,

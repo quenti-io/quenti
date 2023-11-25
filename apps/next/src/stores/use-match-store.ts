@@ -40,6 +40,7 @@ export interface MatchItem {
   height: number;
   type: "word" | "definition";
   word: string;
+  assetUrl: string | null;
   y: number;
   x: number;
   targetX: number;
