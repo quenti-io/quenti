@@ -70,7 +70,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
     setFileName(file.name);
 
     new Compressor(file, {
-      quality: 0.6,
+      quality: 0.8,
       convertSize: 500_000,
       success: (result) => {
         setFile(result as File);
