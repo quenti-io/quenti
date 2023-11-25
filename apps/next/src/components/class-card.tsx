@@ -59,9 +59,11 @@ export const ClassCard: React.FC<ClassCardProps> = ({
         transform: "translateY(-2px)",
         borderBottomColor: "blue.300",
       }}
-      _focusWithin={{
-        transform: "translateY(-2px)",
-        borderColor: "blue.300",
+      sx={{
+        "&:has(:focus-visible)": {
+          transform: "translateY(-2px)",
+          borderColor: "blue.300",
+        },
       }}
       overflow="hidden"
     >
