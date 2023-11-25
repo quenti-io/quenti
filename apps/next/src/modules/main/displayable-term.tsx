@@ -228,10 +228,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 mt={{ base: 3, md: 0 }}
                 position="relative"
               >
-                <PhotoView
-                  src={resize({ src: assetUrl, width: 500 })}
-                  id={`displayable-term-${term.id}`}
-                >
+                <PhotoView src={resize({ src: assetUrl, width: 500 })}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     width={100}

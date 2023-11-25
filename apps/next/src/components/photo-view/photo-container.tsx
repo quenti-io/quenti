@@ -5,14 +5,14 @@ import { Box } from "@chakra-ui/react";
 interface PhotoContainerProps {
   visible: boolean;
   src?: string;
-  originId?: string;
+  origin: HTMLElement | null;
   borderRadius?: number;
 }
 
 export const PhotoContainer: React.FC<PhotoContainerProps> = ({
   visible,
   src,
-  originId,
+  origin,
   borderRadius,
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -37,8 +37,6 @@ export const PhotoContainer: React.FC<PhotoContainerProps> = ({
   scaleRef.current = scale;
 
   const setBounded = () => {
-    if (!originId) return;
-    const origin = document.getElementById(originId);
     if (!origin || !containerRef.current) return;
 
     const originWidth = origin.offsetWidth;
@@ -86,7 +84,7 @@ export const PhotoContainer: React.FC<PhotoContainerProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  if (!src || !originId) return null;
+  if (!src || !origin) return null;
 
   return (
     <Box ref={containerRef} width={originalWidth} height={originalHeight}>

@@ -9,7 +9,7 @@ const InternalView = dynamic(
 );
 
 interface PhotoViewContextProps {
-  show: (src: string, id: string, borderRadius?: number) => void;
+  show: (src: string, elem: HTMLElement, borderRadius?: number) => void;
 }
 
 export const PhotoViewContext = React.createContext<PhotoViewContextProps>({
@@ -20,16 +20,16 @@ export const PhotoViewProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const [visible, setVisible] = React.useState(false);
-  const [currentId, setCurrentId] = React.useState<string>();
+  const [currentRef, setCurrentRef] = React.useState<HTMLElement | null>(null);
   const [currentSrc, setCurrentSrc] = React.useState<string>();
   const [borderRadius, setBorderRadius] = React.useState<number>(0);
 
   return (
     <PhotoViewContext.Provider
       value={{
-        show: (src, id, borderRadius) => {
+        show: (src, ref, borderRadius) => {
           setCurrentSrc(src);
-          setCurrentId(id);
+          setCurrentRef(ref);
           setVisible(true);
           setBorderRadius(borderRadius || 0);
         },
@@ -38,7 +38,7 @@ export const PhotoViewProvider: React.FC<React.PropsWithChildren> = ({
       <InternalView
         visible={visible}
         setVisible={setVisible}
-        currentId={currentId}
+        currentRef={currentRef}
         currentSrc={currentSrc}
         borderRadius={borderRadius}
       />

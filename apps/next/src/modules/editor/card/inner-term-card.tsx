@@ -393,7 +393,6 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             <>
               <PhotoView
                 src={resize({ src: term.assetUrl, width: 500 })}
-                id={`term-asset-${term.id}`}
                 borderRadius={12}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
