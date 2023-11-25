@@ -21,6 +21,7 @@ import type { StudySetAnswerMode } from "@quenti/prisma/client";
 import {
   Box,
   Center,
+  Flex,
   GridItem,
   HStack,
   IconButton,
@@ -32,6 +33,7 @@ import {
 import { IconX } from "@tabler/icons-react";
 
 import { ScriptFormatter } from "../../../components/script-formatter";
+import { SquareAssetPreview } from "../../../components/terms/square-asset-preview";
 import { InteractivePointerSensor } from "../../../lib/dnd-kit-sensors";
 import { useTestContext } from "../../../stores/use-test-store";
 import { word } from "../../../utils/terms";
@@ -169,11 +171,20 @@ const InteractiveMatchCard: React.FC<CardProps> = ({ i }) => {
                   alignItems="center"
                   order={{ base: i, md: i + 1 }}
                 >
-                  <Text whiteSpace="pre-wrap" overflowWrap="anywhere">
-                    <ScriptFormatter>
-                      {word(question.answerMode, term, "prompt")}
-                    </ScriptFormatter>
-                  </Text>
+                  <HStack justifyContent="space-between" gap="4" w="full">
+                    <Text whiteSpace="pre-wrap" overflowWrap="anywhere">
+                      <ScriptFormatter>
+                        {word(question.answerMode, term, "prompt")}
+                      </ScriptFormatter>
+                    </Text>
+                    {question.answerMode == "Word" && term.assetUrl && (
+                      <SquareAssetPreview
+                        src={term.assetUrl}
+                        size={56}
+                        rounded={8}
+                      />
+                    )}
+                  </HStack>
                 </GridItem>
               </React.Fragment>
             ))}
@@ -208,15 +219,24 @@ const ResultsMatchCard: React.FC<CardProps> = ({ i }) => {
         {data.zones.map((term, i) => (
           <React.Fragment key={i}>
             <Stack key={term.id} spacing="6">
-              <Text
-                whiteSpace="pre-wrap"
-                fontSize={{ base: "md", sm: "lg" }}
-                overflowWrap="anywhere"
-              >
-                <ScriptFormatter>
-                  {word(question.answerMode, term, "prompt")}
-                </ScriptFormatter>
-              </Text>
+              <Flex w="full" justifyContent="space-between" gap="4">
+                <Text
+                  whiteSpace="pre-wrap"
+                  fontSize={{ base: "md", sm: "lg" }}
+                  overflowWrap="anywhere"
+                >
+                  <ScriptFormatter>
+                    {word(question.answerMode, term, "prompt")}
+                  </ScriptFormatter>
+                </Text>
+                {question.answerMode == "Word" && term.assetUrl && (
+                  <SquareAssetPreview
+                    src={term.assetUrl}
+                    size={80}
+                    rounded={8}
+                  />
+                )}
+              </Flex>
               <SimpleGrid
                 columns={{
                   base: 1,

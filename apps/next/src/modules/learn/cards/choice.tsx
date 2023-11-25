@@ -9,6 +9,7 @@ import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import {
+  Box,
   Button,
   Flex,
   Grid,
@@ -22,6 +23,7 @@ import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AnimatedXCircle } from "../../../components/animated-icons/x";
 import { ChoiceShortcutLayer } from "../../../components/choice-shortcut-layer";
 import { ScriptFormatter } from "../../../components/script-formatter";
+import { SquareAssetPreview } from "../../../components/terms/square-asset-preview";
 import { useAuthedSet } from "../../../hooks/use-set";
 import { useLearnContext } from "../../../stores/use-learn-store";
 import { word } from "../../../utils/terms";
@@ -231,16 +233,22 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
                   whiteSpace="pre-wrap"
                   overflowWrap="anywhere"
                   textAlign="start"
-                  fontWeight={
-                    500
-                    // isHighlightedTerm(choice.id) ? "semibold" : "normal"
-                  }
+                  fontWeight={500}
                 >
                   <ScriptFormatter>
                     {word(active.answerMode, choice, "answer")}
                   </ScriptFormatter>
                 </Text>
               </Flex>
+              {active.answerMode == "Definition" && choice.assetUrl && (
+                <Box ml="2">
+                  <SquareAssetPreview
+                    rounded={8}
+                    size={60}
+                    src={choice.assetUrl}
+                  />
+                </Box>
+              )}
             </Button>
           </GridItem>
         ))}

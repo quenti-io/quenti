@@ -185,7 +185,6 @@ export const Flashcard: React.FC<FlashcardProps> = ({
                 <PhotoView
                   src={resize({ src: term.assetUrl, width: 500 })}
                   borderRadius={8}
-                  id={`flashcard-${term.id}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

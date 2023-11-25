@@ -13,8 +13,6 @@ import {
   GridItem,
   HStack,
   Input,
-  LinkBox,
-  LinkOverlay,
   Modal,
   ModalBody,
   ModalContent,
@@ -72,7 +70,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
     setFileName(file.name);
 
     new Compressor(file, {
-      quality: 0.6,
+      quality: 0.8,
       convertSize: 500_000,
       success: (result) => {
         setFile(result as File);
@@ -416,8 +414,7 @@ const Thumbnail: React.FC<{ index: number }> = ({ index }) => {
               objectFit: "cover",
             }}
           />
-          <LinkBox
-            as={BgGradient}
+          <BgGradient
             position="absolute"
             bottom="0"
             left="0"
@@ -431,25 +428,23 @@ const Thumbnail: React.FC<{ index: number }> = ({ index }) => {
             _groupHover={{
               opacity: 1,
             }}
+            overflow="hidden"
           >
-            <LinkOverlay
-              as={Link}
-              href={`${image.user.links.html}?utm_source=quenti&utm_medium=referral`}
-              overflow="hidden"
-              target="_blank"
-            >
+            <Box w="full" overflow="hidden" textOverflow="ellipsis">
               <Text
+                as={Link}
+                href={`${image.user.links.html}?utm_source=quenti&utm_medium=referral`}
+                overflow="hidden"
+                target="_blank"
                 fontSize="10px"
                 color="gray.50"
                 fontWeight={500}
                 whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
               >
                 {image.user.first_name} {image.user.last_name}
               </Text>
-            </LinkOverlay>
-          </LinkBox>
+            </Box>
+          </BgGradient>
           <Box
             position="absolute"
             top="0"

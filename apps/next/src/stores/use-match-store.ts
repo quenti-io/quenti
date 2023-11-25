@@ -1,3 +1,4 @@
+import type { JSONContent } from "@tiptap/core";
 import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -40,6 +41,8 @@ export interface MatchItem {
   height: number;
   type: "word" | "definition";
   word: string;
+  richWord: JSONContent | null;
+  assetUrl: string | null;
   y: number;
   x: number;
   targetX: number;

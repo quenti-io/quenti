@@ -8,7 +8,7 @@ import { PhotoPortal } from "./photo-portal";
 interface InternalViewProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  currentId?: string;
+  currentRef: HTMLElement | null;
   currentSrc?: string;
   borderRadius: number;
 }
@@ -16,7 +16,7 @@ interface InternalViewProps {
 export const InternalView: React.FC<InternalViewProps> = ({
   visible,
   setVisible,
-  currentId,
+  currentRef,
   currentSrc,
   borderRadius,
 }) => {
@@ -41,7 +41,7 @@ export const InternalView: React.FC<InternalViewProps> = ({
         <PhotoContainer
           visible={visible}
           src={currentSrc}
-          originId={currentId}
+          origin={currentRef}
           borderRadius={borderRadius}
         />
       </Center>
