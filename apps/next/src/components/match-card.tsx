@@ -1,11 +1,12 @@
 import { animate, motion, useMotionValue } from "framer-motion";
 import React from "react";
 
+import { Display } from "@quenti/components/display";
+
 import { Card, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 
 import { MATCH_SHUFFLE_TIME } from "../../../../packages/lib/constants/match";
 import { type MatchItem, useMatchContext } from "../stores/use-match-store";
-import { ScriptFormatter } from "./script-formatter";
 import { SquareAssetPreview } from "./terms/square-asset-preview";
 
 export interface MatchCardProps {
@@ -128,7 +129,7 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
             />
           )}
           <Text fontSize="sm">
-            <ScriptFormatter>{term.word}</ScriptFormatter>
+            <Display text={term.word} richText={term.richWord} />
           </Text>
         </Stack>
       </Card>
