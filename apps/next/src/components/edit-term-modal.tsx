@@ -41,7 +41,10 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   const utils = api.useUtils();
   const { type } = useSetFolderUnison();
 
-  const [assetUrl, setAssetUrl] = React.useState<string | null>(null);
+  const [termAssetUrl, setTermAssetUrl] = React.useState<string | null>(null);
+  const [cachedAssetUrl, setCachedAssetUrl] = React.useState<string | null>(
+    null,
+  );
 
   const wordEditor = useEditor({
     ...editorConfig(),
@@ -59,7 +62,8 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
     definitionEditor?.commands.setContent(
       editorInput(term as EditorTerm, "definition"),
     );
-    setAssetUrl(term.assetUrl);
+    setTermAssetUrl(term.assetUrl);
+    setCachedAssetUrl(term.assetUrl);
 
     if (onDefinition) {
       definitionEditor?.commands.focus();
@@ -72,7 +76,8 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   React.useEffect(() => {
     const handle = (args: { id: string; url: string }) => {
       if (isOpen && args.id == term?.id) {
-        setAssetUrl(args.url);
+        setTermAssetUrl(args.url);
+        setCachedAssetUrl(args.url);
       }
     };
 
@@ -134,15 +139,15 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
               }}
             />
           </Stack>
-          {assetUrl ? (
+          {cachedAssetUrl ? (
             <Box w="100px" h="80px" mt={{ base: 3, md: 0 }} position="relative">
-              <PhotoView src={resize({ src: assetUrl, width: 500 })}>
+              <PhotoView src={resize({ src: cachedAssetUrl, width: 500 })}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   width={100}
                   height={80}
                   alt="Term asset"
-                  src={resize({ src: assetUrl, width: 500 })}
+                  src={resize({ src: cachedAssetUrl, width: 500 })}
                   style={{
                     cursor: "zoom-in",
                     width: 100,
@@ -156,8 +161,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
               <RemoveImageButton
                 onClick={() => {
                   if (!term) return;
-
-                  setAssetUrl(null);
+                  setCachedAssetUrl(null);
                 }}
               />
             </Box>
@@ -182,7 +186,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
               Cancel
             </Button>
             <Button
-              onClick={() => {
+              onClick={async () => {
                 if (!term) return;
 
                 const wordJson = wordEditor!.getJSON();
@@ -196,8 +200,8 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
                   definition,
                 );
 
-                if (!assetUrl && term.assetUrl) {
-                  removeImage.mutate({
+                if (!cachedAssetUrl && termAssetUrl) {
+                  await removeImage.mutateAsync({
                     id: term.id,
                     studySetId: term.studySetId,
                   });
