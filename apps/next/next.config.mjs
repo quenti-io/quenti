@@ -119,6 +119,10 @@ let config = {
       destination: "/profile/:profile/folders/:slug/match",
     },
     {
+      source: "/:profile(@[a-zA-Z0-9-_]+)/folders/:slug/match/leaderboard",
+      destination: "/profile/:profile/folders/:slug/match/leaderboard",
+    },
+    {
       source: "/:id(c[a-z0-9]{24})",
       destination: "/sets/:id",
     },
@@ -141,6 +145,10 @@ let config = {
     {
       source: "/:id(c[a-z0-9]{24})/match",
       destination: "/sets/:id/match",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})/match/leaderboard",
+      destination: "/sets/:id/match/leaderboard",
     },
     {
       source: "/:id(c[a-z0-9]{24})/test",

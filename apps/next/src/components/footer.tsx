@@ -43,7 +43,9 @@ export const Footer = () => {
               <Link href={WEBSITE_URL}>
                 <HStack>
                   <FrameLogo width="18px" height="18px" />
-                  <Heading size="md">Quenti</Heading>
+                  <Heading size="md" className="notranslate">
+                    Quenti
+                  </Heading>
                 </HStack>
               </Link>
               <HStack
