@@ -18,7 +18,6 @@ export const MatchStartModal: React.FC<MatchStartModalProps> = ({ isOpen }) => {
   const router = useRouter();
 
   const removeIntro = () => {
-    // void router.replace(router.asPath, undefined, { shallow: true });
     window.history.replaceState(null, "", router.asPath.split("?")[0]);
   };
 

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { HeadSeo } from "@quenti/components/head-seo";
 import { api } from "@quenti/trpc";
 import { MATCH_MIN_TIME } from "@quenti/trpc/server/common/constants";
 
@@ -70,6 +71,7 @@ export const MatchSummary = () => {
 
   return (
     <Container maxW="container.md" py="10" display="flex" alignItems="center">
+      <HeadSeo title={`Leaderboard - Match: ${title}`} />
       <Stack spacing="6" w="full">
         {!elapsed || elapsed >= MATCH_MIN_TIME ? (
           <>
