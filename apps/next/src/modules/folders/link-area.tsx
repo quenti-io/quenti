@@ -29,7 +29,7 @@ export const LinkArea = () => {
       <Linkable
         name="Match"
         icon={<IconLayersSubtract />}
-        href={`${folderUrl}/match`}
+        href={`${folderUrl}/match?intro=true`}
       />
     </SimpleGrid>
   );

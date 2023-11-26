@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 import { Link } from "@quenti/components";
@@ -18,96 +19,104 @@ import { IconArrowBack, IconPlayerPlay } from "@tabler/icons-react";
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
-import { useMatchContext } from "../../stores/use-match-store";
 import { Leaderboard } from "../leaderboard/leaderboard";
 import { MatchSummaryFeedback } from "./match-summary-feedback";
 
 export const MatchSummary = () => {
-  const { id, type } = useSetFolderUnison();
+  const router = useRouter();
+  const { id, title, type } = useSetFolderUnison();
   const rootUrl = useEntityRootUrl();
-  const startTime = useMatchContext((s) => s.roundStartTime);
-  const summary = useMatchContext((s) => s.roundSummary)!;
-  const isEligibleForLeaderboard = useMatchContext(
-    (s) => s.isEligibleForLeaderboard,
-  );
-  const elapsed = Math.floor((summary.endTime - startTime) / 100);
-  const nextRound = useMatchContext((s) => s.nextRound);
 
-  const add = api.leaderboard.add.useMutation();
+  const t = router.query.t as string;
+  const eligible = (router.query.eligible as string) || "true";
+
+  const safeParseT = (t: string) => {
+    try {
+      return parseInt(t);
+    } catch {
+      return 0;
+    }
+  };
+
   const leaderboard = api.leaderboard.byEntityId.useQuery(
     {
       mode: "Match",
       entityId: id,
     },
     {
-      enabled: add.isSuccess,
+      enabled: router.isReady,
     },
   );
-
-  const isStorable = elapsed > MATCH_MIN_TIME;
-
-  React.useEffect(() => {
-    if (isStorable)
-      void add.mutateAsync({
-        entityId: id,
-        mode: "Match",
-        time: elapsed,
-        eligible: isEligibleForLeaderboard,
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isStorable]);
 
   const { data: highscore, isFetchedAfterMount } =
     api.leaderboard.highscore.useQuery(
       {
         mode: "Match",
         entityId: id,
-        eligible: isEligibleForLeaderboard,
+        eligible: eligible == "true",
       },
       {
-        refetchOnMount: "always",
-        enabled: add.isSuccess || !isStorable,
+        enabled: router.isReady,
       },
     );
 
-  if (!summary || !leaderboard.data || !highscore || !isFetchedAfterMount)
+  const elapsed =
+    typeof highscore?.bestTime == "number"
+      ? Math.max(highscore.bestTime, safeParseT(t))
+      : null;
+
+  if (!leaderboard.data || !highscore || !isFetchedAfterMount)
     return <Loading />;
 
   return (
     <Container maxW="container.md" py="10" display="flex" alignItems="center">
       <Stack spacing="6" w="full">
-        {isStorable ? (
+        {!elapsed || elapsed >= MATCH_MIN_TIME ? (
           <>
-            <MatchSummaryFeedback
-              elapsed={elapsed}
-              highscore={highscore}
-              highscores={leaderboard.data.highscores}
-            />
-            {isEligibleForLeaderboard && (
-              <Leaderboard data={leaderboard.data} />
+            {elapsed ? (
+              <MatchSummaryFeedback
+                eligible={eligible == "true"}
+                elapsed={elapsed}
+                highscore={highscore}
+                highscores={leaderboard.data.highscores}
+              />
+            ) : (
+              <Stack spacing="1" mb="3" mx="3">
+                <Text
+                  color="gray.700"
+                  _dark={{
+                    color: "gray.300",
+                  }}
+                >
+                  Leaderboard
+                </Text>
+                <Heading size="lg">{title}</Heading>
+              </Stack>
             )}
+            {eligible == "true" && <Leaderboard data={leaderboard.data} />}
           </>
         ) : (
           <>
             <Heading size={"2xl"}>Woah! You{"'"}re too fast!</Heading>
-            <Text>
-              Your time was too fast to record on our leaderboard.
-              {summary.termsThisRound > 3
-                ? ""
-                : " Consider playing with more terms."}
-            </Text>
+            <Text>Your time was too fast to record on our leaderboard.</Text>
           </>
         )}
-        <ButtonGroup w="full" justifyContent="end">
+        <ButtonGroup w="full" justifyContent="end" spacing="3">
           <Button
             variant="outline"
             leftIcon={<IconArrowBack size={18} />}
             as={Link}
             href={rootUrl}
+            colorScheme="gray"
           >
             Back to {type === "folder" ? "folder" : "set"}
           </Button>
-          <Button onClick={nextRound} leftIcon={<IconPlayerPlay size={18} />}>
+          <Button
+            onClick={async () => {
+              await router.push(rootUrl + "/match");
+            }}
+            leftIcon={<IconPlayerPlay size={18} />}
+          >
             Play again
           </Button>
         </ButtonGroup>

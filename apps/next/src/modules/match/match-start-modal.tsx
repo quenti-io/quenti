@@ -17,6 +17,11 @@ export const MatchStartModal: React.FC<MatchStartModalProps> = ({ isOpen }) => {
   const newRound = useMatchContext((e) => e.nextRound);
   const router = useRouter();
 
+  const removeIntro = () => {
+    // void router.replace(router.asPath, undefined, { shallow: true });
+    window.history.replaceState(null, "", router.asPath.split("?")[0]);
+  };
+
   const actionRef = React.useRef<HTMLButtonElement>(null);
 
   return (
@@ -47,7 +52,10 @@ export const MatchStartModal: React.FC<MatchStartModalProps> = ({ isOpen }) => {
               w="full"
               leftIcon={<IconPlayerPlay size={18} />}
               variant="solid"
-              onClick={newRound}
+              onClick={() => {
+                removeIntro();
+                newRound();
+              }}
               ref={actionRef}
             >
               Start game
