@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import React from "react";
 
 import { Link } from "@quenti/components";
 import { HeadSeo } from "@quenti/components/head-seo";
@@ -16,7 +15,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { IconArrowBack, IconPlayerPlay, IconTrophy } from "@tabler/icons-react";
+import {
+  IconArrowBack,
+  IconPlayerPlay,
+  IconTrophy,
+  IconWind,
+} from "@tabler/icons-react";
 
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
@@ -30,7 +34,7 @@ export const MatchSummary = () => {
   const rootUrl = useEntityRootUrl();
 
   const t = router.query.t as string;
-  const eligible = (router.query.eligible as string) || "true";
+  const eligible = ((router.query.eligible as string) || "true") == "true";
 
   const safeParseT = (t: string) => {
     try {
@@ -55,7 +59,7 @@ export const MatchSummary = () => {
       {
         mode: "Match",
         entityId: id,
-        eligible: eligible == "true",
+        eligible,
       },
       {
         enabled: router.isReady,
@@ -65,7 +69,7 @@ export const MatchSummary = () => {
   const elapsed =
     typeof highscore?.bestTime == "number"
       ? Math.max(highscore.bestTime, safeParseT(t))
-      : null;
+      : safeParseT(t);
 
   if (!leaderboard.data || !highscore || !isFetchedAfterMount)
     return <Loading />;
@@ -78,7 +82,7 @@ export const MatchSummary = () => {
           <>
             {elapsed ? (
               <MatchSummaryFeedback
-                eligible={eligible == "true"}
+                eligible={eligible}
                 elapsed={elapsed}
                 highscore={highscore}
                 highscores={leaderboard.data.highscores}
@@ -97,12 +101,25 @@ export const MatchSummary = () => {
                 <Heading size="lg">{title}</Heading>
               </Stack>
             )}
-            {eligible == "true" && <Leaderboard data={leaderboard.data} />}
+            {eligible && <Leaderboard data={leaderboard.data} />}
           </>
         ) : (
           <>
-            <Heading size={"2xl"}>Woah! You{"'"}re too fast!</Heading>
-            <Text>Your time was too fast to record on our leaderboard.</Text>
+            <Stack spacing="3" mb={eligible ? 0 : 3}>
+              <IconWind />
+              <Stack spacing="1">
+                <Heading size="xl">Woah! You{"'"}re too fast!</Heading>
+                <Text
+                  color="gray.600"
+                  _dark={{
+                    color: "gray.400",
+                  }}
+                >
+                  Your time was too fast to record on our leaderboard.
+                </Text>
+              </Stack>
+            </Stack>
+            {eligible && <Leaderboard data={leaderboard.data} />}
           </>
         )}
         <ButtonGroup w="full" justifyContent="end" spacing="3">
