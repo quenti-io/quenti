@@ -10,12 +10,13 @@ import {
   Button,
   ButtonGroup,
   Container,
+  HStack,
   Heading,
   Stack,
   Text,
 } from "@chakra-ui/react";
 
-import { IconArrowBack, IconPlayerPlay } from "@tabler/icons-react";
+import { IconArrowBack, IconPlayerPlay, IconTrophy } from "@tabler/icons-react";
 
 import { Loading } from "../../components/loading";
 import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
@@ -84,14 +85,15 @@ export const MatchSummary = () => {
               />
             ) : (
               <Stack spacing="1" mb="3" mx="3">
-                <Text
-                  color="gray.700"
+                <HStack
+                  color="gray.600"
                   _dark={{
-                    color: "gray.300",
+                    color: "gray.400",
                   }}
                 >
-                  Leaderboard
-                </Text>
+                  <IconTrophy size={16} />
+                  <Text>Leaderboard</Text>
+                </HStack>
                 <Heading size="lg">{title}</Heading>
               </Stack>
             )}
@@ -119,7 +121,7 @@ export const MatchSummary = () => {
             }}
             leftIcon={<IconPlayerPlay size={18} />}
           >
-            Play again
+            {elapsed ? "Play again" : "Play Match"}
           </Button>
         </ButtonGroup>
       </Stack>
