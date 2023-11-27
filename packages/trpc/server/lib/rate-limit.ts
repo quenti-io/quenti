@@ -20,6 +20,7 @@ export interface RateLimitResponse {
 
 export enum RateLimitType {
   Core = "core",
+  Fast = "fast",
   FanOut = "fanOut",
   Verify = "verify",
   Strict = "strict",
@@ -45,6 +46,12 @@ export const rateLimiter = () => {
       analytics: true,
       prefix: "ratelimit",
       limiter: Ratelimit.fixedWindow(10, "60s"),
+    }),
+    fast: new Ratelimit({
+      redis,
+      analytics: true,
+      prefix: "ratelimit:fast",
+      limiter: Ratelimit.fixedWindow(40, "2m"),
     }),
     fanOut: new Ratelimit({
       redis,

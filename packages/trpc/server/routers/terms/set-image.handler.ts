@@ -2,7 +2,9 @@ import { triggerDownload } from "@quenti/images/server/unsplash";
 
 import { TRPCError } from "@trpc/server";
 
+import { getIp } from "../../lib/get-ip";
 import { getCachedPhoto } from "../../lib/images/photo";
+import { RateLimitType, rateLimitOrThrowMultiple } from "../../lib/rate-limit";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TSetImageSchema } from "./set-image.schema";
 
@@ -12,6 +14,14 @@ type SetImageOptions = {
 };
 
 export const setImageHandler = async ({ ctx, input }: SetImageOptions) => {
+  await rateLimitOrThrowMultiple({
+    type: RateLimitType.Fast,
+    identifiers: [
+      `terms:set-image-user-id${ctx.session.user.id}`,
+      `terms:set-image-ip-${getIp(ctx.req)}`,
+    ],
+  });
+
   const studySet = await ctx.prisma.studySet.findFirst({
     where: {
       id: input.studySetId,
