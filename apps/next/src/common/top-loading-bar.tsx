@@ -8,14 +8,21 @@ export const TopLoadingBar = () => {
   const barRef = React.useRef<LoadingBarRef>(null);
 
   React.useEffect(() => {
-    const setPageRegexp = /^\/c([a-zA-Z0-9_-]{24})$/;
+    const setRegex = /^\/c([a-zA-Z0-9_-]{24})$/;
+    const profileRegex = /^\/@([a-zA-Z0-9-_]+)$/;
+    const folderRegex = /^\/@([a-zA-Z0-9-_]+)\/folders\/[^\/]*$/;
+
+    const unified = new RegExp(
+      `^(${[setRegex, profileRegex, folderRegex]
+        .map((r) => r.source)
+        .join("|")})$`,
+    );
 
     router.events.on("routeChangeStart", (url) => {
-      if (setPageRegexp.test(url as string))
-        barRef.current?.continuousStart(20, 750);
+      if (unified.test(url as string)) barRef.current?.continuousStart(20, 750);
     });
     router.events.on("routeChangeComplete", (url) => {
-      if (setPageRegexp.test(url as string)) barRef.current?.complete();
+      if (unified.test(url as string)) barRef.current?.complete();
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

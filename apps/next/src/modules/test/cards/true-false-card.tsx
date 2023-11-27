@@ -20,6 +20,7 @@ import {
   IconCircleXFilled,
 } from "@tabler/icons-react";
 
+import { SquareAssetPreview } from "../../../components/terms/square-asset-preview";
 import { useTestContext } from "../../../stores/use-test-store";
 import { richWord, word } from "../../../utils/terms";
 import { useCardSelector } from "../use-card-selector";
@@ -44,6 +45,10 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
 
   const remark = result ? remarks?.[0] : undefined;
 
+  const Asset = () => (
+    <SquareAssetPreview rounded={8} size={80} src={data.term.assetUrl || ""} />
+  );
+
   return (
     <>
       <Grid
@@ -53,6 +58,9 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
         <Box w="full" pr={{ base: 0, sm: "4" }}>
           <RichPromptDisplay
             label={question.answerMode == "Definition" ? "Term" : "Definition"}
+            extra={
+              question.answerMode == "Word" && data.term.assetUrl && <Asset />
+            }
             {...richWord(question.answerMode, data.term, "prompt")}
           />
         </Box>
@@ -76,6 +84,10 @@ export const TrueFalseCard: React.FC<CardProps> = ({ i, result }) => {
         <Box w="full" pl={{ base: 0, sm: 4 }}>
           <RichPromptDisplay
             label={question.answerMode == "Definition" ? "Definition" : "Term"}
+            extra={
+              question.answerMode == "Definition" &&
+              data.term.assetUrl && <Asset />
+            }
             {...rightSide}
           />
         </Box>

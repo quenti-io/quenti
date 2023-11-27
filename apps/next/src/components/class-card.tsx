@@ -59,6 +59,12 @@ export const ClassCard: React.FC<ClassCardProps> = ({
         transform: "translateY(-2px)",
         borderBottomColor: "blue.300",
       }}
+      sx={{
+        "&:has(:focus-visible)": {
+          transform: "translateY(-2px)",
+          borderColor: "blue.300",
+        },
+      }}
       overflow="hidden"
     >
       <Box
@@ -106,7 +112,13 @@ export const ClassCard: React.FC<ClassCardProps> = ({
               WebkitBoxOrient: "vertical",
             }}
           >
-            <LinkOverlay as={Link} href={`/classes/${id}`}>
+            <LinkOverlay
+              as={Link}
+              href={`/classes/${id}`}
+              _focus={{
+                outline: "none",
+              }}
+            >
               {name}
             </LinkOverlay>
           </Heading>

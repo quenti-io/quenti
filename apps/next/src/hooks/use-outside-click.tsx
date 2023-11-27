@@ -6,7 +6,13 @@ export const useOutsideClick = (callback: () => void) => {
 
   React.useEffect(() => {
     const handleClick = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
+      const target = event.target as HTMLElement;
+      try {
+        if (target.closest("[role=dialog]") || target.closest(".chakra-portal"))
+          return;
+      } catch {}
+
+      if (ref.current && !ref.current.contains(target)) {
         callback();
       }
     };

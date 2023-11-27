@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 
 import TopLoadingBar from "../common/top-loading-bar";
+import { PhotoViewProvider } from "../components/photo-view/provider";
 
 const OnboardingRedirect = dynamic(
   () => import("../common/onboarding-redirect"),
@@ -39,7 +40,7 @@ export const MainLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
       <SignupModal />
       <CreateClassNotice />
       <ConfettiLayer />
-      {children}
+      <PhotoViewProvider>{children}</PhotoViewProvider>
     </>
   );
 };

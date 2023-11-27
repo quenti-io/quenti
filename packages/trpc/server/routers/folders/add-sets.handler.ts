@@ -39,9 +39,16 @@ export const addSetsHandler = async ({ ctx, input }: AddSetsOptions) => {
       id: true,
       userId: true,
       visibility: true,
+      created: true,
     },
   });
 
+  if (studySets.find((x) => !x.created)) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Cannot add drafts to a folder",
+    });
+  }
   if (
     studySets.find(
       (x) => x.visibility == "Private" && x.userId !== ctx.session.user.id,

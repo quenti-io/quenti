@@ -2,6 +2,7 @@ import type { StudySetVisibility } from "@quenti/prisma/client";
 
 export interface SetFolderEntity {
   type: "set" | "folder";
+  draft?: boolean;
   id: string;
   title: string;
   createdAt: Date;

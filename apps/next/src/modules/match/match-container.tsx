@@ -1,33 +1,42 @@
 import { AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { log } from "next-axiom";
+import { useRouter } from "next/router";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
+import { api } from "@quenti/trpc";
+import { MATCH_MIN_TIME } from "@quenti/trpc/server/common/constants";
 
 import { Box } from "@chakra-ui/react";
 
+import { Loading } from "../../components/loading";
 import { MatchCard } from "../../components/match-card";
-import { useHistory } from "../../hooks/use-history";
+import { useEntityRootUrl } from "../../hooks/use-entity-root-url";
 import { useSetFolderUnison } from "../../hooks/use-set-folder-unison";
 import { type MatchItem, useMatchContext } from "../../stores/use-match-store";
 import { EventListener } from "./event-listener";
 import MatchInfo from "./match-info";
 import { MatchStartModal } from "./match-start-modal";
-import { MatchSummary } from "./match-summary";
 
 export const MatchContainer = () => {
-  const history = useHistory();
   const session = useSession();
+  const router = useRouter();
+  const root = useEntityRootUrl();
+
   const { title, id, type } = useSetFolderUnison();
+  const intro = window.location.search.includes("intro");
+
   const terms = useMatchContext((state) => state.terms);
   const summary = useMatchContext((state) => state.roundSummary);
   const completed = useMatchContext((state) => state.completed);
+  const startTime = useMatchContext((s) => s.roundStartTime);
+  const isEligibleForLeaderboard = useMatchContext(
+    (s) => s.isEligibleForLeaderboard,
+  );
   const setCard = useMatchContext((state) => state.setCard);
   const nextRound = useMatchContext((state) => state.nextRound);
   const requestZIndex = useMatchContext((state) => state.requestZIndex);
-
-  const [reloaded, setReloaded] = React.useState<boolean | undefined>();
 
   const getIndicesUnder = useMatchContext((state) => state.getIndicesUnder);
   const setHighlightedIndices = useMatchContext(
@@ -69,11 +78,11 @@ export const MatchContainer = () => {
     [],
   );
 
+  const add = api.leaderboard.add.useMutation();
+
   React.useEffect(() => {
     // Start the round immediately if the page was entered directly
-    const reloaded = history.length <= 1;
-    setReloaded(reloaded);
-    if (reloaded) nextRound();
+    if (!intro) nextRound();
 
     log.info("match.identify", {
       userId: session.data?.user?.id,
@@ -83,13 +92,34 @@ export const MatchContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  React.useEffect(() => {
+    if (!summary) return;
+
+    void (async () => {
+      const elapsed = Math.floor((summary.endTime - startTime) / 100);
+
+      if (elapsed > MATCH_MIN_TIME) {
+        await add.mutateAsync({
+          entityId: id,
+          mode: "Match",
+          time: elapsed,
+          eligible: isEligibleForLeaderboard,
+        });
+      }
+
+      await router.push(
+        `${root}/match/leaderboard?t=${elapsed}&eligible=${isEligibleForLeaderboard}`,
+      );
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [summary]);
+
   return (
     <>
       <HeadSeo title={`Match: ${title}`} />
       <Box ref={wrapper} w="100%" h="calc(100vh - 112px)" position="relative">
-        {summary && <MatchSummary />}
-        <MatchStartModal isOpen={completed && reloaded === false && !summary} />
-        {!completed && (
+        <MatchStartModal isOpen={completed && intro} />
+        {!completed ? (
           <AnimatePresence>
             {terms.map((term, index) =>
               term.completed ? (
@@ -106,6 +136,8 @@ export const MatchContainer = () => {
               ),
             )}
           </AnimatePresence>
+        ) : (
+          <Loading />
         )}
         <EventListener wrapper={wrapper} />
         {!completed && <MatchInfo />}

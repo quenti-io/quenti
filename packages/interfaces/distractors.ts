@@ -9,6 +9,7 @@ export type Distractor = {
   definition: string;
   wordRichText?: JSONContent | null;
   definitionRichText?: JSONContent | null;
+  assetUrl: string | null;
 };
 
 export type TermWithDistractors = Term & {

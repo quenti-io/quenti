@@ -10,6 +10,7 @@ import {
   Flex,
   HStack,
   Heading,
+  IconButton,
   LinkBox,
   LinkOverlay,
   Menu,
@@ -34,6 +35,7 @@ export interface GenericCardProps {
   title: string;
   numItems: number;
   itemsLabel: string;
+  label?: React.ReactNode;
   url: string;
   user: {
     username: string | null;
@@ -51,6 +53,7 @@ export const GenericCard = ({
   title,
   numItems,
   itemsLabel,
+  label,
   url,
   user,
   reverseTitle = false,
@@ -83,6 +86,12 @@ export const GenericCard = ({
         transform: "translateY(-2px)",
         borderBottomColor: "blue.300",
       }}
+      sx={{
+        "&:has(:focus-visible)": {
+          transform: "translateY(-2px)",
+          borderColor: "blue.300",
+        },
+      }}
     >
       <Flex justifyContent="space-between" flexDir="column" h="full" gap={4}>
         <Stack
@@ -100,15 +109,27 @@ export const GenericCard = ({
               WebkitBoxOrient: "vertical",
             }}
           >
-            <LinkOverlay as={Link} href={url}>
+            <LinkOverlay
+              as={Link}
+              href={url}
+              _focus={{
+                outline: "none",
+              }}
+            >
               {title}
             </LinkOverlay>
           </Heading>
-          <HStack spacing="2" color={termsTextColor}>
-            {leftIcon}
-            <Text fontSize="sm">{plural(numItems, itemsLabel)}</Text>
-            {rightIcon}
-          </HStack>
+          {!label ? (
+            <HStack spacing="2" color={termsTextColor}>
+              {leftIcon}
+              <Text fontSize="sm">{plural(numItems, itemsLabel)}</Text>
+              {rightIcon}
+            </HStack>
+          ) : (
+            <HStack spacing="2" color={termsTextColor}>
+              {label}
+            </HStack>
+          )}
         </Stack>
         <Flex justifyContent="space-between">
           <HStack spacing={2}>
@@ -141,16 +162,27 @@ export const GenericCard = ({
                 onOpen={() => setMenuOpen(true)}
                 onClose={() => setMenuOpen(false)}
               >
-                <MenuButton>
-                  <Box w="24px">
-                    <IconDotsVertical size="20" />
-                  </Box>
-                </MenuButton>
+                <MenuButton
+                  rounded="md"
+                  as={IconButton}
+                  icon={<IconDotsVertical size="20" />}
+                  aria-label="options"
+                  size="sm"
+                  variant="ghost"
+                  colorScheme="gray"
+                  _hover={{
+                    bg: "none",
+                  }}
+                  _active={{
+                    bg: "none",
+                  }}
+                />
                 <MenuList
                   bg={menuBg}
                   py={0}
                   overflow="hidden"
                   display={menuOpen ? "block" : "none"}
+                  minW="124px"
                 >
                   <MenuOption
                     icon={<IconTrash size={20} />}

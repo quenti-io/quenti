@@ -8,7 +8,7 @@ import { Box, Center } from "@chakra-ui/react";
 
 import { IconSchool } from "@tabler/icons-react";
 
-import { squareCdnLoader } from "../../common/cdn-loaders";
+import { square } from "../../common/cdn-loaders";
 
 export interface ClassLogoProps {
   url?: string | null;
@@ -36,7 +36,7 @@ export const ClassLogo: React.FC<ClassLogoProps> = ({
       <Image
         src={src}
         alt="Class logo"
-        loader={!local ? squareCdnLoader : undefined}
+        loader={!local ? square : undefined}
         width={!local ? width : undefined}
         height={!local ? height : undefined}
         fill={local}

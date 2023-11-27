@@ -3,12 +3,14 @@ import { Box, Card, Heading, Stack, Text } from "@chakra-ui/react";
 export interface NewsCardProps {
   title: string | React.ReactNode;
   description: string;
+  cta?: React.ReactNode;
   image: React.ReactNode;
 }
 
 export const NewsCard: React.FC<NewsCardProps> = ({
   title,
   description,
+  cta,
   image,
 }) => {
   return (
@@ -52,6 +54,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({
         >
           {description}
         </Text>
+        {cta}
       </Stack>
     </Card>
   );

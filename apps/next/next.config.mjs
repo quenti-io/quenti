@@ -25,7 +25,7 @@ const appVersion = pjson.version;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const domains = ["lh3.googleusercontent.com"];
+const domains = ["lh3.googleusercontent.com", "images.unsplash.com"];
 if (process.env.USERS_BUCKET_URL)
   domains.push(new URL(process.env.USERS_BUCKET_URL).host);
 if (process.env.ASSETS_BUCKET_URL)
@@ -119,12 +119,20 @@ let config = {
       destination: "/profile/:profile/folders/:slug/match",
     },
     {
+      source: "/:profile(@[a-zA-Z0-9-_]+)/folders/:slug/match/leaderboard",
+      destination: "/profile/:profile/folders/:slug/match/leaderboard",
+    },
+    {
       source: "/:id(c[a-z0-9]{24})",
       destination: "/sets/:id",
     },
     {
       source: "/:id(c[a-z0-9]{24})/edit",
       destination: "/sets/:id/edit",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})/create",
+      destination: "/sets/:id/create",
     },
     {
       source: "/:id(c[a-z0-9]{24})/flashcards",
@@ -137,6 +145,10 @@ let config = {
     {
       source: "/:id(c[a-z0-9]{24})/match",
       destination: "/sets/:id/match",
+    },
+    {
+      source: "/:id(c[a-z0-9]{24})/match/leaderboard",
+      destination: "/sets/:id/match/leaderboard",
     },
     {
       source: "/:id(c[a-z0-9]{24})/test",

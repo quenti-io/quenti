@@ -1,5 +1,6 @@
 import { HeadSeo } from "@quenti/components/head-seo";
 
+import { EditorGlobalStyles } from "../../../../../common/editor-global-styles";
 import { LazyWrapper } from "../../../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../../../common/page-wrapper";
 import { AuthedPage } from "../../../../../components/authed-page";
@@ -13,6 +14,7 @@ const Match = () => {
     <AuthedPage>
       <HeadSeo title="Match" />
       <LazyWrapper>
+        <EditorGlobalStyles small />
         <HydrateFolderData withTerms disallowDirty>
           <CreateMatchData>
             <MatchContainer />

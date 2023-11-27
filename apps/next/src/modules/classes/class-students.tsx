@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useDebounce } from "@quenti/lib/hooks/use-debounce";
 import { api } from "@quenti/trpc";
 
 import {
@@ -18,7 +19,6 @@ import { IconUserPlus } from "@tabler/icons-react";
 
 import { LoadingSearch } from "../../components/loading-search";
 import { useClass } from "../../hooks/use-class";
-import { useDebounce } from "../../hooks/use-debounce";
 import { useEventCallback } from "../../hooks/use-event-callback";
 import { plural } from "../../utils/string";
 import { AddStudentsModal } from "./add-students-modal";

@@ -11,7 +11,7 @@ import {
 
 import { IconSchool } from "@tabler/icons-react";
 
-import { NewsCard } from "../news-card";
+import { NewsCard } from "../../news-card";
 
 export const ClassesBeta = () => {
   return (

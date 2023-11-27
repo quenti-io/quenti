@@ -56,8 +56,10 @@ export const HydrateSetData: React.FC<
   placeholder,
   children,
 }) => {
+  const router = useRouter();
   const { data: session, status } = useSession();
-  const id = useRouter().query.id as string;
+  const id = router.query.id as string;
+
   const [isDirty, setIsDirty] = useSetPropertiesStore((s) => [
     s.isDirty,
     s.setIsDirty,
@@ -73,6 +75,11 @@ export const HydrateSetData: React.FC<
       onSuccess: (data) => {
         if (isDirty) setIsDirty(false);
         queryEventChannel.emit("setQueryRefetched", createInjectedData(data));
+      },
+      onError: (err) => {
+        if (err.data?.httpStatus == 412) {
+          void router.push(`/${id}/create`);
+        }
       },
     },
   );

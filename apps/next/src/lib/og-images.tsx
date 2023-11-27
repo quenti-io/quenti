@@ -56,7 +56,7 @@ export const EntityImage: React.FC<EntityImageProps> = ({
           <div
             style={{
               display: "flex",
-              width: "80%",
+              width: "90%",
               overflow: "hidden",
               flexDirection: "column",
               minWidth: 0,
@@ -82,7 +82,7 @@ export const EntityImage: React.FC<EntityImageProps> = ({
           <img width="80" height="80" src={user.image} tw="rounded-full" />
         </div>
         <p
-          tw="text-gray-400 text-2xl h-46 overflow-hidden -mt-2"
+          tw="text-gray-300 text-2xl h-46 overflow-hidden -mt-2"
           style={{
             whiteSpace: "pre-wrap",
           }}
@@ -158,7 +158,6 @@ export const ProfileImage: React.FC<ProfileImageProps> = ({
           width="44"
           height="44"
           src={`${env.NEXT_PUBLIC_APP_URL}/avatars/quenti.png`}
-          tw="rounded-full"
         />
         <div
           style={{

@@ -1,8 +1,7 @@
-import { Prisma } from "@quenti/prisma/client";
-
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
+import { reorder } from "./mutations/reorder";
 import type { TReorderSchema } from "./reorder.schema";
 
 type ReorderOptions = {
@@ -69,34 +68,10 @@ export const reorderHandler = async ({ ctx, input }: ReorderOptions) => {
         rank: input.term.rank,
       },
     });
-
-    // Sort all of the terms by rank, and update the ranks to be consecutive
-    const terms = await prisma.term.findMany({
-      where: {
-        studySetId: input.studySetId,
-      },
-      orderBy: {
-        rank: "asc",
-      },
-    });
-
-    const vals = terms.map((term, i) => [
-      term.id,
-      term.studySetId,
-      term.word,
-      term.definition,
-      i,
-    ]);
-    const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
-
-    const query = Prisma.sql`
-    INSERT INTO Term (id, studySetId, word, definition, \`rank\`)
-    VALUES ${Prisma.join(formatted)}
-    ON DUPLICATE KEY UPDATE Term.\`rank\` = VALUES(\`rank\`)
-  `;
-
-    await prisma.$executeRaw(query);
   });
+
+  // Needs to be outside of the transaction otherwise breaks
+  await reorder(ctx.prisma, input.studySetId);
 };
 
 export default reorderHandler;

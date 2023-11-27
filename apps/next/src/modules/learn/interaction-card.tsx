@@ -6,12 +6,14 @@ import {
   Box,
   Card,
   Fade,
+  Flex,
   HStack,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { SquareAssetPreview } from "../../components/terms/square-asset-preview";
 import { useLearnContext } from "../../stores/use-learn-store";
 import { richWord } from "../../utils/terms";
 import { ChoiceCard } from "./cards/choice";
@@ -131,11 +133,24 @@ export const InteractionCard = () => {
               </Box>
             </HStack>
             <Box minH={{ base: "60px", md: "140px" }}>
-              <Text fontSize="xl" whiteSpace="pre-wrap" overflowWrap="anywhere">
-                <Display
-                  {...richWord(active.answerMode, active.term, "prompt")}
-                />
-              </Text>
+              <Flex gap="4" justifyContent="space-between">
+                <Text
+                  fontSize="xl"
+                  whiteSpace="pre-wrap"
+                  overflowWrap="anywhere"
+                >
+                  <Display
+                    {...richWord(active.answerMode, active.term, "prompt")}
+                  />
+                </Text>
+                {active.answerMode == "Word" && active.term.assetUrl && (
+                  <SquareAssetPreview
+                    rounded={8}
+                    size={100}
+                    src={active.term.assetUrl}
+                  />
+                )}
+              </Flex>
             </Box>
             {active.type == "choice" ? (
               <ChoiceCard active={active} />

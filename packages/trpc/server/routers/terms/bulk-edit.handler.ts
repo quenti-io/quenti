@@ -1,10 +1,10 @@
-import { Prisma } from "@quenti/prisma/client";
-
 import { TRPCError } from "@trpc/server";
 
 import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TBulkEditSchema } from "./bulk-edit.schema";
+import { bulkUpdateTerms } from "./mutations/update";
+import { serialize } from "./utils/serialize";
 
 type BulkEditOptions = {
   ctx: NonNullableUserContext;
@@ -17,7 +17,9 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
       id: input.studySetId,
       userId: ctx.session.user.id,
     },
-    include: {
+    select: {
+      id: true,
+      created: true,
       terms: {
         where: {
           id: {
@@ -38,27 +40,33 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
     });
   }
 
-  const terms = studySet.terms.map((term) => ({
-    ...term,
-    ...input.terms.find((t) => t.id === term.id),
-  }));
+  const terms = studySet.terms.map((term) => {
+    const t = input.terms.find((t) => t.id === term.id);
+    if (!t) throw new TRPCError({ code: "BAD_REQUEST" });
 
-  const vals = terms.map((term) => [
-    term.id,
-    term.word,
-    term.definition,
-    term.rank,
-    studySet.id,
-  ]);
+    const { plainText: word, richText: wordRichText } = serialize(
+      t.word,
+      t.wordRichText,
+      studySet.created,
+      true,
+    );
+    const { plainText: definition, richText: definitionRichText } = serialize(
+      t.definition,
+      t.definitionRichText,
+      studySet.created,
+      true,
+    );
 
-  const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
-  const query = Prisma.sql`
-    INSERT INTO Term (id, word, definition, \`rank\`, studySetId)
-    VALUES ${Prisma.join(formatted)}
-    ON DUPLICATE KEY UPDATE word = VALUES(word), definition = VALUES(definition)
-  `;
+    return {
+      ...term,
+      word,
+      wordRichText,
+      definition,
+      definitionRichText,
+    };
+  });
 
-  await ctx.prisma.$executeRaw(query);
+  await bulkUpdateTerms(terms, studySet.id);
 
   await markCortexStale(input.studySetId);
 };

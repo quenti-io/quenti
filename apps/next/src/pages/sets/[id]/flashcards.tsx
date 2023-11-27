@@ -14,6 +14,7 @@ import { FlashcardsLoading } from "../../../modules/flashcards/flashcards-loadin
 import { FlashcardsSettingsModal } from "../../../modules/flashcards/flashcards-settings-modal";
 import { TitleBar } from "../../../modules/flashcards/titlebar";
 import { HydrateSetData } from "../../../modules/hydrate-set-data";
+import { TermImageLayer } from "../../../modules/term-image-layer";
 
 const Flashcards = () => {
   const [settingsOpen, setSettingsOpen] = React.useState(false);
@@ -23,6 +24,7 @@ const Flashcards = () => {
       <HeadSeo title="Flashcards" />
       <LazyWrapper>
         <EditorGlobalStyles />
+        <TermImageLayer />
         <HydrateSetData isPublic placeholder={<FlashcardsLoading />}>
           <FlashcardsSettingsModal
             isOpen={settingsOpen}

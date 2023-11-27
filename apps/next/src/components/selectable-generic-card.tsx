@@ -49,8 +49,10 @@ export const SelectableGenericCard: React.FC<SelectableGenericCard> = ({
 
   return (
     <Box
-      as="article"
+      as="button"
       h="full"
+      w="full"
+      textAlign="start"
       rounded="lg"
       p="5"
       bg={linkBg}
@@ -60,6 +62,11 @@ export const SelectableGenericCard: React.FC<SelectableGenericCard> = ({
       transition="all ease-in-out 150ms"
       _hover={{
         transform: "translateY(-2px)",
+      }}
+      outline="solid 2px transparent"
+      outlineOffset={2}
+      _focusVisible={{
+        outlineColor: "blue.200",
       }}
       cursor="pointer"
       onClick={onSelect}

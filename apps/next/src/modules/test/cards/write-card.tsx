@@ -9,6 +9,7 @@ import type { WriteData } from "@quenti/interfaces";
 import { Box, HStack, Input, Stack, useColorModeValue } from "@chakra-ui/react";
 
 import { CharacterButtonWrapper } from "../../../components/special-characters";
+import { SquareAssetPreview } from "../../../components/terms/square-asset-preview";
 import { useTestContext } from "../../../stores/use-test-store";
 import { richWord, word } from "../../../utils/terms";
 import { CortexGraded } from "../cortex-graded";
@@ -53,6 +54,16 @@ export const WriteCard: React.FC<CardProps> = ({ i, result }) => {
     <>
       <RichPromptDisplay
         label={question.answerMode == "Definition" ? "Term" : "Definition"}
+        extra={
+          question.answerMode == "Word" &&
+          data.term.assetUrl && (
+            <SquareAssetPreview
+              rounded={8}
+              size={100}
+              src={data.term.assetUrl || ""}
+            />
+          )
+        }
         {...richWord(question.answerMode, data.term, "prompt")}
       />
       <Stack>

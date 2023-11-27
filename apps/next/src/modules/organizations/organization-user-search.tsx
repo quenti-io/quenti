@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useDebounce } from "@quenti/lib/hooks/use-debounce";
 import { api } from "@quenti/trpc";
 
 import {
@@ -18,7 +19,6 @@ import { IconPlus } from "@tabler/icons-react";
 
 import { ClientOnly } from "../../components/client-only";
 import { LoadingSearch } from "../../components/loading-search";
-import { useDebounce } from "../../hooks/use-debounce";
 import { useOrganization } from "../../hooks/use-organization";
 import { useOrganizationMember } from "../../hooks/use-organization-member";
 import { plural } from "../../utils/string";

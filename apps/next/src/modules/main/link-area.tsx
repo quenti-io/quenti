@@ -58,7 +58,7 @@ export const LinkArea = () => {
       <Linkable
         name="Match"
         icon={<IconLayersSubtract />}
-        href={`/${id}/match`}
+        href={`/${id}/match?intro=true`}
         requireAuth
       />
       <Linkable name="Crossword" icon={<IconGridDots />} comingSoon />
