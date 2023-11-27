@@ -1,11 +1,16 @@
 import { env } from "@quenti/env/client";
 
-export const squareCdnLoader = ({
-  src,
-  width,
-}: {
-  src: string;
-  width: number;
-}) => {
-  return `${env.NEXT_PUBLIC_CDN_WORKER_ENDPOINT}/image/${src}&w=${width}&h=${width}`;
+const transform = (url: string, transform: string) => {
+  const v = url.includes("?") ? "&" : "?";
+  return `${env.NEXT_PUBLIC_CGI_ENDPOINT}/${url}${v}twic=v1/${transform}`;
+};
+
+export const square = ({ src, width }: { src: string; width: number }) => {
+  if (!env.NEXT_PUBLIC_CGI_ENDPOINT) return src;
+  return transform(src, `cover=${width}x${width}`);
+};
+
+export const resize = ({ src, width }: { src: string; width: number }) => {
+  if (!env.NEXT_PUBLIC_CGI_ENDPOINT || src.includes("unsplash.com")) return src;
+  return transform(src, `resize=${width}`);
 };

@@ -15,6 +15,7 @@ import { FlashcardsLoading } from "../../../../../modules/flashcards/flashcards-
 import { FlashcardsSettingsModal } from "../../../../../modules/flashcards/flashcards-settings-modal";
 import { TitleBar } from "../../../../../modules/flashcards/titlebar";
 import { HydrateFolderData } from "../../../../../modules/hydrate-folder-data";
+import { TermImageLayer } from "../../../../../modules/term-image-layer";
 
 const FolderStudyFlashcards = () => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const FolderStudyFlashcards = () => {
       <HeadSeo title="Flashcards" />
       <LazyWrapper>
         <EditorGlobalStyles />
+        <TermImageLayer />
         <HydrateFolderData
           withTerms
           fallback={

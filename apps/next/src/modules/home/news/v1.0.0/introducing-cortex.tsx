@@ -12,7 +12,7 @@ import {
 
 import { IconBrain, IconLayoutGrid, IconPencil } from "@tabler/icons-react";
 
-import { NewsCard } from "../news-card";
+import { NewsCard } from "../../news-card";
 
 export const IntroducingCortex = () => {
   return (

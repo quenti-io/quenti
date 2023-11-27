@@ -9,6 +9,13 @@ import Underline from "@tiptap/extension-underline";
 import { generateHTML, generateJSON } from "@tiptap/html";
 import type { JSONContent } from "@tiptap/react";
 
+import type { Term } from "@quenti/prisma/client";
+
+export type EditorTerm = Term & {
+  wordRichText: JSON | null | undefined;
+  definitionRichText: JSON | null | undefined;
+};
+
 // Glad you're here! https://arc.net/e/D8FDAA6B-8BCD-4D3B-AAE5-4A6756C42D45
 export const HighlightExtension = HighlightRaw.extend({
   priority: 200,

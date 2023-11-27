@@ -16,6 +16,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     include: {
       studySets: {
         where: {
+          created: true,
           OR: [
             {
               visibility: "Public",

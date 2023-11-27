@@ -21,7 +21,7 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
     },
   });
 
-  if (!studySet) {
+  if (!studySet || !studySet.created) {
     throw new TRPCError({
       code: "NOT_FOUND",
     });

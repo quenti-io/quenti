@@ -4,6 +4,7 @@ import React from "react";
 
 import { Display } from "@quenti/components/display";
 import {
+  type EditorTerm,
   editorInput,
   getPlainText,
   hasRichText,
@@ -24,12 +25,18 @@ import {
 
 import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 
+import { resize } from "../../common/cdn-loaders";
+import { PhotoView } from "../../components/photo-view/photo-view";
 import { SetCreatorOnly } from "../../components/set-creator-only";
+import { editorEventChannel } from "../../events/editor";
 import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
 import { useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
-import type { ClientTerm } from "../../stores/use-set-editor-store";
+import {
+  AddImageButton,
+  RemoveImageButton,
+} from "../editor/card/image-components";
 import { RichTextBar } from "../editor/card/rich-text-bar";
 import { editorConfig } from "../editor/editor-config";
 
@@ -43,6 +50,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
 
   const starMutation = api.container.starTerm.useMutation();
   const unstarMutation = api.container.unstarTerm.useMutation();
+  const removeImage = api.terms.removeImage.useMutation();
 
   const { container } = useSet();
   const starredTerms = useContainerContext((s) => s.starredTerms);
@@ -53,14 +61,31 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   const Star = starred ? IconStarFilled : IconStar;
 
   const [isEditing, setIsEditing] = React.useState(false);
+  const [assetUrl, setAssetUrl] = React.useState(term.assetUrl);
+
+  React.useEffect(() => {
+    setAssetUrl(term.assetUrl);
+  }, [term.assetUrl]);
+
+  React.useEffect(() => {
+    const handle = (args: { id: string; url: string }) => {
+      if (args.id == term.id) setAssetUrl(args.url);
+    };
+
+    editorEventChannel.on("propagateImageUrl", handle);
+    return () => {
+      editorEventChannel.off("propagateImageUrl", handle);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
-    content: editorInput(term as ClientTerm, "word"),
+    content: editorInput(term as EditorTerm, "word"),
   });
   const definitionEditor = useEditor({
     ...editorConfig(term.rank + 1),
-    content: editorInput(term as ClientTerm, "definition"),
+    content: editorInput(term as EditorTerm, "definition"),
   });
 
   const edit = api.terms.edit.useMutation({
@@ -131,8 +156,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
   return (
     <Card
       ref={ref}
-      px={{ base: 0, sm: "22px" }}
-      py={{ base: 0, sm: 5 }}
+      px={{ base: 0, md: "22px" }}
+      py={{ base: 0, md: 5 }}
       shadow="0 2px 6px -4px rgba(0, 0, 0, 0.1), 0 2px 4px -4px rgba(0, 0, 0, 0.06)"
       borderWidth="1.5px"
       transition="border-color 0.15s ease-in-out"
@@ -144,16 +169,16 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
       }}
     >
       <Flex
-        flexDir={["column-reverse", "row", "row"]}
+        flexDir={{ base: "column-reverse", md: "row" }}
         alignItems="stretch"
-        gap={[0, 6, 6]}
+        gap={{ base: 0, md: 6 }}
       >
         <Flex
           w="full"
-          flexDir={["column", "row", "row"]}
-          gap={[2, 6, 6]}
-          px={{ base: 3, sm: 0 }}
-          py={{ base: 3, sm: 0 }}
+          flexDir={{ base: "column", md: "row" }}
+          gap={{ base: 2, md: 6 }}
+          px={{ base: 3, md: 0 }}
+          py={{ base: 3, md: 0 }}
         >
           {isEditing ? (
             <Stack w="full">
@@ -167,14 +192,19 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               />
             </Stack>
           ) : (
-            <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+            <Text
+              w="full"
+              whiteSpace="pre-wrap"
+              overflowWrap="anywhere"
+              lineHeight={1.6}
+            >
               <Display text={cache.word} richText={cache.wordRichText} />
             </Text>
           )}
           <Box
-            bg="gray.200"
+            bg="gray.100"
             _dark={{
-              bg: "gray.600",
+              bg: "gray.700",
             }}
             h="full"
             rounded="full"
@@ -192,35 +222,91 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
               />
             </Stack>
           ) : (
-            <Text w="full" whiteSpace="pre-wrap" overflowWrap="anywhere">
+            <Text
+              w="full"
+              whiteSpace="pre-wrap"
+              overflowWrap="anywhere"
+              lineHeight={1.6}
+            >
               <Display
                 text={cache.definition}
                 richText={cache.definitionRichText}
               />
             </Text>
           )}
+          <Box minW="100px">
+            {assetUrl && (
+              <Box
+                minW="100px"
+                h="80px"
+                mt={{ base: 3, md: 0 }}
+                position="relative"
+              >
+                <PhotoView src={resize({ src: assetUrl, width: 500 })}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    width={100}
+                    height={80}
+                    alt="Term asset"
+                    src={resize({ src: assetUrl, width: 500 })}
+                    style={{
+                      cursor: "zoom-in",
+                      width: 100,
+                      height: 80,
+                      objectFit: "cover",
+                      aspectRatio: "5 / 4",
+                      borderRadius: "6px",
+                    }}
+                  />
+                </PhotoView>
+                {isEditing && (
+                  <RemoveImageButton
+                    onClick={() => {
+                      setAssetUrl(null);
+                      removeImage.mutate({
+                        id: term.id,
+                        studySetId: term.studySetId,
+                      });
+                    }}
+                  />
+                )}
+              </Box>
+            )}
+            {isEditing && !assetUrl && (
+              <AddImageButton
+                w="100px"
+                h="80px"
+                onClick={() => {
+                  editorEventChannel.emit("openSearchImages", {
+                    termId: term.id,
+                    studySetId: term.studySetId,
+                  });
+                }}
+              />
+            )}
+          </Box>
         </Flex>
         <Box
           h="full"
-          px={{ base: 1, sm: 0 }}
-          py={{ base: 2, sm: 0 }}
-          borderBottomWidth={{ base: 2, sm: 0 }}
-          borderBottomColor={{ base: "gray.100", sm: "none" }}
+          px={{ base: 1, md: 0 }}
+          py={{ base: 2, md: 0 }}
+          borderBottomWidth={{ base: 2, md: 0 }}
+          borderBottomColor={{ base: "gray.100", md: "none" }}
           _dark={{
-            borderBottomColor: { base: "gray.700", sm: "none" },
+            borderBottomColor: { base: "gray.700", md: "none" },
           }}
         >
           <Flex w="full" justifyContent="end">
             <HStack
               spacing={1}
               height="24px"
-              justifyContent={{ base: "space-between", sm: "end" }}
+              justifyContent={{ base: "space-between", md: "end" }}
               w="full"
             >
               <SetCreatorOnly fallback={<Box />}>
                 <IconButton
-                  size={{ base: "sm", sm: undefined }}
-                  transform={{ base: "scale(0.8)", sm: "scale(1)" }}
+                  size={{ base: "sm", md: undefined }}
+                  transform={{ base: "scale(0.8)", md: "scale(1)" }}
                   icon={<IconEditCircle size={18} />}
                   variant={isEditing ? "solid" : "ghost"}
                   aria-label="Edit"
@@ -234,8 +320,8 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
                 />
               </SetCreatorOnly>
               <IconButton
-                size={{ base: "sm", sm: undefined }}
-                transform={{ base: "scale(0.8)", sm: "scale(1)" }}
+                size={{ base: "sm", md: undefined }}
+                transform={{ base: "scale(0.8)", md: "scale(1)" }}
                 icon={<Star size={18} />}
                 variant="ghost"
                 aria-label="Edit"

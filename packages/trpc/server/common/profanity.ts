@@ -6,6 +6,8 @@ import type { JSONContent } from "@tiptap/react";
 
 import { getPlainText } from "@quenti/lib/editor";
 
+import { TRPCError } from "@trpc/server";
+
 import whitelist from "./static/profanity.json";
 
 const { defaultWhitelist, usernameWhitelist } = whitelist;
@@ -78,33 +80,35 @@ usernameProfanity.removeWords(
 
 export const censorRichText = (json: JSONContent): JSONContent => {
   const plainText = getPlainText(json);
-  const censored = profanity.censor(plainText);
-  return internalCensor(0, censored, json);
+  const censored = profanity.censor(plainText).split("\n");
+
+  return internalCensor(censored, json);
 };
 
-const internalCensor = (
-  index: number,
-  censored: string,
-  json: JSONContent,
-): JSONContent => {
-  return {
-    ...json,
-    content: json.content?.map((node) => {
+const internalCensor = (censored: string[], json: JSONContent): JSONContent => {
+  const censorParagraph = (json: JSONContent, index: number) => {
+    if (json.type !== "paragraph")
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    // May contain empty paragraphs
+    if (!json.content) return;
+
+    const rawCensored = censored[index]!;
+
+    let counter = 0;
+    for (const node of json.content) {
       if (node.type === "text" && typeof node.text == "string") {
-        const start = index;
-        const end = index + node.text.length;
-        index = end;
+        const start = counter;
+        const end = counter + node.text.length;
+        counter = end;
 
-        return {
-          ...node,
-          text: censored.slice(start, end),
-        };
+        node.text = rawCensored.slice(start, end);
       }
-      if (node.type === "paragraph") {
-        return internalCensor(index, censored, node);
-      }
-
-      return node;
-    }),
+    }
   };
+
+  if (json.type !== "doc" || json.content?.length !== censored.length)
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+  json.content.map((node, i) => censorParagraph(node, i));
+  return json;
 };

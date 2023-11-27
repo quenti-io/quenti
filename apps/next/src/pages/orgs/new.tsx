@@ -56,7 +56,7 @@ export default function NewOrganization() {
   useUnauthedRedirect();
 
   const sendEvent = (id: string, name: string) => {
-    void event("class_created", { id, name });
+    void event("org_created", { id, name });
   };
 
   const { file, setFile, onInputFile, uploadLogo } = useOrgLogoUpload({

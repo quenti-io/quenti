@@ -13,27 +13,25 @@ import {
 import { IconClockPlay } from "@tabler/icons-react";
 
 import { UsernameLink } from "../../components/username-link";
-import { useMatchContext } from "../../stores/use-match-store";
 import { formatDeciseconds } from "../../utils/time";
 
 interface MatchSummaryFeedbackProps {
   elapsed: number;
+  eligible: boolean;
   highscore: RouterOutputs["leaderboard"]["highscore"];
   highscores: RouterOutputs["leaderboard"]["byEntityId"]["highscores"];
 }
 
 export const MatchSummaryFeedback: React.FC<MatchSummaryFeedbackProps> = ({
   elapsed,
+  eligible,
   highscore,
   highscores,
 }) => {
   const session = useSession();
   const userId = session.data!.user!.id;
-  const isEligibleForLeaderboard = useMatchContext(
-    (s) => s.isEligibleForLeaderboard,
-  );
 
-  const text = isEligibleForLeaderboard
+  const text = eligible
     ? leaderboardSummary(elapsed, userId, highscores)
     : personalSummary(elapsed, highscore);
 

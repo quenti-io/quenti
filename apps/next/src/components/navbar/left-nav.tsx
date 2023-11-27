@@ -72,6 +72,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             _dark={{
               color: "white",
             }}
+            className="notranslate"
           >
             Quenti
           </Heading>

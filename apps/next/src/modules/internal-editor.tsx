@@ -1,12 +1,7 @@
-import React from "react";
-import { shallow } from "zustand/shallow";
-
 import { HeadSeo } from "@quenti/components/head-seo";
 
-import {
-  SetEditorStoreContext,
-  useSetEditorContext,
-} from "../stores/use-set-editor-store";
+import { useSetEditorContext } from "../stores/use-set-editor-store";
+import { EditorListener } from "./editor-listener";
 import { HydrateEditSetData } from "./hydrate-edit-set-data";
 import { SetEditorPure } from "./set-editor";
 
@@ -30,37 +25,8 @@ const EditorWrapper = () => {
           nofollow: true,
         }}
       />
-      <PropertiesListener />
+      <EditorListener />
       <SetEditorPure />
     </>
   );
-};
-
-const PropertiesListener = () => {
-  const store = React.useContext(SetEditorStoreContext)!;
-
-  const propertiesSaveHandler = React.useCallback(() => {
-    store.getState().onSubscribeDelegate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    store.subscribe(
-      (s) => [
-        s.title,
-        s.description,
-        s.tags,
-        s.wordLanguage,
-        s.definitionLanguage,
-        s.visibility,
-      ],
-      propertiesSaveHandler,
-      {
-        equalityFn: shallow,
-      },
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return <></>;
 };

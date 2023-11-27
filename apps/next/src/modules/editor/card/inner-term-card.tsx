@@ -27,10 +27,14 @@ import {
 
 import { IconGripHorizontal, IconTrash } from "@tabler/icons-react";
 
+import { resize } from "../../../common/cdn-loaders";
+import { PhotoView } from "../../../components/photo-view/photo-view";
+import { editorEventChannel } from "../../../events/editor";
 import { useSetEditorContext } from "../../../stores/use-set-editor-store";
 import { CharacterSuggestionsPure } from "../character-suggestions";
 import { editorAttributes, editorConfig } from "../editor-config";
 import { DeloadedDisplayable } from "./deloaded-card";
+import { AddImageButton, RemoveImageButton } from "./image-components";
 import { RichTextBar } from "./rich-text-bar";
 import type { SortableTermCardProps } from "./sortable-term-card";
 
@@ -87,7 +91,9 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const [wordEmpty, setWordEmpty] = React.useState(false);
   const [definitionEmpty, setDefinitionEmpty] = React.useState(false);
 
+  const id = useSetEditorContext((s) => s.id);
   const setCurrentActive = useSetEditorContext((s) => s.setCurrentActiveRank);
+  const removeImage = useSetEditorContext((s) => s.removeImage);
 
   const wordEditor = useEditor({
     ...editorConfig(term.rank + 1),
@@ -192,7 +198,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     return { word, definition, wordJson, definitionJson };
   };
 
-  const editIfDirty = (focused: boolean) => {
+  const editIfDirty = (focused: boolean, force = false) => {
     const { word, definition, wordJson, definitionJson } =
       getEditorPlainTexts();
 
@@ -209,13 +215,14 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     };
 
     if (
-      (word !== term.word ||
+      force ||
+      ((word !== term.word ||
         definition !== term.definition ||
         ((wordRichText || term.wordRichText) &&
           !compareJson(wordJson, term.wordRichText)) ||
         ((definitionRichText || term.definitionRichText) &&
           !compareJson(definitionJson, term.definitionRichText))) &&
-      !focused
+        !focused)
     ) {
       editTerm(
         term.id,
@@ -274,7 +281,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
         alignItems="start"
         flexDir={{
           base: "column",
-          sm: "row",
+          sd: "row",
         }}
       >
         <Stack w="full" spacing={2}>
@@ -381,6 +388,42 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             <LanguageButtonPure type="definition" />
           </Flex>
         </Stack>
+        <Box mt="1" minW="80px" h="60px" position="relative">
+          {term.assetUrl ? (
+            <>
+              <PhotoView
+                src={resize({ src: term.assetUrl, width: 500 })}
+                borderRadius={12}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  width="80x"
+                  height="60px"
+                  src={resize({ src: term.assetUrl, width: 500 })}
+                  alt={`Image for ${term.definition}`}
+                  style={{
+                    cursor: "zoom-in",
+                    objectFit: "cover",
+                    width: "80px",
+                    height: "60px",
+                    borderRadius: "0.75rem",
+                  }}
+                />
+              </PhotoView>
+              <RemoveImageButton onClick={() => removeImage(term.id)} />
+            </>
+          ) : (
+            <AddImageButton
+              onClick={() => {
+                editIfDirty(false, true);
+                editorEventChannel.emit("openSearchImages", {
+                  termId: term.id,
+                  studySetId: id,
+                });
+              }}
+            />
+          )}
+        </Box>
       </HStack>
     </MotionStack>
   );

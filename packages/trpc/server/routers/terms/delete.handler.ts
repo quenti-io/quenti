@@ -1,3 +1,6 @@
+import { env } from "@quenti/env/server";
+import { deleteTermAsset } from "@quenti/images/server";
+
 import { TRPCError } from "@trpc/server";
 
 import { markCortexStale } from "../../lib/cortex";
@@ -43,6 +46,11 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
         studySetId: input.studySetId,
       },
     },
+    select: {
+      id: true,
+      rank: true,
+      assetUrl: true,
+    },
   });
 
   if (!term) {
@@ -65,6 +73,13 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
       },
     },
   });
+
+  if (
+    env.ASSETS_BUCKET_URL &&
+    term.assetUrl?.startsWith(env.ASSETS_BUCKET_URL)
+  ) {
+    await deleteTermAsset(input.studySetId, term.id);
+  }
 
   await ctx.prisma.term.delete({
     where: {

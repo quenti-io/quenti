@@ -5,8 +5,10 @@ import {
   publicProcedure,
 } from "../../trpc";
 import { ZByIdSchema } from "./by-id.schema";
+import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSchema } from "./delete.schema";
 import { ZEditSchema } from "./edit.schema";
+import { ZGetAutosaveSchema } from "./get-autosave.schema";
 import { ZGetPublicSchema } from "./get-public.schema";
 import { ZGetShareIdSchema } from "./get-share-id.schema";
 import { ZRecentSchema } from "./recent.schema";
@@ -14,11 +16,12 @@ import { ZRecentSchema } from "./recent.schema";
 type StudySetsRouterHandlerCache = {
   handlers: {
     recent?: typeof import("./recent.handler").recentHandler;
-    ["get-official"]?: typeof import("./get-official.handler").getOfficialHandler;
     ["by-id"]?: typeof import("./by-id.handler").byIdHandler;
     ["get-public"]?: typeof import("./get-public.handler").getPublicHandler;
+    ["get-autosave"]?: typeof import("./get-autosave.handler").getAutosaveHandler;
+    ["create-autosave"]?: typeof import("./create-autosave.handler").createAutosaveHandler;
     ["get-share-id"]?: typeof import("./get-share-id.handler").getShareIdHandler;
-    ["create-from-autosave"]?: typeof import("./create-from-autosave.handler").createFromAutosaveHandler;
+    create?: typeof import("./create.handler").createHandler;
     edit?: typeof import("./edit.handler").editHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
   };
@@ -36,10 +39,6 @@ export const studySetsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "recent");
       return HANDLER_CACHE.handlers.recent!({ ctx, input });
     }),
-  getOfficial: protectedProcedure.query(async ({ ctx }) => {
-    await loadHandler(HANDLER_CACHE, "get-official");
-    return HANDLER_CACHE.handlers["get-official"]!({ ctx });
-  }),
   byId: protectedProcedure.input(ZByIdSchema).query(async ({ ctx, input }) => {
     await loadHandler(HANDLER_CACHE, "by-id");
     return HANDLER_CACHE.handlers["by-id"]!({ ctx, input });
@@ -50,16 +49,28 @@ export const studySetsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "get-public");
       return HANDLER_CACHE.handlers["get-public"]!({ ctx, input });
     }),
+  getAutosave: protectedProcedure
+    .input(ZGetAutosaveSchema)
+    .query(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "get-autosave");
+      return HANDLER_CACHE.handlers["get-autosave"]!({ ctx, input });
+    }),
+  createAutosave: protectedProcedure.mutation(async ({ ctx }) => {
+    await loadHandler(HANDLER_CACHE, "create-autosave");
+    return HANDLER_CACHE.handlers["create-autosave"]!({ ctx });
+  }),
   getShareId: publicProcedure
     .input(ZGetShareIdSchema)
     .query(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "get-share-id");
       return HANDLER_CACHE.handlers["get-share-id"]!({ ctx, input });
     }),
-  createFromAutosave: protectedProcedure.mutation(async ({ ctx }) => {
-    await loadHandler(HANDLER_CACHE, "create-from-autosave");
-    return HANDLER_CACHE.handlers["create-from-autosave"]!({ ctx });
-  }),
+  create: protectedProcedure
+    .input(ZCreateSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "create");
+      return HANDLER_CACHE.handlers["create"]!({ ctx, input });
+    }),
   edit: protectedProcedure
     .input(ZEditSchema)
     .mutation(async ({ ctx, input }) => {

@@ -4,20 +4,11 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
 import type { Language } from "@quenti/core/language";
-import type {
-  AutoSaveTerm,
-  StudySetVisibility,
-  Term,
-} from "@quenti/prisma/client";
+import type { StudySetVisibility, Term } from "@quenti/prisma/client";
 
-export type ClientTerm = Omit<Term, "wordRichText" | "definitionRichText"> & {
-  clientKey: string;
-  wordRichText?: JSON | null;
-  definitionRichText?: JSON | null;
-};
-export type ClientAutoSaveTerm = Omit<
-  AutoSaveTerm,
-  "wordRichText" | "definitionRichText"
+export type ClientTerm = Omit<
+  Term,
+  "studySetId" | "wordRichText" | "definitionRichText"
 > & {
   clientKey: string;
   wordRichText?: JSON | null;
@@ -25,6 +16,7 @@ export type ClientAutoSaveTerm = Omit<
 };
 
 interface SetEditorProps {
+  id: string;
   mode: "create" | "edit";
   isSaving: boolean;
   isLoading: boolean;
@@ -36,7 +28,7 @@ interface SetEditorProps {
   wordLanguage: Language;
   definitionLanguage: Language;
   visibility: StudySetVisibility;
-  terms: (ClientTerm | ClientAutoSaveTerm)[];
+  terms: ClientTerm[];
   serverTerms: string[];
   visibleTerms: number[];
   lastCreated?: string;
@@ -55,7 +47,10 @@ interface SetEditorState extends SetEditorProps {
   setDefinitionLanguage: (definitionLanguage: Language) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
   addTerm: (rank: number) => void;
-  bulkAddTerms: (terms: { word: string; definition: string }[]) => void;
+  bulkAddTerms: (
+    terms: { word: string; definition: string }[],
+    deleted?: string[],
+  ) => void;
   deleteTerm: (id: string) => void;
   setServerTermId: (oldId: string, serverId: string) => void;
   editTerm: (
@@ -65,10 +60,12 @@ interface SetEditorState extends SetEditorProps {
     wordRichText?: JSON,
     definitionRichText?: JSON,
   ) => void;
+  setImage: (id: string, assetUrl: string) => void;
+  removeImage: (id: string) => void;
   reorderTerm: (id: string, rank: number) => void;
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
-  removeServerTerm: (term: string) => void;
+  removeServerTerms: (term: string[]) => void;
   setTermVisible: (rank: number, visible: boolean) => void;
   setLastCreated: (id: string) => void;
   setCurrentActiveRank: (id: number) => void;
@@ -83,6 +80,7 @@ export const createSetEditorStore = (
   behaviors?: Partial<SetEditorState>,
 ) => {
   const DEFAULT_PROPS: SetEditorProps = {
+    id: "",
     mode: "create",
     isSaving: false,
     isLoading: false,
@@ -117,14 +115,14 @@ export const createSetEditorStore = (
         set((state) => {
           const clientKey = nanoid();
 
-          const term: ClientAutoSaveTerm = {
+          const term: ClientTerm = {
             id: clientKey,
             clientKey,
             word: "",
             definition: "",
             wordRichText: null,
             definitionRichText: null,
-            setAutoSaveId: "",
+            assetUrl: null,
             rank,
           };
 
@@ -141,9 +139,15 @@ export const createSetEditorStore = (
         behaviors?.addTerm?.(rank);
       },
       bulkAddTerms: (terms: { word: string; definition: string }[]) => {
+        const deleted = new Array<string>();
+
         set((state) => {
           const filtered = state.terms
-            .filter((x) => !!x.word.length || !!x.definition.length)
+            .filter((x) => {
+              const keep = !!x.word.length || !!x.definition.length;
+              if (!keep && state.serverTerms.includes(x.id)) deleted.push(x.id);
+              return keep;
+            })
             .map((x, i) => ({ ...x, rank: i }));
 
           const newTerms = terms.map((term, i) => {
@@ -156,7 +160,7 @@ export const createSetEditorStore = (
               definition: term.definition,
               wordRichText: null,
               definitionRichText: null,
-              setAutoSaveId: "",
+              assetUrl: null,
               rank: filtered.length + i,
             };
           });
@@ -165,7 +169,8 @@ export const createSetEditorStore = (
             terms: [...filtered, ...newTerms],
           };
         });
-        behaviors?.bulkAddTerms?.(terms);
+
+        behaviors?.bulkAddTerms?.(terms, deleted);
       },
       deleteTerm: (id: string) => {
         set((state) => {
@@ -207,6 +212,26 @@ export const createSetEditorStore = (
           wordRichText,
           definitionRichText,
         );
+      },
+      setImage: (id: string, assetUrl: string) => {
+        set((state) => {
+          return {
+            terms: state.terms.map((t) =>
+              t.id === id ? { ...t, assetUrl } : t,
+            ),
+          };
+        });
+        behaviors?.setImage?.(id, assetUrl);
+      },
+      removeImage: (id: string) => {
+        set((state) => {
+          return {
+            terms: state.terms.map((t) =>
+              t.id === id ? { ...t, assetUrl: null } : t,
+            ),
+          };
+        });
+        behaviors?.removeImage?.(id);
       },
       setServerTermId: (oldId: string, serverId: string) => {
         set((state) => {
@@ -255,13 +280,13 @@ export const createSetEditorStore = (
         });
         behaviors?.addServerTerms?.(terms);
       },
-      removeServerTerm: (term: string) => {
+      removeServerTerms: (terms: string[]) => {
         set((state) => {
           return {
-            serverTerms: state.serverTerms.filter((t) => t !== term),
+            serverTerms: state.serverTerms.filter((t) => !terms.includes(t)),
           };
         });
-        behaviors?.removeServerTerm?.(term);
+        behaviors?.removeServerTerms?.(terms);
       },
       setTermVisible: (rank: number, visible: boolean) => {
         set((state) => {
