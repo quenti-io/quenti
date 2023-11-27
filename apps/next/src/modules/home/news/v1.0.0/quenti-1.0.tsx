@@ -1,6 +1,6 @@
 import { Box, Center, GridItem, Heading } from "@chakra-ui/react";
 
-import { NewsCard } from "../news-card";
+import { NewsCard } from "../../news-card";
 
 export const Quenti10 = () => {
   return (

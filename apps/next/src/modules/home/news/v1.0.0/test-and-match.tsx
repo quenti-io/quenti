@@ -2,7 +2,7 @@ import { Box, Center, GridItem, HStack } from "@chakra-ui/react";
 
 import { IconLayersSubtract, IconPlus, IconReport } from "@tabler/icons-react";
 
-import { NewsCard } from "../news-card";
+import { NewsCard } from "../../news-card";
 
 export const TestAndMatch = () => {
   return (

@@ -2,10 +2,10 @@ import { api } from "@quenti/trpc";
 
 import { Grid, Heading, Skeleton, Stack } from "@chakra-ui/react";
 
-import { ClassesBeta } from "./news/classes-beta";
-import { IntroducingCortex } from "./news/introducing-cortex";
-import { Quenti10 } from "./news/quenti-1.0";
-import { TestAndMatch } from "./news/test-and-match";
+import { ClassesBeta } from "./news/v1.0.0/classes-beta";
+import { IntroducingCortex } from "./news/v1.0.0/introducing-cortex";
+import { Images } from "./news/v1.2.0/images";
+import { RichText } from "./news/v1.2.0/rich-text";
 
 export const News = () => {
   const { data } = api.recent.get.useQuery();
@@ -18,10 +18,10 @@ export const News = () => {
         <Heading size="lg">What&apos;s new</Heading>
       </Skeleton>
       <Grid templateColumns="repeat(auto-fill, minmax(256px, 1fr))" gap={4}>
-        <Quenti10 />
+        <Images />
+        <RichText />
         <ClassesBeta />
         <IntroducingCortex />
-        <TestAndMatch />
       </Grid>
     </Stack>
   );
