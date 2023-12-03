@@ -18,13 +18,20 @@ export const TopLoadingBar = () => {
         .join("|")})$`,
     );
 
-    router.events.on("routeChangeStart", (url) => {
-      if (unified.test(url as string)) barRef.current?.continuousStart(20, 750);
-    });
-    router.events.on("routeChangeComplete", (url) => {
-      if (unified.test(url as string)) barRef.current?.complete();
-    });
+    const routeChangeStart = (url: string) => {
+      if (unified.test(url)) barRef.current?.continuousStart(20, 750);
+    };
+    const routeChangeComplete = (url: string) => {
+      if (unified.test(url)) barRef.current?.complete();
+    };
 
+    router.events.on("routeChangeStart", routeChangeStart);
+    router.events.on("routeChangeComplete", routeChangeComplete);
+
+    return () => {
+      router.events.off("routeChangeStart", routeChangeStart);
+      router.events.off("routeChangeComplete", routeChangeComplete);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
