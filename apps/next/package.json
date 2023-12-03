@@ -66,7 +66,6 @@
     "@tremor/react": "^3.8.2",
     "@upstash/ratelimit": "^0.4.4",
     "@upstash/redis": "^1.22.1",
-    "@vercel/analytics": "^1.1.1",
     "@vercel/og": "^0.5.17",
     "attr-accept": "^2.2.2",
     "axios": "^1.5.0",

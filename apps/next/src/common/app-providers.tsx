@@ -11,10 +11,6 @@ const HighlightInit = dynamic(
   () => import("@highlight-run/next/client").then((mod) => mod.HighlightInit),
   { ssr: false },
 );
-const Analytics = dynamic(
-  () => import("@vercel/analytics/react").then((mod) => mod.Analytics),
-  { ssr: false },
-);
 const SessionListener = dynamic(
   () => import("./session-listener").then((mod) => mod.SessionListener),
   { ssr: false },
@@ -71,13 +67,6 @@ export const AppProviders = (props: AppPropsWithChildren) => {
           {props.children}
         </SessionProvider>
       </TelemetryProvider>
-      <Analytics
-        mode={
-          env.NEXT_PUBLIC_DEPLOYMENT == "production"
-            ? "production"
-            : "development"
-        }
-      />
     </ChakraProvider>
   );
 };
