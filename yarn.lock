@@ -4689,7 +4689,6 @@ __metadata:
     "@types/react-dom": "npm:^18.2.15"
     "@upstash/ratelimit": "npm:^0.4.4"
     "@upstash/redis": "npm:^1.22.1"
-    "@vercel/analytics": "npm:^1.1.1"
     "@vercel/og": "npm:^0.5.17"
     attr-accept: "npm:^2.2.2"
     autoprefixer: "npm:^10.4.14"

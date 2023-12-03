@@ -11,16 +11,12 @@ const HighlightInit = dynamic(
   () => import("@highlight-run/next/client").then((mod) => mod.HighlightInit),
   { ssr: false },
 );
-const Analytics = dynamic(
-  () => import("@vercel/analytics/react").then((mod) => mod.Analytics),
-  { ssr: false },
-);
 const SessionListener = dynamic(
   () => import("./session-listener").then((mod) => mod.SessionListener),
   { ssr: false },
 );
-const IdentifyUser = dynamic(
-  () => import("../lib/telemetry").then((mod) => mod.IdentifyUser),
+const EventListeners = dynamic(
+  () => import("../lib/telemetry").then((mod) => mod.EventListeners),
   {
     ssr: false,
   },
@@ -28,9 +24,6 @@ const IdentifyUser = dynamic(
 
 // We can't use no-ssr boundary splitting for providers with children otherwise SEO and rendering will be broken
 // Unfortunately, our bundle size is a bit larger but ttfb is still decent
-const HistoryProvider = dynamic(() =>
-  import("../modules/history-provider").then((mod) => mod.HistoryProvider),
-);
 const TelemetryProvider = dynamic(() =>
   import("../lib/telemetry").then((mod) => mod.TelemetryProvider),
 );
@@ -70,17 +63,10 @@ export const AppProviders = (props: AppPropsWithChildren) => {
         />
         <SessionProvider session={props.pageProps.session ?? undefined}>
           <SessionListener />
-          <IdentifyUser />
-          <HistoryProvider>{props.children}</HistoryProvider>
+          <EventListeners />
+          {props.children}
         </SessionProvider>
       </TelemetryProvider>
-      <Analytics
-        mode={
-          env.NEXT_PUBLIC_DEPLOYMENT == "production"
-            ? "production"
-            : "development"
-        }
-      />
     </ChakraProvider>
   );
 };

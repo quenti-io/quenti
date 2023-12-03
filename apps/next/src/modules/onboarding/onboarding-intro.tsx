@@ -23,13 +23,6 @@ const ghost = {
 };
 
 export const OnboardingIntro = () => {
-  const { event } = useTelemetry();
-
-  React.useEffect(() => {
-    void event("onboarding_started", {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Box>
       <HeadSeo
@@ -50,6 +43,7 @@ export const OnboardingIntro = () => {
 };
 
 const Intro = () => {
+  const { event } = useTelemetry();
   const next = useNextStep();
 
   return (
@@ -59,7 +53,15 @@ const Intro = () => {
       </motion.div>
       <Heading size="3xl">Welcome to Quenti</Heading>
       <Text fontWeight={500}>{BODY_COPY_BASE}</Text>
-      <Button mt="4" w="72" size="lg" onClick={next}>
+      <Button
+        mt="4"
+        w="72"
+        size="lg"
+        onClick={async () => {
+          await event("onboarding_started", {});
+          next();
+        }}
+      >
         Get started
       </Button>
     </VStack>
