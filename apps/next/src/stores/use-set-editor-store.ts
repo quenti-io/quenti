@@ -62,7 +62,7 @@ interface SetEditorState extends SetEditorProps {
   ) => void;
   setImage: (id: string, assetUrl: string) => void;
   removeImage: (id: string) => void;
-  reorderTerm: (id: string, rank: number) => void;
+  reorderTerm: (clientKey: string, rank: number) => void;
   flipTerms: () => void;
   addServerTerms: (terms: string[]) => void;
   removeServerTerms: (term: string[]) => void;
