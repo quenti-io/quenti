@@ -52,14 +52,31 @@ export const EditorContextLayer: React.FC<
     },
   });
   const apiAddTerm = api.terms.add.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data, { term: termInput }) => {
       const state = storeRef.current!.getState();
 
       state.setServerTermId(
-        state.terms.find((x) => !state.serverTerms.includes(x.id))!.id,
-        data.id,
+        state.terms.find((x) => x.rank === termInput.rank)!.clientKey,
+        data.created.id,
       );
-      state.addServerTerms([data.id]);
+      state.addServerTerms(
+        [data.created.id].concat(data.merges.map((x) => x.id)),
+      );
+
+      if (data.merges.length) {
+        storeRef.current!.setState((state) => {
+          const terms = state.terms;
+
+          for (const merge of data.merges) {
+            const term = terms.find((x) => x.rank === merge.rank);
+            if (term) {
+              term.id = merge.id;
+            }
+          }
+
+          return { terms };
+        });
+      }
     },
   });
   const apiBulkAddTerms = api.terms.bulkAdd.useMutation({
@@ -235,12 +252,7 @@ export const EditorContextLayer: React.FC<
                 definition,
                 wordRichText,
                 definitionRichText,
-                rank: state.terms
-                  .filter(
-                    (x) => state.serverTerms.includes(x.id) || x.id === termId,
-                  )
-                  .sort((a, b) => a.rank - b.rank)
-                  .findIndex((x) => x.id === termId),
+                rank: state.terms.find((x) => x.id == termId)!.rank,
               },
             });
           }
@@ -251,21 +263,21 @@ export const EditorContextLayer: React.FC<
             id,
           });
         },
-        reorderTerm: (termId, rank) => {
+        reorderTerm: (id, rank) => {
           void (async () => {
             const state = storeRef.current!.getState();
 
-            if (state.serverTerms.includes(termId)) {
+            const term = state.terms.find((x) => x.id === id)!;
+
+            if (state.serverTerms.includes(term.id)) {
               await apiReorderTerm.mutateAsync({
                 studySetId: data.id,
                 term: {
-                  id: termId,
+                  id,
                   rank,
                 },
               });
             } else {
-              const term = state.terms.find((x) => x.id === termId)!;
-
               await apiAddTerm.mutateAsync({
                 studySetId: data.id,
                 term: {

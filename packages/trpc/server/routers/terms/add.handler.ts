@@ -18,6 +18,11 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
     },
     select: {
       created: true,
+      _count: {
+        select: {
+          terms: true,
+        },
+      },
     },
   });
 
@@ -37,6 +42,38 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
     input.term.definitionRichText,
     studySet.created,
   );
+
+  // Insert empty terms below the current rank if it is greater than the current max rank
+  const merges = [];
+  if (input.term.rank > studySet._count.terms) {
+    await ctx.prisma.term.createMany({
+      data: Array(input.term.rank - studySet._count.terms)
+        .fill(null)
+        .map((_, i) => ({
+          studySetId: input.studySetId,
+          rank: studySet._count.terms + i,
+          word: "",
+          definition: "",
+        })),
+    });
+
+    const created = await ctx.prisma.term.findMany({
+      where: {
+        studySetId: input.studySetId,
+        rank: {
+          in: Array(input.term.rank - studySet._count.terms)
+            .fill(null)
+            .map((_, i) => studySet._count.terms + i),
+        },
+      },
+      select: {
+        id: true,
+        rank: true,
+      },
+    });
+
+    merges.push(...created.map((term) => ({ id: term.id, rank: term.rank })));
+  }
 
   // Censorup all ranks so that all values are consecutive
   await ctx.prisma.term.updateMany({
@@ -66,7 +103,7 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
 
   await markCortexStale(input.studySetId);
 
-  return created;
+  return { created, merges };
 };
 
 export default addHandler;
