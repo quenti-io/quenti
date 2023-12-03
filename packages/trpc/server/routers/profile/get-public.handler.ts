@@ -23,6 +23,7 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
       studySets: {
         where: {
           visibility: "Public",
+          created: true,
         },
         select: {
           id: true,
