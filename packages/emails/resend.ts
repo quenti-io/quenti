@@ -19,6 +19,9 @@ import OrganizationInviteEmail, {
   type OrganizationInviteEmailProps,
 } from "./templates/organization-invite";
 import OrganizationTeacherInviteEmail from "./templates/organization-teacher-invite";
+import ProfileImportCompleteEmail, {
+  type ProfileImportCompleteEmailProps,
+} from "./templates/profile-import-complete";
 
 const NOTIFICATIONS_SENDER = `Quenti <notifications@${env.EMAIL_SENDER || ""}>`;
 
@@ -114,5 +117,17 @@ export const sendConfirmCodeEmail = async (
     to: email,
     subject: `Verify ${opts.orgName}`,
     react: ConfirmCodeEmail(opts),
+  });
+};
+
+export const sendProfileImportCompleteEmail = async (
+  email: string,
+  opts: ProfileImportCompleteEmailProps,
+) => {
+  await sendEmail({
+    from: NOTIFICATIONS_SENDER,
+    to: email,
+    subject: `Your Quenti profile is ready!`,
+    react: ProfileImportCompleteEmail(opts),
   });
 };

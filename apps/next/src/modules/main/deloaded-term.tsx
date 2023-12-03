@@ -90,12 +90,22 @@ export const DeloadedTermRaw: React.FC<DeloadedTermProps> = ({
               color: "blue.200",
             }}
           >
-            {creator && (
-              <Center w="8" h="8">
+            {creator ? (
+              <Center
+                w="8"
+                h="8"
+                transform={{ base: "scale(0.8)", md: "scale(1)" }}
+              >
                 <IconEditCircle size={18} />
               </Center>
+            ) : (
+              <Box />
             )}
-            <Center w="8" h="8">
+            <Center
+              w="8"
+              h="8"
+              transform={{ base: "scale(0.8)", md: "scale(1)" }}
+            >
               <IconStar size={18} />
             </Center>
           </HStack>
