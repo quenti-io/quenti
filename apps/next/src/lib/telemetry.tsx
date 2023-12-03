@@ -1,6 +1,7 @@
 import { JitsuContext, JitsuProvider } from "@jitsu/jitsu-react";
 import { emptyAnalytics } from "@jitsu/js";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React from "react";
 
 import { env } from "@quenti/env/client";
@@ -81,6 +82,29 @@ const useJitsuInternal_ = () => {
   } else if (instance?.analytics) return instance;
 
   return { analytics: emptyAnalytics };
+};
+
+export const EventListeners = () => {
+  return (
+    <>
+      <IdentifyUser />
+      <TrackPageView />
+    </>
+  );
+};
+
+export const TrackPageView = () => {
+  const router = useRouter();
+  const { analytics } = useJitsuInternal_();
+
+  React.useEffect(() => {
+    void analytics.page({
+      pathname: router.pathname,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.asPath]);
+
+  return null;
 };
 
 export const IdentifyUser = () => {
