@@ -70,6 +70,12 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
 
   const [wordFocused, setWordFocused] = React.useState(false);
   const [definitionFocused, setDefinitionFocused] = React.useState(false);
+
+  const wordFocusedRef = React.useRef(wordFocused);
+  wordFocusedRef.current = wordFocused;
+  const definitionFocusedRef = React.useRef(definitionFocused);
+  definitionFocusedRef.current = definitionFocused;
+
   const [lastFocused, setLastFocused] = React.useState<
     "word" | "definition" | null
   >(null);
@@ -90,6 +96,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
 
   const [wordEmpty, setWordEmpty] = React.useState(false);
   const [definitionEmpty, setDefinitionEmpty] = React.useState(false);
+  const [added, setAdded] = React.useState(false);
 
   const id = useSetEditorContext((s) => s.id);
   const setCurrentActive = useSetEditorContext((s) => s.setCurrentActiveRank);
@@ -190,6 +197,23 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     [],
   );
 
+  const blurWord = React.useCallback(() => {
+    setWordFocused(false);
+    // Timeout is neccesary if clicked to or tabbed immediately
+    setTimeout(() => {
+      editIfDirty(definitionFocusedRef.current);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [term, wordEditor, definitionEditor]);
+
+  const blurDefinition = React.useCallback(() => {
+    setDefinitionFocused(false);
+    setTimeout(() => {
+      editIfDirty(wordFocusedRef.current);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [term, wordEditor, definitionEditor]);
+
   const getEditorPlainTexts = () => {
     const wordJson = wordEditor!.getJSON();
     const definitionJson = definitionEditor!.getJSON();
@@ -198,7 +222,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
     return { word, definition, wordJson, definitionJson };
   };
 
-  const editIfDirty = (focused: boolean, force = false) => {
+  const getTermDelta = () => {
     const { word, definition, wordJson, definitionJson } =
       getEditorPlainTexts();
 
@@ -214,16 +238,41 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
       return left === right;
     };
 
-    if (
-      force ||
-      ((word !== term.word ||
-        definition !== term.definition ||
-        ((wordRichText || term.wordRichText) &&
-          !compareJson(wordJson, term.wordRichText)) ||
-        ((definitionRichText || term.definitionRichText) &&
-          !compareJson(definitionJson, term.definitionRichText))) &&
-        !focused)
-    ) {
+    const isDirty =
+      word !== term.word ||
+      definition !== term.definition ||
+      ((wordRichText || term.wordRichText) &&
+        !compareJson(wordJson, term.wordRichText)) ||
+      ((definitionRichText || term.definitionRichText) &&
+        !compareJson(definitionJson, term.definitionRichText));
+
+    return {
+      word,
+      definition,
+      wordJson,
+      definitionJson,
+      wordRichText,
+      definitionRichText,
+      isDirty,
+    };
+  };
+
+  const editIfDirty = (focused: boolean) => {
+    console.log("EDITING");
+
+    const {
+      isDirty,
+      word,
+      definition,
+      wordJson,
+      definitionJson,
+      wordRichText,
+      definitionRichText,
+    } = getTermDelta();
+
+    if (isDirty && !focused) {
+      setAdded(true);
+
       editTerm(
         term.id,
         word,
@@ -290,16 +339,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
               <EditorContent
                 editor={wordEditor}
                 onFocus={() => setWordFocused(true)}
-                onBlur={() => {
-                  setWordFocused(false);
-                  // Timeout is neccesary if clicked to or tabbed immediately
-                  setTimeout(() => {
-                    setDefinitionFocused((focused) => {
-                      editIfDirty(focused);
-                      return focused;
-                    });
-                  });
-                }}
+                onBlur={blurWord}
               >
                 {wordEmpty && (
                   <Text
@@ -340,15 +380,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                 editor={definitionEditor}
                 placeholder={`Enter ${placeholderDefinition}`}
                 onFocus={() => setDefinitionFocused(true)}
-                onBlur={() => {
-                  setDefinitionFocused(false);
-                  setTimeout(() => {
-                    setWordFocused((focused) => {
-                      editIfDirty(focused);
-                      return focused;
-                    });
-                  });
-                }}
+                onBlur={blurDefinition}
                 onKeyDown={(e) => {
                   if (isLast && e.key == "Tab" && !e.shiftKey) {
                     e.preventDefault();
@@ -415,7 +447,27 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
           ) : (
             <AddImageButton
               onClick={() => {
-                editIfDirty(false, true);
+                const {
+                  isDirty,
+                  word,
+                  definition,
+                  wordJson,
+                  definitionJson,
+                  wordRichText,
+                  definitionRichText,
+                } = getTermDelta();
+
+                // Empty term needs to be added
+                if (!isDirty && !added) {
+                  editTerm(
+                    term.id,
+                    word,
+                    definition,
+                    wordRichText ? (wordJson as JSON) : undefined,
+                    definitionRichText ? (definitionJson as JSON) : undefined,
+                  );
+                }
+
                 editorEventChannel.emit("openSearchImages", {
                   termId: term.id,
                   studySetId: id,
