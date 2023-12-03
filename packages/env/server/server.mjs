@@ -34,6 +34,7 @@ export const env = createEnv({
     STRIPE_PRIVATE_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
     STRIPE_ORG_MONTHLY_PRICE_ID: z.string().optional(),
+    ADMIN_WEBHOOK_SECRET: z.string().optional(),
     UPSTASH_REDIS_REST_URL: z.string().optional(),
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
     QSTASH_TOKEN: z.string().optional(),
