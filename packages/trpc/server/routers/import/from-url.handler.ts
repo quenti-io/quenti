@@ -11,13 +11,12 @@ type Return = {
   importFromUrl: (
     url: string,
     userId: string,
-    opts: { attempt: number },
   ) => Promise<{ createdSetId: string; title: string; terms: number }>;
 };
 
 export const fromUrlHandler = async ({ ctx, input }: FromUrlOptions) => {
   const { importFromUrl } = (await importIntegration("quizlet")) as Return;
-  return await importFromUrl(input.url, ctx.session.user.id, { attempt: 2 });
+  return await importFromUrl(input.url, ctx.session.user.id);
 };
 
 export default fromUrlHandler;
