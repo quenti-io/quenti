@@ -8,4 +8,5 @@ export const MATCH_MIN_TIME = 15;
 
 export enum EnabledFeature {
   ExtendedFeedbackBank = 1,
+  ProfileBulkImport = 2,
 }
