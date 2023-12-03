@@ -26,7 +26,9 @@ export const ProfileImportCompleteEmail = ({
     <Tailwind>
       <Html>
         <Head />
-        <Preview>Your Quenti profile is ready!</Preview>
+        <Preview>
+          We&apos;ve successfully imported your public study sets from Quizlet.
+        </Preview>
         <BodyContainer>
           <MainContainer>
             <Img
