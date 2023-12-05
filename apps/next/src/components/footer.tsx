@@ -17,10 +17,18 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconCopyright, IconMoon, IconSun } from "@tabler/icons-react";
+import {
+  IconCopyright,
+  IconMinusVertical,
+  IconMoon,
+  IconSun,
+} from "@tabler/icons-react";
 
+import pjson from "../../package.json";
 import { MOD } from "../lib/tinykeys";
 import { Authed } from "./authed";
+
+const { version } = pjson;
 
 export const Footer = () => {
   const textColor = useColorModeValue("gray.900", "whiteAlpha.900");
@@ -58,6 +66,18 @@ export const Footer = () => {
                 <IconCopyright size={12} />
                 <Text fontSize="sm">2023</Text>
               </HStack>
+              <Box
+                color="gray.300"
+                _dark={{
+                  color: "gray.600",
+                }}
+                mx="-2"
+              >
+                <IconMinusVertical strokeWidth={1.5} />
+              </Box>
+              <Text fontSize="xs" color="gray.500" fontWeight={500}>
+                v{version}
+              </Text>
             </HStack>
             <HStack spacing="4">
               <Authed nullOnLoad>
