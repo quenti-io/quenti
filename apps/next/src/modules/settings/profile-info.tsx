@@ -2,10 +2,12 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { env } from "@quenti/env/client";
 import { api } from "@quenti/trpc";
 
 import {
   Button,
+  ButtonGroup,
   Divider,
   HStack,
   Skeleton,
@@ -15,7 +17,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconUser } from "@tabler/icons-react";
+import { IconUpload, IconUser } from "@tabler/icons-react";
 
 import { ChangeUsernameInput } from "../../components/change-username-input";
 import { SectionWrapper } from "./section-wrapper";
@@ -29,7 +31,19 @@ export const ProfileInfo = () => {
   const [checked, setChecked] = React.useState(!!session!.user?.displayName);
   const [changeAvatarOpen, setChangeAvatarOpen] = React.useState(false);
 
+  const [image, setImage] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (!session?.user?.image) return;
+    setImage(session.user.image);
+  }, [session?.user?.image]);
+
   const setDisplayName = api.user.setDisplayName.useMutation();
+  const removeAvatar = api.user.removeAvatar.useMutation({
+    onSuccess: ({ image }) => {
+      setImage(image);
+      void update();
+    },
+  });
 
   return (
     <SectionWrapper
@@ -56,7 +70,7 @@ export const ProfileInfo = () => {
           <Skeleton rounded="full" isLoaded={!!session!.user} minW="54px">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={session!.user?.image || ""}
+              src={image || ""}
               alt="Avatar"
               width={54}
               height={54}
@@ -66,19 +80,36 @@ export const ProfileInfo = () => {
               }}
             />
           </Skeleton>
-          <Stack>
+          <Stack spacing="10px">
             <Text fontSize="sm" color={grayText}>
-              We recommend using an image of at least 512x512 for your avatar
+              We recommend using an image of at least 256x256 for your avatar
             </Text>
-            <Button
+            <ButtonGroup
               colorScheme="gray"
               variant="outline"
               size="sm"
-              onClick={() => setChangeAvatarOpen(true)}
-              w="max"
+              spacing="10px"
             >
-              Change avatar
-            </Button>
+              <Button
+                onClick={() => setChangeAvatarOpen(true)}
+                w="max"
+                leftIcon={<IconUpload size={16} />}
+              >
+                Change avatar
+              </Button>
+              {!image?.startsWith(env.NEXT_PUBLIC_APP_URL) && (
+                <Button
+                  color="gray.600"
+                  _dark={{
+                    color: "gray.400",
+                  }}
+                  isLoading={removeAvatar.isLoading}
+                  onClick={() => removeAvatar.mutate()}
+                >
+                  Remove
+                </Button>
+              )}
+            </ButtonGroup>
           </Stack>
         </HStack>
         <Divider borderColor={divider} />
