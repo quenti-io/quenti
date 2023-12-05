@@ -1,6 +1,7 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { Adapter } from "next-auth/adapters";
 
+import { env as clientEnv } from "@quenti/env/client";
 import { env } from "@quenti/env/server";
 import { USERNAME_REPLACE_REGEXP } from "@quenti/lib/constants/characters";
 import type { PrismaClient, UserType } from "@quenti/prisma/client";
@@ -72,6 +73,12 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
         }
       }
 
+      let image = data.image;
+      if (!image) {
+        const index = Math.floor(Math.random() * 5);
+        image = `${clientEnv.NEXT_PUBLIC_APP_URL}/avatars/default/${index}.png`;
+      }
+
       const user = await p.user.create({
         data: {
           ...data,
@@ -80,6 +87,7 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
           displayName: !!data.name,
           isOrgEligible,
           type: userType,
+          image,
         },
       });
 
