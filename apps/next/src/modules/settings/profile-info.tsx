@@ -97,7 +97,7 @@ export const ProfileInfo = () => {
               >
                 Change avatar
               </Button>
-              {!image?.startsWith(env.NEXT_PUBLIC_APP_URL) && (
+              {image && !image?.startsWith(env.NEXT_PUBLIC_APP_URL) && (
                 <Button
                   color="gray.600"
                   _dark={{
