@@ -52,3 +52,30 @@ export const getUserAvatarUrl = async (userId: string) => {
     return null;
   }
 };
+
+export const deleteAvatar = async (userId: string) => {
+  if (!S3) return;
+
+  try {
+    const objects = await S3.send(
+      new ListObjectsCommand({
+        Bucket: USERS_BUCKET,
+        Prefix: `${userId}/avatar/`,
+      }),
+    );
+
+    if (!objects.Contents?.length) return;
+    const keys = objects.Contents.map((object) => object.Key).filter(
+      (key) => !!key,
+    ) as string[];
+
+    await S3.send(
+      new DeleteObjectsCommand({
+        Bucket: USERS_BUCKET,
+        Delete: { Objects: keys.map((k) => ({ Key: k })) },
+      }),
+    );
+  } catch {
+    return;
+  }
+};

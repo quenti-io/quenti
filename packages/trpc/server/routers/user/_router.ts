@@ -19,6 +19,7 @@ type UserRouterHandlerCache = {
     ["complete-onboarding"]?: typeof import("./complete-onboarding.handler").completeOnboardingHandler;
     ["upload-avatar"]?: typeof import("./upload-avatar.handler").uploadAvatarHandler;
     ["upload-avatar-complete"]?: typeof import("./upload-avatar-complete.handler").uploadAvatarCompleteHandler;
+    ["remove-avatar"]?: typeof import("./remove-avatar.handler").removeAvatarHandler;
     ["delete-account"]?: typeof import("./delete-account.handler").deleteAccountHandler;
   };
 } & { routerPath: string };
@@ -68,6 +69,10 @@ export const userRouter = createTRPCRouter({
   uploadAvatarComplete: protectedProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "upload-avatar-complete");
     return HANDLER_CACHE.handlers["upload-avatar-complete"]!({ ctx });
+  }),
+  removeAvatar: protectedProcedure.mutation(async ({ ctx }) => {
+    await loadHandler(HANDLER_CACHE, "remove-avatar");
+    return HANDLER_CACHE.handlers["remove-avatar"]!({ ctx });
   }),
   deleteAccount: onboardingProcedure.mutation(async ({ ctx }) => {
     await loadHandler(HANDLER_CACHE, "delete-account");
