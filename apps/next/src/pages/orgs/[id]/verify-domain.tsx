@@ -179,10 +179,10 @@ export default function OrgVerifyEmail() {
                       {verifyStudentDomain.isLoading
                         ? loading
                         : verifyStudentDomain.isSuccess
-                        ? success
-                        : verifyStudentDomain.isError
-                        ? error
-                        : null}
+                          ? success
+                          : verifyStudentDomain.isError
+                            ? error
+                            : null}
                     </Box>
                   </HStack>
                 </Stack>

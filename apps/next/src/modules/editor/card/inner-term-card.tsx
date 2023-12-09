@@ -132,8 +132,8 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const activeEditor = wordFocused
     ? wordRef.current
     : definitionFocused
-    ? definitionRef.current
-    : null;
+      ? definitionRef.current
+      : null;
 
   React.useEffect(() => {
     if (wordFocused || definitionFocused) setCurrentActive(term.rank);

@@ -32,13 +32,13 @@ export const SegmentedProgress: React.FC<SegmentedProgressProps> = ({
             i == currentHover
               ? "120%"
               : currentHover !== 0 &&
-                currentHover !== steps - 1 &&
-                (i + 1 == currentHover || i - 1 == currentHover)
-              ? "90%"
-              : (currentHover === 0 && i === 1) ||
-                (currentHover === steps - 1 && i === steps - 2)
-              ? "80%"
-              : "100%"
+                  currentHover !== steps - 1 &&
+                  (i + 1 == currentHover || i - 1 == currentHover)
+                ? "90%"
+                : (currentHover === 0 && i === 1) ||
+                    (currentHover === steps - 1 && i === steps - 2)
+                  ? "80%"
+                  : "100%"
           }
           height={i == currentHover ? "12px" : "6px"}
           onHover={(hover) => {

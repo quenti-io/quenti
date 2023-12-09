@@ -23,8 +23,8 @@ export type PartialKeys<T, K extends keyof T> = Omit<T, K> &
 export type Widen<T> = [T] extends [Array<infer _E>]
   ? { [K in keyof T]: Widen<T[K]> }
   : [T] extends [object]
-  ? PartialKeys<
-      { [K in AllKeys<T>]: Widen<Idx<T, K>> },
-      Exclude<AllKeys<T>, keyof T> | OptionalKeys<T>
-    >
-  : T;
+    ? PartialKeys<
+        { [K in AllKeys<T>]: Widen<Idx<T, K>> },
+        Exclude<AllKeys<T>, keyof T> | OptionalKeys<T>
+      >
+    : T;

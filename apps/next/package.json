@@ -115,7 +115,7 @@
     "postcss": "^8.4.32",
     "prettier-plugin-tailwindcss": "^0.5.9",
     "react-textarea-autosize": "^8.5.3",
-    "tailwindcss": "^3.3.5",
+    "tailwindcss": "^3.3.6",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.3"
   },
