@@ -156,10 +156,7 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     terms: input.withDistractors
       ? studySet.terms.map((t) => ({
           ...t,
-          distractors: (t as WidenedTerm).distractors!.map((d) => ({
-            ...d.distractor,
-            type: d.type,
-          })),
+          distractors: (t as WidenedTerm).distractors!,
         }))
       : studySet.terms,
     tags: studySet.tags as string[],
