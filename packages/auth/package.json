@@ -8,7 +8,7 @@
     "@quenti/lib": "workspace:*",
     "@quenti/prisma": "workspace:*",
     "email-providers": "^2.0.1",
-    "next": "^14.0.2",
+    "next": "^14.0.4",
     "next-auth": "^4.24.5"
   },
   "scripts": {
