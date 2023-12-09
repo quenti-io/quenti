@@ -40,8 +40,8 @@ export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
             ? correctBorder
             : incorrectBorder
           : isSelected
-          ? selectedBorder
-          : defaultBorder
+            ? selectedBorder
+            : defaultBorder
       }
       px={hasIcon ? 4 : 6}
       py="4"
@@ -52,8 +52,8 @@ export const Clickable: React.FC<React.PropsWithChildren<ClickableProps>> = ({
             ? "green"
             : "red"
           : isSelected
-          ? "blue"
-          : "gray"
+            ? "blue"
+            : "gray"
       }
       pointerEvents={disabled ? "none" : undefined}
       onClick={disabled ? undefined : onClick}

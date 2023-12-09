@@ -66,10 +66,10 @@ export const getOrganizationActivity = async (
       period == "24h"
         ? "toStartOfTenMinutes(time)"
         : period == "5d"
-        ? "toStartOfHour(time)"
-        : period == "14d"
-        ? "toStartOfInterval(time, INTERVAL 2 HOUR)"
-        : "toStartOfInterval(time, INTERVAL 6 HOUR)";
+          ? "toStartOfHour(time)"
+          : period == "14d"
+            ? "toStartOfInterval(time, INTERVAL 2 HOUR)"
+            : "toStartOfInterval(time, INTERVAL 6 HOUR)";
 
     const interval = period == "24h" ? "1 DAY" : `${period.slice(0, -1)} DAY`;
 
@@ -77,10 +77,10 @@ export const getOrganizationActivity = async (
       period == "24h"
         ? "toIntervalMinute(10)"
         : period == "5d"
-        ? "toIntervalHour(1)"
-        : period == "14d"
-        ? "toIntervalHour(2)"
-        : "toIntervalHour(6)";
+          ? "toIntervalHour(1)"
+          : period == "14d"
+            ? "toIntervalHour(2)"
+            : "toIntervalHour(6)";
 
     return `
       SELECT

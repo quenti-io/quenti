@@ -43,8 +43,8 @@ export const RawMatchCard: React.FC<MatchCardProps> = ({
   const linkBorder = term.state
     ? stateBorder
     : isHighlighted
-    ? highlighted
-    : gray;
+      ? highlighted
+      : gray;
 
   const card = React.useRef<HTMLDivElement>(null);
 

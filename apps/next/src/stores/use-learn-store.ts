@@ -293,8 +293,8 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
               state.answerMode != "Both"
                 ? state.answerMode
                 : Math.random() < 0.5
-                ? "Definition"
-                : "Word";
+                  ? "Definition"
+                  : "Word";
 
             if (choice) {
               const distractorIds = term.distractors

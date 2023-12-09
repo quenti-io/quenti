@@ -145,8 +145,8 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
                 checkUsername.isLoading
                   ? gray
                   : checkUsername.data?.available
-                  ? green
-                  : red
+                    ? green
+                    : red
               }
             >
               {checkUsername.isLoading && !isInvalid ? (
@@ -181,10 +181,10 @@ export const ChangeUsernameInput: React.FC<ChangeUsernameInputProps> = ({
         {isTooLong
           ? "Username must be 40 characters or less."
           : isProfane
-          ? "Profane usernames are not allowed."
-          : isTaken
-          ? "That username has already been taken."
-          : "Only letters, numbers, underscores and dashes allowed."}
+            ? "Profane usernames are not allowed."
+            : isTaken
+              ? "That username has already been taken."
+              : "Only letters, numbers, underscores and dashes allowed."}
       </Text>
     </Stack>
   );

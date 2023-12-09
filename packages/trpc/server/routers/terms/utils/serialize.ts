@@ -25,8 +25,8 @@ export const serialize = (
     richText = richText
       ? (censorRichText(richText) as object)
       : raw
-      ? null
-      : Prisma.JsonNull;
+        ? null
+        : Prisma.JsonNull;
   }
 
   return { plainText: text, richText: richText as object };

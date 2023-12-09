@@ -116,23 +116,23 @@ const OrganizationActivityRaw = () => {
               minute: "2-digit",
             }
           : period == "24h"
-          ? {
-              weekday: "short",
-              hour: "numeric",
-              minute: "2-digit",
-            }
-          : period == "5d"
-          ? {
-              weekday: "short",
-              hour: "numeric",
-              minute: "2-digit",
-            }
-          : {
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
-            };
+            ? {
+                weekday: "short",
+                hour: "numeric",
+                minute: "2-digit",
+              }
+            : period == "5d"
+              ? {
+                  weekday: "short",
+                  hour: "numeric",
+                  minute: "2-digit",
+                }
+              : {
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                };
 
       const time = new Date(item.time).toLocaleTimeString(["en"], options);
 

@@ -81,8 +81,8 @@ export const InteractionCard = () => {
                 status == "correct"
                   ? correctColor
                   : status == "incorrect"
-                  ? incorrectColor
-                  : neutralColor
+                    ? incorrectColor
+                    : neutralColor
               }`}
               opacity="0.2"
               zIndex={300}
