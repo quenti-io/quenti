@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@chakra-ui/react": "^2.8.1",
-    "@chakra-ui/theme-tools": "^2.1.1",
+    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/theme-tools": "^2.1.2",
     "@quenti/env": "workspace:*",
     "@quenti/prisma": "workspace:*",
     "@tiptap/core": "^2.1.12",
@@ -21,7 +21,7 @@
     "@tiptap/extension-underline": "^2.1.12",
     "@tiptap/html": "^2.1.12",
     "@tiptap/react": "^2.1.12",
-    "next": "^14.0.2",
+    "next": "^14.0.4",
     "react": "^18.2.0"
   },
   "scripts": {
@@ -29,6 +29,6 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix"
   },
   "devDependencies": {
-    "@types/react": "^18.2.37"
+    "@types/react": "^18.2.43"
   }
 }

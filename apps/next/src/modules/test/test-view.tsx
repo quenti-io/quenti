@@ -115,14 +115,14 @@ export const TestView: React.FC<TestViewProps> = ({ onSubmit }) => {
                       },
                     }
                   : index == 0
-                  ? {
-                      opacity: 0,
-                      transform: "translateY(0px)",
-                      transition: {
-                        duration: 0.1,
-                      },
-                    }
-                  : {}
+                    ? {
+                        opacity: 0,
+                        transform: "translateY(0px)",
+                        transition: {
+                          duration: 0.1,
+                        },
+                      }
+                    : {}
               }
               style={{
                 zIndex: -1,

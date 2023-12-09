@@ -239,12 +239,12 @@ const GapIcon: React.FC<
         ? IconCircleCheckFilled
         : IconCircleXFilled
       : type == "start"
-      ? IconReport
-      : type == "finish"
-      ? IconCircleCheckFilled
-      : answered
-      ? IconPointFilled
-      : IconPoint;
+        ? IconReport
+        : type == "finish"
+          ? IconCircleCheckFilled
+          : answered
+            ? IconPointFilled
+            : IconPoint;
 
   return <Icon size={24} />;
 };
