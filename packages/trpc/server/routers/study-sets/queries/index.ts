@@ -36,16 +36,8 @@ export const termsSelect = Prisma.validator<Prisma.TermSelect>()({
 
 export const distractorsArgs = Prisma.validator<Prisma.Term$distractorsArgs>()({
   select: {
+    termId: true,
+    distractingId: true,
     type: true,
-    distractor: {
-      select: {
-        id: true,
-        word: true,
-        definition: true,
-        wordRichText: true,
-        definitionRichText: true,
-        assetUrl: true,
-      },
-    },
   },
 });
