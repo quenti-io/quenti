@@ -149,10 +149,10 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
     status == "correct"
       ? remark.correct
       : status == "incorrect"
-      ? remark.incorrect
-      : `Choose matching ${
-          active.answerMode == "Definition" ? "definition" : "term"
-        }`;
+        ? remark.incorrect
+        : `Choose matching ${
+            active.answerMode == "Definition" ? "definition" : "term"
+          }`;
 
   return (
     <Stack spacing="3">

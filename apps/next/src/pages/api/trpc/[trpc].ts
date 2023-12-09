@@ -19,16 +19,16 @@ export default withAxiom(
             );
           }
         : clientEnv.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID
-        ? async ({ error, req }) => {
-            await Handlers.trpcOnError(
-              { error, req },
-              {
-                projectID: clientEnv.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID!,
-                serviceName: "quenti-trpc",
-                serviceVersion: "1.0.0",
-              },
-            );
-          }
-        : undefined,
+          ? async ({ error, req }) => {
+              await Handlers.trpcOnError(
+                { error, req },
+                {
+                  projectID: clientEnv.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID!,
+                  serviceName: "quenti-trpc",
+                  serviceVersion: "1.0.0",
+                },
+              );
+            }
+          : undefined,
   }),
 );
