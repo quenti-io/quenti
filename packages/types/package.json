@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@quenti/prisma": "workspace:*",
-    "next": "^14.0.2",
+    "next": "^14.0.4",
     "next-auth": "^4.24.5",
     "next-axiom": "^0.18.0"
   },
