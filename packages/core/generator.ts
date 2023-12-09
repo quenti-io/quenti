@@ -19,6 +19,7 @@ export const getAnswerMode = (
 export const generateTrueFalseQuestion = (
   term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
+  allTerms: Term[],
 ): TestQuestion<TrueFalseData> => {
   const evaluation = Math.random() > 0.5;
   const distractor = !evaluation
@@ -30,7 +31,9 @@ export const generateTrueFalseQuestion = (
     answerMode: getAnswerMode(answerMode),
     data: {
       term,
-      distractor,
+      distractor: distractor
+        ? allTerms.find((t) => t.id == distractor.distractingId)!
+        : undefined,
     },
     answered: false,
   };
@@ -39,20 +42,18 @@ export const generateTrueFalseQuestion = (
 export const generateMcqQuestion = (
   term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
+  alTerms: Term[],
 ): TestQuestion<MultipleChoiceData> => {
   const mode = getAnswerMode(answerMode);
 
-  const choices = shuffleArray([
-    term,
-    ...term.distractors
-      .filter((d) => d.type == mode)
-      .map((d) => ({
-        id: d.id,
-        word: d.word,
-        definition: d.definition,
-        assetUrl: d.assetUrl,
-      })),
-  ]);
+  const distractors = shuffleArray(
+    term.distractors.filter((d) => d.type == mode),
+  );
+  const distractorTerms = distractors.map(
+    (d) => alTerms.find((t) => t.id == d.distractingId)!,
+  );
+
+  const choices = shuffleArray([term, ...distractorTerms]);
 
   return {
     type: TestQuestionType.MultipleChoice,

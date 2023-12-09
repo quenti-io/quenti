@@ -255,12 +255,14 @@ export const createTestStore = (
           switch (type) {
             case TestQuestionType.TrueFalse: {
               const term = pool.pop()!;
-              timeline.push(generateTrueFalseQuestion(term, answerMode));
+              timeline.push(
+                generateTrueFalseQuestion(term, answerMode, allTerms),
+              );
               break;
             }
             case TestQuestionType.MultipleChoice: {
               const term = pool.pop()!;
-              timeline.push(generateMcqQuestion(term, answerMode));
+              timeline.push(generateMcqQuestion(term, answerMode, allTerms));
               break;
             }
             case TestQuestionType.Match: {
