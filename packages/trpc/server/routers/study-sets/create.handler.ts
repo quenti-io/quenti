@@ -104,7 +104,6 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       type: d.type == "word" ? "Word" : "Definition",
       termId: d.termId,
       distractingId: d.distractorId,
-      studySetId: created.id,
     })),
   });
 

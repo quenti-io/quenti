@@ -1,7 +1,6 @@
 import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
 
 import type { CortexGraderResponse } from "./cortex";
-import type { Distractor } from "./distractors";
 
 export enum TestQuestionType {
   TrueFalse = "TrueFalse",
@@ -25,13 +24,13 @@ export interface TestQuestion<D = DefaultData> {
 
 export interface TrueFalseData {
   term: Term;
-  distractor?: Distractor;
+  distractor?: Term;
   answer?: boolean;
 }
 
 export interface MultipleChoiceData {
   term: Term;
-  choices: Omit<Distractor, "type">[];
+  choices: Term[];
   answer?: string;
 }
 

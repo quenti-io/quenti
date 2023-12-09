@@ -299,7 +299,7 @@ export const createLearnStore = (initProps?: Partial<LearnStoreProps>) => {
             if (choice) {
               const distractorIds = term.distractors
                 .filter((x) => x.type == answerMode)
-                .map((x) => x.id);
+                .map((x) => x.distractingId);
               const distractors = state.allTerms.filter((x) =>
                 distractorIds.includes(x.id),
               );
