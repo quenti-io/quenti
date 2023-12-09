@@ -21,18 +21,14 @@ import {
 import { IconMenu, IconX } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
-
-const LeftNav = dynamic(() => import("./navbar/left-nav"), { ssr: false });
+import LeftNav from "./navbar/left-nav";
+import MobileMenu from "./navbar/mobile-menu";
+import UserMenu from "./navbar/user-menu";
 
 const ImportFromQuizletModal = dynamic(
   () => import("./import-from-quizlet-modal"),
   { ssr: false },
 );
-const MobileMenu = dynamic(() => import("./navbar/mobile-menu"), {
-  ssr: false,
-});
-const UserMenu = dynamic(() => import("./navbar/user-menu"), { ssr: false });
-
 const CreateFolderModal = dynamic(() => import("./create-folder-modal"), {
   ssr: false,
 });

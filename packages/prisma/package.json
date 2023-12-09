@@ -24,9 +24,9 @@
     "zod-prisma": "^0.5.4"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0",
+    "@types/node": "^20.10.4",
     "prisma": "5.5.2",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   }
 }
