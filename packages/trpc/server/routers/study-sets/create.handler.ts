@@ -59,6 +59,10 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     });
   }
 
+  const creatableTerms = autosave.terms.filter(
+    (t) => !blankTerms.find((b) => b.id === t.id),
+  );
+
   const created = await ctx.prisma.studySet.update({
     where: {
       id: input.id,
@@ -97,7 +101,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     },
   });
 
-  const terms = autosave.terms.map((term) => {
+  const terms = creatableTerms.map((term) => {
     return {
       ...term,
       word: profanity.censor(term.word.slice(0, MAX_TERM)),
