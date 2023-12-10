@@ -133,6 +133,7 @@ export const EditorContextLayer: React.FC<
 
     if (!isSaving && savedLocally) {
       state.setSavedAt(new Date());
+      state.setSaveError(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSaving]);
