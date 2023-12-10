@@ -38,6 +38,9 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
     const hideTimeout = React.useRef<NodeJS.Timeout | null>(null);
 
     const setTermVisible = useSetEditorContext((s) => s.setTermVisible);
+    const saveError = useSetEditorContext((s) => s.saveError);
+
+    const termError = saveError == "At least two terms are required.";
 
     React.useEffect(() => {
       if (inView) {
@@ -57,7 +60,24 @@ export const TermCard = React.forwardRef<TermCardRef, TermCardProps>(
 
     return (
       <Box ref={ref} style={props.style}>
-        <Box ref={innerRef}>
+        <Box ref={innerRef} position="relative">
+          {props.term.rank < 2 && (
+            <Box
+              position="absolute"
+              top="50%"
+              transform="translateY(-50%)"
+              opacity={termError ? 1 : 0}
+              transition="opacity 0.2s ease-in-out"
+              left="-6"
+              w="10px"
+              h="10px"
+              rounded="full"
+              bg="red.500"
+              _dark={{
+                bg: "red.300",
+              }}
+            />
+          )}
           {visible || props.justCreated ? (
             <MotionCard
               rounded="xl"
