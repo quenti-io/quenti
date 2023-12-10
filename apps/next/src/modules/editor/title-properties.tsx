@@ -38,6 +38,8 @@ export const TitleProperties = () => {
 
   const tagBg = useColorModeValue("gray.200", "gray.750");
 
+  const titleError = saveError == "Set title is required.";
+
   return (
     <Stack spacing={6}>
       <Stack spacing={0}>
@@ -60,7 +62,7 @@ export const TitleProperties = () => {
             position="absolute"
             top="50%"
             transform="translateY(-50%)"
-            opacity={saveError ? 1 : 0}
+            opacity={titleError ? 1 : 0}
             transition="opacity 0.2s ease-in-out"
             left="-6"
             w="10px"
