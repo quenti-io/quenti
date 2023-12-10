@@ -53,7 +53,7 @@ export const FlashcardPreview = () => {
   React.useEffect(() => {
     setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shuffle, data.id]);
+  }, [shuffle, data.id, _termOrder.length]);
 
   const [settingsOpen, setSettingsOpen] = React.useState(false);
 
