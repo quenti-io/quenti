@@ -145,7 +145,7 @@ export const TermsList = () => {
                         isDragging={currentDrag === term.clientKey}
                         isCurrent={current === term.clientKey}
                         isLast={i === terms.length - 1}
-                        deletable={terms.length > 1}
+                        deletable={terms.length > 2}
                         key={term.clientKey}
                         term={term}
                         wordLanguage={wordLanguage}
