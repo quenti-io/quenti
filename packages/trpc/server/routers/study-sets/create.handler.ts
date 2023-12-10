@@ -49,6 +49,16 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     });
   }
 
+  const blankTerms = autosave.terms.filter(
+    (term) => !term.word.trim().length && !term.definition.trim().length,
+  );
+  if (autosave.terms.length - blankTerms.length < 2) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "At least two terms are required.",
+    });
+  }
+
   const created = await ctx.prisma.studySet.update({
     where: {
       id: input.id,
@@ -65,6 +75,13 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       definitionLanguage: autosave.definitionLanguage,
       visibility: autosave.visibility,
       cortexStale: false,
+      terms: {
+        deleteMany: {
+          id: {
+            in: blankTerms.map((term) => term.id),
+          },
+        },
+      },
     },
     select: {
       id: true,
