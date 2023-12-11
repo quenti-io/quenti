@@ -1,8 +1,8 @@
 import { inngest } from "@quenti/inngest";
+import { EnabledFeature } from "@quenti/lib/feature";
 
 import { TRPCError } from "@trpc/server";
 
-import { EnabledFeature } from "../../common/constants";
 import { hasFeature } from "../../common/feature";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TCreateSchema } from "./create.schema";

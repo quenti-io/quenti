@@ -5,6 +5,7 @@ import React from "react";
 
 import { Link } from "@quenti/components";
 import { avatarUrl } from "@quenti/lib/avatar";
+import { EnabledFeature } from "@quenti/lib/feature";
 
 import {
   Avatar,
@@ -21,6 +22,7 @@ import {
 import { IconMenu, IconX } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
+import { useFeature } from "../hooks/use-feature";
 import LeftNav from "./navbar/left-nav";
 import MobileMenu from "./navbar/mobile-menu";
 import UserMenu from "./navbar/user-menu";
@@ -40,6 +42,7 @@ export const Navbar: React.FC = () => {
   const { isOpen: isMobileMenuOpen, onToggle: onMobileMenuToggle } =
     useDisclosure();
   const user = session?.user;
+  const earlyClassAccess = useFeature(EnabledFeature.EarlyClassAccess);
 
   const [folderModalOpen, setFolderModalOpen] = React.useState(false);
   const [folderChildSetId, setFolderChildSetId] = React.useState<string>();
@@ -71,7 +74,8 @@ export const Navbar: React.FC = () => {
   }, []);
 
   const onClassClick = () => {
-    if (user?.organizationId) void router.push("/classes/new");
+    if (user?.organizationId || earlyClassAccess)
+      void router.push("/classes/new");
     else menuEventChannel.emit("openCreateClassNotice");
   };
 
