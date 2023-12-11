@@ -190,7 +190,7 @@ model PendingOrganizationInvite {
 }
 
 model Class {
-  id             String  @id @default(cuid())
+  id             String   @id @default(cuid())
   name           String
   description    String
   orgId          String?
@@ -200,10 +200,13 @@ model Class {
   bannerHash     String?
   cortexCategory String?
   cortexCourse   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   organization Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
   members      ClassMembership[]
   invites      PendingClassInvite[]
+  joinCodes    ClassJoinCode[]
   sections     Section[]
   studySets    StudySetsOnClasses[]
   folders      FoldersOnClasses[]
@@ -214,15 +217,31 @@ model Class {
 }
 
 model Section {
-  id      String @id @default(cuid())
-  classId String
-  name    String
+  id        String   @id @default(cuid())
+  classId   String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   class       Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
   students    ClassMembership[]
   assignments Assignment[]
+  joinCode    ClassJoinCode?
 
   @@unique([classId, name])
+  @@index([classId])
+}
+
+model ClassJoinCode {
+  id        String   @id @default(cuid())
+  classId   String
+  sectionId String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+
+  class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
   @@index([classId])
 }
 
