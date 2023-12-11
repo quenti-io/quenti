@@ -204,17 +204,21 @@ export const ClassStudentsRaw = () => {
                 value={section || ""}
               />
             </Skeleton>
-            <Skeleton isLoaded={isLoaded} rounded="lg">
-              <Button
-                leftIcon={<IconUserPlus size={18} />}
-                px="4"
-                colorScheme="gray"
-                variant="outline"
-                onClick={() => setAddStudentsOpen(true)}
-              >
-                Add
-              </Button>
-            </Skeleton>
+            {!class_ || class_?.organization ? (
+              <Skeleton isLoaded={isLoaded} rounded="lg">
+                <Button
+                  leftIcon={<IconUserPlus size={18} />}
+                  px="4"
+                  colorScheme="gray"
+                  variant="outline"
+                  onClick={() => setAddStudentsOpen(true)}
+                >
+                  Add
+                </Button>
+              </Skeleton>
+            ) : (
+              ""
+            )}
           </HStack>
         </HStack>
         <SelectedBar
