@@ -2,6 +2,8 @@ import { inngest } from "@quenti/inngest";
 
 import { TRPCError } from "@trpc/server";
 
+import { EnabledFeature } from "../../common/constants";
+import { hasFeature } from "../../common/feature";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TCreateSchema } from "./create.schema";
 
@@ -12,7 +14,11 @@ type CreateOptions = {
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
   const orgId = ctx.session.user.organizationId;
-  if (!orgId)
+
+  if (
+    !orgId &&
+    !hasFeature(EnabledFeature.EarlyClassAccess, ctx.session.user.flags)
+  )
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Classes are not yet supported for personal accounts",
