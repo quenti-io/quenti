@@ -13,8 +13,8 @@ import {
 
 import { IconBooks, IconFolderPlus, IconFolders } from "@tabler/icons-react";
 
-import { StudySetCard } from "../../components/study-set-card";
-import { ClassTeacherOnly } from "./class-teacher-only";
+import { StudySetCard } from "../../../components/study-set-card";
+import { ClassTeacherOnly } from "../class-teacher-only";
 
 export interface EntityGroupProps {
   heading: string;

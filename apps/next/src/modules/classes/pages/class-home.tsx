@@ -10,7 +10,8 @@ import { StudySetCard } from "../../../components/study-set-card";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { ClassEmpty } from "../class-empty";
-import { EntityGroup } from "../entity-group";
+import { EntityGroup } from "../home/entity-group";
+import { InviteBanner } from "../home/invite-banner";
 
 export const ClassHome = () => {
   const utils = api.useUtils();
@@ -95,6 +96,7 @@ export const ClassHome = () => {
         isAddLoading={addEntities.isLoading}
       />
       <Stack spacing="6">
+        {isTeacher && !data?.students && <InviteBanner />}
         {(!data || !!data.folders.length || isTeacher) && (
           <EntityGroup
             heading="Folders"
