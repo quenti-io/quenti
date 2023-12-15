@@ -8,6 +8,7 @@ import { ZAddEntitiesSchema } from "./add-entities.schema";
 import { ZAddStudentsSchema } from "./add-students.schema";
 import { ZBanStudentsSchema } from "./ban-students.schema";
 import { ZBulkAddSectionsSchema } from "./bulk-add-sections.schema";
+import { ZCreateJoinCodeSchema } from "./create-join-code.schema";
 import { ZCreateSectionSchema } from "./create-section.schema";
 import { ZCreateSchema } from "./create.schema";
 import { ZDeleteSectionSchema } from "./delete-section.schema";
@@ -42,6 +43,8 @@ type ClassesRouterHandlerCache = {
     ["create-section"]?: typeof import("./create-section.handler").createSectionHandler;
     ["update-section"]?: typeof import("./update-section.handler").updateSectionHandler;
     ["delete-section"]?: typeof import("./delete-section.handler").deleteSectionHandler;
+    ["create-join-code"]?: typeof import("./create-join-code.handler").createJoinCodeHandler;
+    ["delete-join-code"]?: typeof import("./delete-join-code.handler").deleteJoinCodeHandler;
     ["remove-members"]?: typeof import("./remove-members.handler").removeMembersHandler;
     ["update-students"]?: typeof import("./update-students.handler").updateStudentsHandler;
     ["ban-students"]?: typeof import("./ban-students.handler").banStudentsHandler;
@@ -143,6 +146,18 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "delete-section");
       return HANDLER_CACHE.handlers["delete-section"]!({ ctx, input });
+    }),
+  createJoinCode: teacherProcedure
+    .input(ZCreateJoinCodeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "create-join-code");
+      return HANDLER_CACHE.handlers["create-join-code"]!({ ctx, input });
+    }),
+  deleteJoinCode: teacherProcedure
+    .input(ZCreateJoinCodeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "delete-join-code");
+      return HANDLER_CACHE.handlers["delete-join-code"]!({ ctx, input });
     }),
   removeMembers: teacherProcedure
     .input(ZRemoveMembersSchema)
