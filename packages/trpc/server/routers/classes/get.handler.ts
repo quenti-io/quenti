@@ -81,6 +81,11 @@ const sectionsSelect = Prisma.validator<Prisma.Class$sectionsArgs>()({
   select: {
     id: true,
     name: true,
+    joinCode: {
+      select: {
+        code: true,
+      },
+    },
     _count: {
       select: {
         students: true,
@@ -231,6 +236,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         id: s.id,
         name: s.name,
         students: s._count.students,
+        joinCode: s.joinCode,
       })),
       teacherInvites: class_.invites,
     }),
