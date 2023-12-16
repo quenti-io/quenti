@@ -5,6 +5,7 @@ import { api } from "@quenti/trpc";
 
 import {
   Box,
+  Center,
   Flex,
   HStack,
   Heading,
@@ -13,6 +14,7 @@ import {
   InputGroup,
   InputRightElement,
   Skeleton,
+  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -68,14 +70,15 @@ export const InviteBanner = () => {
       _dark={{ borderColor: "gray.750", bg: "gray.800" }}
     >
       <Flex
-        justifyContent="space-between"
+        justifyContent={{ base: "start", lg: "space-between" }}
+        gap="4"
         flexDir={{
           base: "column",
           md: "row",
         }}
       >
         <Stack spacing="8">
-          <HStack spacing="6" flexDir={{ base: "column", sm: "row" }}>
+          <HStack spacing="6" flexDir={{ base: "column", lg: "row" }}>
             <Box w="max-content">
               <GhostGroup />
             </Box>
@@ -93,7 +96,19 @@ export const InviteBanner = () => {
               <Text fontSize="sm" color="gray.500">
                 Invite your students to join this class to get started.
               </Text>
-              <HStack spacing="3" mt="4">
+              <HStack
+                maxW="375px"
+                spacing="3"
+                mt="4"
+                flexDir={{
+                  base: "column",
+                  sm: "row",
+                }}
+                alignItems={{
+                  base: "start",
+                  sm: "center",
+                }}
+              >
                 <Box color="inherit" w="160px" minW="160px">
                   <SectionSelect
                     size="sm"
@@ -123,22 +138,25 @@ export const InviteBanner = () => {
             </Stack>
           </HStack>
         </Stack>
-        <Flex
-          maxH="112px"
-          flex={{ base: undefined, md: 1 }}
-          justifyContent={{ base: "start", md: "end" }}
-          h={{ base: "112px", md: undefined }}
+        <Center
+          flex={{ base: "inherit", sm: 1, lg: "inherit" }}
           mt={{ base: 4, md: 0 }}
         >
-          <Box overflow="hidden" rounded="md">
-            <Skeleton isLoaded={!!code}>
-              <QR
-                text={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`}
-                options={{ width: 112, margin: 2 }}
-              />
-            </Skeleton>
+          <Box maxW="375px" w={{ base: "full", md: "auto" }}>
+            <Box overflow="hidden" rounded="md" shadow="xl" w="max">
+              {!!code ? (
+                <QR
+                  text={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`}
+                  options={{ width: 112, margin: 2 }}
+                />
+              ) : (
+                <Center w={112} h={112}>
+                  <Spinner size="sm" color="blue.200" />
+                </Center>
+              )}
+            </Box>
           </Box>
-        </Flex>
+        </Center>
       </Flex>
     </Box>
   );
