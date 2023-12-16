@@ -22,6 +22,7 @@ import {
 import { IconCopy } from "@tabler/icons-react";
 
 import { GhostGroup } from "../../../components/ghost-group";
+import { TooltipWithTouch } from "../../../components/tooltip-with-touch";
 import { useClass } from "../../../hooks/use-class";
 import { useImageQrCode } from "../../../hooks/use-image-qrcode";
 import { SectionSelect } from "../section-select";
@@ -37,7 +38,17 @@ export const InviteBanner = () => {
   const [code, setCode] = React.useState<string | null>(
     class_!.sections![0]!.joinCode?.code ?? null,
   );
+  const [copied, setCopied] = React.useState(false);
   const { QR } = useImageQrCode();
+
+  React.useEffect(() => {
+    if (!copied) return;
+
+    const timeout = setTimeout(() => setCopied(false), 2000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [copied]);
 
   React.useEffect(() => {
     const section = class_!.sections!.find((s) => s.id === selectedSection);
@@ -123,14 +134,27 @@ export const InviteBanner = () => {
                   <InputGroup>
                     <Input size="sm" value={`quenti.io/j${code}`} />
                     <InputRightElement boxSize="32px">
-                      <IconButton
-                        rounded="md"
-                        colorScheme="gray"
-                        aria-label="Search database"
-                        variant="ghost"
-                        icon={<IconCopy size={16} />}
-                        size="xs"
-                      />
+                      <TooltipWithTouch
+                        label={copied ? "Copied!" : "Copy link"}
+                        placement="top"
+                        fontSize="xs"
+                        onMouseLeave={() => setCopied(false)}
+                      >
+                        <IconButton
+                          rounded="md"
+                          colorScheme="gray"
+                          aria-label="Copy link"
+                          variant="ghost"
+                          icon={<IconCopy size={16} />}
+                          size="xs"
+                          onClick={async () => {
+                            await navigator.clipboard.writeText(
+                              `${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`,
+                            );
+                            setCopied(true);
+                          }}
+                        />
+                      </TooltipWithTouch>
                     </InputRightElement>
                   </InputGroup>
                 </Skeleton>

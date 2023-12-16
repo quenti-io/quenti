@@ -10,8 +10,6 @@ import {
   LinkBox,
   LinkOverlay,
   SimpleGrid,
-  Tooltip,
-  type TooltipProps,
   useColorModeValue,
 } from "@chakra-ui/react";
 
@@ -25,6 +23,7 @@ import {
   IconReport,
 } from "@tabler/icons-react";
 
+import { TooltipWithTouch } from "../../components/tooltip-with-touch";
 import { menuEventChannel } from "../../events/menu";
 import { useSet } from "../../hooks/use-set";
 
@@ -214,24 +213,5 @@ export const Linkable: React.FC<LinkableProps> = ({
         </HStack>
       </LinkBox>
     </Wrapper>
-  );
-};
-
-const TooltipWithTouch: React.FC<React.PropsWithChildren<TooltipProps>> = ({
-  children,
-  ...props
-}) => {
-  const [isLabelOpen, setIsLabelOpen] = React.useState(false);
-
-  return (
-    <Tooltip isOpen={isLabelOpen} {...props}>
-      <Box
-        onMouseEnter={() => setIsLabelOpen(true)}
-        onMouseLeave={() => setIsLabelOpen(false)}
-        onClick={() => setIsLabelOpen(true)}
-      >
-        {children}
-      </Box>
-    </Tooltip>
   );
 };
