@@ -18,6 +18,15 @@ export const joinHandler = async ({ ctx, input }: JoinOptions) => {
 
     if (!joinCode) throw new TRPCError({ code: "NOT_FOUND" });
 
+    const membership = await ctx.prisma.classMembership.findFirst({
+      where: {
+        classId: joinCode.classId,
+        userId: ctx.session.user.id,
+      },
+    });
+
+    if (membership) return;
+
     await ctx.prisma.classMembership.create({
       data: {
         classId: joinCode.classId,

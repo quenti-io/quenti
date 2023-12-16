@@ -30,6 +30,7 @@ interface ClassCardProps {
     | { studySets: number; folders: number }
   >;
   for: UserType;
+  disableLink?: boolean;
 }
 
 export const ClassCard: React.FC<ClassCardProps> = ({
@@ -39,9 +40,24 @@ export const ClassCard: React.FC<ClassCardProps> = ({
   logo,
   hash,
   for: for_,
+  disableLink = false,
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
+
+  const children = disableLink ? (
+    name
+  ) : (
+    <LinkOverlay
+      as={Link}
+      href={`/classes/${id}`}
+      _focus={{
+        outline: "none",
+      }}
+    >
+      {name}
+    </LinkOverlay>
+  );
 
   return (
     <LinkBox
@@ -112,15 +128,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
               WebkitBoxOrient: "vertical",
             }}
           >
-            <LinkOverlay
-              as={Link}
-              href={`/classes/${id}`}
-              _focus={{
-                outline: "none",
-              }}
-            >
-              {name}
-            </LinkOverlay>
+            {children}
           </Heading>
           <HStack fontSize="sm" color="gray.500" spacing="1">
             {for_ == "Student" ? (

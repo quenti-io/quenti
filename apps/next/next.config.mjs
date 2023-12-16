@@ -103,6 +103,10 @@ let config = {
       destination: "/share-resolver/:id",
     },
     {
+      source: "/:id(j[a-zA-Z0-9]{8})",
+      destination: "/class-resolver/:id",
+    },
+    {
       source: "/:profile(@[a-zA-Z0-9-_]+)",
       destination: "/profile/:profile",
     },
