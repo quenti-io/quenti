@@ -29,6 +29,61 @@ export const entityShare = mysqlTable(
   },
 );
 
+export const classJoinCode = mysqlTable(
+  "ClassJoinCode",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    classId: varchar("classId", { length: 191 }).notNull(),
+    sectionId: varchar("sectionId", { length: 191 }).notNull(),
+    code: varchar("code", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      classJoinCodeIdPk: primaryKey({
+        columns: [table.id],
+        name: "ClassJoinCode_id_pk",
+      }),
+      classJoinCodeSectionIdKey: unique("ClassJoinCode_sectionId_key").on(
+        table.sectionId,
+      ),
+      classJoinCodeCodeKey: unique("ClassJoinCode_code_key").on(table.code),
+      classJoinCodeClassIdIdx: index("ClassJoinCode_classId_idx").on(
+        table.classId,
+      ),
+    };
+  },
+);
+
+export const classJoinCodeRelations = relations(classJoinCode, ({ one }) => ({
+  class: one(class_, {
+    fields: [classJoinCode.classId],
+    references: [class_.id],
+  }),
+}));
+
+export const class_ = mysqlTable(
+  "Class",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    orgId: varchar("orgId", { length: 191 }),
+    name: varchar("name", { length: 191 }).notNull(),
+    description: varchar("description", { length: 191 }).notNull(),
+    logoUrl: varchar("logoUrl", { length: 191 }),
+    logoHash: varchar("logoHash", { length: 191 }),
+    bannerUrl: varchar("bannerUrl", { length: 191 }),
+    bannerHash: varchar("bannerHash", { length: 191 }),
+  },
+  (table) => {
+    return {
+      classIdPk: primaryKey({
+        columns: [table.id],
+        name: "Class_id_pk",
+      }),
+      orgIdIdx: index("Class_orgId_idx").on(table.orgId),
+    };
+  },
+);
+
 export const folder = mysqlTable(
   "Folder",
   {
