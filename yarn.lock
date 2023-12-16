@@ -4755,6 +4755,7 @@ __metadata:
     "@types/lodash.omit": "npm:^4.5.9"
     "@types/lodash.throttle": "npm:^4.1.9"
     "@types/node": "npm:^20.10.4"
+    "@types/qrcode": "npm:^1.5.5"
     "@types/react": "npm:^18.2.43"
     "@types/react-dom": "npm:^18.2.17"
     "@upstash/ratelimit": "npm:^0.4.4"
@@ -6730,6 +6731,15 @@ __metadata:
   version: 15.7.9
   resolution: "@types/prop-types@npm:15.7.9"
   checksum: e2a7373b91a8eb30cb4e399ef5b3a14baa7d72eed1667ef5e3cb1e9400edfca9b60c20b845fefdcf7562773829f6ff60ba350b09f6313a8093e70c15b2b88f00
+  languageName: node
+  linkType: hard
+
+"@types/qrcode@npm:^1.5.5":
+  version: 1.5.5
+  resolution: "@types/qrcode@npm:1.5.5"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: b8e6709905d1edb32dda414408acab18ac4aefcbe7bf96d9e32ba94218f45b99c8938ba7a09863ce82a67b226195099fd0f48881d16ee844899087b7f249955f
   languageName: node
   linkType: hard
 

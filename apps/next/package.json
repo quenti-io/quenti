@@ -108,6 +108,7 @@
     "@types/lodash.omit": "^4.5.9",
     "@types/lodash.throttle": "^4.1.9",
     "@types/node": "^20.10.4",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "autoprefixer": "^10.4.16",

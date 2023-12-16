@@ -1,5 +1,8 @@
 import React from "react";
 
+import { env } from "@quenti/env/client";
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Flex,
@@ -9,6 +12,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Skeleton,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -17,14 +21,40 @@ import { IconCopy } from "@tabler/icons-react";
 
 import { GhostGroup } from "../../../components/ghost-group";
 import { useClass } from "../../../hooks/use-class";
+import { useImageQrCode } from "../../../hooks/use-image-qrcode";
 import { SectionSelect } from "../section-select";
 
 export const InviteBanner = () => {
   const { data: class_ } = useClass();
+  const utils = api.useUtils();
 
   const [selectedSection, setSection] = React.useState<string>(
     class_!.sections![0]!.id,
   );
+
+  const [code, setCode] = React.useState<string | null>(
+    class_!.sections![0]!.joinCode?.code ?? null,
+  );
+  const { QR } = useImageQrCode();
+
+  React.useEffect(() => {
+    const section = class_!.sections!.find((s) => s.id === selectedSection);
+    if (!section) return;
+
+    const code = section.joinCode?.code;
+    setCode(code ?? null);
+    if (!code) {
+      createJoinCode.mutate({ classId: class_!.id, sectionId: section.id });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSection]);
+
+  const createJoinCode = api.classes.createJoinCode.useMutation({
+    onSuccess: async (data) => {
+      await utils.classes.get.invalidate();
+      setCode(data.code);
+    },
+  });
 
   return (
     <Box
@@ -74,19 +104,21 @@ export const InviteBanner = () => {
                     value={selectedSection}
                   />
                 </Box>
-                <InputGroup>
-                  <Input size="sm" />
-                  <InputRightElement boxSize="32px">
-                    <IconButton
-                      rounded="md"
-                      colorScheme="gray"
-                      aria-label="Search database"
-                      variant="ghost"
-                      icon={<IconCopy size={16} />}
-                      size="xs"
-                    />
-                  </InputRightElement>
-                </InputGroup>
+                <Skeleton rounded="md" isLoaded={!!code}>
+                  <InputGroup>
+                    <Input size="sm" value={`quenti.io/j${code}`} />
+                    <InputRightElement boxSize="32px">
+                      <IconButton
+                        rounded="md"
+                        colorScheme="gray"
+                        aria-label="Search database"
+                        variant="ghost"
+                        icon={<IconCopy size={16} />}
+                        size="xs"
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </Skeleton>
               </HStack>
             </Stack>
           </HStack>
@@ -98,7 +130,14 @@ export const InviteBanner = () => {
           h={{ base: "112px", md: undefined }}
           mt={{ base: 4, md: 0 }}
         >
-          <Box aspectRatio="1 / 1" rounded="md" bg="gray.200" h="full" />
+          <Box overflow="hidden" rounded="md">
+            <Skeleton isLoaded={!!code}>
+              <QR
+                text={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`}
+                options={{ width: 112, margin: 2 }}
+              />
+            </Skeleton>
+          </Box>
         </Flex>
       </Flex>
     </Box>
