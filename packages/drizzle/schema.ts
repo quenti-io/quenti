@@ -70,6 +70,7 @@ export const class_ = mysqlTable(
     description: varchar("description", { length: 191 }).notNull(),
     logoUrl: varchar("logoUrl", { length: 191 }),
     logoHash: varchar("logoHash", { length: 191 }),
+    bannerColor: varchar("bannerColor", { length: 191 }).notNull(),
     bannerUrl: varchar("bannerUrl", { length: 191 }),
     bannerHash: varchar("bannerHash", { length: 191 }),
   },

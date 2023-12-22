@@ -25,6 +25,7 @@ export const ClassesGrid = () => {
               key={class_.id}
               id={class_.id}
               name={class_.name}
+              bannerColor={class_.bannerColor}
               data={{
                 students: class_._count.members || 0,
                 sections: class_._count.sections || 0,

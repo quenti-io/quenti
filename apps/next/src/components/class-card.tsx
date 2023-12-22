@@ -17,12 +17,12 @@ import {
 import { IconPointFilled } from "@tabler/icons-react";
 
 import { ClassLogo } from "../modules/classes/class-logo";
-import { getColorFromId } from "../utils/color";
 import { plural } from "../utils/string";
 
 interface ClassCardProps {
   id: string;
   name: string;
+  bannerColor: string;
   logo?: string | null;
   hash?: string | null;
   data: Widen<
@@ -36,6 +36,7 @@ interface ClassCardProps {
 export const ClassCard: React.FC<ClassCardProps> = ({
   id,
   name,
+  bannerColor,
   data,
   logo,
   hash,
@@ -92,7 +93,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
         justifyContent="end"
         top="0"
         left="0"
-        bgGradient={`linear(to-r, blue.400, ${getColorFromId(id)})`}
+        bgGradient={`linear(to-r, blue.400, ${bannerColor})`}
         zIndex="50"
         pointerEvents="none"
       />

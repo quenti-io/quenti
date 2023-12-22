@@ -141,6 +141,7 @@ const getTeacher = async (id: string, prisma: PrismaClient) => {
       description: true,
       logoUrl: true,
       logoHash: true,
+      bannerColor: true,
       bannerUrl: true,
       bannerHash: true,
       cortexCategory: true,
@@ -175,6 +176,7 @@ const getStudent = async (id: string, prisma: PrismaClient) => {
       description: true,
       logoUrl: true,
       logoHash: true,
+      bannerColor: true,
       bannerUrl: true,
       bannerHash: true,
       cortexCategory: true,
@@ -210,8 +212,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   const class_ = (
     member?.type === "Teacher" ||
-    orgMember?.role === "Admin" ||
-    orgMember?.role === "Owner"
+    ["Admin", "Owner"].includes(orgMember?.role || "")
       ? await getTeacher(input.id, ctx.prisma)
       : await getStudent(input.id, ctx.prisma)
   ) as Widened;
@@ -222,6 +223,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     description: class_.description,
     logoUrl: class_.logoUrl,
     logoHash: class_.logoHash,
+    bannerColor: class_.bannerColor,
     bannerUrl: class_.bannerUrl,
     bannerHash: class_.bannerHash,
     cortexCategory: class_.cortexCategory,
@@ -245,6 +247,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       type:
         member?.type || (orgMember?.role == "Member" ? "Student" : "Teacher"),
       sectionId: member?.sectionId,
+      preferences: member?.preferences,
     },
   };
 };

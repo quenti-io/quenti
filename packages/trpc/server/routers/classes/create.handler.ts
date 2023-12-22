@@ -1,4 +1,5 @@
 import { inngest } from "@quenti/inngest";
+import { randomBannerColor } from "@quenti/lib/color";
 import { EnabledFeature } from "@quenti/lib/feature";
 
 import { TRPCError } from "@trpc/server";
@@ -28,6 +29,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     data: {
       name: input.name,
       description: input.description ?? "",
+      bannerColor: randomBannerColor(),
       orgId,
       members: {
         create: {

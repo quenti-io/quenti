@@ -10,6 +10,19 @@ export const getClassMember = async (classId: string, userId: string) => {
         userId,
       },
     },
+    select: {
+      id: true,
+      classId: true,
+      userId: true,
+      email: true,
+      type: true,
+      sectionId: true,
+      preferences: {
+        select: {
+          bannerColor: true,
+        },
+      },
+    },
   });
 };
 
