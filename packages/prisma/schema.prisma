@@ -196,6 +196,8 @@ model Class {
   orgId          String?
   logoUrl        String?
   logoHash       String?
+  // TODO: remove default once schema changes are merged
+  bannerColor    String   @default("#ffa54c")
   bannerUrl      String?
   bannerHash     String?
   cortexCategory String?
@@ -259,9 +261,10 @@ model ClassMembership {
   viewedAt  DateTime?
   sectionId String?
 
-  class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  section Section? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  class       Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  section     Section?          @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  preferences ClassPreferences?
 
   @@unique([classId, userId])
   @@unique([email, classId])
@@ -302,6 +305,17 @@ model PendingClassInvite {
   @@index([classId])
   @@index([userId])
   @@index([email])
+}
+
+model ClassPreferences {
+  id           String @id @default(cuid())
+  membershipId String @unique
+
+  bannerColor String?
+
+  membership ClassMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId])
 }
 
 model Assignment {
