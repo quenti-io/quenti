@@ -114,10 +114,10 @@ export const MemberComponentRaw: React.FC<MemberComponentProps> = ({
         background: hoverColor,
       }}
       _first={{
-        roundedTop: "md",
+        roundedTop: "8px",
       }}
       _last={{
-        roundedBottom: "md",
+        roundedBottom: "8px",
       }}
       borderColor={borderColor}
       justifyContent="space-between"
