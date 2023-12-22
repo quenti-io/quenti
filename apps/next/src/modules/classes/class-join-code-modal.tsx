@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Center,
+  Fade,
   IconButton,
   Input,
   InputGroup,
@@ -88,32 +89,34 @@ export const ClassJoinCodeModal: React.FC<ClassJoinCodeModalProps> = ({
                 <strong>{section?.name}</strong>.
               </Text>
               {code ? (
-                <InputGroup>
-                  <Input value={`quenti.io/j${code}`} />
-                  <InputRightElement boxSize="40px">
-                    <TooltipWithTouch
-                      label={copied ? "Copied!" : "Copy link"}
-                      placement="top"
-                      fontSize="xs"
-                      onMouseLeave={() => setCopied(false)}
-                    >
-                      <IconButton
-                        rounded="md"
-                        colorScheme="gray"
-                        aria-label="Copy link"
-                        variant="ghost"
-                        icon={<IconCopy size={20} />}
-                        size="sm"
-                        onClick={async () => {
-                          await navigator.clipboard.writeText(
-                            `${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`,
-                          );
-                          setCopied(true);
-                        }}
-                      />
-                    </TooltipWithTouch>
-                  </InputRightElement>
-                </InputGroup>
+                <Fade in>
+                  <InputGroup>
+                    <Input value={`quenti.io/j${code}`} />
+                    <InputRightElement boxSize="40px">
+                      <TooltipWithTouch
+                        label={copied ? "Copied!" : "Copy link"}
+                        placement="top"
+                        fontSize="xs"
+                        onMouseLeave={() => setCopied(false)}
+                      >
+                        <IconButton
+                          rounded="md"
+                          colorScheme="gray"
+                          aria-label="Copy link"
+                          variant="ghost"
+                          icon={<IconCopy size={20} />}
+                          size="sm"
+                          onClick={async () => {
+                            await navigator.clipboard.writeText(
+                              `${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`,
+                            );
+                            setCopied(true);
+                          }}
+                        />
+                      </TooltipWithTouch>
+                    </InputRightElement>
+                  </InputGroup>
+                </Fade>
               ) : (
                 <Button
                   leftIcon={<IconLinkPlus size={18} />}
@@ -148,16 +151,20 @@ export const ClassJoinCodeModal: React.FC<ClassJoinCodeModalProps> = ({
             )}
             <Center>
               {code ? (
-                <Box overflow="hidden" rounded="md" shadow="xl" w="max">
-                  <QR
-                    text={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`}
-                    options={{ width: 160, margin: 2 }}
-                  />
-                </Box>
+                <Fade in>
+                  <Box overflow="hidden" rounded="md" shadow="xl" w="max">
+                    <QR
+                      text={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`}
+                      options={{ width: 160, margin: 2 }}
+                    />
+                  </Box>
+                </Fade>
               ) : (
-                <Box mt="100px">
-                  <GhostGroup />
-                </Box>
+                <Fade in>
+                  <Box mt="100px">
+                    <GhostGroup />
+                  </Box>
+                </Fade>
               )}
             </Center>
           </Modal.Body>
