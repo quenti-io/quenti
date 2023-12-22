@@ -26,6 +26,7 @@ import {
   ChangeSectionModal,
   type ChangeSectionModalProps,
 } from "./change-section-modal";
+import { ClassJoinCodeModal } from "./class-join-code-modal";
 import { ClassStudent } from "./class-student";
 import {
   RemoveStudentsModal,
@@ -91,6 +92,7 @@ export const ClassStudentsRaw = () => {
   const [changeSectionMembers, setChangeSectionMembers] = React.useState<
     ChangeSectionModalProps["members"]
   >([]);
+  const [joinCodeOpen, setJoinCodeOpen] = React.useState(false);
   const [addStudentsOpen, setAddStudentsOpen] = React.useState(false);
   const [removeStudents, setRemoveStudents] = React.useState<
     RemoveStudentsModalProps["members"]
@@ -136,6 +138,11 @@ export const ClassStudentsRaw = () => {
     <>
       {isLoaded && (
         <>
+          <ClassJoinCodeModal
+            isOpen={joinCodeOpen}
+            onClose={() => setJoinCodeOpen(false)}
+            selectable
+          />
           <AddStudentsModal
             isOpen={addStudentsOpen}
             onClose={() => setAddStudentsOpen(false)}
@@ -204,21 +211,25 @@ export const ClassStudentsRaw = () => {
                 value={section || ""}
               />
             </Skeleton>
-            {!class_ || class_?.organization ? (
-              <Skeleton isLoaded={isLoaded} rounded="lg">
-                <Button
-                  leftIcon={<IconUserPlus size={18} />}
-                  px="4"
-                  colorScheme="gray"
-                  variant="outline"
-                  onClick={() => setAddStudentsOpen(true)}
-                >
-                  Add
-                </Button>
-              </Skeleton>
-            ) : (
-              ""
-            )}
+            <Skeleton isLoaded={isLoaded} rounded="lg">
+              <Button
+                leftIcon={<IconUserPlus size={18} />}
+                px="4"
+                colorScheme="gray"
+                variant="outline"
+                onClick={() => {
+                  if (!class_) return;
+
+                  if (class_.organization) {
+                    setAddStudentsOpen(true);
+                  } else {
+                    setJoinCodeOpen(true);
+                  }
+                }}
+              >
+                Add
+              </Button>
+            </Skeleton>
           </HStack>
         </HStack>
         <SelectedBar

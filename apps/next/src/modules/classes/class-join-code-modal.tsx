@@ -24,21 +24,36 @@ import { GhostGroup } from "../../components/ghost-group";
 import { TooltipWithTouch } from "../../components/tooltip-with-touch";
 import { useClass } from "../../hooks/use-class";
 import { useImageQrCode } from "../../hooks/use-image-qrcode";
+import { SectionSelect } from "./section-select";
 
 interface ClassJoinCodeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  sectionId: string | undefined;
+  selectable?: boolean;
+  sectionId?: string;
 }
 
 export const ClassJoinCodeModal: React.FC<ClassJoinCodeModalProps> = ({
   isOpen,
   onClose,
-  sectionId,
+  selectable = false,
+  sectionId: _sectionId,
 }) => {
   const { data: class_ } = useClass();
   const utils = api.useUtils();
 
+  const useSectionId = () => {
+    const [selectedId, setSelectedId] = React.useState<string | undefined>(
+      class_!.sections![0]!.id,
+    );
+
+    return {
+      sectionId: selectable ? selectedId : _sectionId,
+      setSectionId: setSelectedId,
+    };
+  };
+
+  const { sectionId, setSectionId } = useSectionId();
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
   const { QR } = useImageQrCode();
@@ -63,7 +78,7 @@ export const ClassJoinCodeModal: React.FC<ClassJoinCodeModalProps> = ({
       <ConfirmModal
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
-        heading="Are you sure?"
+        heading="Delete join link?"
         body="Are you sure you want to delete this join link? Students will no longer be able to join this section with the current link."
         actionText="Delete"
         onConfirm={() =>
@@ -78,6 +93,16 @@ export const ClassJoinCodeModal: React.FC<ClassJoinCodeModalProps> = ({
           <Modal.Body>
             <Modal.Heading>Invite students</Modal.Heading>
             <Stack spacing="3">
+              {selectable && (
+                <Box mb="2" w="140px">
+                  <SectionSelect
+                    size="sm"
+                    sections={class_?.sections || []}
+                    onChange={(s) => setSectionId(s)}
+                    value={sectionId || ""}
+                  />
+                </Box>
+              )}
               <Text
                 fontSize="sm"
                 color="gray.600"
@@ -91,7 +116,7 @@ export const ClassJoinCodeModal: React.FC<ClassJoinCodeModalProps> = ({
               {code ? (
                 <Fade in>
                   <InputGroup>
-                    <Input value={`quenti.io/j${code}`} />
+                    <Input value={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`} />
                     <InputRightElement boxSize="40px">
                       <TooltipWithTouch
                         label={copied ? "Copied!" : "Copy link"}
