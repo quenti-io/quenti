@@ -9,15 +9,13 @@ import {
   Center,
   Grid,
   GridItem,
-  HStack,
   Heading,
   Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
 
-import { IconPlus } from "@tabler/icons-react";
-
+import { GhostGroup } from "./ghost-group";
 import { SelectableGenericCard } from "./selectable-generic-card";
 
 export interface AddEntitiesModal {
@@ -92,16 +90,16 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
           </Grid>
           {!entities.length && !isEntitiesLoading && (
             <Center>
-              <VStack>
-                <HStack>
-                  <IconPlus />
-                  <Heading size="lg" fontWeight={600}>
+              <VStack spacing="10">
+                <GhostGroup />
+                <VStack>
+                  <Heading fontSize="2xl" fontWeight={600}>
                     Nothing to add
                   </Heading>
-                </HStack>
-                <Text color="gray.500">
-                  Your study material will show up here.
-                </Text>
+                  <Text color="gray.500">
+                    Your study material will show up here.
+                  </Text>
+                </VStack>
               </VStack>
             </Center>
           )}
