@@ -20,6 +20,7 @@ import { ZInviteTeachersSchema } from "./invite-teachers.schema";
 import { ZJoinSchema } from "./join.schema";
 import { ZRemoveEntitySchema } from "./remove-entity.schema";
 import { ZRemoveMembersSchema } from "./remove-members.schema";
+import { ZSetPreferencesSchema } from "./set-preferences.schema";
 import { ZUpdateSectionSchema } from "./update-section.schema";
 import { ZUpdateStudentsSchema } from "./update-students.schema";
 import { ZUpdateSchema } from "./update.schema";
@@ -50,6 +51,7 @@ type ClassesRouterHandlerCache = {
     ["ban-students"]?: typeof import("./ban-students.handler").banStudentsHandler;
     ["upload-logo"]?: typeof import("./upload-logo.handler").uploadLogoHandler;
     ["upload-logo-complete"]?: typeof import("./upload-logo-complete.handler").uploadLogoCompleteHandler;
+    ["set-preferences"]?: typeof import("./set-preferences.handler").setPreferencesHandler;
   };
 } & { routerPath: string };
 
@@ -188,5 +190,11 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "upload-logo-complete");
       return HANDLER_CACHE.handlers["upload-logo-complete"]!({ ctx, input });
+    }),
+  setPreferences: protectedProcedure
+    .input(ZSetPreferencesSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "set-preferences");
+      return HANDLER_CACHE.handlers["set-preferences"]!({ ctx, input });
     }),
 });
