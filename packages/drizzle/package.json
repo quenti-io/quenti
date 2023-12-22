@@ -7,6 +7,6 @@
   "dependencies": {
     "@planetscale/database": "^1.11.0",
     "@quenti/env": "workspace:*",
-    "drizzle-orm": "^0.29.0"
+    "drizzle-orm": "^0.29.1"
   }
 }

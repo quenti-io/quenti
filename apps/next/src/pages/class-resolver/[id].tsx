@@ -3,8 +3,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { HeadSeo } from "@quenti/components/head-seo";
-import { db, eq } from "@quenti/drizzle";
-import { classJoinCode as classJoinCodeTable } from "@quenti/drizzle/schema";
+import { count, db, eq } from "@quenti/drizzle";
+import {
+  classJoinCode as classJoinCodeTable,
+  foldersOnClasses,
+  studySetsOnClasses,
+} from "@quenti/drizzle/schema";
 import { api } from "@quenti/trpc";
 
 import {
@@ -81,8 +85,8 @@ const ClassResolver = ({
                   {...class_}
                   disableLink
                   data={{
-                    studySets: 0,
-                    folders: 0,
+                    studySets: class_.studySets,
+                    folders: class_.folders,
                   }}
                 />
               </Box>
@@ -124,7 +128,28 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   if (!classJoinCode) return { props: { class: null } };
 
-  return { props: { class: classJoinCode.class } };
+  const studySets = await db
+    .select({
+      studySets: count(),
+    })
+    .from(studySetsOnClasses)
+    .where(eq(studySetsOnClasses.classId, classJoinCode.classId));
+  const folders = await db
+    .select({
+      folders: count(),
+    })
+    .from(foldersOnClasses)
+    .where(eq(foldersOnClasses.classId, classJoinCode.classId));
+
+  return {
+    props: {
+      class: {
+        ...classJoinCode.class,
+        studySets: studySets[0]?.studySets || 0,
+        folders: folders[0]?.folders || 0,
+      },
+    },
+  };
 };
 
 ClassResolver.PageWrapper = PageWrapper;

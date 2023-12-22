@@ -4563,7 +4563,7 @@ __metadata:
   dependencies:
     "@planetscale/database": "npm:^1.11.0"
     "@quenti/env": "workspace:*"
-    drizzle-orm: "npm:^0.29.0"
+    drizzle-orm: "npm:^0.29.1"
   languageName: unknown
   linkType: soft
 
@@ -9370,9 +9370,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"drizzle-orm@npm:^0.29.0":
-  version: 0.29.0
-  resolution: "drizzle-orm@npm:0.29.0"
+"drizzle-orm@npm:^0.29.1":
+  version: 0.29.1
+  resolution: "drizzle-orm@npm:0.29.1"
   peerDependencies:
     "@aws-sdk/client-rds-data": ">=3"
     "@cloudflare/workers-types": ">=3"
@@ -9432,7 +9432,7 @@ __metadata:
       optional: true
     sqlite3:
       optional: true
-  checksum: 8c4a3d05f98cff8ec8b1e65a04baced3d826df3b6ac029779c3fbf78c47b8ec277162f971b5217ee2c6b75d401bb2c392d2dc50fb93f5c017f11f734047e1261
+  checksum: 890b8a336325414b708476e111f50d229ac0137ad9aba929cdbfb9338720770f9a8d192a71682b3d207305820d0f362195fcc619ab65973d409ec0ca95eeee0e
   languageName: node
   linkType: hard
 

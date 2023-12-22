@@ -84,6 +84,44 @@ export const class_ = mysqlTable(
   },
 );
 
+export const studySetsOnClasses = mysqlTable(
+  "StudySetsOnClasses",
+  {
+    studySetId: varchar("studySetId", { length: 191 }).notNull(),
+    classId: varchar("classId", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      studySetIdClassIdPk: primaryKey({
+        columns: [table.studySetId, table.classId],
+        name: "StudySetsOnClasses_studySetId_classId_pk",
+      }),
+      studySetIdIdx: index("StudySetsOnClasses_studySetId_idx").on(
+        table.studySetId,
+      ),
+      classIdIdx: index("StudySetsOnClasses_classId_idx").on(table.classId),
+    };
+  },
+);
+
+export const foldersOnClasses = mysqlTable(
+  "FoldersOnClasses",
+  {
+    folderId: varchar("folderId", { length: 191 }).notNull(),
+    classId: varchar("classId", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      folderIdClassIdPk: primaryKey({
+        columns: [table.folderId, table.classId],
+        name: "FoldersOnClasses_folderId_classId_pk",
+      }),
+      folderIdIdx: index("FoldersOnClasses_folderId_idx").on(table.folderId),
+      classIdIdx: index("FoldersOnClasses_classId_idx").on(table.classId),
+    };
+  },
+);
+
 export const folder = mysqlTable(
   "Folder",
   {
