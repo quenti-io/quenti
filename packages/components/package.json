@@ -9,7 +9,7 @@
     "@quenti/interfaces": "workspace:*",
     "@quenti/lib": "workspace:*",
     "@quenti/prisma": "workspace:*",
-    "@tabler/icons-react": "^2.38.0",
+    "@tabler/icons-react": "^2.44.0",
     "@tiptap/react": "^2.1.12",
     "lodash.merge": "^4.6.2",
     "next": "^14.0.4",

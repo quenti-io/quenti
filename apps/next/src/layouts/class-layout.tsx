@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
+import { api } from "@quenti/trpc";
 
 import {
   Box,
@@ -20,7 +21,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconPointFilled } from "@tabler/icons-react";
+import { IconDotsVertical, IconPointFilled } from "@tabler/icons-react";
 
 import { LazyWrapper } from "../common/lazy-wrapper";
 import { AuthedPage } from "../components/authed-page";
@@ -28,6 +29,7 @@ import { SkeletonTab } from "../components/skeleton-tab";
 import { WithFooter } from "../components/with-footer";
 import { useClass } from "../hooks/use-class";
 import { useIsClassTeacher } from "../hooks/use-is-class-teacher";
+import { BannerPicker } from "../modules/classes/banner-picker";
 import { ClassLogo } from "../modules/classes/class-logo";
 import { plural } from "../utils/string";
 import { MainLayout } from "./main-layout";
@@ -53,10 +55,23 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
   const router = useRouter();
   const id = router.query.id as string;
   const { data } = useClass();
+  const utils = api.useUtils();
 
   const bg = useColorModeValue("gray.50", "gray.900");
   const borderColor = useColorModeValue("gray.300", "gray.700");
   const { name, tabIndex } = useTabIndex();
+
+  const preferences = data?.me?.preferences || {};
+  const banner = data?.me.preferences?.bannerColor || data?.bannerColor || "";
+
+  const [pickerOpen, setPickerOpen] = React.useState(false);
+  const [bannerState, setBannerState] = React.useState<string | null>(null);
+
+  const setPreferences = api.classes.setPreferences.useMutation({
+    onSuccess: async () => {
+      await utils.classes.get.invalidate();
+    },
+  });
 
   const getTitle = () => {
     if (name) return `${name}${data?.name ? ` - ${data.name}` : ""}`;
@@ -76,9 +91,58 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
                   <Box
                     w="full"
                     h="32"
-                    bgGradient={`linear(to-tr, blue.400, ${data?.bannerColor})`}
+                    bgGradient={`linear(to-tr, blue.400, ${
+                      bannerState || banner
+                    })`}
                     rounded="2xl"
-                  />
+                    position="relative"
+                  >
+                    <Box
+                      position="absolute"
+                      color="white"
+                      top="14px"
+                      right="10px"
+                    >
+                      <BannerPicker
+                        isOpen={pickerOpen}
+                        onClose={() => setPickerOpen(false)}
+                        selected={banner}
+                        reset
+                        onSelect={(c) => {
+                          setPickerOpen(false);
+                          setBannerState(c);
+
+                          setPreferences.mutate({
+                            classId: id,
+                            preferences: {
+                              ...preferences,
+                              bannerColor: c,
+                            },
+                          });
+                        }}
+                        onReset={() => {
+                          setPickerOpen(false);
+                          setBannerState(data!.bannerColor);
+
+                          setPreferences.mutate({
+                            classId: id,
+                            preferences: {
+                              ...preferences,
+                              bannerColor: null,
+                            },
+                          });
+                        }}
+                        columns={3}
+                      >
+                        <Box
+                          cursor="pointer"
+                          onClick={() => setPickerOpen(true)}
+                        >
+                          <IconDotsVertical size={18} />
+                        </Box>
+                      </BannerPicker>
+                    </Box>
+                  </Box>
                 </Skeleton>
                 <Stack
                   px={{ base: 0, sm: 6, md: 10 }}

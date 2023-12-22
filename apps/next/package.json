@@ -45,7 +45,7 @@
     "@quenti/prisma": "workspace:*",
     "@quenti/trpc": "workspace:*",
     "@quenti/types": "workspace:*",
-    "@tabler/icons-react": "^2.38.0",
+    "@tabler/icons-react": "^2.44.0",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-virtual": "^3.0.0-beta.65",
     "@tiptap/core": "^2.1.12",

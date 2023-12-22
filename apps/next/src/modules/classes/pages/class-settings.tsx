@@ -269,14 +269,14 @@ export const ClassSettings = () => {
                 <HStack color="gray.500">
                   <IconPaint size={16} />
                   <Text fontSize="sm" fontWeight={500}>
-                    Banner color
+                    Default banner color
                   </Text>
                 </HStack>
               </Skeleton>
               <Skeleton rounded="md" isLoaded={isLoaded}>
                 <BannerPicker
                   isOpen={bannerPickerOpen}
-                  onClose={() => setBannerPickerOpen(true)}
+                  onClose={() => setBannerPickerOpen(false)}
                   selected={bannerColor}
                   onSelect={(c) => {
                     setBannerColor(c);

@@ -84,6 +84,7 @@ export const getBelongingClasses = async (userId: string) => {
   return classes.map((membership) => ({
     viewedAt: membership.viewedAt,
     as: membership.type,
+    preferences: membership.preferences,
     ...membership.class,
   }));
 };
