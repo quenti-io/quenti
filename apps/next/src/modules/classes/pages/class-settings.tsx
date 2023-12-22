@@ -1,17 +1,23 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { BANNER_COLORS } from "@quenti/lib/color";
 import { api } from "@quenti/trpc";
 
 import {
   Box,
   Button,
   ButtonGroup,
+  Center,
   Divider,
   Flex,
   HStack,
   Heading,
   Input,
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  SimpleGrid,
   Skeleton,
   SkeletonText,
   Stack,
@@ -21,11 +27,13 @@ import {
 } from "@chakra-ui/react";
 
 import {
+  IconCheck,
   IconLogout,
   IconSettings,
   IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
+import { IconPaint } from "@tabler/icons-react";
 
 import { ToastWrapper } from "../../../common/toast-wrapper";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
@@ -61,12 +69,16 @@ export const ClassSettings = () => {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [bannerColor, setBannerColor] = React.useState("");
+
+  const [bannerPickerOpen, setBannerPickerOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (data && !mounted) {
       setMounted(true);
       setName(data.name);
       setDescription(data.description);
+      setBannerColor(data.bannerColor);
       setImageSrc(data.logoUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,6 +170,7 @@ export const ClassSettings = () => {
                 onClick={() => {
                   setName(data!.name);
                   setDescription(data!.description);
+                  setBannerColor(data!.bannerColor);
                   setImageSrc(data!.logoUrl);
                 }}
               >
@@ -172,6 +185,7 @@ export const ClassSettings = () => {
                     id: data!.id,
                     name,
                     description,
+                    bannerColor,
                     clearLogo: imageSrc === null,
                   });
                 }}
@@ -256,6 +270,94 @@ export const ClassSettings = () => {
                 </ButtonGroup>
               </Stack>
             </HStack>
+            <Stack spacing="3">
+              <Skeleton rounded="md" isLoaded={isLoaded} w="max">
+                <HStack color="gray.500">
+                  <IconPaint size={16} />
+                  <Text fontSize="sm" fontWeight={500}>
+                    Banner color
+                  </Text>
+                </HStack>
+              </Skeleton>
+              <Skeleton rounded="lg" isLoaded={isLoaded} w="max">
+                <Box>
+                  <Popover
+                    isOpen={bannerPickerOpen}
+                    onOpen={() => setBannerPickerOpen(true)}
+                    onClose={() => setBannerPickerOpen(false)}
+                    placement="bottom"
+                  >
+                    <PopoverAnchor>
+                      <Box
+                        w="32"
+                        h="16"
+                        cursor="pointer"
+                        rounded="lg"
+                        bgGradient={`linear(to-tr, blue.300, ${bannerColor})`}
+                        onClick={() => setBannerPickerOpen(true)}
+                        shadow="sm"
+                        position="relative"
+                        role="group"
+                        overflow="hidden"
+                      >
+                        <Box
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          w="full"
+                          h="full"
+                          transition="opacity 0.15s ease-in-out"
+                          opacity={0}
+                          _hover={{
+                            opacity: 0.2,
+                          }}
+                          bg="white"
+                        />
+                      </Box>
+                    </PopoverAnchor>
+                    <PopoverContent w="max" p="2">
+                      <SimpleGrid columns={5} spacing="2">
+                        {BANNER_COLORS.map((c) => (
+                          <Center
+                            key={c}
+                            w="10"
+                            h="8"
+                            rounded="md"
+                            bgGradient={`linear(to-tr, blue.300, ${c})`}
+                            cursor="pointer"
+                            onClick={() => {
+                              setBannerColor(c);
+                              setBannerPickerOpen(false);
+                            }}
+                            color="white"
+                            position="relative"
+                            role="group"
+                            overflow="hidden"
+                          >
+                            {bannerColor === c && (
+                              <IconCheck size={16} strokeWidth={3} />
+                            )}
+                            <Box
+                              position="absolute"
+                              top="0"
+                              left="0"
+                              w="full"
+                              h="full"
+                              transition="opacity 0.15s ease-in-out"
+                              opacity={0}
+                              _hover={{
+                                opacity: 0.3,
+                              }}
+                              bg="white"
+                            />
+                          </Center>
+                        ))}
+                      </SimpleGrid>
+                    </PopoverContent>
+                  </Popover>
+                </Box>
+              </Skeleton>
+            </Stack>
             <Stack spacing="4">
               <Stack spacing="1">
                 <Skeleton rounded="md" w="full" isLoaded={isLoaded}>
