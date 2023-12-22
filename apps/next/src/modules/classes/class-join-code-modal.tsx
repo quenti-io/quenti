@@ -44,9 +44,8 @@ export const ClassJoinCodeModal: React.FC<ClassJoinCodeModalProps> = ({
 
   const useSectionId = () => {
     const [selectedId, setSelectedId] = React.useState<string | undefined>(
-      class_!.sections![0]!.id,
+      class_?.sections?.[0]?.id,
     );
-
     return {
       sectionId: selectable ? selectedId : _sectionId,
       setSectionId: setSelectedId,

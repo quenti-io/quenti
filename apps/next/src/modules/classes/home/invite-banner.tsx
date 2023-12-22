@@ -5,6 +5,7 @@ import { api } from "@quenti/trpc";
 
 import {
   Box,
+  Button,
   Center,
   Flex,
   HStack,
@@ -19,24 +20,29 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { IconCopy } from "@tabler/icons-react";
+import { IconCopy, IconNewSection } from "@tabler/icons-react";
 
 import { GhostGroup } from "../../../components/ghost-group";
 import { TooltipWithTouch } from "../../../components/tooltip-with-touch";
 import { useClass } from "../../../hooks/use-class";
 import { useImageQrCode } from "../../../hooks/use-image-qrcode";
+import { AddSectionModal } from "../add-section-modal";
 import { SectionSelect } from "../section-select";
 
 export const InviteBanner = () => {
   const { data: class_ } = useClass();
   const utils = api.useUtils();
 
-  const [selectedSection, setSection] = React.useState<string>(
-    class_!.sections![0]!.id,
-  );
+  const initialSection = class_?.sections?.[0];
+  const initialIdRef = React.useRef(initialSection?.id);
+  initialIdRef.current = initialSection?.id;
 
+  const [addSectionOpen, setAddSectionOpen] = React.useState(false);
+  const [selectedSection, setSection] = React.useState<string>(
+    initialSection?.id || "",
+  );
   const [code, setCode] = React.useState<string | null>(
-    class_!.sections![0]!.joinCode?.code ?? null,
+    initialSection?.joinCode?.code ?? null,
   );
   const [copied, setCopied] = React.useState(false);
   const { QR } = useImageQrCode();
@@ -69,119 +75,149 @@ export const InviteBanner = () => {
     },
   });
 
+  React.useEffect(() => {
+    if (!initialSection) return;
+    setSection(initialSection.id);
+  }, [initialSection]);
+
   return (
-    <Box
-      w="full"
-      rounded="xl"
-      p="8"
-      borderWidth="2px"
-      borderColor="gray.200"
-      bg="white"
-      shadow="lg"
-      _dark={{ borderColor: "gray.750", bg: "gray.800" }}
-    >
-      <Flex
-        justifyContent={{ base: "start", lg: "space-between" }}
-        gap="4"
-        flexDir={{
-          base: "column",
-          md: "row",
+    <>
+      <AddSectionModal
+        isOpen={addSectionOpen}
+        onClose={() => {
+          setAddSectionOpen(false);
         }}
+      />
+      <Box
+        w="full"
+        rounded="xl"
+        p="8"
+        borderWidth="2px"
+        borderColor="gray.200"
+        bg="white"
+        shadow="lg"
+        _dark={{ borderColor: "gray.750", bg: "gray.800" }}
       >
-        <Stack spacing="8">
-          <HStack spacing="6" flexDir={{ base: "column", lg: "row" }}>
-            <Box w="max-content">
-              <GhostGroup />
-            </Box>
-            <Stack spacing="1">
-              <Heading
-                fontSize="lg"
-                fontWeight={600}
-                color="gray.800"
-                _dark={{
-                  color: "gray.200",
-                }}
-              >
-                It&apos;s looking a little lonely in here...
-              </Heading>
-              <Text fontSize="sm" color="gray.500">
-                Invite your students to join this class to get started.
-              </Text>
-              <HStack
-                maxW="375px"
-                spacing="3"
-                mt="4"
-                flexDir={{
-                  base: "column",
-                  sm: "row",
-                }}
-                alignItems={{
-                  base: "start",
-                  sm: "center",
-                }}
-              >
-                <Box color="inherit" w="160px" minW="160px">
-                  <SectionSelect
-                    size="sm"
-                    sections={class_?.sections || []}
-                    onChange={(s) => {
-                      setSection(s);
-                    }}
-                    value={selectedSection}
-                  />
-                </Box>
-                <Skeleton rounded="md" isLoaded={!!code}>
-                  <InputGroup>
-                    <Input size="sm" value={`quenti.io/j${code}`} />
-                    <InputRightElement boxSize="32px">
-                      <TooltipWithTouch
-                        label={copied ? "Copied!" : "Copy link"}
-                        placement="top"
-                        fontSize="xs"
-                        onMouseLeave={() => setCopied(false)}
-                      >
-                        <IconButton
-                          rounded="md"
-                          colorScheme="gray"
-                          aria-label="Copy link"
-                          variant="ghost"
-                          icon={<IconCopy size={16} />}
-                          size="xs"
-                          onClick={async () => {
-                            await navigator.clipboard.writeText(
-                              `${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`,
-                            );
-                            setCopied(true);
-                          }}
-                        />
-                      </TooltipWithTouch>
-                    </InputRightElement>
-                  </InputGroup>
-                </Skeleton>
-              </HStack>
-            </Stack>
-          </HStack>
-        </Stack>
-        <Center
-          flex={{ base: "inherit", sm: 1, lg: "inherit" }}
-          mt={{ base: 4, md: 0 }}
+        <Flex
+          justifyContent={{ base: "start", lg: "space-between" }}
+          gap="4"
+          flexDir={{
+            base: "column",
+            md: "row",
+          }}
         >
-          <Box maxW="375px" w={{ base: "full", md: "auto" }}>
-            <Box overflow="hidden" rounded="md" shadow="xl" w="max">
-              {!!code ? (
-                <QR
-                  text={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`}
-                  options={{ width: 112, margin: 2 }}
-                />
-              ) : (
-                <Center w={112} h={112}>
-                  <Spinner size="sm" color="blue.200" />
-                </Center>
-              )}
+          <Stack spacing="8">
+            <HStack spacing="6" flexDir={{ base: "column", lg: "row" }}>
+              <Box w="max-content">
+                <GhostGroup />
+              </Box>
+              <Stack spacing="1">
+                <Heading
+                  fontSize="lg"
+                  fontWeight={600}
+                  color="gray.800"
+                  _dark={{
+                    color: "gray.200",
+                  }}
+                >
+                  It&apos;s looking a little lonely in here...
+                </Heading>
+                <Text fontSize="sm" color="gray.500">
+                  Invite your students to join this class to get started.
+                </Text>
+                <HStack
+                  maxW="375px"
+                  spacing="3"
+                  mt="4"
+                  flexDir={{
+                    base: "column",
+                    sm: "row",
+                  }}
+                  alignItems={{
+                    base: "start",
+                    sm: "center",
+                  }}
+                >
+                  {initialSection ? (
+                    <Box color="inherit" w="160px" minW="160px">
+                      <SectionSelect
+                        size="sm"
+                        sections={class_?.sections || []}
+                        onChange={(s) => {
+                          setSection(s);
+                        }}
+                        value={selectedSection}
+                      />
+                    </Box>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      leftIcon={<IconNewSection size={16} />}
+                      onClick={() => setAddSectionOpen(true)}
+                    >
+                      Create a section
+                    </Button>
+                  )}
+                  {initialSection && (
+                    <Skeleton rounded="md" isLoaded={!!code}>
+                      <InputGroup>
+                        <Input size="sm" value={`quenti.io/j${code}`} />
+                        <InputRightElement boxSize="32px">
+                          <TooltipWithTouch
+                            label={copied ? "Copied!" : "Copy link"}
+                            placement="top"
+                            fontSize="xs"
+                            onMouseLeave={() => setCopied(false)}
+                          >
+                            <IconButton
+                              rounded="md"
+                              colorScheme="gray"
+                              aria-label="Copy link"
+                              variant="ghost"
+                              icon={<IconCopy size={16} />}
+                              size="xs"
+                              onClick={async () => {
+                                await navigator.clipboard.writeText(
+                                  `${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`,
+                                );
+                                setCopied(true);
+                              }}
+                            />
+                          </TooltipWithTouch>
+                        </InputRightElement>
+                      </InputGroup>
+                    </Skeleton>
+                  )}
+                </HStack>
+              </Stack>
+            </HStack>
+          </Stack>
+          <Center
+            flex={{ base: "inherit", sm: 1, lg: "inherit" }}
+            mt={{ base: 4, md: 0 }}
+          >
+            <Box
+              maxW="375px"
+              w={{ base: "full", md: "auto" }}
+              visibility={initialSection ? "visible" : "hidden"}
+            >
+              <Box overflow="hidden" rounded="md" shadow="xl" w="max">
+                {!!code ? (
+                  <QR
+                    text={`${env.NEXT_PUBLIC_WEBSITE_URL}/j${code}`}
+                    options={{ width: 112, margin: 2 }}
+                  />
+                ) : (
+                  <Center w={112} h={112}>
+                    <Spinner size="sm" color="blue.200" />
+                  </Center>
+                )}
+              </Box>
             </Box>
-          </Box>
-        </Center>
-      </Flex>
-    </Box>
+          </Center>
+        </Flex>
+      </Box>
+    </>
   );
 };
