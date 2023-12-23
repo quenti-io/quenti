@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 
-import type { Term } from "@quenti/prisma/client";
+import type { FacingTerm } from "@quenti/interfaces";
 
 import {
   Box,
@@ -198,7 +198,7 @@ const TermsByAlphabetical = () => {
 interface TermsCategoryProps {
   heading: string;
   subheading: string;
-  terms: Term[];
+  terms: FacingTerm[];
   icon: React.FC<TablerIconsProps>;
   color: string;
 }
@@ -245,7 +245,7 @@ const TermsCategory: React.FC<TermsCategoryProps> = ({
 };
 
 interface TermsListProps {
-  terms: Term[];
+  terms: FacingTerm[];
   sortOrder?: string[];
   slice?: number;
 }

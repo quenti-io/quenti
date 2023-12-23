@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import React from "react";
 
-import type { Term } from "@quenti/prisma/client";
+import type { FacingTerm } from "@quenti/interfaces";
 import { api } from "@quenti/trpc";
 
 import { Box } from "@chakra-ui/react";
@@ -21,18 +21,18 @@ const EditTermModal = dynamic(
 );
 
 export interface RootFlashcardWrapperProps {
-  terms: Term[];
+  terms: FacingTerm[];
   termOrder: string[];
   h?: string;
   isDirty?: boolean;
 }
 
 interface RootFlashcardContextProps {
-  terms: Term[];
+  terms: FacingTerm[];
   termOrder: string[];
   h?: string;
-  editTerm: (term: Term, focusDefinition: boolean) => void;
-  starTerm: (term: Term) => void;
+  editTerm: (term: FacingTerm, focusDefinition: boolean) => void;
+  starTerm: (term: FacingTerm) => void;
 }
 
 export const RootFlashcardContext =
@@ -51,7 +51,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
 }) => {
   const authed = useSession().status == "authenticated";
   const [editModalOpen, setEditModalOpen] = React.useState(false);
-  const [editTerm, setEditTerm] = React.useState<Term | null>(null);
+  const [editTerm, setEditTerm] = React.useState<FacingTerm | null>(null);
   const [focusDefinition, setFocusDefinition] = React.useState(false);
 
   const setStarMutation = api.container.starTerm.useMutation();

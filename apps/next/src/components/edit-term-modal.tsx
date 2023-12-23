@@ -2,6 +2,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import React from "react";
 
 import { Modal } from "@quenti/components/modal";
+import type { FacingTerm } from "@quenti/interfaces";
 import {
   type EditorTerm,
   editorInput,
@@ -9,7 +10,6 @@ import {
   hasRichText,
   richTextToHtml,
 } from "@quenti/lib/editor";
-import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import { Box, Button, ButtonGroup, Stack } from "@chakra-ui/react";
@@ -26,7 +26,7 @@ import { editorConfig } from "../modules/editor/editor-config";
 import { PhotoView } from "./photo-view/photo-view";
 
 export interface EditTermModalProps {
-  term: Term | null;
+  term: FacingTerm | null;
   isOpen: boolean;
   onClose: () => void;
   onDefinition: boolean;

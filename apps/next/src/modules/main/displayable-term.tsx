@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Display } from "@quenti/components/display";
+import type { FacingTerm } from "@quenti/interfaces";
 import {
   type EditorTerm,
   editorInput,
@@ -10,7 +11,6 @@ import {
   hasRichText,
   richTextToHtml,
 } from "@quenti/lib/editor";
-import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import {
@@ -41,7 +41,7 @@ import { RichTextBar } from "../editor/card/rich-text-bar";
 import { editorConfig } from "../editor/editor-config";
 
 export interface DisplayableTermProps {
-  term: Term;
+  term: FacingTerm;
 }
 
 export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {

@@ -1,6 +1,7 @@
-import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
+import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 import type { CortexGraderResponse } from "./cortex";
+import type { FacingTerm } from "./studiable-term";
 
 export enum TestQuestionType {
   TrueFalse = "TrueFalse",
@@ -23,26 +24,26 @@ export interface TestQuestion<D = DefaultData> {
 }
 
 export interface TrueFalseData {
-  term: Term;
-  distractor?: Term;
+  term: FacingTerm;
+  distractor?: FacingTerm;
   answer?: boolean;
 }
 
 export interface MultipleChoiceData {
-  term: Term;
-  choices: Term[];
+  term: FacingTerm;
+  choices: FacingTerm[];
   answer?: string;
 }
 
 export interface WriteData {
-  term: Term;
+  term: FacingTerm;
   evaluation?: boolean;
   cortexResponse?: CortexGraderResponse;
   answer?: string;
 }
 
 export interface MatchData {
-  terms: Term[];
-  zones: Term[];
+  terms: FacingTerm[];
+  zones: FacingTerm[];
   answer: { zone: string; term: string }[];
 }

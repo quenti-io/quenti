@@ -1,13 +1,13 @@
 import React from "react";
 
-import type { Term } from "@quenti/prisma/client";
+import type { FacingTerm } from "@quenti/interfaces";
 
 import { Box, Card, Center, Flex, HStack, Text } from "@chakra-ui/react";
 
 import { IconEditCircle, IconStar } from "@tabler/icons-react";
 
 interface DeloadedTermProps {
-  term: Term;
+  term: FacingTerm;
   creator?: boolean;
 }
 

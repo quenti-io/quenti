@@ -3,8 +3,8 @@ import React from "react";
 import useFitText from "use-fit-text";
 
 import { Display } from "@quenti/components/display";
+import type { FacingTerm } from "@quenti/interfaces";
 import { outfit } from "@quenti/lib/chakra-theme";
-import type { Term } from "@quenti/prisma/client";
 
 import {
   Box,
@@ -35,7 +35,7 @@ import { PhotoView } from "./photo-view/photo-view";
 import { SetCreatorOnly } from "./set-creator-only";
 
 export interface FlashcardProps {
-  term: Term;
+  term: FacingTerm;
   isFlipped: boolean;
   index: number;
   numTerms: number;

@@ -4,10 +4,11 @@ import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
 import type { Language } from "@quenti/core/language";
-import type { StudySetVisibility, Term } from "@quenti/prisma/client";
+import type { FacingTerm } from "@quenti/interfaces";
+import type { StudySetVisibility } from "@quenti/prisma/client";
 
 export type ClientTerm = Omit<
-  Term,
+  FacingTerm,
   "studySetId" | "wordRichText" | "definitionRichText"
 > & {
   clientKey: string;
