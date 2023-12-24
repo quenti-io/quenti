@@ -42,7 +42,7 @@ export const BannerPicker: React.FC<
         position: "relative",
       }}
     >
-      <Popover isOpen={isOpen} onClose={onClose} placement="bottom">
+      <Popover isOpen={isOpen} onClose={onClose} placement="bottom" isLazy>
         <PopoverAnchor>{children}</PopoverAnchor>
         <PopoverContent w="max" p="2" rounded="xl">
           <SimpleGrid columns={columns} spacing="6px">
