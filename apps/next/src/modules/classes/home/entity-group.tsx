@@ -2,10 +2,10 @@ import {
   Box,
   Button,
   Flex,
+  GridItem,
   HStack,
   Heading,
   SimpleGrid,
-  Skeleton,
   SkeletonText,
   Stack,
   Text,
@@ -13,7 +13,7 @@ import {
 
 import { IconBooks, IconFolderPlus, IconFolders } from "@tabler/icons-react";
 
-import { StudySetCard } from "../../../components/study-set-card";
+import { GenericCard } from "../../../components/generic-card";
 import { ClassTeacherOnly } from "../class-teacher-only";
 
 export interface EntityGroupProps {
@@ -100,20 +100,9 @@ export const EntityGroup: React.FC<
         {isLoaded
           ? children
           : Array.from({ length: numSkeletons }).map((_, i) => (
-              <Skeleton rounded="lg" key={i}>
-                <StudySetCard
-                  studySet={{
-                    id: "",
-                    title: "Title",
-                    visibility: "Public",
-                  }}
-                  numTerms={0}
-                  user={{
-                    username: "username",
-                    image: "",
-                  }}
-                />
-              </Skeleton>
+              <GridItem h="141px" key={i}>
+                <GenericCard.Skeleton />
+              </GridItem>
             ))}
       </SimpleGrid>
     </Stack>
