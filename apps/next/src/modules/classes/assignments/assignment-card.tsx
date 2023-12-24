@@ -29,10 +29,10 @@ export interface AssignmentCardProps {
 export const AssignmentCard = () => {
   return (
     <Box
-      px="6"
+      px="5"
       py="4"
       bg="white"
-      borderColor="gray.200"
+      borderColor="gray.100"
       _hover={{
         transform: "translateY(-2px)",
         borderBottomColor: "blue.300",
@@ -61,14 +61,15 @@ export const AssignmentCard = () => {
       <HStack spacing="4">
         <Box
           p="10px"
-          color="blue.300"
+          color="blue.600"
           position="relative"
           overflow="hidden"
           rounded="full"
-          outline="2px solid"
-          outlineOffset={-2}
+          outline="1.5px solid"
+          outlineOffset={-1.5}
           outlineColor="gray.100"
           _dark={{
+            color: "blue.300",
             outlineColor: "gray.750",
           }}
           shadow="md"
@@ -82,7 +83,7 @@ export const AssignmentCard = () => {
             h="full"
             rounded="full"
             bg="rgba(75, 131, 255, 0.1)"
-            filter="blur(3px)"
+            filter="blur(4px)"
             color="blue.200"
           >
             <Box opacity={0.75}>
@@ -91,7 +92,7 @@ export const AssignmentCard = () => {
           </Box>
           <IconUsersGroup size={24} />
         </Box>
-        <Stack spacing="1">
+        <Stack spacing="2px">
           <Heading fontSize="lg">Final Midterm Study Guide</Heading>
           <Text
             fontSize="sm"
