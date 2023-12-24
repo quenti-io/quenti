@@ -1,8 +1,17 @@
+import React from "react";
+
 import type { AssignmentType } from "@quenti/prisma/client";
 
 import { Box, HStack, Heading, Stack, Text } from "@chakra-ui/react";
 
-import { IconUsersGroup } from "@tabler/icons-react";
+import {
+  IconProgress,
+  IconSlash,
+  IconUsers,
+  IconUsersGroup,
+} from "@tabler/icons-react";
+
+import { dtFormatter } from "../../../utils/time";
 
 export interface AssignmentCardProps {
   for: "Teacher" | "Student";
@@ -26,7 +35,7 @@ export interface AssignmentCardProps {
   };
 }
 
-export const AssignmentCard = () => {
+export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
   return (
     <Box
       px="5"
@@ -58,52 +67,112 @@ export const AssignmentCard = () => {
       }}
       transition="all ease-in-out 150ms"
     >
-      <HStack spacing="4">
-        <Box
-          p="10px"
-          color="blue.600"
-          position="relative"
-          overflow="hidden"
-          rounded="full"
-          outline="1.5px solid"
-          outlineOffset={-1.5}
-          outlineColor="gray.100"
-          _dark={{
-            color: "blue.300",
-            outlineColor: "gray.750",
-          }}
-          shadow="md"
-        >
+      <HStack justifyContent="space-between">
+        <HStack spacing="4">
           <Box
             p="10px"
-            position="absolute"
-            top="0"
-            left="0"
-            w="full"
-            h="full"
+            color="blue.600"
+            position="relative"
+            overflow="hidden"
             rounded="full"
-            bg="rgba(75, 131, 255, 0.1)"
-            filter="blur(4px)"
-            color="blue.200"
-          >
-            <Box opacity={0.75}>
-              <IconUsersGroup size={24} />
-            </Box>
-          </Box>
-          <IconUsersGroup size={24} />
-        </Box>
-        <Stack spacing="2px">
-          <Heading fontSize="lg">Final Midterm Study Guide</Heading>
-          <Text
-            fontSize="sm"
-            color="gray.600"
+            outline="1.5px solid"
+            outlineOffset={-1.5}
+            outlineColor="gray.100"
             _dark={{
-              color: "gray.400",
+              color: "blue.300",
+              outlineColor: "gray.750",
             }}
+            shadow="md"
           >
-            Today at 2:00 PM
-          </Text>
-        </Stack>
+            <Box
+              p="10px"
+              position="absolute"
+              top="0"
+              left="0"
+              w="full"
+              h="full"
+              rounded="full"
+              bg="rgba(75, 131, 255, 0.1)"
+              filter="blur(4px)"
+              color="blue.200"
+            >
+              <Box opacity={0.75}>
+                <IconUsersGroup size={24} />
+              </Box>
+            </Box>
+            <IconUsersGroup size={24} />
+          </Box>
+          <Stack spacing="1">
+            <Heading fontSize="lg">{props.name}</Heading>
+            <HStack spacing="3">
+              {props.for == "Teacher" && !props.published && (
+                <HStack color="gray.500" spacing="6px">
+                  <IconProgress size={14} />
+                  <Text fontSize="sm">Unpublished</Text>
+                </HStack>
+              )}
+              <HStack
+                color="gray.600"
+                _dark={{
+                  color: "gray.400",
+                }}
+                spacing="6px"
+              >
+                {props.for == "Teacher" && <IconUsers size={14} />}
+                <Text fontSize="sm">
+                  {props.for == "Teacher"
+                    ? props.section?.name || "Section"
+                    : dtFormatter.format(props.availableAt)}
+                </Text>
+              </HStack>
+            </HStack>
+          </Stack>
+        </HStack>
+        {props.for == "Teacher" && (
+          <Stack>
+            <HStack spacing="2px">
+              <Heading fontSize="md">{props.submissions || 0}</Heading>
+              <Box
+                transform="rotate(-20deg)"
+                color="gray.700"
+                _dark={{
+                  color: "gray.300",
+                }}
+              >
+                <IconSlash size={14} stroke={3} />
+              </Box>
+              <Heading fontSize="md">{props.section?.students || 0}</Heading>
+            </HStack>
+            <Box
+              w="full"
+              h="2px"
+              rounded="full"
+              bg="gray.200"
+              _dark={{
+                bg: "gray.700",
+              }}
+              overflow="hidden"
+              position="relative"
+            >
+              <Box
+                position="absolute"
+                rounded="full"
+                w={`${
+                  ((props.submissions || 0) / (props.section?.students || 0)) *
+                  100
+                }%`}
+                h="full"
+                transition="width ease-in-out 300ms"
+                top="0"
+                left="0"
+                bg="blue.500"
+                _dark={{
+                  bg: "blue.200",
+                }}
+              />
+            </Box>
+          </Stack>
+        )}
       </HStack>
     </Box>
   );

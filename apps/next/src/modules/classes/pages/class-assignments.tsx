@@ -79,8 +79,29 @@ export const ClassAssignments = () => {
           <Box flex="1" h="2px" bg="gray.100" _dark={{ bg: "gray.750" }} />
         </HStack>
         <Stack spacing="4">
-          <AssignmentCard />
-          <AssignmentCard />
+          <AssignmentCard
+            for="Student"
+            id=""
+            type="Collaborate"
+            name="Midterm Study Guide Example"
+            createdAt={new Date()}
+            availableAt={new Date()}
+          />
+          <AssignmentCard
+            for="Teacher"
+            id=""
+            type="Collaborate"
+            name="1.2b — Your Midterm Study Guide"
+            createdAt={new Date()}
+            availableAt={new Date()}
+            published={false}
+            section={{
+              id: "",
+              name: "Section A",
+              students: 22,
+            }}
+            submissions={18}
+          />
         </Stack>
       </Stack>
     </Stack>
