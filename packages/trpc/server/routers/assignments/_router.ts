@@ -8,11 +8,13 @@ import { ZBulkAddCollabTopicsSchema } from "./bulk-add-collab-topics.schema";
 import { ZCreateCollaborativeSchema } from "./create-collaborative.schema";
 import { ZCreateAssignmentSchema } from "./create.schema";
 import { ZEditCollabSchema } from "./edit-collab.schema";
+import { ZFeedSchema } from "./feed.schema";
 import { ZGetSchema } from "./get.schema";
 
 type AssignmentsRouteHandlerCache = {
   handlers: {
     get?: typeof import("./get.handler").getHandler;
+    feed?: typeof import("./feed.handler").feedHandler;
     create?: typeof import("./create.handler").createHandler;
     ["create-collaborative"]?: typeof import("./create-collaborative.handler").createCollaborativeHandler;
     ["edit-collab"]?: typeof import("./edit-collab.handler").editCollabHandler;
@@ -29,6 +31,10 @@ export const assignmentsRouter = createTRPCRouter({
   get: protectedProcedure.input(ZGetSchema).query(async ({ ctx, input }) => {
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers.get!({ ctx, input });
+  }),
+  feed: protectedProcedure.input(ZFeedSchema).query(async ({ ctx, input }) => {
+    await loadHandler(HANDLER_CACHE, "feed");
+    return HANDLER_CACHE.handlers.feed!({ ctx, input });
   }),
   create: teacherProcedure
     .input(ZCreateAssignmentSchema)

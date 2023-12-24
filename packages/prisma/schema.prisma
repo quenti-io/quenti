@@ -340,7 +340,7 @@ model Assignment {
   studySetId  String?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  availableAt DateTime?
+  availableAt DateTime
   dueAt       DateTime?
   lockedAt    DateTime?
   published   Boolean        @default(false)
