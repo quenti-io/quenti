@@ -350,6 +350,7 @@ model Assignment {
   submissions Submission[]
   studySet    StudySet?
 
+  @@unique([id, classId])
   @@index([classId])
   @@index([sectionId])
   @@index([studySetId])
