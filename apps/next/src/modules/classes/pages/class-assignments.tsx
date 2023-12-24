@@ -83,6 +83,19 @@ export const ClassAssignments = () => {
             for="Student"
             id=""
             type="Collaborate"
+            name="Submitted Assignment"
+            createdAt={new Date()}
+            availableAt={new Date()}
+            submission={{
+              id: "",
+              startedAt: new Date(),
+              submittedAt: new Date(),
+            }}
+          />
+          <AssignmentCard
+            for="Student"
+            id=""
+            type="Collaborate"
             name="Midterm Study Guide Example"
             createdAt={new Date()}
             availableAt={new Date()}

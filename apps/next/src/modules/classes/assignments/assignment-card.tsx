@@ -5,6 +5,8 @@ import type { AssignmentType } from "@quenti/prisma/client";
 import { Box, HStack, Heading, Stack, Text } from "@chakra-ui/react";
 
 import {
+  IconArrowRight,
+  IconCircleCheck,
   IconProgress,
   IconSlash,
   IconUsers,
@@ -66,6 +68,7 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
         },
       }}
       transition="all ease-in-out 150ms"
+      role="group"
     >
       <HStack justifyContent="space-between">
         <HStack spacing="4">
@@ -128,7 +131,7 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
             </HStack>
           </Stack>
         </HStack>
-        {props.for == "Teacher" && (
+        {props.for == "Teacher" ? (
           <Stack>
             <HStack spacing="2px">
               <Heading fontSize="md">{props.submissions || 0}</Heading>
@@ -172,6 +175,61 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
               />
             </Box>
           </Stack>
+        ) : (
+          <HStack
+            color={props.submission ? "gray.400" : "gray.600"}
+            _dark={{
+              color: props.submission ? "gray.500" : "gray.400",
+            }}
+            fontSize="sm"
+            fontWeight={600}
+          >
+            <Text>
+              {props.submission?.submittedAt
+                ? "Turned in"
+                : props.submission?.startedAt
+                  ? "In progress"
+                  : "Not started"}
+            </Text>
+            {props.submission?.submittedAt ? (
+              <IconCircleCheck size={18} />
+            ) : (
+              <Box
+                w="18px"
+                h="18px"
+                overflow="hidden"
+                position="relative"
+                rounded="full"
+              >
+                <Stack
+                  spacing="0"
+                  _groupHover={{
+                    transform: "translateY(-18px)",
+                  }}
+                  transition="transform ease-in-out 300ms"
+                >
+                  <Box
+                    opacity={1}
+                    _groupHover={{
+                      opacity: 0,
+                    }}
+                    transition="opacity ease-in-out 300ms"
+                  >
+                    <IconProgress size={18} />
+                  </Box>
+                  <Box
+                    opacity={0}
+                    _groupHover={{
+                      opacity: 1,
+                    }}
+                    transition="opacity ease-in-out 300ms"
+                  >
+                    <IconArrowRight size={18} />
+                  </Box>
+                </Stack>
+              </Box>
+            )}
+          </HStack>
         )}
       </HStack>
     </Box>
