@@ -40,10 +40,12 @@ const useTabIndex = (): { name: string | null; tabIndex: number } => {
   switch (router.pathname) {
     case `/classes/[id]`:
       return { name: null, tabIndex: 0 };
+    case `/classes/[id]/assignments`:
+      return { name: "Assignments", tabIndex: 1 };
     case `/classes/[id]/members`:
-      return { name: "Members", tabIndex: 1 };
+      return { name: "Members", tabIndex: 2 };
     case `/classes/[id]/settings`:
-      return { name: "Settings", tabIndex: 2 };
+      return { name: "Settings", tabIndex: 3 };
     default:
       return { name: null, tabIndex: -1 };
   }
@@ -217,7 +219,13 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
                         <SkeletonTab isLoaded={!!data} href={`/classes/${id}`}>
                           Home
                         </SkeletonTab>
-                        <HiddenTabWrapper index={1}>
+                        <SkeletonTab
+                          isLoaded={!!data}
+                          href={`/classes/${id}/assignments`}
+                        >
+                          Assignments
+                        </SkeletonTab>
+                        <HiddenTabWrapper index={2}>
                           <SkeletonTab
                             isLoaded={!!data}
                             href={`/classes/${id}/members`}
@@ -225,7 +233,7 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
                             Members
                           </SkeletonTab>
                         </HiddenTabWrapper>
-                        <HiddenTabWrapper index={2}>
+                        <HiddenTabWrapper index={3}>
                           <SkeletonTab
                             isLoaded={!!data}
                             href={`/classes/${id}/settings`}
