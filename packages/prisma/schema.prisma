@@ -343,6 +343,7 @@ model Assignment {
   availableAt DateTime?
   dueAt       DateTime?
   lockedAt    DateTime?
+  published   Boolean        @default(false)
 
   class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
   section     Section      @relation(fields: [sectionId], references: [id], onDelete: Cascade)

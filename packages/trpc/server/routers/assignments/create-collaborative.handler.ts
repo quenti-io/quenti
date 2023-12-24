@@ -1,0 +1,68 @@
+import { TRPCError } from "@trpc/server";
+
+import { MAX_DESC, MAX_TITLE } from "../../common/constants";
+import { profanity } from "../../common/profanity";
+import { isClassTeacherOrThrow } from "../../lib/queries/classes";
+import type { NonNullableUserContext } from "../../lib/types";
+import type { TCreateCollaborativeSchema } from "./create-collaborative.schema";
+
+type CreateCollaborativeOptions = {
+  ctx: NonNullableUserContext;
+  input: TCreateCollaborativeSchema;
+};
+
+export const createCollaborativeHandler = async ({
+  ctx,
+  input,
+}: CreateCollaborativeOptions) => {
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+
+  const assignment = await ctx.prisma.assignment.findFirst({
+    where: {
+      id: input.assignmentId,
+      classId: input.classId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!assignment)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+    });
+
+  if (input.visibility == "Private") {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Cannot create a private collab set",
+    });
+  }
+
+  return await ctx.prisma.studySet.create({
+    data: {
+      type: "Collaborative",
+      userId: ctx.session.user.id,
+      assignmentId: assignment.id,
+      created: true,
+      createdAt: new Date(),
+      title: profanity.censor(input.title.slice(0, MAX_TITLE)),
+      description: profanity.censor(
+        (input.description || "").slice(0, MAX_DESC),
+      ),
+      wordLanguage: input.wordLanguage,
+      definitionLanguage: input.definitionLanguage,
+      visibility: input.visibility,
+      cortexStale: false,
+      collab: {
+        create: {
+          type: "Default",
+          minTermsPerUser: 4,
+          maxTermsPerUser: 4,
+        },
+      },
+    },
+  });
+};
+
+export default createCollaborativeHandler;

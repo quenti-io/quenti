@@ -1,10 +1,12 @@
 import { loadHandler } from "../../lib/load-handler";
 import { createTRPCRouter, teacherProcedure } from "../../trpc";
+import { ZCreateCollaborativeSchema } from "./create-collaborative.schema";
 import { ZCreateAssignmentSchema } from "./create.schema";
 
 type AssignmentsRouteHandlerCache = {
   handlers: {
     create?: typeof import("./create.handler").createHandler;
+    ["create-collaborative"]?: typeof import("./create-collaborative.handler").createCollaborativeHandler;
   };
 } & { routerPath: string };
 
@@ -19,5 +21,11 @@ export const assignmentsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "create");
       return HANDLER_CACHE.handlers.create!({ ctx, input });
+    }),
+  createCollaborative: teacherProcedure
+    .input(ZCreateCollaborativeSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "create-collaborative");
+      return HANDLER_CACHE.handlers["create-collaborative"]!({ ctx, input });
     }),
 });
