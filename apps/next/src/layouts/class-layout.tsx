@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Link } from "@quenti/components";
 import { HeadSeo } from "@quenti/components/head-seo";
 import { api } from "@quenti/trpc";
 
@@ -21,7 +22,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconDotsVertical, IconPointFilled } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconDotsVertical,
+  IconPointFilled,
+} from "@tabler/icons-react";
 
 import { LazyWrapper } from "../common/lazy-wrapper";
 import { AuthedPage } from "../components/authed-page";
@@ -51,9 +56,16 @@ const useTabIndex = (): { name: string | null; tabIndex: number } => {
   }
 };
 
-export const ClassLayout: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export interface ClassLayoutProps {
+  returnTo?: {
+    name: string;
+    path: string;
+  };
+}
+
+export const ClassLayout: React.FC<
+  React.PropsWithChildren<ClassLayoutProps>
+> = ({ children, returnTo }) => {
   const router = useRouter();
   const id = router.query.id as string;
   const { data } = useClass();
@@ -214,36 +226,74 @@ export const ClassLayout: React.FC<React.PropsWithChildren> = ({
                     {data?.description && (
                       <Text whiteSpace="pre-wrap">{data?.description}</Text>
                     )}
-                    <Tabs borderColor={borderColor} isManual index={tabIndex}>
-                      <TabList gap="6">
-                        <SkeletonTab isLoaded={!!data} href={`/classes/${id}`}>
-                          Home
-                        </SkeletonTab>
-                        <SkeletonTab
-                          isLoaded={!!data}
-                          href={`/classes/${id}/assignments`}
-                        >
-                          Assignments
-                        </SkeletonTab>
-                        <HiddenTabWrapper index={2}>
+                    {!returnTo ? (
+                      <Tabs borderColor={borderColor} isManual index={tabIndex}>
+                        <TabList gap="6">
                           <SkeletonTab
                             isLoaded={!!data}
-                            href={`/classes/${id}/members`}
+                            href={`/classes/${id}`}
                           >
-                            Members
+                            Home
                           </SkeletonTab>
-                        </HiddenTabWrapper>
-                        <HiddenTabWrapper index={3}>
                           <SkeletonTab
                             isLoaded={!!data}
-                            href={`/classes/${id}/settings`}
+                            href={`/classes/${id}/assignments`}
                           >
-                            Settings
+                            Assignments
                           </SkeletonTab>
-                        </HiddenTabWrapper>
-                      </TabList>
-                      <TabPanels mt="6">{children}</TabPanels>
-                    </Tabs>
+                          <HiddenTabWrapper index={2}>
+                            <SkeletonTab
+                              isLoaded={!!data}
+                              href={`/classes/${id}/members`}
+                            >
+                              Members
+                            </SkeletonTab>
+                          </HiddenTabWrapper>
+                          <HiddenTabWrapper index={3}>
+                            <SkeletonTab
+                              isLoaded={!!data}
+                              href={`/classes/${id}/settings`}
+                            >
+                              Settings
+                            </SkeletonTab>
+                          </HiddenTabWrapper>
+                        </TabList>
+                        <TabPanels mt="6">{children}</TabPanels>
+                      </Tabs>
+                    ) : (
+                      <Stack spacing="6" mt="2">
+                        <Skeleton fitContent rounded="md" isLoaded={!!data}>
+                          <Link href={returnTo.path}>
+                            <HStack
+                              color="gray.500"
+                              _hover={{
+                                color: "gray.900",
+                              }}
+                              _dark={{
+                                color: "gray.400",
+                                _hover: {
+                                  color: "gray.50",
+                                },
+                              }}
+                              fontWeight={600}
+                              transition="color 150ms ease-in-out"
+                              role="group"
+                            >
+                              <Box
+                                transition="transform 150ms ease-in-out"
+                                _groupHover={{
+                                  transform: "translateX(-4px)",
+                                }}
+                              >
+                                <IconArrowLeft size={18} />
+                              </Box>
+                              <Text>{returnTo.name}</Text>
+                            </HStack>
+                          </Link>
+                        </Skeleton>
+                        {children}
+                      </Stack>
+                    )}
                   </Stack>
                 </Stack>
               </Stack>

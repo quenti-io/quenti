@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Link } from "@quenti/components";
 import { api } from "@quenti/trpc";
 
 import {
@@ -66,7 +67,12 @@ export const ClassAssignments = () => {
                   value={section || ""}
                 />
               </Box>
-              <Button leftIcon={<IconClipboardText size={18} />} minW="max">
+              <Button
+                leftIcon={<IconClipboardText size={18} />}
+                minW="max"
+                as={Link}
+                href={`/classes/${id}/assignments/new`}
+              >
                 New
               </Button>
             </>
