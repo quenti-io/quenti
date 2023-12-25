@@ -1,14 +1,11 @@
-import dayjs, { type Dayjs } from "dayjs";
 import React from "react";
 
-import { DatePicker } from "@quenti/components/date-picker";
-import { TimePicker } from "@quenti/components/time-picker";
+import { DateTimePicker } from "@quenti/components/date-time-picker";
 
 import {
   Box,
   Card,
   Center,
-  Flex,
   GridItem,
   HStack,
   Heading,
@@ -38,13 +35,9 @@ export const NewAssignment = () => {
   const isLoaded = useProtectedRedirect();
 
   const [pickerOpen, setPickerOpen] = React.useState(false);
-
-  // YYYY-MM-DD
-  const [selectedDate, setSelectedDate] = React.useState<string | null>(
-    dayjs().format("YYYY-MM-DD"),
+  const [availableAt, setAvailableAt] = React.useState<string | null>(
+    new Date().toISOString(),
   );
-  // YYYY-MM
-  const [month, setMonth] = React.useState<string | null>(null);
 
   return (
     <ClassWizardLayout
@@ -156,7 +149,7 @@ export const NewAssignment = () => {
         <Stack spacing={4}>
           <SkeletonLabel isLoaded={isLoaded}>Details</SkeletonLabel>
           <InputGroup w="max" size="sm">
-            <Input value={dtFormatter.format(dayjs(selectedDate).toDate())} />
+            <Input value={dtFormatter.format(new Date(availableAt ?? ""))} />
             <InputRightElement>
               <Popover
                 isOpen={pickerOpen}
@@ -174,7 +167,6 @@ export const NewAssignment = () => {
                   />
                 </PopoverAnchor>
                 <PopoverContent
-                  // p="5"
                   w="max"
                   overflow="hidden"
                   rounded="xl"
@@ -184,32 +176,13 @@ export const NewAssignment = () => {
                   }}
                   shadow="lg"
                 >
-                  <Flex>
-                    <Box p="5">
-                      <DatePicker
-                        selected={dayjs(selectedDate)}
-                        onChange={(date: Dayjs | null) => {
-                          setSelectedDate(
-                            date === null ? date : date.format("YYYY-MM-DD"),
-                          );
-                        }}
-                        onMonthChange={(date: Dayjs) => {
-                          setMonth(date.format("YYYY-MM"));
-                          setSelectedDate(date.format("YYYY-MM-DD"));
-                        }}
-                        browsingDate={month ? dayjs(month) : undefined}
-                      />
-                    </Box>
-                    <Box
-                      h="366px"
-                      w="1px"
-                      bg="gray.100"
-                      _dark={{
-                        bg: "gray.700",
-                      }}
-                    />
-                    <TimePicker />
-                  </Flex>
+                  <DateTimePicker
+                    value={availableAt}
+                    onChange={(v, time) => {
+                      setAvailableAt(v);
+                      if (time) setPickerOpen(false);
+                    }}
+                  />
                 </PopoverContent>
               </Popover>
             </InputRightElement>

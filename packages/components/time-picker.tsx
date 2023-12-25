@@ -15,7 +15,11 @@ import { IconSearch } from "@tabler/icons-react";
 
 import { ToggleGroup } from "./toggle-group";
 
-export const TimePicker = () => {
+export interface TimePickerProps {
+  onChange: (hours: number, minutes: number) => void;
+}
+
+export const TimePicker: React.FC<TimePickerProps> = ({ onChange }) => {
   const [index, setIndex] = React.useState(0);
 
   const t = (v: number) => (v < 10 ? `0${v}` : v);
@@ -95,7 +99,7 @@ export const TimePicker = () => {
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
   return (
-    <Box h="326px" w="200px">
+    <Box h="366px" w="200px">
       <Box
         borderBottomWidth="1px"
         borderBottomColor="gray.100"
@@ -108,7 +112,7 @@ export const TimePicker = () => {
         <HStack>
           <InputGroup size="sm">
             <InputLeftElement pointerEvents="none" color="gray.500" w="8">
-              <IconSearch size={12} />
+              <IconSearch size={14} />
             </InputLeftElement>
             <Input
               placeholder="Time"
@@ -137,8 +141,8 @@ export const TimePicker = () => {
           </ToggleGroup>
         </HStack>
       </Box>
-      <Box p="5" overflowY="auto" h="full">
-        <Stack pb="3">
+      <Box p="5" pb="5" overflowY="auto" h={309}>
+        <Stack>
           {filteredTimes.map((time, i) => (
             <Button
               variant="outline"
@@ -146,6 +150,9 @@ export const TimePicker = () => {
               colorScheme="gray"
               size="sm"
               fontSize="sm"
+              onClick={() => {
+                onChange(time.hours, time.minutes);
+              }}
             >
               {index === 0 ? time._12h : time._24h}
             </Button>
