@@ -1,8 +1,9 @@
 import React from "react";
 
+import { ToggleGroup } from "@quenti/components/toggle-group";
+
 import { Text, VStack, useColorMode } from "@chakra-ui/react";
 
-import { ToggleGroup } from "@quenti/components/toggle-group";
 import { SettingsContext } from "../../pages/settings";
 import { ThemePreview } from "../onboarding/theme-preview";
 import { SectionWrapper } from "./section-wrapper";

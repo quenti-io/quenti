@@ -1,4 +1,5 @@
 import { Modal } from "@quenti/components/modal";
+import { ToggleGroup } from "@quenti/components/toggle-group";
 import type { StudySetVisibility } from "@quenti/prisma/client";
 
 import {
@@ -10,8 +11,6 @@ import {
 } from "@chakra-ui/react";
 
 import { IconLink, IconLock, IconWorld } from "@tabler/icons-react";
-
-import { ToggleGroup } from "@quenti/components/toggle-group";
 
 export interface VisibilityModalProps {
   isOpen: boolean;

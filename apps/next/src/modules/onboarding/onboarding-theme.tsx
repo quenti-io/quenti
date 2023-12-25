@@ -1,3 +1,5 @@
+import { ToggleGroup } from "@quenti/components/toggle-group";
+
 import {
   Text,
   VStack,
@@ -5,7 +7,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 
-import { ToggleGroup } from "@quenti/components/toggle-group";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper } from "./present-wrapper";
 import { ThemePreview } from "./theme-preview";

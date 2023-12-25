@@ -8,7 +8,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "../../packages/types/next-auth.d.ts",
-    "../../packages/lib/hooks/use-debounce.tsx"
-, "../../packages/components/toggle-group.tsx", "../../packages/components/lib/use-tab.ts"  ]
+    "../../packages/types/next-auth.d.ts"
+  ]
 }

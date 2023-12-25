@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 
+import { ToggleGroup } from "@quenti/components/toggle-group";
 import type { FacingTerm } from "@quenti/interfaces";
 
 import {
@@ -23,7 +24,6 @@ import {
   type TablerIconsProps,
 } from "@tabler/icons-react";
 
-import { ToggleGroup } from "@quenti/components/toggle-group";
 import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { TermWrapper } from "./term-wrapper";
