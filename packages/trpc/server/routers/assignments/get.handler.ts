@@ -72,7 +72,7 @@ const getTeacher = async (
     select: {
       id: true,
       type: true,
-      name: true,
+      title: true,
       description: true,
       createdAt: true,
       updatedAt: true,
@@ -123,7 +123,7 @@ const getStudent = async (
     select: {
       id: true,
       type: true,
-      name: true,
+      title: true,
       description: true,
       createdAt: true,
       updatedAt: true,
@@ -170,7 +170,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   return {
     id: assignment.id,
     type: assignment.type,
-    name: assignment.name,
+    title: assignment.title,
     description: assignment.description,
     createdAt: assignment.createdAt,
     availableAt: assignment.availableAt,

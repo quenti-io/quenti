@@ -335,7 +335,7 @@ model Assignment {
   classId     String
   sectionId   String
   type        AssignmentType
-  name        String         @db.VarChar(255)
+  title       String         @db.VarChar(255)
   description String?        @db.VarChar(2000)
   studySetId  String?
   createdAt   DateTime       @default(now())

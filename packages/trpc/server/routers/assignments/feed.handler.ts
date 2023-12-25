@@ -48,7 +48,7 @@ const getTeacher = async (classId: string, prisma: PrismaClient) => {
     select: {
       id: true,
       type: true,
-      name: true,
+      title: true,
       createdAt: true,
       availableAt: true,
       dueAt: true,
@@ -79,7 +79,7 @@ const getStudent = async (
     select: {
       id: true,
       type: true,
-      name: true,
+      title: true,
       createdAt: true,
       availableAt: true,
       dueAt: true,
@@ -122,7 +122,7 @@ export const feedHandler = async ({ ctx, input }: FeedOptions) => {
     assignments: assignments.map((a) => ({
       id: a.id,
       type: a.type,
-      name: a.name,
+      title: a.title,
       createdAt: a.createdAt,
       availableAt: a.availableAt,
       dueAt: a.dueAt,

@@ -7,9 +7,9 @@ export const ZCreateAssignmentSchema = z.object({
   classId: z.string().cuid(),
   sectionId: z.string().cuid(),
   type: z.nativeEnum(AssignmentType),
-  name: z.string(),
+  title: z.string(),
   description: z.string().optional(),
-  availableAt: z.date().min(new Date()),
+  availableAt: z.date(),
   dueAt: z
     .date()
     .min(new Date(Date.now() + THIRTY_MINUTES))
