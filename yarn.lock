@@ -4518,6 +4518,7 @@ __metadata:
     "@types/lodash.merge": "npm:^4.6.9"
     "@types/react": "npm:^18.2.43"
     "@types/react-dom": "npm:^18.2.17"
+    dayjs: "npm:^1.11.10"
     lodash.merge: "npm:^4.6.2"
     next: "npm:^14.0.4"
     next-seo: "npm:^6.1.0"
@@ -4685,6 +4686,7 @@ __metadata:
     "@tiptap/html": "npm:^2.1.12"
     "@tiptap/react": "npm:^2.1.12"
     "@types/react": "npm:^18.2.43"
+    dayjs: "npm:^1.11.10"
     next: "npm:^14.0.4"
     react: "npm:^18.2.0"
   languageName: unknown
@@ -4766,6 +4768,7 @@ __metadata:
     axios: "npm:^1.5.0"
     chakra-react-select: "npm:^4.7.6"
     compressorjs: "npm:^1.2.1"
+    dayjs: "npm:^1.11.10"
     diff: "npm:^5.1.0"
     encoding: "npm:^0.1.13"
     env-cmd: "npm:^10.1.0"
@@ -8970,6 +8973,13 @@ __metadata:
   dependencies:
     "@babel/runtime": "npm:^7.21.0"
   checksum: e4b521fbf22bc8c3db332bbfb7b094fd3e7627de0259a9d17c7551e2d2702608a7307a449206065916538e384f37b181565447ce2637ae09828427aed9cb5581
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.10":
+  version: 1.11.10
+  resolution: "dayjs@npm:1.11.10"
+  checksum: 4de9af50639d47df87f2e15fa36bb07e0f9ed1e9c52c6caa1482788ee9a384d668f1dbd00c54f82aaab163db07d61d2899384b8254da3a9184fc6deca080e2fe
   languageName: node
   linkType: hard
 

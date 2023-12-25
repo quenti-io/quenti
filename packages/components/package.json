@@ -11,6 +11,7 @@
     "@quenti/prisma": "workspace:*",
     "@tabler/icons-react": "^2.44.0",
     "@tiptap/react": "^2.1.12",
+    "dayjs": "^1.11.10",
     "lodash.merge": "^4.6.2",
     "next": "^14.0.4",
     "next-seo": "^6.1.0",

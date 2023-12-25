@@ -1,3 +1,8 @@
+import dayjs, { type Dayjs } from "dayjs";
+import React from "react";
+
+import { DatePicker } from "@quenti/components/date-picker";
+
 import {
   Box,
   Card,
@@ -21,6 +26,11 @@ import { useProtectedRedirect } from "../use-protected-redirect";
 
 export const NewAssignment = () => {
   const isLoaded = useProtectedRedirect();
+
+  // YYYY-MM-DD
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
+  // YYYY-MM
+  const [month, setMonth] = React.useState<string | null>(null);
 
   return (
     <ClassWizardLayout
@@ -131,6 +141,27 @@ export const NewAssignment = () => {
         </Stack>
         <Stack spacing={4}>
           <SkeletonLabel isLoaded={isLoaded}>Details</SkeletonLabel>
+          <Box
+            p="4"
+            borderWidth="2px"
+            borderColor="gray.200"
+            rounded="lg"
+            w="360px"
+          >
+            <DatePicker
+              selected={dayjs(selectedDate)}
+              onChange={(date: Dayjs | null) => {
+                setSelectedDate(
+                  date === null ? date : date.format("YYYY-MM-DD"),
+                );
+              }}
+              onMonthChange={(date: Dayjs) => {
+                setMonth(date.format("YYYY-MM"));
+                setSelectedDate(date.format("YYYY-MM-DD"));
+              }}
+              browsingDate={month ? dayjs(month) : undefined}
+            />
+          </Box>
         </Stack>
       </Stack>
     </ClassWizardLayout>
