@@ -11,7 +11,7 @@ import {
 
 import { IconLink, IconLock, IconWorld } from "@tabler/icons-react";
 
-import { ToggleGroup } from "../../components/toggle-group";
+import { ToggleGroup } from "@quenti/components/toggle-group";
 
 export interface VisibilityModalProps {
   isOpen: boolean;

@@ -12,7 +12,7 @@ import {
   useTabsStyles,
 } from "@chakra-ui/react";
 
-import { useTab } from "../lib/use-tab";
+import { useTab } from "./lib/use-tab";
 
 interface ToggleGroupProps {
   index: number;

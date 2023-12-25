@@ -28,7 +28,7 @@ import {
 import { IconX } from "@tabler/icons-react";
 
 import { SelectAnswerMode } from "../../components/select-answer-mode";
-import { ToggleGroup } from "../../components/toggle-group";
+import { ToggleGroup } from "@quenti/components/toggle-group";
 import { useTestContext } from "../../stores/use-test-store";
 
 export interface TestSettingsModalProps {

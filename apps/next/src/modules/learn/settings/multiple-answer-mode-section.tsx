@@ -2,7 +2,7 @@ import { api } from "@quenti/trpc";
 
 import { Flex, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 
-import { ToggleGroup } from "../../../components/toggle-group";
+import { ToggleGroup } from "@quenti/components/toggle-group";
 import { useSet } from "../../../hooks/use-set";
 import { useContainerContext } from "../../../stores/use-container-store";
 

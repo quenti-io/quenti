@@ -8,7 +8,7 @@ import { HStack, Text, useColorModeValue } from "@chakra-ui/react";
 
 import { IconBooks, IconSchool } from "@tabler/icons-react";
 
-import { ToggleGroup } from "../../components/toggle-group";
+import { ToggleGroup } from "@quenti/components/toggle-group";
 import { SectionWrapper } from "./section-wrapper";
 
 export const AccountType = () => {

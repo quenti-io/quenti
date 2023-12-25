@@ -23,7 +23,7 @@ import {
   type TablerIconsProps,
 } from "@tabler/icons-react";
 
-import { ToggleGroup } from "../../components/toggle-group";
+import { ToggleGroup } from "@quenti/components/toggle-group";
 import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { TermWrapper } from "./term-wrapper";

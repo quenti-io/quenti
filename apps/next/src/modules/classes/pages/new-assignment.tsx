@@ -2,14 +2,23 @@ import dayjs, { type Dayjs } from "dayjs";
 import React from "react";
 
 import { DatePicker } from "@quenti/components/date-picker";
+import { TimePicker } from "@quenti/components/time-picker";
 
 import {
   Box,
   Card,
   Center,
+  Flex,
   GridItem,
   HStack,
   Heading,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
   SimpleGrid,
   Skeleton,
   Stack,
@@ -17,18 +26,23 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { IconUsersGroup } from "@tabler/icons-react";
+import { IconCalendar, IconUsersGroup } from "@tabler/icons-react";
 
 import { GhostGroup } from "../../../components/ghost-group";
 import { SkeletonLabel } from "../../../components/skeleton-label";
+import { dtFormatter } from "../../../utils/time";
 import { ClassWizardLayout } from "../class-wizard-layout";
 import { useProtectedRedirect } from "../use-protected-redirect";
 
 export const NewAssignment = () => {
   const isLoaded = useProtectedRedirect();
 
+  const [pickerOpen, setPickerOpen] = React.useState(false);
+
   // YYYY-MM-DD
-  const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(
+    dayjs().format("YYYY-MM-DD"),
+  );
   // YYYY-MM
   const [month, setMonth] = React.useState<string | null>(null);
 
@@ -141,27 +155,65 @@ export const NewAssignment = () => {
         </Stack>
         <Stack spacing={4}>
           <SkeletonLabel isLoaded={isLoaded}>Details</SkeletonLabel>
-          <Box
-            p="4"
-            borderWidth="2px"
-            borderColor="gray.200"
-            rounded="lg"
-            w="360px"
-          >
-            <DatePicker
-              selected={dayjs(selectedDate)}
-              onChange={(date: Dayjs | null) => {
-                setSelectedDate(
-                  date === null ? date : date.format("YYYY-MM-DD"),
-                );
-              }}
-              onMonthChange={(date: Dayjs) => {
-                setMonth(date.format("YYYY-MM"));
-                setSelectedDate(date.format("YYYY-MM-DD"));
-              }}
-              browsingDate={month ? dayjs(month) : undefined}
-            />
-          </Box>
+          <InputGroup w="max" size="sm">
+            <Input value={dtFormatter.format(dayjs(selectedDate).toDate())} />
+            <InputRightElement>
+              <Popover
+                isOpen={pickerOpen}
+                onClose={() => setPickerOpen(false)}
+                isLazy
+              >
+                <PopoverAnchor>
+                  <IconButton
+                    icon={<IconCalendar size={14} />}
+                    size="xs"
+                    aria-label="Pick date and time"
+                    variant="ghost"
+                    onClick={() => setPickerOpen(true)}
+                    colorScheme="gray"
+                  />
+                </PopoverAnchor>
+                <PopoverContent
+                  // p="5"
+                  w="max"
+                  overflow="hidden"
+                  rounded="xl"
+                  bg="white"
+                  _dark={{
+                    bg: "gray.800",
+                  }}
+                  shadow="lg"
+                >
+                  <Flex>
+                    <Box p="5">
+                      <DatePicker
+                        selected={dayjs(selectedDate)}
+                        onChange={(date: Dayjs | null) => {
+                          setSelectedDate(
+                            date === null ? date : date.format("YYYY-MM-DD"),
+                          );
+                        }}
+                        onMonthChange={(date: Dayjs) => {
+                          setMonth(date.format("YYYY-MM"));
+                          setSelectedDate(date.format("YYYY-MM-DD"));
+                        }}
+                        browsingDate={month ? dayjs(month) : undefined}
+                      />
+                    </Box>
+                    <Box
+                      h="366px"
+                      w="1px"
+                      bg="gray.100"
+                      _dark={{
+                        bg: "gray.700",
+                      }}
+                    />
+                    <TimePicker />
+                  </Flex>
+                </PopoverContent>
+              </Popover>
+            </InputRightElement>
+          </InputGroup>
         </Stack>
       </Stack>
     </ClassWizardLayout>

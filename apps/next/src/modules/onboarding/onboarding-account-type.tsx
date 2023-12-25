@@ -8,7 +8,7 @@ import { HStack, Text, useColorModeValue } from "@chakra-ui/react";
 
 import { IconBooks, IconSchool } from "@tabler/icons-react";
 
-import { ToggleGroup } from "../../components/toggle-group";
+import { ToggleGroup } from "@quenti/components/toggle-group";
 import { DefaultLayout } from "./default-layout";
 import { PresentWrapper, useNextStep } from "./present-wrapper";
 
