@@ -26,7 +26,7 @@ export const ClassWizardLayout: React.FC<
     <>
       {seoTitle && isLoaded && (
         <HeadSeo
-          title={`${seoTitle} - ${class_.name}`}
+          title={`${seoTitle} - ${class_!.name}`}
           description={description?.toString()}
           nextSeoProps={{
             noindex: true,
