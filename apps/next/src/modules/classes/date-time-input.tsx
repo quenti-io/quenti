@@ -13,6 +13,7 @@ import {
   Popover,
   PopoverAnchor,
   PopoverContent,
+  Portal,
 } from "@chakra-ui/react";
 
 import { IconCalendar, IconX } from "@tabler/icons-react";
@@ -89,30 +90,32 @@ export const DateTimeInput: React.FC<DateTimeInputProps> = ({
                   colorScheme="gray"
                 />
               </PopoverAnchor>
-              <PopoverContent
-                w="max"
-                overflow="hidden"
-                rounded="xl"
-                bg="white"
-                _dark={{
-                  bg: "gray.800",
-                }}
-                shadow="lg"
-                style={{
-                  position: "relative",
-                  zIndex: 20,
-                }}
-              >
-                <DateTimePicker
-                  value={value}
-                  onChange={(v, time) => {
-                    if (!value && !time) return;
-
-                    onChange(v);
-                    if (time) setPickerOpen(false);
+              <Portal>
+                <PopoverContent
+                  w="max"
+                  overflow="hidden"
+                  rounded="xl"
+                  bg="white"
+                  _dark={{
+                    bg: "gray.800",
                   }}
-                />
-              </PopoverContent>
+                  shadow="lg"
+                  style={{
+                    position: "relative",
+                    zIndex: 20,
+                  }}
+                >
+                  <DateTimePicker
+                    value={value}
+                    onChange={(v, time) => {
+                      if (!value && !time) return;
+
+                      onChange(v);
+                      if (time) setPickerOpen(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Portal>
             </Popover>
           </Box>
         </HStack>
