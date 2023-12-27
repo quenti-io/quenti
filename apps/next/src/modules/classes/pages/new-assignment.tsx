@@ -50,9 +50,15 @@ export const NewAssignment = () => {
       <Stack spacing="8">
         <Stack>
           <SkeletonLabel isLoaded={isLoaded}>Title</SkeletonLabel>
-          <Skeleton rounded="lg" w="full" maxW="50%" isLoaded={isLoaded}>
+          <Skeleton
+            rounded="lg"
+            w="full"
+            maxW={{ base: "full", md: "50%" }}
+            isLoaded={isLoaded}
+          >
             <Input
               w="full"
+              autoFocus
               rounded="lg"
               placeholder="Assignment Title"
               bg="white"
@@ -65,7 +71,11 @@ export const NewAssignment = () => {
         </Stack>
         <TypeSection />
         <Stack spacing="8" mt="6">
-          <HStack spacing="6">
+          <HStack
+            spacing="6"
+            display={{ base: "grid", lg: "flex" }}
+            gridTemplateColumns={{ base: "1fr", md: "1fr 1fr" }}
+          >
             <Stack>
               <SkeletonLabel isLoaded={isLoaded}>Available at</SkeletonLabel>
               <Skeleton rounded="lg" fitContent isLoaded={isLoaded}>
@@ -76,8 +86,9 @@ export const NewAssignment = () => {
               w="2px"
               bg="gray.200"
               _dark={{ bg: "gray.700" }}
-              h="61px"
+              h="56px"
               rounded="full"
+              display={{ base: "none", lg: "inherit" }}
             />
             <Stack>
               <SkeletonLabel isLoaded={isLoaded}>Due at</SkeletonLabel>
@@ -89,8 +100,9 @@ export const NewAssignment = () => {
               w="2px"
               bg="gray.200"
               _dark={{ bg: "gray.700" }}
-              h="61px"
+              h="56px"
               rounded="full"
+              display={{ base: "none", lg: "inherit" }}
             />
             <Stack>
               <SkeletonLabel isLoaded={isLoaded}>

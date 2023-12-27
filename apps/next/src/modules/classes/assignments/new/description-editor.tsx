@@ -123,6 +123,7 @@ export const DescriptionEditor = () => {
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             icon={<IconListNumbers size={18} />}
             aria-label="Toggle ordered list"
+            isActive={editor.isActive("orderedList")}
           />
         </ButtonGroup>
         <Box

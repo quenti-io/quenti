@@ -41,8 +41,8 @@ export const ClassWizardLayout: React.FC<
           }}
         />
       )}
-      <Stack spacing="8">
-        <Stack spacing="8">
+      <Stack spacing="8" mt="2">
+        <Stack spacing="4">
           <Box w="full">
             <SegmentedProgress
               steps={steps}
