@@ -156,6 +156,10 @@ const Days: React.FC<DaysProps> = ({
       // If selected date not available in the month, select the first available date of the month
       onChange(firstAvailableDateOfMonth);
     }
+
+    if (!firstAvailableDateOfMonth) {
+      onChange(null);
+    }
   };
 
   React.useEffect(useHandleInitialDateSelection);
@@ -190,6 +194,7 @@ export const DatePicker: React.FC<DatePickerProps & Partial<DaysProps>> = ({
   onChange,
   onMonthChange,
   browsingDate: _browsingDate,
+  minDate,
 }) => {
   const browsingDate = _browsingDate || dayjs().startOf("month");
 
@@ -201,6 +206,8 @@ export const DatePicker: React.FC<DatePickerProps & Partial<DaysProps>> = ({
         new Date(browsingDate.year(), browsingDate.month()),
       )
     : null;
+
+  const disabled = minDate ? browsingDate.isBefore(minDate) : false;
 
   return (
     <Stack spacing="3">
@@ -219,6 +226,7 @@ export const DatePicker: React.FC<DatePickerProps & Partial<DaysProps>> = ({
             _dark={{
               color: "gray.300",
             }}
+            isDisabled={disabled}
             onClick={() => changeMonth(-1)}
           />
           <IconButton
@@ -257,6 +265,7 @@ export const DatePicker: React.FC<DatePickerProps & Partial<DaysProps>> = ({
             browsingDate={browsingDate}
             selected={selected}
             onChange={onChange}
+            minDate={minDate}
           />
         </SimpleGrid>
       </Box>

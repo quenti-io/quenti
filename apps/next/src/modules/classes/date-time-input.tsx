@@ -23,6 +23,7 @@ import { dtFormatter } from "../../utils/time";
 export interface DateTimeInputProps {
   value: string | null;
   onChange: (date: string | null) => void;
+  minDate?: string;
   nullable?: boolean;
   placeholder?: string;
   inputStyles?: InputProps;
@@ -31,6 +32,7 @@ export interface DateTimeInputProps {
 export const DateTimeInput: React.FC<DateTimeInputProps> = ({
   value,
   onChange,
+  minDate,
   nullable = false,
   placeholder = "Pick date and time",
   inputStyles,
@@ -113,6 +115,7 @@ export const DateTimeInput: React.FC<DateTimeInputProps> = ({
                       onChange(v);
                       if (time) setPickerOpen(false);
                     }}
+                    minDate={minDate}
                   />
                 </PopoverContent>
               </Portal>

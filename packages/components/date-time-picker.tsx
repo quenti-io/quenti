@@ -9,17 +9,30 @@ import { TimePicker } from "./time-picker";
 export interface DateTimePickerProps {
   value: string | null;
   onChange: (date: string | null, time?: boolean) => void;
+  minDate?: string;
 }
 
 export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   value,
   onChange,
+  minDate,
 }) => {
+  const _value = value ? dayjs(value) : undefined;
+  const _min = minDate ? dayjs(minDate) : undefined;
+  const _month = dayjs(value ?? undefined);
+
+  const initial =
+    _value && _min
+      ? _value.isAfter(_min)
+        ? _value
+        : _min
+      : _value ?? _min ?? _month;
+
   const [selectedDate, setSelectedDate] = React.useState<string | null>(
-    dayjs(value ?? undefined).format("YYYY-MM-DD"),
+    initial.format("YYYY-MM-DD"),
   );
   const [month, setMonth] = React.useState<string | null>(
-    dayjs(value ?? undefined).format("YYYY-MM"),
+    initial.format("YYYY-MM"),
   );
 
   const changeDate = (date: Dayjs | null) => {
@@ -46,6 +59,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
             setSelectedDate(date.format("YYYY-MM-DD"));
             changeDate(date);
           }}
+          minDate={minDate ? new Date(minDate) : undefined}
           browsingDate={month ? dayjs(month) : undefined}
         />
       </Box>

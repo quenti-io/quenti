@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
@@ -101,7 +102,11 @@ export const NewAssignment = () => {
   });
   const {
     formState: { errors },
+    watch,
   } = createMethods;
+
+  const _availableAt = watch("availableAt");
+  const _dueAt = watch("dueAt");
 
   React.useEffect(() => {
     if (!isLoaded) return;
@@ -113,7 +118,7 @@ export const NewAssignment = () => {
   }, [isLoaded]);
 
   const onSubmit: SubmitHandler<CreateAssignmentFormInputs> = (data) => {
-    console.log(data);
+    console.log(new Date(data.availableAt).toISOString());
   };
 
   return (
@@ -188,7 +193,7 @@ export const NewAssignment = () => {
                 name="availableAt"
                 control={createMethods.control}
                 render={({ field: { value, onChange } }) => (
-                  <Stack>
+                  <Stack w="max">
                     <SkeletonLabel isLoaded={isLoaded}>
                       Available at
                     </SkeletonLabel>
@@ -196,6 +201,7 @@ export const NewAssignment = () => {
                       <DateTimeInput
                         value={value}
                         onChange={onChange}
+                        minDate={dayjs().startOf("day").toISOString()}
                         inputStyles={{
                           w: { base: "full", sm: "244px" },
                         }}
@@ -219,6 +225,7 @@ export const NewAssignment = () => {
                           value={value}
                           onChange={onChange}
                           placeholder="Set due date"
+                          minDate={_availableAt}
                           inputStyles={{
                             w: { base: "full", sm: "244px" },
                           }}
@@ -256,6 +263,7 @@ export const NewAssignment = () => {
                         <DateTimeInput
                           value={value}
                           onChange={onChange}
+                          minDate={_dueAt ?? _availableAt}
                           placeholder="Set lock date"
                           inputStyles={{
                             w: { base: "full", sm: "244px" },
