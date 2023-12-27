@@ -20,11 +20,13 @@ import { dtFormatter } from "../../utils/time";
 export interface DateTimeInputProps {
   value: string | null;
   onChange: (date: string | null) => void;
+  placeholder?: string;
 }
 
 export const DateTimeInput: React.FC<DateTimeInputProps> = ({
   value,
   onChange,
+  placeholder = "Pick date and time",
 }) => {
   const [pickerOpen, setPickerOpen] = React.useState(false);
 
@@ -42,7 +44,8 @@ export const DateTimeInput: React.FC<DateTimeInputProps> = ({
       shadow="sm"
     >
       <Input
-        value={dtFormatter.format(new Date(value ?? ""))}
+        value={value ? dtFormatter.format(new Date(value)) : undefined}
+        placeholder={placeholder}
         onClick={() => setPickerOpen(true)}
       />
       <InputRightElement position="absolute">
@@ -79,6 +82,8 @@ export const DateTimeInput: React.FC<DateTimeInputProps> = ({
               <DateTimePicker
                 value={value}
                 onChange={(v, time) => {
+                  if (!value && !time) return;
+
                   onChange(v);
                   if (time) setPickerOpen(false);
                 }}

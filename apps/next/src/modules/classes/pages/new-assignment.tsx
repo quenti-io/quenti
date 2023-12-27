@@ -35,9 +35,7 @@ export const NewAssignment = () => {
   const [dueAt, setDueAt] = React.useState<string | null>(
     new Date().toISOString(),
   );
-  const [lockedAt, setLockedAt] = React.useState<string | null>(
-    new Date().toISOString(),
-  );
+  const [lockedAt, setLockedAt] = React.useState<string | null>(null);
 
   return (
     <ClassWizardLayout

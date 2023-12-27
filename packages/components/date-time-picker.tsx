@@ -16,15 +16,15 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   onChange,
 }) => {
   const [selectedDate, setSelectedDate] = React.useState<string | null>(
-    value ? dayjs(value).format("YYYY-MM-DD") : null,
+    dayjs(value ?? undefined).format("YYYY-MM-DD"),
   );
   const [month, setMonth] = React.useState<string | null>(
-    value ? dayjs(value).format("YYYY-MM") : null,
+    dayjs(value ?? undefined).format("YYYY-MM"),
   );
 
   const changeDate = (date: Dayjs | null) => {
     if (!date) return;
-    const newDate = dayjs(new Date(value || ""))
+    const newDate = dayjs(value ? new Date(value) : undefined)
       .year(date.year())
       .month(date.month())
       .date(date.date());
@@ -60,7 +60,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       <TimePicker
         onChange={(hours, minutes) => {
           onChange(
-            dayjs(value)
+            dayjs(value ?? selectedDate ?? undefined)
               .set("hour", hours)
               .set("minute", minutes)
               .toISOString(),
