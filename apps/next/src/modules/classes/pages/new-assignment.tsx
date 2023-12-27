@@ -209,7 +209,7 @@ export const NewAssignment = () => {
                 name="dueAt"
                 control={createMethods.control}
                 render={({ field: { value, onChange } }) => (
-                  <FormControl isInvalid={!!errors.dueAt}>
+                  <FormControl isInvalid={!!errors.dueAt} w="max">
                     <Stack>
                       <SkeletonLabel isLoaded={isLoaded}>
                         Due at (optional)
@@ -235,7 +235,7 @@ export const NewAssignment = () => {
                 name="lockedAt"
                 control={createMethods.control}
                 render={({ field: { value, onChange } }) => (
-                  <FormControl isInvalid={!!errors.lockedAt}>
+                  <FormControl isInvalid={!!errors.lockedAt} w="max">
                     <Stack>
                       <SkeletonLabel isLoaded={isLoaded}>
                         <HStack>
