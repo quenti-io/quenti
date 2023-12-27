@@ -129,7 +129,12 @@ export const NewAssignment = () => {
       steps={5}
       description=""
     >
-      <form onSubmit={createMethods.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={createMethods.handleSubmit(onSubmit)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.preventDefault();
+        }}
+      >
         <Stack spacing="8">
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 8, md: 4 }}>
             <Controller

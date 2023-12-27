@@ -60,6 +60,8 @@ export const DateTimeInput: React.FC<DateTimeInputProps> = ({
         placeholder={placeholder}
         onClick={() => setPickerOpen(true)}
         pr="12"
+        autoComplete="off"
+        readOnly
       />
       <InputRightElement w="56px">
         <HStack spacing="0">

@@ -15,9 +15,9 @@ export const createCollaborativeHandler = async ({
   ctx,
   input,
 }: CreateCollaborativeOptions) => {
-  await isClassTeacherOrThrow(input.classId, ctx.session.user.id);
+  await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");
 
-  const assignment = await ctx.prisma.assignment.findFirst({
+  const assignment = await ctx.prisma.assignment.findUnique({
     where: {
       id: input.assignmentId,
       classId: input.classId,
