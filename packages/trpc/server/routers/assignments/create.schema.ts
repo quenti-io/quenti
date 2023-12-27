@@ -8,8 +8,8 @@ export const ZCreateAssignmentSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   availableAt: z.date(),
-  dueAt: z.date().optional(),
-  lockedAt: z.date().optional(),
+  dueAt: z.coerce.date().optional(),
+  lockedAt: z.coerce.date().optional(),
 });
 
 export type TCreateAssignmentSchema = z.infer<typeof ZCreateAssignmentSchema>;
