@@ -4741,10 +4741,12 @@ __metadata:
     "@tiptap/extension-highlight": "npm:^2.1.12"
     "@tiptap/extension-history": "npm:^2.1.12"
     "@tiptap/extension-italic": "npm:^2.1.12"
+    "@tiptap/extension-link": "npm:^2.1.13"
     "@tiptap/extension-paragraph": "npm:^2.1.12"
     "@tiptap/extension-placeholder": "npm:^2.1.12"
     "@tiptap/extension-strike": "npm:^2.1.12"
     "@tiptap/extension-text": "npm:^2.1.12"
+    "@tiptap/extension-text-style": "npm:^2.1.13"
     "@tiptap/extension-typography": "npm:^2.1.12"
     "@tiptap/extension-underline": "npm:^2.1.12"
     "@tiptap/pm": "npm:^2.1.12"
@@ -6073,6 +6075,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/extension-link@npm:^2.1.13":
+  version: 2.1.13
+  resolution: "@tiptap/extension-link@npm:2.1.13"
+  dependencies:
+    linkifyjs: "npm:^4.1.0"
+  peerDependencies:
+    "@tiptap/core": ^2.0.0
+    "@tiptap/pm": ^2.0.0
+  checksum: 9e298d684a808db3fcd3234d10efab44691a40b33661a42fdac47fbaaacb217eb31faf59d2a8e43fb93ca2bf3e924852c979447ecdea35f429826aff96ee4412
+  languageName: node
+  linkType: hard
+
 "@tiptap/extension-list-item@npm:^2.1.12":
   version: 2.1.12
   resolution: "@tiptap/extension-list-item@npm:2.1.12"
@@ -6116,6 +6130,15 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^2.0.0
   checksum: 7a94d3b310f7c60cd724c37f26740b3cb38e08bfea84be6f6b55f68c9ee51009aeed9761821bfaa3c9c4b8529360a052a5771a5d16aa3b53eed4baae49e5dd34
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-text-style@npm:^2.1.13":
+  version: 2.1.13
+  resolution: "@tiptap/extension-text-style@npm:2.1.13"
+  peerDependencies:
+    "@tiptap/core": ^2.0.0
+  checksum: 4dd9bdc3ac5975cd0c37b2273807799e764ba3ea1566fa8687375bcb97a5fa2e01ebc4637e10de3b76fb1755cfef0f002f467a8a5078f2a2662ca0f30a178799
   languageName: node
   linkType: hard
 
@@ -12845,6 +12868,13 @@ __metadata:
   dependencies:
     uc.micro: "npm:^1.0.1"
   checksum: f1949ee2c7c2979c4f80c8c08f507d813f50775ebc5adfdb7ee662f28e0ee53dbd4a329d5231be67414405fc60d4e99b37536d6949702d311fe509a6bcbcf4a6
+  languageName: node
+  linkType: hard
+
+"linkifyjs@npm:^4.1.0":
+  version: 4.1.3
+  resolution: "linkifyjs@npm:4.1.3"
+  checksum: 9fb71da06ee710b5587c8b61ff9a0e45303d448f61fab135e44652cff95c09c1abe276158a72384cff6f35a2371d1cec33dfaa7e5280b71dbb142b43d210c75a
   languageName: node
   linkType: hard
 

@@ -2,7 +2,14 @@ import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
 
-import { Flex, Heading, SkeletonText, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  SkeletonText,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import { SegmentedProgress } from "../../components/segmented-progress";
 import { useClass } from "../../hooks/use-class";
@@ -36,12 +43,12 @@ export const ClassWizardLayout: React.FC<
       )}
       <Stack spacing="8">
         <Stack spacing="8">
-          <Stack>
+          <Box w="full">
             <SegmentedProgress
               steps={steps}
               currentStep={isLoaded ? currentStep : -1}
             />
-          </Stack>
+          </Box>
           <Stack spacing="4">
             <Stack spacing="1">
               <Flex h="21px" alignItems="center">
@@ -64,7 +71,6 @@ export const ClassWizardLayout: React.FC<
                   </Text>
                 </SkeletonText>
               </Flex>
-
               <Flex h="36px" alignItems="center">
                 <SkeletonText
                   isLoaded={isLoaded}

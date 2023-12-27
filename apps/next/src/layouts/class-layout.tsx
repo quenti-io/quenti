@@ -57,6 +57,7 @@ const useTabIndex = (): { name: string | null; tabIndex: number } => {
 };
 
 export interface ClassLayoutProps {
+  hideNav?: boolean;
   returnTo?: {
     name: string;
     path: string;
@@ -65,7 +66,7 @@ export interface ClassLayoutProps {
 
 export const ClassLayout: React.FC<
   React.PropsWithChildren<ClassLayoutProps>
-> = ({ children, returnTo }) => {
+> = ({ children, hideNav = false, returnTo }) => {
   const router = useRouter();
   const id = router.query.id as string;
   const { data } = useClass();
@@ -226,7 +227,7 @@ export const ClassLayout: React.FC<
                     {data?.description && (
                       <Text whiteSpace="pre-wrap">{data?.description}</Text>
                     )}
-                    {!returnTo ? (
+                    {!hideNav ? (
                       <Tabs borderColor={borderColor} isManual index={tabIndex}>
                         <TabList gap="6">
                           <SkeletonTab
@@ -261,36 +262,38 @@ export const ClassLayout: React.FC<
                         <TabPanels mt="6">{children}</TabPanels>
                       </Tabs>
                     ) : (
-                      <Stack spacing="6" mt="2">
-                        <Skeleton fitContent rounded="md" isLoaded={!!data}>
-                          <Link href={returnTo.path}>
-                            <HStack
-                              color="gray.500"
-                              _hover={{
-                                color: "gray.900",
-                              }}
-                              _dark={{
-                                color: "gray.400",
-                                _hover: {
-                                  color: "gray.50",
-                                },
-                              }}
-                              fontWeight={600}
-                              transition="color 150ms ease-in-out"
-                              role="group"
-                            >
-                              <Box
-                                transition="transform 150ms ease-in-out"
-                                _groupHover={{
-                                  transform: "translateX(-4px)",
+                      <Stack spacing="6">
+                        {returnTo && (
+                          <Skeleton fitContent rounded="md" isLoaded={!!data}>
+                            <Link href={returnTo.path}>
+                              <HStack
+                                color="gray.500"
+                                _hover={{
+                                  color: "gray.900",
                                 }}
+                                _dark={{
+                                  color: "gray.400",
+                                  _hover: {
+                                    color: "gray.50",
+                                  },
+                                }}
+                                fontWeight={600}
+                                transition="color 150ms ease-in-out"
+                                role="group"
                               >
-                                <IconArrowLeft size={18} />
-                              </Box>
-                              <Text>{returnTo.name}</Text>
-                            </HStack>
-                          </Link>
-                        </Skeleton>
+                                <Box
+                                  transition="transform 150ms ease-in-out"
+                                  _groupHover={{
+                                    transform: "translateX(-4px)",
+                                  }}
+                                >
+                                  <IconArrowLeft size={18} />
+                                </Box>
+                                <Text>{returnTo.name}</Text>
+                              </HStack>
+                            </Link>
+                          </Skeleton>
+                        )}
                         {children}
                       </Stack>
                     )}

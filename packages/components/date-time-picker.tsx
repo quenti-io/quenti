@@ -24,7 +24,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   const changeDate = (date: Dayjs | null) => {
     if (!date) return;
-    const newDate = dayjs()
+    const newDate = dayjs(new Date(value || ""))
       .year(date.year())
       .month(date.month())
       .date(date.date());
