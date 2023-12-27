@@ -32,9 +32,7 @@ export const NewAssignment = () => {
   const [availableAt, setAvailableAt] = React.useState<string | null>(
     new Date().toISOString(),
   );
-  const [dueAt, setDueAt] = React.useState<string | null>(
-    new Date().toISOString(),
-  );
+  const [dueAt, setDueAt] = React.useState<string | null>(null);
   const [lockedAt, setLockedAt] = React.useState<string | null>(null);
 
   return (
@@ -77,7 +75,13 @@ export const NewAssignment = () => {
             <Stack>
               <SkeletonLabel isLoaded={isLoaded}>Available at</SkeletonLabel>
               <Skeleton rounded="lg" fitContent isLoaded={isLoaded}>
-                <DateTimeInput value={availableAt} onChange={setAvailableAt} />
+                <DateTimeInput
+                  value={availableAt}
+                  onChange={setAvailableAt}
+                  inputStyles={{
+                    w: { base: "full", sm: "244px" },
+                  }}
+                />
               </Skeleton>
             </Stack>
             <Box
@@ -89,9 +93,19 @@ export const NewAssignment = () => {
               display={{ base: "none", lg: "inherit" }}
             />
             <Stack>
-              <SkeletonLabel isLoaded={isLoaded}>Due at</SkeletonLabel>
+              <SkeletonLabel isLoaded={isLoaded}>
+                Due at (optional)
+              </SkeletonLabel>
               <Skeleton rounded="lg" fitContent isLoaded={isLoaded}>
-                <DateTimeInput value={dueAt} onChange={setDueAt} />
+                <DateTimeInput
+                  value={dueAt}
+                  onChange={setDueAt}
+                  placeholder="Set due date"
+                  inputStyles={{
+                    w: { base: "full", sm: "244px" },
+                  }}
+                  nullable
+                />
               </Skeleton>
             </Stack>
             <Box
@@ -119,7 +133,15 @@ export const NewAssignment = () => {
                 </HStack>
               </SkeletonLabel>
               <Skeleton rounded="lg" fitContent isLoaded={isLoaded}>
-                <DateTimeInput value={lockedAt} onChange={setLockedAt} />
+                <DateTimeInput
+                  value={lockedAt}
+                  onChange={setLockedAt}
+                  placeholder="Set lock date"
+                  inputStyles={{
+                    w: { base: "full", sm: "244px" },
+                  }}
+                  nullable
+                />
               </Skeleton>
             </Stack>
           </HStack>
