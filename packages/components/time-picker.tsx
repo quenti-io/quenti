@@ -115,6 +115,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({ onChange }) => {
               <IconSearch size={14} />
             </InputLeftElement>
             <Input
+              isInvalid={false}
               placeholder="Time"
               pl="7"
               fontSize="xs"
