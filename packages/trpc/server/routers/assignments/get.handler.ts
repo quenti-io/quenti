@@ -33,7 +33,10 @@ const memberSelect = Prisma.validator<Prisma.ClassMembershipDefaultArgs>()({
 
 const collabSelect = Prisma.validator<Prisma.StudySetCollabDefaultArgs>()({
   select: {
+    id: true,
     type: true,
+    minTermsPerUser: true,
+    maxTermsPerUser: true,
     _count: {
       select: {
         topics: true,

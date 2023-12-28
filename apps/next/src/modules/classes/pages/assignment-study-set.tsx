@@ -118,7 +118,7 @@ export const AssignmentStudySet = () => {
       title="Create a study set"
       seoTitle="Create a study set"
       currentStep={1}
-      steps={5}
+      steps={4}
       description="Create a Collab study set to attach to your assignment."
     >
       <VisibilityModal

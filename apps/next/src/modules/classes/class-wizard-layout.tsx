@@ -21,13 +21,24 @@ export interface ClassWizardLayout {
   description: string | React.ReactNode;
   steps: number;
   currentStep: number;
+  isLoaded?: boolean;
 }
 
 export const ClassWizardLayout: React.FC<
   React.PropsWithChildren<ClassWizardLayout>
-> = ({ title, seoTitle, description, steps, currentStep, children }) => {
+> = ({
+  title,
+  seoTitle,
+  description,
+  steps,
+  currentStep,
+  children,
+  ...props
+}) => {
   const { data: class_ } = useClass();
-  const isLoaded = useProtectedRedirect();
+  const _isLoaded = useProtectedRedirect();
+
+  const isLoaded = props.isLoaded !== undefined ? props.isLoaded : _isLoaded;
 
   return (
     <>

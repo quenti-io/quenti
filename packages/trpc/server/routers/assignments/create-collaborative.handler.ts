@@ -57,8 +57,8 @@ export const createCollaborativeHandler = async ({
       collab: {
         create: {
           type: "Default",
-          minTermsPerUser: 4,
-          maxTermsPerUser: 4,
+          minTermsPerUser: 3,
+          maxTermsPerUser: 7,
         },
       },
     },

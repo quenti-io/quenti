@@ -1,7 +1,7 @@
 import Link from "@tiptap/extension-link";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
-import { generateJSON } from "@tiptap/react";
+import { generateJSON } from "@tiptap/html";
 import StarterKit from "@tiptap/starter-kit";
 
 import { TRPCError } from "@trpc/server";

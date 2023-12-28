@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEditor } from "@tiptap/react";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React from "react";
@@ -28,7 +29,10 @@ import { IconHelpCircle } from "@tabler/icons-react";
 
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { useClass } from "../../../hooks/use-class";
-import { DescriptionEditor } from "../assignments/new/description-editor";
+import {
+  DescriptionEditor,
+  extensions,
+} from "../assignments/new/description-editor";
 import { TypeSection } from "../assignments/new/type-section";
 import { ClassWizardLayout } from "../class-wizard-layout";
 import { DateTimeInput } from "../date-time-input";
@@ -107,6 +111,15 @@ export const NewAssignment = () => {
     watch,
   } = createMethods;
 
+  const editor = useEditor({
+    extensions,
+    editorProps: {
+      attributes: {
+        class: "p-4 focus:outline-none",
+      },
+    },
+  });
+
   const _availableAt = watch("availableAt");
   const _dueAt = watch("dueAt");
 
@@ -134,6 +147,7 @@ export const NewAssignment = () => {
       availableAt: new Date(data.availableAt),
       dueAt: data.dueAt ? new Date(data.dueAt) : null,
       lockedAt: data.lockedAt ? new Date(data.lockedAt) : null,
+      description: editor?.getHTML() ?? "",
     });
   };
 
@@ -142,7 +156,7 @@ export const NewAssignment = () => {
       title="New assignment"
       seoTitle="New assignment"
       currentStep={0}
-      steps={5}
+      steps={4}
       description=""
     >
       <form
@@ -306,7 +320,7 @@ export const NewAssignment = () => {
               Description (optional)
             </SkeletonLabel>
             <Skeleton rounded="lg" isLoaded={isLoaded} w="full">
-              <DescriptionEditor />
+              <DescriptionEditor editor={editor} />
             </Skeleton>
           </Stack>
           <Flex w="full" justifyContent="end">

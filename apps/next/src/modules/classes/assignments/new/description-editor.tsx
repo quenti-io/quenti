@@ -2,7 +2,7 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { type Editor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import {
@@ -29,7 +29,7 @@ import {
 import { EmojiReplacer } from "../../../editor/extensions/emoji-replacer";
 import { DescriptionEditorStyles } from "./description-editor-styles";
 
-const extensions = [
+export const extensions = [
   StarterKit,
   Link,
   Typography,
@@ -40,15 +40,13 @@ const extensions = [
   Underline,
 ];
 
-export const DescriptionEditor = () => {
-  const editor = useEditor({
-    extensions,
-    editorProps: {
-      attributes: {
-        class: "p-4 focus:outline-none",
-      },
-    },
-  });
+export interface DescriptionEditorProps {
+  editor: Editor | null;
+}
+
+export const DescriptionEditor: React.FC<DescriptionEditorProps> = ({
+  editor,
+}) => {
   if (!editor) return null;
 
   return (
