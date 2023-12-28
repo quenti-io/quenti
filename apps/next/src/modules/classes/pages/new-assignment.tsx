@@ -5,6 +5,8 @@ import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { api } from "@quenti/trpc";
+
 import {
   Box,
   Button,
@@ -37,7 +39,7 @@ interface CreateAssignmentFormInputs {
   title: string;
   description: string;
   sectionId: string;
-  type: "Collaborative";
+  type: "Collab";
   availableAt: string;
   dueAt: string | null;
   lockedAt: string | null;
@@ -51,7 +53,7 @@ const schema = z
       .min(1, { message: "Enter a title" }),
     description: z.string().default("").optional(),
     sectionId: z.string(),
-    type: z.enum(["Collaborative"]),
+    type: z.enum(["Collab"]),
     availableAt: z.coerce.date(),
     dueAt: z.coerce.date().optional().nullable(),
     lockedAt: z.coerce.date().optional().nullable(),
@@ -96,7 +98,7 @@ export const NewAssignment = () => {
   const createMethods = useForm<CreateAssignmentFormInputs>({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: "Collaborative",
+      type: "Collab",
       availableAt: new Date().toISOString(),
     },
   });
@@ -117,8 +119,22 @@ export const NewAssignment = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded]);
 
-  const onSubmit: SubmitHandler<CreateAssignmentFormInputs> = (data) => {
-    console.log(new Date(data.availableAt).toISOString());
+  const apiCreate = api.assignments.create.useMutation({
+    onSuccess: async (assignment) => {
+      await router.push(
+        `/classes/${id}/assignments/${assignment.id}/study-set`,
+      );
+    },
+  });
+
+  const onSubmit: SubmitHandler<CreateAssignmentFormInputs> = async (data) => {
+    await apiCreate.mutateAsync({
+      ...data,
+      classId: id,
+      availableAt: new Date(data.availableAt),
+      dueAt: data.dueAt ? new Date(data.dueAt) : null,
+      lockedAt: data.lockedAt ? new Date(data.lockedAt) : null,
+    });
   };
 
   return (
@@ -307,7 +323,9 @@ export const NewAssignment = () => {
                 </Button>
               </Skeleton>
               <Skeleton rounded="lg" isLoaded={isLoaded} fitContent>
-                <Button type="submit">Continue</Button>
+                <Button type="submit" isLoading={apiCreate.isLoading}>
+                  Continue
+                </Button>
               </Skeleton>
             </ButtonGroup>
           </Flex>

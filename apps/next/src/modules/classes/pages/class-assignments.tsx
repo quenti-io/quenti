@@ -88,7 +88,7 @@ export const ClassAssignments = () => {
           <AssignmentCard
             for="Student"
             id=""
-            type="Collaborate"
+            type="Collab"
             name="Submitted Assignment"
             createdAt={new Date()}
             availableAt={new Date()}
@@ -101,7 +101,7 @@ export const ClassAssignments = () => {
           <AssignmentCard
             for="Student"
             id=""
-            type="Collaborate"
+            type="Collab"
             name="Midterm Study Guide Example"
             createdAt={new Date()}
             availableAt={new Date()}
@@ -109,7 +109,7 @@ export const ClassAssignments = () => {
           <AssignmentCard
             for="Teacher"
             id=""
-            type="Collaborate"
+            type="Collab"
             name="1.2b — Your Midterm Study Guide"
             createdAt={new Date()}
             availableAt={new Date()}

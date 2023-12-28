@@ -327,7 +327,7 @@ model ClassPreferences {
 }
 
 enum AssignmentType {
-  Collaborate
+  Collab
 }
 
 model Assignment {

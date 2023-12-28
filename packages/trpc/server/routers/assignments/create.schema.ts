@@ -7,9 +7,9 @@ export const ZCreateAssignmentSchema = z.object({
   type: z.nativeEnum(AssignmentType),
   title: z.string(),
   description: z.string().optional(),
-  availableAt: z.date(),
-  dueAt: z.coerce.date().optional(),
-  lockedAt: z.coerce.date().optional(),
+  availableAt: z.coerce.date(),
+  dueAt: z.coerce.date().optional().nullable(),
+  lockedAt: z.coerce.date().optional().nullable(),
 });
 
 export type TCreateAssignmentSchema = z.infer<typeof ZCreateAssignmentSchema>;

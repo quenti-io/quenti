@@ -25,12 +25,15 @@ interface ClassCardProps {
   bannerColor: string;
   logo?: string | null;
   hash?: string | null;
+  variant?: "selectable" | "normal";
   data: Widen<
     | { students: number; sections: number }
     | { studySets: number; folders: number }
   >;
   for: UserType;
   disableLink?: boolean;
+  selected?: boolean;
+  onClick?: () => void;
 }
 
 export const ClassCard: React.FC<ClassCardProps> = ({
@@ -41,7 +44,10 @@ export const ClassCard: React.FC<ClassCardProps> = ({
   logo,
   hash,
   for: for_,
+  variant = "normal",
   disableLink = false,
+  selected = false,
+  onClick,
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
@@ -67,22 +73,25 @@ export const ClassCard: React.FC<ClassCardProps> = ({
       rounded="lg"
       p="5"
       bg={linkBg}
-      borderColor={linkBorder}
+      borderColor={selected ? "blue.300" : linkBorder}
+      opacity={variant !== "selectable" || selected ? 1 : 0.7}
       borderWidth="2px"
       shadow="lg"
       position="relative"
       transition="all ease-in-out 150ms"
+      cursor={variant == "selectable" ? "pointer" : undefined}
       _hover={{
         transform: "translateY(-2px)",
-        borderBottomColor: "blue.300",
+        ...(variant == "normal" ? { borderBottomColor: "blue.300" } : {}),
       }}
       sx={{
         "&:has(:focus-visible)": {
           transform: "translateY(-2px)",
-          borderColor: "blue.300",
+          ...(variant == "normal" ? { borderColor: "blue.300" } : {}),
         },
       }}
       overflow="hidden"
+      onClick={onClick}
     >
       <Box
         w="full"

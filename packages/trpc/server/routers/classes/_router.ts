@@ -30,6 +30,7 @@ import { ZUploadLogoSchema } from "./upload-logo.schema";
 type ClassesRouterHandlerCache = {
   handlers: {
     get?: typeof import("./get.handler").getHandler;
+    ["get-belonging"]?: typeof import("./get-belonging.handler").getBelongingHandler;
     join?: typeof import("./join.handler").joinHandler;
     ["get-members"]?: typeof import("./get-members.handler").getMembersHandler;
     ["get-students"]?: typeof import("./get-students.handler").getStudentsHandler;
@@ -64,6 +65,10 @@ export const classesRouter = createTRPCRouter({
   get: protectedProcedure.input(ZGetSchema).query(async ({ ctx, input }) => {
     await loadHandler(HANDLER_CACHE, "get");
     return HANDLER_CACHE.handlers.get!({ ctx, input });
+  }),
+  getBelonging: protectedProcedure.query(async ({ ctx }) => {
+    await loadHandler(HANDLER_CACHE, "get-belonging");
+    return HANDLER_CACHE.handlers["get-belonging"]!({ ctx });
   }),
   join: protectedProcedure
     .input(ZJoinSchema)

@@ -39,7 +39,7 @@ export const createCollaborativeHandler = async ({
     });
   }
 
-  return await ctx.prisma.studySet.create({
+  const set = await ctx.prisma.studySet.create({
     data: {
       type: "Collaborative",
       userId: ctx.session.user.id,
@@ -62,7 +62,36 @@ export const createCollaborativeHandler = async ({
         },
       },
     },
+    select: {
+      id: true,
+    },
   });
+
+  if (input.visibility == "Class" && !input.classesWithAccess?.length) {
+    const classes = await ctx.prisma.class.findMany({
+      where: {
+        id: {
+          in: input.classesWithAccess,
+        },
+        members: {
+          some: {
+            type: "Teacher",
+            userId: ctx.session.user.id,
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    await ctx.prisma.allowedClassesOnStudySets.createMany({
+      data: classes.map((c) => ({
+        classId: c.id,
+        studySetId: set.id,
+      })),
+    });
+  }
 };
 
 export default createCollaborativeHandler;

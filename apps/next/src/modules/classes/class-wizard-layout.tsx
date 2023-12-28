@@ -3,9 +3,9 @@ import React from "react";
 import { HeadSeo } from "@quenti/components/head-seo";
 
 import {
-  Box,
   Flex,
   Heading,
+  Skeleton,
   SkeletonText,
   Stack,
   Text,
@@ -42,35 +42,37 @@ export const ClassWizardLayout: React.FC<
         />
       )}
       <Stack spacing="8" mt="2">
-        <Stack spacing="4">
-          <Box w="full">
-            <SegmentedProgress
-              steps={steps}
-              currentStep={isLoaded ? currentStep : -1}
-            />
-          </Box>
-          <Stack spacing="4">
-            <Stack spacing="1">
-              <Flex h="21px" alignItems="center">
-                <SkeletonText
-                  noOfLines={1}
-                  fitContent
-                  w="max"
-                  isLoaded={isLoaded}
-                  skeletonHeight="16px"
+        <Stack spacing="6">
+          <Stack w="full" spacing="3">
+            <Flex h="21px" alignItems="center">
+              <SkeletonText
+                noOfLines={1}
+                fitContent
+                w="max"
+                isLoaded={isLoaded}
+                skeletonHeight="16px"
+              >
+                <Text
+                  color="gray.600"
+                  _dark={{
+                    color: "gray.400",
+                  }}
+                  fontSize="sm"
+                  fontWeight={600}
                 >
-                  <Text
-                    color="gray.600"
-                    _dark={{
-                      color: "gray.400",
-                    }}
-                    fontSize="sm"
-                    fontWeight={600}
-                  >
-                    Step {currentStep + 1} of {steps}
-                  </Text>
-                </SkeletonText>
-              </Flex>
+                  Step {currentStep + 1} of {steps}
+                </Text>
+              </SkeletonText>
+            </Flex>
+            <Skeleton rounded="full" isLoaded={isLoaded}>
+              <SegmentedProgress
+                steps={steps}
+                currentStep={isLoaded ? currentStep : currentStep - 1}
+              />
+            </Skeleton>
+          </Stack>
+          <Stack spacing="5">
+            <Stack spacing="1">
               <Flex h="36px" alignItems="center">
                 <SkeletonText
                   isLoaded={isLoaded}
@@ -78,19 +80,21 @@ export const ClassWizardLayout: React.FC<
                   w="max"
                   noOfLines={1}
                 >
-                  <Heading size="lg">{title}</Heading>
+                  <Heading fontSize="3xl">{title}</Heading>
                 </SkeletonText>
               </Flex>
             </Stack>
-            <Text
-              color="gray.600"
-              _dark={{
-                color: "gray.400",
-              }}
-              whiteSpace="pre-wrap"
-            >
-              {description}
-            </Text>
+            <Skeleton fitContent isLoaded={isLoaded}>
+              <Text
+                color="gray.600"
+                _dark={{
+                  color: "gray.400",
+                }}
+                whiteSpace="pre-wrap"
+              >
+                {description}
+              </Text>
+            </Skeleton>
           </Stack>
         </Stack>
         {children}

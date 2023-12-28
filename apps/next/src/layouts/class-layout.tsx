@@ -191,40 +191,42 @@ export const ClassLayout: React.FC<
                     </Skeleton>
                   </Center>
                   <Stack spacing="6">
-                    <Stack spacing="0">
-                      <Flex alignItems="center" minH="48px">
-                        <SkeletonText
-                          noOfLines={1}
-                          isLoaded={!!data}
-                          skeletonHeight="30px"
-                        >
-                          <Heading>
-                            {data?.name || "Placeholder class name"}
-                          </Heading>
-                        </SkeletonText>
-                      </Flex>
-                      <Flex alignItems="center" h="21px">
-                        <SkeletonText
-                          noOfLines={1}
-                          isLoaded={!!data}
-                          skeletonHeight="12px"
-                        >
-                          <HStack fontSize="sm" color="gray.500" spacing="1">
-                            <Text>
-                              {plural(
-                                data?.studySets?.length || 0,
-                                "study set",
-                              )}
-                            </Text>
-                            <IconPointFilled size={10} />
-                            <Text>
-                              {plural(data?.folders?.length || 0, "folder")}
-                            </Text>
-                          </HStack>
-                        </SkeletonText>
-                      </Flex>
-                    </Stack>
-                    {data?.description && (
+                    {!hideNav && (
+                      <Stack spacing="0">
+                        <Flex alignItems="center" minH="48px">
+                          <SkeletonText
+                            noOfLines={1}
+                            isLoaded={!!data}
+                            skeletonHeight="30px"
+                          >
+                            <Heading>
+                              {data?.name || "Placeholder class name"}
+                            </Heading>
+                          </SkeletonText>
+                        </Flex>
+                        <Flex alignItems="center" h="21px">
+                          <SkeletonText
+                            noOfLines={1}
+                            isLoaded={!!data}
+                            skeletonHeight="12px"
+                          >
+                            <HStack fontSize="sm" color="gray.500" spacing="1">
+                              <Text>
+                                {plural(
+                                  data?.studySets?.length || 0,
+                                  "study set",
+                                )}
+                              </Text>
+                              <IconPointFilled size={10} />
+                              <Text>
+                                {plural(data?.folders?.length || 0, "folder")}
+                              </Text>
+                            </HStack>
+                          </SkeletonText>
+                        </Flex>
+                      </Stack>
+                    )}
+                    {data?.description && !hideNav && (
                       <Text whiteSpace="pre-wrap">{data?.description}</Text>
                     )}
                     {!hideNav ? (
