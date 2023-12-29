@@ -1,8 +1,10 @@
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
+import { useRouter } from "next/router";
 import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
 import { outfit } from "@quenti/lib/chakra-theme";
+import { api } from "@quenti/trpc";
 
 import {
   Box,
@@ -11,6 +13,9 @@ import {
   Flex,
   HStack,
   Heading,
+  Menu,
+  MenuButton,
+  MenuList,
   SimpleGrid,
   Skeleton,
   SkeletonText,
@@ -18,9 +23,17 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { IconPointFilled } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconEditCircle,
+  IconLink,
+  IconPointFilled,
+  IconTrashX,
+} from "@tabler/icons-react";
 
+import { ConfirmModal } from "../../../components/confirm-modal";
 import { GenericCard } from "../../../components/generic-card";
+import { MenuOption } from "../../../components/menu-option";
 import { StudySetCard } from "../../../components/study-set-card";
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
@@ -28,6 +41,7 @@ import { CollabIcon } from "../assignments/collab-icon";
 import { extensions } from "../assignments/new/description-editor";
 
 export const Assignment = () => {
+  const router = useRouter();
   const { data: class_ } = useClass();
   const { data: assignment } = useAssignment();
 
@@ -43,6 +57,14 @@ export const Assignment = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignment?.description]);
 
+  const apiDelete = api.assignments.delete.useMutation({
+    onSuccess: async () => {
+      await router.push(`/classes/${class_!.id}/assignments`);
+    },
+  });
+
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+
   return (
     <>
       {assignment && class_ && (
@@ -54,25 +76,83 @@ export const Assignment = () => {
           }}
         />
       )}
+      {
+        <ConfirmModal
+          heading="Delete assignment"
+          body="Are you sure you want to delete this assignment? This action cannot be undone."
+          destructive
+          isOpen={deleteOpen}
+          onClose={() => setDeleteOpen(false)}
+          onConfirm={() =>
+            apiDelete.mutate({
+              classId: class_!.id,
+              id: assignment!.id,
+            })
+          }
+          actionText="Delete"
+          isLoading={apiDelete.isLoading}
+        />
+      }
       <Flex gap="8">
         <Stack spacing="8" w="full">
           <Stack spacing="6">
             <Stack spacing="3">
-              <SkeletonText
-                noOfLines={1}
-                fitContent
-                w="max"
-                maxW="full"
-                skeletonHeight="36px"
-                minHeight={43.2}
-                isLoaded={!!assignment}
-              >
-                <Stack>
+              <Flex gap="2" justifyContent="space-between">
+                <SkeletonText
+                  noOfLines={1}
+                  fitContent
+                  w="max"
+                  maxW="full"
+                  skeletonHeight="36px"
+                  minHeight={43.2}
+                  isLoaded={!!assignment}
+                >
                   <Heading>
                     {assignment?.title || "Placeholder Assignment Title"}
                   </Heading>
-                </Stack>
-              </SkeletonText>
+                </SkeletonText>
+                <Menu placement="bottom-end">
+                  <MenuButton h="max" mt="1">
+                    <IconDotsVertical size={24} />
+                  </MenuButton>
+                  <MenuList
+                    bg="white"
+                    _dark={{
+                      bg: "gray.800",
+                    }}
+                    py={0}
+                    overflow="hidden"
+                    minW="auto"
+                    w="32"
+                  >
+                    <MenuOption
+                      icon={<IconLink size={16} />}
+                      label="Copy link"
+                      fontSize="sm"
+                      py="6px"
+                      onClick={() => {}}
+                    />
+                    <MenuOption
+                      icon={<IconEditCircle size={16} />}
+                      label="Edit"
+                      fontSize="sm"
+                      py="6px"
+                      onClick={() => {}}
+                    />
+                    <MenuOption
+                      icon={<IconTrashX size={16} />}
+                      label="Delete"
+                      fontSize="sm"
+                      py="6px"
+                      color="red.600"
+                      _dark={{
+                        color: "red.200",
+                      }}
+                      onClick={() => setDeleteOpen(true)}
+                    />
+                  </MenuList>
+                </Menu>
+              </Flex>
               <HStack color="gray.500">
                 <HStack>
                   <Skeleton rounded="full" isLoaded={!!assignment}>
