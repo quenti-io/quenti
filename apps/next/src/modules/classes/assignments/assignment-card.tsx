@@ -1,8 +1,17 @@
 import React from "react";
 
+import { Link } from "@quenti/components/link";
 import type { AssignmentType } from "@quenti/prisma/client";
 
-import { Box, HStack, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Heading,
+  LinkBox,
+  LinkOverlay,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import {
   IconArrowRight,
@@ -17,6 +26,7 @@ import { dtFormatter } from "../../../utils/time";
 
 export interface AssignmentCardProps {
   for: "Teacher" | "Student";
+  classId: string;
   id: string;
   type: AssignmentType;
   name: string;
@@ -39,7 +49,7 @@ export interface AssignmentCardProps {
 
 export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
   return (
-    <Box
+    <LinkBox
       px="5"
       py="4"
       bg="white"
@@ -106,7 +116,17 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
             <IconUsersGroup size={24} />
           </Box>
           <Stack spacing="1">
-            <Heading fontSize="lg">{props.name}</Heading>
+            <Heading fontSize="lg">
+              <LinkOverlay
+                href={`/classes/${props.classId}/assignments/${props.id}`}
+                as={Link}
+                _focus={{
+                  outline: "none",
+                }}
+              >
+                {props.name}
+              </LinkOverlay>
+            </Heading>
             <HStack spacing="3">
               {props.for == "Teacher" && !props.published && (
                 <HStack color="gray.500" spacing="6px">
@@ -232,6 +252,6 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
           </HStack>
         )}
       </HStack>
-    </Box>
+    </LinkBox>
   );
 };

@@ -85,42 +85,24 @@ export const ClassAssignments = () => {
           <Box flex="1" h="2px" bg="gray.100" _dark={{ bg: "gray.750" }} />
         </HStack>
         <Stack spacing="4">
-          <AssignmentCard
-            for="Student"
-            id=""
-            type="Collab"
-            name="Submitted Assignment"
-            createdAt={new Date()}
-            availableAt={new Date()}
-            submission={{
-              id: "",
-              startedAt: new Date(),
-              submittedAt: new Date(),
-            }}
-          />
-          <AssignmentCard
-            for="Student"
-            id=""
-            type="Collab"
-            name="Midterm Study Guide Example"
-            createdAt={new Date()}
-            availableAt={new Date()}
-          />
-          <AssignmentCard
-            for="Teacher"
-            id=""
-            type="Collab"
-            name="1.2b — Your Midterm Study Guide"
-            createdAt={new Date()}
-            availableAt={new Date()}
-            published={false}
-            section={{
-              id: "",
-              name: "Section A",
-              students: 22,
-            }}
-            submissions={18}
-          />
+          {feed?.assignments.map((a) => (
+            <AssignmentCard
+              key={a.id}
+              classId={id}
+              for={feed?.role}
+              id={a.id}
+              type={a.type}
+              name={a.title}
+              createdAt={new Date(a.createdAt)}
+              availableAt={new Date(a.availableAt)}
+              submissions={a.submissions}
+              section={{
+                id: a.section?.id,
+                name: a.section?.name,
+                students: a.section?._count?.students || 0,
+              }}
+            />
+          ))}
         </Stack>
       </Stack>
     </Stack>

@@ -2,7 +2,7 @@ export const DescriptionEditorStyles = () => {
   return (
     <style jsx global>{`
       .tiptap > * + * {
-        margin-top: 0.5em;
+        margin-top: 0.25em;
       }
 
       .tiptap p.is-editor-empty:first-child::before {
@@ -22,12 +22,12 @@ export const DescriptionEditorStyles = () => {
 
       .tiptap li:not(:first-child),
       .tiptap li > p:not(:first-child) {
-        margin-top: 0.5em;
+        margin-top: 0.25em;
       }
 
       .tiptap li > ul,
       li > ol {
-        margin-top: 0.5em;
+        margin-top: 0.25em;
       }
 
       .tiptap ul,
