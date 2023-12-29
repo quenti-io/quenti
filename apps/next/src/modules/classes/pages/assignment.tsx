@@ -8,8 +8,6 @@ import { api } from "@quenti/trpc";
 
 import {
   Box,
-  Button,
-  Card,
   Flex,
   HStack,
   Heading,
@@ -37,6 +35,7 @@ import { MenuOption } from "../../../components/menu-option";
 import { StudySetCard } from "../../../components/study-set-card";
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
+import { AssignmentRighSide } from "../assignments/assignment-right-side";
 import { CollabIcon } from "../assignments/collab-icon";
 import { extensions } from "../assignments/new/description-editor";
 
@@ -93,11 +92,17 @@ export const Assignment = () => {
           isLoading={apiDelete.isLoading}
         />
       }
-      <Flex gap="8">
+      <Flex
+        gap="8"
+        flexDir={{
+          base: "column",
+          lg: "row",
+        }}
+      >
         <Stack spacing="8" w="full">
           <Stack spacing="6">
             <Stack spacing="3">
-              <Flex gap="2" justifyContent="space-between">
+              <Flex gap="6" justifyContent="space-between">
                 <SkeletonText
                   noOfLines={1}
                   fitContent
@@ -112,7 +117,11 @@ export const Assignment = () => {
                   </Heading>
                 </SkeletonText>
                 <Menu placement="bottom-end">
-                  <MenuButton h="max" mt="1">
+                  <MenuButton
+                    h="max"
+                    mt="1"
+                    visibility={assignment ? "visible" : "hidden"}
+                  >
                     <IconDotsVertical size={24} />
                   </MenuButton>
                   <MenuList
@@ -243,44 +252,7 @@ export const Assignment = () => {
           </SimpleGrid>
         </Stack>
         <Stack w="300px">
-          <Card w="full" shadow="none" bg="transparent">
-            <Stack spacing="5">
-              <SkeletonText
-                fitContent
-                noOfLines={1}
-                isLoaded={!!assignment}
-                height="21px"
-                w="max"
-                maxW="full"
-                skeletonHeight="14px"
-                display="flex"
-                alignItems="center"
-              >
-                <Text
-                  fontSize="sm"
-                  fontWeight={500}
-                  color="gray.700"
-                  _dark={{
-                    color: "gray.300",
-                  }}
-                >
-                  Due{" "}
-                  {Intl.DateTimeFormat("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                  }).format(new Date(assignment?.dueAt ?? 0))}
-                </Text>
-              </SkeletonText>
-              <Skeleton rounded="lg" isLoaded={!!assignment}>
-                <Button fontSize="sm" w="full">
-                  Start assignment
-                </Button>
-              </Skeleton>
-            </Stack>
-          </Card>
+          <AssignmentRighSide />
         </Stack>
       </Flex>
     </>
