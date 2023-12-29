@@ -158,6 +158,10 @@ let config = {
       source: "/:id(c[a-z0-9]{24})/test",
       destination: "/sets/:id/test",
     },
+    {
+      source: "/a/:id/:assignmentId",
+      destination: "/classes/:id/assignments/:assignmentId",
+    },
   ],
   productionBrowserSourceMaps: false,
 };

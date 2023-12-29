@@ -1,18 +1,22 @@
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
 import React from "react";
 
+import { outfit } from "@quenti/lib/chakra-theme";
+
 import {
   Box,
-  Flex,
+  HStack,
   Heading,
   SimpleGrid,
   SkeletonText,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 
 import { GenericCard } from "../../../components/generic-card";
 import { StudySetCard } from "../../../components/study-set-card";
 import { useAssignment } from "../../../hooks/use-assignment";
+import { CollabIcon } from "../assignments/collab-icon";
 import { extensions } from "../assignments/new/description-editor";
 
 export const Assignment = () => {
@@ -32,19 +36,37 @@ export const Assignment = () => {
 
   return (
     <Stack spacing="6">
-      <Stack spacing="4">
-        <Flex h="43.2" gap="4">
-          <SkeletonText
-            noOfLines={1}
-            fitContent
-            skeletonHeight="36px"
-            isLoaded={!!assignment}
-          >
+      <Stack spacing="6">
+        <SkeletonText
+          noOfLines={1}
+          fitContent
+          skeletonHeight="36px"
+          isLoaded={!!assignment}
+        >
+          <Stack>
             <Heading>
               {assignment?.title || "Placeholder Assignment Title"}
             </Heading>
-          </SkeletonText>
-        </Flex>
+            <HStack>
+              <HStack>
+                <Box w="max">
+                  <CollabIcon size={24} />
+                </Box>
+                <Text
+                  fontWeight={700}
+                  bgClip="text"
+                  fontFamily={outfit.style.fontFamily}
+                  bgGradient="linear(to-r, blue.600, blue.500)"
+                  _dark={{
+                    bgGradient: "linear(to-r, blue.300, blue.200)",
+                  }}
+                >
+                  Collab
+                </Text>
+              </HStack>
+            </HStack>
+          </Stack>
+        </SkeletonText>
         <Box
           color="gray.800"
           _dark={{

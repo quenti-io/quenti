@@ -19,10 +19,10 @@ import {
   IconProgress,
   IconSlash,
   IconUsers,
-  IconUsersGroup,
 } from "@tabler/icons-react";
 
 import { dtFormatter } from "../../../utils/time";
+import { CollabIcon } from "./collab-icon";
 
 export interface AssignmentCardProps {
   for: "Teacher" | "Student";
@@ -82,43 +82,11 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
     >
       <HStack justifyContent="space-between">
         <HStack spacing="4">
-          <Box
-            p="10px"
-            color="blue.600"
-            position="relative"
-            overflow="hidden"
-            rounded="full"
-            outline="1.5px solid"
-            outlineOffset={-1.5}
-            outlineColor="gray.100"
-            _dark={{
-              color: "blue.300",
-              outlineColor: "gray.750",
-            }}
-            shadow="md"
-          >
-            <Box
-              p="10px"
-              position="absolute"
-              top="0"
-              left="0"
-              w="full"
-              h="full"
-              rounded="full"
-              bg="rgba(75, 131, 255, 0.1)"
-              filter="blur(4px)"
-              color="blue.200"
-            >
-              <Box opacity={0.75}>
-                <IconUsersGroup size={24} />
-              </Box>
-            </Box>
-            <IconUsersGroup size={24} />
-          </Box>
+          <CollabIcon />
           <Stack spacing="1">
             <Heading fontSize="lg">
               <LinkOverlay
-                href={`/classes/${props.classId}/assignments/${props.id}`}
+                href={`/a/${props.classId}/${props.id}`}
                 as={Link}
                 _focus={{
                   outline: "none",
