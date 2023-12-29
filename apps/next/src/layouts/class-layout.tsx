@@ -266,7 +266,12 @@ export const ClassLayout: React.FC<
                     ) : (
                       <Stack spacing="6">
                         {returnTo && (
-                          <Skeleton fitContent rounded="md" isLoaded={!!data}>
+                          <Skeleton
+                            fitContent
+                            rounded="md"
+                            isLoaded={!!data}
+                            w="max"
+                          >
                             <Link href={returnTo.path}>
                               <HStack
                                 color="gray.500"
