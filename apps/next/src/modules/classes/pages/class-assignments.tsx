@@ -93,14 +93,18 @@ export const ClassAssignments = () => {
               id={a.id}
               type={a.type}
               name={a.title}
-              createdAt={new Date(a.createdAt)}
-              availableAt={new Date(a.availableAt)}
+              createdAt={a.createdAt}
+              availableAt={a.availableAt}
               submissions={a.submissions}
-              section={{
-                id: a.section?.id,
-                name: a.section?.name,
-                students: a.section?._count?.students || 0,
-              }}
+              section={
+                a.section
+                  ? {
+                      id: a.section.id,
+                      name: a.section.name,
+                      students: a.section._count.students || 0,
+                    }
+                  : undefined
+              }
             />
           ))}
         </Stack>

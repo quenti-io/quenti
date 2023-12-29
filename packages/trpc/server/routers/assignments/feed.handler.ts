@@ -89,9 +89,16 @@ const getStudent = async (
   });
 };
 
+type DateOptions = {
+  createdAt: Date;
+  availableAt: Date;
+  dueAt: Date | null;
+  lockedAt: Date | null;
+};
+
 type AwaitedGetTeacher = Awaited<ReturnType<typeof getTeacher>>[number];
 type AwaitedGetStudent = Awaited<ReturnType<typeof getStudent>>[number];
-type Widened = Widen<AwaitedGetTeacher | AwaitedGetStudent>;
+type Widened = Widen<AwaitedGetTeacher | AwaitedGetStudent> & DateOptions;
 
 export const feedHandler = async ({ ctx, input }: FeedOptions) => {
   const member = await getClassMember(input.classId, ctx.session.user.id);
@@ -118,7 +125,7 @@ export const feedHandler = async ({ ctx, input }: FeedOptions) => {
   ) as Widened[];
 
   return {
-    role: isTeacher ? "Teacher" : "Student",
+    role: (isTeacher ? "Teacher" : "Student") as "Teacher" | "Student",
     assignments: assignments.map((a) => ({
       id: a.id,
       type: a.type,
