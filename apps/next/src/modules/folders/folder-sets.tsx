@@ -54,7 +54,11 @@ export const FolderSets = () => {
         isEntitiesLoading={recentForAdd.isLoading}
         entities={(recentForAdd.data ?? []).map((s) => ({
           ...s,
-          type: "set",
+          entityType: "set",
+          collaborators: {
+            total: s._count.collaborators,
+            avatars: s.collaborators.map((c) => c.user.image!),
+          },
           numItems: s._count.terms,
           slug: "",
         }))}

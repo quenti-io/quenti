@@ -61,7 +61,7 @@ export const ClassHome = () => {
         onClose={() => setAddFoldersOpen(false)}
         entities={(recentFolders.data ?? []).map((f) => ({
           ...f,
-          type: "folder",
+          entityType: "folder",
           numItems: f._count.studySets,
         }))}
         onAdd={(ids) =>
@@ -80,7 +80,11 @@ export const ClassHome = () => {
         onClose={() => setAddSetsOpen(false)}
         entities={(recentSets.data ?? []).map((s) => ({
           ...s,
-          type: "set",
+          collaborators: {
+            total: s._count.collaborators,
+            avatars: s.collaborators.map((c) => c.user.image!),
+          },
+          entityType: "set",
           numItems: s._count.terms,
           slug: "",
         }))}
