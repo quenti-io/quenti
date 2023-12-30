@@ -166,6 +166,7 @@ export const feedHandler = async ({ ctx, input }: FeedOptions) => {
       lockedAt: a.lockedAt,
       ...strip({
         section: a.section,
+        published: isTeacher ? a.published : undefined,
         submissions: a._count?.submissions,
         submission: a.submissions?.[0],
       }),

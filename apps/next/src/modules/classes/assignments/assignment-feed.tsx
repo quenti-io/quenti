@@ -51,6 +51,7 @@ export const AssignmentFeed = ({
                 createdAt={a.createdAt}
                 availableAt={a.availableAt}
                 submissions={a.submissions}
+                published={a.published}
                 section={
                   a.section
                     ? {

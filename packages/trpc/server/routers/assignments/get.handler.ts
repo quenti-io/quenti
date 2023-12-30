@@ -182,6 +182,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     studySet: assignment.studySet,
     ...strip({
       section: assignment.section,
+      published: isTeacher ? assignment.published : undefined,
       submissions: isTeacher ? assignment.submissions : undefined,
       submission: !isTeacher ? assignment.submissions[0] || {} : undefined,
     }),

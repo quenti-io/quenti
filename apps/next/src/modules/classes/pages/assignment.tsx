@@ -27,6 +27,7 @@ import {
   IconLink,
   IconPointFilled,
   IconTrashX,
+  IconUsers,
 } from "@tabler/icons-react";
 
 import { ConfirmModal } from "../../../components/confirm-modal";
@@ -35,6 +36,7 @@ import { MenuOption } from "../../../components/menu-option";
 import { StudySetCard } from "../../../components/study-set-card";
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
+import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { AssignmentRighSide } from "../assignments/assignment-right-side";
 import { CollabIcon } from "../assignments/collab-icon";
 import { extensions } from "../assignments/new/description-editor";
@@ -43,6 +45,7 @@ export const Assignment = () => {
   const router = useRouter();
   const { data: class_ } = useClass();
   const { data: assignment } = useAssignment();
+  const isTeacher = useIsClassTeacher();
 
   const editor = useEditor({
     editable: false,
@@ -217,6 +220,21 @@ export const Assignment = () => {
                     }).format(new Date(assignment?.availableAt ?? 0))}
                   </Text>
                 </SkeletonText>
+                {!!assignment && isTeacher && (
+                  <>
+                    <IconPointFilled size={10} />
+                    <HStack
+                      color="gray.700"
+                      _dark={{
+                        color: "gray.300",
+                      }}
+                      spacing="6px"
+                    >
+                      <IconUsers size={14} />
+                      <Text fontSize="sm">{assignment?.section.name}</Text>
+                    </HStack>
+                  </>
+                )}
               </HStack>
             </Stack>
             <Box

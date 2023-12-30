@@ -100,10 +100,23 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
               </Heading>
             </Flex>
             <HStack spacing="3">
-              {props.for == "Teacher" && !props.published && (
-                <HStack color="gray.500" spacing="6px">
-                  <IconProgress size={14} />
-                  <Text fontSize="sm">Unpublished</Text>
+              {props.for == "Teacher" && (
+                <HStack
+                  color={props.published ? "green.500" : "gray.500"}
+                  spacing="6px"
+                  fontWeight={props.published ? 500 : 400}
+                  _dark={{
+                    color: props.published ? "green.300" : "gray.500",
+                  }}
+                >
+                  {props.published ? (
+                    <IconCircleCheck size={14} />
+                  ) : (
+                    <IconProgress size={14} />
+                  )}
+                  <Text fontSize="sm">
+                    {props.published ? "Published" : "Unpublished"}
+                  </Text>
                 </HStack>
               )}
               <HStack
