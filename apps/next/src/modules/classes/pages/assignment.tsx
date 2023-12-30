@@ -53,6 +53,8 @@ export const Assignment = () => {
   const { data: assignment } = useAssignment();
   const isTeacher = useIsClassTeacher();
 
+  const utils = api.useUtils();
+
   const editor = useEditor({
     editable: false,
     content: (assignment?.description as JSONContent) ?? "<p></p>",
@@ -70,8 +72,15 @@ export const Assignment = () => {
       await router.push(`/classes/${class_!.id}/assignments`);
     },
   });
+  const apiSetPublished = api.assignments.setPublished.useMutation({
+    onSuccess: async () => {
+      setPublishOpen(false);
+      await utils.assignments.get.invalidate();
+    },
+  });
 
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [publishOpen, setPublishOpen] = React.useState(false);
 
   return (
     <>
@@ -84,23 +93,43 @@ export const Assignment = () => {
           }}
         />
       )}
-      {
-        <ConfirmModal
-          heading="Delete assignment"
-          body="Are you sure you want to delete this assignment? This action cannot be undone."
-          destructive
-          isOpen={deleteOpen}
-          onClose={() => setDeleteOpen(false)}
-          onConfirm={() =>
-            apiDelete.mutate({
-              classId: class_!.id,
-              id: assignment!.id,
-            })
-          }
-          actionText="Delete"
-          isLoading={apiDelete.isLoading}
-        />
-      }
+      <ConfirmModal
+        heading="Delete assignment"
+        body="Are you sure you want to delete this assignment? This action cannot be undone."
+        destructive
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() =>
+          apiDelete.mutate({
+            classId: class_!.id,
+            id: assignment!.id,
+          })
+        }
+        actionText="Delete"
+        isLoading={apiDelete.isLoading}
+      />
+      <ConfirmModal
+        heading={
+          assignment?.published ? "Unpublish assignment" : "Publish assignment"
+        }
+        body={
+          assignment?.published
+            ? "Are you sure you want to unpublish this assignment? Students will no longer be able to see it."
+            : "Publishing this assignment will make it visible to students."
+        }
+        isOpen={publishOpen}
+        onClose={() => setPublishOpen(false)}
+        onConfirm={() =>
+          apiSetPublished.mutate({
+            classId: class_!.id,
+            id: assignment!.id,
+            published: !assignment?.published,
+          })
+        }
+        actionText={assignment?.published ? "Unpublish" : "Publish"}
+        destructive={assignment?.published}
+        isLoading={apiSetPublished.isLoading}
+      />
       <Flex
         gap="8"
         flexDir={{
@@ -180,7 +209,7 @@ export const Assignment = () => {
                             }
                             fontSize="sm"
                             py="6px"
-                            onClick={() => {}}
+                            onClick={() => setPublishOpen(true)}
                           />
                           <MenuOption
                             icon={<IconEditCircle size={16} />}

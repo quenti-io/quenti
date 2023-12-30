@@ -15,7 +15,10 @@ export const setPublishedHandler = async ({
 
   await ctx.prisma.assignment.update({
     where: {
-      id_classId: { ...input },
+      id_classId: {
+        id: input.id,
+        classId: input.classId,
+      },
     },
     data: {
       published: input.published,
