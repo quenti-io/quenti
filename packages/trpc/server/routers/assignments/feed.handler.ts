@@ -40,10 +40,17 @@ const studentSubmissionsSelect = (memberId: string) =>
     },
   });
 
-const getTeacher = async (classId: string, prisma: PrismaClient) => {
+const getTeacher = async (
+  classId: string,
+  sectionId: string | null,
+  query: string | null,
+  prisma: PrismaClient,
+) => {
   return await prisma.assignment.findMany({
     where: {
       classId,
+      ...(sectionId ? { sectionId } : {}),
+      ...(query ? { title: { contains: query } } : {}),
     },
     select: {
       id: true,
@@ -68,13 +75,15 @@ const getStudent = async (
   classId: string,
   sectionId: string,
   memberId: string,
+  query: string | null,
   prisma: PrismaClient,
 ) => {
   return await prisma.assignment.findMany({
     where: {
       classId,
       sectionId,
-      published: true,
+      // published: true,
+      ...(query ? { title: { contains: query } } : {}),
     },
     select: {
       id: true,
@@ -113,13 +122,26 @@ export const feedHandler = async ({ ctx, input }: FeedOptions) => {
 
   const isTeacher = member?.type === "Teacher" || !!orgMember;
 
+  if (!isTeacher && input.sectionId) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Cannot specify section id",
+    });
+  }
+
   const assignments = (
     isTeacher
-      ? await getTeacher(input.classId, ctx.prisma)
+      ? await getTeacher(
+          input.classId,
+          input.sectionId ?? null,
+          input.query ?? null,
+          ctx.prisma,
+        )
       : await getStudent(
           input.classId,
           member!.sectionId || "",
           member!.id || "",
+          input.query ?? null,
           ctx.prisma,
         )
   ) as Widened[];
