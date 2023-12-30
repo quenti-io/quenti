@@ -92,7 +92,8 @@ model User {
   classInvites   PendingClassInvite[]
   classBans      ClassBan[]
 
-  collabTerms Term[]
+  collabTerms     Term[]
+  collabStudySets StudySetCollaborator[]
 
   @@index([organizationId])
   @@index([type])
@@ -403,8 +404,22 @@ model StudySet {
   classesWithAccess  AllowedClassesOnStudySets[]
   sectionsWithAccess AllowedSectionsOnStudySets[]
   setPinnedInClasses StudySetsOnClasses[]
+  collaborators      StudySetCollaborator[]
 
   @@unique([id, userId])
+  @@index([userId])
+}
+
+model StudySetCollaborator {
+  id         String @id @default(cuid())
+  studySetId String
+  userId     String
+
+  studySet StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studySetId, userId])
+  @@index([studySetId])
   @@index([userId])
 }
 
