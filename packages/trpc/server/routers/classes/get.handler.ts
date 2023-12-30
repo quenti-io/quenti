@@ -47,7 +47,18 @@ const studySetsSelect = Prisma.validator<Prisma.Class$studySetsArgs>()({
         _count: {
           select: {
             terms: true,
+            collaborators: true,
           },
+        },
+        collaborators: {
+          select: {
+            user: {
+              select: {
+                image: true,
+              },
+            },
+          },
+          take: 5,
         },
       },
     },

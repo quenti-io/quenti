@@ -36,6 +36,7 @@ export interface GenericCardProps {
   numItems: number;
   itemsLabel: string;
   label?: React.ReactNode;
+  bottom?: React.ReactNode;
   url: string;
   user: {
     username: string | null;
@@ -54,6 +55,7 @@ export const GenericCard = ({
   numItems,
   itemsLabel,
   label,
+  bottom,
   url,
   user,
   reverseTitle = false,
@@ -133,26 +135,32 @@ export const GenericCard = ({
         </Stack>
         <Flex justifyContent="space-between">
           <HStack spacing={2}>
-            <Avatar
-              src={avatarUrl(user)}
-              size="xs"
-              className="highlight-block"
-            />
-            <HStack spacing={1}>
-              <Text
-                fontSize="sm"
-                fontWeight={600}
-                className="highlight-block"
-                w="max-content"
-              >
-                {user.username}
-              </Text>
-              {verified && (
-                <Box>
-                  <IconDiscountCheck aria-label="Verified" size={18} />
-                </Box>
-              )}
-            </HStack>
+            {!bottom ? (
+              <>
+                <Avatar
+                  src={avatarUrl(user)}
+                  size="xs"
+                  className="highlight-block"
+                />
+                <HStack spacing={1}>
+                  <Text
+                    fontSize="sm"
+                    fontWeight={600}
+                    className="highlight-block"
+                    w="max-content"
+                  >
+                    {user.username}
+                  </Text>
+                  {verified && (
+                    <Box>
+                      <IconDiscountCheck aria-label="Verified" size={18} />
+                    </Box>
+                  )}
+                </HStack>
+              </>
+            ) : (
+              bottom
+            )}
           </HStack>
           {removable && (
             <Box zIndex="20" position="relative">

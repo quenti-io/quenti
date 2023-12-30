@@ -70,7 +70,7 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
             {entities.map((entity) => (
               <GridItem key={entity.id}>
                 <SelectableGenericCard
-                  type={entity.type}
+                  type={entity.entityType}
                   title={entity.title}
                   numItems={entity.numItems}
                   user={entity.user}

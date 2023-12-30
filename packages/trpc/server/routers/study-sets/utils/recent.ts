@@ -65,6 +65,17 @@ export const getRecentStudySets = async (
         _count: {
           select: {
             terms: true,
+            collaborators: true,
+          },
+        },
+        collaborators: {
+          take: 5,
+          select: {
+            user: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
       },

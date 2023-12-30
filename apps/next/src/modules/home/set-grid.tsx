@@ -29,9 +29,13 @@ export const SetGrid = () => {
           ))}
         {(data?.entities || []).map((item) => (
           <GridItem key={item.id} h="156px">
-            {item.type == "set" ? (
+            {item.entityType == "set" ? (
               <StudySetCard
-                studySet={{ ...item, visibility: item.visibility! }}
+                studySet={{
+                  ...item,
+                  visibility: item.visibility!,
+                  type: item.type!,
+                }}
                 draft={item.draft}
                 numTerms={item.numItems}
                 user={item.user}
