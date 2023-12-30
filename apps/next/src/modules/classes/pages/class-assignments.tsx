@@ -2,9 +2,17 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { Link } from "@quenti/components";
+import { useDebounce } from "@quenti/lib/hooks/use-debounce";
 import { api } from "@quenti/trpc";
 
-import { Box, Button, HStack, Skeleton, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Skeleton,
+  SlideFade,
+  Stack,
+} from "@chakra-ui/react";
 
 import { IconClipboardText } from "@tabler/icons-react";
 
@@ -20,29 +28,38 @@ export const ClassAssignments = () => {
   const { data: class_ } = useClass();
   const isTeacher = useIsClassTeacher();
 
-  const { data: feed } = api.assignments.feed.useQuery(
+  const [search, setSearch] = React.useState("");
+  const debouncedSearch = useDebounce(search.trim(), 500);
+  const [section, setSection] = React.useState<string | undefined>();
+
+  const { data: feed, isPreviousData } = api.assignments.feed.useQuery(
     {
       classId: id,
+      query: debouncedSearch.length ? debouncedSearch : undefined,
+      sectionId: section,
     },
     {
+      keepPreviousData: true,
       enabled: !!class_,
+      cacheTime: !search.length && !section ? undefined : 0,
     },
   );
 
-  const [section, setSection] = React.useState<string | undefined>();
+  const isLoaded = !!feed;
 
   return (
     <Stack spacing="8" mt="8">
-      <Skeleton rounded="md" fitContent w="full" isLoaded={!!feed}>
+      <Skeleton rounded="md" fitContent w="full" isLoaded={isLoaded}>
         <HStack
           spacing="4"
           w={{ base: "full", md: "auto" }}
           justifyContent={{ base: "space-between", md: "auto" }}
         >
           <LoadingSearch
-            value=""
+            value={search}
+            onChange={setSearch}
             placeholder="Search assignments"
-            onChange={() => {}}
+            debounceInequality={search.trim() != debouncedSearch.trim()}
           />
           {isTeacher && (
             <>
@@ -77,12 +94,18 @@ export const ClassAssignments = () => {
           )}
         </HStack>
       </Skeleton>
-      {!feed && <AssignmentFeed.Skeleton />}
-      <AssignmentFeed
-        assignments={feed?.assignments || []}
-        classId={id}
-        role={feed?.role || "Student"}
-      />
+      {!isLoaded && <AssignmentFeed.Skeleton />}
+      <SlideFade
+        offsetY="10px"
+        in={isLoaded && !isPreviousData}
+        unmountOnExit={false}
+      >
+        <AssignmentFeed
+          assignments={feed?.assignments || []}
+          classId={id}
+          role={feed?.role || "Student"}
+        />
+      </SlideFade>
     </Stack>
   );
 };
