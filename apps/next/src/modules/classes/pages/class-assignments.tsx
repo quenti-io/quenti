@@ -14,7 +14,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 
-import { IconClipboardText } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 
 import { LoadingSearch } from "../../../components/loading-search";
 import { useClass } from "../../../hooks/use-class";
@@ -83,7 +83,7 @@ export const ClassAssignments = () => {
                 />
               </Box>
               <Button
-                leftIcon={<IconClipboardText size={18} />}
+                leftIcon={<IconPlus size={18} />}
                 minW="max"
                 as={Link}
                 href={`/classes/${id}/assignments/new`}

@@ -99,7 +99,7 @@ export const Assignment = () => {
           lg: "row",
         }}
       >
-        <Stack spacing="8" w="full">
+        <Stack spacing="8" flex="1" w="full" minW="0">
           <Stack spacing="6">
             <Stack spacing="3">
               <Flex gap="6" justifyContent="space-between">
@@ -119,7 +119,7 @@ export const Assignment = () => {
                 <Menu placement="bottom-end">
                   <MenuButton
                     h="max"
-                    mt="1"
+                    mt="10px"
                     visibility={assignment ? "visible" : "hidden"}
                   >
                     <IconDotsVertical size={24} />
@@ -251,7 +251,7 @@ export const Assignment = () => {
             {!assignment && <GenericCard.Skeleton />}
           </SimpleGrid>
         </Stack>
-        <Stack w="300px">
+        <Stack minW="215px" w="215px" flex="0">
           <AssignmentRighSide />
         </Stack>
       </Flex>
