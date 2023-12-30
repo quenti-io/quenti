@@ -13,19 +13,25 @@ import {
   Heading,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuList,
   SimpleGrid,
   Skeleton,
   SkeletonText,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import {
+  IconCircleCheck,
+  IconCircleCheckFilled,
+  IconCircleOff,
   IconDotsVertical,
   IconEditCircle,
   IconLink,
   IconPointFilled,
+  IconProgress,
   IconTrashX,
   IconUsers,
 } from "@tabler/icons-react";
@@ -119,51 +125,98 @@ export const Assignment = () => {
                     {assignment?.title || "Placeholder Assignment Title"}
                   </Heading>
                 </SkeletonText>
-                <Menu placement="bottom-end">
-                  <MenuButton
-                    h="max"
-                    mt="10px"
-                    visibility={assignment ? "visible" : "hidden"}
-                  >
-                    <IconDotsVertical size={24} />
-                  </MenuButton>
-                  <MenuList
-                    bg="white"
-                    _dark={{
-                      bg: "gray.800",
-                    }}
-                    py={0}
-                    overflow="hidden"
-                    minW="auto"
-                    w="32"
-                  >
-                    <MenuOption
-                      icon={<IconLink size={16} />}
-                      label="Copy link"
-                      fontSize="sm"
-                      py="6px"
-                      onClick={() => {}}
-                    />
-                    <MenuOption
-                      icon={<IconEditCircle size={16} />}
-                      label="Edit"
-                      fontSize="sm"
-                      py="6px"
-                      onClick={() => {}}
-                    />
-                    <MenuOption
-                      icon={<IconTrashX size={16} />}
-                      label="Delete"
-                      fontSize="sm"
-                      py="6px"
-                      color="red.600"
+                <HStack
+                  h="max"
+                  mt="10px"
+                  visibility={assignment ? "visible" : "hidden"}
+                >
+                  {isTeacher && assignment && (
+                    <Tooltip
+                      label={assignment.published ? "Published" : "Unpublished"}
+                    >
+                      <Box
+                        color={assignment.published ? "green.500" : "gray.500"}
+                        _dark={{
+                          color: assignment.published
+                            ? "green.300"
+                            : "gray.500",
+                        }}
+                      >
+                        {assignment.published ? (
+                          <IconCircleCheckFilled />
+                        ) : (
+                          <IconProgress />
+                        )}
+                      </Box>
+                    </Tooltip>
+                  )}
+                  <Menu placement="bottom-end">
+                    <MenuButton h="max">
+                      <IconDotsVertical size={24} />
+                    </MenuButton>
+                    <MenuList
+                      mt="2"
+                      bg="white"
                       _dark={{
-                        color: "red.200",
+                        bg: "gray.800",
                       }}
-                      onClick={() => setDeleteOpen(true)}
-                    />
-                  </MenuList>
-                </Menu>
+                      py={0}
+                      overflow="hidden"
+                      minW="auto"
+                      w="32"
+                    >
+                      {isTeacher && (
+                        <>
+                          <MenuOption
+                            icon={
+                              assignment?.published ? (
+                                <IconCircleOff size={16} />
+                              ) : (
+                                <IconCircleCheck size={16} />
+                              )
+                            }
+                            label={
+                              assignment?.published ? "Unpublish" : "Publish"
+                            }
+                            fontSize="sm"
+                            py="6px"
+                            onClick={() => {}}
+                          />
+                          <MenuOption
+                            icon={<IconEditCircle size={16} />}
+                            label="Edit"
+                            fontSize="sm"
+                            py="6px"
+                            onClick={() => {}}
+                          />
+                        </>
+                      )}
+                      <MenuOption
+                        icon={<IconLink size={16} />}
+                        label="Copy link"
+                        fontSize="sm"
+                        py="6px"
+                        onClick={() => {}}
+                      />
+                      {isTeacher && (
+                        <>
+                          <MenuDivider />
+                          <MenuOption
+                            icon={<IconTrashX size={16} />}
+                            label="Delete"
+                            fontSize="sm"
+                            py="6px"
+                            color="red.600"
+                            _dark={{
+                              color: "red.200",
+                            }}
+                            onClick={() => setDeleteOpen(true)}
+                          />
+                        </>
+                      )}
+                    </MenuList>
+                  </Menu>
+                </HStack>
               </Flex>
               <HStack color="gray.500">
                 <HStack>
