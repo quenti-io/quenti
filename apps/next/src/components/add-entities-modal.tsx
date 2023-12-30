@@ -15,6 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
+import { GenericCollaboratorsFooter } from "./generic-collaborators-footer";
 import { GhostGroup } from "./ghost-group";
 import { SelectableGenericCard } from "./selectable-generic-card";
 
@@ -75,6 +76,16 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
                   numItems={entity.numItems}
                   user={entity.user}
                   selected={selectedIds.includes(entity.id)}
+                  bottom={
+                    entity.type === "Collaborative" ? (
+                      <GenericCollaboratorsFooter
+                        avatars={entity.collaborators?.avatars || []}
+                        total={entity.collaborators?.total || 0}
+                        emptyText="No collaborators"
+                        darkBg="gray.750"
+                      />
+                    ) : undefined
+                  }
                   onSelect={() => {
                     setSelectedIds((s) => {
                       if (s.includes(entity.id)) {
