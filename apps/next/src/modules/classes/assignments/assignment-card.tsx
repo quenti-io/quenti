@@ -1,14 +1,16 @@
-import React from "react";
-
 import { Link } from "@quenti/components/link";
 import type { AssignmentType } from "@quenti/prisma/client";
 
 import {
   Box,
+  Card,
+  Flex,
   HStack,
   Heading,
   LinkBox,
   LinkOverlay,
+  Skeleton,
+  SkeletonText,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -47,7 +49,7 @@ export interface AssignmentCardProps {
   };
 }
 
-export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
+export const AssignmentCard = (props: AssignmentCardProps) => {
   return (
     <LinkBox
       px="5"
@@ -84,17 +86,19 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
         <HStack spacing="4">
           <CollabIcon />
           <Stack spacing="1">
-            <Heading fontSize="lg">
-              <LinkOverlay
-                href={`/a/${props.classId}/${props.id}`}
-                as={Link}
-                _focus={{
-                  outline: "none",
-                }}
-              >
-                {props.name}
-              </LinkOverlay>
-            </Heading>
+            <Flex minH="24px" alignItems="center">
+              <Heading fontSize="lg">
+                <LinkOverlay
+                  href={`/a/${props.classId}/${props.id}`}
+                  as={Link}
+                  _focus={{
+                    outline: "none",
+                  }}
+                >
+                  {props.name}
+                </LinkOverlay>
+              </Heading>
+            </Flex>
             <HStack spacing="3">
               {props.for == "Teacher" && !props.published && (
                 <HStack color="gray.500" spacing="6px">
@@ -221,5 +225,55 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = (props) => {
         )}
       </HStack>
     </LinkBox>
+  );
+};
+
+AssignmentCard.Skeleton = function AssignmentCardSkeleton() {
+  return (
+    <Card
+      px="5"
+      py="4"
+      bg="white"
+      borderColor="gray.100"
+      _dark={{
+        borderColor: "gray.700",
+        bg: "gray.800",
+      }}
+      rounded="lg"
+      borderWidth="2px"
+      shadow="md"
+    >
+      <HStack spacing="4">
+        <Skeleton w="44px" h="44px" rounded="full" />
+        <Stack spacing="1">
+          <SkeletonText
+            rounded="lg"
+            fitContent
+            variant="refined"
+            noOfLines={1}
+            display="flex"
+            alignItems="center"
+            skeletonHeight={18}
+            h="6"
+          >
+            <Heading fontSize="lg">Assignment Title Placeholder</Heading>
+          </SkeletonText>
+          <HStack spacing="3">
+            <SkeletonText
+              rounded="lg"
+              fitContent
+              variant="refined"
+              noOfLines={1}
+              display="flex"
+              alignItems="center"
+              skeletonHeight="14px"
+              h="21px"
+            >
+              <Text fontSize="sm">Dec 31, 1969</Text>
+            </SkeletonText>
+          </HStack>
+        </Stack>
+      </HStack>
+    </Card>
   );
 };
