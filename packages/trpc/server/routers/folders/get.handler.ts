@@ -43,6 +43,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
             select: {
               id: true,
               title: true,
+              type: true,
               user: true,
               visibility: true,
               _count: {

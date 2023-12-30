@@ -11,7 +11,7 @@ import { plural } from "../utils/string";
 import { GenericCard } from "./generic-card";
 
 export interface StudySetCardProps {
-  studySet: Pick<StudySet, "id" | "title" | "visibility">;
+  studySet: Pick<StudySet, "id" | "title" | "visibility" | "type">;
   numTerms: number;
   draft?: boolean;
   user: {

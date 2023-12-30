@@ -35,6 +35,7 @@ const studySetsSelect = Prisma.validator<Prisma.Class$studySetsArgs>()({
       select: {
         id: true,
         title: true,
+        type: true,
         visibility: true,
         user: {
           select: {
