@@ -41,7 +41,7 @@ export const createCollaborativeHandler = async ({
 
   const set = await ctx.prisma.studySet.create({
     data: {
-      type: "Collaborative",
+      type: "Collab",
       userId: ctx.session.user.id,
       assignmentId: assignment.id,
       created: true,

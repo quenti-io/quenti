@@ -6,6 +6,7 @@ export const studySetSelect = Prisma.validator<Prisma.StudySetSelect>()({
   createdAt: true,
   savedAt: true,
   title: true,
+  type: true,
   description: true,
   cortexStale: true,
   tags: true,

@@ -160,6 +160,7 @@ export const studySet = mysqlTable(
     id: varchar("id", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     title: varchar("title", { length: 255 }).notNull(),
+    type: mysqlEnum("type", ["Default", "Collab"]).notNull(),
     description: varchar("description", { length: 2000 }).notNull(),
     visibility: mysqlEnum("visibility", ["Private", "Unlisted", "Public"])
       .default("Public")

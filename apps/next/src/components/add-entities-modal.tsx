@@ -77,7 +77,7 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
                   user={entity.user}
                   selected={selectedIds.includes(entity.id)}
                   bottom={
-                    entity.type === "Collaborative" ? (
+                    entity.type === "Collab" ? (
                       <GenericCollaboratorsFooter
                         avatars={entity.collaborators?.avatars || []}
                         total={entity.collaborators?.total || 0}

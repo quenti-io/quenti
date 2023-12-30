@@ -24,5 +24,8 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",
     "@types/react": "^18.2.43"
-  }
+  },
+  "trustedDepdenencies": [
+    "sharp"
+  ]
 }

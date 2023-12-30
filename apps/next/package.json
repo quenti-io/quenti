@@ -126,5 +126,8 @@
   },
   "ct3aMetadata": {
     "initVersion": "7.1.0"
-  }
+  },
+  "trustedDependencies": [
+    "sharp"
+  ]
 }

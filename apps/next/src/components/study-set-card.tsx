@@ -61,7 +61,7 @@ export const StudySetCard: React.FC<StudySetCardProps> = ({
       }
       user={user}
       bottom={
-        studySet.type == "Collaborative" ? (
+        studySet.type == "Collab" ? (
           <GenericCollaboratorsFooter
             avatars={collaborators?.avatars || []}
             total={collaborators?.total || 0}

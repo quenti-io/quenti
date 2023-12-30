@@ -11,10 +11,14 @@ import { TermImageLayer } from "../modules/term-image-layer";
 import { PhotoViewProvider } from "./photo-view/provider";
 import { WithFooter } from "./with-footer";
 
-const InternalSet = () => {
+interface InternalSetProps {
+  collab?: boolean;
+}
+
+const InternalSet: React.FC<InternalSetProps> = ({ collab }) => {
   return (
     <PhotoViewProvider>
-      <HydrateSetData placeholder={<SetLoading />} isPublic>
+      <HydrateSetData placeholder={<SetLoading collab={collab} />} isPublic>
         <EditorGlobalStyles />
         <TermImageLayer />
         <WithFooter>

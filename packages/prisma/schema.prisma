@@ -472,7 +472,7 @@ model StudySetCollabTopicAssignee {
 
 enum StudySetType {
   Default
-  Collaborative
+  Collab
 }
 
 enum StudySetVisibility {
