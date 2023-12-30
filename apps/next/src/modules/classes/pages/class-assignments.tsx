@@ -12,6 +12,7 @@ import {
   Skeleton,
   SlideFade,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 
 import { IconPlus } from "@tabler/icons-react";
@@ -20,6 +21,7 @@ import { LoadingSearch } from "../../../components/loading-search";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { AssignmentFeed } from "../assignments/assignment-feed";
+import { ClassEmpty } from "../class-empty";
 import { SectionSelect } from "../section-select";
 
 export const ClassAssignments = () => {
@@ -95,6 +97,18 @@ export const ClassAssignments = () => {
         </HStack>
       </Skeleton>
       {!isLoaded && <AssignmentFeed.Skeleton />}
+      {isLoaded && !feed.total && (
+        <SlideFade offsetY="10px" in>
+          <ClassEmpty />
+        </SlideFade>
+      )}
+      {isLoaded && feed.total && !feed.assignments.length && (
+        <SlideFade offsetY="10px" in>
+          <Text color="gray.500" fontSize="sm">
+            No assignments found
+          </Text>
+        </SlideFade>
+      )}
       <SlideFade
         offsetY="10px"
         in={isLoaded && !isPreviousData}

@@ -82,7 +82,7 @@ const getStudent = async (
     where: {
       classId,
       sectionId,
-      // published: true,
+      published: true,
       ...(query ? { title: { contains: query } } : {}),
     },
     select: {
@@ -146,8 +146,16 @@ export const feedHandler = async ({ ctx, input }: FeedOptions) => {
         )
   ) as Widened[];
 
+  const total = await ctx.prisma.assignment.count({
+    where: {
+      classId: input.classId,
+      ...(isTeacher ? {} : { published: true }),
+    },
+  });
+
   return {
     role: (isTeacher ? "Teacher" : "Student") as "Teacher" | "Student",
+    total,
     assignments: assignments.map((a) => ({
       id: a.id,
       type: a.type,

@@ -18,7 +18,7 @@ export const ClassEmpty = () => {
       <VStack mt="10" px="-4">
         <GhostMessage
           message="There's nothing here yet"
-          subheading="Check back here once your teacher adds some content to the class."
+          subheading="Check back once your teacher adds some content to the class."
         />
       </VStack>
     </Box>
