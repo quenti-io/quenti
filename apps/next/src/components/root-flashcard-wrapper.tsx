@@ -12,6 +12,7 @@ import { useSetFolderUnison } from "../hooks/use-set-folder-unison";
 import { CreateSortFlashcardsData } from "../modules/create-sort-flashcards-data";
 import { useContainerContext } from "../stores/use-container-store";
 import { DefaultFlashcardWrapper } from "./default-flashcard-wrapper";
+import { FlashcardsEmpty } from "./flashcards-empty";
 import { LoadingFlashcard } from "./loading-flashcard";
 import { SortFlashcardWrapper } from "./sort-flashcard-wrapper";
 
@@ -70,7 +71,9 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
 
   const Wrapper = authed ? CreateSortFlashcardsData : React.Fragment;
 
-  if (isDirty || !termOrder.length) return <LoadingFlashcard h={h} />;
+  if (isDirty || (!termOrder.length && !container))
+    return <LoadingFlashcard h={h} />;
+  if (!termOrder.length) return <FlashcardsEmpty h={h} />;
 
   return (
     <RootFlashcardContext.Provider
