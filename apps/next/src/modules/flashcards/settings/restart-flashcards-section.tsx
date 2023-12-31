@@ -10,7 +10,7 @@ import { useSetPropertiesStore } from "../../../stores/use-set-properties-store"
 export const RestartFlashcardsSection: React.FC<{
   requestClose: () => void;
 }> = ({ requestClose }) => {
-  const { id, type } = useSetFolderUnison();
+  const { id, entityType } = useSetFolderUnison();
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
 
   const setDirtyProps = {
@@ -32,7 +32,7 @@ export const RestartFlashcardsSection: React.FC<{
         onClick={() => {
           apiResetCardsProgress.mutate({
             entityId: id,
-            type: type == "set" ? "StudySet" : "Folder",
+            type: entityType == "set" ? "StudySet" : "Folder",
           });
         }}
       >

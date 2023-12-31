@@ -24,7 +24,7 @@ export const MatchContainer = () => {
   const router = useRouter();
   const root = useEntityRootUrl();
 
-  const { title, id, type } = useSetFolderUnison();
+  const { title, id, entityType } = useSetFolderUnison();
   const intro = window.location.search.includes("intro");
 
   const terms = useMatchContext((state) => state.terms);
@@ -87,7 +87,7 @@ export const MatchContainer = () => {
     log.info("match.identify", {
       userId: session.data?.user?.id,
       entityId: id,
-      type,
+      type: entityType,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

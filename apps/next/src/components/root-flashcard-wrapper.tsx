@@ -58,7 +58,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
   const folderStarMutation = api.folders.starTerm.useMutation();
   const unstarMutation = api.container.unstarTerm.useMutation();
 
-  const { type, container } = useSetFolderUnison();
+  const { entityType, container } = useSetFolderUnison();
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const starTerm = useContainerContext((s) => s.starTerm);
@@ -92,7 +92,7 @@ export const RootFlashcardWrapper: React.FC<RootFlashcardWrapperProps> = ({
           }
 
           if (!starredTerms.includes(term.id)) {
-            if (type === "set") {
+            if (entityType === "set") {
               setStarMutation.mutate({
                 termId: term.id,
                 containerId: container.id,

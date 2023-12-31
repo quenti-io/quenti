@@ -39,7 +39,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   onDefinition,
 }) => {
   const utils = api.useUtils();
-  const { type } = useSetFolderUnison();
+  const { entityType } = useSetFolderUnison();
 
   const [termAssetUrl, setTermAssetUrl] = React.useState<string | null>(null);
   const [cachedAssetUrl, setCachedAssetUrl] = React.useState<string | null>(
@@ -91,7 +91,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   const edit = api.terms.edit.useMutation({
     async onSuccess() {
       onClose();
-      if (type == "set") {
+      if (entityType == "set") {
         await utils.studySets.invalidate();
       } else {
         await utils.folders.invalidate();
