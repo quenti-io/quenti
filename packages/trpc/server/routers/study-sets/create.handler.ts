@@ -29,7 +29,6 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     },
     select: {
       ...studySetSelect,
-      created: true,
       terms: {
         select: termsSelect,
       },

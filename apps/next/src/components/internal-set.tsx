@@ -18,7 +18,11 @@ interface InternalSetProps {
 const InternalSet: React.FC<InternalSetProps> = ({ collab }) => {
   return (
     <PhotoViewProvider>
-      <HydrateSetData placeholder={<SetLoading collab={collab} />} isPublic>
+      <HydrateSetData
+        placeholder={<SetLoading collab={collab} />}
+        isPublic
+        withCollab={collab}
+      >
         <EditorGlobalStyles />
         <TermImageLayer />
         <WithFooter>

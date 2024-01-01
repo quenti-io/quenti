@@ -1,6 +1,6 @@
 import type { Language } from "@quenti/core";
+import { strip } from "@quenti/lib/strip";
 import type { Widen } from "@quenti/lib/widen";
-import { prisma } from "@quenti/prisma";
 import { type StarredTerm, type StudiableTerm } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
@@ -8,57 +8,34 @@ import { TRPCError } from "@trpc/server";
 import { regenerateCortex } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TByIdSchema } from "./by-id.schema";
-import { distractorsArgs, studySetSelect, termsSelect } from "./queries";
+import type {
+  AwaitedGet,
+  AwaitedGetWithCollab,
+  AwaitedGetWithDistractors,
+} from "./queries";
+import { get, getWithCollab, getWithDistractors } from "./queries";
 
 type ByIdOptions = {
   ctx: NonNullableUserContext;
   input: TByIdSchema;
 };
 
-const get = async (id: string) => {
-  return await prisma.studySet.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      ...studySetSelect,
-      created: true,
-      terms: {
-        select: termsSelect,
-      },
-    },
-  });
+type Widened = AwaitedGet | AwaitedGetWithCollab | AwaitedGetWithDistractors;
+type WidenedReturn = Widen<Widened> & {
+  createdAt: Date;
+  savedAt: Date;
 };
 
-const getWithDistractors = async (id: string) => {
-  return await prisma.studySet.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      ...studySetSelect,
-      created: true,
-      terms: {
-        select: {
-          ...termsSelect,
-          distractors: distractorsArgs,
-        },
-      },
-    },
-  });
-};
-
-type AwaitedGet = Awaited<ReturnType<typeof get>>;
-type AwaitedGetWithDistractors = Awaited<ReturnType<typeof getWithDistractors>>;
-type Widened = NonNullable<AwaitedGet> | NonNullable<AwaitedGetWithDistractors>;
 type WidenedTerm = Widen<Widened["terms"][number]>;
 
 export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
   let studySet = (
     input.withDistractors
       ? await getWithDistractors(input.studySetId)
-      : await get(input.studySetId)
-  ) as Widened;
+      : input.withCollab
+        ? await getWithCollab(input.studySetId, ctx.session.user.id)
+        : await get(input.studySetId)
+  ) as WidenedReturn;
 
   if (!studySet) {
     throw new TRPCError({
@@ -151,14 +128,20 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
 
   return {
     ...studySet,
-    createdAt: new Date(studySet.createdAt),
-    savedAt: new Date(studySet.savedAt),
+    ...strip({
+      collaborators: studySet.collaborators?.map((c) => ({
+        id: c.user.id,
+        image: c.user.image,
+        username: c.user.username,
+        name: c.user.displayName ? c.user.name : undefined,
+      })),
+    }),
     terms: input.withDistractors
       ? studySet.terms.map((t) => ({
-          ...t,
+          ...(t as WidenedTerm),
           distractors: (t as WidenedTerm).distractors!,
         }))
-      : studySet.terms,
+      : (studySet.terms as WidenedTerm[]),
     tags: studySet.tags as string[],
     wordLanguage: studySet.wordLanguage as Language,
     definitionLanguage: studySet.definitionLanguage as Language,

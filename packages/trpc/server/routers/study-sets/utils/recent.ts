@@ -64,7 +64,11 @@ export const getRecentStudySets = async (
         },
         _count: {
           select: {
-            terms: true,
+            terms: {
+              where: {
+                ephemeral: false,
+              },
+            },
             collaborators: true,
           },
         },

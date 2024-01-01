@@ -1,44 +1,87 @@
-import { Prisma } from "@quenti/prisma/client";
+import { prisma } from "@quenti/prisma";
 
-export const studySetSelect = Prisma.validator<Prisma.StudySetSelect>()({
-  id: true,
-  userId: true,
-  createdAt: true,
-  savedAt: true,
-  title: true,
-  type: true,
-  description: true,
-  cortexStale: true,
-  tags: true,
-  visibility: true,
-  wordLanguage: true,
-  definitionLanguage: true,
-  user: {
-    select: {
-      username: true,
-      name: true,
-      displayName: true,
-      image: true,
-      verified: true,
+import {
+  assignmentArgs,
+  collabSelect,
+  collabTermsSelect,
+  collaboratorsSelect,
+} from "./collab";
+import { distractorsArgs, studySetSelect, termsSelect } from "./select";
+
+export * from "./collab";
+export * from "./select";
+
+export const get = async (id: string) => {
+  return await prisma.studySet.findUnique({
+    where: {
+      id,
     },
-  },
-});
+    select: {
+      ...studySetSelect,
+      terms: {
+        where: {
+          ephemeral: false,
+        },
+        select: termsSelect,
+      },
+    },
+  });
+};
 
-export const termsSelect = Prisma.validator<Prisma.TermSelect>()({
-  id: true,
-  rank: true,
-  word: true,
-  definition: true,
-  wordRichText: true,
-  definitionRichText: true,
-  assetUrl: true,
-  studySetId: true,
-});
+export const getWithCollab = async (id: string, userId?: string) => {
+  return await prisma.studySet.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      ...studySetSelect,
+      collaborators: {
+        select: collaboratorsSelect,
+      },
+      collab: {
+        select: collabSelect(userId),
+      },
+      assignment: userId ? assignmentArgs(userId) : false,
+      terms: {
+        where: {
+          ephemeral: false,
+        },
+        select: {
+          ...termsSelect,
+          ...collabTermsSelect,
+        },
+      },
+    },
+  });
+};
 
-export const distractorsArgs = Prisma.validator<Prisma.Term$distractorsArgs>()({
-  select: {
-    termId: true,
-    distractingId: true,
-    type: true,
-  },
-});
+export const getWithDistractors = async (id: string) => {
+  return await prisma.studySet.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      ...studySetSelect,
+      collaborators: {
+        select: collaboratorsSelect,
+      },
+      terms: {
+        where: {
+          ephemeral: false,
+        },
+        select: {
+          ...termsSelect,
+          distractors: distractorsArgs,
+        },
+      },
+    },
+  });
+};
+
+export type AwaitedGet = NonNullable<Awaited<ReturnType<typeof get>>>;
+export type AwaitedGetWithCollab = NonNullable<
+  Awaited<ReturnType<typeof getWithCollab>>
+>;
+export type AwaitedGetWithDistractors = NonNullable<
+  Awaited<ReturnType<typeof getWithDistractors>>
+>;
