@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 
 import { MAX_TERM } from "../../common/constants";
 import { censorRichText, profanity } from "../../common/profanity";
+import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import { termsSelect } from "../study-sets/queries";
 import { bulkUpdateTerms } from "../terms/mutations/update";
@@ -124,6 +125,8 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
   `;
 
   await ctx.prisma.$executeRaw(query);
+
+  await markCortexStale(studySet.id);
 
   // All of the terms are published now, update the submission
   await ctx.prisma.submission.update({
