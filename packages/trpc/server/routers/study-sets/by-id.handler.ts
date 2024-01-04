@@ -146,6 +146,7 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     wordLanguage: studySet.wordLanguage as Language,
     definitionLanguage: studySet.definitionLanguage as Language,
     user: {
+      id: studySet.user.id,
       username: studySet.user.username,
       image: studySet.user.image!,
       verified: studySet.user.verified,

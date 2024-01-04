@@ -61,6 +61,7 @@ export const getPublicHandler = async ({ input }: GetPublicOptions) => {
     wordLanguage: studySet.wordLanguage as Language,
     definitionLanguage: studySet.definitionLanguage as Language,
     user: {
+      id: studySet.user.id,
       username: studySet.user.username,
       image: studySet.user.image!,
       name: studySet.user.displayName ? studySet.user.name : null,

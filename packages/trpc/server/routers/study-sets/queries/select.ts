@@ -16,6 +16,7 @@ export const studySetSelect = Prisma.validator<Prisma.StudySetSelect>()({
   definitionLanguage: true,
   user: {
     select: {
+      id: true,
       username: true,
       name: true,
       displayName: true,

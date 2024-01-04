@@ -64,6 +64,8 @@ export const TermsOverview = () => {
     if (!starredTerms.length) setStarredOnly(false);
   }, [starredTerms.length]);
 
+  if (!terms.length) return null;
+
   return (
     <TermsOverviewContext.Provider value={{ starredOnly }}>
       <Stack spacing={8}>

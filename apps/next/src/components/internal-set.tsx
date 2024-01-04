@@ -2,6 +2,7 @@ import { Container, Stack } from "@chakra-ui/react";
 
 import { EditorGlobalStyles } from "../common/editor-global-styles";
 import HydrateSetData from "../modules/hydrate-set-data";
+import { CollabDetails } from "../modules/main/collab-details";
 import { DescriptionArea } from "../modules/main/description-area";
 import { FlashcardPreview } from "../modules/main/flashcard-preview";
 import { HeadingArea } from "../modules/main/heading-area";
@@ -35,7 +36,7 @@ const InternalSet: React.FC<InternalSetProps> = ({ collab }) => {
             <Container maxW="7xl" p="4">
               <Stack spacing={10} w="full">
                 <FlashcardPreview />
-                <DescriptionArea />
+                {collab ? <CollabDetails /> : <DescriptionArea />}
               </Stack>
             </Container>
           </Container>
