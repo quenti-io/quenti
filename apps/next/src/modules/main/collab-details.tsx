@@ -36,7 +36,7 @@ interface CollaboratorIcon {
 }
 
 export const CollabDetails = () => {
-  const { collaborators, user, description, assignment } = useSet();
+  const { collaborators, user, description, assignment, id } = useSet();
 
   const [collaboratorIcons, setCollaboratorIcons] = React.useState<
     CollaboratorIcon[]
@@ -102,7 +102,7 @@ export const CollabDetails = () => {
             </Text>
             {assignment && (
               <ButtonGroup mt="2" spacing="3">
-                <Button w="full" size="sm">
+                <Button w="full" size="sm" as={Link} href={`/${id}/collab`}>
                   Start assignment
                 </Button>
                 <IconButton
@@ -111,6 +111,8 @@ export const CollabDetails = () => {
                   icon={<IconExternalLink size={16} />}
                   size="sm"
                   variant="outline"
+                  as={Link}
+                  href={`/a/${assignment.classId}/${assignment.id}`}
                 />
               </ButtonGroup>
             )}

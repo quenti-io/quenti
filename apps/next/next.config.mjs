@@ -139,6 +139,10 @@ let config = {
       destination: "/sets/:id/create",
     },
     {
+      source: "/:id(c[a-z0-9]{24})/collab",
+      destination: "/sets/:id/collab",
+    },
+    {
       source: "/:id(c[a-z0-9]{24})/flashcards",
       destination: "/sets/:id/flashcards",
     },
