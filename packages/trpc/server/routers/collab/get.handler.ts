@@ -87,6 +87,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
                 definition: "",
                 authorId: ctx.session.user.id,
                 studySetId: input.studySetId,
+                ephemeral: true,
                 rank: i,
               }),
             ),

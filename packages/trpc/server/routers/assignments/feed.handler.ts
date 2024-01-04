@@ -64,7 +64,11 @@ const getTeacher = async (
       section: sectionSelect,
       _count: {
         select: {
-          submissions: true,
+          submissions: {
+            where: {
+              submittedAt: { not: null },
+            },
+          },
         },
       },
     },

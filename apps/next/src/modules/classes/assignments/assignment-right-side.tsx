@@ -43,12 +43,16 @@ const TeacherSide = () => {
 
   if (!assignment) return null;
 
+  const submitted =
+    assignment.submissions?.filter((a) => a.submittedAt).length || 0;
+  const assigned = assignment.section._count.students || 0;
+
   return (
     <Stack spacing="6">
       <VStack spacing="4">
         <HStack spacing="6">
           <Stack spacing="0">
-            <Heading>{assignment.submissions?.length}</Heading>
+            <Heading>{submitted}</Heading>
             <Text fontSize="sm" color="gray.500" fontWeight={500}>
               Submitted
             </Text>
@@ -63,7 +67,7 @@ const TeacherSide = () => {
             }}
           />
           <Stack spacing="0">
-            <Heading>{assignment.section._count.students}</Heading>
+            <Heading>{assigned}</Heading>
             <Text fontSize="sm" color="gray.500" fontWeight={500}>
               Assigned
             </Text>
@@ -83,11 +87,7 @@ const TeacherSide = () => {
           <Box
             position="absolute"
             rounded="full"
-            w={`${
-              ((assignment.submissions?.length || 0) /
-                (assignment.section._count.students || 0)) *
-              100
-            }%`}
+            w={`${(submitted / assigned) * 100}%`}
             h="full"
             transition="width ease-in-out 300ms"
             top="0"
@@ -100,19 +100,18 @@ const TeacherSide = () => {
         </Box>
       </VStack>
       <SimpleGrid columns={5} spacing="4">
-        {Array.from({ length: assignment.section._count.students || 15 }).map(
-          (_, i) => (
-            <StudentAvatar
-              key={i}
-              user={studentData?.students[i]?.user}
-              submitted={
-                !!assignment.submissions?.find(
-                  (a) => a.member.id == studentData?.students[i]?.id,
-                )
-              }
-            />
-          ),
-        )}
+        {Array.from({ length: assigned || 15 }).map((_, i) => (
+          <StudentAvatar
+            key={i}
+            user={studentData?.students[i]?.user}
+            submitted={
+              !!assignment.submissions?.find(
+                (a) =>
+                  a.submittedAt && a.member.id == studentData?.students[i]?.id,
+              )
+            }
+          />
+        ))}
       </SimpleGrid>
     </Stack>
   );
