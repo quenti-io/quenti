@@ -1,5 +1,6 @@
 import { assignmentsRouter } from "./routers/assignments/_router";
 import { classesRouter } from "./routers/classes/_router";
+import { collabRouter } from "./routers/collab/_router";
 import { containerRouter } from "./routers/container/_router";
 import { cortexRouter } from "./routers/cortex/_router";
 import { devRouter } from "./routers/dev";
@@ -38,6 +39,7 @@ export const appRouter = createTRPCRouter({
   images: imagesRouter,
   classes: classesRouter,
   assignments: assignmentsRouter,
+  collab: collabRouter,
   organizations: organizationsRouter,
   disoverable: discoverableRouter,
   shareResolver: shareResolverRouter,
