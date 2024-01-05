@@ -46,6 +46,8 @@ export const editTermHandler = async ({ ctx, input }: EditTermOptions) => {
         id: input.id,
         studySetId: input.studySetId,
       },
+      authorId: ctx.session.user.id,
+      ephemeral: true,
     },
     data: {
       word,

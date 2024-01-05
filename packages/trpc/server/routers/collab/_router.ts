@@ -1,6 +1,7 @@
 import { loadHandler } from "../../lib/load-handler";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { ZAddTermSchema } from "./add-term.schema";
+import { ZDeleteTermSchema } from "./delete-term.schema";
 import { ZEditTermSchema } from "./edit-term.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZSubmitSchema } from "./submit.schema";
@@ -11,6 +12,7 @@ type CollabRouterHandlerCache = {
     submit?: typeof import("./submit.handler").submitHandler;
     addTerm?: typeof import("./add-term.handler").addTermHandler;
     editTerm?: typeof import("./edit-term.handler").editTermHandler;
+    deleteTerm?: typeof import("./delete-term.handler").deleteTermHandler;
   };
 } & { routerPath: string };
 
@@ -41,5 +43,11 @@ export const collabRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "editTerm");
       return HANDLER_CACHE.handlers.editTerm!({ ctx, input });
+    }),
+  deleteTerm: protectedProcedure
+    .input(ZDeleteTermSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "deleteTerm");
+      return HANDLER_CACHE.handlers.deleteTerm!({ ctx, input });
     }),
 });
