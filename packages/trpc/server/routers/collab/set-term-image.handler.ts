@@ -6,14 +6,17 @@ import { getIp } from "../../lib/get-ip";
 import { getCachedPhoto } from "../../lib/images/photo";
 import { RateLimitType, rateLimitOrThrowMultiple } from "../../lib/rate-limit";
 import type { NonNullableUserContext } from "../../lib/types";
-import type { TSetImageSchema } from "./set-image.schema";
+import type { TSetTermImageSchema } from "./set-term-image.schema";
 
-type SetImageOptions = {
+type SetTermImageOptions = {
   ctx: NonNullableUserContext;
-  input: TSetImageSchema;
+  input: TSetTermImageSchema;
 };
 
-export const setImageHandler = async ({ ctx, input }: SetImageOptions) => {
+export const setTermImageHandler = async ({
+  ctx,
+  input,
+}: SetTermImageOptions) => {
   await rateLimitOrThrowMultiple({
     type: RateLimitType.Fast,
     identifiers: [
@@ -22,29 +25,30 @@ export const setImageHandler = async ({ ctx, input }: SetImageOptions) => {
     ],
   });
 
-  const studySet = await ctx.prisma.studySet.findFirst({
+  const submission = await ctx.prisma.submission.findUnique({
     where: {
-      id: input.studySetId,
-      userId: ctx.session.user.id,
-    },
-    select: {
-      id: true,
+      id: input.submissionId,
+      member: {
+        userId: ctx.session.user.id,
+      },
+      submittedAt: null,
     },
   });
 
-  if (!studySet) {
+  if (!submission) {
     throw new TRPCError({
       code: "NOT_FOUND",
     });
   }
+
   const photo = await getCachedPhoto(ctx, input.query, input.index);
   await triggerDownload(photo.links.download_location);
 
   return await ctx.prisma.term.update({
     where: {
-      id_studySetId: {
+      id_submissionId: {
         id: input.id,
-        studySetId: input.studySetId,
+        submissionId: input.submissionId,
       },
     },
     data: {
@@ -53,4 +57,4 @@ export const setImageHandler = async ({ ctx, input }: SetImageOptions) => {
   });
 };
 
-export default setImageHandler;
+export default setTermImageHandler;

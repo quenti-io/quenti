@@ -1,3 +1,5 @@
+import React from "react";
+
 import { HeadSeo } from "@quenti/components/head-seo";
 
 import { Container } from "@chakra-ui/react";
@@ -5,12 +7,25 @@ import { Container } from "@chakra-ui/react";
 import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
+import { SearchImagesModal } from "../../../components/search-images-modal";
 import { WithFooter } from "../../../components/with-footer";
+import { editorEventChannel } from "../../../events/editor";
 import { getLayout } from "../../../layouts/main-layout";
 import { TermsListPure } from "../../../modules/editor/terms-list";
 import { HydrateCollabData } from "../../../modules/hydrate-collab-data";
 
 const Collab = () => {
+  const [searchImagesOpen, setSearchImagesOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const open = () => setSearchImagesOpen(true);
+
+    editorEventChannel.on("openSearchImages", open);
+    return () => {
+      editorEventChannel.off("openSearchImages", open);
+    };
+  }, []);
+
   return (
     <AuthedPage>
       <HeadSeo title="Collab" />
@@ -18,6 +33,12 @@ const Collab = () => {
         <WithFooter>
           <Container maxW="7xl">
             <HydrateCollabData>
+              <SearchImagesModal
+                isOpen={searchImagesOpen}
+                onClose={() => {
+                  setSearchImagesOpen(false);
+                }}
+              />
               <TermsListPure />
             </HydrateCollabData>
           </Container>

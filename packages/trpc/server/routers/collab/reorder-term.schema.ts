@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ZReorderTermsSchema = z.object({
+export const ZReorderTermSchema = z.object({
   submissionId: z.string(),
   term: z.object({
     id: z.string(),
@@ -8,4 +8,4 @@ export const ZReorderTermsSchema = z.object({
   }),
 });
 
-export type TReorderTermsSchema = z.infer<typeof ZReorderTermsSchema>;
+export type TReorderTermSchema = z.infer<typeof ZReorderTermSchema>;

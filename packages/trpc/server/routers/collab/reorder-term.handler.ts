@@ -2,17 +2,17 @@ import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
 import { reorder } from "../terms/mutations/reorder";
-import type { TReorderTermsSchema } from "./reorder-terms.schema";
+import type { TReorderTermSchema } from "./reorder-term.schema";
 
-type ReorderTermsOptions = {
+type ReorderTermOptions = {
   ctx: NonNullableUserContext;
-  input: TReorderTermsSchema;
+  input: TReorderTermSchema;
 };
 
-export const reorderTermsHandler = async ({
+export const reorderTermHandler = async ({
   ctx,
   input,
-}: ReorderTermsOptions) => {
+}: ReorderTermOptions) => {
   const submission = await ctx.prisma.submission.findUnique({
     where: {
       id: input.submissionId,
@@ -83,4 +83,4 @@ export const reorderTermsHandler = async ({
   await reorder(ctx.prisma, term.studySetId, input.submissionId);
 };
 
-export default reorderTermsHandler;
+export default reorderTermHandler;

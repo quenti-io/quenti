@@ -4,8 +4,12 @@ import { ZAddTermSchema } from "./add-term.schema";
 import { ZDeleteTermSchema } from "./delete-term.schema";
 import { ZEditTermSchema } from "./edit-term.schema";
 import { ZGetSchema } from "./get.schema";
-import { ZReorderTermsSchema } from "./reorder-terms.schema";
+import { ZRemoveTermImageSchema } from "./remove-term-image.schema";
+import { ZReorderTermSchema } from "./reorder-term.schema";
+import { ZSetTermImageSchema } from "./set-term-image.schema";
 import { ZSubmitSchema } from "./submit.schema";
+import { ZUploadTermImageCompleteSchema } from "./upload-term-image-complete.schema";
+import { ZUploadTermImageSchema } from "./upload-term-image.schema";
 
 type CollabRouterHandlerCache = {
   handlers: {
@@ -14,7 +18,11 @@ type CollabRouterHandlerCache = {
     ["add-term"]?: typeof import("./add-term.handler").addTermHandler;
     ["edit-term"]?: typeof import("./edit-term.handler").editTermHandler;
     ["delete-term"]?: typeof import("./delete-term.handler").deleteTermHandler;
-    ["reorder-terms"]?: typeof import("./reorder-terms.handler").reorderTermsHandler;
+    ["reorder-term"]?: typeof import("./reorder-term.handler").reorderTermHandler;
+    ["set-term-image"]?: typeof import("./set-term-image.handler").setTermImageHandler;
+    ["remove-term-image"]?: typeof import("./remove-term-image.handler").removeTermImageHandler;
+    ["upload-term-image"]?: typeof import("./upload-term-image.handler").uploadTermImageHandler;
+    ["upload-term-image-complete"]?: typeof import("./upload-term-image-complete.handler").uploadTermImageCompleteHandler;
   };
 } & { routerPath: string };
 
@@ -52,10 +60,37 @@ export const collabRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "delete-term");
       return HANDLER_CACHE.handlers["delete-term"]!({ ctx, input });
     }),
-  reorderTerms: protectedProcedure
-    .input(ZReorderTermsSchema)
+  reorderTerm: protectedProcedure
+    .input(ZReorderTermSchema)
     .mutation(async ({ ctx, input }) => {
-      await loadHandler(HANDLER_CACHE, "reorder-terms");
-      return HANDLER_CACHE.handlers["reorder-terms"]!({ ctx, input });
+      await loadHandler(HANDLER_CACHE, "reorder-term");
+      return HANDLER_CACHE.handlers["reorder-term"]!({ ctx, input });
+    }),
+  setTermImage: protectedProcedure
+    .input(ZSetTermImageSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "set-term-image");
+      return HANDLER_CACHE.handlers["set-term-image"]!({ ctx, input });
+    }),
+  removeTermImage: protectedProcedure
+    .input(ZRemoveTermImageSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "remove-term-image");
+      return HANDLER_CACHE.handlers["remove-term-image"]!({ ctx, input });
+    }),
+  uploadTermImage: protectedProcedure
+    .input(ZUploadTermImageSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-term-image");
+      return HANDLER_CACHE.handlers["upload-term-image"]!({ ctx, input });
+    }),
+  uploadTermImageComplete: protectedProcedure
+    .input(ZUploadTermImageCompleteSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "upload-term-image-complete");
+      return HANDLER_CACHE.handlers["upload-term-image-complete"]!({
+        ctx,
+        input,
+      });
     }),
 });

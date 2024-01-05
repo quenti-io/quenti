@@ -3,6 +3,7 @@ import React from "react";
 import { richTextToHtml } from "@quenti/lib/editor";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
+import { type Context, editorEventChannel } from "../../events/editor";
 import {
   type ClientTerm,
   type SetEditorStore,
@@ -57,23 +58,24 @@ export const CollabEditorLayer: React.FC<
     },
   });
   const apiEditTerm = api.collab.editTerm.useMutation();
-  // const apiBulkEdit = api.terms.bulkEdit.useMutation();
-  // const apiSetImage = api.terms.setImage.useMutation();
-  // const apiRemoveImage = api.terms.removeImage.useMutation();
-  const apiReorderTerm = api.collab.reorderTerms.useMutation();
+  const apiSetImage = api.collab.setTermImage.useMutation();
+  const apiRemoveImage = api.collab.removeTermImage.useMutation();
+  const apiReorderTerm = api.collab.reorderTerm.useMutation();
 
-  // const apiUploadImage = api.terms.uploadImage.useMutation({
-  //   onSuccess: (jwt) => {
-  //     editorEventChannel.emit("startUpload", jwt);
-  //   },
-  // });
-  // const apiUploadImageComplete = api.terms.uploadImageComplete.useMutation({
-  //   onSuccess: (data, { termId }) => {
-  //     if (!data?.url) return;
-  //     const state = storeRef.current!.getState();
-  //     state.setImage(termId, data.url);
-  //   },
-  // });
+  const apiUploadImage = api.collab.uploadTermImage.useMutation({
+    onSuccess: (jwt) => {
+      editorEventChannel.emit("startUpload", jwt);
+    },
+  });
+  const apiUploadImageComplete = api.collab.uploadTermImageComplete.useMutation(
+    {
+      onSuccess: (data, { termId }) => {
+        if (!data?.url) return;
+        const state = storeRef.current!.getState();
+        state.setImage(termId, data.url);
+      },
+    },
+  );
 
   const isSaving =
     apiAddTerm.isLoading || apiDeleteTerm.isLoading || apiEditTerm.isLoading;
@@ -92,41 +94,41 @@ export const CollabEditorLayer: React.FC<
 
   React.useEffect(() => {
     // Needed because IDs may be innacurate at the time the modal is opened
-    // const transform = (c: Context) => {
-    //   const term = storeRef
-    //     .current!.getState()
-    //     .terms.find((x) => x.id === c.termId || x.clientKey === c.termId)!;
-    //   return { termId: term.id, studySetId: c.studySetId };
-    // };
-    // const requestUploadUrl = (context: Context) =>
-    //   apiUploadImage.mutate(transform(context));
-    // const complete = (context: Context) =>
-    //   apiUploadImageComplete.mutate(transform(context));
-    // const setImage = (args: {
-    //   context: Context;
-    //   optimisticUrl: string;
-    //   query?: string;
-    //   index?: number;
-    // }) => {
-    //   const context = transform(args.context);
-    //   storeRef.current!.getState().setImage(context.termId, args.optimisticUrl);
-    //   if (args.query !== undefined && args.index !== undefined) {
-    //     apiSetImage.mutate({
-    //       studySetId: context.studySetId,
-    //       id: context.termId,
-    //       query: args.query,
-    //       index: args.index,
-    //     });
-    //   }
-    // };
-    // editorEventChannel.on("imageSelected", setImage);
-    // editorEventChannel.on("requestUploadUrl", requestUploadUrl);
-    // editorEventChannel.on("uploadComplete", complete);
-    // return () => {
-    //   editorEventChannel.off("imageSelected", setImage);
-    //   editorEventChannel.off("requestUploadUrl", requestUploadUrl);
-    //   editorEventChannel.off("uploadComplete", complete);
-    // };
+    const transform = (c: Context) => {
+      const term = storeRef
+        .current!.getState()
+        .terms.find((x) => x.id === c.termId || x.clientKey === c.termId)!;
+      return { termId: term.id, submissionId: submission.id };
+    };
+    const requestUploadUrl = (context: Context) =>
+      apiUploadImage.mutate(transform(context));
+    const complete = (context: Context) =>
+      apiUploadImageComplete.mutate(transform(context));
+    const setImage = (args: {
+      context: Context;
+      optimisticUrl: string;
+      query?: string;
+      index?: number;
+    }) => {
+      const context = transform(args.context);
+      storeRef.current!.getState().setImage(context.termId, args.optimisticUrl);
+      if (args.query !== undefined && args.index !== undefined) {
+        apiSetImage.mutate({
+          submissionId: submission.id,
+          id: context.termId,
+          query: args.query,
+          index: args.index,
+        });
+      }
+    };
+    editorEventChannel.on("imageSelected", setImage);
+    editorEventChannel.on("requestUploadUrl", requestUploadUrl);
+    editorEventChannel.on("uploadComplete", complete);
+    return () => {
+      editorEventChannel.off("imageSelected", setImage);
+      editorEventChannel.off("requestUploadUrl", requestUploadUrl);
+      editorEventChannel.off("uploadComplete", complete);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -191,12 +193,12 @@ export const CollabEditorLayer: React.FC<
             });
           }
         },
-        // removeImage: (id) => {
-        //   // apiRemoveImage.mutate({
-        //   //   studySetId: data.id,
-        //   //   id,
-        //   // });
-        // },
+        removeImage: (id) => {
+          apiRemoveImage.mutate({
+            submissionId: submission.id,
+            id,
+          });
+        },
         reorderTerm: (id, rank) => {
           void (async () => {
             const state = storeRef.current!.getState();
@@ -220,25 +222,6 @@ export const CollabEditorLayer: React.FC<
               });
             }
           })();
-        },
-        flipTerms: () => {
-          // void (async () => {
-          //   const state = storeRef.current!.getState();
-          //   await apiBulkEdit.mutateAsync({
-          //     studySetId: data.id,
-          //     terms: state.terms.map((x) => ({
-          //       id: x.id,
-          //       word: x.word,
-          //       definition: x.definition,
-          //       wordRichText: x.wordRichText
-          //         ? richTextToHtml(x.wordRichText)
-          //         : undefined,
-          //       definitionRichText: x.definitionRichText
-          //         ? richTextToHtml(x.definitionRichText)
-          //         : undefined,
-          //     })),
-          //   });
-          // })();
         },
       },
     );
