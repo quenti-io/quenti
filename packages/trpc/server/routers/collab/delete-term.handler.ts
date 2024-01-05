@@ -19,7 +19,7 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
         userId: ctx.session.user.id,
       },
       assignment: {
-        studySetId: input.studySetId,
+        studySet: { id: input.studySetId },
       },
       submittedAt: null,
     },

@@ -3,7 +3,11 @@ import React from "react";
 
 import { api } from "@quenti/trpc";
 
-export const HydrateCollabData = () => {
+import { CollabEditorLayer } from "./collab/collab-editor-layer";
+
+export const HydrateCollabData: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
   const router = useRouter();
   const id = router.query.id as string;
 
@@ -25,5 +29,7 @@ export const HydrateCollabData = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
-  return null;
+  if (!data) return null;
+
+  return <CollabEditorLayer data={data}>{children}</CollabEditorLayer>;
 };

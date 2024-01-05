@@ -17,7 +17,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
         userId: ctx.session.user.id,
       },
       assignment: {
-        studySetId: input.studySetId,
+        studySet: { id: input.studySetId },
       },
       submittedAt: null,
     },
