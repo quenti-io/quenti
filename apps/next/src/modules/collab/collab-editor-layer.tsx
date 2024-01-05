@@ -78,7 +78,10 @@ export const CollabEditorLayer: React.FC<
   );
 
   const isSaving =
-    apiAddTerm.isLoading || apiDeleteTerm.isLoading || apiEditTerm.isLoading;
+    apiAddTerm.isLoading ||
+    apiDeleteTerm.isLoading ||
+    apiEditTerm.isLoading ||
+    apiReorderTerm.isLoading;
 
   React.useEffect(() => {
     const state = storeRef.current!.getState();
@@ -135,13 +138,13 @@ export const CollabEditorLayer: React.FC<
   if (!storeRef.current) {
     storeRef.current = createSetEditorStore(
       {
-        ...data,
-        terms: data.submissions[0]!.terms.map((x) => ({
+        ...submission,
+        terms: submission.terms.map((x) => ({
           ...x,
           clientKey: x.id,
         })) as ClientTerm[],
         mode: "edit",
-        serverTerms: data.submissions[0]!.terms.map((x) => x.id),
+        serverTerms: submission.terms.map((x) => x.id),
       },
       {
         deleteTerm: (termId) => {

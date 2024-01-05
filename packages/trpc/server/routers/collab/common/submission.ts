@@ -26,5 +26,5 @@ export const getSubmissionOrThrow = async (
 };
 
 export const saveSubmisson = async (id: string) => {
-  await prisma.$executeRaw`UPDATE "Submission" SET "savedAt" = NOW() WHERE "id" = ${id}`;
+  await prisma.$executeRaw`UPDATE Submission SET savedAt = NOW() WHERE id = ${id}`;
 };
