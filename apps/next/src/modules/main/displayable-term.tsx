@@ -39,6 +39,7 @@ import {
 } from "../editor/card/image-components";
 import { RichTextBar } from "../editor/card/rich-text-bar";
 import { editorConfig } from "../editor/editor-config";
+import { TermAuthorAvatar } from "./term-author-avatar";
 
 export interface DisplayableTermProps {
   term: FacingTerm;
@@ -180,6 +181,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           px={{ base: 3, md: 0 }}
           py={{ base: 3, md: 0 }}
         >
+          {term.authorId && <TermAuthorAvatar authorId={term.authorId} />}
           {isEditing ? (
             <Stack w="full">
               <RichTextBar activeEditor={wordEditor} />

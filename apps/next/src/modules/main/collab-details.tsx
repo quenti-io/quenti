@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Link } from "@quenti/components";
-import { api } from "@quenti/trpc";
 
 import {
   Avatar,
@@ -13,7 +12,6 @@ import {
   Heading,
   IconButton,
   Popover,
-  PopoverContent,
   PopoverTrigger,
   Stack,
   Tag,
@@ -24,12 +22,13 @@ import { IconExternalLink, IconUsersGroup } from "@tabler/icons-react";
 
 import { useSet } from "../../hooks/use-set";
 import { ActionArea } from "./action-area";
+import { CollaboratorPopoverContent } from "./collaborator-popover-content";
 
-interface CollaboratorIcon {
+export interface CollaboratorIcon {
   type: "creator" | "collaborator";
   user: {
     id: string;
-    image: string;
+    image: string | null;
     name?: string | null;
     username: string;
   };
@@ -42,12 +41,8 @@ export const CollabDetails = () => {
     CollaboratorIcon[]
   >([]);
 
-  const { data } = api.classes.getStudents.useQuery({
-    classId: "clq11d6zz003drzxhsbj776zw",
-  });
-
   React.useEffect(() => {
-    if (!data || !user) return;
+    if (!collaborators || !user) return;
 
     const c = new Array<CollaboratorIcon>();
 
@@ -60,20 +55,20 @@ export const CollabDetails = () => {
     });
 
     c.push(
-      ...data.students.map(
+      ...collaborators.map(
         (s) =>
           ({
             type: "collaborator",
             user: {
-              ...s.user,
-              username: s.user.username!,
+              ...s,
+              username: s.username!,
             },
           }) as CollaboratorIcon,
       ),
     );
 
     setCollaboratorIcons(c);
-  }, [data, user]);
+  }, [collaborators, user]);
 
   return (
     <Stack spacing={8}>
@@ -120,6 +115,7 @@ export const CollabDetails = () => {
         </Box>
         <Box w="full">
           <Flex
+            w="max"
             maxH="128px"
             overflow="hidden"
             justifyContent={{ base: "start", md: "center" }}
@@ -132,7 +128,7 @@ export const CollabDetails = () => {
                   <PopoverTrigger>
                     <Stack spacing="0">
                       <Avatar
-                        src={c.user.image}
+                        src={c.user.image || ""}
                         size="sm"
                         className="highlight-block"
                       />
@@ -165,73 +161,5 @@ export const CollabDetails = () => {
       </Flex>
       <Text whiteSpace="pre-wrap">{description}</Text>
     </Stack>
-  );
-};
-
-const CollaboratorPopoverContent = ({ user, type }: CollaboratorIcon) => {
-  return (
-    <PopoverContent
-      p="3"
-      w="max"
-      bg="white"
-      _dark={{
-        bg: "gray.750",
-      }}
-      mb="1"
-      rounded="xl"
-      shadow="lg"
-    >
-      <Stack spacing="3">
-        <HStack spacing="3">
-          <Avatar src={user.image} size="sm" />
-          <Stack spacing="0">
-            <Text fontWeight={700} fontSize="sm">
-              {user.name ?? user.username}
-            </Text>
-            {user.name && (
-              <Text fontSize="xs" color="gray.500" fontWeight={600}>
-                {user.username}
-              </Text>
-            )}
-          </Stack>
-        </HStack>
-        <Box
-          w="full"
-          h="1.5px"
-          rounded="full"
-          bg="gray.100"
-          _dark={{
-            bg: "gray.700",
-          }}
-        />
-        <HStack spacing="3">
-          <Tag
-            size="sm"
-            colorScheme={type == "creator" ? "green" : "blue"}
-            rounded="full"
-            _light={{
-              bg: type == "creator" ? undefined : "blue.50",
-            }}
-          >
-            {
-              {
-                creator: "Creator",
-                collaborator: "Collaborator",
-              }[type]
-            }
-          </Tag>
-          <Button
-            as={Link}
-            href={`/@${user.username}`}
-            size="xs"
-            variant="link"
-            rightIcon={<IconExternalLink size={14} />}
-            colorScheme="gray"
-          >
-            View profile
-          </Button>
-        </HStack>
-      </Stack>
-    </PopoverContent>
   );
 };
