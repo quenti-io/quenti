@@ -2,7 +2,7 @@ import React from "react";
 
 import { HeadSeo } from "@quenti/components/head-seo";
 
-import { Container } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 
 import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
@@ -11,7 +11,9 @@ import { SearchImagesModal } from "../../../components/search-images-modal";
 import { WithFooter } from "../../../components/with-footer";
 import { editorEventChannel } from "../../../events/editor";
 import { getLayout } from "../../../layouts/main-layout";
+import { CollabSetInfo } from "../../../modules/collab/collab-set-info";
 import { TermsListPure } from "../../../modules/editor/terms-list";
+import { TopBar } from "../../../modules/editor/top-bar";
 import { HydrateCollabData } from "../../../modules/hydrate-collab-data";
 
 const Collab = () => {
@@ -39,7 +41,11 @@ const Collab = () => {
                   setSearchImagesOpen(false);
                 }}
               />
-              <TermsListPure />
+              <Stack spacing="8">
+                <TopBar />
+                <CollabSetInfo />
+                <TermsListPure />
+              </Stack>
             </HydrateCollabData>
           </Container>
         </WithFooter>
