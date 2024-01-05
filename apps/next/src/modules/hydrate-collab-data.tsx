@@ -1,9 +1,15 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-import { api } from "@quenti/trpc";
+import { type RouterOutputs, api } from "@quenti/trpc";
 
 import { CollabEditorLayer } from "./collab/collab-editor-layer";
+
+type CollabData = RouterOutputs["collab"]["get"];
+
+export const CollabContext = React.createContext<
+  { data: CollabData } | undefined
+>(undefined);
 
 export const HydrateCollabData: React.FC<React.PropsWithChildren> = ({
   children,
@@ -31,5 +37,9 @@ export const HydrateCollabData: React.FC<React.PropsWithChildren> = ({
 
   if (!data) return null;
 
-  return <CollabEditorLayer data={data}>{children}</CollabEditorLayer>;
+  return (
+    <CollabContext.Provider value={{ data }}>
+      <CollabEditorLayer data={data}>{children}</CollabEditorLayer>
+    </CollabContext.Provider>
+  );
 };

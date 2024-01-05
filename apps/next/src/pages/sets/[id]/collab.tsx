@@ -12,8 +12,8 @@ import { WithFooter } from "../../../components/with-footer";
 import { editorEventChannel } from "../../../events/editor";
 import { getLayout } from "../../../layouts/main-layout";
 import { CollabSetInfo } from "../../../modules/collab/collab-set-info";
+import { CollabTopBar } from "../../../modules/collab/collab-top-bar";
 import { TermsListPure } from "../../../modules/editor/terms-list";
-import { TopBar } from "../../../modules/editor/top-bar";
 import { HydrateCollabData } from "../../../modules/hydrate-collab-data";
 
 const Collab = () => {
@@ -42,7 +42,7 @@ const Collab = () => {
                 }}
               />
               <Stack spacing="8">
-                <TopBar />
+                <CollabTopBar />
                 <CollabSetInfo />
                 <TermsListPure />
               </Stack>

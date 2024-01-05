@@ -2,6 +2,7 @@ import { Prisma } from "@quenti/prisma/client";
 
 export const collaboratorsSelect =
   Prisma.validator<Prisma.StudySetCollaboratorSelect>()({
+    createdAt: true,
     user: {
       select: {
         id: true,

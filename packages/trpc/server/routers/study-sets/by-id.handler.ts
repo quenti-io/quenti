@@ -130,6 +130,7 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     ...studySet,
     ...strip({
       collaborators: studySet.collaborators?.map((c) => ({
+        createdAt: c.createdAt,
         id: c.user.id,
         image: c.user.image,
         username: c.user.username,

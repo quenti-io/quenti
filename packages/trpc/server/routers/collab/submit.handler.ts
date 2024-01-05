@@ -126,6 +126,21 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
 
   await ctx.prisma.$executeRaw(query);
 
+  // Now create a collaborator if one does not exist
+  await ctx.prisma.studySetCollaborator.upsert({
+    where: {
+      studySetId_userId: {
+        studySetId: studySet.id,
+        userId: ctx.session.user.id,
+      },
+    },
+    create: {
+      studySetId: studySet.id,
+      userId: ctx.session.user.id,
+    },
+    update: {},
+  });
+
   await markCortexStale(studySet.id);
 
   // All of the terms are published now, update the submission

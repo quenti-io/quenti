@@ -139,6 +139,9 @@ export const CollabEditorLayer: React.FC<
     storeRef.current = createSetEditorStore(
       {
         ...submission,
+        id: data.id,
+        title: data.title,
+        description: data.description,
         terms: submission.terms.map((x) => ({
           ...x,
           clientKey: x.id,

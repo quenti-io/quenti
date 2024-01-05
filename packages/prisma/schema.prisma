@@ -412,9 +412,10 @@ model StudySet {
 }
 
 model StudySetCollaborator {
-  id         String @id @default(cuid())
+  id         String   @id @default(cuid())
   studySetId String
   userId     String
+  createdAt  DateTime @default(now())
 
   studySet StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
