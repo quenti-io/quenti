@@ -1,11 +1,10 @@
 import { triggerDownload } from "@quenti/images/server/unsplash";
 
-import { TRPCError } from "@trpc/server";
-
 import { getIp } from "../../lib/get-ip";
 import { getCachedPhoto } from "../../lib/images/photo";
 import { RateLimitType, rateLimitOrThrowMultiple } from "../../lib/rate-limit";
 import type { NonNullableUserContext } from "../../lib/types";
+import { getSubmissionOrThrow } from "./common/submission";
 import type { TSetTermImageSchema } from "./set-term-image.schema";
 
 type SetTermImageOptions = {
@@ -25,21 +24,7 @@ export const setTermImageHandler = async ({
     ],
   });
 
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-    },
-  });
-
-  if (!submission) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-    });
-  }
+  await getSubmissionOrThrow(input.submissionId, ctx.session.user.id);
 
   const photo = await getCachedPhoto(ctx, input.query, input.index);
   await triggerDownload(photo.links.download_location);

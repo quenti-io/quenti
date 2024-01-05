@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { NonNullableUserContext } from "../../lib/types";
 import { serialize } from "../terms/utils/serialize";
 import type { TAddTermSchema } from "./add-term.schema";
+import { saveSubmisson } from "./common/submission";
 
 export type AddTermOptions = {
   ctx: NonNullableUserContext;
@@ -141,6 +142,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
     },
   });
 
+  await saveSubmisson(input.submissionId);
   return { created, merges };
 };
 

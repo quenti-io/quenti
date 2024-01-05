@@ -3,6 +3,7 @@ import { getTermAssetUrl } from "@quenti/images/server";
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
+import { saveSubmisson } from "./common/submission";
 import type { TUploadTermImageSchema } from "./upload-term-image.schema";
 
 type UploadTermImageCompleteOptions = {
@@ -61,6 +62,7 @@ export const uploadTermImageCompleteHandler = async ({
     },
   });
 
+  await saveSubmisson(input.submissionId);
   return { url };
 };
 

@@ -4,6 +4,7 @@ import { deleteTermAsset } from "@quenti/images/server";
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
+import { saveSubmisson } from "./common/submission";
 import type { TRemoveTermImageSchema } from "./remove-term-image.schema";
 
 type RemoveTermImageOptions = {
@@ -46,7 +47,7 @@ export const removeTermImageHandler = async ({
   if (env.ASSETS_BUCKET_URL && term.assetUrl?.startsWith(env.ASSETS_BUCKET_URL))
     await deleteTermAsset(term.studySetId, term.id);
 
-  return await ctx.prisma.term.update({
+  const updated = await ctx.prisma.term.update({
     where: {
       id_submissionId: {
         id: input.id,
@@ -57,6 +58,9 @@ export const removeTermImageHandler = async ({
       assetUrl: null,
     },
   });
+
+  await saveSubmisson(input.submissionId);
+  return updated;
 };
 
 export default removeTermImageHandler;

@@ -1,7 +1,6 @@
-import { TRPCError } from "@trpc/server";
-
 import type { NonNullableUserContext } from "../../lib/types";
 import { serialize } from "../terms/utils/serialize";
+import { getSubmissionOrThrow, saveSubmisson } from "./common/submission";
 import type { TEditTermSchema } from "./edit-term.schema";
 
 type EditTermOptions = {
@@ -10,21 +9,7 @@ type EditTermOptions = {
 };
 
 export const editTermHandler = async ({ ctx, input }: EditTermOptions) => {
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-    },
-  });
-
-  if (!submission) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-    });
-  }
+  await getSubmissionOrThrow(input.submissionId, ctx.session.user.id);
 
   const { plainText: word, richText: wordRichText } = serialize(
     input.word,
@@ -53,6 +38,8 @@ export const editTermHandler = async ({ ctx, input }: EditTermOptions) => {
       definitionRichText,
     },
   });
+
+  await saveSubmisson(input.submissionId);
   return term;
 };
 

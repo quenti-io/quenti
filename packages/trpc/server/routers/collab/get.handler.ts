@@ -50,10 +50,14 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
               },
             },
           },
-          submissions: {
-            where: {
-              member: {
-                userId: ctx.session.user.id,
+          _count: {
+            select: {
+              submissions: {
+                where: {
+                  member: {
+                    userId: ctx.session.user.id,
+                  },
+                },
               },
             },
           },
@@ -73,7 +77,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   if (!memberId || !collab)
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-  if (!studySet.assignment?.submissions.length) {
+  if (!studySet.assignment._count.submissions) {
     // Create a submission for the user to start
     await ctx.prisma.submission.create({
       data: {
@@ -104,6 +108,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     select: {
       id: true,
       startedAt: true,
+      savedAt: true,
       submittedAt: true,
       terms: {
         select: {

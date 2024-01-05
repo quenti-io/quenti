@@ -4,6 +4,7 @@ import { deleteTermAsset } from "@quenti/images/server";
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
+import { saveSubmisson } from "./common/submission";
 import type { TDeleteTermSchema } from "./delete-term.schema";
 
 type DeleteTermOptions = {
@@ -117,6 +118,7 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
     },
   });
 
+  await saveSubmisson(input.submissionId);
   return { deleted: input.termId };
 };
 

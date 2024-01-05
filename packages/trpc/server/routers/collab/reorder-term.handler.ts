@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
 import { reorder } from "../terms/mutations/reorder";
+import { getSubmissionOrThrow } from "./common/submission";
 import type { TReorderTermSchema } from "./reorder-term.schema";
 
 type ReorderTermOptions = {
@@ -13,21 +14,7 @@ export const reorderTermHandler = async ({
   ctx,
   input,
 }: ReorderTermOptions) => {
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-    },
-  });
-
-  if (!submission) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-    });
-  }
+  await getSubmissionOrThrow(input.submissionId, ctx.session.user.id);
 
   const term = await ctx.prisma.term.findUnique({
     where: {
