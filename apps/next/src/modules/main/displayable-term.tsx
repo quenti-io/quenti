@@ -19,6 +19,8 @@ import {
   Flex,
   HStack,
   IconButton,
+  Popover,
+  PopoverTrigger,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -39,7 +41,7 @@ import {
 } from "../editor/card/image-components";
 import { RichTextBar } from "../editor/card/rich-text-bar";
 import { editorConfig } from "../editor/editor-config";
-import { TermAuthorAvatar } from "./term-author-avatar";
+import { CollaboratorPopoverContent } from "./collaborator-popover-content";
 
 export interface DisplayableTermProps {
   term: FacingTerm;
@@ -181,7 +183,28 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           px={{ base: 3, md: 0 }}
           py={{ base: 3, md: 0 }}
         >
-          {term.authorId && <TermAuthorAvatar authorId={term.authorId} />}
+          {term.author && (
+            <Popover isLazy trigger="hover" placement="top">
+              <PopoverTrigger>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  style={{
+                    minWidth: 24,
+                    width: 24,
+                    height: 24,
+                    overflow: "hidden",
+                    borderRadius: "50%",
+                  }}
+                  src={term.author.image || ""}
+                  alt={`${term.author.username}'s avatar`}
+                />
+              </PopoverTrigger>
+              <CollaboratorPopoverContent
+                type="collaborator"
+                user={term.author}
+              />
+            </Popover>
+          )}
           {isEditing ? (
             <Stack w="full">
               <RichTextBar activeEditor={wordEditor} />

@@ -9,6 +9,13 @@ export type FacingTerm = {
   wordRichText: Prisma.JsonValue;
   definitionRichText: Prisma.JsonValue;
   authorId?: string | null;
+  author?: {
+    id: string;
+    image: string;
+    username: string;
+    name: string | null;
+    createdAt: Date;
+  };
   assetUrl: string | null;
   rank: number;
   studySetId: string;

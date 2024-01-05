@@ -41,6 +41,7 @@ export const DeloadedTermRaw: React.FC<DeloadedTermProps> = ({
           px={{ base: 3, md: 0 }}
           py={{ base: 3, md: 0 }}
         >
+          {term.authorId && <Box minW="6" w="6" h="6" />}
           <Text
             w="full"
             whiteSpace="pre-wrap"

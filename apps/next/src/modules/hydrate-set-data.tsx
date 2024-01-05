@@ -100,8 +100,19 @@ export const HydrateSetData: React.FC<
     const studiableFlashcardTerms = data.container.studiableTerms.filter(
       (t) => t.mode == "Flashcards",
     );
+
+    const terms = data.collaborators
+      ? data.terms.map((t) => ({
+          ...t,
+          ...(t.authorId
+            ? { author: data.collaborators!.find((c) => c.id == t.authorId) }
+            : {}),
+        }))
+      : data.terms;
+
     return {
       ...data,
+      terms,
       authed: true,
       injected: {
         studiableLearnTerms,
