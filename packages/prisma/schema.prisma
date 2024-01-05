@@ -362,6 +362,7 @@ model Submission {
   memberId     String
   assignmentId String
   startedAt    DateTime  @default(now())
+  savedAt      DateTime  @default(now())
   submittedAt  DateTime?
 
   member     ClassMembership @relation(fields: [memberId], references: [id], onDelete: Cascade)
