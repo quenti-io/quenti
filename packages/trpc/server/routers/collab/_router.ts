@@ -4,6 +4,7 @@ import { ZAddTermSchema } from "./add-term.schema";
 import { ZDeleteTermSchema } from "./delete-term.schema";
 import { ZEditTermSchema } from "./edit-term.schema";
 import { ZGetSchema } from "./get.schema";
+import { ZReorderTermsSchema } from "./reorder-terms.schema";
 import { ZSubmitSchema } from "./submit.schema";
 
 type CollabRouterHandlerCache = {
@@ -13,6 +14,7 @@ type CollabRouterHandlerCache = {
     ["add-term"]?: typeof import("./add-term.handler").addTermHandler;
     ["edit-term"]?: typeof import("./edit-term.handler").editTermHandler;
     ["delete-term"]?: typeof import("./delete-term.handler").deleteTermHandler;
+    ["reorder-terms"]?: typeof import("./reorder-terms.handler").reorderTermsHandler;
   };
 } & { routerPath: string };
 
@@ -49,5 +51,11 @@ export const collabRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "delete-term");
       return HANDLER_CACHE.handlers["delete-term"]!({ ctx, input });
+    }),
+  reorderTerms: protectedProcedure
+    .input(ZReorderTermsSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "reorder-terms");
+      return HANDLER_CACHE.handlers["reorder-terms"]!({ ctx, input });
     }),
 });

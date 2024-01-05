@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const ZAddTermSchema = z.object({
-  studySetId: z.string(),
   submissionId: z.string(),
   term: z.object({
     rank: z.number().min(0),

@@ -16,9 +16,6 @@ export const editTermHandler = async ({ ctx, input }: EditTermOptions) => {
       member: {
         userId: ctx.session.user.id,
       },
-      assignment: {
-        studySet: { id: input.studySetId },
-      },
       submittedAt: null,
     },
   });
@@ -42,9 +39,9 @@ export const editTermHandler = async ({ ctx, input }: EditTermOptions) => {
 
   const term = await ctx.prisma.term.update({
     where: {
-      id_studySetId: {
+      id_submissionId: {
         id: input.id,
-        studySetId: input.studySetId,
+        submissionId: input.submissionId,
       },
       authorId: ctx.session.user.id,
       ephemeral: true,

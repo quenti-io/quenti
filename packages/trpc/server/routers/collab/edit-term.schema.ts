@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const ZEditTermSchema = z.object({
   submissionId: z.string(),
-  studySetId: z.string(),
   id: z.string(),
   word: z.string(),
   definition: z.string(),

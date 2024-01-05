@@ -60,7 +60,7 @@ export const CollabEditorLayer: React.FC<
   // const apiBulkEdit = api.terms.bulkEdit.useMutation();
   // const apiSetImage = api.terms.setImage.useMutation();
   // const apiRemoveImage = api.terms.removeImage.useMutation();
-  // const apiReorderTerm = api.terms.reorder.useMutation();
+  const apiReorderTerm = api.collab.reorderTerms.useMutation();
 
   // const apiUploadImage = api.terms.uploadImage.useMutation({
   //   onSuccess: (jwt) => {
@@ -148,8 +148,7 @@ export const CollabEditorLayer: React.FC<
           if (state.serverTerms.includes(termId))
             apiDeleteTerm.mutate({
               termId,
-              submissionId: data.id,
-              studySetId: data.id,
+              submissionId: submission.id,
             });
         },
         editTerm: (
@@ -174,7 +173,6 @@ export const CollabEditorLayer: React.FC<
             apiEditTerm.mutate({
               id: termId,
               submissionId: submission.id,
-              studySetId: data.id,
               word,
               definition,
               wordRichText,
@@ -183,7 +181,6 @@ export const CollabEditorLayer: React.FC<
           } else {
             apiAddTerm.mutate({
               submissionId: submission.id,
-              studySetId: data.id,
               term: {
                 word,
                 definition,
@@ -200,30 +197,30 @@ export const CollabEditorLayer: React.FC<
         //   //   id,
         //   // });
         // },
-        // reorderTerm: (id, rank) => {
-        //   // void (async () => {
-        //   //   const state = storeRef.current!.getState();
-        //   //   const term = state.terms.find((x) => x.id === id)!;
-        //   //   if (state.serverTerms.includes(term.id)) {
-        //   //     await apiReorderTerm.mutateAsync({
-        //   //       studySetId: data.id,
-        //   //       term: {
-        //   //         id,
-        //   //         rank,
-        //   //       },
-        //   //     });
-        //   //   } else {
-        //   //     await apiAddTerm.mutateAsync({
-        //   //       studySetId: data.id,
-        //   //       term: {
-        //   //         word: term.word,
-        //   //         definition: term.definition,
-        //   //         rank,
-        //   //       },
-        //   //     });
-        //   //   }
-        //   // })();
-        // },
+        reorderTerm: (id, rank) => {
+          void (async () => {
+            const state = storeRef.current!.getState();
+            const term = state.terms.find((x) => x.id === id)!;
+            if (state.serverTerms.includes(term.id)) {
+              await apiReorderTerm.mutateAsync({
+                submissionId: submission.id,
+                term: {
+                  id,
+                  rank,
+                },
+              });
+            } else {
+              await apiAddTerm.mutateAsync({
+                submissionId: submission.id,
+                term: {
+                  word: term.word,
+                  definition: term.definition,
+                  rank,
+                },
+              });
+            }
+          })();
+        },
         flipTerms: () => {
           // void (async () => {
           //   const state = storeRef.current!.getState();

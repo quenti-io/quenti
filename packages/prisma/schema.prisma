@@ -579,6 +579,7 @@ model Term {
   distractors    Distractor[]    @relation("distractor-term-id")
 
   @@unique([id, studySetId])
+  @@unique([id, submissionId])
   @@index([studySetId])
   @@index([authorId])
   @@index([topicId])

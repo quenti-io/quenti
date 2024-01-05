@@ -16,9 +16,6 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
       member: {
         userId: ctx.session.user.id,
       },
-      assignment: {
-        studySet: { id: input.studySetId },
-      },
       submittedAt: null,
     },
     select: {
@@ -27,6 +24,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
         select: {
           studySet: {
             select: {
+              id: true,
               collab: {
                 select: {
                   type: true,
@@ -51,8 +49,11 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
     });
   }
 
-  const collab = submission.assignment.studySet?.collab;
-  if (!collab) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  const studySet = submission.assignment.studySet;
+  const collab = studySet?.collab;
+
+  if (!studySet || !collab)
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
   if (
     collab.type == "Default" &&
@@ -82,7 +83,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
       data: Array(input.term.rank - submission._count.terms)
         .fill(null)
         .map((_, i) => ({
-          studySetId: input.studySetId,
+          studySetId: studySet.id,
           rank: submission._count.terms + i,
           word: "",
           definition: "",
@@ -94,7 +95,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
 
     const created = await ctx.prisma.term.findMany({
       where: {
-        studySetId: input.studySetId,
+        studySetId: studySet.id,
         rank: {
           in: Array(input.term.rank - submission._count.terms)
             .fill(null)
@@ -114,7 +115,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
   await ctx.prisma.term.updateMany({
     where: {
       submissionId: input.submissionId,
-      studySetId: input.studySetId,
+      studySetId: studySet.id,
       rank: {
         gte: input.term.rank,
       },
@@ -128,7 +129,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
 
   const created = await ctx.prisma.term.create({
     data: {
-      studySetId: input.studySetId,
+      studySetId: studySet.id,
       rank: input.term.rank,
       word,
       definition,

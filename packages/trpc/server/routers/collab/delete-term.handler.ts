@@ -18,9 +18,6 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
       member: {
         userId: ctx.session.user.id,
       },
-      assignment: {
-        studySet: { id: input.studySetId },
-      },
       submittedAt: null,
     },
     select: {
@@ -67,9 +64,9 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
 
   const term = await ctx.prisma.term.findUnique({
     where: {
-      id_studySetId: {
+      id_submissionId: {
         id: input.termId,
-        studySetId: input.studySetId,
+        submissionId: input.submissionId,
       },
       authorId: ctx.session.user.id,
       ephemeral: true,
@@ -78,6 +75,7 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
       id: true,
       rank: true,
       assetUrl: true,
+      studySetId: true,
     },
   });
 
@@ -90,7 +88,6 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
   // Update all ranks so that all values are consecutive
   await ctx.prisma.term.updateMany({
     where: {
-      studySetId: input.studySetId,
       submissionId: input.submissionId,
       ephemeral: true,
       rank: {
@@ -108,14 +105,14 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
     env.ASSETS_BUCKET_URL &&
     term.assetUrl?.startsWith(env.ASSETS_BUCKET_URL)
   ) {
-    await deleteTermAsset(input.studySetId, term.id);
+    await deleteTermAsset(term.studySetId, term.id);
   }
 
   await ctx.prisma.term.delete({
     where: {
-      id_studySetId: {
+      id_submissionId: {
         id: term.id,
-        studySetId: input.studySetId,
+        submissionId: input.submissionId,
       },
     },
   });
