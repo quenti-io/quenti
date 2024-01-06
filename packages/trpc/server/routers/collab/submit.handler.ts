@@ -9,6 +9,7 @@ import { censorRichText, profanity } from "../../common/profanity";
 import { markCortexStale } from "../../lib/cortex";
 import type { NonNullableUserContext } from "../../lib/types";
 import { termsSelect } from "../study-sets/queries";
+import { reorder } from "../terms/mutations/reorder";
 import { bulkUpdateTerms } from "../terms/mutations/update";
 import type { TSubmitSchema } from "./submit.schema";
 
@@ -132,7 +133,7 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
     );
   }
 
-  await ctx.prisma.term.deleteMany({
+  const deleted = await ctx.prisma.term.deleteMany({
     where: {
       studySetId: studySet.id,
       authorId: ctx.session.user.id,
@@ -140,19 +141,26 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
     },
   });
 
+  if (deleted.count) {
+    // After deleting terms, we need to reorder the ranks
+    await reorder(ctx.prisma, studySet.id);
+  }
+
   // Now "append" to the set by properly setting the rank and setting ephemeral to false
   const publishedCount = await ctx.prisma.term.count({
     where: { studySetId: studySet.id, ephemeral: false },
   });
 
   // Perform an update via insert with ON DUPLICATE KEY UPDATE (all required columns)
-  const vals = terms.map((t, i) => [
-    t.id,
-    t.word,
-    t.definition,
-    publishedCount + i,
-    studySet.id,
-  ]);
+  const vals = terms
+    .sort((a, b) => a.rank - b.rank)
+    .map((t, i) => [
+      t.id,
+      t.word,
+      t.definition,
+      publishedCount + i,
+      studySet.id,
+    ]);
   const formatted = vals.map((x) => Prisma.sql`(${Prisma.join(x)})`);
   // Only update the rank and ephemeral columns
   const query = Prisma.sql`
