@@ -27,6 +27,9 @@ type WidenedReturn = Widen<Widened> & {
 };
 
 type WidenedTerm = Widen<Widened["terms"][number]>;
+type Collaborator = NonNullable<WidenedReturn["collaborators"]>[number] & {
+  createdAt: Date;
+};
 
 export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
   let studySet = (
@@ -129,13 +132,17 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
   return {
     ...studySet,
     ...strip({
-      collaborators: studySet.collaborators?.map((c) => ({
-        createdAt: c.createdAt,
-        id: c.user.id,
-        image: c.user.image,
-        username: c.user.username,
-        name: c.user.displayName ? c.user.name : undefined,
-      })),
+      collaborators: (studySet.collaborators as Collaborator[])
+        ?.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        )
+        .map((c) => ({
+          id: c.user.id,
+          image: c.user.image,
+          username: c.user.username,
+          name: c.user.displayName ? c.user.name : undefined,
+        })),
     }),
     terms: input.withDistractors
       ? studySet.terms.map((t) => ({

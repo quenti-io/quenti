@@ -104,6 +104,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   const submissions = await ctx.prisma.submission.findMany({
     where: {
       assignmentId: studySet.assignment.id,
+      member: {
+        userId: ctx.session.user.id,
+      },
     },
     select: {
       id: true,
