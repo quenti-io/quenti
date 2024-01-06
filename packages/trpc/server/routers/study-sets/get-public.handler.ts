@@ -7,7 +7,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { DefaultContext } from "../../lib/types";
 import type { TGetPublicSchema } from "./get-public.schema";
-import type { AwaitedGet, AwaitedGetWithCollab } from "./queries";
+import type { AwaitedGet, AwaitedGetWithCollab, Collaborator } from "./queries";
 import { get, getWithCollab } from "./queries";
 
 type GetPublicOptions = {
@@ -48,13 +48,17 @@ export const getPublicHandler = async ({ input }: GetPublicOptions) => {
   return {
     ...studySet,
     ...strip({
-      collaborators:
-        studySet.collaborators?.map((c) => ({
+      collaborators: (studySet.collaborators as Collaborator[])
+        ?.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        )
+        .map((c) => ({
           id: c.user.id,
           image: c.user.image,
           username: c.user.username,
           name: c.user.displayName ? c.user.name : undefined,
-        })) ?? undefined,
+        })),
     }),
     terms: studySet.terms as WidenedTerm[],
     tags: studySet.tags as string[],

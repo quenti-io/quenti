@@ -12,6 +12,7 @@ import type {
   AwaitedGet,
   AwaitedGetWithCollab,
   AwaitedGetWithDistractors,
+  Collaborator,
 } from "./queries";
 import { get, getWithCollab, getWithDistractors } from "./queries";
 
@@ -27,9 +28,6 @@ type WidenedReturn = Widen<Widened> & {
 };
 
 type WidenedTerm = Widen<Widened["terms"][number]>;
-type Collaborator = NonNullable<WidenedReturn["collaborators"]>[number] & {
-  createdAt: Date;
-};
 
 export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
   let studySet = (

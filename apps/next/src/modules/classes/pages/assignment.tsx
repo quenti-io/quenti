@@ -342,7 +342,7 @@ export const Assignment = () => {
               <StudySetCard
                 studySet={assignment.studySet}
                 collaborators={assignment.studySet.collaborators}
-                numTerms={0}
+                numTerms={assignment.studySet._count.terms}
                 user={{
                   username: null,
                   image: null,

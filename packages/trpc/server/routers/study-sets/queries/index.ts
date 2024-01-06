@@ -85,3 +85,9 @@ export type AwaitedGetWithCollab = NonNullable<
 export type AwaitedGetWithDistractors = NonNullable<
   Awaited<ReturnType<typeof getWithDistractors>>
 >;
+
+export type Collaborator = NonNullable<
+  AwaitedGetWithCollab["collaborators"]
+>[number] & {
+  createdAt: Date;
+};

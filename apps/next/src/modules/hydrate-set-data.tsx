@@ -92,15 +92,6 @@ export const HydrateSetData: React.FC<
   }, [isDirty]);
 
   const createInjectedData = (data: BaseReturn): SetData => {
-    if (!data.container) return { ...data, authed: false };
-
-    const studiableLearnTerms = data.container.studiableTerms.filter(
-      (t) => t.mode == "Learn",
-    );
-    const studiableFlashcardTerms = data.container.studiableTerms.filter(
-      (t) => t.mode == "Flashcards",
-    );
-
     const terms = data.collaborators
       ? data.terms.map((t) => ({
           ...t,
@@ -110,6 +101,14 @@ export const HydrateSetData: React.FC<
         }))
       : data.terms;
 
+    if (!data.container) return { ...data, terms, authed: false };
+
+    const studiableLearnTerms = data.container.studiableTerms.filter(
+      (t) => t.mode == "Learn",
+    );
+    const studiableFlashcardTerms = data.container.studiableTerms.filter(
+      (t) => t.mode == "Flashcards",
+    );
     return {
       ...data,
       terms,
