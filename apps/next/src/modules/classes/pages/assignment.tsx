@@ -341,6 +341,7 @@ export const Assignment = () => {
             {assignment?.studySet && (
               <StudySetCard
                 studySet={assignment.studySet}
+                collaborators={assignment.studySet.collaborators}
                 numTerms={0}
                 user={{
                   username: null,

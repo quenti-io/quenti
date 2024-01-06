@@ -19,10 +19,6 @@ export const recentRouter = createTRPCRouter({
         entityType: "set",
         slug: null,
         numItems: set._count.terms,
-        collaborators: {
-          total: set._count.collaborators,
-          avatars: set.collaborators.map((c) => c.user.image || ""),
-        },
       });
     }
     for (const draft of drafts) {

@@ -26,11 +26,18 @@ export const GenericCollaboratorsFooter: React.FC<
   lightBg = "white",
   darkBg = "gray.800",
 }) => {
-  if (total || 0 > 0)
+  if ((total || 0) > 0)
     return (
-      <AvatarGroup size="xs" max={3}>
+      <AvatarGroup size="xs" max={5} spacing="-3">
         {avatars.map((avatar) => (
-          <Avatar key={avatar} name={avatar} src={avatar} />
+          <Avatar
+            key={avatar}
+            borderWidth={3}
+            name={avatar}
+            src={avatar}
+            width="30px"
+            height="30px"
+          />
         ))}
       </AvatarGroup>
     );

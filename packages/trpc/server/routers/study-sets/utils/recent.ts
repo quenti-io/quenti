@@ -93,6 +93,10 @@ export const getRecentStudySets = async (
         username: set.user.username!,
         image: set.user.image!,
       },
+      collaborators: {
+        total: set._count.collaborators,
+        avatars: set.collaborators.map((c) => c.user.image || ""),
+      },
     }));
 };
 

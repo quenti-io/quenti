@@ -36,6 +36,7 @@ export const SetGrid = () => {
                   visibility: item.visibility!,
                   type: item.type!,
                 }}
+                collaborators={item.collaborators}
                 draft={item.draft}
                 numTerms={item.numItems}
                 user={item.user}

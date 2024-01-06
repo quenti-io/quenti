@@ -57,6 +57,32 @@ const studySetSelect = Prisma.validator<Prisma.StudySetDefaultArgs>()({
     wordLanguage: true,
     definitionLanguage: true,
     collab: collabSelect,
+    user: {
+      select: {
+        username: true,
+        image: true,
+      },
+    },
+    _count: {
+      select: {
+        terms: {
+          where: {
+            ephemeral: false,
+          },
+        },
+        collaborators: true,
+      },
+    },
+    collaborators: {
+      take: 5,
+      select: {
+        user: {
+          select: {
+            image: true,
+          },
+        },
+      },
+    },
   },
 });
 
@@ -170,6 +196,8 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   if (!assignment) throw new TRPCError({ code: "NOT_FOUND" });
 
+  const set = assignment.studySet;
+
   return {
     id: assignment.id,
     type: assignment.type,
@@ -179,7 +207,19 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     availableAt: assignment.availableAt,
     dueAt: assignment.dueAt,
     lockedAt: assignment.lockedAt,
-    studySet: assignment.studySet,
+    studySet: set
+      ? {
+          ...set,
+          user: {
+            username: set.user.username!,
+            image: set.user.image!,
+          },
+          collaborators: {
+            total: set._count.collaborators,
+            avatars: set.collaborators.map((c) => c.user.image || ""),
+          },
+        }
+      : null,
     ...strip({
       section: assignment.section,
       published: isTeacher ? assignment.published : undefined,
