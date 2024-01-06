@@ -33,6 +33,7 @@ import {
 import { resize } from "../common/cdn-loaders";
 import { PhotoView } from "./photo-view/photo-view";
 import { SetCreatorOnly } from "./set-creator-only";
+import { TermAuthorAvatar } from "./term-author-avatar";
 
 export interface FlashcardProps {
   term: FacingTerm;
@@ -107,9 +108,12 @@ export const Flashcard: React.FC<FlashcardProps> = ({
                 isDisabled={index == 0}
               />
             )}
-            <Text fontWeight={700} color="gray.500">
-              {isFlipped ? "Definition" : "Term"}
-            </Text>
+            <HStack spacing="3">
+              {term.author && <TermAuthorAvatar user={term.author} />}
+              <Text fontWeight={700} color="gray.500">
+                {isFlipped ? "Definition" : "Term"}
+              </Text>
+            </HStack>
           </HStack>
           <Flex justifyContent="center">
             <Text fontWeight={700} fontSize="lg">
