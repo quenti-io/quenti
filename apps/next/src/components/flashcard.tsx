@@ -109,7 +109,9 @@ export const Flashcard: React.FC<FlashcardProps> = ({
               />
             )}
             <HStack spacing="3">
-              {term.author && <TermAuthorAvatar user={term.author} />}
+              {term.author && (
+                <TermAuthorAvatar user={term.author} computePosition />
+              )}
               <Text fontWeight={700} color="gray.500">
                 {isFlipped ? "Definition" : "Term"}
               </Text>

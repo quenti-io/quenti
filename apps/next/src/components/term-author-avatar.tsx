@@ -6,11 +6,20 @@ import { CollaboratorPopoverContent } from "../modules/main/collaborator-popover
 
 export interface TermAuthorAvatarProps {
   user: NonNullable<FacingTerm["author"]>;
+  computePosition?: boolean;
 }
 
-export const TermAuthorAvatar: React.FC<TermAuthorAvatarProps> = ({ user }) => {
+export const TermAuthorAvatar: React.FC<TermAuthorAvatarProps> = ({
+  user,
+  computePosition,
+}) => {
   return (
-    <Popover isLazy trigger="hover" placement="top">
+    <Popover
+      isLazy
+      trigger="hover"
+      placement="top"
+      computePositionOnMount={computePosition}
+    >
       <PopoverTrigger>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
