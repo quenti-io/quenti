@@ -18,7 +18,7 @@ export const CollabEditorLayer: React.FC<
 > = ({ data, children }) => {
   const storeRef = React.useRef<SetEditorStore>();
 
-  const submission = data.submissions[data.submissions.length - 1]!;
+  const submission = data.submission;
 
   const [savedLocally, setSavedLocally] = React.useState(false);
 

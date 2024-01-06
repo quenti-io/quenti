@@ -86,6 +86,7 @@ export const newAttemptHandler = async ({ ctx, input }: NewAttemptOptions) => {
         createMany: {
           data: submission.terms.map((term) => ({
             ...term,
+            id: undefined,
             wordRichText: term.wordRichText ?? undefined,
             definitionRichText: term.definitionRichText ?? undefined,
             ephemeral: true,

@@ -101,7 +101,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     });
   }
 
-  const submissions = await ctx.prisma.submission.findMany({
+  const submission = await ctx.prisma.submission.findFirstOrThrow({
     where: {
       assignmentId: studySet.assignment.id,
       member: {
@@ -120,11 +120,15 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         },
       },
     },
+    take: 1,
+    orderBy: {
+      startedAt: "desc",
+    },
   });
 
   return {
     ...studySet,
-    submissions,
+    submission,
   };
 };
 

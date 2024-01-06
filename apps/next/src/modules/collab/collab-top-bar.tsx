@@ -16,6 +16,7 @@ import {
 
 import { IconUsersGroup } from "@tabler/icons-react";
 
+import { editorEventChannel } from "../../events/editor";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 import { getRelativeTime } from "../../utils/time";
@@ -26,8 +27,7 @@ export const CollabTopBar = () => {
   const id = useSetEditorContext((s) => s.id);
   const savedAt = useSetEditorContext((s) => s.savedAt);
   const numTerms = useSetEditorContext((s) => s.serverTerms.length);
-  const { submissions } = React.useContext(CollabContext)!.data;
-  const submission = submissions[0]!;
+  const { submission } = React.useContext(CollabContext)!.data;
 
   const isSaving = useSetEditorContext((s) => s.isSaving);
   const isSavingRef = React.useRef(isSaving);
@@ -44,6 +44,11 @@ export const CollabTopBar = () => {
   const submit = api.collab.submit.useMutation({
     onSuccess: async () => {
       await router.push(`/${id}`);
+    },
+  });
+  const newAttempt = api.collab.newAttempt.useMutation({
+    onSuccess: () => {
+      editorEventChannel.emit("refresh");
     },
   });
 
@@ -80,14 +85,20 @@ export const CollabTopBar = () => {
         </Stack>
         <Button
           fontWeight={700}
-          isLoading={submit.isLoading}
+          isLoading={submit.isLoading || newAttempt.isLoading}
           onClick={() => {
-            submit.mutate({
-              submissionId: submission.id,
-            });
+            if (!submission.submittedAt) {
+              submit.mutate({
+                submissionId: submission.id,
+              });
+            } else {
+              newAttempt.mutate({
+                studySetId: id,
+              });
+            }
           }}
         >
-          Submit
+          {submission.submittedAt ? "New attempt" : "Submit"}
         </Button>
       </Flex>
     </HStack>
