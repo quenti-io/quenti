@@ -84,13 +84,17 @@ export const newAttemptHandler = async ({ ctx, input }: NewAttemptOptions) => {
       memberId,
       terms: {
         createMany: {
-          data: submission.terms.map((term) => ({
-            ...term,
-            id: undefined,
-            wordRichText: term.wordRichText ?? undefined,
-            definitionRichText: term.definitionRichText ?? undefined,
-            ephemeral: true,
-          })),
+          data: submission.terms
+            .sort((a, b) => a.rank - b.rank)
+            .map((term, i) => ({
+              ...term,
+              rank: i,
+              id: undefined,
+              authorId: ctx.session.user.id,
+              wordRichText: term.wordRichText ?? undefined,
+              definitionRichText: term.definitionRichText ?? undefined,
+              ephemeral: true,
+            })),
         },
       },
     },

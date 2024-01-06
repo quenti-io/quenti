@@ -22,6 +22,7 @@ export const bulkEditHandler = async ({ ctx, input }: BulkEditOptions) => {
       created: true,
       terms: {
         where: {
+          ephemeral: false,
           id: {
             in: input.terms.map((term) => term.id),
           },

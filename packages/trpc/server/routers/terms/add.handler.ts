@@ -82,6 +82,7 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
       rank: {
         gte: input.term.rank,
       },
+      ephemeral: false,
     },
     data: {
       rank: {

@@ -1,3 +1,5 @@
+import { env } from "@quenti/env/server";
+import { deleteTermAssets } from "@quenti/images/server";
 import { Prisma } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
@@ -22,6 +24,7 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
       member: {
         userId: ctx.session.user.id,
       },
+      submittedAt: null,
     },
     select: {
       assignment: {
@@ -102,6 +105,40 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
 
   // Edit all term content
   await bulkUpdateTerms(creatable, studySet.id);
+
+  // Delete all previously submitted terms
+  // TODO: not the most ideal way to do this, but flagging as ephemeral causes issues with studiable terms
+  // + other relations
+
+  // Find all CDN asset urls that are no longer used
+  const deleteAssetTerms = await ctx.prisma.term.findMany({
+    where: {
+      studySetId: studySet.id,
+      authorId: ctx.session.user.id,
+      ephemeral: false,
+      assetUrl: {
+        startsWith: env.ASSETS_BUCKET_URL,
+        notIn: creatable.map((t) => t.assetUrl).filter((x) => !!x) as string[],
+      },
+    },
+    select: {
+      assetUrl: true,
+    },
+  });
+
+  if (deleteAssetTerms.length) {
+    await deleteTermAssets(
+      deleteAssetTerms.map((t) => new URL(t.assetUrl!).pathname.slice(1)),
+    );
+  }
+
+  await ctx.prisma.term.deleteMany({
+    where: {
+      studySetId: studySet.id,
+      authorId: ctx.session.user.id,
+      ephemeral: false,
+    },
+  });
 
   // Now "append" to the set by properly setting the rank and setting ephemeral to false
   const publishedCount = await ctx.prisma.term.count({

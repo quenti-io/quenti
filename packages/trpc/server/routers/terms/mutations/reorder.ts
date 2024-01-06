@@ -9,7 +9,9 @@ export const reorder = async (
   const terms = await prisma.term.findMany({
     where: {
       studySetId: studySetId,
-      ...(submissionId ? { submissionId } : {}),
+      ...(submissionId
+        ? { submissionId, ephemeral: true }
+        : { ephemeral: false }),
     },
     orderBy: {
       rank: "asc",

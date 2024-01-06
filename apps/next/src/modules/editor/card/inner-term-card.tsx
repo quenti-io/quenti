@@ -258,8 +258,6 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   };
 
   const editIfDirty = (focused: boolean) => {
-    console.log("EDITING");
-
     const {
       isDirty,
       word,
