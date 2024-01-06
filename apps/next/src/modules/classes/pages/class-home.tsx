@@ -80,10 +80,6 @@ export const ClassHome = () => {
         onClose={() => setAddSetsOpen(false)}
         entities={(recentSets.data ?? []).map((s) => ({
           ...s,
-          collaborators: {
-            total: s._count.collaborators,
-            avatars: s.collaborators.map((c) => c.user.image!),
-          },
           entityType: "set",
           numItems: s._count.terms,
           slug: "",
