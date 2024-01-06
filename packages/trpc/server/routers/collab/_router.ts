@@ -4,6 +4,7 @@ import { ZAddTermSchema } from "./add-term.schema";
 import { ZDeleteTermSchema } from "./delete-term.schema";
 import { ZEditTermSchema } from "./edit-term.schema";
 import { ZGetSchema } from "./get.schema";
+import { ZNewAttemptSchema } from "./new-attempt.schema";
 import { ZRemoveTermImageSchema } from "./remove-term-image.schema";
 import { ZReorderTermSchema } from "./reorder-term.schema";
 import { ZSetTermImageSchema } from "./set-term-image.schema";
@@ -23,6 +24,7 @@ type CollabRouterHandlerCache = {
     ["remove-term-image"]?: typeof import("./remove-term-image.handler").removeTermImageHandler;
     ["upload-term-image"]?: typeof import("./upload-term-image.handler").uploadTermImageHandler;
     ["upload-term-image-complete"]?: typeof import("./upload-term-image-complete.handler").uploadTermImageCompleteHandler;
+    ["new-attempt"]?: typeof import("./new-attempt.handler").newAttemptHandler;
   };
 } & { routerPath: string };
 
@@ -92,5 +94,11 @@ export const collabRouter = createTRPCRouter({
         ctx,
         input,
       });
+    }),
+  newAttempt: protectedProcedure
+    .input(ZNewAttemptSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "new-attempt");
+      return HANDLER_CACHE.handlers["new-attempt"]!({ ctx, input });
     }),
 });
