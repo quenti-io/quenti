@@ -31,6 +31,7 @@ export const GenericCollaboratorsFooter: React.FC<
       <AvatarGroup
         size="xs"
         max={5}
+        h="24px"
         spacing="-3"
         ml="-3px"
         pointerEvents="none"
