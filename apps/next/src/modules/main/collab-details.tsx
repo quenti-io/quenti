@@ -18,7 +18,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { IconExternalLink, IconUsersGroup } from "@tabler/icons-react";
+import {
+  IconCircleCheck,
+  IconExternalLink,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 
 import { useSet } from "../../hooks/use-set";
 import { ActionArea } from "./action-area";
@@ -40,6 +44,8 @@ export const CollabDetails = () => {
   const [collaboratorIcons, setCollaboratorIcons] = React.useState<
     CollaboratorIcon[]
   >([]);
+
+  const submitted = !!assignment?.submissions[0]?.submittedAt;
 
   React.useEffect(() => {
     if (!collaborators || !user) return;
@@ -97,8 +103,18 @@ export const CollabDetails = () => {
             </Text>
             {assignment && (
               <ButtonGroup mt="2" spacing="3">
-                <Button w="full" size="sm" as={Link} href={`/${id}/collab`}>
-                  Start assignment
+                <Button
+                  w="full"
+                  size="sm"
+                  as={Link}
+                  href={`/${id}/collab`}
+                  leftIcon={
+                    submitted ? <IconCircleCheck size={16} /> : undefined
+                  }
+                  variant={submitted ? "outline" : "solid"}
+                  colorScheme={submitted ? "gray" : "blue"}
+                >
+                  {submitted ? "Submitted" : "Start assignment"}
                 </Button>
                 <IconButton
                   colorScheme="gray"

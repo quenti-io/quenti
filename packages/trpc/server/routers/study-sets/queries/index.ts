@@ -81,7 +81,14 @@ export const getWithDistractors = async (id: string) => {
 export type AwaitedGet = NonNullable<Awaited<ReturnType<typeof get>>>;
 export type AwaitedGetWithCollab = NonNullable<
   Awaited<ReturnType<typeof getWithCollab>>
->;
+> & {
+  assignment: {
+    submissions: {
+      startedAt: Date;
+      submittedAt?: Date;
+    }[];
+  };
+};
 export type AwaitedGetWithDistractors = NonNullable<
   Awaited<ReturnType<typeof getWithDistractors>>
 >;

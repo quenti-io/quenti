@@ -73,6 +73,10 @@ export const assignmentArgs = (userId: string) =>
             userId,
           },
         },
+        orderBy: {
+          startedAt: "desc",
+        },
+        take: 1,
         select: {
           startedAt: true,
           submittedAt: true,
