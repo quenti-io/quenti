@@ -38,7 +38,7 @@ export const CollabTopBar = () => {
 
   const text = submitted
     ? `${plural(numTerms, "term")} submitted ${
-        getRelativeTime(submission.submittedAt) || "just now"
+        getRelativeTime(submission.submittedAt!) || "just now"
       }`
     : isSaving
       ? "Saving..."
