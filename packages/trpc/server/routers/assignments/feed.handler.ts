@@ -62,13 +62,13 @@ const getTeacher = async (
       lockedAt: true,
       published: true,
       section: sectionSelect,
-      _count: {
+      submissions: {
+        distinct: ["memberId"],
+        where: {
+          submittedAt: { not: null },
+        },
         select: {
-          submissions: {
-            where: {
-              submittedAt: { not: null },
-            },
-          },
+          id: true,
         },
       },
     },
@@ -171,7 +171,7 @@ export const feedHandler = async ({ ctx, input }: FeedOptions) => {
       ...strip({
         section: a.section,
         published: isTeacher ? a.published : undefined,
-        submissions: a._count?.submissions,
+        submissions: a.submissions.length,
         submission: a.submissions?.[0],
       }),
     })),
