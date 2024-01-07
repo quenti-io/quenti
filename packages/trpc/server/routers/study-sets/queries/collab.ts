@@ -67,6 +67,19 @@ export const assignmentArgs = (userId: string) =>
       description: true,
       type: true,
       published: true,
+      class: {
+        select: {
+          members: {
+            where: {
+              userId,
+            },
+            select: {
+              id: true,
+              type: true,
+            },
+          },
+        },
+      },
       submissions: {
         where: {
           member: {

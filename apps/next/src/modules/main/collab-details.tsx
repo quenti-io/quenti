@@ -46,6 +46,7 @@ export const CollabDetails = () => {
   >([]);
 
   const submitted = !!assignment?.submissions[0]?.submittedAt;
+  const isTeacher = assignment?.me?.type == "Teacher";
 
   React.useEffect(() => {
     if (!collaborators || !user) return;
@@ -107,24 +108,34 @@ export const CollabDetails = () => {
                   w="full"
                   size="sm"
                   as={Link}
-                  href={`/${id}/collab`}
+                  href={
+                    isTeacher
+                      ? `/a/${assignment.classId}/${assignment.id}`
+                      : `/${id}/collab`
+                  }
                   leftIcon={
                     submitted ? <IconCircleCheck size={16} /> : undefined
                   }
                   variant={submitted ? "outline" : "solid"}
                   colorScheme={submitted ? "gray" : "blue"}
                 >
-                  {submitted ? "Submitted" : "Start assignment"}
+                  {isTeacher
+                    ? "Manage assignment"
+                    : submitted
+                      ? "Submitted"
+                      : "Start assignment"}
                 </Button>
-                <IconButton
-                  colorScheme="gray"
-                  aria-label="View assignment"
-                  icon={<IconExternalLink size={16} />}
-                  size="sm"
-                  variant="outline"
-                  as={Link}
-                  href={`/a/${assignment.classId}/${assignment.id}`}
-                />
+                {!isTeacher && (
+                  <IconButton
+                    colorScheme="gray"
+                    aria-label="View assignment"
+                    icon={<IconExternalLink size={16} />}
+                    size="sm"
+                    variant="outline"
+                    as={Link}
+                    href={`/a/${assignment.classId}/${assignment.id}`}
+                  />
+                )}
               </ButtonGroup>
             )}
           </Stack>
