@@ -42,6 +42,7 @@ export const TermsList = () => {
   const editTerm = useSetEditorContext((s) => s.editTerm);
   const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
   const lastCreated = useSetEditorContext((s) => s.lastCreated);
+  const readonly = useSetEditorContext((s) => s.readonly);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -169,15 +170,17 @@ export const TermsList = () => {
           </DndContext>
         </LanguageMenuWrapper>
       </Stack>
-      <Button
-        leftIcon={<IconPlus size={18} />}
-        size="lg"
-        height="24"
-        variant="outline"
-        onClick={() => addTerm(terms.length)}
-      >
-        Add card
-      </Button>
+      {!readonly && (
+        <Button
+          leftIcon={<IconPlus size={18} />}
+          size="lg"
+          height="24"
+          variant="outline"
+          onClick={() => addTerm(terms.length)}
+        >
+          Add card
+        </Button>
+      )}
     </Stack>
   );
 };

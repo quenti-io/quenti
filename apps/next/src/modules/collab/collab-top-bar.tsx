@@ -14,7 +14,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { IconUsersGroup } from "@tabler/icons-react";
+import { IconCircleCheck, IconUsersGroup } from "@tabler/icons-react";
 
 import { editorEventChannel } from "../../events/editor";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
@@ -28,6 +28,7 @@ export const CollabTopBar = () => {
   const savedAt = useSetEditorContext((s) => s.savedAt);
   const numTerms = useSetEditorContext((s) => s.serverTerms.length);
   const { submission } = React.useContext(CollabContext)!.data;
+  const submitted = !!submission.submittedAt;
 
   const isSaving = useSetEditorContext((s) => s.isSaving);
   const isSavingRef = React.useRef(isSaving);
@@ -35,11 +36,15 @@ export const CollabTopBar = () => {
 
   const subTextColor = useColorModeValue("gray.600", "gray.400");
 
-  const text = isSaving
-    ? "Saving..."
-    : `${plural(numTerms, "term")} saved ${
-        getRelativeTime(savedAt) || "just now"
-      }`;
+  const text = submitted
+    ? `${plural(numTerms, "term")} submitted ${
+        getRelativeTime(submission.submittedAt) || "just now"
+      }`
+    : isSaving
+      ? "Saving..."
+      : `${plural(numTerms, "term")} saved ${
+          getRelativeTime(savedAt) || "just now"
+        }`;
 
   const submit = api.collab.submit.useMutation({
     onSuccess: async () => {
@@ -75,8 +80,14 @@ export const CollabTopBar = () => {
       <Flex align="center" justify="space-between" w="full">
         <Stack>
           <HStack spacing="10px">
-            <IconUsersGroup size={18} />
-            <Heading fontSize="lg">Collab</Heading>
+            {submitted ? (
+              <IconCircleCheck size={18} />
+            ) : (
+              <IconUsersGroup size={18} />
+            )}
+            <Heading fontSize="lg">
+              {submitted ? "Submitted" : "Collab"}
+            </Heading>
           </HStack>
           <HStack color={subTextColor} spacing={4}>
             {isSaving && <Spinner size="sm" />}

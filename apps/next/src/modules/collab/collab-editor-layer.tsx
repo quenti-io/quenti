@@ -141,6 +141,7 @@ export const CollabEditorLayer: React.FC<
         id: data.id,
         title: data.title,
         description: data.description,
+        readonly: !!submission.submittedAt,
         terms: submission.terms.map((x) => ({
           ...x,
           clientKey: x.id,

@@ -34,6 +34,7 @@ interface SetEditorProps {
   visibleTerms: number[];
   lastCreated?: string;
   currentActiveRank?: number;
+  readonly?: boolean;
 }
 
 interface SetEditorState extends SetEditorProps {
@@ -95,6 +96,7 @@ export const createSetEditorStore = (
     visibility: "Public",
     terms: [],
     serverTerms: [],
+    readonly: false,
   };
 
   return createStore<SetEditorState>()(
