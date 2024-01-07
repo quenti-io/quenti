@@ -20,7 +20,7 @@ import React from "react";
 
 import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 
-import { Button, Stack } from "@chakra-ui/react";
+import { Box, Button, Stack } from "@chakra-ui/react";
 
 import { IconPlus } from "@tabler/icons-react";
 
@@ -162,7 +162,7 @@ export const TermsList = () => {
                         }}
                         anyFocus={() => setCurrent(term.clientKey)}
                       />
-                      <TermCardGap index={i} />
+                      {!readonly ? <TermCardGap index={i} /> : <Box h="4" />}
                     </React.Fragment>
                   ))}
               </AnimatePresence>
