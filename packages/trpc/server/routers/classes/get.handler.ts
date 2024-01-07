@@ -46,11 +46,16 @@ const studySetsSelect = Prisma.validator<Prisma.Class$studySetsArgs>()({
         },
         _count: {
           select: {
-            terms: true,
+            terms: {
+              where: {
+                ephemeral: false,
+              },
+            },
             collaborators: true,
           },
         },
         collaborators: {
+          take: 5,
           select: {
             user: {
               select: {
@@ -58,7 +63,6 @@ const studySetsSelect = Prisma.validator<Prisma.Class$studySetsArgs>()({
               },
             },
           },
-          take: 5,
         },
       },
     },
@@ -240,7 +244,13 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     bannerHash: class_.bannerHash,
     cortexCategory: class_.cortexCategory,
     cortexCourse: class_.cortexCourse,
-    studySets: class_.studySets.map((s) => s.studySet),
+    studySets: class_.studySets.map((set) => ({
+      ...set.studySet,
+      collaborators: {
+        total: set.studySet._count.collaborators,
+        avatars: set.studySet.collaborators.map((c) => c.user.image || ""),
+      },
+    })),
     folders: class_.folders.map((f) => f.folder),
     ...strip({
       organization: class_.organization,

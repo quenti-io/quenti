@@ -76,6 +76,7 @@ export const FolderSets = () => {
               studySet={studySet}
               user={studySet.user}
               numTerms={studySet._count.terms}
+              collaborators={studySet.collaborators}
               removable={amCreator}
               onRemove={() => {
                 removeSet.mutate({

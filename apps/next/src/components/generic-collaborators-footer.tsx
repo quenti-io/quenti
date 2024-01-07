@@ -28,7 +28,13 @@ export const GenericCollaboratorsFooter: React.FC<
 }) => {
   if ((total || 0) > 0)
     return (
-      <AvatarGroup size="xs" max={5} spacing="-3">
+      <AvatarGroup
+        size="xs"
+        max={5}
+        spacing="-3"
+        ml="-3px"
+        pointerEvents="none"
+      >
         {avatars.map((avatar) => (
           <Avatar
             key={avatar}
@@ -44,6 +50,7 @@ export const GenericCollaboratorsFooter: React.FC<
 
   return (
     <HStack
+      pointerEvents="none"
       color="gray.600"
       _dark={{
         color: "gray.400",

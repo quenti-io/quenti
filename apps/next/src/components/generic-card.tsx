@@ -141,6 +141,7 @@ export const GenericCard = ({
                   src={avatarUrl(user)}
                   size="xs"
                   className="highlight-block"
+                  pointerEvents="none"
                 />
                 <HStack spacing={1}>
                   <Text

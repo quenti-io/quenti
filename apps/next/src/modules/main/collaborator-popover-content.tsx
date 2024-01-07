@@ -22,7 +22,7 @@ export const CollaboratorPopoverContent = ({
 }: CollaboratorIcon) => {
   return (
     <Portal>
-      <Box zIndex={200} position="relative">
+      <Box zIndex={200} position="fixed">
         <PopoverContent
           p="3"
           w="max"

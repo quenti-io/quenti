@@ -48,7 +48,22 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
               visibility: true,
               _count: {
                 select: {
-                  terms: true,
+                  terms: {
+                    where: {
+                      ephemeral: false,
+                    },
+                  },
+                  collaborators: true,
+                },
+              },
+              collaborators: {
+                take: 5,
+                select: {
+                  user: {
+                    select: {
+                      image: true,
+                    },
+                  },
                 },
               },
             },
@@ -193,6 +208,10 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         username: s.user.username,
         image: s.user.image,
         verified: s.user.verified,
+      },
+      collaborators: {
+        total: s._count.collaborators,
+        avatars: s.collaborators.map((c) => c.user.image || ""),
       },
     })),
     container: {

@@ -143,6 +143,7 @@ export const ClassHome = () => {
                   numTerms={studySet._count.terms}
                   user={studySet.user}
                   removable={isTeacher}
+                  collaborators={studySet.collaborators}
                   onRemove={() =>
                     removeEntity.mutate({
                       classId: data.id,
