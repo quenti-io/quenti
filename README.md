@@ -89,7 +89,7 @@ bun dev
 or create and start a production build with
 
 ```
-bun build
+bun run build
 bun start
 ```
 
