@@ -26,6 +26,9 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
         userId: ctx.session.user.id,
       },
       submittedAt: null,
+      assignment: {
+        published: true,
+      },
     },
     select: {
       assignment: {

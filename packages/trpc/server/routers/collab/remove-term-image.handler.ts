@@ -4,7 +4,7 @@ import { deleteTermAsset } from "@quenti/images/server";
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
-import { saveSubmisson } from "./common/submission";
+import { getSubmissionOrThrow, saveSubmisson } from "./common/submission";
 import type { TRemoveTermImageSchema } from "./remove-term-image.schema";
 
 type RemoveTermImageOptions = {
@@ -16,17 +16,7 @@ export const removeTermImageHandler = async ({
   ctx,
   input,
 }: RemoveTermImageOptions) => {
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-    },
-  });
-
-  if (!submission) throw new TRPCError({ code: "NOT_FOUND" });
+  await getSubmissionOrThrow(input.submissionId, ctx.session.user.id);
 
   const term = await ctx.prisma.term.findUnique({
     where: {

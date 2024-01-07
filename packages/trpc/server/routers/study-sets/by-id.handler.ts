@@ -127,8 +127,13 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     container.matchStudyStarred = false;
   }
 
+  const shouldShowAssignment =
+    studySet.assignment?.me?.type == "Teacher" ||
+    studySet.assignment?.published;
+
   return {
     ...studySet,
+    assignment: shouldShowAssignment ? studySet.assignment : undefined,
     ...strip({
       collaborators: (studySet.collaborators as Collaborator[])
         ?.sort(

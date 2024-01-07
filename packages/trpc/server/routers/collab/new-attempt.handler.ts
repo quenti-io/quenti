@@ -15,6 +15,7 @@ export const newAttemptHandler = async ({ ctx, input }: NewAttemptOptions) => {
       id: input.studySetId,
       assignment: {
         type: "Collab",
+        published: true,
         section: {
           students: {
             some: {

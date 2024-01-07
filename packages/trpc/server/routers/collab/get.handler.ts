@@ -36,6 +36,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         },
       },
       assignment: {
+        where: {
+          published: true,
+        },
         select: {
           id: true,
           class: {

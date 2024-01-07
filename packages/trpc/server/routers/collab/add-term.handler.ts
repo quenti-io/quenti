@@ -18,6 +18,9 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
         userId: ctx.session.user.id,
       },
       submittedAt: null,
+      assignment: {
+        published: true,
+      },
     },
     select: {
       id: true,

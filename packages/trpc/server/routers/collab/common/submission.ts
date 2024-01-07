@@ -13,6 +13,9 @@ export const getSubmissionOrThrow = async (
         userId,
       },
       submittedAt: null,
+      assignment: {
+        published: true,
+      },
     },
   });
 

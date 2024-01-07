@@ -21,6 +21,9 @@ export const uploadTermImageHandler = async ({
         userId: ctx.session.user.id,
       },
       submittedAt: null,
+      assignment: {
+        published: true,
+      },
       terms: {
         some: {
           id: input.termId,
