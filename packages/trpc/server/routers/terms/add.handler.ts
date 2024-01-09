@@ -20,7 +20,11 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
       created: true,
       _count: {
         select: {
-          terms: true,
+          terms: {
+            where: {
+              ephemeral: false,
+            },
+          },
         },
       },
     },
@@ -60,6 +64,7 @@ export const addHandler = async ({ ctx, input }: AddOptions) => {
     const created = await ctx.prisma.term.findMany({
       where: {
         studySetId: input.studySetId,
+        ephemeral: false,
         rank: {
           in: Array(input.term.rank - studySet._count.terms)
             .fill(null)

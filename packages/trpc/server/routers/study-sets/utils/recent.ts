@@ -17,8 +17,30 @@ export const getRecentStudySets = async (
       studySet: {
         OR: [
           {
-            visibility: {
-              not: "Private",
+            AND: {
+              visibility: {
+                not: "Private",
+              },
+              OR: [
+                {
+                  visibility: {
+                    not: "Class",
+                  },
+                },
+                {
+                  classesWithAccess: {
+                    some: {
+                      class: {
+                        members: {
+                          some: {
+                            userId,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
             },
           },
           {

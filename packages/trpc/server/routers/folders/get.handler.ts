@@ -1,3 +1,4 @@
+import { strip } from "@quenti/lib/strip";
 import type { StudiableTerm, Term } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
@@ -66,6 +67,11 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
                   },
                 },
               },
+              classesWithAccess: {
+                select: {
+                  classId: true,
+                },
+              },
             },
           },
         },
@@ -81,6 +87,20 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   const isMyFolder = folder.userId === ctx.session.user.id;
   const studySets = folder.studySets.map((s) => s.studySet);
+
+  const inClassIds = new Array<string>();
+  if (studySets.find((s) => s.visibility == "Class")) {
+    const myClasses = await ctx.prisma.classMembership.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        classId: true,
+      },
+    });
+    inClassIds.push(...myClasses.map((c) => c.classId));
+  }
+
   const studySetsICanSee = studySets.filter((s) => {
     if (s.visibility === "Public") {
       return true;
@@ -91,6 +111,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     }
     if (s.visibility === "Private") {
       return s.user.id === ctx.session.user.id;
+    }
+    if (s.visibility === "Class") {
+      return s.classesWithAccess.some((c) => inClassIds.includes(c.classId));
     }
 
     return false;
@@ -153,6 +176,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         studySetId: {
           in: studySetsICanSee.map((s) => s.id),
         },
+        ephemeral: false,
       },
     });
 
@@ -202,7 +226,10 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       verified: user.verified,
     },
     sets: studySetsICanSee.map((s) => ({
-      ...s,
+      ...strip({
+        ...s,
+        classesWithAccess: undefined,
+      }),
       user: {
         id: s.user.id,
         username: s.user.username,

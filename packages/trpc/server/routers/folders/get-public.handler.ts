@@ -94,6 +94,7 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
         studySetId: {
           in: folder.studySets.map((s) => s.studySet.id),
         },
+        ephemeral: false,
       },
     });
 

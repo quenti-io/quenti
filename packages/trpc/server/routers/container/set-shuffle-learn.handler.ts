@@ -33,7 +33,7 @@ export const setShuffleLearnHandler = async ({
   if (input.shuffleLearn) {
     const termIds = (
       await ctx.prisma.term.findMany({
-        where: { studySetId: input.entityId },
+        where: { studySetId: input.entityId, ephemeral: false },
         select: { id: true },
       })
     ).map((x) => x.id);
