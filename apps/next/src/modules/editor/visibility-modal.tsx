@@ -6,6 +6,7 @@ import type { StudySetVisibility } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import {
+  Box,
   Button,
   Flex,
   GridItem,
@@ -70,7 +71,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
         overflow="hidden"
         className="transition-[min-width,width] duration-300"
       >
-        <ModalBody p="0">
+        <ModalBody p="0" maxH="full">
           <Flex>
             <Stack spacing="5" flex="0" py="8" pl="10">
               <Heading size="lg">Set visibility</Heading>
@@ -208,82 +209,86 @@ const ClassSelectGroup: React.FC<ClassSelectGroupProps> = ({
   );
 
   return (
-    <Stack
-      spacing="5"
-      flex="1"
-      minW="336px"
-      maxH="512px"
-      pr="10"
-      pl="12"
-      py="8"
-      overflow="auto"
-    >
-      <Heading size="md">Classes with access</Heading>
-      <SimpleGrid columns={1} gap="4">
-        {isLoading &&
-          Array.from({ length: 3 }).map((_, i) => (
-            <GridItem key={i}>
-              <Skeleton h="169px" rounded="lg" w="full" />
+    <Box flex="1" position="relative" minW="336px">
+      <Stack
+        spacing="5"
+        position="absolute"
+        top="0"
+        left="0"
+        w="full"
+        h="full"
+        pr="10"
+        pl="12"
+        py="8"
+        overflow="auto"
+      >
+        <Heading size="md">Classes with access</Heading>
+        <SimpleGrid columns={1} gap="4">
+          {isLoading &&
+            Array.from({ length: 3 }).map((_, i) => (
+              <GridItem key={i}>
+                <Skeleton h="169px" rounded="lg" w="full" />
+              </GridItem>
+            ))}
+          {!isLoading && !classes?.length && (
+            <GridItem mt="4">
+              <VStack textAlign="center">
+                <GhostGroup />
+                <Text color="gray.500" fontSize="sm" fontWeight={500}>
+                  You aren&apos;t part of any classes yet. Create or join a
+                  class to continue.
+                </Text>
+                <Button
+                  leftIcon={<IconPlus size={16} />}
+                  variant="outline"
+                  size="sm"
+                  mt="3"
+                  onClick={() => menuEventChannel.emit("createClass")}
+                >
+                  New class
+                </Button>
+              </VStack>
             </GridItem>
-          ))}
-        {!isLoading && !classes?.length && (
-          <GridItem mt="4">
-            <VStack textAlign="center">
-              <GhostGroup />
-              <Text color="gray.500" fontSize="sm" fontWeight={500}>
-                You aren&apos;t part of any classes yet. Create or join a class
-                to continue.
-              </Text>
-              <Button
-                leftIcon={<IconPlus size={16} />}
-                variant="outline"
-                size="sm"
-                mt="3"
-                onClick={() => menuEventChannel.emit("createClass")}
-              >
-                New class
-              </Button>
-            </VStack>
-          </GridItem>
-        )}
-        {(classes || [])
-          .filter((c) => c.as == "Teacher")
-          .map((class_) => (
-            <GridItem key={class_.id}>
-              <ClassCard
-                id={class_.id}
-                name={class_.name}
-                disableLink
-                variant="selectable"
-                bannerColor={
-                  class_.preferences?.bannerColor ?? class_.bannerColor
-                }
-                data={{
-                  students: class_._count.members || 0,
-                  sections: class_._count.sections || 0,
-                }}
-                for={class_.as}
-                logo={class_.logoUrl}
-                hash={class_.logoHash}
-                onClick={() => {
-                  if (classesWithAccess?.includes(class_.id)) {
-                    const newClasses = classesWithAccess.filter(
-                      (id) => id != class_.id,
-                    );
-                    onChangeClassesWithAccess?.(newClasses);
-                  } else {
-                    const newClasses = [
-                      ...(classesWithAccess || []),
-                      class_.id,
-                    ];
-                    onChangeClassesWithAccess?.(newClasses);
+          )}
+          {(classes || [])
+            .filter((c) => c.as == "Teacher")
+            .map((class_) => (
+              <GridItem key={class_.id}>
+                <ClassCard
+                  id={class_.id}
+                  name={class_.name}
+                  disableLink
+                  variant="selectable"
+                  bannerColor={
+                    class_.preferences?.bannerColor ?? class_.bannerColor
                   }
-                }}
-                selected={classesWithAccess?.includes(class_.id)}
-              />
-            </GridItem>
-          ))}
-      </SimpleGrid>
-    </Stack>
+                  data={{
+                    students: class_._count.members || 0,
+                    sections: class_._count.sections || 0,
+                  }}
+                  for={class_.as}
+                  logo={class_.logoUrl}
+                  hash={class_.logoHash}
+                  onClick={() => {
+                    if (classesWithAccess?.includes(class_.id)) {
+                      const newClasses = classesWithAccess.filter(
+                        (id) => id != class_.id,
+                      );
+                      onChangeClassesWithAccess?.(newClasses);
+                    } else {
+                      const newClasses = [
+                        ...(classesWithAccess || []),
+                        class_.id,
+                      ];
+                      onChangeClassesWithAccess?.(newClasses);
+                    }
+                  }}
+                  selected={classesWithAccess?.includes(class_.id)}
+                />
+              </GridItem>
+            ))}
+        </SimpleGrid>
+      </Stack>
+    </Box>
   );
 };

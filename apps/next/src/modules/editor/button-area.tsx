@@ -1,5 +1,7 @@
 import React from "react";
 
+import { api } from "@quenti/trpc";
+
 import {
   Button,
   ButtonGroup,
@@ -21,7 +23,10 @@ import {
 
 import { visibilityIcon } from "../../common/visibility-icon";
 import { menuEventChannel } from "../../events/menu";
-import { useSetEditorContext } from "../../stores/use-set-editor-store";
+import {
+  SetEditorStoreContext,
+  useSetEditorContext,
+} from "../../stores/use-set-editor-store";
 import { ShortcutModal } from "./shortcut-modal";
 import { VisibilityModal } from "./visibility-modal";
 
@@ -30,22 +35,44 @@ export interface ButtonAreaProps {
 }
 
 export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
+  const store = React.useContext(SetEditorStoreContext)!;
+  const id = useSetEditorContext((s) => s.id);
+  const type = useSetEditorContext((s) => s.type);
   const mode = useSetEditorContext((s) => s.mode);
   const visibility = useSetEditorContext((s) => s.visibility);
   const setVisibility = useSetEditorContext((s) => s.setVisibility);
+  const classesWithAccess = useSetEditorContext((s) => s.classesWithAccess);
+  const setClassesWithAccess = useSetEditorContext(
+    (s) => s.setClassesWithAccess,
+  );
   const flipTerms = useSetEditorContext((s) => s.flipTerms);
 
   const [visibilityModalOpen, setVisibilityModalOpen] = React.useState(false);
   const [shortcutModalOpen, setShortcutModalOpen] = React.useState(false);
+
+  api.studySets.getAllowedClasses.useQuery(
+    {
+      studySetId: id,
+    },
+    {
+      enabled: visibility == "Class",
+      onSuccess: (data) => {
+        store.getState().classesWithAccess = data?.classes || [];
+      },
+    },
+  );
 
   return (
     <>
       <VisibilityModal
         isOpen={visibilityModalOpen}
         visibility={visibility}
+        noPrivate={type == "Collab"}
+        classesWithAccess={classesWithAccess}
+        onChangeClassesWithAccess={setClassesWithAccess}
         onChangeVisibility={(v) => {
           setVisibility(v);
-          setVisibilityModalOpen(false);
+          if (v !== "Class") setVisibilityModalOpen(false);
         }}
         onClose={() => {
           setVisibilityModalOpen(false);

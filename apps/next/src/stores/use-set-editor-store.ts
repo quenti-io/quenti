@@ -5,7 +5,7 @@ import { subscribeWithSelector } from "zustand/middleware";
 
 import type { Language } from "@quenti/core/language";
 import type { FacingTerm } from "@quenti/interfaces";
-import type { StudySetVisibility } from "@quenti/prisma/client";
+import type { StudySetType, StudySetVisibility } from "@quenti/prisma/client";
 
 export type ClientTerm = Omit<
   FacingTerm,
@@ -19,6 +19,7 @@ export type ClientTerm = Omit<
 interface SetEditorProps {
   id: string;
   mode: "create" | "edit";
+  type: StudySetType;
   isSaving: boolean;
   isLoading: boolean;
   saveError?: string;
@@ -29,6 +30,7 @@ interface SetEditorProps {
   wordLanguage: Language;
   definitionLanguage: Language;
   visibility: StudySetVisibility;
+  classesWithAccess: string[];
   terms: ClientTerm[];
   serverTerms: string[];
   visibleTerms: number[];
@@ -48,6 +50,7 @@ interface SetEditorState extends SetEditorProps {
   setWordLanguage: (wordLanguage: Language) => void;
   setDefinitionLanguage: (definitionLanguage: Language) => void;
   setVisibility: (visibility: StudySetVisibility) => void;
+  setClassesWithAccess: (classes: string[]) => void;
   addTerm: (rank: number) => void;
   bulkAddTerms: (
     terms: { word: string; definition: string }[],
@@ -84,6 +87,7 @@ export const createSetEditorStore = (
   const DEFAULT_PROPS: SetEditorProps = {
     id: "",
     mode: "create",
+    type: "Default",
     isSaving: false,
     isLoading: false,
     savedAt: new Date(),
@@ -94,6 +98,7 @@ export const createSetEditorStore = (
     tags: [],
     visibleTerms: [],
     visibility: "Public",
+    classesWithAccess: [],
     terms: [],
     serverTerms: [],
     readonly: false,
@@ -114,6 +119,10 @@ export const createSetEditorStore = (
       setDefinitionLanguage: (definitionLanguage: Language) =>
         set({ definitionLanguage }),
       setVisibility: (visibility: StudySetVisibility) => set({ visibility }),
+      setClassesWithAccess: (classes: string[]) => {
+        set({ classesWithAccess: classes });
+        behaviors?.setClassesWithAccess?.(classes);
+      },
       addTerm: (rank: number) => {
         set((state) => {
           const clientKey = nanoid();

@@ -63,6 +63,27 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     });
   }
 
+  if (studySet.visibility === "Class") {
+    if (
+      !(await ctx.prisma.allowedClassesOnStudySets.findFirst({
+        where: {
+          studySetId: input.studySetId,
+          class: {
+            members: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+      }))
+    )
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "This set is restricted to specific classes.",
+      });
+  }
+
   if (input.withDistractors && studySet.cortexStale) {
     const start = Date.now();
 

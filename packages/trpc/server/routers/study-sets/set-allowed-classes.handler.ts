@@ -40,6 +40,12 @@ export const setAllowedClassesHandler = async ({
     },
   });
 
+  if (!classes.length)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Must specify at least one class",
+    });
+
   await ctx.prisma.studySet.update({
     where: {
       id: input.studySetId,
