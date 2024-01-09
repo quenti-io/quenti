@@ -37,7 +37,6 @@ export interface ButtonAreaProps {
 export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
   const store = React.useContext(SetEditorStoreContext)!;
   const id = useSetEditorContext((s) => s.id);
-  const type = useSetEditorContext((s) => s.type);
   const mode = useSetEditorContext((s) => s.mode);
   const visibility = useSetEditorContext((s) => s.visibility);
   const setVisibility = useSetEditorContext((s) => s.setVisibility);
@@ -67,7 +66,6 @@ export const ButtonArea = ({ onImportOpen }: ButtonAreaProps) => {
       <VisibilityModal
         isOpen={visibilityModalOpen}
         visibility={visibility}
-        noPrivate={type == "Collab"}
         classesWithAccess={classesWithAccess}
         onChangeClassesWithAccess={setClassesWithAccess}
         onChangeVisibility={(v) => {
