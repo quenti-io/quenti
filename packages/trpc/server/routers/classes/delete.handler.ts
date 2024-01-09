@@ -12,6 +12,22 @@ type DeleteOptions = {
 export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
   await isClassTeacherOrThrow(input.id, ctx.session.user.id, "mutation");
 
+  // If we delete a class, study sets with visibility "Class" could be left without
+  // anyone having access to them whatsoever—set the visibility to "Unlisted" instead
+  await ctx.prisma.studySet.updateMany({
+    where: {
+      visibility: "Class",
+      classesWithAccess: {
+        every: {
+          classId: input.id,
+        },
+      },
+    },
+    data: {
+      visibility: "Unlisted",
+    },
+  });
+
   await ctx.prisma.class.delete({
     where: {
       id: input.id,
