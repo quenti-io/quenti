@@ -230,26 +230,27 @@ const ClassSelectGroup: React.FC<ClassSelectGroupProps> = ({
                 <Skeleton h="169px" rounded="lg" w="full" />
               </GridItem>
             ))}
-          {!isLoading && !classes?.length && (
-            <GridItem mt="4">
-              <VStack textAlign="center">
-                <GhostGroup />
-                <Text color="gray.500" fontSize="sm" fontWeight={500}>
-                  You aren&apos;t part of any classes yet. Create or join a
-                  class to continue.
-                </Text>
-                <Button
-                  leftIcon={<IconPlus size={16} />}
-                  variant="outline"
-                  size="sm"
-                  mt="3"
-                  onClick={() => menuEventChannel.emit("createClass")}
-                >
-                  New class
-                </Button>
-              </VStack>
-            </GridItem>
-          )}
+          {!isLoading &&
+            !(classes || []).filter((c) => c.as == "Teacher").length && (
+              <GridItem mt="4">
+                <VStack textAlign="center">
+                  <GhostGroup />
+                  <Text color="gray.500" fontSize="sm" fontWeight={500}>
+                    You aren&apos;t a teacher in any class yet. Create or join a
+                    class to continue.
+                  </Text>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    size="sm"
+                    mt="3"
+                    onClick={() => menuEventChannel.emit("createClass")}
+                  >
+                    New class
+                  </Button>
+                </VStack>
+              </GridItem>
+            )}
           {(classes || [])
             .filter((c) => c.as == "Teacher")
             .map((class_) => (
@@ -271,6 +272,7 @@ const ClassSelectGroup: React.FC<ClassSelectGroupProps> = ({
                   hash={class_.logoHash}
                   onClick={() => {
                     if (classesWithAccess?.includes(class_.id)) {
+                      if (classesWithAccess?.length == 1) return;
                       const newClasses = classesWithAccess.filter(
                         (id) => id != class_.id,
                       );

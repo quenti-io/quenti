@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
       setImportModalOpen(true);
     };
     const createClass = () => {
-      void router.push("/classes/new");
+      onClassClick();
     };
 
     menuEventChannel.on("createFolder", createFolder);
