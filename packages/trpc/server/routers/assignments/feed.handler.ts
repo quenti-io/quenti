@@ -33,6 +33,10 @@ const studentSubmissionsSelect = (memberId: string) =>
     where: {
       memberId,
     },
+    orderBy: {
+      startedAt: "desc",
+    },
+    take: 1,
     select: {
       id: true,
       startedAt: true,
@@ -172,7 +176,9 @@ export const feedHandler = async ({ ctx, input }: FeedOptions) => {
         section: a.section,
         published: isTeacher ? a.published : undefined,
         submissions: a.submissions.length,
-        submission: a.submissions?.[0],
+        submission: a.submissions?.[0] as
+          | { id: string; startedAt: Date; submittedAt: Date | null }
+          | undefined,
       }),
     })),
   };

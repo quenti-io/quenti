@@ -45,7 +45,7 @@ export interface AssignmentCardProps {
   submission?: {
     id: string;
     startedAt: Date;
-    submittedAt?: Date;
+    submittedAt: Date | null;
   };
 }
 
