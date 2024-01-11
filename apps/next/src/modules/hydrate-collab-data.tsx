@@ -5,6 +5,7 @@ import { type RouterOutputs, api } from "@quenti/trpc";
 
 import { editorEventChannel } from "../events/editor";
 import { CollabEditorLayer } from "./collab/collab-editor-layer";
+import { CollabEditorLoading } from "./collab/collab-editor-loading";
 
 type CollabData = RouterOutputs["collab"]["get"];
 
@@ -54,8 +55,7 @@ export const HydrateCollabData: React.FC<React.PropsWithChildren> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // TODO: loading skeleton
-  if (!data || isDirty) return null;
+  if (!data || isDirty) return <CollabEditorLoading />;
 
   return (
     <CollabContext.Provider value={{ data }}>
