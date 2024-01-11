@@ -4,7 +4,10 @@ import React from "react";
 
 import type { Language } from "@quenti/core/language";
 
-import type { ClientTerm } from "../../../stores/use-set-editor-store";
+import {
+  type ClientTerm,
+  useSetEditorContext,
+} from "../../../stores/use-set-editor-store";
 import { TermCard } from "./term-card";
 
 export interface SortableTermCardProps {
@@ -32,6 +35,7 @@ export interface SortableTermCardProps {
 export const SortableTermCard: React.FC<SortableTermCardProps> = (props) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.term.id });
+  const readonly = useSetEditorContext((s) => s.readonly);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -45,7 +49,7 @@ export const SortableTermCard: React.FC<SortableTermCardProps> = (props) => {
       {...props}
       style={style}
       attributes={attributes}
-      listeners={listeners}
+      listeners={!readonly ? listeners : undefined}
       ref={setNodeRef}
     />
   );
