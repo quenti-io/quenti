@@ -9,6 +9,7 @@ import { api } from "@quenti/trpc";
 import {
   Box,
   Flex,
+  GridItem,
   HStack,
   Heading,
   Menu,
@@ -338,18 +339,20 @@ export const Assignment = () => {
             </Box>
           </Stack>
           <SimpleGrid columns={{ base: 1, sm: 2 }}>
-            {assignment?.studySet && (
-              <StudySetCard
-                studySet={assignment.studySet}
-                collaborators={assignment.studySet.collaborators}
-                numTerms={assignment.studySet._count.terms}
-                user={{
-                  username: null,
-                  image: null,
-                }}
-              />
-            )}
-            {!assignment && <GenericCard.Skeleton />}
+            <GridItem>
+              {assignment?.studySet && (
+                <StudySetCard
+                  studySet={assignment.studySet}
+                  collaborators={assignment.studySet.collaborators}
+                  numTerms={assignment.studySet._count.terms}
+                  user={{
+                    username: null,
+                    image: null,
+                  }}
+                />
+              )}
+              {!assignment && <GenericCard.Skeleton />}
+            </GridItem>
           </SimpleGrid>
         </Stack>
         <Stack minW="215px" w="215px" flex="0">

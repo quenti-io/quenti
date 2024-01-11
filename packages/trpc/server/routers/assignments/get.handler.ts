@@ -164,6 +164,10 @@ const getStudent = async (
         where: {
           memberId,
         },
+        orderBy: {
+          startedAt: "desc",
+        },
+        take: 1,
         select: {
           id: true,
           startedAt: true,
@@ -225,7 +229,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       section: assignment.section,
       published: isTeacher ? assignment.published : undefined,
       submissions: isTeacher ? assignment.submissions : undefined,
-      submission: !isTeacher ? assignment.submissions[0] || {} : undefined,
+      submission: !isTeacher ? assignment.submissions[0] : undefined,
     }),
   };
 };

@@ -17,6 +17,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
+import { IconCircleCheck } from "@tabler/icons-react";
+
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
@@ -160,7 +162,7 @@ const StudentSide = () => {
   const isLoaded = !!assignment && !!class_;
 
   return (
-    <Stack spacing="5">
+    <Stack spacing="3">
       <SkeletonText
         fitContent
         noOfLines={1}
@@ -173,26 +175,41 @@ const StudentSide = () => {
         alignItems="center"
       >
         <Text
-          fontSize="sm"
+          fontSize="xs"
           fontWeight={500}
           color="gray.700"
           _dark={{
             color: "gray.300",
           }}
         >
-          Due{" "}
+          {assignment?.submission?.submittedAt ? "Submitted" : "Due"}{" "}
           {Intl.DateTimeFormat("en-US", {
             month: "short",
             day: "numeric",
             year: "numeric",
             hour: "numeric",
             minute: "numeric",
-          }).format(new Date(assignment?.dueAt ?? 0))}
+          }).format(
+            new Date(
+              assignment?.submission?.submittedAt ?? assignment?.dueAt ?? 0,
+            ),
+          )}
         </Text>
       </SkeletonText>
       <Skeleton rounded="lg" isLoaded={isLoaded}>
-        <Button fontSize="sm" w="full">
-          Start assignment
+        <Button
+          fontSize="sm"
+          w="full"
+          variant={assignment?.submission?.submittedAt ? "outline" : "filled"}
+          leftIcon={<IconCircleCheck size={18} />}
+          as={Link}
+          href={`/${assignment?.studySet?.id}/collab`}
+        >
+          {assignment?.submission?.submittedAt
+            ? "Submitted"
+            : assignment?.submission
+              ? "Continue assignment"
+              : "Start assignment"}
         </Button>
       </Skeleton>
     </Stack>
