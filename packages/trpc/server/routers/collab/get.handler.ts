@@ -38,6 +38,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       assignment: {
         where: {
           published: true,
+          availableAt: {
+            gte: new Date(),
+          },
         },
         select: {
           id: true,

@@ -11,6 +11,7 @@ import type { NonNullableUserContext } from "../../lib/types";
 import { termsSelect } from "../study-sets/queries";
 import { reorder } from "../terms/mutations/reorder";
 import { bulkUpdateTerms } from "../terms/mutations/update";
+import { getSubmissionOrThrow } from "./common/submission";
 import type { TSubmitSchema } from "./submit.schema";
 
 type SubmitOptions = {
@@ -19,18 +20,10 @@ type SubmitOptions = {
 };
 
 export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-      assignment: {
-        published: true,
-      },
-    },
-    select: {
+  const submission = await getSubmissionOrThrow(
+    input.submissionId,
+    ctx.session.user.id,
+    {
       assignment: {
         select: {
           id: true,
@@ -55,7 +48,7 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
         },
       },
     },
-  });
+  );
 
   const studySet = submission?.assignment?.studySet;
   const collab = submission?.assignment?.studySet?.collab;

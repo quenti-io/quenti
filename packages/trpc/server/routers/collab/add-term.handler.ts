@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { NonNullableUserContext } from "../../lib/types";
 import { serialize } from "../terms/utils/serialize";
 import type { TAddTermSchema } from "./add-term.schema";
-import { saveSubmisson } from "./common/submission";
+import { getSubmissionOrThrow, saveSubmisson } from "./common/submission";
 
 export type AddTermOptions = {
   ctx: NonNullableUserContext;
@@ -11,18 +11,10 @@ export type AddTermOptions = {
 };
 
 export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-      assignment: {
-        published: true,
-      },
-    },
-    select: {
+  const submission = await getSubmissionOrThrow(
+    input.submissionId,
+    ctx.session.user.id,
+    {
       id: true,
       assignment: {
         select: {
@@ -45,13 +37,7 @@ export const addTermHandler = async ({ ctx, input }: AddTermOptions) => {
         },
       },
     },
-  });
-
-  if (!submission) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-    });
-  }
+  );
 
   const studySet = submission.assignment.studySet;
   const collab = studySet?.collab;

@@ -3,7 +3,7 @@ import { getTermAssetUrl } from "@quenti/images/server";
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
-import { saveSubmisson } from "./common/submission";
+import { getSubmissionOrThrow, saveSubmisson } from "./common/submission";
 import type { TUploadTermImageSchema } from "./upload-term-image.schema";
 
 type UploadTermImageCompleteOptions = {
@@ -15,23 +15,10 @@ export const uploadTermImageCompleteHandler = async ({
   ctx,
   input,
 }: UploadTermImageCompleteOptions) => {
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-      assignment: {
-        published: true,
-      },
-      terms: {
-        some: {
-          id: input.termId,
-        },
-      },
-    },
-    select: {
+  const submission = await getSubmissionOrThrow(
+    input.submissionId,
+    ctx.session.user.id,
+    {
       assignment: {
         select: {
           studySet: {
@@ -42,7 +29,8 @@ export const uploadTermImageCompleteHandler = async ({
         },
       },
     },
-  });
+    input.termId,
+  );
 
   if (!submission || !submission.assignment.studySet?.id)
     throw new TRPCError({ code: "NOT_FOUND" });

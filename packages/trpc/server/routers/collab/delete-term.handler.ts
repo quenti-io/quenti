@@ -4,7 +4,7 @@ import { deleteTermAsset } from "@quenti/images/server";
 import { TRPCError } from "@trpc/server";
 
 import type { NonNullableUserContext } from "../../lib/types";
-import { saveSubmisson } from "./common/submission";
+import { getSubmissionOrThrow, saveSubmisson } from "./common/submission";
 import type { TDeleteTermSchema } from "./delete-term.schema";
 
 type DeleteTermOptions = {
@@ -13,18 +13,10 @@ type DeleteTermOptions = {
 };
 
 export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
-  const submission = await ctx.prisma.submission.findUnique({
-    where: {
-      id: input.submissionId,
-      member: {
-        userId: ctx.session.user.id,
-      },
-      submittedAt: null,
-      assignment: {
-        published: true,
-      },
-    },
-    select: {
+  const submission = await getSubmissionOrThrow(
+    input.submissionId,
+    ctx.session.user.id,
+    {
       id: true,
       assignment: {
         select: {
@@ -46,13 +38,7 @@ export const deleteTermHandler = async ({ ctx, input }: DeleteTermOptions) => {
         },
       },
     },
-  });
-
-  if (!submission) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-    });
-  }
+  );
 
   const collab = submission.assignment.studySet?.collab;
   if (!collab) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
