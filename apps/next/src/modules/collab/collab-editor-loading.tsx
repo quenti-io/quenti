@@ -17,10 +17,14 @@ export const CollabEditorLoading = () => {
         </Stack>
         <Text whiteSpace="pre-wrap" />
         <HStack color="gray.500">
-          <IconStack2 size="16" />
-          <Text fontSize="sm" fontWeight={600}>
-            Submit 10-20 terms
-          </Text>
+          <Skeleton fitContent rounded="md">
+            <IconStack2 size="16" />
+          </Skeleton>
+          <Skeleton fitContent rounded="md">
+            <Text fontSize="sm" fontWeight={600}>
+              Submit between 3-7 terms
+            </Text>
+          </Skeleton>
         </HStack>
       </Stack>
       <Stack spacing="4">

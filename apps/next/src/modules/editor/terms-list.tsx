@@ -43,6 +43,7 @@ export const TermsList = () => {
   const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
   const lastCreated = useSetEditorContext((s) => s.lastCreated);
   const readonly = useSetEditorContext((s) => s.readonly);
+  const collab = useSetEditorContext((s) => s.collab);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -146,7 +147,11 @@ export const TermsList = () => {
                         isDragging={currentDrag === term.clientKey}
                         isCurrent={current === term.clientKey}
                         isLast={i === terms.length - 1}
-                        deletable={terms.length > 2}
+                        deletable={
+                          collab && collab.minTerms
+                            ? terms.length > collab.minTerms
+                            : terms.length > 2
+                        }
                         key={term.clientKey}
                         term={term}
                         wordLanguage={wordLanguage}
@@ -177,6 +182,9 @@ export const TermsList = () => {
           height="24"
           variant="outline"
           onClick={() => addTerm(terms.length)}
+          isDisabled={
+            collab && collab.maxTerms ? terms.length >= collab.maxTerms : false
+          }
         >
           Add card
         </Button>

@@ -148,6 +148,10 @@ export const CollabEditorLayer: React.FC<
         })) as ClientTerm[],
         mode: "edit",
         serverTerms: submission.terms.map((x) => x.id),
+        collab: {
+          minTerms: data.collab!.minTermsPerUser || 4,
+          maxTerms: data.collab!.maxTermsPerUser || 7,
+        },
       },
       {
         deleteTerm: (termId) => {

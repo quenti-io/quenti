@@ -37,6 +37,10 @@ interface SetEditorProps {
   lastCreated?: string;
   currentActiveRank?: number;
   readonly?: boolean;
+  collab?: {
+    minTerms: number;
+    maxTerms: number;
+  };
 }
 
 interface SetEditorState extends SetEditorProps {
