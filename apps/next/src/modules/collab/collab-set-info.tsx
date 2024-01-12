@@ -1,8 +1,8 @@
 import { Link } from "@quenti/components";
 
-import { Button, Heading, Stack, Text } from "@chakra-ui/react";
+import { Button, HStack, Heading, Stack, Text } from "@chakra-ui/react";
 
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconStack2 } from "@tabler/icons-react";
 
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 
@@ -27,6 +27,12 @@ export const CollabSetInfo = () => {
         <Heading>{title}</Heading>
       </Stack>
       <Text whiteSpace="pre-wrap">{description}</Text>
+      <HStack color="gray.500">
+        <IconStack2 size="16" />
+        <Text fontSize="sm" fontWeight={600}>
+          Submit 10-20 terms
+        </Text>
+      </HStack>
     </Stack>
   );
 };

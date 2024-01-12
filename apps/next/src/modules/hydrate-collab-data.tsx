@@ -27,6 +27,7 @@ export const HydrateCollabData: React.FC<React.PropsWithChildren> = ({
     },
     {
       enabled: !!id,
+      cacheTime: 0,
       onSuccess: () => {
         if (isDirty) setIsDirty(false);
       },

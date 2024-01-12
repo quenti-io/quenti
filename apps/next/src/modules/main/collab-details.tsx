@@ -45,7 +45,9 @@ export const CollabDetails = () => {
     CollaboratorIcon[]
   >([]);
 
-  const submitted = !!assignment?.submissions[0]?.submittedAt;
+  const submission = assignment?.submissions[0];
+  const started = !!submission?.startedAt;
+  const submitted = !!submission?.submittedAt;
   const isTeacher = assignment?.me?.type == "Teacher";
 
   React.useEffect(() => {
@@ -123,7 +125,9 @@ export const CollabDetails = () => {
                     ? "Manage assignment"
                     : submitted
                       ? "Submitted"
-                      : "Start assignment"}
+                      : started
+                        ? "Continue"
+                        : "Start assignment"}
                 </Button>
                 {!isTeacher && (
                   <IconButton

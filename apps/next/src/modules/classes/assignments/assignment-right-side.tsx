@@ -200,8 +200,12 @@ const StudentSide = () => {
         <Button
           fontSize="sm"
           w="full"
-          variant={assignment?.submission?.submittedAt ? "outline" : "filled"}
-          leftIcon={<IconCircleCheck size={18} />}
+          variant={assignment?.submission?.submittedAt ? "outline" : "solid"}
+          leftIcon={
+            assignment?.submission?.submittedAt ? (
+              <IconCircleCheck size={18} />
+            ) : undefined
+          }
           as={Link}
           href={`/${assignment?.studySet?.id}/collab`}
         >
