@@ -39,7 +39,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         where: {
           published: true,
           availableAt: {
-            gte: new Date(),
+            lte: new Date(),
           },
         },
         select: {
