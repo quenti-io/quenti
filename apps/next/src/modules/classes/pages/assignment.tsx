@@ -1,4 +1,4 @@
-import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
+import { EditorContent, type JSONContent } from "@tiptap/react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -51,6 +51,7 @@ import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { AssignmentRightSide } from "../assignments/assignment-right-side";
 import { CollabIcon } from "../assignments/collab-icon";
 import { extensions } from "../assignments/editor/description-editor";
+import { useReadonlyEditor } from "../assignments/editor/use-readonly-editor";
 
 export const Assignment = () => {
   const router = useRouter();
@@ -60,7 +61,7 @@ export const Assignment = () => {
 
   const utils = api.useUtils();
 
-  const editor = useEditor({
+  const editor = useReadonlyEditor({
     editable: false,
     content: (assignment?.description as JSONContent) ?? "<p></p>",
     extensions: extensions,
