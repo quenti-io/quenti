@@ -199,6 +199,7 @@ export const EditorContextLayer: React.FC<
         })) as ClientTerm[],
         mode,
         serverTerms: data.terms.map((x) => x.id),
+        collab: undefined,
       },
       {
         setClassesWithAccess: (classes) => {
