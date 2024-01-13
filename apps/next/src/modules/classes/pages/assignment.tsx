@@ -4,6 +4,7 @@ import React from "react";
 
 import { Link } from "@quenti/components";
 import { HeadSeo } from "@quenti/components/head-seo";
+import { env } from "@quenti/env/client";
 import { outfit } from "@quenti/lib/chakra-theme";
 import { api } from "@quenti/trpc";
 
@@ -24,6 +25,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 
 import {
@@ -41,10 +43,12 @@ import {
 } from "@tabler/icons-react";
 
 import { ToastWrapper } from "../../../common/toast-wrapper";
+import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { ConfirmModal } from "../../../components/confirm-modal";
 import { GenericCard } from "../../../components/generic-card";
 import { MenuOption } from "../../../components/menu-option";
 import { StudySetCard } from "../../../components/study-set-card";
+import { Toast } from "../../../components/toast";
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
@@ -58,6 +62,7 @@ export const Assignment = () => {
   const { data: class_ } = useClass();
   const { data: assignment } = useAssignment();
   const isTeacher = useIsClassTeacher();
+  const toast = useToast();
 
   const utils = api.useUtils();
 
@@ -84,6 +89,19 @@ export const Assignment = () => {
       await utils.assignments.get.invalidate();
     },
   });
+
+  const copyAssignmentLink = async () => {
+    const url = `${env.NEXT_PUBLIC_WEBSITE_URL}/a/${class_?.id}/${assignment?.id}`;
+    await navigator.clipboard.writeText(url);
+
+    toast({
+      title: "Copied to clipboard",
+      status: "success",
+      colorScheme: "green",
+      icon: <AnimatedCheckCircle />,
+      render: Toast,
+    });
+  };
 
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [publishOpen, setPublishOpen] = React.useState(false);
@@ -235,7 +253,7 @@ export const Assignment = () => {
                         label="Copy link"
                         fontSize="sm"
                         py="6px"
-                        onClick={() => {}}
+                        onClick={() => void copyAssignmentLink()}
                       />
                       {isTeacher && (
                         <>
