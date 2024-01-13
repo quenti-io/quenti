@@ -157,8 +157,14 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
 
   return {
     ...studySet,
-    assignment: shouldShowAssignment ? studySet.assignment : undefined,
     ...strip({
+      assignment: shouldShowAssignment
+        ? strip({
+            ...studySet.assignment,
+            submission: studySet.assignment?.submissions[0],
+            submissions: undefined,
+          })
+        : undefined,
       collaborators: (studySet.collaborators as Collaborator[])
         ?.sort(
           (a, b) =>

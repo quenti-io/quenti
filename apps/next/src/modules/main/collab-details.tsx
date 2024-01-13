@@ -18,13 +18,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import {
-  IconCircleCheck,
-  IconExternalLink,
-  IconUsersGroup,
-} from "@tabler/icons-react";
+import { IconExternalLink, IconUsersGroup } from "@tabler/icons-react";
 
 import { useSet } from "../../hooks/use-set";
+import { useAssignmentButton } from "../classes/assignments/use-assignment-button";
 import { ActionArea } from "./action-area";
 import { CollaboratorPopoverContent } from "./collaborator-popover-content";
 
@@ -45,9 +42,6 @@ export const CollabDetails = () => {
     CollaboratorIcon[]
   >([]);
 
-  const submission = assignment?.submissions[0];
-  const started = !!submission?.startedAt;
-  const submitted = !!submission?.submittedAt;
   const isTeacher = assignment?.me?.type == "Teacher";
 
   React.useEffect(() => {
@@ -79,6 +73,14 @@ export const CollabDetails = () => {
     setCollaboratorIcons(c);
   }, [collaborators, user]);
 
+  const { label, Icon, variant, colorScheme, isDisabled } = useAssignmentButton(
+    {
+      assignment,
+      isTeacher,
+      short: true,
+    },
+  );
+
   return (
     <Stack spacing={8}>
       <Flex
@@ -109,25 +111,22 @@ export const CollabDetails = () => {
                 <Button
                   w="full"
                   size="sm"
-                  as={Link}
+                  as={isDisabled ? undefined : Link}
                   href={
                     isTeacher
                       ? `/a/${assignment.classId}/${assignment.id}`
                       : `/${id}/collab`
                   }
-                  leftIcon={
-                    submitted ? <IconCircleCheck size={16} /> : undefined
-                  }
-                  variant={submitted ? "outline" : "solid"}
-                  colorScheme={submitted ? "gray" : "blue"}
+                  leftIcon={Icon ? <Icon size={16} /> : undefined}
+                  variant={variant}
+                  colorScheme={colorScheme}
+                  isDisabled={isDisabled}
+                  _disabled={{
+                    opacity: 0.75,
+                    cursor: "not-allowed",
+                  }}
                 >
-                  {isTeacher
-                    ? "Manage assignment"
-                    : submitted
-                      ? "Submitted"
-                      : started
-                        ? "Continue"
-                        : "Start assignment"}
+                  {label}
                 </Button>
                 {!isTeacher && (
                   <IconButton

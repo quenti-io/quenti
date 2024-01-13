@@ -17,12 +17,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { IconCircleCheck } from "@tabler/icons-react";
-
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { formatDueDate } from "../../../utils/time";
+import { useAssignmentButton } from "./use-assignment-button";
 
 export const AssignmentRightSide = () => {
   const isTeacher = useIsClassTeacher();
@@ -162,6 +161,11 @@ const StudentSide = () => {
 
   const isLoaded = !!assignment && !!class_;
 
+  const { label, Icon, variant, colorScheme } = useAssignmentButton({
+    assignment,
+    isTeacher: false,
+  });
+
   return (
     <Stack spacing="3">
       <SkeletonText
@@ -195,20 +199,13 @@ const StudentSide = () => {
         <Button
           fontSize="sm"
           w="full"
-          variant={assignment?.submission?.submittedAt ? "outline" : "solid"}
-          leftIcon={
-            assignment?.submission?.submittedAt ? (
-              <IconCircleCheck size={18} />
-            ) : undefined
-          }
+          variant={variant}
+          colorScheme={colorScheme}
+          leftIcon={Icon ? <Icon size={18} /> : undefined}
           as={Link}
           href={`/${assignment?.studySet?.id}/collab`}
         >
-          {assignment?.submission?.submittedAt
-            ? "Submitted"
-            : assignment?.submission
-              ? "Continue assignment"
-              : "Start assignment"}
+          {label}
         </Button>
       </Skeleton>
     </Stack>
