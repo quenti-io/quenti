@@ -170,6 +170,8 @@ export const EditAssignment = () => {
   const apiEditCollab = api.assignments.editCollab.useMutation();
   const apiEdit = api.assignments.edit.useMutation({
     onSuccess: async () => {
+      await router.push(`/a/${id}/${assignmentId}`);
+
       toast({
         title: "Saved assignment successfully",
         status: "success",
@@ -178,7 +180,6 @@ export const EditAssignment = () => {
         render: Toast,
       });
 
-      await router.push(`/a/${id}/${assignmentId}`);
       await utils.assignments.get.invalidate();
     },
   });
