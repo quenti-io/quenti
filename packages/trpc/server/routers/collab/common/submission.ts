@@ -30,6 +30,9 @@ export const getSubmissionOrThrow = async <T extends Prisma.SubmissionSelect>(
             },
           },
         ],
+        studySet: {
+          visibility: { not: "Private" },
+        },
       },
       ...(termId
         ? {

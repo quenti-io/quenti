@@ -187,12 +187,16 @@ const StudentSide = () => {
             color: "gray.300",
           }}
         >
-          {assignment?.submission?.submittedAt ? "Submitted" : "Due"}{" "}
-          {formatDueDate(
-            assignment?.submission?.submittedAt ??
-              assignment?.dueAt ??
-              new Date(),
-          )}
+          {assignment?.submission?.submittedAt
+            ? "Submitted "
+            : assignment?.dueAt
+              ? "Due "
+              : ""}
+          {assignment?.submission?.submittedAt || assignment?.dueAt
+            ? formatDueDate(
+                assignment?.submission?.submittedAt ?? assignment.dueAt!,
+              )
+            : "No due date"}
         </Text>
       </SkeletonText>
       <Skeleton rounded="lg" isLoaded={isLoaded}>

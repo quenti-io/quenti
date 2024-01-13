@@ -1,5 +1,6 @@
 import React from "react";
 
+import type { Language } from "@quenti/core";
 import { richTextToHtml } from "@quenti/lib/editor";
 import { type RouterOutputs, api } from "@quenti/trpc";
 
@@ -140,6 +141,8 @@ export const CollabEditorLayer: React.FC<
         ...submission,
         id: data.id,
         title: data.title,
+        wordLanguage: data.wordLanguage as Language,
+        definitionLanguage: data.definitionLanguage as Language,
         description: data.description,
         readonly: !!submission.submittedAt,
         terms: submission.terms.map((x) => ({

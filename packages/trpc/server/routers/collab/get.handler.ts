@@ -23,11 +23,16 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
           },
         },
       },
+      visibility: {
+        not: "Private",
+      },
     },
     select: {
       id: true,
       title: true,
       description: true,
+      wordLanguage: true,
+      definitionLanguage: true,
       collab: {
         select: {
           type: true,

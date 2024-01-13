@@ -4,6 +4,7 @@ import { HeadSeo } from "@quenti/components/head-seo";
 
 import { Container, Stack } from "@chakra-ui/react";
 
+import { EditorGlobalStyles } from "../../../common/editor-global-styles";
 import { LazyWrapper } from "../../../common/lazy-wrapper";
 import { PageWrapper } from "../../../common/page-wrapper";
 import { AuthedPage } from "../../../components/authed-page";
@@ -32,6 +33,7 @@ const Collab = () => {
     <AuthedPage>
       <HeadSeo title="Collab" />
       <LazyWrapper>
+        <EditorGlobalStyles />
         <WithFooter>
           <Container maxW="7xl">
             <HydrateCollabData>
