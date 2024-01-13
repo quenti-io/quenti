@@ -63,7 +63,10 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     });
   }
 
-  if (studySet.visibility === "Class") {
+  if (
+    studySet.visibility === "Class" &&
+    studySet.userId !== ctx.session?.user?.id
+  ) {
     if (
       !(await ctx.prisma.allowedClassesOnStudySets.findFirst({
         where: {

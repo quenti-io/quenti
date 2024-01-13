@@ -67,12 +67,16 @@ export const createCollaborativeHandler = async ({
     },
   });
 
-  if (input.visibility == "Class" && !input.classesWithAccess?.length) {
+  if (input.visibility == "Class") {
     const classes = await ctx.prisma.class.findMany({
       where: {
-        id: {
-          in: input.classesWithAccess,
-        },
+        ...(input.classesWithAccess
+          ? {
+              id: {
+                in: input.classesWithAccess,
+              },
+            }
+          : {}),
         members: {
           some: {
             type: "Teacher",
