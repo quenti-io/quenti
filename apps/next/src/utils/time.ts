@@ -83,3 +83,50 @@ export const formatDeciseconds = (deciseconds: number) => {
 
   return `${seconds}.${deci}`;
 };
+
+export const formatDueDate = (date: Date) => {
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  const today = new Date();
+  const dateDifference = Math.floor(
+    (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  if (dateDifference < 0) {
+    options.month = "short";
+    options.day = "numeric";
+    options.weekday = undefined;
+  } else if (dateDifference >= 7) {
+    options.weekday = undefined;
+    options.month = "short";
+    options.day = "numeric";
+  }
+
+  const isToday = dateDifference === 0;
+  if (date.getFullYear() !== today.getFullYear()) {
+    options.year = "numeric";
+  }
+
+  return new Intl.DateTimeFormat("en-US", options)
+    .formatToParts(date)
+    .map((part) => {
+      switch (part.type) {
+        case "hour":
+          return ` at ${part.value}`;
+        case "weekday":
+          return isToday ? "Today" : part.value;
+        case "literal":
+          return part.value.replace(", ", "");
+        case "year":
+          return `, ${part.value}`;
+        default:
+          return part.value;
+      }
+    })
+    .join("");
+};
