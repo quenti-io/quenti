@@ -1,6 +1,6 @@
 import type { FacingTerm } from "@quenti/interfaces";
 
-import { Popover, PopoverTrigger } from "@chakra-ui/react";
+import { Popover, PopoverTrigger, chakra } from "@chakra-ui/react";
 
 import { CollaboratorPopoverContent } from "../modules/main/collaborator-popover-content";
 
@@ -21,8 +21,11 @@ export const TermAuthorAvatar: React.FC<TermAuthorAvatarProps> = ({
       computePositionOnMount={computePosition}
     >
       <PopoverTrigger>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <chakra.img
+          bg="gray.200"
+          _dark={{
+            bg: "gray.700",
+          }}
           style={{
             minWidth: 24,
             width: 24,

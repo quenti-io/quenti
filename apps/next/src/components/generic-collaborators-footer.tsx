@@ -1,10 +1,10 @@
 import {
   Avatar,
-  AvatarGroup,
   Box,
-  type BoxProps,
+  Center,
   HStack,
   Text,
+  type BoxProps,
 } from "@chakra-ui/react";
 
 import { IconGhost3 } from "@tabler/icons-react";
@@ -28,16 +28,18 @@ export const GenericCollaboratorsFooter: React.FC<
 }) => {
   if ((total || 0) > 0)
     return (
-      <AvatarGroup
-        size="xs"
-        max={5}
-        h="24px"
-        spacing="-3"
-        ml="-3px"
-        pointerEvents="none"
-      >
+      <HStack h="24px" ml="-3px" pointerEvents="none" gap="0">
         {avatars.map((avatar) => (
           <Avatar
+            size="xs"
+            marginEnd="-3"
+            bg="gray.100"
+            _dark={{
+              bg: "gray.700",
+              borderColor: "gray.800",
+            }}
+            icon={<></>}
+            getInitials={() => ""}
             key={avatar}
             borderWidth={3}
             name={avatar}
@@ -46,7 +48,29 @@ export const GenericCollaboratorsFooter: React.FC<
             height="30px"
           />
         ))}
-      </AvatarGroup>
+        {total > 5 && (
+          <Center
+            bg="gray.200"
+            borderColor="white"
+            _dark={{
+              bg: "gray.700",
+              borderColor: "gray.800",
+            }}
+            rounded="full"
+            w="max"
+            px="6px"
+            pr="7px"
+            h="30px"
+            borderWidth={3}
+            position="relative"
+            fontSize="12px"
+            fontWeight={600}
+            fontFamily="heading"
+          >
+            <Text>+{total - 5}</Text>
+          </Center>
+        )}
+      </HStack>
     );
 
   return (

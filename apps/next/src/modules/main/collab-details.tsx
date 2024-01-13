@@ -159,6 +159,12 @@ export const CollabDetails = () => {
                   <PopoverTrigger>
                     <Stack spacing="0">
                       <Avatar
+                        bg="gray.200"
+                        _dark={{
+                          bg: "gray.700",
+                        }}
+                        icon={<></>}
+                        getInitials={() => ""}
                         src={c.user.image || ""}
                         size="sm"
                         className="highlight-block"
