@@ -23,7 +23,7 @@ import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 
-export const AssignmentRighSide = () => {
+export const AssignmentRightSide = () => {
   const isTeacher = useIsClassTeacher();
 
   if (!isTeacher) return <StudentSide />;

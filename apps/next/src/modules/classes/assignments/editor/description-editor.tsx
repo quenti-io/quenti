@@ -146,7 +146,12 @@ export const DescriptionEditor: React.FC<DescriptionEditorProps> = ({
           />
         </ButtonGroup>
       </HStack>
-      <Box height={200} overflowY="auto" onClick={() => editor.chain().focus()}>
+      <Box
+        minHeight={200}
+        height={200}
+        overflowY="auto"
+        onClick={() => editor.chain().focus()}
+      >
         <EditorContent editor={editor} />
       </Box>
     </Stack>

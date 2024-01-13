@@ -1,8 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type JSONContent, useEditor } from "@tiptap/react";
+import { useRouter } from "next/router";
 import React from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  type SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { z } from "zod";
+
+import { api } from "@quenti/trpc";
 
 import {
   Button,
@@ -12,12 +20,18 @@ import {
   Heading,
   Skeleton,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 
 import { IconEditCircle } from "@tabler/icons-react";
 
+import { ToastWrapper } from "../../../common/toast-wrapper";
+import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
+import { ConfirmModal } from "../../../components/confirm-modal";
 import { SkeletonLabel } from "../../../components/skeleton-label";
+import { Toast } from "../../../components/toast";
 import { useAssignment } from "../../../hooks/use-assignment";
+import { CollabTermsSlider } from "../assignments/editor/collab-terms-slider";
 import { DatesSection } from "../assignments/editor/dates-section";
 import {
   DescriptionEditor,
@@ -34,6 +48,10 @@ interface EditAssignmentFormInputs {
   availableAt: string;
   dueAt: string | null;
   lockedAt: string | null;
+  collab: {
+    collabMinTerms: number;
+    collabMaxTerms: number;
+  };
 }
 
 const schema = z
@@ -47,6 +65,10 @@ const schema = z
     availableAt: z.coerce.date(),
     dueAt: z.coerce.date().optional().nullable(),
     lockedAt: z.coerce.date().optional().nullable(),
+    collab: z.object({
+      collabMinTerms: z.number().min(1).max(20),
+      collabMaxTerms: z.number().min(1).max(20),
+    }),
   })
   .refine(
     (schema) =>
@@ -80,22 +102,43 @@ const schema = z
   );
 
 export const EditAssignment = () => {
+  const router = useRouter();
+  const id = router.query.id as string;
+  const assignmentId = router.query.assignmentId as string;
   const { data: assignment } = useAssignment();
+  const utils = api.useUtils();
+
+  const toast = useToast();
+
   const [mounted, setMounted] = React.useState(false);
+  const [confirmSection, setConfirmSection] = React.useState(false);
+  const confirmSectionRef = React.useRef(confirmSection);
+  confirmSectionRef.current = confirmSection;
+
+  const [confirmSectionOpen, setConfirmSectionOpen] = React.useState(false);
 
   const isLoaded = useProtectedRedirect();
 
+  const defaultObj = {
+    ...assignment,
+    sectionId: assignment?.section.id,
+    description: undefined,
+    availableAt: assignment?.availableAt as unknown as string,
+    dueAt: assignment?.dueAt as unknown as string,
+    lockedAt: assignment?.lockedAt as unknown as string,
+    collab: {
+      collabMinTerms: assignment?.studySet?.collab?.minTermsPerUser ?? 3,
+      collabMaxTerms: assignment?.studySet?.collab?.maxTermsPerUser ?? 7,
+    },
+  };
+
   const editMethods = useForm<EditAssignmentFormInputs>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      ...assignment,
-      sectionId: assignment?.section.id,
-      description: undefined,
-      availableAt: assignment?.availableAt as unknown as string,
-      dueAt: assignment?.dueAt as unknown as string,
-      lockedAt: assignment?.lockedAt as unknown as string,
-    },
+    defaultValues: defaultObj,
   });
+
+  const _sectionId = editMethods.watch("sectionId");
+  const sectionDirty = _sectionId !== assignment?.section.id;
 
   const editor = useEditor({
     extensions,
@@ -106,77 +149,134 @@ export const EditAssignment = () => {
     },
   });
 
+  const reset = () => {
+    editMethods.reset(defaultObj);
+    editor?.commands.setContent(assignment?.description as JSONContent);
+  };
+
   React.useEffect(() => {
     if (mounted || !assignment || !editor) return;
     setMounted(true);
-
-    editMethods.reset({
-      ...assignment,
-      sectionId: assignment?.section.id,
-      description: undefined,
-      availableAt: assignment?.availableAt as unknown as string,
-      dueAt: assignment?.dueAt as unknown as string,
-      lockedAt: assignment?.lockedAt as unknown as string,
-    });
-
-    editor.commands.setContent(assignment.description as JSONContent);
+    reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignment, editor]);
 
+  const apiEdit = api.assignments.edit.useMutation({
+    onSuccess: async () => {
+      toast({
+        title: "Saved assignment successfully",
+        status: "success",
+        colorScheme: "green",
+        icon: <AnimatedCheckCircle />,
+        render: Toast,
+      });
+
+      await router.push(`/a/${id}/${assignmentId}`);
+      await utils.assignments.get.invalidate();
+    },
+  });
+
+  const onSubmit: SubmitHandler<EditAssignmentFormInputs> = async (data) => {
+    if (sectionDirty && confirmSectionRef.current !== true) {
+      setConfirmSectionOpen(true);
+      return;
+    }
+
+    await apiEdit.mutateAsync({
+      ...data,
+      classId: id,
+      id: assignmentId,
+      availableAt: new Date(data.availableAt),
+      dueAt: data.dueAt ? new Date(data.dueAt) : null,
+      lockedAt: data.lockedAt ? new Date(data.lockedAt) : null,
+      description: editor?.getHTML() ?? undefined,
+    });
+  };
+
   return (
-    <FormProvider {...editMethods}>
-      <form
-        // onSubmit={createMethods.handleSubmit(onSubmit)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e.preventDefault();
-        }}
-      >
-        <Stack spacing="8">
-          <Stack spacing="6">
-            <Skeleton fitContent rounded="lg" isLoaded={isLoaded}>
-              <HStack
-                justifyContent="space-between"
-                alignItems={{ base: "start", md: "center" }}
-                spacing="6"
-                flexDir={{
-                  base: "column",
-                  md: "row",
-                }}
-              >
-                <HStack>
-                  <IconEditCircle />
-                  <Heading size="lg">Edit assignment</Heading>
+    <ToastWrapper>
+      <FormProvider {...editMethods}>
+        <ConfirmModal
+          isOpen={confirmSectionOpen}
+          onClose={() => setConfirmSectionOpen(false)}
+          heading="Change assignment section"
+          body="Changing this assignment's section will reset all student submissions. Are you sure you want to continue?"
+          isLoading={apiEdit.isLoading}
+          onConfirm={async () => {
+            setConfirmSection(true);
+            await editMethods.handleSubmit(onSubmit)();
+          }}
+        />
+        <form
+          onSubmit={editMethods.handleSubmit(onSubmit)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.preventDefault();
+          }}
+        >
+          <Stack spacing="8">
+            <Stack spacing="6">
+              <Skeleton fitContent rounded="lg" isLoaded={isLoaded}>
+                <HStack
+                  justifyContent="space-between"
+                  alignItems={{ base: "start", md: "center" }}
+                  spacing="6"
+                  flexDir={{
+                    base: "column",
+                    md: "row",
+                  }}
+                >
+                  <HStack>
+                    <IconEditCircle />
+                    <Heading size="lg">Edit assignment</Heading>
+                  </HStack>
+                  <ButtonGroup alignSelf="end" size={{ base: "sm", md: "md" }}>
+                    <Skeleton rounded="lg" isLoaded={isLoaded}>
+                      <Button variant="ghost" onClick={reset}>
+                        Reset
+                      </Button>
+                    </Skeleton>
+                    <Skeleton rounded="lg" isLoaded={isLoaded}>
+                      <Button type="submit" isLoading={apiEdit.isLoading}>
+                        Save changes
+                      </Button>
+                    </Skeleton>
+                  </ButtonGroup>
                 </HStack>
-                <ButtonGroup alignSelf="end" size={{ base: "sm", md: "md" }}>
-                  <Skeleton rounded="lg" isLoaded={isLoaded}>
-                    <Button variant="ghost">Reset</Button>
-                  </Skeleton>
-                  <Skeleton rounded="lg" isLoaded={isLoaded}>
-                    <Button>Save changes</Button>
-                  </Skeleton>
-                </ButtonGroup>
-              </HStack>
-            </Skeleton>
-            <Divider
-              borderColor="gray.300"
-              _dark={{
-                borderColor: "gray.600",
-              }}
+              </Skeleton>
+              <Divider
+                borderColor="gray.300"
+                _dark={{
+                  borderColor: "gray.600",
+                }}
+              />
+            </Stack>
+            <TitleSectionArea />
+            <TypeSection />
+            <DatesSection />
+            <Stack>
+              <SkeletonLabel isLoaded={isLoaded}>
+                Description (optional)
+              </SkeletonLabel>
+              <Skeleton rounded="lg" isLoaded={isLoaded} w="full" h="246px">
+                <DescriptionEditor editor={editor} />
+              </Skeleton>
+            </Stack>
+            <Controller
+              control={editMethods.control}
+              name="collab"
+              render={({ field: { value, onChange } }) => (
+                <CollabTermsSlider
+                  minTerms={value.collabMinTerms}
+                  maxTerms={value.collabMaxTerms}
+                  onChange={(min, max) => {
+                    onChange({ collabMinTerms: min, collabMaxTerms: max });
+                  }}
+                />
+              )}
             />
           </Stack>
-          <TitleSectionArea />
-          <TypeSection />
-          <DatesSection />
-          <Stack>
-            <SkeletonLabel isLoaded={isLoaded}>
-              Description (optional)
-            </SkeletonLabel>
-            <Skeleton rounded="lg" isLoaded={isLoaded} w="full">
-              <DescriptionEditor editor={editor} />
-            </Skeleton>
-          </Stack>
-        </Stack>
-      </form>
-    </FormProvider>
+        </form>
+      </FormProvider>
+    </ToastWrapper>
   );
 };

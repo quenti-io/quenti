@@ -122,7 +122,7 @@ export const NewAssignment = () => {
       availableAt: new Date(data.availableAt),
       dueAt: data.dueAt ? new Date(data.dueAt) : null,
       lockedAt: data.lockedAt ? new Date(data.lockedAt) : null,
-      description: editor?.getHTML() ?? "",
+      description: editor?.getHTML() ?? undefined,
     });
   };
 

@@ -45,7 +45,7 @@ import { StudySetCard } from "../../../components/study-set-card";
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
-import { AssignmentRighSide } from "../assignments/assignment-right-side";
+import { AssignmentRightSide } from "../assignments/assignment-right-side";
 import { CollabIcon } from "../assignments/collab-icon";
 import { extensions } from "../assignments/editor/description-editor";
 
@@ -361,7 +361,7 @@ export const Assignment = () => {
           </SimpleGrid>
         </Stack>
         <Stack minW="215px" w="215px" flex="0">
-          <AssignmentRighSide />
+          <AssignmentRightSide />
         </Stack>
       </Flex>
     </>
