@@ -1,10 +1,10 @@
 import {
   Avatar,
   Box,
+  type BoxProps,
   Center,
   HStack,
   Text,
-  type BoxProps,
 } from "@chakra-ui/react";
 
 import { IconGhost3 } from "@tabler/icons-react";
