@@ -50,6 +50,7 @@ export const AssignmentFeed = ({
                 name={a.title}
                 createdAt={a.createdAt}
                 availableAt={a.availableAt}
+                dueAt={a.dueAt}
                 submissions={a.submissions}
                 submission={a.submission}
                 published={a.published}

@@ -23,7 +23,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
-import { dtFormatter } from "../../../utils/time";
+import { formatDueDate } from "../../../utils/time";
 import { CollabIcon } from "./collab-icon";
 
 export interface AssignmentCardProps {
@@ -34,7 +34,7 @@ export interface AssignmentCardProps {
   name: string;
   createdAt: Date;
   availableAt: Date;
-  dueAt?: Date;
+  dueAt: Date | null;
   published?: boolean;
   submissions?: number;
   section?: {
@@ -130,7 +130,9 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
                 <Text fontSize="sm">
                   {props.for == "Teacher"
                     ? props.section?.name || "Section"
-                    : dtFormatter.format(props.availableAt)}
+                    : props.dueAt
+                      ? `Due ${formatDueDate(props.dueAt)}`
+                      : "No due date"}
                 </Text>
               </HStack>
             </HStack>
@@ -191,7 +193,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
           >
             <Text>
               {props.submission?.submittedAt
-                ? "Turned in"
+                ? "Submitted"
                 : props.submission?.startedAt
                   ? "In progress"
                   : "Not started"}

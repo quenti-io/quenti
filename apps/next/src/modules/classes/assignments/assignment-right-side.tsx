@@ -22,6 +22,7 @@ import { IconCircleCheck } from "@tabler/icons-react";
 import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
+import { formatDueDate } from "../../../utils/time";
 
 export const AssignmentRightSide = () => {
   const isTeacher = useIsClassTeacher();
@@ -183,16 +184,10 @@ const StudentSide = () => {
           }}
         >
           {assignment?.submission?.submittedAt ? "Submitted" : "Due"}{" "}
-          {Intl.DateTimeFormat("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          }).format(
-            new Date(
-              assignment?.submission?.submittedAt ?? assignment?.dueAt ?? 0,
-            ),
+          {formatDueDate(
+            assignment?.submission?.submittedAt ??
+              assignment?.dueAt ??
+              new Date(),
           )}
         </Text>
       </SkeletonText>
