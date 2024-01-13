@@ -1,26 +1,16 @@
-import Link from "@tiptap/extension-link";
-import Typography from "@tiptap/extension-typography";
-import Underline from "@tiptap/extension-underline";
 import { generateJSON } from "@tiptap/html";
-import StarterKit from "@tiptap/starter-kit";
 
 import { TRPCError } from "@trpc/server";
 
 import { isClassTeacherOrThrow } from "../../lib/queries/classes";
 import type { NonNullableUserContext } from "../../lib/types";
+import { SERIALIZABLE_EXTENSIONS } from "./common/editor";
 import type { TCreateAssignmentSchema } from "./create.schema";
 
 type CreateOptions = {
   ctx: NonNullableUserContext;
   input: TCreateAssignmentSchema;
 };
-
-export const SERIALIZABLE_EXTENSIONS = [
-  StarterKit,
-  Link,
-  Typography,
-  Underline,
-];
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
   await isClassTeacherOrThrow(input.classId, ctx.session.user.id, "mutation");

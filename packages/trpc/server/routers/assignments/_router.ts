@@ -9,6 +9,7 @@ import { ZCreateCollaborativeSchema } from "./create-collaborative.schema";
 import { ZCreateAssignmentSchema } from "./create.schema";
 import { ZDeleteAssignmentSchema } from "./delete.schema";
 import { ZEditCollabSchema } from "./edit-collab.schema";
+import { ZEditSchema } from "./edit.schema";
 import { ZFeedSchema } from "./feed.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZSetPublishedSchema } from "./set-published.schema";
@@ -18,6 +19,7 @@ type AssignmentsRouteHandlerCache = {
     get?: typeof import("./get.handler").getHandler;
     feed?: typeof import("./feed.handler").feedHandler;
     create?: typeof import("./create.handler").createHandler;
+    edit?: typeof import("./edit.handler").editHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
     ["set-published"]?: typeof import("./set-published.handler").setPublishedHandler;
     ["create-collaborative"]?: typeof import("./create-collaborative.handler").createCollaborativeHandler;
@@ -46,6 +48,10 @@ export const assignmentsRouter = createTRPCRouter({
       await loadHandler(HANDLER_CACHE, "create");
       return HANDLER_CACHE.handlers.create!({ ctx, input });
     }),
+  edit: teacherProcedure.input(ZEditSchema).mutation(async ({ ctx, input }) => {
+    await loadHandler(HANDLER_CACHE, "edit");
+    return HANDLER_CACHE.handlers.edit!({ ctx, input });
+  }),
   delete: teacherProcedure
     .input(ZDeleteAssignmentSchema)
     .mutation(async ({ ctx, input }) => {
