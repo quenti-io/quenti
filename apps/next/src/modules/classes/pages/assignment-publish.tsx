@@ -4,7 +4,7 @@ import React from "react";
 import { Heading, Stack } from "@chakra-ui/react";
 
 import { useAssignment } from "../../../hooks/use-assignment";
-import { extensions } from "../assignments/new/description-editor";
+import { extensions } from "../assignments/editor/description-editor";
 import { ClassWizardLayout } from "../class-wizard-layout";
 
 export const AssignmentPublish = () => {

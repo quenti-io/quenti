@@ -166,6 +166,10 @@ let config = {
       source: "/a/:id/:assignmentId",
       destination: "/classes/:id/assignments/:assignmentId",
     },
+    {
+      source: "/a/:id/:assignmentId/:path*",
+      destination: "/classes/:id/assignments/:assignmentId/:path*",
+    },
   ],
   productionBrowserSourceMaps: false,
 };

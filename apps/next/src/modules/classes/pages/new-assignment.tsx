@@ -12,12 +12,12 @@ import { Button, ButtonGroup, Flex, Skeleton, Stack } from "@chakra-ui/react";
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { useClass } from "../../../hooks/use-class";
 import { DatesSection } from "../assignments/editor/dates-section";
-import { TitleSectionArea } from "../assignments/editor/title-section-area";
 import {
   DescriptionEditor,
   extensions,
-} from "../assignments/new/description-editor";
-import { TypeSection } from "../assignments/new/type-section";
+} from "../assignments/editor/description-editor";
+import { TitleSectionArea } from "../assignments/editor/title-section-area";
+import { TypeSection } from "../assignments/editor/type-section";
 import { ClassWizardLayout } from "../class-wizard-layout";
 import { useProtectedRedirect } from "../use-protected-redirect";
 

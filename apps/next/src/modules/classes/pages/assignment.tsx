@@ -2,6 +2,7 @@ import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { Link } from "@quenti/components";
 import { HeadSeo } from "@quenti/components/head-seo";
 import { outfit } from "@quenti/lib/chakra-theme";
 import { api } from "@quenti/trpc";
@@ -46,7 +47,7 @@ import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { AssignmentRighSide } from "../assignments/assignment-right-side";
 import { CollabIcon } from "../assignments/collab-icon";
-import { extensions } from "../assignments/new/description-editor";
+import { extensions } from "../assignments/editor/description-editor";
 
 export const Assignment = () => {
   const router = useRouter();
@@ -215,6 +216,10 @@ export const Assignment = () => {
                           <MenuOption
                             icon={<IconEditCircle size={16} />}
                             label="Edit"
+                            as={Link}
+                            href={`/a/${class_?.id || ""}/${
+                              assignment?.id || ""
+                            }/edit`}
                             fontSize="sm"
                             py="6px"
                             onClick={() => {}}
