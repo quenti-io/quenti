@@ -9,6 +9,7 @@ import { api } from "@quenti/trpc";
 
 import {
   Box,
+  Button,
   Flex,
   GridItem,
   HStack,
@@ -32,6 +33,7 @@ import {
   IconDotsVertical,
   IconEditCircle,
   IconLink,
+  IconPlus,
   IconPointFilled,
   IconProgress,
   IconTrashX,
@@ -346,7 +348,7 @@ export const Assignment = () => {
           </Stack>
           <SimpleGrid columns={{ base: 1, sm: 2 }}>
             <GridItem>
-              {assignment?.studySet && (
+              {assignment?.studySet ? (
                 <StudySetCard
                   studySet={assignment.studySet}
                   collaborators={assignment.studySet.collaborators}
@@ -356,7 +358,21 @@ export const Assignment = () => {
                     image: null,
                   }}
                 />
-              )}
+              ) : assignment && isTeacher ? (
+                <Button
+                  w="full"
+                  h="150px"
+                  variant="outline"
+                  leftIcon={<IconPlus />}
+                  onClick={async () => {
+                    await router.push(
+                      `/a/${class_!.id}/${assignment.id}/study-set`,
+                    );
+                  }}
+                >
+                  Attach a study set
+                </Button>
+              ) : undefined}
               {!assignment && <GenericCard.Skeleton />}
             </GridItem>
           </SimpleGrid>
