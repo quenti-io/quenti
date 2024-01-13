@@ -140,6 +140,12 @@ export const EditAssignment = () => {
   const _sectionId = editMethods.watch("sectionId");
   const sectionDirty = _sectionId !== assignment?.section.id;
 
+  const { collabMinTerms: _minTerms, collabMaxTerms: _maxTerms } =
+    editMethods.watch("collab");
+  const collabDirty =
+    _minTerms !== assignment?.studySet?.collab?.minTermsPerUser ||
+    _maxTerms !== assignment?.studySet?.collab?.maxTermsPerUser;
+
   const editor = useEditor({
     extensions,
     editorProps: {
@@ -161,6 +167,7 @@ export const EditAssignment = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignment, editor]);
 
+  const apiEditCollab = api.assignments.editCollab.useMutation();
   const apiEdit = api.assignments.edit.useMutation({
     onSuccess: async () => {
       toast({
@@ -182,6 +189,15 @@ export const EditAssignment = () => {
       return;
     }
 
+    if (collabDirty) {
+      await apiEditCollab.mutateAsync({
+        id: assignment?.studySet?.collab?.id || "",
+        type: "Default",
+        minTermsPerUser: data.collab.collabMinTerms,
+        maxTermsPerUser: data.collab.collabMaxTerms,
+      });
+    }
+
     await apiEdit.mutateAsync({
       ...data,
       classId: id,
@@ -201,7 +217,7 @@ export const EditAssignment = () => {
           onClose={() => setConfirmSectionOpen(false)}
           heading="Change assignment section"
           body="Changing this assignment's section will reset all student submissions. Are you sure you want to continue?"
-          isLoading={apiEdit.isLoading}
+          isLoading={apiEdit.isLoading || apiEditCollab.isLoading}
           onConfirm={async () => {
             setConfirmSection(true);
             await editMethods.handleSubmit(onSubmit)();
@@ -236,7 +252,10 @@ export const EditAssignment = () => {
                       </Button>
                     </Skeleton>
                     <Skeleton rounded="lg" isLoaded={isLoaded}>
-                      <Button type="submit" isLoading={apiEdit.isLoading}>
+                      <Button
+                        type="submit"
+                        isLoading={apiEdit.isLoading || apiEditCollab.isLoading}
+                      >
                         Save changes
                       </Button>
                     </Skeleton>

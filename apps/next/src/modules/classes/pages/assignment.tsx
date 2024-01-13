@@ -38,6 +38,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
+import { ToastWrapper } from "../../../common/toast-wrapper";
 import { ConfirmModal } from "../../../components/confirm-modal";
 import { GenericCard } from "../../../components/generic-card";
 import { MenuOption } from "../../../components/menu-option";
@@ -85,7 +86,7 @@ export const Assignment = () => {
   const [publishOpen, setPublishOpen] = React.useState(false);
 
   return (
-    <>
+    <ToastWrapper>
       {assignment && class_ && (
         <HeadSeo
           title={`${assignment.title} - ${class_.name}`}
@@ -364,6 +365,6 @@ export const Assignment = () => {
           <AssignmentRightSide />
         </Stack>
       </Flex>
-    </>
+    </ToastWrapper>
   );
 };
