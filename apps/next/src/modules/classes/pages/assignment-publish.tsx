@@ -5,7 +5,6 @@ import React from "react";
 import { api } from "@quenti/trpc";
 
 import {
-  Box,
   Button,
   ButtonGroup,
   Flex,
@@ -80,14 +79,6 @@ export const AssignmentPublish = () => {
       description="You're almost done! Review your assignment and publish it to your class."
     >
       <Stack spacing="6">
-        <Box
-          h="2px"
-          bg="gray.200"
-          _dark={{
-            bg: "gray.700",
-          }}
-          rounded="full"
-        />
         <Stack spacing="8">
           <Stack spacing="6">
             <Stack spacing="4">
@@ -184,7 +175,7 @@ export const AssignmentPublish = () => {
           </SimpleGrid>
         </Stack>
       </Stack>
-      <Flex w="full" justifyContent="end">
+      <Flex w="full" mt="6">
         <ButtonGroup>
           <Skeleton isLoaded={isLoaded} rounded="lg">
             <Button

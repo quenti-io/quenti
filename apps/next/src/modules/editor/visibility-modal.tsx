@@ -38,6 +38,7 @@ export interface VisibilityModalProps {
   isOpen: boolean;
   onClose: () => void;
   visibility: StudySetVisibility;
+  currentClass?: string;
   noPrivate?: boolean;
   onChangeVisibility: (visibility: StudySetVisibility) => void;
   classesWithAccess?: string[];
@@ -48,6 +49,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
   isOpen,
   onClose,
   visibility,
+  currentClass,
   noPrivate,
   onChangeVisibility,
   classesWithAccess,
@@ -133,7 +135,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
                   <ToggleGroup.Tab onClick={() => onChangeVisibility("Class")}>
                     <VisibilityOption
                       name="Class"
-                      description="Only members of specific classes can view and study this set. It will be available to the class but hidden from your profile."
+                      description="Only members of specific classes can view and study this set. It will be available to the classes but hidden from your profile."
                       icon={<IconSchool size={20} />}
                       selected={visibility === "Class"}
                     />
@@ -144,6 +146,7 @@ export const VisibilityModal: React.FC<VisibilityModalProps> = ({
             {isTeacher && (
               <ClassSelectGroup
                 isOpen={visibility == "Class"}
+                currentClass={currentClass}
                 classesWithAccess={classesWithAccess}
                 onChangeClassesWithAccess={onChangeClassesWithAccess}
               />
@@ -192,12 +195,14 @@ const VisibilityOption: React.FC<VisbilityOptionProps> = ({
 
 interface ClassSelectGroupProps {
   isOpen: boolean;
+  currentClass?: string;
   classesWithAccess?: string[];
   onChangeClassesWithAccess?: (classes: string[]) => void;
 }
 
 const ClassSelectGroup: React.FC<ClassSelectGroupProps> = ({
   isOpen,
+  currentClass,
   classesWithAccess,
   onChangeClassesWithAccess,
 }) => {
@@ -253,6 +258,7 @@ const ClassSelectGroup: React.FC<ClassSelectGroupProps> = ({
             )}
           {(classes || [])
             .filter((c) => c.as == "Teacher")
+            .sort((c) => (c.id == currentClass ? -1 : 1))
             .map((class_) => (
               <GridItem key={class_.id}>
                 <ClassCard

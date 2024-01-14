@@ -48,6 +48,7 @@ export const AssignmentCollab = () => {
     >
       <Stack spacing="10">
         <CollabTermsSlider
+          isLoaded={isLoaded}
           minTerms={minTerms}
           maxTerms={maxTerms}
           onChange={(min, max) => {

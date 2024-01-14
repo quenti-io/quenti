@@ -14,6 +14,7 @@ import { SkeletonLabel } from "../../../../components/skeleton-label";
 import { useProtectedRedirect } from "../../use-protected-redirect";
 
 export interface CollabTermsSliderProps {
+  isLoaded?: boolean;
   minTerms: number;
   maxTerms: number;
   onChange: (min: number, max: number) => void;
@@ -23,8 +24,10 @@ export const CollabTermsSlider: React.FC<CollabTermsSliderProps> = ({
   minTerms,
   maxTerms,
   onChange,
+  isLoaded: propsIsLoaded,
 }) => {
-  const isLoaded = useProtectedRedirect();
+  const _isLoaded = useProtectedRedirect();
+  const isLoaded = propsIsLoaded !== undefined ? propsIsLoaded : _isLoaded;
 
   return (
     <Stack spacing="8">
@@ -71,8 +74,8 @@ export const CollabTermsSlider: React.FC<CollabTermsSliderProps> = ({
               }}
             />
           </RangeSliderTrack>
-          <Thumb index={0} value={minTerms} />
-          <Thumb index={1} value={maxTerms} />
+          <Thumb index={0} value={minTerms} isLoaded={isLoaded} />
+          <Thumb index={1} value={maxTerms} isLoaded={isLoaded} />
         </RangeSlider>
         <Flex
           w="full"
@@ -88,12 +91,11 @@ export const CollabTermsSlider: React.FC<CollabTermsSliderProps> = ({
   );
 };
 
-const Thumb: React.FC<{ index: number; value: number }> = ({
+const Thumb: React.FC<{ index: number; value: number; isLoaded: boolean }> = ({
   index,
   value,
+  isLoaded,
 }) => {
-  const isLoaded = useProtectedRedirect();
-
   return (
     <RangeSliderThumb
       boxSize={8}

@@ -32,6 +32,7 @@ import {
 import { visibilityIcon } from "../../../common/visibility-icon";
 import { AutoResizeTextarea } from "../../../components/auto-resize-textarea";
 import { SkeletonLabel } from "../../../components/skeleton-label";
+import { useAssignment } from "../../../hooks/use-assignment";
 import { useClass } from "../../../hooks/use-class";
 import { LanguageMenuWrapper } from "../../editor/language-menu";
 import { VisibilityModal } from "../../editor/visibility-modal";
@@ -60,7 +61,9 @@ export const AssignmentStudySet = () => {
   const router = useRouter();
   const id = router.query.id as string;
   const assignmentId = router.query.assignmentId as string;
+  const utils = api.useUtils();
 
+  useAssignment();
   const isLoaded = useProtectedRedirect();
   const { data: class_ } = useClass();
 
@@ -96,6 +99,7 @@ export const AssignmentStudySet = () => {
 
   const createCollaborative = api.assignments.createCollaborative.useMutation({
     onSuccess: async () => {
+      await utils.assignments.get.invalidate();
       await router.push(`/classes/${id}/assignments/${assignmentId}/collab`);
     },
   });
@@ -124,6 +128,7 @@ export const AssignmentStudySet = () => {
       <VisibilityModal
         noPrivate
         visibility={_visibility}
+        currentClass={id}
         onChangeVisibility={(v) => {
           if (v !== "Class") setVisibilityOpen(false);
           createMethods.setValue("visibility", v);
