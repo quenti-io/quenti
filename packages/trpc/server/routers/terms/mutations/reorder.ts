@@ -1,10 +1,17 @@
 import { Prisma, type PrismaClient } from "@quenti/prisma/client";
 
-export const reorder = async (prisma: PrismaClient, studySetId: string) => {
+export const reorder = async (
+  prisma: PrismaClient,
+  studySetId: string,
+  submissionId?: string,
+) => {
   // Sort all of the terms by rank, and update the ranks to be consecutive
   const terms = await prisma.term.findMany({
     where: {
       studySetId: studySetId,
+      ...(submissionId
+        ? { submissionId, ephemeral: true }
+        : { ephemeral: false }),
     },
     orderBy: {
       rank: "asc",

@@ -111,7 +111,7 @@ export default function TeachersOnboarding() {
                 <OnboardingMember
                   isLoaded={isLoaded}
                   isMe
-                  nameOrEmail={data?.me?.user.name}
+                  nameOrEmail={data?.me?.user.name || data?.me?.user.username}
                   image={data?.me?.user.image}
                   label="Teacher"
                 />
@@ -120,7 +120,7 @@ export default function TeachersOnboarding() {
                   .map((m) => (
                     <OnboardingMember
                       key={m.id}
-                      nameOrEmail={m.user.name}
+                      nameOrEmail={m.user.name || m.user.username}
                       image={m.user.image}
                       label="Teacher"
                     />

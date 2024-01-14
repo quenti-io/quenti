@@ -92,6 +92,9 @@ model User {
   classInvites   PendingClassInvite[]
   classBans      ClassBan[]
 
+  collabTerms     Term[]
+  collabStudySets StudySetCollaborator[]
+
   @@index([organizationId])
   @@index([type])
 }
@@ -190,39 +193,64 @@ model PendingOrganizationInvite {
 }
 
 model Class {
-  id             String  @id @default(cuid())
+  id             String   @id @default(cuid())
   name           String
   description    String
   orgId          String?
   logoUrl        String?
   logoHash       String?
+  // TODO: remove default once schema changes are merged
+  bannerColor    String   @default("#ffa54c")
   bannerUrl      String?
   bannerHash     String?
   cortexCategory String?
   cortexCourse   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   organization Organization?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
   members      ClassMembership[]
   invites      PendingClassInvite[]
+  joinCodes    ClassJoinCode[]
   sections     Section[]
   studySets    StudySetsOnClasses[]
   folders      FoldersOnClasses[]
   assignments  Assignment[]
   bans         ClassBan[]
 
+  accessableStudySets AllowedClassesOnStudySets[]
+
   @@index([orgId])
 }
 
 model Section {
-  id      String @id @default(cuid())
-  classId String
-  name    String
+  id        String   @id @default(cuid())
+  classId   String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   class       Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
   students    ClassMembership[]
   assignments Assignment[]
+  joinCode    ClassJoinCode?
+
+  accessableStudySets AllowedSectionsOnStudySets[]
 
   @@unique([classId, name])
+  @@index([classId])
+}
+
+model ClassJoinCode {
+  id        String   @id @default(cuid())
+  classId   String
+  sectionId String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+
+  class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
   @@index([classId])
 }
 
@@ -240,9 +268,13 @@ model ClassMembership {
   viewedAt  DateTime?
   sectionId String?
 
-  class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  section Section? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  class       Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  section     Section?          @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  preferences ClassPreferences?
+  submissions Submission[]
+
+  topicAssignments StudySetCollabTopicAssignee[]
 
   @@unique([classId, userId])
   @@unique([email, classId])
@@ -259,7 +291,6 @@ model ClassBan {
   email   String
 
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
-  // The ban still applies even if the user deletes their account
   user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@unique([classId, userId])
@@ -285,22 +316,62 @@ model PendingClassInvite {
   @@index([email])
 }
 
+model ClassPreferences {
+  id           String @id @default(cuid())
+  membershipId String @unique
+
+  bannerColor String?
+
+  membership ClassMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId])
+}
+
+enum AssignmentType {
+  Collab
+}
+
 model Assignment {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   classId     String
   sectionId   String
-  name        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  availableAt DateTime?
+  type        AssignmentType
+  title       String         @db.VarChar(255)
+  description Json?
+  templateId  String?
+  studySetId  String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  availableAt DateTime
   dueAt       DateTime?
+  lockedAt    DateTime?
+  published   Boolean        @default(false)
 
-  class     Class                    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  section   Section                  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  studySets StudySetsOnAssignments[]
+  class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  section     Section      @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  submissions Submission[]
+  studySet    StudySet?
 
+  @@unique([id, classId])
   @@index([classId])
   @@index([sectionId])
+  @@index([studySetId])
+}
+
+model Submission {
+  id           String    @id @default(cuid())
+  memberId     String
+  assignmentId String
+  startedAt    DateTime  @default(now())
+  savedAt      DateTime  @default(now())
+  submittedAt  DateTime?
+
+  member     ClassMembership @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  assignment Assignment      @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  terms      Term[]
+
+  @@index([memberId])
+  @@index([assignmentId])
 }
 
 model WhitelistedEmail {
@@ -309,34 +380,131 @@ model WhitelistedEmail {
 }
 
 model StudySet {
-  id                 String                   @id @default(cuid())
+  id                 String             @id @default(cuid())
   userId             String
-  user               User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  created            Boolean                  @default(true)
-  createdAt          DateTime                 @default(now())
-  savedAt            DateTime                 @default(now()) @updatedAt
-  title              String                   @db.VarChar(255)
-  description        String                   @db.VarChar(2000)
-  tags               Json                     @default("[]")
-  visibility         StudySetVisibility       @default(Public)
-  wordLanguage       String                   @default("en")
-  definitionLanguage String                   @default("en")
-  cortexStale        Boolean                  @default(true)
-  terms              Term[]
-  containers         Container[]
-  folders            StudySetsOnFolders[]
-  leaderboards       Leaderboard[]
-  classes            StudySetsOnClasses[]
-  assignments        StudySetsOnAssignments[]
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignmentId       String?            @unique
+  assignment         Assignment?        @relation(fields: [assignmentId], references: [id], onDelete: SetNull)
+  created            Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  savedAt            DateTime           @default(now()) @updatedAt
+  type               StudySetType       @default(Default)
+  title              String             @db.VarChar(255)
+  description        String             @db.VarChar(2000)
+  tags               Json               @default("[]")
+  visibility         StudySetVisibility @default(Public)
+  wordLanguage       String             @default("en")
+  definitionLanguage String             @default("en")
+  cortexStale        Boolean            @default(true)
+
+  collab       StudySetCollab?
+  terms        Term[]
+  containers   Container[]
+  folders      StudySetsOnFolders[]
+  leaderboards Leaderboard[]
+
+  classesWithAccess  AllowedClassesOnStudySets[]
+  sectionsWithAccess AllowedSectionsOnStudySets[]
+  setPinnedInClasses StudySetsOnClasses[]
+  collaborators      StudySetCollaborator[]
 
   @@unique([id, userId])
   @@index([userId])
+}
+
+model StudySetCollaborator {
+  id         String   @id @default(cuid())
+  studySetId String
+  userId     String
+  createdAt  DateTime @default(now())
+
+  studySet StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([studySetId, userId])
+  @@index([studySetId])
+  @@index([userId])
+}
+
+model StudySetCollab {
+  id              String             @id @default(cuid())
+  studySetId      String             @unique
+  type            StudySetCollabType
+  minTermsPerUser Int?
+  maxTermsPerUser Int?
+
+  studySet StudySet              @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  topics   StudySetCollabTopic[]
+}
+
+enum StudySetCollabType {
+  Default
+  Topic
+}
+
+model StudySetCollabTopic {
+  id          String  @id @default(cuid())
+  collabId    String
+  topic       String  @db.VarChar(255)
+  description String? @db.VarChar(2000)
+  rank        Int
+
+  minTerms Int
+  maxTerms Int
+
+  collab   StudySetCollab                @relation(fields: [collabId], references: [id], onDelete: Cascade)
+  assigned StudySetCollabTopicAssignee[]
+  terms    Term[]
+
+  @@index([collabId])
+}
+
+model StudySetCollabTopicAssignee {
+  id       String @id @default(cuid())
+  topicId  String
+  memberId String
+  minTerms Int
+  maxTerms Int
+
+  topic  StudySetCollabTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  member ClassMembership     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([topicId, memberId])
+  @@index([memberId])
+}
+
+enum StudySetType {
+  Default
+  Collab
 }
 
 enum StudySetVisibility {
   Private
   Unlisted
   Public
+  Class
+}
+
+model AllowedClassesOnStudySets {
+  studySetId String
+  classId    String
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, classId])
+  @@index([studySetId])
+  @@index([classId])
+}
+
+model AllowedSectionsOnStudySets {
+  studySetId String
+  sectionId  String
+  studySet   StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  section    Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@id([studySetId, sectionId])
+  @@index([studySetId])
+  @@index([sectionId])
 }
 
 model Folder {
@@ -350,7 +518,8 @@ model Folder {
   studySets    StudySetsOnFolders[]
   containers   Container[]
   leaderboards Leaderboard[]
-  classes      FoldersOnClasses[]
+
+  folderPinnedInClasses FoldersOnClasses[]
 
   @@unique([id, userId])
   @@unique([userId, slug])
@@ -389,34 +558,35 @@ model FoldersOnClasses {
   @@index([classId])
 }
 
-model StudySetsOnAssignments {
-  studySetId   String
-  assignmentId String
-  studySet     StudySet   @relation(fields: [studySetId], references: [id], onDelete: Cascade)
-  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-
-  @@id([studySetId, assignmentId])
-  @@index([studySetId])
-  @@index([assignmentId])
-}
-
 model Term {
-  id                 String   @id @default(cuid())
-  word               String   @db.VarChar(1000)
-  definition         String   @db.VarChar(1000)
+  id                 String  @id @default(cuid())
+  word               String  @db.VarChar(1000)
+  definition         String  @db.VarChar(1000)
   wordRichText       Json?
   definitionRichText Json?
-  assetUrl           String?  @db.VarChar(255)
+  assetUrl           String? @db.VarChar(255)
   rank               Int
   studySetId         String
-  studySet           StudySet @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  ephemeral          Boolean @default(false)
+  authorId           String?
+  topicId            String?
+  submissionId       String?
+
+  studySet   StudySet             @relation(fields: [studySetId], references: [id], onDelete: Cascade)
+  user       User?                @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  topic      StudySetCollabTopic? @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  submission Submission?          @relation(fields: [submissionId], references: [id], onDelete: SetNull)
 
   starredTerms   StarredTerm[]
   studiableTerms StudiableTerm[]
   distractors    Distractor[]    @relation("distractor-term-id")
 
   @@unique([id, studySetId])
+  @@unique([id, submissionId])
   @@index([studySetId])
+  @@index([authorId])
+  @@index([topicId])
+  @@index([submissionId])
 }
 
 enum DistractorType {

@@ -9,10 +9,12 @@ import { IconPointFilled, IconProgress } from "@tabler/icons-react";
 import { visibilityIcon } from "../common/visibility-icon";
 import { plural } from "../utils/string";
 import { GenericCard } from "./generic-card";
+import { GenericCollaboratorsFooter } from "./generic-collaborators-footer";
 
 export interface StudySetCardProps {
-  studySet: Pick<StudySet, "id" | "title" | "visibility">;
+  studySet: Pick<StudySet, "id" | "title" | "visibility" | "type">;
   numTerms: number;
+  collaborators?: { total: number; avatars: string[] };
   draft?: boolean;
   user: {
     username: string | null;
@@ -26,6 +28,7 @@ export interface StudySetCardProps {
 export const StudySetCard: React.FC<StudySetCardProps> = ({
   studySet,
   numTerms,
+  collaborators,
   draft,
   user,
   verified = false,
@@ -57,6 +60,14 @@ export const StudySetCard: React.FC<StudySetCardProps> = ({
           : undefined
       }
       user={user}
+      bottom={
+        studySet.type == "Collab" ? (
+          <GenericCollaboratorsFooter
+            avatars={collaborators?.avatars || []}
+            total={collaborators?.total || 0}
+          />
+        ) : undefined
+      }
       verified={verified}
       removable={removable}
       onRemove={onRemove}

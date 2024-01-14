@@ -11,7 +11,7 @@ type SetData = RouterOutputs["studySets"]["byId"];
 type FolderData = RouterOutputs["folders"]["get"];
 
 type SetFolderIntersection = Widen<SetData | FolderData> & {
-  type: "set" | "folder";
+  entityType: "set" | "folder";
 };
 
 export const useSetFolderUnison = (authed?: boolean) => {
@@ -22,7 +22,7 @@ export const useSetFolderUnison = (authed?: boolean) => {
   const _data = set ?? folder;
   const data = {
     ..._data,
-    type: set ? "set" : "folder",
+    entityType: set ? "set" : "folder",
   } as SetFolderIntersection;
 
   if (!data) throw new Error("Missing either Set or Folder contexts in tree!");

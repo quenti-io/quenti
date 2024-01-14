@@ -1,29 +1,24 @@
 {
   "name": "quenti-monorepo",
   "private": true,
-  "workspaces": [
-    "apps/next",
-    "apps/website",
-    "packages/*"
-  ],
   "scripts": {
     "build": "dotenv -- turbo build --filter @quenti/next...",
     "clean": "find . -name node_modules -o -name .next -o -name .turbo -o -name dist -type d -prune | xargs rm -rf",
     "clean:workspaces": "turbo clean",
-    "db:setup": "dotenv -- yarn prisma seed",
+    "db:setup": "dotenv -- bun prisma seed",
     "db:generate": "dotenv -- turbo db:generate",
     "db:push": "dotenv -- turbo db:push db:generate",
-    "db:studio": "dotenv -- yarn -F db dev",
+    "db:studio": "dotenv -- bun -F db dev",
     "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\"",
     "lint": "dotenv -- turbo lint",
     "lint:fix": "turbo lint:fix",
     "type-check": "turbo type-check",
     "dev": "dotenv -- turbo dev --scope \"@quenti/next\"",
     "start": "dotenv -- turbo start --scope \"@quenti/next\"",
-    "next": "dotenv -- yarn workspace @quenti/next",
-    "website": "dotenv -- yarn workspace @quenti/website",
-    "prisma": "dotenv -- yarn workspace @quenti/prisma",
-    "drizzle": "dotenv -- yarn workspace @quenti/drizzle",
+    "next": "dotenv -- bun run --cwd apps/next",
+    "website": "dotenv -- bun run --cwd apps/website",
+    "prisma": "dotenv -- bun run --cwd packages/prisma",
+    "drizzle": "dotenv -- bun run --cwd packages/drizzle",
     "install-vercel": "sh ./install-vercel.sh",
     "email-dev": "dotenv -- npx email dev --dir packages/emails/templates --port 3001",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts",
@@ -37,7 +32,7 @@
     "eslint-config-turbo": "^1.11.1",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-unused-imports": "^3.0.0",
-    "turbo": "^1.11.1"
+    "turbo": "latest"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
@@ -60,5 +55,10 @@
     "node": ">=18.x",
     "npm": ">=7.0.0"
   },
-  "packageManager": "yarn@4.0.1"
+  "packageManager": "bun@1.0.2",
+  "workspaces": [
+    "apps/next",
+    "apps/website",
+    "packages/*"
+  ]
 }

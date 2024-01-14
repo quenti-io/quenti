@@ -1,3 +1,4 @@
+import { strip } from "@quenti/lib/strip";
 import type { StudiableTerm, Term } from "@quenti/prisma/client";
 
 import { TRPCError } from "@trpc/server";
@@ -43,11 +44,32 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
             select: {
               id: true,
               title: true,
+              type: true,
               user: true,
               visibility: true,
               _count: {
                 select: {
-                  terms: true,
+                  terms: {
+                    where: {
+                      ephemeral: false,
+                    },
+                  },
+                  collaborators: true,
+                },
+              },
+              collaborators: {
+                take: 5,
+                select: {
+                  user: {
+                    select: {
+                      image: true,
+                    },
+                  },
+                },
+              },
+              classesWithAccess: {
+                select: {
+                  classId: true,
                 },
               },
             },
@@ -65,6 +87,20 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   const isMyFolder = folder.userId === ctx.session.user.id;
   const studySets = folder.studySets.map((s) => s.studySet);
+
+  const inClassIds = new Array<string>();
+  if (studySets.find((s) => s.visibility == "Class")) {
+    const myClasses = await ctx.prisma.classMembership.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        classId: true,
+      },
+    });
+    inClassIds.push(...myClasses.map((c) => c.classId));
+  }
+
   const studySetsICanSee = studySets.filter((s) => {
     if (s.visibility === "Public") {
       return true;
@@ -75,6 +111,9 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     }
     if (s.visibility === "Private") {
       return s.user.id === ctx.session.user.id;
+    }
+    if (s.visibility === "Class") {
+      return s.classesWithAccess.some((c) => inClassIds.includes(c.classId));
     }
 
     return false;
@@ -137,6 +176,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         studySetId: {
           in: studySetsICanSee.map((s) => s.id),
         },
+        ephemeral: false,
       },
     });
 
@@ -186,12 +226,19 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       verified: user.verified,
     },
     sets: studySetsICanSee.map((s) => ({
-      ...s,
+      ...strip({
+        ...s,
+        classesWithAccess: undefined,
+      }),
       user: {
         id: s.user.id,
         username: s.user.username,
         image: s.user.image,
         verified: s.user.verified,
+      },
+      collaborators: {
+        total: s._count.collaborators,
+        avatars: s.collaborators.map((c) => c.user.image || ""),
       },
     })),
     container: {

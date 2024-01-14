@@ -30,7 +30,7 @@ import { MatchSummaryFeedback } from "./match-summary-feedback";
 
 export const MatchSummary = () => {
   const router = useRouter();
-  const { id, title, type } = useSetFolderUnison();
+  const { id, title, entityType } = useSetFolderUnison();
   const rootUrl = useEntityRootUrl();
 
   const t = router.query.t as string;
@@ -130,7 +130,7 @@ export const MatchSummary = () => {
             href={rootUrl}
             colorScheme="gray"
           >
-            Back to {type === "folder" ? "folder" : "set"}
+            Back to {entityType === "folder" ? "folder" : "set"}
           </Button>
           <Button
             onClick={async () => {

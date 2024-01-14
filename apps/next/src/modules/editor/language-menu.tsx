@@ -47,11 +47,12 @@ export interface LanguageMenuProps {
   onClose: () => void;
   selected: Language;
   onChange: (l: Language) => void;
+  isLazy?: boolean;
 }
 
 export const LanguageMenuWrapper: React.FC<
   React.PropsWithChildren<LanguageMenuProps>
-> = ({ isOpen, onClose, selected, onChange, children }) => {
+> = ({ isOpen, onClose, selected, onChange, isLazy, children }) => {
   const allLanguages = Object.entries(languages) as [Language, string][];
   const [query, setQuery] = React.useState("");
 
@@ -130,6 +131,7 @@ export const LanguageMenuWrapper: React.FC<
       }}
       onClose={onClose}
       initialFocusRef={inputRef}
+      isLazy={isLazy}
     >
       {children}
       <PopoverContent

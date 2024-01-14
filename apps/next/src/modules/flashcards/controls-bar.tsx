@@ -23,7 +23,7 @@ export const ControlsBar = ({ onSettingsClick }: ControlsBarProps) => {
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const enableCardsSorting = useContainerContext((s) => s.enableCardsSorting);
 
-  const { id, type } = useSetFolderUnison();
+  const { id, entityType } = useSetFolderUnison();
   const setShuffle = api.container.setShuffle.useMutation({
     onSuccess: () => {
       if (enableCardsSorting) setIsDirty(true);
@@ -56,7 +56,7 @@ export const ControlsBar = ({ onSettingsClick }: ControlsBarProps) => {
               if (authed)
                 setShuffle.mutate({
                   entityId: id,
-                  type: type == "set" ? "StudySet" : "Folder",
+                  type: entityType == "set" ? "StudySet" : "Folder",
                   shuffle: !shuffle,
                 });
             }}

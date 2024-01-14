@@ -27,6 +27,51 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     });
   }
 
+  if (input.visibility == "Class") {
+    if (ctx.session.user.type != "Teacher")
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+      });
+
+    const existing = await ctx.prisma.allowedClassesOnStudySets.findFirst({
+      where: {
+        studySetId: input.id,
+      },
+      select: {
+        classId: true,
+      },
+    });
+
+    if (!existing) {
+      const firstTeacherClass = await ctx.prisma.classMembership.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          type: "Teacher",
+        },
+        select: {
+          class: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      if (!firstTeacherClass)
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "No classes found",
+        });
+
+      await ctx.prisma.allowedClassesOnStudySets.create({
+        data: {
+          classId: firstTeacherClass.class.id,
+          studySetId: input.id,
+        },
+      });
+    }
+  }
+
   const studySet = await ctx.prisma.studySet.update({
     where: {
       id_userId: {

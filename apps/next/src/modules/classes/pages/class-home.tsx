@@ -9,8 +9,9 @@ import { FolderCard } from "../../../components/folder-card";
 import { StudySetCard } from "../../../components/study-set-card";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
-import { ClassEmpty } from "../class-empty";
-import { EntityGroup } from "../entity-group";
+import { EmptyMessage } from "../empty-message";
+import { EntityGroup } from "../home/entity-group";
+import { InviteBanner } from "../home/invite-banner";
 
 export const ClassHome = () => {
   const utils = api.useUtils();
@@ -60,7 +61,7 @@ export const ClassHome = () => {
         onClose={() => setAddFoldersOpen(false)}
         entities={(recentFolders.data ?? []).map((f) => ({
           ...f,
-          type: "folder",
+          entityType: "folder",
           numItems: f._count.studySets,
         }))}
         onAdd={(ids) =>
@@ -79,7 +80,7 @@ export const ClassHome = () => {
         onClose={() => setAddSetsOpen(false)}
         entities={(recentSets.data ?? []).map((s) => ({
           ...s,
-          type: "set",
+          entityType: "set",
           numItems: s._count.terms,
           slug: "",
         }))}
@@ -95,6 +96,7 @@ export const ClassHome = () => {
         isAddLoading={addEntities.isLoading}
       />
       <Stack spacing="6">
+        {isTeacher && !data?.students && <InviteBanner />}
         {(!data || !!data.folders.length || isTeacher) && (
           <EntityGroup
             heading="Folders"
@@ -141,6 +143,7 @@ export const ClassHome = () => {
                   numTerms={studySet._count.terms}
                   user={studySet.user}
                   removable={isTeacher}
+                  collaborators={studySet.collaborators}
                   onRemove={() =>
                     removeEntity.mutate({
                       classId: data.id,
@@ -156,7 +159,7 @@ export const ClassHome = () => {
         {data &&
           !isTeacher &&
           !data.folders.length &&
-          !data.studySets.length && <ClassEmpty />}
+          !data.studySets.length && <EmptyMessage />}
       </Stack>
     </>
   );

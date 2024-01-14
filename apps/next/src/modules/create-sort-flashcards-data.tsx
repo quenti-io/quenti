@@ -1,7 +1,6 @@
 import React from "react";
 
-import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
-import type { Term } from "@quenti/prisma/client";
+import type { FacingTerm, StudiableTerm } from "@quenti/interfaces";
 
 import { RootFlashcardContext } from "../components/root-flashcard-wrapper";
 import { queryEventChannel } from "../events/query";
@@ -29,7 +28,7 @@ export const CreateSortFlashcardsData: React.FC<React.PropsWithChildren> = ({
       StudiableTerm,
       "id" | "correctness" | "appearedInRound" | "incorrectCount"
     >[],
-    terms: Term[],
+    terms: FacingTerm[],
     termOrder: string[],
     studyStarred: boolean,
   ) => {

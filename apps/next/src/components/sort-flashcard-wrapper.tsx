@@ -17,7 +17,7 @@ import { SortFlashcardProgress } from "./sort-flashcard-progress";
 import { SortableShortcutLayer } from "./sortable-shortcut-layer";
 
 export const SortFlashcardWrapper = () => {
-  const { id, container, type } = useSetFolderUnison();
+  const { id, container, entityType } = useSetFolderUnison();
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const { h, editTerm, starTerm } = React.useContext(RootFlashcardContext);
   const controls = useAnimationControls();
@@ -156,7 +156,7 @@ export const SortFlashcardWrapper = () => {
     void (async () => {
       await apiCompleteCardsRound.mutateAsync({
         entityId: id,
-        type: type == "set" ? "StudySet" : "Folder",
+        type: entityType == "set" ? "StudySet" : "Folder",
       });
     })();
   };
@@ -165,7 +165,7 @@ export const SortFlashcardWrapper = () => {
     void (async () => {
       await apiResetCardsProgress.mutateAsync({
         entityId: id,
-        type: type == "set" ? "StudySet" : "Folder",
+        type: entityType == "set" ? "StudySet" : "Folder",
       });
     })();
   };

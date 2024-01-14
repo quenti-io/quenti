@@ -6,6 +6,7 @@ import { env } from "@quenti/env/client";
 import { api } from "@quenti/trpc";
 
 import {
+  Avatar,
   Button,
   ButtonGroup,
   Divider,
@@ -68,10 +69,13 @@ export const ProfileInfo = () => {
       <Stack spacing={8}>
         <HStack spacing="4">
           <Skeleton rounded="full" isLoaded={!!session!.user} minW="54px">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Avatar
               src={image || ""}
-              alt="Avatar"
+              bg="gray.200"
+              _dark={{
+                bg: "gray.700",
+              }}
+              icon={<></>}
               width={54}
               height={54}
               className="highlight-block"

@@ -129,12 +129,20 @@ export const components = {
     },
   },
   Popover: {
-    baseStyle: {
+    baseStyle: ({ colorMode }: StyleFunctionProps) => ({
       popper: {
         width: "fit-content",
         maxWidth: "fit-content",
       },
-    },
+      content: {
+        background: colorMode == "light" ? "white" : "gray.750",
+        borderColor: colorMode == "light" ? "gray.100" : "gray.700",
+        shadow: "md",
+      },
+      // content: ({ colorMode }: StyleFunctionProps) => ({
+      //   background: "white",
+      // }),
+    }),
   },
   Input: {
     baseStyle: {

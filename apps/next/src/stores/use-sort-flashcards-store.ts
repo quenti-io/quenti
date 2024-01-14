@@ -2,12 +2,11 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-import type { StudiableTerm } from "@quenti/interfaces/studiable-term";
-import type { Term } from "@quenti/prisma/client";
+import type { FacingTerm, StudiableTerm } from "@quenti/interfaces";
 
 export interface SortFlashcardsStoreProps {
   studiableTerms: StudiableTerm[];
-  allTerms: Term[];
+  allTerms: FacingTerm[];
   termsThisRound: StudiableTerm[];
   index: number;
   currentRound: number;
@@ -18,7 +17,7 @@ interface SortFlashcardsState extends SortFlashcardsStoreProps {
   initialize: (
     round: number,
     studiableTerms: StudiableTerm[],
-    allTerms: Term[],
+    allTerms: FacingTerm[],
   ) => void;
   markStillLearning: (termId: string) => void;
   markKnown: (termId: string) => void;

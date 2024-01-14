@@ -17,7 +17,7 @@ export const setImageHandler = async ({ ctx, input }: SetImageOptions) => {
   await rateLimitOrThrowMultiple({
     type: RateLimitType.Fast,
     identifiers: [
-      `terms:set-image-user-id${ctx.session.user.id}`,
+      `terms:set-image-user-id-${ctx.session.user.id}`,
       `terms:set-image-ip-${getIp(ctx.req)}`,
     ],
   });

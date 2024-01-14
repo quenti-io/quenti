@@ -2,6 +2,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import React from "react";
 
 import { Modal } from "@quenti/components/modal";
+import type { FacingTerm } from "@quenti/interfaces";
 import {
   type EditorTerm,
   editorInput,
@@ -9,7 +10,6 @@ import {
   hasRichText,
   richTextToHtml,
 } from "@quenti/lib/editor";
-import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import { Box, Button, ButtonGroup, Stack } from "@chakra-ui/react";
@@ -26,7 +26,7 @@ import { editorConfig } from "../modules/editor/editor-config";
 import { PhotoView } from "./photo-view/photo-view";
 
 export interface EditTermModalProps {
-  term: Term | null;
+  term: FacingTerm | null;
   isOpen: boolean;
   onClose: () => void;
   onDefinition: boolean;
@@ -39,7 +39,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   onDefinition,
 }) => {
   const utils = api.useUtils();
-  const { type } = useSetFolderUnison();
+  const { entityType } = useSetFolderUnison();
 
   const [termAssetUrl, setTermAssetUrl] = React.useState<string | null>(null);
   const [cachedAssetUrl, setCachedAssetUrl] = React.useState<string | null>(
@@ -91,7 +91,7 @@ export const EditTermModal: React.FC<EditTermModalProps> = ({
   const edit = api.terms.edit.useMutation({
     async onSuccess() {
       onClose();
-      if (type == "set") {
+      if (entityType == "set") {
         await utils.studySets.invalidate();
       } else {
         await utils.folders.invalidate();

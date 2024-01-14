@@ -81,7 +81,7 @@ export const addEntitiesHandler = async ({
     ) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: "Cannot add other users' private study sets to a folder",
+        message: "Cannot add other users' private study sets to a class",
       });
     }
 

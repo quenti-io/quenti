@@ -25,7 +25,7 @@ const Flashcards = () => {
       <LazyWrapper>
         <EditorGlobalStyles />
         <TermImageLayer />
-        <HydrateSetData isPublic placeholder={<FlashcardsLoading />}>
+        <HydrateSetData isPublic placeholder={<FlashcardsLoading />} withCollab>
           <FlashcardsSettingsModal
             isOpen={settingsOpen}
             onClose={() => setSettingsOpen(false)}

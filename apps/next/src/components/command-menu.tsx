@@ -7,7 +7,7 @@ import { avatarUrl } from "@quenti/lib/avatar";
 import { outfit } from "@quenti/lib/chakra-theme";
 import { APP_URL } from "@quenti/lib/constants/url";
 import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
-import type { User } from "@quenti/prisma/client";
+import type { StudySetType, User } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import {
@@ -34,16 +34,17 @@ import {
   IconCloudDownload,
   IconFolder,
   IconFolderPlus,
+  IconGhost3,
   IconHome,
   IconLink,
   IconMoon,
   IconPlus,
+  IconProgress,
   IconSchool,
   IconSettings,
   IconSun,
   IconUser,
 } from "@tabler/icons-react";
-import { IconProgress } from "@tabler/icons-react";
 
 import { menuEventChannel } from "../events/menu";
 import { useDevActions } from "../hooks/use-dev-actions";
@@ -61,8 +62,10 @@ type EntityType = "set" | "folder";
 interface Entity {
   id: string;
   name: string;
-  type: EntityType;
+  entityType: EntityType;
   author: Pick<User, "username" | "image">;
+  type?: StudySetType;
+  collaborators?: string[];
   viewedAt: Date;
 }
 
@@ -143,9 +146,11 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           entity: {
             id: set.id,
             name: set.title,
-            type: "set",
+            entityType: "set",
+            type: set.type,
             author: set.user,
             viewedAt: set.viewedAt,
+            collaborators: set.collaborators?.avatars,
           },
           shouldShow: () => !window.location.pathname.startsWith(`/${set.id}`),
         });
@@ -166,7 +171,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           entity: {
             id: folder.id,
             name: folder.title,
-            type: "folder",
+            entityType: "folder",
             author: folder.user,
             viewedAt: folder.viewedAt,
           },
@@ -185,7 +190,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
           entity: {
             id: draft.id,
             name: draft.title,
-            type: "set",
+            entityType: "set",
             author: draft.user,
             viewedAt: draft.savedAt,
           },
@@ -478,7 +483,9 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({
                 icon={o.icon}
                 name={o.name}
                 label={o.label}
+                type={o.entity?.type}
                 author={o.entity?.author}
+                collaborators={o.entity?.collaborators}
                 resultsRef={resultsRef}
                 selectionIndex={selectionIndex}
                 setSelectionIndex={setSelectionIndex}
@@ -499,7 +506,9 @@ interface OptionCompProps {
   index: number;
   icon: React.ReactNode;
   name: string;
+  type?: StudySetType;
   author?: Pick<User, "username" | "image">;
+  collaborators?: string[];
   label?: string;
   resultsRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
   selectionIndex: number;
@@ -514,7 +523,9 @@ const OptionComp: React.FC<OptionCompProps> = ({
   index,
   icon,
   name,
+  type,
   author,
+  collaborators,
   label,
   resultsRef,
   selectionIndex,
@@ -578,7 +589,7 @@ const OptionComp: React.FC<OptionCompProps> = ({
         >
           {name}
         </Text>
-        {author && (
+        {author && type == "Default" ? (
           <HStack>
             <Avatar
               src={avatarUrl(author)}
@@ -589,6 +600,58 @@ const OptionComp: React.FC<OptionCompProps> = ({
               {author.username}
             </Text>
           </HStack>
+        ) : type == "Collab" ? (
+          !!collaborators?.length ? (
+            <HStack spacing="0">
+              <svg
+                width="0"
+                height="0"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <mask id="avatarClip">
+                    <circle cx="8" cy="8" r="8" fill="white" />
+                    <circle cx="22" cy="8" r="10" fill="black" />
+                  </mask>
+                  <mask id="defaultAvatar">
+                    <circle cx="8" cy="8" r="8" fill="white" />
+                  </mask>
+                </defs>
+              </svg>
+              {collaborators.map((c, i) => (
+                // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+                <Avatar
+                  key={i}
+                  src={c}
+                  width="16px"
+                  height="16px"
+                  bg="gray.300"
+                  _dark={{
+                    bg: "gray.600",
+                  }}
+                  icon={<></>}
+                  style={{
+                    borderRadius: 0,
+                    width: "16px",
+                    height: "16px",
+                    marginLeft: i != 0 ? "-2px" : 0,
+                    mask:
+                      i < collaborators.length - 1
+                        ? "url(#avatarClip)"
+                        : "url(#defaultAvatar)",
+                  }}
+                />
+              ))}
+            </HStack>
+          ) : (
+            <HStack spacing="1" color={baseText}>
+              <IconGhost3 size={16} />
+              <Text fontSize="xs">No collaborators yet</Text>
+            </HStack>
+          )
+        ) : (
+          ""
         )}
         {label && (
           <Text fontSize="xs" color={baseText}>

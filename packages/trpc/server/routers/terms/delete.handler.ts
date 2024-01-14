@@ -21,7 +21,11 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
     include: {
       _count: {
         select: {
-          terms: true,
+          terms: {
+            where: {
+              ephemeral: false,
+            },
+          },
         },
       },
     },
@@ -45,6 +49,7 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
         id: input.termId,
         studySetId: input.studySetId,
       },
+      ephemeral: false,
     },
     select: {
       id: true,
