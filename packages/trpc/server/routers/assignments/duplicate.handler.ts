@@ -57,6 +57,7 @@ export const duplicateHandler = async ({ ctx, input }: DuplicateOptions) => {
     where: {
       classId: input.classId,
       id: {
+        not: assignment.sectionId,
         in: input.sectionIds,
       },
     },
@@ -68,9 +69,13 @@ export const duplicateHandler = async ({ ctx, input }: DuplicateOptions) => {
   await ctx.prisma.assignment.createMany({
     data: sections.map(({ id }) => ({
       ...assignment,
+      id: undefined,
       description: assignment.description ?? undefined,
       sectionId: id,
       published: false,
+      createdAt: undefined,
+      updatedAt: undefined,
+      studySet: undefined,
       studySetId: null,
     })),
   });
@@ -80,6 +85,7 @@ export const duplicateHandler = async ({ ctx, input }: DuplicateOptions) => {
   const createdAssignments = await ctx.prisma.assignment.findMany({
     where: {
       sectionId: {
+        not: assignment.sectionId,
         in: input.sectionIds,
       },
     },
@@ -91,8 +97,11 @@ export const duplicateHandler = async ({ ctx, input }: DuplicateOptions) => {
 
   // Create the study set containers first
   await ctx.prisma.studySet.createMany({
-    data: createdAssignments.map(({ id }) => ({
+    data: createdIds.map((id) => ({
       ...assignment.studySet!,
+      classesWithAccess: undefined,
+      terms: undefined,
+      collab: undefined,
       cortexStale: true,
       userId: ctx.session.user.id,
       assignmentId: id,

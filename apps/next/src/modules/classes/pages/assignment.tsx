@@ -32,6 +32,7 @@ import {
   IconCircleCheck,
   IconCircleCheckFilled,
   IconCircleOff,
+  IconCopy,
   IconDotsVertical,
   IconEditCircle,
   IconLink,
@@ -54,6 +55,7 @@ import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { AssignmentRightSide } from "../assignments/assignment-right-side";
 import { CollabIcon } from "../assignments/collab-icon";
+import { DuplicateAssignmentModal } from "../assignments/duplicate-assignment-modal";
 import { extensions } from "../assignments/editor/description-editor";
 import { useReadonlyEditor } from "../assignments/editor/use-readonly-editor";
 
@@ -105,6 +107,7 @@ export const Assignment = () => {
 
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [publishOpen, setPublishOpen] = React.useState(false);
+  const [duplicateOpen, setDuplicateOpen] = React.useState(false);
 
   return (
     <ToastWrapper>
@@ -115,6 +118,12 @@ export const Assignment = () => {
             noindex: true,
             nofollow: true,
           }}
+        />
+      )}
+      {isTeacher && (
+        <DuplicateAssignmentModal
+          isOpen={duplicateOpen}
+          onClose={() => setDuplicateOpen(false)}
         />
       )}
       <ConfirmModal
@@ -244,7 +253,13 @@ export const Assignment = () => {
                             }/edit`}
                             fontSize="sm"
                             py="6px"
-                            onClick={() => {}}
+                          />
+                          <MenuOption
+                            icon={<IconCopy size={16} />}
+                            label="Duplicate"
+                            fontSize="sm"
+                            py="6px"
+                            onClick={() => setDuplicateOpen(true)}
                           />
                         </>
                       )}
