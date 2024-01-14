@@ -29,6 +29,7 @@ export const newAttemptHandler = async ({ ctx, input }: NewAttemptOptions) => {
       assignment: {
         select: {
           id: true,
+          lockedAt: true,
           class: {
             select: {
               members: {
@@ -71,6 +72,16 @@ export const newAttemptHandler = async ({ ctx, input }: NewAttemptOptions) => {
 
   if (!studySet || !studySet.assignment)
     throw new TRPCError({ code: "NOT_FOUND" });
+
+  if (
+    studySet.assignment.lockedAt &&
+    studySet.assignment.lockedAt <= new Date()
+  ) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "Assignment is locked",
+    });
+  }
 
   const memberId = studySet.assignment.class.members[0]?.id;
   if (!memberId) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });

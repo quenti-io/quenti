@@ -135,6 +135,10 @@ export const CollabEditorLayer: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isLocked = !!(
+    data.assignment?.lockedAt && data.assignment.lockedAt <= new Date()
+  );
+
   if (!storeRef.current) {
     storeRef.current = createSetEditorStore(
       {
@@ -144,7 +148,7 @@ export const CollabEditorLayer: React.FC<
         wordLanguage: data.wordLanguage as Language,
         definitionLanguage: data.definitionLanguage as Language,
         description: data.description,
-        readonly: !!submission.submittedAt,
+        readonly: !!submission.submittedAt || isLocked,
         terms: submission.terms.map((x) => ({
           ...x,
           clientKey: x.id,

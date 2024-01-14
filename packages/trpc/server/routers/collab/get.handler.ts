@@ -49,6 +49,8 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         },
         select: {
           id: true,
+          dueAt: true,
+          lockedAt: true,
           class: {
             select: {
               members: {
@@ -88,7 +90,15 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   if (!memberId || !collab)
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
+  const isLocked =
+    studySet.assignment.lockedAt && studySet.assignment.lockedAt <= new Date();
+
   if (!studySet.assignment._count.submissions) {
+    // Don't create any new submissions for a locked assignment
+    if (isLocked) {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
+
     // Create a submission for the user to start
     await ctx.prisma.submission.create({
       data: {

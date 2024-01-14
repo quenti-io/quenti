@@ -26,7 +26,7 @@ export const CollabTopBar = () => {
   const id = useSetEditorContext((s) => s.id);
   const savedAt = useSetEditorContext((s) => s.savedAt);
   const numTerms = useSetEditorContext((s) => s.serverTerms.length);
-  const { submission } = React.useContext(CollabContext)!.data;
+  const { submission, assignment } = React.useContext(CollabContext)!.data;
   const submitted = !!submission.submittedAt;
 
   const isSaving = useSetEditorContext((s) => s.isSaving);
@@ -36,6 +36,10 @@ export const CollabTopBar = () => {
   const [submitOpen, setSubmitOpen] = React.useState(false);
 
   const subTextColor = useColorModeValue("gray.600", "gray.400");
+
+  const isLocked = !!(
+    assignment?.lockedAt && assignment.lockedAt <= new Date()
+  );
 
   const text = submitted
     ? `${plural(numTerms, "term")} submitted ${
@@ -104,8 +108,19 @@ export const CollabTopBar = () => {
                 });
               }
             }}
+            colorScheme={isLocked ? "gray" : "blue"}
+            variant={isLocked ? "outline" : "solid"}
+            isDisabled={isLocked}
+            _disabled={{
+              cursor: "not-allowed",
+              opacity: 0.75,
+            }}
           >
-            {submission.submittedAt ? "New attempt" : "Submit"}
+            {isLocked
+              ? "Locked"
+              : submission.submittedAt
+                ? "New attempt"
+                : "Submit"}
           </Button>
         </Flex>
       </HStack>

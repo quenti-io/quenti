@@ -161,7 +161,7 @@ const StudentSide = () => {
 
   const isLoaded = !!assignment && !!class_;
 
-  const { label, Icon, variant, colorScheme } = useAssignmentButton({
+  const { label, Icon, variant, colorScheme, state } = useAssignmentButton({
     assignment,
     isTeacher: false,
   });
@@ -207,7 +207,11 @@ const StudentSide = () => {
           colorScheme={colorScheme}
           leftIcon={Icon ? <Icon size={18} /> : undefined}
           as={Link}
-          href={`/${assignment?.studySet?.id}/collab`}
+          href={
+            state !== "locked"
+              ? `/${assignment?.studySet?.id}/collab`
+              : `/${assignment?.studySet?.id}`
+          }
         >
           {label}
         </Button>

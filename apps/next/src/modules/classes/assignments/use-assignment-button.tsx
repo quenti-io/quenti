@@ -2,7 +2,10 @@ import type { Widen } from "@quenti/lib/widen";
 
 import { IconCircleCheck, IconLock } from "@tabler/icons-react";
 
-import { useAssignmentState } from "./use-assignment-state";
+import {
+  type AssignmentState,
+  useAssignmentState,
+} from "./use-assignment-state";
 
 export const useAssignmentButton = ({
   assignment,
@@ -49,5 +52,8 @@ export const useAssignmentButton = ({
     }
   };
 
-  return getState() as Widen<ReturnType<typeof getState>>;
+  return {
+    ...(getState() as Widen<ReturnType<typeof getState>>),
+    state: _state as AssignmentState,
+  };
 };
