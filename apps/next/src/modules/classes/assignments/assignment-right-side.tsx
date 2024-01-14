@@ -102,7 +102,7 @@ const TeacherSide = () => {
         </Box>
       </VStack>
       <SimpleGrid columns={5} spacing="4">
-        {Array.from({ length: assigned || 15 }).map((_, i) => (
+        {Array.from({ length: assigned }).map((_, i) => (
           <StudentAvatar
             key={i}
             user={studentData?.students[i]?.user}
@@ -134,7 +134,16 @@ const StudentAvatar: React.FC<{
     >
       <Link href={`/@${user?.username}`}>
         <Tooltip label={user?.name ?? user?.username}>
-          <Avatar w="full" h="full" src={user?.image || ""} />
+          <Avatar
+            w="full"
+            h="full"
+            src={user?.image || ""}
+            bg="gray.200"
+            _dark={{
+              bg: "gray.700",
+            }}
+            icon={<></>}
+          />
         </Tooltip>
       </Link>
       <Box
