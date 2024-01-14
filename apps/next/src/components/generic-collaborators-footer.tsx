@@ -36,7 +36,7 @@ export const GenericCollaboratorsFooter: React.FC<
             bg="gray.100"
             _dark={{
               bg: "gray.700",
-              borderColor: "gray.800",
+              borderColor: darkBg,
             }}
             icon={<></>}
             getInitials={() => ""}
@@ -54,7 +54,7 @@ export const GenericCollaboratorsFooter: React.FC<
             borderColor="white"
             _dark={{
               bg: "gray.700",
-              borderColor: "gray.800",
+              borderColor: darkBg,
             }}
             rounded="full"
             w="max"
