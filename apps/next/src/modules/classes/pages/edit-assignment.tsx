@@ -142,9 +142,12 @@ export const EditAssignment = () => {
 
   const { collabMinTerms: _minTerms, collabMaxTerms: _maxTerms } =
     editMethods.watch("collab");
+
+  const collab = assignment?.studySet?.collab;
   const collabDirty =
-    _minTerms !== assignment?.studySet?.collab?.minTermsPerUser ||
-    _maxTerms !== assignment?.studySet?.collab?.maxTermsPerUser;
+    collab &&
+    (_minTerms !== collab.minTermsPerUser ||
+      _maxTerms !== collab.maxTermsPerUser);
 
   const editor = useEditor({
     extensions,
@@ -280,19 +283,21 @@ export const EditAssignment = () => {
               <DescriptionEditor editor={editor} />
             </Skeleton>
           </Stack>
-          <Controller
-            control={editMethods.control}
-            name="collab"
-            render={({ field: { value, onChange } }) => (
-              <CollabTermsSlider
-                minTerms={value.collabMinTerms}
-                maxTerms={value.collabMaxTerms}
-                onChange={(min, max) => {
-                  onChange({ collabMinTerms: min, collabMaxTerms: max });
-                }}
-              />
-            )}
-          />
+          {(!assignment || assignment.studySet?.collab) && (
+            <Controller
+              control={editMethods.control}
+              name="collab"
+              render={({ field: { value, onChange } }) => (
+                <CollabTermsSlider
+                  minTerms={value.collabMinTerms}
+                  maxTerms={value.collabMaxTerms}
+                  onChange={(min, max) => {
+                    onChange({ collabMinTerms: min, collabMaxTerms: max });
+                  }}
+                />
+              )}
+            />
+          )}
         </Stack>
       </form>
     </FormProvider>

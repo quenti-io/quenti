@@ -122,6 +122,9 @@ const getTeacher = async (
       },
       submissions: {
         distinct: ["memberId"],
+        where: {
+          submittedAt: { not: null },
+        },
         select: {
           id: true,
           startedAt: true,

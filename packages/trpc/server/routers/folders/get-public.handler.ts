@@ -63,7 +63,11 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
               visibility: true,
               _count: {
                 select: {
-                  terms: true,
+                  terms: {
+                    where: {
+                      ephemeral: false,
+                    },
+                  },
                 },
               },
             },

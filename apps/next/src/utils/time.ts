@@ -132,10 +132,8 @@ export const formatDueDate = (date: Date) => {
     .formatToParts(date)
     .map((part) => {
       switch (part.type) {
-        case "hour":
-          return ` at ${part.value}`;
         case "weekday":
-          return isToday ? "Today" : part.value;
+          return `${isToday ? "Today" : part.value} at`;
         case "literal":
           return part.value.replace(", ", "");
         case "year":
