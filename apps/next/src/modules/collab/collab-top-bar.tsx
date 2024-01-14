@@ -109,7 +109,7 @@ export const CollabTopBar = () => {
               }
             }}
             colorScheme={isLocked ? "gray" : "blue"}
-            variant={isLocked ? "outline" : "solid"}
+            variant={isLocked || submission.submittedAt ? "outline" : "solid"}
             isDisabled={isLocked}
             _disabled={{
               cursor: "not-allowed",

@@ -97,7 +97,10 @@ export const formatDueDate = (date: Date) => {
     (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
   );
 
-  if (dateDifference < 0) {
+  const isToday =
+    new Date(date).setHours(0, 0, 0, 0) == new Date(today).setHours(0, 0, 0, 0);
+
+  if (dateDifference < 0 && !isToday) {
     options.month = "short";
     options.day = "numeric";
     options.weekday = undefined;
@@ -107,7 +110,6 @@ export const formatDueDate = (date: Date) => {
     options.day = "numeric";
   }
 
-  const isToday = dateDifference === 0;
   if (date.getFullYear() !== today.getFullYear()) {
     options.year = "numeric";
   }
