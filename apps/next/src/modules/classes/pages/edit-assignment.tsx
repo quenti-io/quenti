@@ -30,6 +30,7 @@ import { ConfirmModal } from "../../../components/confirm-modal";
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { Toast } from "../../../components/toast";
 import { useAssignment } from "../../../hooks/use-assignment";
+import { trimHTML } from "../../../utils/editor";
 import { CollabTermsSlider } from "../assignments/editor/collab-terms-slider";
 import { DatesSection } from "../assignments/editor/dates-section";
 import {
@@ -205,7 +206,7 @@ export const EditAssignment = () => {
       availableAt: new Date(data.availableAt),
       dueAt: data.dueAt ? new Date(data.dueAt) : null,
       lockedAt: data.lockedAt ? new Date(data.lockedAt) : null,
-      description: editor?.getHTML() ?? undefined,
+      description: editor ? trimHTML(editor.getHTML()) : undefined,
     });
   };
 

@@ -170,7 +170,7 @@ export const Assignment = () => {
         }}
       >
         <Stack spacing="8" flex="1" w="full" minW="0">
-          <Stack spacing="6">
+          <Stack spacing={!assignment || assignment.description ? 6 : 0}>
             <Stack spacing="3">
               <Flex gap="6" justifyContent="space-between">
                 <SkeletonText
@@ -368,7 +368,7 @@ export const Assignment = () => {
               }}
             >
               {assignment ? (
-                <EditorContent editor={editor} />
+                assignment.description && <EditorContent editor={editor} />
               ) : (
                 <SkeletonText
                   noOfLines={3}

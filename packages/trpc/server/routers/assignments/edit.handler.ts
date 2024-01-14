@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { generateJSON } from "@tiptap/html";
 
 import { TRPCError } from "@trpc/server";
@@ -51,7 +52,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
   const json = input.description
     ? generateJSON(input.description, SERIALIZABLE_EXTENSIONS)
-    : undefined;
+    : Prisma.JsonNull;
 
   await ctx.prisma.assignment.update({
     where: {

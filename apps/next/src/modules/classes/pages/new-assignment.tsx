@@ -11,6 +11,7 @@ import { Button, ButtonGroup, Flex, Skeleton, Stack } from "@chakra-ui/react";
 
 import { SkeletonLabel } from "../../../components/skeleton-label";
 import { useClass } from "../../../hooks/use-class";
+import { trimHTML } from "../../../utils/editor";
 import { DatesSection } from "../assignments/editor/dates-section";
 import {
   DescriptionEditor,
@@ -122,7 +123,7 @@ export const NewAssignment = () => {
       availableAt: new Date(data.availableAt),
       dueAt: data.dueAt ? new Date(data.dueAt) : null,
       lockedAt: data.lockedAt ? new Date(data.lockedAt) : null,
-      description: editor?.getHTML() ?? undefined,
+      description: editor ? trimHTML(editor.getHTML()) : undefined,
     });
   };
 
