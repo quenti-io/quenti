@@ -56,6 +56,7 @@ export const ClassAssignments = () => {
           spacing="4"
           w={{ base: "full", md: "auto" }}
           justifyContent={{ base: "space-between", md: "auto" }}
+          flexDir={{ base: "column", md: "row" }}
         >
           <LoadingSearch
             value={search}
@@ -64,8 +65,12 @@ export const ClassAssignments = () => {
             debounceInequality={search.trim() != debouncedSearch.trim()}
           />
           {isTeacher && (
-            <>
-              <Box minW="250px" w="250px">
+            <HStack
+              spacing="4"
+              w={{ base: "full", md: "auto" }}
+              justifyContent={{ base: "space-between", md: "auto" }}
+            >
+              <Box w="250px">
                 <SectionSelect
                   sections={Array.from([
                     {
@@ -92,7 +97,7 @@ export const ClassAssignments = () => {
               >
                 New
               </Button>
-            </>
+            </HStack>
           )}
         </HStack>
       </Skeleton>

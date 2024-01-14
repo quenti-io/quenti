@@ -82,11 +82,41 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
       transition="all ease-in-out 150ms"
       role="group"
     >
+      <HStack
+        display={{
+          base: "flex",
+          md: "none",
+        }}
+        mb="3"
+        ml="-6px"
+      >
+        <CollabIcon size={24} />
+        <Heading fontSize="lg">
+          <LinkOverlay
+            href={`/a/${props.classId}/${props.id}`}
+            as={Link}
+            _focus={{
+              outline: "none",
+            }}
+          >
+            {props.name}
+          </LinkOverlay>
+        </Heading>
+      </HStack>
       <HStack justifyContent="space-between">
         <HStack spacing="4">
-          <CollabIcon />
+          <Box display={{ base: "none", md: "flex" }}>
+            <CollabIcon />
+          </Box>
           <Stack spacing="1">
-            <Flex minH="24px" alignItems="center">
+            <Flex
+              minH="24px"
+              alignItems="center"
+              display={{
+                base: "none",
+                md: "flex",
+              }}
+            >
               <Heading fontSize="lg">
                 <LinkOverlay
                   href={`/a/${props.classId}/${props.id}`}
@@ -99,7 +129,14 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
                 </LinkOverlay>
               </Heading>
             </Flex>
-            <HStack spacing="3">
+            <HStack
+              spacing={{ base: 1, md: 3 }}
+              alignItems={{ base: "flex-start", md: "center" }}
+              flexDir={{
+                base: "column",
+                md: "row",
+              }}
+            >
               {props.for == "Teacher" && (
                 <HStack
                   color={props.published ? "green.500" : "gray.500"}
