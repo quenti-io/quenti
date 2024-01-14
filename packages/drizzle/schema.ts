@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  datetime,
   index,
   mysqlEnum,
   mysqlTable,
@@ -183,12 +184,52 @@ export const studySet = mysqlTable(
   },
 );
 
-export const studySetRelations = relations(studySet, ({ one }) => ({
+export const studySetRelations = relations(studySet, ({ one, many }) => ({
   user: one(user, {
     fields: [studySet.userId],
     references: [user.id],
   }),
+  collaborators: many(studySetCollaborator),
 }));
+
+export const studySetCollaborator = mysqlTable(
+  "StudySetCollaborator",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    studySetId: varchar("studySetId", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }).notNull(),
+    createdAt: datetime("createdAt").notNull(),
+  },
+  (table) => {
+    return {
+      idPk: primaryKey({
+        columns: [table.id],
+      }),
+      studySetIdIdx: index("StudySetCollaborator_studySetId_idx").on(
+        table.studySetId,
+        table.userId,
+      ),
+      userIdIdx: index("StudySetCollaborator_userId_idx").on(table.userId),
+      studySetIdUserIdKey: unique(
+        "StudySetCollaborator_studySetId_userId_key",
+      ).on(table.studySetId, table.userId),
+    };
+  },
+);
+
+export const studySetCollaboratorRelations = relations(
+  studySetCollaborator,
+  ({ one }) => ({
+    studySet: one(studySet, {
+      fields: [studySetCollaborator.studySetId],
+      references: [studySet.id],
+    }),
+    user: one(user, {
+      fields: [studySetCollaborator.userId],
+      references: [user.id],
+    }),
+  }),
+);
 
 export const studySetsOnFolders = mysqlTable(
   "StudySetsOnFolders",

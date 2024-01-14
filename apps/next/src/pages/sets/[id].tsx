@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 
 import { HeadSeo } from "@quenti/components/head-seo";
-import { and, db, eq, sql } from "@quenti/drizzle";
-import { studySet, term } from "@quenti/drizzle/schema";
+import { and, asc, db, eq, sql } from "@quenti/drizzle";
+import { studySet, studySetCollaborator, term } from "@quenti/drizzle/schema";
 import type { GetServerSidePropsContext } from "@quenti/types";
 
 import { LazyWrapper } from "../../common/lazy-wrapper";
@@ -14,7 +14,7 @@ export const runtime = "experimental-edge";
 
 const InternalSet = dynamic(() => import("../../components/internal-set"));
 
-const Set = ({ set }: inferSSRProps<typeof getServerSideProps>) => {
+const Set = ({ set, collab }: inferSSRProps<typeof getServerSideProps>) => {
   return (
     <>
       {set && (
@@ -26,6 +26,7 @@ const Set = ({ set }: inferSSRProps<typeof getServerSideProps>) => {
             title: set.title,
             description: set.description,
             numItems: set.terms,
+            collaborators: set.collaborators ?? undefined,
             user: {
               username: set.user.username!,
               image: set.user.image || "",
@@ -38,7 +39,7 @@ const Set = ({ set }: inferSSRProps<typeof getServerSideProps>) => {
         />
       )}
       <LazyWrapper>
-        <InternalSet collab={set?.type == "Collab"} />
+        <InternalSet collab={collab} />
       </LazyWrapper>
     </>
   );
@@ -64,24 +65,60 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
           image: true,
         },
       },
+      collaborators: {
+        orderBy: asc(studySetCollaborator.createdAt),
+        limit: 5,
+        with: {
+          user: {
+            columns: {
+              image: true,
+            },
+          },
+        },
+      },
     },
   });
 
   if (!set || ["Private", "Class"].includes(set.visibility))
-    return { props: { set: null } };
+    return { props: { set: null, collab: set?.type == "Collab" } };
 
   const { count } = (
     await db
       .select({
-        count: sql<number>`cast(count(${term.id}) as unsigned)`,
+        count: sql<number>`cast(count(*) as unsigned)`,
       })
       .from(term)
       .where(and(eq(term.studySetId, set.id), eq(term.ephemeral, false)))
   )[0]!;
 
+  let collaborators = null;
+
+  if (set.type == "Collab") {
+    const { total } = (
+      await db
+        .select({
+          total: sql<number>`cast(count(*) as unsigned)`,
+        })
+        .from(studySetCollaborator)
+        .where(eq(studySetCollaborator.studySetId, set.id))
+    )[0]!;
+
+    collaborators = {
+      total,
+      avatars: set.collaborators
+        .map((c) => c.user.image)
+        .filter(Boolean) as string[],
+    };
+  }
+
   return {
     props: {
-      set: { ...set, terms: count },
+      set: {
+        ...set,
+        terms: count,
+        collaborators,
+        collab: set.type == "Collab",
+      },
     },
   };
 };

@@ -11,6 +11,10 @@ export interface EntityImageProps {
   title: string;
   description: string;
   numItems: number;
+  collaborators?: {
+    total: number;
+    avatars: string[];
+  };
   user: {
     image: string;
     username: string;
@@ -37,7 +41,15 @@ export const buildEntityImage = (
     `&numItems=${props.numItems}`,
     `&userImage=${encodeURIComponent(props.user.image)}`,
     `&username=${encodeURIComponent(props.user.username)}`,
-  ].join("");
+    props.collaborators ? `&collaborators=${props.collaborators.total}` : [],
+    props.collaborators
+      ? `&avatars=${encodeURIComponent(
+          JSON.stringify(props.collaborators.avatars),
+        )}`
+      : [],
+  ]
+    .flat()
+    .join("");
 
   return encodeUri ? encodeURIComponent(url) : url;
 };
