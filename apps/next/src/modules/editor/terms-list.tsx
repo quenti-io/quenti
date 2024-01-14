@@ -108,6 +108,8 @@ export const TermsList = () => {
   };
 
   const items = terms.sort((a, b) => a.rank - b.rank);
+  const disableAdd =
+    collab && collab.maxTerms ? terms.length >= collab.maxTerms : false;
 
   return (
     <Stack spacing={10}>
@@ -167,7 +169,11 @@ export const TermsList = () => {
                         }}
                         anyFocus={() => setCurrent(term.clientKey)}
                       />
-                      {!readonly ? <TermCardGap index={i} /> : <Box h="4" />}
+                      {!readonly && !disableAdd ? (
+                        <TermCardGap index={i} />
+                      ) : (
+                        <Box h="4" />
+                      )}
                     </React.Fragment>
                   ))}
               </AnimatePresence>
@@ -182,9 +188,7 @@ export const TermsList = () => {
           height="24"
           variant="outline"
           onClick={() => addTerm(terms.length)}
-          isDisabled={
-            collab && collab.maxTerms ? terms.length >= collab.maxTerms : false
-          }
+          isDisabled={disableAdd}
         >
           Add card
         </Button>
