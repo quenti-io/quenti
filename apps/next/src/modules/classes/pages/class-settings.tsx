@@ -28,7 +28,6 @@ import {
   IconUpload,
 } from "@tabler/icons-react";
 
-import { ToastWrapper } from "../../../common/toast-wrapper";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../../components/auto-resize-textarea";
 import { ConfirmModal } from "../../../components/confirm-modal";
@@ -119,7 +118,7 @@ export const ClassSettings = () => {
   const inputBorder = useColorModeValue("gray.300", "gray.600");
 
   return (
-    <ToastWrapper>
+    <>
       <ConfirmModal
         isOpen={leaveOpen}
         onClose={() => setLeaveOpen(false)}
@@ -372,6 +371,6 @@ export const ClassSettings = () => {
           </ButtonGroup>
         </SettingsWrapper>
       </Stack>
-    </ToastWrapper>
+    </>
   );
 };

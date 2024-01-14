@@ -29,6 +29,7 @@ import {
 } from "@tabler/icons-react";
 
 import { LazyWrapper } from "../common/lazy-wrapper";
+import { ToastWrapper } from "../common/toast-wrapper";
 import { AuthedPage } from "../components/authed-page";
 import { SkeletonTab } from "../components/skeleton-tab";
 import { WithFooter } from "../components/with-footer";
@@ -99,216 +100,231 @@ export const ClassLayout: React.FC<
       <HeadSeo title={getTitle()} hideTitleSuffix={!name && !data} />
       <MainLayout>
         <LazyWrapper>
-          <WithFooter>
-            <Container maxW="5xl">
-              <Stack spacing="0">
-                <Skeleton w="full" h="32" rounded="2xl" isLoaded={!!data}>
-                  <Box
-                    w="full"
-                    h="32"
-                    bgGradient={`linear(to-tr, blue.400, ${
-                      bannerState || banner
-                    })`}
-                    rounded="2xl"
-                    position="relative"
-                  >
+          <ToastWrapper>
+            <WithFooter>
+              <Container maxW="5xl">
+                <Stack spacing="0">
+                  <Skeleton w="full" h="32" rounded="2xl" isLoaded={!!data}>
                     <Box
-                      position="absolute"
-                      color="white"
-                      top="14px"
-                      right="10px"
+                      w="full"
+                      h="32"
+                      bgGradient={`linear(to-tr, blue.400, ${
+                        bannerState || banner
+                      })`}
+                      rounded="2xl"
+                      position="relative"
                     >
-                      <BannerPicker
-                        isOpen={pickerOpen}
-                        onClose={() => setPickerOpen(false)}
-                        selected={banner}
-                        reset
-                        onSelect={(c) => {
-                          setPickerOpen(false);
-                          setBannerState(c);
-
-                          setPreferences.mutate({
-                            classId: id,
-                            preferences: {
-                              ...preferences,
-                              bannerColor: c,
-                            },
-                          });
-                        }}
-                        onReset={() => {
-                          setPickerOpen(false);
-                          setBannerState(data!.bannerColor);
-
-                          setPreferences.mutate({
-                            classId: id,
-                            preferences: {
-                              ...preferences,
-                              bannerColor: null,
-                            },
-                          });
-                        }}
-                        columns={3}
+                      <Box
+                        position="absolute"
+                        color="white"
+                        top="14px"
+                        right="10px"
                       >
-                        <Box
-                          cursor="pointer"
-                          onClick={() => setPickerOpen(true)}
+                        <BannerPicker
+                          isOpen={pickerOpen}
+                          onClose={() => setPickerOpen(false)}
+                          selected={banner}
+                          reset
+                          onSelect={(c) => {
+                            setPickerOpen(false);
+                            setBannerState(c);
+
+                            setPreferences.mutate({
+                              classId: id,
+                              preferences: {
+                                ...preferences,
+                                bannerColor: c,
+                              },
+                            });
+                          }}
+                          onReset={() => {
+                            setPickerOpen(false);
+                            setBannerState(data!.bannerColor);
+
+                            setPreferences.mutate({
+                              classId: id,
+                              preferences: {
+                                ...preferences,
+                                bannerColor: null,
+                              },
+                            });
+                          }}
+                          columns={3}
                         >
-                          <IconDotsVertical size={18} />
-                        </Box>
-                      </BannerPicker>
+                          <Box
+                            cursor="pointer"
+                            onClick={() => setPickerOpen(true)}
+                          >
+                            <IconDotsVertical size={18} />
+                          </Box>
+                        </BannerPicker>
+                      </Box>
                     </Box>
-                  </Box>
-                </Skeleton>
-                <Stack
-                  px={{ base: 0, sm: 6, md: 10 }}
-                  spacing="8"
-                  mt="-36px"
-                  zIndex={10}
-                >
-                  <Center
-                    w="88px"
-                    h="88px"
-                    rounded="3xl"
-                    outlineColor={bg}
-                    bg={bg}
+                  </Skeleton>
+                  <Stack
+                    px={{ base: 0, sm: 6, md: 10 }}
+                    spacing="8"
+                    mt="-36px"
+                    zIndex={10}
                   >
-                    <Skeleton w="72px" h="72px" rounded="2xl" isLoaded={!!data}>
-                      <Center
-                        rounded="2xl"
+                    <Center
+                      w="88px"
+                      h="88px"
+                      rounded="3xl"
+                      outlineColor={bg}
+                      bg={bg}
+                    >
+                      <Skeleton
                         w="72px"
                         h="72px"
-                        bg="white"
-                        shadow="2xl"
-                        overflow="hidden"
+                        rounded="2xl"
+                        isLoaded={!!data}
                       >
-                        <ClassLogo
-                          width={72}
-                          height={72}
-                          url={data?.logoUrl}
-                          hash={data?.logoHash}
-                        />
-                      </Center>
-                    </Skeleton>
-                  </Center>
-                  <Stack spacing="6">
-                    {!hideNav && (
-                      <Stack spacing="0">
-                        <Flex alignItems="center" minH="48px">
-                          <SkeletonText
-                            noOfLines={1}
-                            isLoaded={!!data}
-                            skeletonHeight="30px"
-                          >
-                            <Heading>
-                              {data?.name || "Placeholder class name"}
-                            </Heading>
-                          </SkeletonText>
-                        </Flex>
-                        <Flex alignItems="center" h="21px">
-                          <SkeletonText
-                            noOfLines={1}
-                            isLoaded={!!data}
-                            skeletonHeight="12px"
-                          >
-                            <HStack fontSize="sm" color="gray.500" spacing="1">
-                              <Text>
-                                {plural(
-                                  data?.studySets?.length || 0,
-                                  "study set",
-                                )}
-                              </Text>
-                              <IconPointFilled size={10} />
-                              <Text>
-                                {plural(data?.folders?.length || 0, "folder")}
-                              </Text>
-                            </HStack>
-                          </SkeletonText>
-                        </Flex>
-                      </Stack>
-                    )}
-                    {data?.description && !hideNav && (
-                      <Text whiteSpace="pre-wrap">{data?.description}</Text>
-                    )}
-                    {!hideNav ? (
-                      <Tabs borderColor={borderColor} isManual index={tabIndex}>
-                        <TabList gap="6">
-                          <SkeletonTab
-                            isLoaded={!!data}
-                            href={`/classes/${id}`}
-                          >
-                            Home
-                          </SkeletonTab>
-                          <SkeletonTab
-                            isLoaded={!!data}
-                            href={`/classes/${id}/assignments`}
-                          >
-                            Assignments
-                          </SkeletonTab>
-                          <HiddenTabWrapper index={2}>
-                            <SkeletonTab
+                        <Center
+                          rounded="2xl"
+                          w="72px"
+                          h="72px"
+                          bg="white"
+                          shadow="2xl"
+                          overflow="hidden"
+                        >
+                          <ClassLogo
+                            width={72}
+                            height={72}
+                            url={data?.logoUrl}
+                            hash={data?.logoHash}
+                          />
+                        </Center>
+                      </Skeleton>
+                    </Center>
+                    <Stack spacing="6">
+                      {!hideNav && (
+                        <Stack spacing="0">
+                          <Flex alignItems="center" minH="48px">
+                            <SkeletonText
+                              noOfLines={1}
                               isLoaded={!!data}
-                              href={`/classes/${id}/members`}
+                              skeletonHeight="30px"
                             >
-                              Members
-                            </SkeletonTab>
-                          </HiddenTabWrapper>
-                          <HiddenTabWrapper index={3}>
-                            <SkeletonTab
+                              <Heading>
+                                {data?.name || "Placeholder class name"}
+                              </Heading>
+                            </SkeletonText>
+                          </Flex>
+                          <Flex alignItems="center" h="21px">
+                            <SkeletonText
+                              noOfLines={1}
                               isLoaded={!!data}
-                              href={`/classes/${id}/settings`}
+                              skeletonHeight="12px"
                             >
-                              Settings
-                            </SkeletonTab>
-                          </HiddenTabWrapper>
-                        </TabList>
-                        <TabPanels mt="6">{children}</TabPanels>
-                      </Tabs>
-                    ) : (
-                      <Stack spacing="6">
-                        {returnTo && (
-                          <Skeleton
-                            fitContent
-                            rounded="md"
-                            isLoaded={!!data}
-                            w="max"
-                          >
-                            <Link href={returnTo.path}>
                               <HStack
+                                fontSize="sm"
                                 color="gray.500"
-                                _hover={{
-                                  color: "gray.900",
-                                }}
-                                _dark={{
-                                  color: "gray.400",
-                                  _hover: {
-                                    color: "gray.50",
-                                  },
-                                }}
-                                fontWeight={600}
-                                transition="color 150ms ease-in-out"
-                                role="group"
+                                spacing="1"
                               >
-                                <Box
-                                  transition="transform 150ms ease-in-out"
-                                  _groupHover={{
-                                    transform: "translateX(-4px)",
-                                  }}
-                                >
-                                  <IconArrowLeft size={18} />
-                                </Box>
-                                <Text>{returnTo.name}</Text>
+                                <Text>
+                                  {plural(
+                                    data?.studySets?.length || 0,
+                                    "study set",
+                                  )}
+                                </Text>
+                                <IconPointFilled size={10} />
+                                <Text>
+                                  {plural(data?.folders?.length || 0, "folder")}
+                                </Text>
                               </HStack>
-                            </Link>
-                          </Skeleton>
-                        )}
-                        {children}
-                      </Stack>
-                    )}
+                            </SkeletonText>
+                          </Flex>
+                        </Stack>
+                      )}
+                      {data?.description && !hideNav && (
+                        <Text whiteSpace="pre-wrap">{data?.description}</Text>
+                      )}
+                      {!hideNav ? (
+                        <Tabs
+                          borderColor={borderColor}
+                          isManual
+                          index={tabIndex}
+                        >
+                          <TabList gap="6">
+                            <SkeletonTab
+                              isLoaded={!!data}
+                              href={`/classes/${id}`}
+                            >
+                              Home
+                            </SkeletonTab>
+                            <SkeletonTab
+                              isLoaded={!!data}
+                              href={`/classes/${id}/assignments`}
+                            >
+                              Assignments
+                            </SkeletonTab>
+                            <HiddenTabWrapper index={2}>
+                              <SkeletonTab
+                                isLoaded={!!data}
+                                href={`/classes/${id}/members`}
+                              >
+                                Members
+                              </SkeletonTab>
+                            </HiddenTabWrapper>
+                            <HiddenTabWrapper index={3}>
+                              <SkeletonTab
+                                isLoaded={!!data}
+                                href={`/classes/${id}/settings`}
+                              >
+                                Settings
+                              </SkeletonTab>
+                            </HiddenTabWrapper>
+                          </TabList>
+                          <TabPanels mt="6">{children}</TabPanels>
+                        </Tabs>
+                      ) : (
+                        <Stack spacing="6">
+                          {returnTo && (
+                            <Skeleton
+                              fitContent
+                              rounded="md"
+                              isLoaded={!!data}
+                              w="max"
+                            >
+                              <Link href={returnTo.path}>
+                                <HStack
+                                  color="gray.500"
+                                  _hover={{
+                                    color: "gray.900",
+                                  }}
+                                  _dark={{
+                                    color: "gray.400",
+                                    _hover: {
+                                      color: "gray.50",
+                                    },
+                                  }}
+                                  fontWeight={600}
+                                  transition="color 150ms ease-in-out"
+                                  role="group"
+                                >
+                                  <Box
+                                    transition="transform 150ms ease-in-out"
+                                    _groupHover={{
+                                      transform: "translateX(-4px)",
+                                    }}
+                                  >
+                                    <IconArrowLeft size={18} />
+                                  </Box>
+                                  <Text>{returnTo.name}</Text>
+                                </HStack>
+                              </Link>
+                            </Skeleton>
+                          )}
+                          {children}
+                        </Stack>
+                      )}
+                    </Stack>
                   </Stack>
                 </Stack>
-              </Stack>
-            </Container>
-          </WithFooter>
+              </Container>
+            </WithFooter>
+          </ToastWrapper>
         </LazyWrapper>
       </MainLayout>
     </AuthedPage>

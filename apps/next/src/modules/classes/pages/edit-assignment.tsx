@@ -25,7 +25,6 @@ import {
 
 import { IconEditCircle } from "@tabler/icons-react";
 
-import { ToastWrapper } from "../../../common/toast-wrapper";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { ConfirmModal } from "../../../components/confirm-modal";
 import { SkeletonLabel } from "../../../components/skeleton-label";
@@ -211,92 +210,90 @@ export const EditAssignment = () => {
   };
 
   return (
-    <ToastWrapper>
-      <FormProvider {...editMethods}>
-        <ConfirmModal
-          isOpen={confirmSectionOpen}
-          onClose={() => setConfirmSectionOpen(false)}
-          heading="Change assignment section"
-          body="Changing this assignment's section will reset all student submissions. Are you sure you want to continue?"
-          isLoading={apiEdit.isLoading || apiEditCollab.isLoading}
-          onConfirm={async () => {
-            setConfirmSection(true);
-            await editMethods.handleSubmit(onSubmit)();
-          }}
-        />
-        <form
-          onSubmit={editMethods.handleSubmit(onSubmit)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") e.preventDefault();
-          }}
-        >
-          <Stack spacing="8">
-            <Stack spacing="6">
-              <Skeleton fitContent rounded="lg" isLoaded={isLoaded}>
-                <HStack
-                  justifyContent="space-between"
-                  alignItems={{ base: "start", md: "center" }}
-                  spacing="6"
-                  flexDir={{
-                    base: "column",
-                    md: "row",
-                  }}
-                >
-                  <HStack>
-                    <IconEditCircle />
-                    <Heading size="lg">Edit assignment</Heading>
-                  </HStack>
-                  <ButtonGroup alignSelf="end" size={{ base: "sm", md: "md" }}>
-                    <Skeleton rounded="lg" isLoaded={isLoaded}>
-                      <Button variant="ghost" onClick={reset}>
-                        Reset
-                      </Button>
-                    </Skeleton>
-                    <Skeleton rounded="lg" isLoaded={isLoaded}>
-                      <Button
-                        type="submit"
-                        isLoading={apiEdit.isLoading || apiEditCollab.isLoading}
-                      >
-                        Save changes
-                      </Button>
-                    </Skeleton>
-                  </ButtonGroup>
-                </HStack>
-              </Skeleton>
-              <Divider
-                borderColor="gray.300"
-                _dark={{
-                  borderColor: "gray.600",
+    <FormProvider {...editMethods}>
+      <ConfirmModal
+        isOpen={confirmSectionOpen}
+        onClose={() => setConfirmSectionOpen(false)}
+        heading="Change assignment section"
+        body="Changing this assignment's section will reset all student submissions. Are you sure you want to continue?"
+        isLoading={apiEdit.isLoading || apiEditCollab.isLoading}
+        onConfirm={async () => {
+          setConfirmSection(true);
+          await editMethods.handleSubmit(onSubmit)();
+        }}
+      />
+      <form
+        onSubmit={editMethods.handleSubmit(onSubmit)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.preventDefault();
+        }}
+      >
+        <Stack spacing="8">
+          <Stack spacing="6">
+            <Skeleton fitContent rounded="lg" isLoaded={isLoaded}>
+              <HStack
+                justifyContent="space-between"
+                alignItems={{ base: "start", md: "center" }}
+                spacing="6"
+                flexDir={{
+                  base: "column",
+                  md: "row",
                 }}
-              />
-            </Stack>
-            <TitleSectionArea />
-            <TypeSection />
-            <DatesSection />
-            <Stack>
-              <SkeletonLabel isLoaded={isLoaded}>
-                Description (optional)
-              </SkeletonLabel>
-              <Skeleton rounded="lg" isLoaded={isLoaded} w="full" h="246px">
-                <DescriptionEditor editor={editor} />
-              </Skeleton>
-            </Stack>
-            <Controller
-              control={editMethods.control}
-              name="collab"
-              render={({ field: { value, onChange } }) => (
-                <CollabTermsSlider
-                  minTerms={value.collabMinTerms}
-                  maxTerms={value.collabMaxTerms}
-                  onChange={(min, max) => {
-                    onChange({ collabMinTerms: min, collabMaxTerms: max });
-                  }}
-                />
-              )}
+              >
+                <HStack>
+                  <IconEditCircle />
+                  <Heading size="lg">Edit assignment</Heading>
+                </HStack>
+                <ButtonGroup alignSelf="end" size={{ base: "sm", md: "md" }}>
+                  <Skeleton rounded="lg" isLoaded={isLoaded}>
+                    <Button variant="ghost" onClick={reset}>
+                      Reset
+                    </Button>
+                  </Skeleton>
+                  <Skeleton rounded="lg" isLoaded={isLoaded}>
+                    <Button
+                      type="submit"
+                      isLoading={apiEdit.isLoading || apiEditCollab.isLoading}
+                    >
+                      Save changes
+                    </Button>
+                  </Skeleton>
+                </ButtonGroup>
+              </HStack>
+            </Skeleton>
+            <Divider
+              borderColor="gray.300"
+              _dark={{
+                borderColor: "gray.600",
+              }}
             />
           </Stack>
-        </form>
-      </FormProvider>
-    </ToastWrapper>
+          <TitleSectionArea />
+          <TypeSection />
+          <DatesSection />
+          <Stack>
+            <SkeletonLabel isLoaded={isLoaded}>
+              Description (optional)
+            </SkeletonLabel>
+            <Skeleton rounded="lg" isLoaded={isLoaded} w="full" h="246px">
+              <DescriptionEditor editor={editor} />
+            </Skeleton>
+          </Stack>
+          <Controller
+            control={editMethods.control}
+            name="collab"
+            render={({ field: { value, onChange } }) => (
+              <CollabTermsSlider
+                minTerms={value.collabMinTerms}
+                maxTerms={value.collabMaxTerms}
+                onChange={(min, max) => {
+                  onChange({ collabMinTerms: min, collabMaxTerms: max });
+                }}
+              />
+            )}
+          />
+        </Stack>
+      </form>
+    </FormProvider>
   );
 };

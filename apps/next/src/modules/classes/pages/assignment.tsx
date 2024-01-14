@@ -43,7 +43,6 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
-import { ToastWrapper } from "../../../common/toast-wrapper";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { ConfirmModal } from "../../../components/confirm-modal";
 import { GenericCard } from "../../../components/generic-card";
@@ -110,7 +109,7 @@ export const Assignment = () => {
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
 
   return (
-    <ToastWrapper>
+    <>
       {assignment && class_ && (
         <HeadSeo
           title={`${assignment.title} - ${class_.name}`}
@@ -415,6 +414,6 @@ export const Assignment = () => {
           <AssignmentRightSide />
         </Stack>
       </Flex>
-    </ToastWrapper>
+    </>
   );
 };
