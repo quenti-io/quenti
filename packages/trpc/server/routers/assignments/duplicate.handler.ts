@@ -70,6 +70,7 @@ export const duplicateHandler = async ({ ctx, input }: DuplicateOptions) => {
     data: sections.map(({ id }) => ({
       ...assignment,
       id: undefined,
+      templateId: assignment.id,
       description: assignment.description ?? undefined,
       sectionId: id,
       published: false,
@@ -84,10 +85,7 @@ export const duplicateHandler = async ({ ctx, input }: DuplicateOptions) => {
 
   const createdAssignments = await ctx.prisma.assignment.findMany({
     where: {
-      sectionId: {
-        not: assignment.sectionId,
-        in: input.sectionIds,
-      },
+      templateId: assignment.id,
     },
     select: {
       id: true,
