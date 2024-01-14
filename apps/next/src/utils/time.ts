@@ -1,3 +1,12 @@
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(relativeTime);
+
 const units = {
   year: 24 * 60 * 60 * 1000 * 365,
   month: (24 * 60 * 60 * 1000 * 365) / 12,
@@ -27,25 +36,30 @@ export const getRelativeTime = (d1: Date, d2 = new Date()) => {
 };
 
 export const relevantLabel = (date: Date) => {
-  const now = new Date();
+  const now = dayjs();
+  const inputDate = dayjs(date);
 
-  if (date.getFullYear() === now.getFullYear()) {
-    if (date.getMonth() === now.getMonth()) {
-      if (date.getDate() === now.getDate()) {
+  if (inputDate.isSame(now, "year")) {
+    if (inputDate.isSame(now, "month")) {
+      if (inputDate.isSame(now, "day")) {
         return "Today";
-      } else if (date.getDate() === now.getDate() - 1) {
+      } else if (inputDate.isSame(now.subtract(1, "day"), "day")) {
         return "Yesterday";
-      } else {
-        const diff = Math.abs(now.getTime() - date.getTime());
-        const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        if (diffDays <= 7) {
-          return "This week";
-        }
-        if (diffDays <= 14) {
-          return "Last week";
-        }
-
-        return "This month";
+      } else if (
+        inputDate.isSameOrAfter(now.startOf("week")) &&
+        inputDate.isBefore(now.endOf("week"))
+      ) {
+        return inputDate.isBefore(now) ? "This week" : "Later this week";
+      } else if (
+        inputDate.isSameOrAfter(now.subtract(1, "week").startOf("week")) &&
+        inputDate.isBefore(now.startOf("week"))
+      ) {
+        return "Last week";
+      } else if (
+        inputDate.isSameOrAfter(now.startOf("month")) &&
+        inputDate.isBefore(now.endOf("month"))
+      ) {
+        return inputDate.isBefore(now) ? "This month" : "Later this month";
       }
     } else {
       return date.toLocaleDateString("en-US", {

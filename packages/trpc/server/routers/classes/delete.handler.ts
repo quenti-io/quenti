@@ -16,12 +16,16 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
   // anyone having access to them whatsoever—set the visibility to "Unlisted" instead
   await ctx.prisma.studySet.updateMany({
     where: {
-      visibility: "Class",
-      classesWithAccess: {
-        every: {
-          classId: input.id,
+      AND: [
+        { visibility: "Class" },
+        {
+          classesWithAccess: {
+            every: {
+              classId: input.id,
+            },
+          },
         },
-      },
+      ],
     },
     data: {
       visibility: "Unlisted",
