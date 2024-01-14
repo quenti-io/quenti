@@ -13,7 +13,6 @@ export const useAssignment = () => {
     { classId: id, id: assignmentId },
     {
       enabled: !!id && !!assignmentId && !!session.data?.user,
-      refetchOnMount: false,
     },
   );
 };
