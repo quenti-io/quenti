@@ -21,7 +21,7 @@ import { LoadingSearch } from "../../../components/loading-search";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
 import { AssignmentFeed } from "../assignments/assignment-feed";
-import { ClassEmpty } from "../class-empty";
+import { EmptyMessage } from "../empty-message";
 import { SectionSelect } from "../section-select";
 
 export const ClassAssignments = () => {
@@ -99,7 +99,14 @@ export const ClassAssignments = () => {
       {!isLoaded && <AssignmentFeed.Skeleton />}
       {isLoaded && !feed.total && (
         <SlideFade offsetY="10px" in>
-          <ClassEmpty />
+          <EmptyMessage
+            message={isTeacher ? "No assignments yet" : undefined}
+            subheading={
+              isTeacher
+                ? "Create an assignment for you class to get started."
+                : undefined
+            }
+          />
         </SlideFade>
       )}
       {isLoaded && feed.total && !feed.assignments.length && (

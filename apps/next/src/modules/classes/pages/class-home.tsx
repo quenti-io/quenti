@@ -9,7 +9,7 @@ import { FolderCard } from "../../../components/folder-card";
 import { StudySetCard } from "../../../components/study-set-card";
 import { useClass } from "../../../hooks/use-class";
 import { useIsClassTeacher } from "../../../hooks/use-is-class-teacher";
-import { ClassEmpty } from "../class-empty";
+import { EmptyMessage } from "../empty-message";
 import { EntityGroup } from "../home/entity-group";
 import { InviteBanner } from "../home/invite-banner";
 
@@ -159,7 +159,7 @@ export const ClassHome = () => {
         {data &&
           !isTeacher &&
           !data.folders.length &&
-          !data.studySets.length && <ClassEmpty />}
+          !data.studySets.length && <EmptyMessage />}
       </Stack>
     </>
   );
