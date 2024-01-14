@@ -244,6 +244,18 @@ export const CollabEditorLayer: React.FC<
     );
   }
 
+  React.useEffect(() => {
+    if (!data.collab || !storeRef.current) return;
+
+    storeRef.current.setState((s) => ({
+      ...s,
+      collab: {
+        minTerms: data.collab!.minTermsPerUser || 4,
+        maxTerms: data.collab!.maxTermsPerUser || 7,
+      },
+    }));
+  }, [data.collab]);
+
   return (
     <SetEditorStoreContext.Provider value={storeRef.current}>
       {children}
