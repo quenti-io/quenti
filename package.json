@@ -22,6 +22,7 @@
     "install-vercel": "sh ./install-vercel.sh",
     "email-dev": "dotenv -- npx email dev --dir packages/emails/templates --port 3001",
     "generate-org-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-org-students.ts",
+    "generate-assignment-submissions": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/generate-assignment-submissions.ts",
     "join-class-students": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/join-class-students.ts",
     "stripe-webhook": "stripe listen --forward-to localhost:3000/api/stripe/webhook"
   },
