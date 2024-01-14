@@ -606,7 +606,7 @@ const OptionComp: React.FC<OptionCompProps> = ({
               <svg
                 width="0"
                 height="0"
-                viewBox="0 0 22 22"
+                viewBox="0 0 16 16"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <defs>
@@ -621,15 +621,21 @@ const OptionComp: React.FC<OptionCompProps> = ({
               </svg>
               {collaborators.map((c, i) => (
                 // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-                <img
+                <Avatar
                   key={i}
                   src={c}
-                  width={16}
-                  height={16}
+                  width="16px"
+                  height="16px"
+                  bg="gray.300"
+                  _dark={{
+                    bg: "gray.600",
+                  }}
+                  icon={<></>}
                   style={{
+                    borderRadius: 0,
                     width: "16px",
-                    marginLeft: i != 0 ? "-2px" : 0,
                     height: "16px",
+                    marginLeft: i != 0 ? "-2px" : 0,
                     mask:
                       i < collaborators.length - 1
                         ? "url(#avatarClip)"

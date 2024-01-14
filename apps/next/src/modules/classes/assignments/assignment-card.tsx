@@ -184,9 +184,9 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
           </Stack>
         ) : (
           <HStack
-            color={props.submission ? "gray.400" : "gray.600"}
+            color={props.submission?.submittedAt ? "gray.400" : "gray.600"}
             _dark={{
-              color: props.submission ? "gray.500" : "gray.400",
+              color: props.submission?.submittedAt ? "gray.500" : "gray.400",
             }}
             fontSize="sm"
             fontWeight={600}
