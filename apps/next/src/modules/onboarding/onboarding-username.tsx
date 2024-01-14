@@ -86,7 +86,7 @@ export const OnboardingUsername = () => {
               onActionStateChange={(disabled) => setDisabled(disabled)}
               onLoadingChange={(loading) => setLoading(loading)}
             />
-            <HStack spacing="5" w="full">
+            <HStack spacing="6" w="full" mt="3">
               <Avatar
                 src={image || ""}
                 bg="gray.200"
