@@ -162,7 +162,12 @@ export const studySet = mysqlTable(
     title: varchar("title", { length: 255 }).notNull(),
     type: mysqlEnum("type", ["Default", "Collab"]).notNull(),
     description: varchar("description", { length: 2000 }).notNull(),
-    visibility: mysqlEnum("visibility", ["Private", "Unlisted", "Public"])
+    visibility: mysqlEnum("visibility", [
+      "Private",
+      "Unlisted",
+      "Public",
+      "Class",
+    ])
       .default("Public")
       .notNull(),
   },
@@ -210,6 +215,7 @@ export const term = mysqlTable(
   {
     id: varchar("id", { length: 191 }).notNull(),
     studySetId: varchar("studySetId", { length: 191 }).notNull(),
+    ephemeral: boolean("ephemeral").notNull().default(false),
   },
   (table) => {
     return {

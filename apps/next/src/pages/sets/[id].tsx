@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 import { HeadSeo } from "@quenti/components/head-seo";
-import { db, eq, sql } from "@quenti/drizzle";
+import { and, db, eq, sql } from "@quenti/drizzle";
 import { studySet, term } from "@quenti/drizzle/schema";
 import type { GetServerSidePropsContext } from "@quenti/types";
 
@@ -67,7 +67,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     },
   });
 
-  if (!set || set.visibility == "Private") return { props: { set: null } };
+  if (!set || ["Private", "Class"].includes(set.visibility))
+    return { props: { set: null } };
 
   const { count } = (
     await db
@@ -75,7 +76,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         count: sql<number>`cast(count(${term.id}) as unsigned)`,
       })
       .from(term)
-      .where(eq(term.studySetId, set.id))
+      .where(and(eq(term.studySetId, set.id), eq(term.ephemeral, false)))
   )[0]!;
 
   return {

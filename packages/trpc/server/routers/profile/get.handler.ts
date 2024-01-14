@@ -33,7 +33,11 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
           createdAt: true,
           _count: {
             select: {
-              terms: true,
+              terms: {
+                where: {
+                  ephemeral: false,
+                },
+              },
             },
           },
         },
