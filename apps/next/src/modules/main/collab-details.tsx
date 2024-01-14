@@ -58,7 +58,7 @@ export const CollabDetails = () => {
     });
 
     c.push(
-      ...collaborators.map(
+      ...collaborators.slice(0, 27).map(
         (s) =>
           ({
             type: "collaborator",
@@ -143,9 +143,8 @@ export const CollabDetails = () => {
             )}
           </Stack>
         </Box>
-        <Box w="full">
+        <Box display="flex" w="full">
           <Flex
-            w="max"
             maxH="128px"
             overflow="hidden"
             justifyContent={{ base: "start", md: "center" }}
