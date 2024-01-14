@@ -3,8 +3,8 @@ import React from "react";
 import useFitText from "use-fit-text";
 
 import { Display } from "@quenti/components/display";
+import type { FacingTerm } from "@quenti/interfaces";
 import { outfit } from "@quenti/lib/chakra-theme";
-import type { Term } from "@quenti/prisma/client";
 
 import {
   Box,
@@ -33,9 +33,10 @@ import {
 import { resize } from "../common/cdn-loaders";
 import { PhotoView } from "./photo-view/photo-view";
 import { SetCreatorOnly } from "./set-creator-only";
+import { TermAuthorAvatar } from "./term-author-avatar";
 
 export interface FlashcardProps {
-  term: Term;
+  term: FacingTerm;
   isFlipped: boolean;
   index: number;
   numTerms: number;
@@ -107,9 +108,21 @@ export const Flashcard: React.FC<FlashcardProps> = ({
                 isDisabled={index == 0}
               />
             )}
-            <Text fontWeight={700} color="gray.500">
-              {isFlipped ? "Definition" : "Term"}
-            </Text>
+            <HStack spacing="3">
+              {term.author && (
+                <Box
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  <TermAuthorAvatar user={term.author} computePosition />
+                </Box>
+              )}
+              <Text fontWeight={700} color="gray.500">
+                {isFlipped ? "Definition" : "Term"}
+              </Text>
+            </HStack>
           </HStack>
           <Flex justifyContent="center">
             <Text fontWeight={700} fontSize="lg">

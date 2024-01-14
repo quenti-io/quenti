@@ -22,7 +22,7 @@ const options: { label: string; value: LimitedStudySetAnswerMode }[] = [
 
 export const CardsAnswerModeSection = () => {
   const { status } = useSession();
-  const { id, type } = useSetFolderUnison();
+  const { id, entityType } = useSetFolderUnison();
 
   const cardsAnswerWith = useContainerContext((s) => s.cardsAnswerWith);
   const setCardsAnswerWith = useContainerContext((s) => s.setCardsAnswerWith);
@@ -54,7 +54,7 @@ export const CardsAnswerModeSection = () => {
               apiCardsAnswerWith.mutate({
                 entityId: id,
                 cardsAnswerWith: e!.value,
-                type: type == "set" ? "StudySet" : "Folder",
+                type: entityType == "set" ? "StudySet" : "Folder",
               });
           }}
           chakraStyles={{

@@ -1,3 +1,4 @@
+import type { FacingTerm } from "@quenti/interfaces";
 import {
   type MatchData,
   type MultipleChoiceData,
@@ -7,7 +8,7 @@ import {
   type TrueFalseData,
 } from "@quenti/interfaces";
 import { getRandom, shuffleArray } from "@quenti/lib/array";
-import type { StudySetAnswerMode, Term } from "@quenti/prisma/client";
+import type { StudySetAnswerMode } from "@quenti/prisma/client";
 
 export const getAnswerMode = (
   answerMode: StudySetAnswerMode,
@@ -19,7 +20,7 @@ export const getAnswerMode = (
 export const generateTrueFalseQuestion = (
   term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
-  allTerms: Term[],
+  allTerms: FacingTerm[],
 ): TestQuestion<TrueFalseData> => {
   const evaluation = Math.random() > 0.5;
   const distractor = !evaluation
@@ -42,7 +43,7 @@ export const generateTrueFalseQuestion = (
 export const generateMcqQuestion = (
   term: TermWithDistractors,
   answerMode: StudySetAnswerMode,
-  alTerms: Term[],
+  alTerms: FacingTerm[],
 ): TestQuestion<MultipleChoiceData> => {
   const mode = getAnswerMode(answerMode);
 
@@ -67,7 +68,7 @@ export const generateMcqQuestion = (
 };
 
 export const generateMatchQuestion = (
-  terms: Term[],
+  terms: FacingTerm[],
   answerMode: StudySetAnswerMode,
 ): TestQuestion<MatchData> => {
   return {
@@ -83,7 +84,7 @@ export const generateMatchQuestion = (
 };
 
 export const generateWriteQuestion = (
-  term: Term,
+  term: FacingTerm,
   answerMode: StudySetAnswerMode,
 ): TestQuestion => {
   return {

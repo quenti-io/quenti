@@ -38,7 +38,7 @@ const Set = ({ set }: inferSSRProps<typeof getServerSideProps>) => {
         />
       )}
       <LazyWrapper>
-        <InternalSet />
+        <InternalSet collab={set?.type == "Collab"} />
       </LazyWrapper>
     </>
   );
@@ -51,6 +51,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     where: eq(studySet.id, ctx.query?.id as string),
     columns: {
       id: true,
+      type: true,
       title: true,
       description: true,
       visibility: true,

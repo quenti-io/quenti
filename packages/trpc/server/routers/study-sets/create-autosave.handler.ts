@@ -26,7 +26,6 @@ export const createAutosaveHandler = async ({ ctx }: CreateAutosaveOptions) => {
     },
     select: {
       ...studySetSelect,
-      created: true,
       terms: {
         select: termsSelect,
       },

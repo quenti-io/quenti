@@ -12,7 +12,8 @@
       "inputs": ["**/*", "!apps/cdn/**"]
     },
     "start": {
-      "outputs": ["dist/**", "build/**"]
+      "outputs": ["dist/**", "build/**"],
+      "cache": false
     },
     "lint": {
       "dependsOn": ["^lint"],

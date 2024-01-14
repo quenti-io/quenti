@@ -17,31 +17,54 @@ import {
 import { IconPointFilled } from "@tabler/icons-react";
 
 import { ClassLogo } from "../modules/classes/class-logo";
-import { getColorFromId } from "../utils/color";
 import { plural } from "../utils/string";
 
 interface ClassCardProps {
   id: string;
   name: string;
+  bannerColor: string;
   logo?: string | null;
   hash?: string | null;
+  variant?: "selectable" | "normal";
   data: Widen<
     | { students: number; sections: number }
     | { studySets: number; folders: number }
   >;
   for: UserType;
+  disableLink?: boolean;
+  selected?: boolean;
+  onClick?: () => void;
 }
 
 export const ClassCard: React.FC<ClassCardProps> = ({
   id,
   name,
+  bannerColor,
   data,
   logo,
   hash,
   for: for_,
+  variant = "normal",
+  disableLink = false,
+  selected = false,
+  onClick,
 }) => {
   const linkBg = useColorModeValue("white", "gray.800");
   const linkBorder = useColorModeValue("gray.200", "gray.700");
+
+  const children = disableLink ? (
+    name
+  ) : (
+    <LinkOverlay
+      as={Link}
+      href={`/classes/${id}`}
+      _focus={{
+        outline: "none",
+      }}
+    >
+      {name}
+    </LinkOverlay>
+  );
 
   return (
     <LinkBox
@@ -50,22 +73,25 @@ export const ClassCard: React.FC<ClassCardProps> = ({
       rounded="lg"
       p="5"
       bg={linkBg}
-      borderColor={linkBorder}
+      borderColor={selected ? "blue.300" : linkBorder}
+      opacity={variant !== "selectable" || selected ? 1 : 0.7}
       borderWidth="2px"
       shadow="lg"
       position="relative"
       transition="all ease-in-out 150ms"
+      cursor={variant == "selectable" ? "pointer" : undefined}
       _hover={{
         transform: "translateY(-2px)",
-        borderBottomColor: "blue.300",
+        ...(variant == "normal" ? { borderBottomColor: "blue.300" } : {}),
       }}
       sx={{
         "&:has(:focus-visible)": {
           transform: "translateY(-2px)",
-          borderColor: "blue.300",
+          ...(variant == "normal" ? { borderColor: "blue.300" } : {}),
         },
       }}
       overflow="hidden"
+      onClick={onClick}
     >
       <Box
         w="full"
@@ -76,7 +102,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
         justifyContent="end"
         top="0"
         left="0"
-        bgGradient={`linear(to-r, blue.400, ${getColorFromId(id)})`}
+        bgGradient={`linear(to-r, blue.400, ${bannerColor})`}
         zIndex="50"
         pointerEvents="none"
       />
@@ -112,15 +138,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
               WebkitBoxOrient: "vertical",
             }}
           >
-            <LinkOverlay
-              as={Link}
-              href={`/classes/${id}`}
-              _focus={{
-                outline: "none",
-              }}
-            >
-              {name}
-            </LinkOverlay>
+            {children}
           </Heading>
           <HStack fontSize="sm" color="gray.500" spacing="1">
             {for_ == "Student" ? (

@@ -28,6 +28,7 @@ import {
   IconDotsVertical,
   IconEditCircle,
   IconTrash,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 
 import { visibilityIcon } from "../../common/visibility-icon";
@@ -37,7 +38,7 @@ import { SetCreatorOnly } from "../../components/set-creator-only";
 import { useSet } from "../../hooks/use-set";
 
 export const HeadingArea = () => {
-  const { id, title, tags, terms, visibility } = useSet();
+  const { id, title, type, tags, terms, visibility } = useSet();
   const router = useRouter();
   const text = useColorModeValue("gray.600", "gray.400");
   const tagBg = useColorModeValue("gray.200", "gray.750");
@@ -70,13 +71,42 @@ export const HeadingArea = () => {
         destructive
       />
       <Stack spacing={4}>
-        {tags.length && (
-          <HStack spacing={3} flexWrap="wrap">
-            {tags.map((t, i) => (
-              <Tag bg={tagBg} key={i} fontWeight={600}>
-                {t}
-              </Tag>
-            ))}
+        {(type == "Collab" || tags.length) && (
+          <HStack spacing="4">
+            {type == "Collab" && (
+              <HStack
+                h="32px"
+                w="88px"
+                borderWidth="1px"
+                borderColor="gray.300"
+                color="blue.600"
+                bg="white"
+                _dark={{
+                  bg: "gray.800",
+                  color: "blue.100",
+                  borderColor: "gray.600",
+                }}
+                shadow="sm"
+                rounded="xl"
+                spacing="6px"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <IconUsersGroup size={14} />
+                <Text fontWeight={600} fontSize="sm">
+                  Collab
+                </Text>
+              </HStack>
+            )}
+            {tags.length && (
+              <HStack spacing={3} flexWrap="wrap">
+                {tags.map((t, i) => (
+                  <Tag bg={tagBg} key={i} fontWeight={600}>
+                    {t}
+                  </Tag>
+                ))}
+              </HStack>
+            )}
           </HStack>
         )}
         <Heading size="2xl">{title}</Heading>

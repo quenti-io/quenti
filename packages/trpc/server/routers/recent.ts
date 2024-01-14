@@ -16,7 +16,7 @@ export const recentRouter = createTRPCRouter({
     for (const set of sets) {
       entities.push({
         ...set,
-        type: "set",
+        entityType: "set",
         slug: null,
         numItems: set._count.terms,
       });
@@ -25,7 +25,7 @@ export const recentRouter = createTRPCRouter({
       entities.push({
         ...draft,
         draft: true,
-        type: "set",
+        entityType: "set",
         viewedAt: draft.savedAt,
         slug: null,
         numItems: draft._count.terms,
@@ -34,7 +34,7 @@ export const recentRouter = createTRPCRouter({
     for (const folder of folders) {
       entities.push({
         ...folder,
-        type: "folder",
+        entityType: "folder",
         numItems: folder._count.studySets,
       });
     }

@@ -48,7 +48,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
   onNextRound,
   onResetProgress,
 }) => {
-  const { id, container, type } = useSetFolderUnison();
+  const { id, container, entityType } = useSetFolderUnison();
   const router = useRouter();
   const cardBg = useColorModeValue("white", "gray.750");
   const borderColor = useColorModeValue("gray.200", "gray.750");
@@ -123,7 +123,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
                     icon={IconCards}
                     onClick={onNextRound}
                   />
-                ) : type == "set" ? (
+                ) : entityType == "set" ? (
                   <Actionable
                     name="Continue to Learn"
                     description="Keep studying with multiple choice and written questions."
@@ -140,7 +140,7 @@ export const SortFlashcardProgress: React.FC<SortFlashcardProgressProps> = ({
                   icon={IconRotateClockwise}
                   onClick={onResetProgress}
                 />
-                {!stillLearning && type == "folder" && (
+                {!stillLearning && entityType == "folder" && (
                   <Actionable
                     name="Back to folder overview"
                     description=""

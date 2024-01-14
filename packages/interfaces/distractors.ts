@@ -1,4 +1,6 @@
-import type { DistractorType, Term } from "@quenti/prisma/client";
+import type { DistractorType } from "@quenti/prisma/client";
+
+import type { FacingTerm } from "./studiable-term";
 
 export type Distractor = {
   type: DistractorType;
@@ -6,6 +8,6 @@ export type Distractor = {
   distractingId: string;
 };
 
-export type TermWithDistractors = Term & {
+export type TermWithDistractors = FacingTerm & {
   distractors: Distractor[];
 };

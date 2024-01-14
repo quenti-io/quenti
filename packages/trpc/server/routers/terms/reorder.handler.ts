@@ -44,6 +44,7 @@ export const reorderHandler = async ({ ctx, input }: ReorderOptions) => {
     await prisma.term.updateMany({
       where: {
         studySetId: input.studySetId,
+        ephemeral: false,
         rank: {
           gte: Math.min(currentRank, input.term.rank),
           lte: Math.max(currentRank, input.term.rank),

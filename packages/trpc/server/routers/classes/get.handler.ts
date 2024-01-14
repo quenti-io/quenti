@@ -35,6 +35,7 @@ const studySetsSelect = Prisma.validator<Prisma.Class$studySetsArgs>()({
       select: {
         id: true,
         title: true,
+        type: true,
         visibility: true,
         user: {
           select: {
@@ -45,7 +46,22 @@ const studySetsSelect = Prisma.validator<Prisma.Class$studySetsArgs>()({
         },
         _count: {
           select: {
-            terms: true,
+            terms: {
+              where: {
+                ephemeral: false,
+              },
+            },
+            collaborators: true,
+          },
+        },
+        collaborators: {
+          take: 5,
+          select: {
+            user: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
       },
@@ -81,6 +97,11 @@ const sectionsSelect = Prisma.validator<Prisma.Class$sectionsArgs>()({
   select: {
     id: true,
     name: true,
+    joinCode: {
+      select: {
+        code: true,
+      },
+    },
     _count: {
       select: {
         students: true,
@@ -136,6 +157,7 @@ const getTeacher = async (id: string, prisma: PrismaClient) => {
       description: true,
       logoUrl: true,
       logoHash: true,
+      bannerColor: true,
       bannerUrl: true,
       bannerHash: true,
       cortexCategory: true,
@@ -170,6 +192,7 @@ const getStudent = async (id: string, prisma: PrismaClient) => {
       description: true,
       logoUrl: true,
       logoHash: true,
+      bannerColor: true,
       bannerUrl: true,
       bannerHash: true,
       cortexCategory: true,
@@ -205,8 +228,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   const class_ = (
     member?.type === "Teacher" ||
-    orgMember?.role === "Admin" ||
-    orgMember?.role === "Owner"
+    ["Admin", "Owner"].includes(orgMember?.role || "")
       ? await getTeacher(input.id, ctx.prisma)
       : await getStudent(input.id, ctx.prisma)
   ) as Widened;
@@ -217,11 +239,18 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     description: class_.description,
     logoUrl: class_.logoUrl,
     logoHash: class_.logoHash,
+    bannerColor: class_.bannerColor,
     bannerUrl: class_.bannerUrl,
     bannerHash: class_.bannerHash,
     cortexCategory: class_.cortexCategory,
     cortexCourse: class_.cortexCourse,
-    studySets: class_.studySets.map((s) => s.studySet),
+    studySets: class_.studySets.map((set) => ({
+      ...set.studySet,
+      collaborators: {
+        total: set.studySet._count.collaborators,
+        avatars: set.studySet.collaborators.map((c) => c.user.image || ""),
+      },
+    })),
     folders: class_.folders.map((f) => f.folder),
     ...strip({
       organization: class_.organization,
@@ -231,6 +260,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
         id: s.id,
         name: s.name,
         students: s._count.students,
+        joinCode: s.joinCode,
       })),
       teacherInvites: class_.invites,
     }),
@@ -239,6 +269,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
       type:
         member?.type || (orgMember?.role == "Member" ? "Student" : "Teacher"),
       sectionId: member?.sectionId,
+      preferences: member?.preferences,
     },
   };
 };

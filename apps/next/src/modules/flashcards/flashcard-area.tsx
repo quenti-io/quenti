@@ -20,7 +20,7 @@ export const FlashcardArea = () => {
   React.useEffect(() => {
     setTermOrder(shuffle ? shuffleArray(Array.from(_termOrder)) : _termOrder);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shuffle, _termOrder.length]);
+  }, [shuffle, JSON.stringify(_termOrder)]);
 
   return (
     <RootFlashcardWrapper

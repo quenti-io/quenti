@@ -24,7 +24,6 @@ const getAutosaveById = async (
     },
     select: {
       ...studySetSelect,
-      created: true,
       terms: {
         select: termsSelect,
       },
@@ -55,7 +54,6 @@ export const getAutosaveHandler = async ({
         },
         select: {
           ...studySetSelect,
-          created: true,
           terms: {
             select: termsSelect,
           },
@@ -82,7 +80,6 @@ export const getAutosaveHandler = async ({
       },
       select: {
         ...studySetSelect,
-        created: true,
         terms: {
           select: termsSelect,
         },

@@ -9,15 +9,14 @@ import {
   Center,
   Grid,
   GridItem,
-  HStack,
   Heading,
   Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
 
-import { IconPlus } from "@tabler/icons-react";
-
+import { GenericCollaboratorsFooter } from "./generic-collaborators-footer";
+import { GhostGroup } from "./ghost-group";
 import { SelectableGenericCard } from "./selectable-generic-card";
 
 export interface AddEntitiesModal {
@@ -72,11 +71,21 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
             {entities.map((entity) => (
               <GridItem key={entity.id}>
                 <SelectableGenericCard
-                  type={entity.type}
+                  type={entity.entityType}
                   title={entity.title}
                   numItems={entity.numItems}
                   user={entity.user}
                   selected={selectedIds.includes(entity.id)}
+                  bottom={
+                    entity.type === "Collab" ? (
+                      <GenericCollaboratorsFooter
+                        avatars={entity.collaborators?.avatars || []}
+                        total={entity.collaborators?.total || 0}
+                        emptyText="No collaborators"
+                        darkBg="gray.750"
+                      />
+                    ) : undefined
+                  }
                   onSelect={() => {
                     setSelectedIds((s) => {
                       if (s.includes(entity.id)) {
@@ -92,16 +101,16 @@ export const AddEntitiesModal: React.FC<AddEntitiesModal> = ({
           </Grid>
           {!entities.length && !isEntitiesLoading && (
             <Center>
-              <VStack>
-                <HStack>
-                  <IconPlus />
-                  <Heading size="lg" fontWeight={600}>
+              <VStack spacing="10">
+                <GhostGroup />
+                <VStack>
+                  <Heading fontSize="2xl" fontWeight={600}>
                     Nothing to add
                   </Heading>
-                </HStack>
-                <Text color="gray.500">
-                  Your study material will show up here.
-                </Text>
+                  <Text color="gray.500">
+                    Your study material will show up here.
+                  </Text>
+                </VStack>
               </VStack>
             </Center>
           )}

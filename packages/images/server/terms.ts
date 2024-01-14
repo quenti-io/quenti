@@ -55,6 +55,19 @@ export const deleteTermAsset = async (studySetId: string, termId: string) => {
   );
 };
 
+export const deleteTermAssets = async (keys: string[]) => {
+  if (!S3) return;
+
+  await S3.send(
+    new DeleteObjectsCommand({
+      Bucket: ASSETS_BUCKET,
+      Delete: {
+        Objects: keys.map((key) => ({ Key: key })),
+      },
+    }),
+  );
+};
+
 export const deleteStudySetAssets = async (studySetId: string) => {
   if (!S3) return;
 

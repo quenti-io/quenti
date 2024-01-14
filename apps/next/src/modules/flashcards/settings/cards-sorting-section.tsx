@@ -10,7 +10,7 @@ import { useContainerContext } from "../../../stores/use-container-store";
 
 export const CardsSortingSection = () => {
   const authed = useSession().status == "authenticated";
-  const { id, type } = useSetFolderUnison();
+  const { id, entityType } = useSetFolderUnison();
 
   const [enableCardsSorting, setEnableCardsSorting] = useContainerContext(
     (s) => [s.enableCardsSorting, s.setEnableCardsSorting],
@@ -48,7 +48,7 @@ export const CardsSortingSection = () => {
           apiEnableCardsSorting.mutate({
             entityId: id,
             enableCardsSorting: e.target.checked,
-            type: type == "set" ? "StudySet" : "Folder",
+            type: entityType == "set" ? "StudySet" : "Folder",
           });
         }}
       />

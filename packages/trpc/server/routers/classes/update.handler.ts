@@ -28,6 +28,7 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
     data: {
       name: input.name,
       description: input.description,
+      bannerColor: input.bannerColor,
       ...(input.clearLogo
         ? {
             logoUrl: null,

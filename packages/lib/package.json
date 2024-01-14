@@ -21,6 +21,7 @@
     "@tiptap/extension-underline": "^2.1.12",
     "@tiptap/html": "^2.1.12",
     "@tiptap/react": "^2.1.12",
+    "dayjs": "^1.11.10",
     "next": "^14.0.4",
     "react": "^18.2.0"
   },

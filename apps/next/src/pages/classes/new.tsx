@@ -5,6 +5,7 @@ import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { EnabledFeature } from "@quenti/lib/feature";
 import { api } from "@quenti/trpc";
 
 import {
@@ -27,6 +28,7 @@ import { PageWrapper } from "../../common/page-wrapper";
 import { AutoResizeTextarea } from "../../components/auto-resize-textarea";
 import { Loading } from "../../components/loading";
 import { WizardLayout } from "../../components/wizard-layout";
+import { useFeature } from "../../hooks/use-feature";
 import { useStudentRedirect } from "../../hooks/use-student-redirect";
 import { getLayout } from "../../layouts/main-layout";
 import { useTelemetry } from "../../lib/telemetry";
@@ -50,6 +52,7 @@ export default function NewClass() {
   const router = useRouter();
   const { event } = useTelemetry();
   const { data: session } = useSession();
+  const earlyClassAccess = useFeature(EnabledFeature.EarlyClassAccess);
 
   useStudentRedirect("/home");
 
@@ -87,12 +90,14 @@ export default function NewClass() {
   };
 
   React.useEffect(() => {
-    if (!session?.user || session.user.organizationId) return;
+    if (!session?.user || session.user.organizationId || earlyClassAccess)
+      return;
     void router.push("/home");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user]);
 
-  if (!session?.user || !session.user.organizationId) return <Loading />;
+  if (!session?.user || (!session.user.organizationId && !earlyClassAccess))
+    return <Loading />;
 
   return (
     <WizardLayout

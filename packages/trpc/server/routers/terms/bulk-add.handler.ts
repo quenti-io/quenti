@@ -21,7 +21,11 @@ export const bulkAddHandler = async ({ ctx, input }: BulkAddOptions) => {
       created: true,
       _count: {
         select: {
-          terms: true,
+          terms: {
+            where: {
+              ephemeral: false,
+            },
+          },
         },
       },
     },
@@ -52,6 +56,7 @@ export const bulkAddHandler = async ({ ctx, input }: BulkAddOptions) => {
   return await ctx.prisma.term.findMany({
     where: {
       studySetId: input.studySetId,
+      ephemeral: false,
     },
     select: {
       id: true,

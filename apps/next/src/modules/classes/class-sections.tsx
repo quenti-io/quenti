@@ -11,6 +11,7 @@ import { useClass } from "../../hooks/use-class";
 import { plural } from "../../utils/string";
 import { SettingsWrapper } from "../organizations/settings-wrapper";
 import { AddSectionModal } from "./add-section-modal";
+import { ClassJoinCodeModal } from "./class-join-code-modal";
 import { EditSectionModal } from "./edit-section-modal";
 import { SectionCard } from "./section-card";
 import { useProtectedRedirect } from "./use-protected-redirect";
@@ -23,6 +24,7 @@ export const ClassSections = () => {
   const [addOpen, setAddOpen] = React.useState(false);
   const [editId, setEditId] = React.useState<string | undefined>();
   const [deleteId, setDeleteId] = React.useState<string | undefined>();
+  const [joinId, setJoinId] = React.useState<string | undefined>();
   const toDelete = data?.sections?.find((s) => s.id === deleteId);
 
   const deleteSection = api.classes.deleteSection.useMutation({
@@ -41,6 +43,11 @@ export const ClassSections = () => {
             isOpen={!!editId}
             onClose={() => setEditId(undefined)}
             sectionId={editId}
+          />
+          <ClassJoinCodeModal
+            isOpen={!!joinId}
+            onClose={() => setJoinId(undefined)}
+            sectionId={joinId}
           />
           <ConfirmModal
             isOpen={!!deleteId}
@@ -80,6 +87,7 @@ export const ClassSections = () => {
                   students={section.students}
                   onRequestEdit={() => setEditId(section.id)}
                   onRequestDelete={() => setDeleteId(section.id)}
+                  onRequestJoinCode={() => setJoinId(section.id)}
                 />
               ))}
           {(data?.sections?.length || 0) < 10 && (
