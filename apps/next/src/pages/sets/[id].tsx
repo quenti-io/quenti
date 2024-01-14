@@ -117,8 +117,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         ...set,
         terms: count,
         collaborators,
-        collab: set.type == "Collab",
       },
+      collab: set.type == "Collab",
     },
   };
 };
