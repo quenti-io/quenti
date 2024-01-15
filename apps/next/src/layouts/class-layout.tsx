@@ -70,7 +70,7 @@ export const ClassLayout: React.FC<
 > = ({ children, hideNav = false, returnTo }) => {
   const router = useRouter();
   const id = router.query.id as string;
-  const { data } = useClass();
+  const { data } = useClass({ refetchOnMount: true });
   const utils = api.useUtils();
 
   const bg = useColorModeValue("gray.50", "gray.900");

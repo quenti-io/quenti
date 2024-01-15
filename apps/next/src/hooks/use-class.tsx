@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 
 import { api } from "@quenti/trpc";
 
-export const useClass = () => {
+interface UseClassOptions {
+  refetchOnMount?: boolean;
+}
+
+export const useClass = (opts?: UseClassOptions) => {
   const router = useRouter();
   const session = useSession();
   const id = router.query.id as string;
@@ -12,7 +16,7 @@ export const useClass = () => {
     { id },
     {
       enabled: !!id && !!session.data?.user,
-      refetchOnMount: false,
+      refetchOnMount: opts?.refetchOnMount ?? false,
     },
   );
 };

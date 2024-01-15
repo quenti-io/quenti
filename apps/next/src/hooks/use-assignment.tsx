@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 
 import { api } from "@quenti/trpc";
 
-export const useAssignment = () => {
+interface UseAssignmentOptions {
+  refetchOnMount?: boolean;
+}
+
+export const useAssignment = (opts?: UseAssignmentOptions) => {
   const router = useRouter();
   const session = useSession();
   const id = router.query.id as string;
@@ -13,6 +17,7 @@ export const useAssignment = () => {
     { classId: id, id: assignmentId },
     {
       enabled: !!id && !!assignmentId && !!session.data?.user,
+      refetchOnMount: opts?.refetchOnMount ?? false,
     },
   );
 };
