@@ -6,6 +6,7 @@ import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, Stack, Text } from "@chakra-ui/react";
 
+import { effectChannel } from "../../events/effects";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 import { CollabContext } from "../hydrate-collab-data";
@@ -35,6 +36,11 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({
   const submit = api.collab.submit.useMutation({
     onSuccess: async () => {
       await router.push(`/${id}`);
+
+      effectChannel.emit("prepareConfetti");
+      requestAnimationFrame(() => {
+        effectChannel.emit("confetti");
+      });
     },
   });
 
