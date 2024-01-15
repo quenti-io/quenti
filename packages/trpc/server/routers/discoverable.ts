@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import { EnabledFeature } from "../common/constants";
+import { EnabledFeature } from "@quenti/lib/feature";
+
 import { createTRPCRouter, lockedProcedure } from "../trpc";
 
 const staticDir = path.join(process.cwd(), "../../packages/trpc/server/static");

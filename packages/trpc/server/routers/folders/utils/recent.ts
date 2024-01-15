@@ -39,6 +39,25 @@ export const getRecentFolders = async (
                   OR: [
                     { visibility: "Public" },
                     { visibility: "Unlisted" },
+                    {
+                      AND: [
+                        { visibility: "Class" },
+                        {
+                          classesWithAccess: {
+                            some: {
+                              class: {
+                                members: {
+                                  some: {
+                                    userId,
+                                    deletedAt: null,
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
                     { userId },
                   ],
                 },

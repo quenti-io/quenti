@@ -22,18 +22,19 @@ import {
 
 import {
   IconLogout,
+  IconPaint,
   IconSettings,
   IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
 
-import { ToastWrapper } from "../../../common/toast-wrapper";
 import { AnimatedCheckCircle } from "../../../components/animated-icons/check";
 import { AutoResizeTextarea } from "../../../components/auto-resize-textarea";
 import { ConfirmModal } from "../../../components/confirm-modal";
 import { Toast } from "../../../components/toast";
 import { useClass } from "../../../hooks/use-class";
 import { SettingsWrapper } from "../../organizations/settings-wrapper";
+import { BannerPicker } from "../banner-picker";
 import { ClassLogo } from "../class-logo";
 import { ClassSections } from "../class-sections";
 import { useClassLogoUpload } from "../use-class-logo-upload";
@@ -61,12 +62,16 @@ export const ClassSettings = () => {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [bannerColor, setBannerColor] = React.useState("");
+
+  const [bannerPickerOpen, setBannerPickerOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (data && !mounted) {
       setMounted(true);
       setName(data.name);
       setDescription(data.description);
+      setBannerColor(data.bannerColor);
       setImageSrc(data.logoUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,7 +118,7 @@ export const ClassSettings = () => {
   const inputBorder = useColorModeValue("gray.300", "gray.600");
 
   return (
-    <ToastWrapper>
+    <>
       <ConfirmModal
         isOpen={leaveOpen}
         onClose={() => setLeaveOpen(false)}
@@ -158,6 +163,7 @@ export const ClassSettings = () => {
                 onClick={() => {
                   setName(data!.name);
                   setDescription(data!.description);
+                  setBannerColor(data!.bannerColor);
                   setImageSrc(data!.logoUrl);
                 }}
               >
@@ -172,6 +178,7 @@ export const ClassSettings = () => {
                     id: data!.id,
                     name,
                     description,
+                    bannerColor,
                     clearLogo: imageSrc === null,
                   });
                 }}
@@ -256,6 +263,54 @@ export const ClassSettings = () => {
                 </ButtonGroup>
               </Stack>
             </HStack>
+            <Stack spacing="3">
+              <Skeleton rounded="md" isLoaded={isLoaded} w="max">
+                <HStack color="gray.500">
+                  <IconPaint size={16} />
+                  <Text fontSize="sm" fontWeight={500}>
+                    Default banner color
+                  </Text>
+                </HStack>
+              </Skeleton>
+              <Skeleton rounded="md" isLoaded={isLoaded}>
+                <BannerPicker
+                  isOpen={bannerPickerOpen}
+                  onClose={() => setBannerPickerOpen(false)}
+                  selected={bannerColor}
+                  onSelect={(c) => {
+                    setBannerColor(c);
+                    setBannerPickerOpen(false);
+                  }}
+                >
+                  <Box
+                    w="32"
+                    h="16"
+                    cursor="pointer"
+                    rounded="lg"
+                    bgGradient={`linear(to-tr, blue.300, ${bannerColor})`}
+                    onClick={() => setBannerPickerOpen(true)}
+                    shadow="sm"
+                    position="relative"
+                    role="group"
+                    overflow="hidden"
+                  >
+                    <Box
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      w="full"
+                      h="full"
+                      transition="opacity 0.15s ease-in-out"
+                      opacity={0}
+                      _hover={{
+                        opacity: 0.2,
+                      }}
+                      bg="white"
+                    />
+                  </Box>
+                </BannerPicker>
+              </Skeleton>
+            </Stack>
             <Stack spacing="4">
               <Stack spacing="1">
                 <Skeleton rounded="md" w="full" isLoaded={isLoaded}>
@@ -266,7 +321,6 @@ export const ClassSettings = () => {
                     placeholder="Name"
                   />
                 </Skeleton>
-                H
               </Stack>
               <Stack spacing="1">
                 <Skeleton rounded="md" w="full" isLoaded={isLoaded}>
@@ -316,6 +370,6 @@ export const ClassSettings = () => {
           </ButtonGroup>
         </SettingsWrapper>
       </Stack>
-    </ToastWrapper>
+    </>
   );
 };

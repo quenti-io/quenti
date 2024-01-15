@@ -1,13 +1,13 @@
 import React from "react";
 
-import type { Term } from "@quenti/prisma/client";
+import type { FacingTerm } from "@quenti/interfaces";
 
 import { Box, Card, Center, Flex, HStack, Text } from "@chakra-ui/react";
 
 import { IconEditCircle, IconStar } from "@tabler/icons-react";
 
 interface DeloadedTermProps {
-  term: Term;
+  term: FacingTerm;
   creator?: boolean;
 }
 
@@ -41,6 +41,7 @@ export const DeloadedTermRaw: React.FC<DeloadedTermProps> = ({
           px={{ base: 3, md: 0 }}
           py={{ base: 3, md: 0 }}
         >
+          {term.authorId && <Box minW="6" w="6" h="6" />}
           <Text
             w="full"
             whiteSpace="pre-wrap"

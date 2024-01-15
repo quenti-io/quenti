@@ -3,9 +3,8 @@ import { log } from "next-axiom";
 import React from "react";
 
 import { GenericLabel } from "@quenti/components";
-import type { Question } from "@quenti/interfaces";
+import type { FacingTerm, Question } from "@quenti/interfaces";
 import { getRandom } from "@quenti/lib/array";
-import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import {
@@ -61,7 +60,7 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
 
   const put = api.studiableTerms.put.useMutation();
 
-  const choose = (term: Term) => {
+  const choose = (term: FacingTerm) => {
     const elapsed = Date.now() - start;
 
     if (term.id === active.term.id) {

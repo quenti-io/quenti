@@ -7,12 +7,16 @@ import { DescriptionAreaSkeleton } from "./skeletons/description-area-skeleton";
 import { FlashcardPreviewSkeleton } from "./skeletons/flashcard-preview-skeleton";
 import { HeadingAreaSkeleton } from "./skeletons/heading-area-skeleton";
 
-export const SetLoadingRaw = () => {
+interface SetLoadingProps {
+  collab?: boolean;
+}
+
+export const SetLoadingRaw: React.FC<SetLoadingProps> = ({ collab }) => {
   return (
     <WithFooter>
       <Container maxW="7xl">
         <Stack spacing="10">
-          <HeadingAreaSkeleton />
+          <HeadingAreaSkeleton collab={collab} />
         </Stack>
       </Container>
       <Container maxW="full" overflow="hidden" px="0" py="6">

@@ -63,7 +63,11 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
               visibility: true,
               _count: {
                 select: {
-                  terms: true,
+                  terms: {
+                    where: {
+                      ephemeral: false,
+                    },
+                  },
                 },
               },
             },
@@ -94,6 +98,7 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
         studySetId: {
           in: folder.studySets.map((s) => s.studySet.id),
         },
+        ephemeral: false,
       },
     });
 

@@ -99,6 +99,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   const [added, setAdded] = React.useState(false);
 
   const id = useSetEditorContext((s) => s.id);
+  const readonly = useSetEditorContext((s) => s.readonly);
   const setCurrentActive = useSetEditorContext((s) => s.setCurrentActiveRank);
   const removeImage = useSetEditorContext((s) => s.removeImage);
 
@@ -258,8 +259,6 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
   };
 
   const editIfDirty = (focused: boolean) => {
-    console.log("EDITING");
-
     const {
       isDirty,
       word,
@@ -305,8 +304,8 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
         <Text fontWeight={700} fontFamily="heading" w="72px">
           {term.rank + 1}
         </Text>
-        {isCurrent && <RichTextBar activeEditor={activeEditor} />}
-        <ButtonGroup size="sm">
+        {isCurrent && !readonly && <RichTextBar activeEditor={activeEditor} />}
+        <ButtonGroup size="sm" isDisabled={readonly}>
           <IconButton
             icon={<IconGripHorizontal size={18} />}
             aria-label="Reorder"
@@ -318,7 +317,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             icon={<IconTrash size={18} />}
             aria-label="Delete"
             variant="ghost"
-            isDisabled={!deletable}
+            isDisabled={readonly || !deletable}
             onClick={() => deleteTerm(term.id)}
           />
         </ButtonGroup>
@@ -335,7 +334,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
       >
         <Stack w="full" spacing={2}>
           <Box pos="relative">
-            {initialized || justCreated ? (
+            {(initialized || justCreated) && !readonly ? (
               <EditorContent
                 editor={wordEditor}
                 onFocus={() => setWordFocused(true)}
@@ -375,7 +374,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
         </Stack>
         <Stack w="full" spacing={2}>
           <Box pos="relative">
-            {initialized || justCreated ? (
+            {(initialized || justCreated) && !readonly ? (
               <EditorContent
                 editor={definitionEditor}
                 placeholder={`Enter ${placeholderDefinition}`}
@@ -404,7 +403,7 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
             ) : (
               <DeloadedDisplayable>{term.definition}</DeloadedDisplayable>
             )}
-            {isCurrent && (
+            {isCurrent && !readonly && (
               <CharacterSuggestionsPure
                 language={definitionLanguage}
                 focused={definitionFocused}
@@ -442,10 +441,13 @@ export const InnerTermCardRaw: React.FC<InnerTermCardProps> = ({
                   }}
                 />
               </PhotoView>
-              <RemoveImageButton onClick={() => removeImage(term.id)} />
+              {!readonly && (
+                <RemoveImageButton onClick={() => removeImage(term.id)} />
+              )}
             </>
           ) : (
             <AddImageButton
+              isDisabled={readonly}
               onClick={() => {
                 const {
                   isDirty,

@@ -6,7 +6,7 @@ import { useSetFolderUnison } from "../../../hooks/use-set-folder-unison";
 import { useContainerContext } from "../../../stores/use-container-store";
 
 export const StudyStarredSection = () => {
-  const { id, type } = useSetFolderUnison();
+  const { id, entityType } = useSetFolderUnison();
 
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const cardsStudyStarred = useContainerContext((s) => s.cardsStudyStarred);
@@ -30,7 +30,7 @@ export const StudyStarredSection = () => {
           setCardsStudyStarred(e.target.checked);
           apiSetCardsStudyStarred.mutate({
             entityId: id,
-            type: type == "set" ? "StudySet" : "Folder",
+            type: entityType == "set" ? "StudySet" : "Folder",
             cardsStudyStarred: e.target.checked,
           });
         }}

@@ -54,7 +54,7 @@ export const FolderSets = () => {
         isEntitiesLoading={recentForAdd.isLoading}
         entities={(recentForAdd.data ?? []).map((s) => ({
           ...s,
-          type: "set",
+          entityType: "set",
           numItems: s._count.terms,
           slug: "",
         }))}
@@ -76,6 +76,7 @@ export const FolderSets = () => {
               studySet={studySet}
               user={studySet.user}
               numTerms={studySet._count.terms}
+              collaborators={studySet.collaborators}
               removable={amCreator}
               onRemove={() => {
                 removeSet.mutate({

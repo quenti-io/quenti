@@ -51,6 +51,9 @@ export const EditorContextLayer: React.FC<
       );
     },
   });
+
+  const apiSetClassesWithAccess = api.studySets.setAllowedClasses.useMutation();
+
   const apiAddTerm = api.terms.add.useMutation({
     onSuccess: (data, { term: termInput }) => {
       const state = storeRef.current!.getState();
@@ -118,6 +121,7 @@ export const EditorContextLayer: React.FC<
 
   const isSaving =
     apiEditSet.isLoading ||
+    apiSetClassesWithAccess.isLoading ||
     apiAddTerm.isLoading ||
     apiBulkAddTerms.isLoading ||
     apiBulkDeleteTerms.isLoading ||
@@ -195,8 +199,15 @@ export const EditorContextLayer: React.FC<
         })) as ClientTerm[],
         mode,
         serverTerms: data.terms.map((x) => x.id),
+        collab: undefined,
       },
       {
+        setClassesWithAccess: (classes) => {
+          apiSetClassesWithAccess.mutate({
+            studySetId: data.id,
+            classIds: classes,
+          });
+        },
         bulkAddTerms: (terms, deleted) => {
           void (async () => {
             if (!!deleted?.length) {

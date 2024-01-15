@@ -7,7 +7,7 @@ import { Box, Card, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { ScriptFormatter } from "./script-formatter";
 
 export interface GenericTermCardProps {
-  term: Term;
+  term: Omit<Term, "ephemeral" | "authorId" | "submissionId" | "topicId">;
   variantBg?: boolean;
 }
 

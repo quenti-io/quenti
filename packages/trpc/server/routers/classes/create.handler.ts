@@ -1,7 +1,10 @@
 import { inngest } from "@quenti/inngest";
+import { randomBannerColor } from "@quenti/lib/color";
+import { EnabledFeature } from "@quenti/lib/feature";
 
 import { TRPCError } from "@trpc/server";
 
+import { hasFeature } from "../../common/feature";
 import type { NonNullableUserContext } from "../../lib/types";
 import type { TCreateSchema } from "./create.schema";
 
@@ -12,7 +15,11 @@ type CreateOptions = {
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
   const orgId = ctx.session.user.organizationId;
-  if (!orgId)
+
+  if (
+    !orgId &&
+    !hasFeature(EnabledFeature.EarlyClassAccess, ctx.session.user.flags)
+  )
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Classes are not yet supported for personal accounts",
@@ -22,6 +29,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     data: {
       name: input.name,
       description: input.description ?? "",
+      bannerColor: randomBannerColor(),
       orgId,
       members: {
         create: {

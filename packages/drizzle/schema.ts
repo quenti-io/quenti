@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  datetime,
   index,
   mysqlEnum,
   mysqlTable,
@@ -25,6 +26,100 @@ export const entityShare = mysqlTable(
       entityShareEntityIdKey: unique("EntityShare_entityId_key").on(
         table.entityId,
       ),
+    };
+  },
+);
+
+export const classJoinCode = mysqlTable(
+  "ClassJoinCode",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    classId: varchar("classId", { length: 191 }).notNull(),
+    sectionId: varchar("sectionId", { length: 191 }).notNull(),
+    code: varchar("code", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      classJoinCodeIdPk: primaryKey({
+        columns: [table.id],
+        name: "ClassJoinCode_id_pk",
+      }),
+      classJoinCodeSectionIdKey: unique("ClassJoinCode_sectionId_key").on(
+        table.sectionId,
+      ),
+      classJoinCodeCodeKey: unique("ClassJoinCode_code_key").on(table.code),
+      classJoinCodeClassIdIdx: index("ClassJoinCode_classId_idx").on(
+        table.classId,
+      ),
+    };
+  },
+);
+
+export const classJoinCodeRelations = relations(classJoinCode, ({ one }) => ({
+  class: one(class_, {
+    fields: [classJoinCode.classId],
+    references: [class_.id],
+  }),
+}));
+
+export const class_ = mysqlTable(
+  "Class",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    orgId: varchar("orgId", { length: 191 }),
+    name: varchar("name", { length: 191 }).notNull(),
+    description: varchar("description", { length: 191 }).notNull(),
+    logoUrl: varchar("logoUrl", { length: 191 }),
+    logoHash: varchar("logoHash", { length: 191 }),
+    bannerColor: varchar("bannerColor", { length: 191 }).notNull(),
+    bannerUrl: varchar("bannerUrl", { length: 191 }),
+    bannerHash: varchar("bannerHash", { length: 191 }),
+  },
+  (table) => {
+    return {
+      classIdPk: primaryKey({
+        columns: [table.id],
+        name: "Class_id_pk",
+      }),
+      orgIdIdx: index("Class_orgId_idx").on(table.orgId),
+    };
+  },
+);
+
+export const studySetsOnClasses = mysqlTable(
+  "StudySetsOnClasses",
+  {
+    studySetId: varchar("studySetId", { length: 191 }).notNull(),
+    classId: varchar("classId", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      studySetIdClassIdPk: primaryKey({
+        columns: [table.studySetId, table.classId],
+        name: "StudySetsOnClasses_studySetId_classId_pk",
+      }),
+      studySetIdIdx: index("StudySetsOnClasses_studySetId_idx").on(
+        table.studySetId,
+      ),
+      classIdIdx: index("StudySetsOnClasses_classId_idx").on(table.classId),
+    };
+  },
+);
+
+export const foldersOnClasses = mysqlTable(
+  "FoldersOnClasses",
+  {
+    folderId: varchar("folderId", { length: 191 }).notNull(),
+    classId: varchar("classId", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      folderIdClassIdPk: primaryKey({
+        columns: [table.folderId, table.classId],
+        name: "FoldersOnClasses_folderId_classId_pk",
+      }),
+      folderIdIdx: index("FoldersOnClasses_folderId_idx").on(table.folderId),
+      classIdIdx: index("FoldersOnClasses_classId_idx").on(table.classId),
     };
   },
 );
@@ -66,8 +161,14 @@ export const studySet = mysqlTable(
     id: varchar("id", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     title: varchar("title", { length: 255 }).notNull(),
+    type: mysqlEnum("type", ["Default", "Collab"]).notNull(),
     description: varchar("description", { length: 2000 }).notNull(),
-    visibility: mysqlEnum("visibility", ["Private", "Unlisted", "Public"])
+    visibility: mysqlEnum("visibility", [
+      "Private",
+      "Unlisted",
+      "Public",
+      "Class",
+    ])
       .default("Public")
       .notNull(),
   },
@@ -83,12 +184,52 @@ export const studySet = mysqlTable(
   },
 );
 
-export const studySetRelations = relations(studySet, ({ one }) => ({
+export const studySetRelations = relations(studySet, ({ one, many }) => ({
   user: one(user, {
     fields: [studySet.userId],
     references: [user.id],
   }),
+  collaborators: many(studySetCollaborator),
 }));
+
+export const studySetCollaborator = mysqlTable(
+  "StudySetCollaborator",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    studySetId: varchar("studySetId", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }).notNull(),
+    createdAt: datetime("createdAt").notNull(),
+  },
+  (table) => {
+    return {
+      idPk: primaryKey({
+        columns: [table.id],
+      }),
+      studySetIdIdx: index("StudySetCollaborator_studySetId_idx").on(
+        table.studySetId,
+        table.userId,
+      ),
+      userIdIdx: index("StudySetCollaborator_userId_idx").on(table.userId),
+      studySetIdUserIdKey: unique(
+        "StudySetCollaborator_studySetId_userId_key",
+      ).on(table.studySetId, table.userId),
+    };
+  },
+);
+
+export const studySetCollaboratorRelations = relations(
+  studySetCollaborator,
+  ({ one }) => ({
+    studySet: one(studySet, {
+      fields: [studySetCollaborator.studySetId],
+      references: [studySet.id],
+    }),
+    user: one(user, {
+      fields: [studySetCollaborator.userId],
+      references: [user.id],
+    }),
+  }),
+);
 
 export const studySetsOnFolders = mysqlTable(
   "StudySetsOnFolders",
@@ -115,6 +256,7 @@ export const term = mysqlTable(
   {
     id: varchar("id", { length: 191 }).notNull(),
     studySetId: varchar("studySetId", { length: 191 }).notNull(),
+    ephemeral: boolean("ephemeral").notNull().default(false),
   },
   (table) => {
     return {

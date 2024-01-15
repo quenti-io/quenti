@@ -1,4 +1,5 @@
-import { EnabledFeature } from "../../common/constants";
+import { EnabledFeature } from "@quenti/lib/feature";
+
 import { loadHandler } from "../../lib/load-handler";
 import {
   createTRPCRouter,

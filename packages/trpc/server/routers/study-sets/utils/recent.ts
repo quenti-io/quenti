@@ -17,8 +17,31 @@ export const getRecentStudySets = async (
       studySet: {
         OR: [
           {
-            visibility: {
-              not: "Private",
+            AND: {
+              visibility: {
+                not: "Private",
+              },
+              OR: [
+                {
+                  visibility: {
+                    not: "Class",
+                  },
+                },
+                {
+                  classesWithAccess: {
+                    some: {
+                      class: {
+                        members: {
+                          some: {
+                            userId,
+                            deletedAt: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
             },
           },
           {
@@ -49,6 +72,7 @@ export const getRecentStudySets = async (
         id: true,
         userId: true,
         createdAt: true,
+        type: true,
         title: true,
         description: true,
         tags: true,
@@ -63,7 +87,22 @@ export const getRecentStudySets = async (
         },
         _count: {
           select: {
-            terms: true,
+            terms: {
+              where: {
+                ephemeral: false,
+              },
+            },
+            collaborators: true,
+          },
+        },
+        collaborators: {
+          take: 5,
+          select: {
+            user: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
       },
@@ -76,6 +115,10 @@ export const getRecentStudySets = async (
       user: {
         username: set.user.username!,
         image: set.user.image!,
+      },
+      collaborators: {
+        total: set._count.collaborators,
+        avatars: set.collaborators.map((c) => c.user.image || ""),
       },
     }));
 };
@@ -116,6 +159,7 @@ export const getRecentDrafts = async (prisma: PrismaClient, userId: string) => {
         id: true,
         userId: true,
         title: true,
+        type: true,
         description: true,
         savedAt: true,
         createdAt: true,

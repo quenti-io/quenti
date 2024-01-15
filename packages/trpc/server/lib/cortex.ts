@@ -18,13 +18,16 @@ export const regenerateCortex = async (id: string) => {
       studySetId: id,
     },
     select: {
+      ephemeral: true,
       id: true,
       word: true,
       definition: true,
     },
   });
 
-  const distractors = await bulkGenerateDistractors(terms);
+  const distractors = await bulkGenerateDistractors(
+    terms.filter((t) => !t.ephemeral),
+  );
 
   const ids = terms.map((d) => d.id);
 

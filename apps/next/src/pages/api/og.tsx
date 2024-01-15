@@ -28,6 +28,12 @@ const entitySchema = z.object({
     image: z.string(),
     username: z.string(),
   }),
+  collaborators: z
+    .object({
+      total: z.number(),
+      avatars: z.array(z.string()),
+    })
+    .optional(),
 });
 
 const profileSchema = z.object({
@@ -67,16 +73,28 @@ export default async function handler(request: NextRequest) {
   switch (imageType) {
     case "StudySet":
     case "Folder": {
-      const { type, title, description, numItems, user } = entitySchema.parse({
-        type: searchParams.get("type"),
-        title: searchParams.get("title"),
-        description: searchParams.get("description"),
-        numItems: parseInt(searchParams.get("numItems")!),
-        user: {
-          image: searchParams.get("userImage"),
-          username: searchParams.get("username"),
-        },
-      });
+      const total = searchParams.get("collaborators");
+      const avatars = searchParams.get("avatars");
+      const collab =
+        total && avatars
+          ? {
+              total: parseInt(total),
+              avatars: JSON.parse(avatars) as string[],
+            }
+          : undefined;
+
+      const { type, title, description, numItems, user, collaborators } =
+        entitySchema.parse({
+          type: searchParams.get("type"),
+          title: searchParams.get("title"),
+          description: searchParams.get("description"),
+          numItems: parseInt(searchParams.get("numItems")!),
+          user: {
+            image: searchParams.get("userImage"),
+            username: searchParams.get("username"),
+          },
+          collaborators: collab,
+        });
 
       const img = new ImageResponse(
         (
@@ -86,6 +104,7 @@ export default async function handler(request: NextRequest) {
             description={description}
             numItems={numItems}
             user={user}
+            collaborators={collaborators}
           />
         ),
         ogConfig,

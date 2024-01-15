@@ -30,12 +30,12 @@ import { getServerAuthSession } from "@quenti/auth";
  * transformer
  */
 import { env } from "@quenti/env/server";
+import type { EnabledFeature } from "@quenti/lib/feature";
 import { prisma } from "@quenti/prisma";
 
 import { TRPCError, initTRPC } from "@trpc/server";
 import type { CreateNextContextOptions } from "@trpc/server/adapters/next";
 
-import type { EnabledFeature } from "./common/constants";
 import { register } from "./prometheus";
 
 type CreateContextOptions = {

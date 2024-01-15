@@ -3,9 +3,9 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
+import type { FacingTerm } from "@quenti/interfaces";
 import { type Rect, areRectanglesOverlapping, pad } from "@quenti/lib/area";
 import { takeNRandom } from "@quenti/lib/array";
-import type { Term } from "@quenti/prisma/client";
 
 import {
   MATCH_SHUFFLE_TIME,
@@ -23,8 +23,8 @@ export interface MatchStoreProps {
   termsThisRound: number;
   roundProgress: number;
   incorrectGuesses: number;
-  studiableTerms: Term[];
-  roundQuestions: (Term & {
+  studiableTerms: FacingTerm[];
+  roundQuestions: (FacingTerm & {
     completed: boolean;
   })[];
   isEligibleForLeaderboard: boolean;
@@ -58,7 +58,7 @@ const MATCH_TIMER_BOUNDS = { x: 300, y: 150 };
 
 interface MatchState extends MatchStoreProps {
   initialize: (
-    studiableTerms: Term[],
+    studiableTerms: FacingTerm[],
     isEligibleForLeaderboard: boolean,
   ) => void;
   // Maybe this shouldn't use ids because it's pretty easy to cheat this way

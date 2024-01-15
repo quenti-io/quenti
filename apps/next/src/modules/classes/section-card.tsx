@@ -4,6 +4,7 @@ import {
   Box,
   Card,
   HStack,
+  IconButton,
   Menu,
   MenuButton,
   MenuList,
@@ -16,6 +17,7 @@ import {
   IconDotsVertical,
   IconEditCircle,
   IconTrashX,
+  IconUsersPlus,
 } from "@tabler/icons-react";
 
 import { MenuOption } from "../../components/menu-option";
@@ -27,6 +29,7 @@ export interface SectionCardProps {
   skeleton?: boolean;
   onRequestEdit?: () => void;
   onRequestDelete?: () => void;
+  onRequestJoinCode?: () => void;
 }
 
 export const SectionCard: React.FC<SectionCardProps> = ({
@@ -35,6 +38,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   skeleton,
   onRequestEdit,
   onRequestDelete,
+  onRequestJoinCode,
 }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const menuBg = useColorModeValue("white", "gray.800");
@@ -50,43 +54,53 @@ export const SectionCard: React.FC<SectionCardProps> = ({
               {plural(students, "student")}
             </Text>
           </HStack>
-          <Menu
-            isOpen={menuOpen}
-            onClose={() => setMenuOpen(false)}
-            onOpen={() => setMenuOpen(true)}
-            placement="bottom-end"
-          >
-            <MenuButton>
-              <Box w="6" display="flex" justifyContent="center">
-                <IconDotsVertical size="18" />
-              </Box>
-            </MenuButton>
-            <MenuList
-              bg={menuBg}
-              py={0}
-              overflow="hidden"
-              minW="auto"
-              shadow="lg"
-              w="32"
-              display={menuOpen ? "block" : "none"}
+          <HStack spacing="1">
+            <IconButton
+              size="xs"
+              icon={<IconUsersPlus size={18} />}
+              aria-label="Add students"
+              variant="ghost"
+              colorScheme="gray"
+              onClick={onRequestJoinCode}
+            />
+            <Menu
+              isOpen={menuOpen}
+              onClose={() => setMenuOpen(false)}
+              onOpen={() => setMenuOpen(true)}
+              placement="bottom-end"
             >
-              <MenuOption
-                icon={<IconEditCircle size={16} />}
-                label="Edit"
-                fontSize="sm"
-                py="6px"
-                onClick={onRequestEdit}
-              />
-              <MenuOption
-                icon={<IconTrashX size={16} />}
-                label="Delete"
-                fontSize="sm"
-                py="6px"
-                color={red}
-                onClick={onRequestDelete}
-              />
-            </MenuList>
-          </Menu>
+              <MenuButton>
+                <Box w="6" display="flex" justifyContent="center">
+                  <IconDotsVertical size="18" />
+                </Box>
+              </MenuButton>
+              <MenuList
+                bg={menuBg}
+                py={0}
+                overflow="hidden"
+                minW="auto"
+                shadow="lg"
+                w="32"
+                display={menuOpen ? "block" : "none"}
+              >
+                <MenuOption
+                  icon={<IconEditCircle size={16} />}
+                  label="Edit"
+                  fontSize="sm"
+                  py="6px"
+                  onClick={onRequestEdit}
+                />
+                <MenuOption
+                  icon={<IconTrashX size={16} />}
+                  label="Delete"
+                  fontSize="sm"
+                  py="6px"
+                  color={red}
+                  onClick={onRequestDelete}
+                />
+              </MenuList>
+            </Menu>
+          </HStack>
         </HStack>
       </Card>
     </Skeleton>

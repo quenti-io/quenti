@@ -2,9 +2,16 @@ import React from "react";
 
 import { Flex, HStack, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
 
-export const HeadingAreaSkeletonRaw = () => {
+interface HeadingAreaSkeletonProps {
+  collab?: boolean;
+}
+
+export const HeadingAreaSkeletonRaw: React.FC<HeadingAreaSkeletonProps> = ({
+  collab,
+}) => {
   return (
     <Stack spacing={4}>
+      {collab && <Skeleton w="88px" h="32px" rounded="xl" />}
       <Skeleton fitContent rounded="lg">
         <Heading size="2xl">Placeholder Set Title</Heading>
       </Skeleton>

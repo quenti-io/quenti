@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 
 import { Display } from "@quenti/components/display";
+import type { FacingTerm } from "@quenti/interfaces";
 import {
   type EditorTerm,
   editorInput,
@@ -10,7 +11,6 @@ import {
   hasRichText,
   richTextToHtml,
 } from "@quenti/lib/editor";
-import type { Term } from "@quenti/prisma/client";
 import { api } from "@quenti/trpc";
 
 import {
@@ -28,6 +28,7 @@ import { IconEditCircle, IconStar, IconStarFilled } from "@tabler/icons-react";
 import { resize } from "../../common/cdn-loaders";
 import { PhotoView } from "../../components/photo-view/photo-view";
 import { SetCreatorOnly } from "../../components/set-creator-only";
+import { TermAuthorAvatar } from "../../components/term-author-avatar";
 import { editorEventChannel } from "../../events/editor";
 import { menuEventChannel } from "../../events/menu";
 import { useOutsideClick } from "../../hooks/use-outside-click";
@@ -41,7 +42,7 @@ import { RichTextBar } from "../editor/card/rich-text-bar";
 import { editorConfig } from "../editor/editor-config";
 
 export interface DisplayableTermProps {
-  term: Term;
+  term: FacingTerm;
 }
 
 export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
@@ -180,6 +181,7 @@ export const DisplayableTerm: React.FC<DisplayableTermProps> = ({ term }) => {
           px={{ base: 3, md: 0 }}
           py={{ base: 3, md: 0 }}
         >
+          {term.author && <TermAuthorAvatar user={term.author} />}
           {isEditing ? (
             <Stack w="full">
               <RichTextBar activeEditor={wordEditor} />

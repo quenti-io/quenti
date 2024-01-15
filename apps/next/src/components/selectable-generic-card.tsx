@@ -28,6 +28,7 @@ export interface SelectableGenericCard {
     username: string;
     image: string | null;
   };
+  bottom?: React.ReactNode;
   selected: boolean;
   onSelect: () => void;
 }
@@ -38,6 +39,7 @@ export const SelectableGenericCard: React.FC<SelectableGenericCard> = ({
   visibility,
   numItems,
   user,
+  bottom,
   selected,
   onSelect,
 }) => {
@@ -100,17 +102,25 @@ export const SelectableGenericCard: React.FC<SelectableGenericCard> = ({
               visibilityIcon(visibility, 16)}
           </HStack>
         </Stack>
-        <HStack spacing="2">
-          <Avatar src={avatarUrl(user)} size="xs" className="highlight-block" />
-          <Text
-            fontSize="sm"
-            fontWeight={600}
-            className="highlight-block"
-            w="max-content"
-          >
-            {user.username}
-          </Text>
-        </HStack>
+        {!bottom ? (
+          <HStack spacing="2">
+            <Avatar
+              src={avatarUrl(user)}
+              size="xs"
+              className="highlight-block"
+            />
+            <Text
+              fontSize="sm"
+              fontWeight={600}
+              className="highlight-block"
+              w="max-content"
+            >
+              {user.username}
+            </Text>
+          </HStack>
+        ) : (
+          bottom
+        )}
       </Flex>
     </Box>
   );

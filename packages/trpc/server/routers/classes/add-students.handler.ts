@@ -74,6 +74,7 @@ export const addStudentsHandler = async ({
       classes: {
         select: {
           classId: true,
+          deletedAt: true,
         },
       },
     },
@@ -88,17 +89,26 @@ export const addStudentsHandler = async ({
     },
   });
 
-  const memberships: { userId: string; email: string }[] = [];
+  const createMemberships: { userId: string; email: string }[] = [];
+  const updateMemberships: { userId: string }[] = [];
   const inviteEmails: string[] = [];
 
   for (const email of input.emails) {
     const invite = existingInvites.find((i) => i.email === email);
     if (invite) continue;
+
     const user = existingusers.find((u) => u.email === email);
-    if (user?.classes.find((c) => c.classId === input.classId)) continue;
+    const foundClass = user?.classes.find((c) => c.classId === input.classId);
+
+    if (foundClass) {
+      if (foundClass.deletedAt) {
+        updateMemberships.push({ userId: user!.id });
+      }
+      continue;
+    }
 
     if (user) {
-      memberships.push({ userId: user.id, email });
+      createMemberships.push({ userId: user.id, email });
     } else {
       inviteEmails.push(email);
     }
@@ -113,15 +123,31 @@ export const addStudentsHandler = async ({
     })),
   });
 
-  await ctx.prisma.classMembership.createMany({
-    data: memberships.map(({ userId, email }) => ({
-      userId,
-      email,
-      classId: input.classId,
-      type: "Student",
-      sectionId: input.sectionId,
-    })),
-  });
+  if (createMemberships.length) {
+    await ctx.prisma.classMembership.createMany({
+      data: createMemberships.map(({ userId, email }) => ({
+        userId,
+        email,
+        classId: input.classId,
+        type: "Student",
+        sectionId: input.sectionId,
+      })),
+    });
+  }
+
+  if (updateMemberships.length) {
+    await ctx.prisma.classMembership.updateMany({
+      where: {
+        classId: input.classId,
+        userId: {
+          in: updateMemberships.map((u) => u.userId),
+        },
+      },
+      data: {
+        deletedAt: null,
+      },
+    });
+  }
 };
 
 export default addStudentsHandler;

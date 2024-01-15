@@ -5,6 +5,7 @@ import React from "react";
 import { Link } from "@quenti/components";
 import { outfit } from "@quenti/lib/chakra-theme";
 import { WEBSITE_URL } from "@quenti/lib/constants/url";
+import { EnabledFeature } from "@quenti/lib/feature";
 
 import {
   Button,
@@ -29,6 +30,7 @@ import {
 } from "@tabler/icons-react";
 
 import { Logo } from "../../../../../packages/components/logo";
+import { useFeature } from "../../hooks/use-feature";
 import { useMe } from "../../hooks/use-me";
 import { MenuOption } from "../menu-option";
 import { TeacherOnly } from "../teacher-only";
@@ -50,6 +52,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 
+  const earlyClassAccess = useFeature(EnabledFeature.EarlyClassAccess);
   const menuBg = useColorModeValue("white", "gray.800");
 
   return (
@@ -95,7 +98,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             Home
           </Button>
           <TeacherOnly>
-            {session.user?.isOrgEligible && (
+            {session.user?.isOrgEligible && !earlyClassAccess && (
               <UnboundOnly strict>
                 <Button
                   as={Link}

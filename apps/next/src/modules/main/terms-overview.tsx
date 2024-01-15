@@ -1,7 +1,8 @@
 import { useSession } from "next-auth/react";
 import React from "react";
 
-import type { Term } from "@quenti/prisma/client";
+import { ToggleGroup } from "@quenti/components/toggle-group";
+import type { FacingTerm } from "@quenti/interfaces";
 
 import {
   Box,
@@ -23,7 +24,6 @@ import {
   type TablerIconsProps,
 } from "@tabler/icons-react";
 
-import { ToggleGroup } from "../../components/toggle-group";
 import { useAuthedSet, useSet } from "../../hooks/use-set";
 import { useContainerContext } from "../../stores/use-container-store";
 import { TermWrapper } from "./term-wrapper";
@@ -63,6 +63,8 @@ export const TermsOverview = () => {
   React.useEffect(() => {
     if (!starredTerms.length) setStarredOnly(false);
   }, [starredTerms.length]);
+
+  if (!terms.length) return null;
 
   return (
     <TermsOverviewContext.Provider value={{ starredOnly }}>
@@ -198,7 +200,7 @@ const TermsByAlphabetical = () => {
 interface TermsCategoryProps {
   heading: string;
   subheading: string;
-  terms: Term[];
+  terms: FacingTerm[];
   icon: React.FC<TablerIconsProps>;
   color: string;
 }
@@ -245,7 +247,7 @@ const TermsCategory: React.FC<TermsCategoryProps> = ({
 };
 
 interface TermsListProps {
-  terms: Term[];
+  terms: FacingTerm[];
   sortOrder?: string[];
   slice?: number;
 }
