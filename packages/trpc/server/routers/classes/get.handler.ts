@@ -104,7 +104,11 @@ const sectionsSelect = Prisma.validator<Prisma.Class$sectionsArgs>()({
     },
     _count: {
       select: {
-        students: true,
+        students: {
+          where: {
+            deletedAt: null,
+          },
+        },
       },
     },
   },
@@ -113,6 +117,7 @@ const sectionsSelect = Prisma.validator<Prisma.Class$sectionsArgs>()({
 const membersSelect = Prisma.validator<Prisma.Class$membersArgs>()({
   where: {
     type: "Teacher",
+    deletedAt: null,
   },
   select: {
     id: true,
@@ -173,6 +178,7 @@ const getTeacher = async (id: string, prisma: PrismaClient) => {
           members: {
             where: {
               type: "Student",
+              deletedAt: null,
             },
           },
         },
@@ -216,14 +222,8 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
   }
 
   if (member) {
-    await ctx.prisma.classMembership.update({
-      where: {
-        id: member.id,
-      },
-      data: {
-        viewedAt: new Date(),
-      },
-    });
+    await ctx.prisma
+      .$executeRaw`UPDATE ClassMembership SET viewedAt = NOW() WHERE id = ${member.id};`;
   }
 
   const class_ = (

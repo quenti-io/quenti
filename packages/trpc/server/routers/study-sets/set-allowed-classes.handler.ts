@@ -32,6 +32,7 @@ export const setAllowedClassesHandler = async ({
         some: {
           type: "Teacher",
           userId: ctx.session.user.id,
+          deletedAt: null,
         },
       },
     },

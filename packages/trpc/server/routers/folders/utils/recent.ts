@@ -49,6 +49,7 @@ export const getRecentFolders = async (
                                 members: {
                                   some: {
                                     userId,
+                                    deletedAt: null,
                                   },
                                 },
                               },

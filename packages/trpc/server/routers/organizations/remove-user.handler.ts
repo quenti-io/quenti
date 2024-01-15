@@ -59,12 +59,14 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     },
   });
 
-  await ctx.prisma.classMembership.deleteMany({
+  await ctx.prisma.classMembership.updateMany({
     where: {
       class: {
         orgId: input.orgId,
       },
-      userId: input.userId,
+    },
+    data: {
+      deletedAt: null,
     },
   });
 };

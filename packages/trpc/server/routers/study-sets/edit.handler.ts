@@ -47,6 +47,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         where: {
           userId: ctx.session.user.id,
           type: "Teacher",
+          deletedAt: null,
         },
         select: {
           class: {

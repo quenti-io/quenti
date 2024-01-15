@@ -35,6 +35,7 @@ export const newAttemptHandler = async ({ ctx, input }: NewAttemptOptions) => {
               members: {
                 where: {
                   userId: ctx.session.user.id,
+                  deletedAt: null,
                 },
                 select: {
                   id: true,
@@ -84,7 +85,7 @@ export const newAttemptHandler = async ({ ctx, input }: NewAttemptOptions) => {
   }
 
   const memberId = studySet.assignment.class.members[0]?.id;
-  if (!memberId) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  if (!memberId) throw new TRPCError({ code: "NOT_FOUND" });
 
   const submission = studySet.assignment.submissions[0];
   if (!submission) throw new TRPCError({ code: "NOT_FOUND" });

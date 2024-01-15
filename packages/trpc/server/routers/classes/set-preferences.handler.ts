@@ -18,6 +18,7 @@ export const setPreferencesHandler = async ({
         classId: input.classId,
         userId: ctx.session.user.id,
       },
+      deletedAt: null,
     },
     select: {
       id: true,

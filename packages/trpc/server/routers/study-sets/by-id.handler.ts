@@ -75,6 +75,7 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
             members: {
               some: {
                 userId: ctx.session.user.id,
+                deletedAt: null,
               },
             },
           },
@@ -157,14 +158,14 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
 
   return {
     ...studySet,
+    assignment: shouldShowAssignment
+      ? strip({
+          ...studySet.assignment,
+          submission: studySet.assignment?.submissions[0],
+          submissions: undefined,
+        })
+      : undefined,
     ...strip({
-      assignment: shouldShowAssignment
-        ? strip({
-            ...studySet.assignment,
-            submission: studySet.assignment?.submissions[0],
-            submissions: undefined,
-          })
-        : undefined,
       collaborators: (studySet.collaborators as Collaborator[])
         ?.sort(
           (a, b) =>

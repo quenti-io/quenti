@@ -16,13 +16,39 @@ const main = async () => {
     },
   });
 
-  await prisma.classMembership.createMany({
-    data: users.map((user) => ({
+  const reinstate = await prisma.user.findMany({
+    where: {
+      id: { in: users.map((x) => x.id) },
+      classes: {
+        some: {
+          classId,
+          deletedAt: { not: null },
+        },
+      },
+    },
+  });
+
+  const reinstateIds = reinstate.map((x) => x.id);
+
+  await prisma.classMembership.updateMany({
+    where: {
+      userId: { in: reinstateIds },
       classId,
-      userId: user.id,
-      type: "Student",
-      email: user.email,
-    })),
+    },
+    data: {
+      deletedAt: null,
+    },
+  });
+
+  await prisma.classMembership.createMany({
+    data: users
+      .filter((x) => !reinstateIds.includes(x.id))
+      .map((user) => ({
+        classId,
+        userId: user.id,
+        type: "Student",
+        email: user.email,
+      })),
   });
 };
 

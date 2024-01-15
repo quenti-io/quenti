@@ -30,6 +30,7 @@ export const getClassesHandler = async ({ ctx, input }: GetClassesOptions) => {
           members: {
             where: {
               type: "Student",
+              deletedAt: null,
             },
           },
           sections: true,

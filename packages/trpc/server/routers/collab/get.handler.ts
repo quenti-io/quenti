@@ -56,6 +56,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
               members: {
                 where: {
                   userId: ctx.session.user.id,
+                  deletedAt: null,
                 },
                 select: {
                   id: true,
@@ -87,8 +88,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
 
   const memberId = studySet.assignment.class.members[0]?.id;
   const collab = studySet.collab;
-  if (!memberId || !collab)
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  if (!memberId || !collab) throw new TRPCError({ code: "NOT_FOUND" });
 
   const isLocked =
     studySet.assignment.lockedAt && studySet.assignment.lockedAt <= new Date();

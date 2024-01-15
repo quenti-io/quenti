@@ -15,6 +15,7 @@ export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
         classId: input.id,
         userId: ctx.session.user.id,
       },
+      deletedAt: null,
     },
     include: {
       user: {
@@ -40,6 +41,7 @@ export const getMembersHandler = async ({ ctx, input }: GetMembersOptions) => {
       members: {
         where: {
           type: "Teacher",
+          deletedAt: null,
         },
         select: {
           id: true,

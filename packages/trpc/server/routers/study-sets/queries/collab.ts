@@ -31,6 +31,7 @@ export const collabSelect = (userId?: string) =>
               where: {
                 member: {
                   userId,
+                  deletedAt: null,
                 },
               },
               select: {
@@ -53,6 +54,7 @@ export const assignmentArgs = (userId: string) =>
         members: {
           some: {
             userId,
+            deletedAt: null,
           },
         },
       },
@@ -72,6 +74,7 @@ export const assignmentArgs = (userId: string) =>
           members: {
             where: {
               userId,
+              deletedAt: null,
             },
             select: {
               id: true,
@@ -84,6 +87,7 @@ export const assignmentArgs = (userId: string) =>
         where: {
           member: {
             userId,
+            deletedAt: null,
           },
         },
         orderBy: {
