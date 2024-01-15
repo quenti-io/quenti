@@ -59,7 +59,6 @@ export const AssignmentCollab = () => {
         <Skeleton isLoaded={isLoaded} rounded="lg" fitContent alignSelf="end">
           <Button
             w="max"
-            size="sm"
             rightIcon={<IconArrowRight size={18} />}
             isLoading={editCollab.isLoading}
             onClick={() => {

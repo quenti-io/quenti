@@ -138,7 +138,7 @@ export const AssignmentPublish = () => {
               </HStack>
             </Stack>
             {isLoaded ? (
-              <EditorContent editor={editor} />
+              assignment?.description && <EditorContent editor={editor} />
             ) : (
               <SkeletonText noOfLines={3} skeletonHeight={4} spacing="3" />
             )}
