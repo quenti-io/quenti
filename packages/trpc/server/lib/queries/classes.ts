@@ -9,6 +9,7 @@ export const getClassMember = async (classId: string, userId: string) => {
         classId,
         userId,
       },
+      deletedAt: null,
     },
     select: {
       id: true,

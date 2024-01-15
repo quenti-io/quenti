@@ -34,6 +34,7 @@ export const getRecentStudySets = async (
                         members: {
                           some: {
                             userId,
+                            deletedAt: null,
                           },
                         },
                       },

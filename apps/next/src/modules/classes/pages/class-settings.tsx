@@ -321,7 +321,6 @@ export const ClassSettings = () => {
                     placeholder="Name"
                   />
                 </Skeleton>
-                H
               </Stack>
               <Stack spacing="1">
                 <Skeleton rounded="md" w="full" isLoaded={isLoaded}>

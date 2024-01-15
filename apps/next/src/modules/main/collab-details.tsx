@@ -146,6 +146,7 @@ export const CollabDetails = () => {
         <Box display="flex" w="full">
           <Flex
             maxH="128px"
+            h="128px"
             overflow="hidden"
             justifyContent={{ base: "start", md: "center" }}
             ml={{ base: "-3", md: "0" }}

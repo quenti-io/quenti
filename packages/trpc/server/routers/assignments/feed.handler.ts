@@ -22,7 +22,11 @@ const sectionSelect = Prisma.validator<Prisma.SectionDefaultArgs>()({
     name: true,
     _count: {
       select: {
-        students: true,
+        students: {
+          where: {
+            deletedAt: null,
+          },
+        },
       },
     },
   },
@@ -70,6 +74,9 @@ const getTeacher = async (
         distinct: ["memberId"],
         where: {
           submittedAt: { not: null },
+          member: {
+            deletedAt: null,
+          },
         },
         select: {
           id: true,

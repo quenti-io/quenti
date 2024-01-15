@@ -59,6 +59,7 @@ export const inviteTeachersHandler = async ({
           members: {
             where: {
               type: "Teacher",
+              deletedAt: null,
             },
           },
         },

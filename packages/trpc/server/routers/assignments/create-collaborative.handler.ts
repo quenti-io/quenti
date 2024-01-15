@@ -81,6 +81,7 @@ export const createCollaborativeHandler = async ({
           some: {
             type: "Teacher",
             userId: ctx.session.user.id,
+            deletedAt: null,
           },
         },
       },

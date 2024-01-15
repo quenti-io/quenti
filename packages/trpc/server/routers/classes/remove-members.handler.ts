@@ -46,12 +46,15 @@ export const removeMembersHandler = async ({
         message: "You cannot remove yourself as the only teacher in a class.",
       });
 
-    await ctx.prisma.classMembership.deleteMany({
+    await ctx.prisma.classMembership.updateMany({
       where: {
         classId: input.id,
         id: {
           in: input.members,
         },
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
   } else {

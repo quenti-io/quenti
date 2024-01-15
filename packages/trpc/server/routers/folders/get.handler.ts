@@ -93,6 +93,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     const myClasses = await ctx.prisma.classMembership.findMany({
       where: {
         userId: ctx.session.user.id,
+        deletedAt: null,
       },
       select: {
         classId: true,

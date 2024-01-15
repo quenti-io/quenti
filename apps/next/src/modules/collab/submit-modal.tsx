@@ -6,6 +6,8 @@ import { api } from "@quenti/trpc";
 
 import { Button, ButtonGroup, Stack, Text } from "@chakra-ui/react";
 
+import { effectChannel } from "../../events/effects";
+import { queryEventChannel } from "../../events/query";
 import { useSetEditorContext } from "../../stores/use-set-editor-store";
 import { plural } from "../../utils/string";
 import { CollabContext } from "../hydrate-collab-data";
@@ -33,8 +35,17 @@ export const SubmitModal: React.FC<SubmitModalProps> = ({
   const canSubmit = submittableTerms >= collab.minTerms;
 
   const submit = api.collab.submit.useMutation({
-    onSuccess: async () => {
+    onSuccess: async ({ firstTime }) => {
       await router.push(`/${id}`);
+      if (!firstTime) return;
+
+      effectChannel.emit("prepareConfetti");
+
+      const handler = () => {
+        effectChannel.emit("confetti");
+        queryEventChannel.off("setQueryRefetched", handler);
+      };
+      queryEventChannel.on("setQueryRefetched", handler);
     },
   });
 

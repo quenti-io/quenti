@@ -1,6 +1,6 @@
 import type { FacingTerm } from "@quenti/interfaces";
 
-import { Popover, PopoverTrigger, chakra } from "@chakra-ui/react";
+import { Avatar, Popover, PopoverTrigger } from "@chakra-ui/react";
 
 import { CollaboratorPopoverContent } from "../modules/main/collaborator-popover-content";
 
@@ -21,7 +21,7 @@ export const TermAuthorAvatar: React.FC<TermAuthorAvatarProps> = ({
       computePositionOnMount={computePosition}
     >
       <PopoverTrigger>
-        <chakra.img
+        <Avatar
           bg="gray.200"
           _dark={{
             bg: "gray.700",
@@ -31,10 +31,9 @@ export const TermAuthorAvatar: React.FC<TermAuthorAvatarProps> = ({
             width: 24,
             height: 24,
             overflow: "hidden",
-            borderRadius: "50%",
           }}
           src={user.image || ""}
-          alt={`${user.username}'s avatar`}
+          icon={<></>}
         />
       </PopoverTrigger>
       <CollaboratorPopoverContent type="collaborator" user={user} />

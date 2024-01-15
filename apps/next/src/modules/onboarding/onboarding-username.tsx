@@ -109,7 +109,7 @@ export const OnboardingUsername = () => {
                     color: "gray.400",
                   }}
                 >
-                  Recommended size 256x256 for your avatar
+                  Recommended size 256x256
                 </Text>
                 <ButtonGroup
                   colorScheme="gray"

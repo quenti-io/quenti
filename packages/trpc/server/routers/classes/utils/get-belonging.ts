@@ -47,6 +47,7 @@ export const getBelongingClasses = async (userId: string) => {
     where: {
       userId,
       type: "Teacher",
+      deletedAt: null,
     },
     include: {
       class: {
@@ -62,6 +63,7 @@ export const getBelongingClasses = async (userId: string) => {
     where: {
       userId,
       type: "Student",
+      deletedAt: null,
     },
     include: {
       class: {

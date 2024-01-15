@@ -18,6 +18,7 @@ import { ZGetStudentsSchema } from "./get-students.schema";
 import { ZGetSchema } from "./get.schema";
 import { ZInviteTeachersSchema } from "./invite-teachers.schema";
 import { ZJoinSchema } from "./join.schema";
+import { ZLeaveSchema } from "./leave.schema";
 import { ZRemoveEntitySchema } from "./remove-entity.schema";
 import { ZRemoveMembersSchema } from "./remove-members.schema";
 import { ZSetPreferencesSchema } from "./set-preferences.schema";
@@ -37,6 +38,7 @@ type ClassesRouterHandlerCache = {
     create?: typeof import("./create.handler").createHandler;
     update?: typeof import("./update.handler").updateHandler;
     delete?: typeof import("./delete.handler").deleteHandler;
+    leave?: typeof import("./leave.handler").leaveHandler;
     ["invite-teachers"]?: typeof import("./invite-teachers.handler").inviteTeachersHandler;
     ["add-students"]?: typeof import("./add-students.handler").addStudentsHandler;
     ["add-entities"]?: typeof import("./add-entities.handler").addEntitiesHandler;
@@ -105,6 +107,12 @@ export const classesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await loadHandler(HANDLER_CACHE, "delete");
       return HANDLER_CACHE.handlers.delete!({ ctx, input });
+    }),
+  leave: protectedProcedure
+    .input(ZLeaveSchema)
+    .mutation(async ({ ctx, input }) => {
+      await loadHandler(HANDLER_CACHE, "leave");
+      return HANDLER_CACHE.handlers.leave!({ ctx, input });
     }),
   inviteTeachers: teacherProcedure
     .input(ZInviteTeachersSchema)

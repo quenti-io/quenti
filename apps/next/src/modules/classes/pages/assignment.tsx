@@ -61,7 +61,9 @@ import { useReadonlyEditor } from "../assignments/editor/use-readonly-editor";
 export const Assignment = () => {
   const router = useRouter();
   const { data: class_ } = useClass();
-  const { data: assignment } = useAssignment();
+  const { data: assignment } = useAssignment({
+    refetchOnMount: true,
+  });
   const isTeacher = useIsClassTeacher();
   const toast = useToast();
 

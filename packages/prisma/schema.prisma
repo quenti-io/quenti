@@ -267,6 +267,7 @@ model ClassMembership {
   type      ClassMembershipType
   viewedAt  DateTime?
   sectionId String?
+  deletedAt DateTime?
 
   class       Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
   user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
