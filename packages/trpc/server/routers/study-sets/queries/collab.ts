@@ -50,6 +50,22 @@ export const collabSelect = (userId?: string) =>
 export const assignmentArgs = (userId: string) =>
   Prisma.validator<Prisma.StudySet$assignmentArgs>()({
     where: {
+      OR: [
+        {
+          availableAt: { lte: new Date() },
+        },
+        {
+          class: {
+            members: {
+              some: {
+                userId,
+                deletedAt: null,
+                type: "Teacher",
+              },
+            },
+          },
+        },
+      ],
       class: {
         members: {
           some: {

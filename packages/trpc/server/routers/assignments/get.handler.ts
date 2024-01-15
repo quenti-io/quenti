@@ -157,6 +157,7 @@ const getStudent = async (
         classId,
       },
       AND: {
+        availableAt: { lte: new Date() },
         published: true,
       },
     },
