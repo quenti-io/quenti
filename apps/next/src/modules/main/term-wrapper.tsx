@@ -1,7 +1,7 @@
 import { useInView } from "framer-motion";
 import React from "react";
 
-import type { Term } from "@quenti/prisma/client";
+import type { FacingTerm } from "@quenti/interfaces";
 
 import { Box } from "@chakra-ui/react";
 
@@ -9,7 +9,7 @@ import { DeloadedTerm } from "./deloaded-term";
 import { DisplayableTermPure } from "./displayable-term";
 
 interface TermWrapperProps {
-  term: Term;
+  term: FacingTerm;
   creator?: boolean;
 }
 

@@ -1,8 +1,8 @@
 import { Box, type BoxProps } from "@chakra-ui/react";
 
-const gradient = (hsl: string) => `
+const gradient = (hsl: string, direction = "top") => `
   linear-gradient(
-    to top,
+    to ${direction},
     hsl(${hsl}) 0%,
     hsla(${hsl}, 0.987) 8.1%,
     hsla(${hsl}, 0.951) 15.5%,
@@ -23,13 +23,13 @@ const gradient = (hsl: string) => `
 `;
 
 export const BgGradient: React.FC<
-  BoxProps & { hsl: string; darkHsl?: string }
+  BoxProps & { hsl: string; darkHsl?: string; direction?: string }
 > = (props) => {
   return (
     <Box
-      backgroundImage={gradient(props.hsl)}
+      backgroundImage={gradient(props.hsl, props.direction)}
       _dark={{
-        backgroundImage: gradient(props.darkHsl ?? props.hsl),
+        backgroundImage: gradient(props.darkHsl ?? props.hsl, props.direction),
       }}
       {...props}
     />

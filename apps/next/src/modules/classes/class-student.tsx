@@ -116,10 +116,10 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
         background: hoverColor,
       }}
       _first={{
-        roundedTop: "md",
+        roundedTop: "8px",
       }}
       _last={{
-        roundedBottom: "md",
+        roundedBottom: "8px",
       }}
       borderColor={borderColor}
       justifyContent="space-between"
@@ -175,7 +175,7 @@ export const ClassStudentRaw: React.FC<ClassStudentProps> = ({
                 overflow="hidden"
                 textOverflow="ellipsis"
               >
-                {user.name}
+                {user.name || user.username}
               </Text>
             </SmSkeleton>
             <SmSkeleton>

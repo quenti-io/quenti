@@ -20,7 +20,7 @@ import React from "react";
 
 import { useShortcut } from "@quenti/lib/hooks/use-shortcut";
 
-import { Button, Stack } from "@chakra-ui/react";
+import { Box, Button, Stack } from "@chakra-ui/react";
 
 import { IconPlus } from "@tabler/icons-react";
 
@@ -42,6 +42,8 @@ export const TermsList = () => {
   const editTerm = useSetEditorContext((s) => s.editTerm);
   const deleteTerm = useSetEditorContext((s) => s.deleteTerm);
   const lastCreated = useSetEditorContext((s) => s.lastCreated);
+  const readonly = useSetEditorContext((s) => s.readonly);
+  const collab = useSetEditorContext((s) => s.collab);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -106,6 +108,8 @@ export const TermsList = () => {
   };
 
   const items = terms.sort((a, b) => a.rank - b.rank);
+  const disableAdd =
+    collab && collab.maxTerms ? terms.length >= collab.maxTerms : false;
 
   return (
     <Stack spacing={10}>
@@ -145,7 +149,11 @@ export const TermsList = () => {
                         isDragging={currentDrag === term.clientKey}
                         isCurrent={current === term.clientKey}
                         isLast={i === terms.length - 1}
-                        deletable={terms.length > 2}
+                        deletable={
+                          collab && collab.minTerms
+                            ? terms.length > collab.minTerms
+                            : terms.length > 2
+                        }
                         key={term.clientKey}
                         term={term}
                         wordLanguage={wordLanguage}
@@ -161,7 +169,11 @@ export const TermsList = () => {
                         }}
                         anyFocus={() => setCurrent(term.clientKey)}
                       />
-                      <TermCardGap index={i} />
+                      {!readonly && !disableAdd ? (
+                        <TermCardGap index={i} />
+                      ) : (
+                        <Box h="4" />
+                      )}
                     </React.Fragment>
                   ))}
               </AnimatePresence>
@@ -169,15 +181,18 @@ export const TermsList = () => {
           </DndContext>
         </LanguageMenuWrapper>
       </Stack>
-      <Button
-        leftIcon={<IconPlus size={18} />}
-        size="lg"
-        height="24"
-        variant="outline"
-        onClick={() => addTerm(terms.length)}
-      >
-        Add card
-      </Button>
+      {!readonly && (
+        <Button
+          leftIcon={<IconPlus size={18} />}
+          size="lg"
+          height="24"
+          variant="outline"
+          onClick={() => addTerm(terms.length)}
+          isDisabled={disableAdd}
+        >
+          Add card
+        </Button>
+      )}
     </Stack>
   );
 };

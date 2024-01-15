@@ -31,6 +31,7 @@ export const bulkDeleteHandler = async ({ ctx, input }: BulkDeleteOptions) => {
   await ctx.prisma.term.deleteMany({
     where: {
       studySetId: studySet.id,
+      ephemeral: false,
       id: {
         in: input.terms,
       },

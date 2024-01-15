@@ -11,6 +11,7 @@ export interface RichTextPropertyProps {
 
 export const RichTextProperty: React.FC<RichTextPropertyProps> = ({
   icon: Icon,
+  label,
   onClick,
   isActive = false,
 }) => {
@@ -19,7 +20,7 @@ export const RichTextProperty: React.FC<RichTextPropertyProps> = ({
   return (
     <IconButton
       icon={<Icon size={16} />}
-      aria-label="Bold"
+      aria-label={label}
       rounded="full"
       onMouseDown={(e) => e.preventDefault()}
       onClick={() => onClick()}

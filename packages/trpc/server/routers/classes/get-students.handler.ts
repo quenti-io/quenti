@@ -21,6 +21,7 @@ export const getStudentsHandler = async ({
       ? {
           classId: input.classId,
           type: "Student",
+          deletedAt: null,
           sectionId: input.sectionId ?? undefined,
           user: {
             OR: [
@@ -33,6 +34,7 @@ export const getStudentsHandler = async ({
       : {
           classId: input.classId,
           type: "Student",
+          deletedAt: null,
           sectionId: input.sectionId ?? undefined,
         },
     take: limit + 1,

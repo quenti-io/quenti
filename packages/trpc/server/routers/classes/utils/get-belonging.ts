@@ -7,8 +7,19 @@ const classSelect = Prisma.validator<Prisma.ClassDefaultArgs["select"]>()({
   name: true,
   logoUrl: true,
   logoHash: true,
+  bannerColor: true,
   bannerUrl: true,
   bannerHash: true,
+});
+
+const preferencesSelect = Prisma.validator<
+  Prisma.ClassMembershipDefaultArgs["select"]
+>()({
+  preferences: {
+    select: {
+      bannerColor: true,
+    },
+  },
 });
 
 const teacherCountSelect =
@@ -36,6 +47,7 @@ export const getBelongingClasses = async (userId: string) => {
     where: {
       userId,
       type: "Teacher",
+      deletedAt: null,
     },
     include: {
       class: {
@@ -44,12 +56,14 @@ export const getBelongingClasses = async (userId: string) => {
           _count: teacherCountSelect,
         },
       },
+      ...preferencesSelect,
     },
   });
   const studentClasses = await prisma.classMembership.findMany({
     where: {
       userId,
       type: "Student",
+      deletedAt: null,
     },
     include: {
       class: {
@@ -58,6 +72,7 @@ export const getBelongingClasses = async (userId: string) => {
           _count: studentCountSelect,
         },
       },
+      ...preferencesSelect,
     },
   });
 
@@ -71,6 +86,7 @@ export const getBelongingClasses = async (userId: string) => {
   return classes.map((membership) => ({
     viewedAt: membership.viewedAt,
     as: membership.type,
+    preferences: membership.preferences,
     ...membership.class,
   }));
 };

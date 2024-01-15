@@ -22,6 +22,7 @@ export const getClassesHandler = async ({ ctx, input }: GetClassesOptions) => {
       name: true,
       logoHash: true,
       logoUrl: true,
+      bannerColor: true,
       cortexCategory: true,
       cortexCourse: true,
       _count: {
@@ -29,6 +30,7 @@ export const getClassesHandler = async ({ ctx, input }: GetClassesOptions) => {
           members: {
             where: {
               type: "Student",
+              deletedAt: null,
             },
           },
           sections: true,

@@ -32,7 +32,11 @@ export const getPublicHandler = async ({ ctx, input }: GetPublicOptions) => {
           createdAt: true,
           _count: {
             select: {
-              terms: true,
+              terms: {
+                where: {
+                  ephemeral: false,
+                },
+              },
             },
           },
         },

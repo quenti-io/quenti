@@ -17,6 +17,7 @@ export const updateStudentsHandler = async ({
     where: {
       classId: input.classId,
       type: "Student",
+      deletedAt: null,
       id: {
         in: input.members,
       },

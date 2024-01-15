@@ -3,9 +3,9 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 
+import { EnabledFeature } from "@quenti/lib/feature";
 import type { Widen } from "@quenti/lib/widen";
 import { type RouterOutputs, api } from "@quenti/trpc";
-import { EnabledFeature } from "@quenti/trpc/server/common/constants";
 
 import { Loading } from "../components/loading";
 import { queryEventChannel } from "../events/query";
@@ -41,6 +41,7 @@ export type AuthedData = AuthedReturn & {
 export interface HydrateSetDataProps {
   isPublic?: boolean;
   withDistractors?: boolean;
+  withCollab?: boolean;
   disallowDirty?: boolean;
   requireFresh?: boolean;
   placeholder?: React.ReactNode;
@@ -51,6 +52,7 @@ export const HydrateSetData: React.FC<
 > = ({
   isPublic,
   withDistractors = false,
+  withCollab = false,
   disallowDirty = false,
   requireFresh,
   placeholder,
@@ -69,7 +71,7 @@ export const HydrateSetData: React.FC<
   const { data, error, refetch, isFetchedAfterMount } = (
     api.studySets[queryKey] as typeof api.studySets.byId
   ).useQuery(
-    { studySetId: id, withDistractors },
+    { studySetId: id, withDistractors, withCollab },
     {
       enabled: status !== "loading" && !!id && !isDirty,
       onSuccess: (data) => {
@@ -90,7 +92,16 @@ export const HydrateSetData: React.FC<
   }, [isDirty]);
 
   const createInjectedData = (data: BaseReturn): SetData => {
-    if (!data.container) return { ...data, authed: false };
+    const terms = data.collaborators
+      ? data.terms.map((t) => ({
+          ...t,
+          ...(t.authorId
+            ? { author: data.collaborators!.find((c) => c.id == t.authorId) }
+            : {}),
+        }))
+      : data.terms;
+
+    if (!data.container) return { ...data, terms, authed: false };
 
     const studiableLearnTerms = data.container.studiableTerms.filter(
       (t) => t.mode == "Learn",
@@ -100,6 +111,7 @@ export const HydrateSetData: React.FC<
     );
     return {
       ...data,
+      terms,
       authed: true,
       injected: {
         studiableLearnTerms,

@@ -13,10 +13,10 @@ export const SetCreatorOnly: React.FC<
   React.PropsWithChildren<SetCreatorOnlyProps>
 > = ({ children, studySetId, fallback }) => {
   const session = useSession();
-  const { type, userId, editableSets } = useSetFolderUnison();
+  const { entityType, userId, editableSets } = useSetFolderUnison();
 
   if (
-    (type == "set" && session.data?.user?.id === userId) ||
+    (entityType == "set" && session.data?.user?.id === userId) ||
     (studySetId && editableSets?.includes(studySetId))
   ) {
     return <>{children}</>;

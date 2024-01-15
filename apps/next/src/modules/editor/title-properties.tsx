@@ -74,7 +74,7 @@ export const TitleProperties = () => {
             }}
           />
         </Box>
-        <Text color="gray.400">{plural(numTerms, "term")}</Text>B
+        <Text color="gray.400">{plural(numTerms, "term")}</Text>
       </Stack>
       <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
         <AutoResizeTextarea

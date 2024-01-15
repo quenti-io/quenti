@@ -10,6 +10,7 @@ export const bulkJoinOrgClasses = async (orgId: string) => {
           user: {
             organizationId: orgId,
           },
+          deletedAt: null,
         },
       },
     },

@@ -46,6 +46,7 @@ export const EntityImage: React.FC<EntityImageProps> = ({
   description,
   numItems,
   user,
+  collaborators,
 }) => {
   const entityLabel = type == "Folder" ? "set" : "term";
 
@@ -56,7 +57,7 @@ export const EntityImage: React.FC<EntityImageProps> = ({
           <div
             style={{
               display: "flex",
-              width: "90%",
+              width: collaborators ? "100%" : "90%",
               overflow: "hidden",
               flexDirection: "column",
               minWidth: 0,
@@ -66,7 +67,11 @@ export const EntityImage: React.FC<EntityImageProps> = ({
               tw="text-gray-500 text-xl font-bold"
               style={{ fontFamily: "Open Sans" }}
             >
-              {type == "Folder" ? "Folder" : "Study set"}
+              {type == "Folder"
+                ? "Folder"
+                : collaborators
+                  ? "Collab"
+                  : "Study set"}
             </div>
             <h2
               tw="font-bold text-white text-7xl overflow-hidden pb-4"
@@ -79,34 +84,48 @@ export const EntityImage: React.FC<EntityImageProps> = ({
               {title}
             </h2>
           </div>
-          <img width="80" height="80" src={user.image} tw="rounded-full" />
+          {!collaborators && (
+            <img width="80" height="80" src={user.image} tw="rounded-full" />
+          )}
         </div>
-        <p
-          tw="text-gray-300 text-2xl h-46 overflow-hidden -mt-2"
-          style={{
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {description.length ? description : `Created by ${user.username}`}
-        </p>
+        {!collaborators ? (
+          <p
+            tw="text-gray-300 text-2xl h-46 overflow-hidden -mt-2"
+            style={{
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {description.length ? description : `Created by ${user.username}`}
+          </p>
+        ) : (
+          <div tw="flex items-center">
+            {collaborators.avatars.map((avatar, i) => (
+              <img
+                key={i}
+                width="64"
+                height="64"
+                src={avatar}
+                tw="rounded-full mr-4"
+              />
+            ))}
+            <p
+              style={{
+                fontFamily: "Outfit",
+                color: "white",
+              }}
+              tw="text-4xl ml-2"
+            >
+              +{collaborators.total - 5}
+            </p>
+          </div>
+        )}
       </div>
       <div tw="flex w-full justify-between items-end">
-        <div tw="flex items-end mt-6">
-          <h3
-            style={{
-              fontFamily: "Outfit",
-              lineHeight: "14px",
-            }}
-            tw="text-white text-5xl"
-          >
-            {numItems}
-          </h3>
-          <div
-            tw="text-xl text-gray-100 ml-2"
-            style={{ fontFamily: "Open Sans" }}
-          >
-            {numItems != 1 ? `${entityLabel}s` : entityLabel}
-          </div>
+        <div tw="flex">
+          <FooterLabel value={numItems} label={entityLabel} />
+          {collaborators && (
+            <FooterLabel value={collaborators.total} label="collaborator" />
+          )}
         </div>
         <div tw="flex items-center">
           <img
@@ -126,6 +145,30 @@ export const EntityImage: React.FC<EntityImageProps> = ({
         </div>
       </div>
     </ImageWrapper>
+  );
+};
+
+interface FooterLabelProps {
+  value: number;
+  label: string;
+}
+
+const FooterLabel = ({ value, label }: FooterLabelProps) => {
+  return (
+    <div tw="flex items-end mt-6 mr-10">
+      <h3
+        style={{
+          fontFamily: "Outfit",
+          lineHeight: "14px",
+        }}
+        tw="text-white text-5xl"
+      >
+        {value}
+      </h3>
+      <div tw="text-xl text-gray-100 ml-2" style={{ fontFamily: "Open Sans" }}>
+        {value != 1 ? `${label}s` : label}
+      </div>
+    </div>
   );
 };
 

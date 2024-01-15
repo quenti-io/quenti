@@ -23,6 +23,7 @@ export default function OnboardingDone() {
         <ClassCard
           id={data?.id || ""}
           name={data?.name || ""}
+          bannerColor={data?.bannerColor || ""}
           logo={data?.logoUrl || ""}
           hash={data?.logoHash}
           data={{ students: data?.students, sections: data?.sections?.length }}

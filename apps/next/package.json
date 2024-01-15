@@ -1,6 +1,6 @@
 {
   "name": "@quenti/next",
-  "version": "1.2.4",
+  "version": "1.3.0",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -45,7 +45,7 @@
     "@quenti/prisma": "workspace:*",
     "@quenti/trpc": "workspace:*",
     "@quenti/types": "workspace:*",
-    "@tabler/icons-react": "^2.38.0",
+    "@tabler/icons-react": "^2.44.0",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-virtual": "^3.0.0-beta.65",
     "@tiptap/core": "^2.1.12",
@@ -54,10 +54,12 @@
     "@tiptap/extension-highlight": "^2.1.12",
     "@tiptap/extension-history": "^2.1.12",
     "@tiptap/extension-italic": "^2.1.12",
+    "@tiptap/extension-link": "^2.1.13",
     "@tiptap/extension-paragraph": "^2.1.12",
     "@tiptap/extension-placeholder": "^2.1.12",
     "@tiptap/extension-strike": "^2.1.12",
     "@tiptap/extension-text": "^2.1.12",
+    "@tiptap/extension-text-style": "^2.1.13",
     "@tiptap/extension-typography": "^2.1.12",
     "@tiptap/extension-underline": "^2.1.12",
     "@tiptap/pm": "^2.1.12",
@@ -71,6 +73,7 @@
     "axios": "^1.5.0",
     "chakra-react-select": "^4.7.6",
     "compressorjs": "^1.2.1",
+    "dayjs": "^1.11.10",
     "diff": "^5.1.0",
     "file-selector": "^0.6.0",
     "framer-motion": "^10.16.4",
@@ -84,6 +87,7 @@
     "next-auth": "^4.24.5",
     "next-axiom": "^0.18.0",
     "next-build-id": "^3.0.0",
+    "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-canvas-confetti": "^1.4.0",
     "react-dom": "^18.2.0",
@@ -107,6 +111,7 @@
     "@types/lodash.omit": "^4.5.9",
     "@types/lodash.throttle": "^4.1.9",
     "@types/node": "^20.10.4",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "autoprefixer": "^10.4.16",
@@ -121,5 +126,8 @@
   },
   "ct3aMetadata": {
     "initVersion": "7.1.0"
-  }
+  },
+  "trustedDependencies": [
+    "sharp"
+  ]
 }

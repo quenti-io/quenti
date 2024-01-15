@@ -103,6 +103,10 @@ let config = {
       destination: "/share-resolver/:id",
     },
     {
+      source: "/:id(j[a-zA-Z0-9]{8})",
+      destination: "/class-resolver/:id",
+    },
+    {
       source: "/:profile(@[a-zA-Z0-9-_]+)",
       destination: "/profile/:profile",
     },
@@ -135,6 +139,10 @@ let config = {
       destination: "/sets/:id/create",
     },
     {
+      source: "/:id(c[a-z0-9]{24})/collab",
+      destination: "/sets/:id/collab",
+    },
+    {
       source: "/:id(c[a-z0-9]{24})/flashcards",
       destination: "/sets/:id/flashcards",
     },
@@ -153,6 +161,14 @@ let config = {
     {
       source: "/:id(c[a-z0-9]{24})/test",
       destination: "/sets/:id/test",
+    },
+    {
+      source: "/a/:id/:assignmentId",
+      destination: "/classes/:id/assignments/:assignmentId",
+    },
+    {
+      source: "/a/:id/:assignmentId/:path*",
+      destination: "/classes/:id/assignments/:assignmentId/:path*",
     },
   ],
   productionBrowserSourceMaps: false,
