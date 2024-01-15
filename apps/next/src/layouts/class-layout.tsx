@@ -50,8 +50,10 @@ const useTabIndex = (): { name: string | null; tabIndex: number } => {
       return { name: "Assignments", tabIndex: 1 };
     case `/classes/[id]/members`:
       return { name: "Members", tabIndex: 2 };
-    case `/classes/[id]/settings`:
+    case `/classes/[id]/settings/class`:
       return { name: "Settings", tabIndex: 3 };
+    case `/classes/[id]/settings/student`:
+      return { name: "Settings", tabIndex: 2 };
     default:
       return { name: null, tabIndex: -1 };
   }
@@ -267,14 +269,23 @@ export const ClassLayout: React.FC<
                                 Members
                               </SkeletonTab>
                             </HiddenTabWrapper>
-                            <HiddenTabWrapper index={3}>
+                            {data?.me.type == "Teacher" ? (
+                              <HiddenTabWrapper index={3}>
+                                <SkeletonTab
+                                  isLoaded={!!data}
+                                  href={`/classes/${id}/settings/class`}
+                                >
+                                  Settings
+                                </SkeletonTab>
+                              </HiddenTabWrapper>
+                            ) : (
                               <SkeletonTab
                                 isLoaded={!!data}
-                                href={`/classes/${id}/settings`}
+                                href={`/classes/${id}/settings/student`}
                               >
                                 Settings
                               </SkeletonTab>
-                            </HiddenTabWrapper>
+                            )}
                           </TabList>
                           <TabPanels mt="6">{children}</TabPanels>
                         </Tabs>
@@ -344,8 +355,10 @@ const HiddenTabWrapper: React.FC<
 > = ({ index, children }) => {
   const { tabIndex } = useTabIndex();
   const isTeacher = useIsClassTeacher();
+  const { data: class_ } = useClass();
 
-  if (!isTeacher && tabIndex !== index) return null;
+  if (!class_?.me && tabIndex !== index) return null;
+  if (!isTeacher) return null;
 
   return <>{children}</>;
 };
