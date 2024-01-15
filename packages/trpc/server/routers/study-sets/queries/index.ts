@@ -77,12 +77,12 @@ export const getWithCollab = async (id: string, userId?: string) => {
 
   return {
     ...added,
-    ...strip({
-      assignment: {
-        ...added.assignment,
-        me: added.assignment?.class.members[0],
-      },
-    }),
+    assignment: added.assignment
+      ? strip({
+          ...added.assignment,
+          me: added.assignment?.class.members[0],
+        })
+      : undefined,
   };
 };
 
