@@ -75,6 +75,8 @@ const ClassResolver = ({
                   _dark={{
                     color: "gray.400",
                   }}
+                  fontWeight={500}
+                  textAlign="center"
                 >
                   You&apos;ve been invited to join the following class:
                 </Text>
