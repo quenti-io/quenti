@@ -47,6 +47,7 @@ export const getPublicHandler = async ({ input }: GetPublicOptions) => {
 
   return {
     ...studySet,
+    assignment: undefined,
     ...strip({
       collaborators: (studySet.collaborators as Collaborator[])
         ?.sort(

@@ -160,8 +160,8 @@ export const byIdHandler = async ({ ctx, input }: ByIdOptions) => {
     ...studySet,
     assignment: shouldShowAssignment
       ? strip({
-          ...studySet.assignment,
-          submission: studySet.assignment?.submissions[0],
+          ...studySet.assignment!,
+          submission: studySet.assignment!.submissions[0],
           submissions: undefined,
         })
       : undefined,
