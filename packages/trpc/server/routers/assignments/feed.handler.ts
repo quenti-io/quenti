@@ -98,6 +98,7 @@ const getStudent = async (
       classId,
       sectionId,
       published: true,
+      availableAt: { lte: new Date() },
       ...(query ? { title: { contains: query } } : {}),
     },
     select: {
