@@ -193,6 +193,18 @@ export const submitHandler = async ({ ctx, input }: SubmitOptions) => {
       submittedAt: new Date(),
     },
   });
+
+  const firstTime =
+    (await ctx.prisma.submission.count({
+      where: {
+        assignmentId: submission.assignment.id,
+        member: {
+          userId: ctx.session.user.id,
+        },
+      },
+    })) <= 1;
+
+  return { firstTime };
 };
 
 export default submitHandler;
