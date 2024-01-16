@@ -228,6 +228,7 @@ export const SearchImagesModal: React.FC<SearchImagesModalProps> = ({
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
         <ModalOverlay
           backdropFilter="blur(12px)"
+          transform="translateZ(0px)"
           backgroundColor={useColorModeValue(
             "rgba(247, 250, 252, 75%)",
             "rgba(23, 25, 35, 40%)",
