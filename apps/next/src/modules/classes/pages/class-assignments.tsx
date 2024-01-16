@@ -108,7 +108,7 @@ export const ClassAssignments = () => {
             message={isTeacher ? "No assignments yet" : undefined}
             subheading={
               isTeacher
-                ? "Create an assignment for you class to get started."
+                ? "Create an assignment for your class to get started."
                 : undefined
             }
           />
