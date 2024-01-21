@@ -58,7 +58,6 @@
   },
   "packageManager": "bun@1.0.2",
   "workspaces": [
-    "apps/next",
     "apps/*",
     "packages/*"
   ]
