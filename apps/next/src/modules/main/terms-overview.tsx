@@ -132,7 +132,8 @@ const TermsByStats = () => {
 
   let familiarTerms = injected.studiableLearnTerms
     .filter((x) => x.correctness != 0 && x.correctness != 2)
-    .map((x) => terms.find((t) => t.id === x.id)!);
+    .map((x) => terms.find((t) => t.id === x.id)!)
+    .filter((x) => x);
 
   let unstudiedTerms = terms.filter((x) => {
     const studiableTerm = injected.studiableLearnTerms.find(
@@ -143,7 +144,8 @@ const TermsByStats = () => {
 
   let masteredTerms = injected.studiableLearnTerms
     .filter((x) => x.correctness === 2)
-    .map((x) => terms.find((t) => t.id === x.id)!);
+    .map((x) => terms.find((t) => t.id === x.id)!)
+    .filter((x) => x);
 
   familiarTerms = container.learnMode == "Learn" ? familiarTerms : [];
   unstudiedTerms = container.learnMode == "Learn" ? unstudiedTerms : [];
