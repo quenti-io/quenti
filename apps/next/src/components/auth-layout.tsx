@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
@@ -33,6 +34,7 @@ import {
 } from "@tabler/icons-react";
 
 import { Logo } from "../../../../packages/components/logo";
+import myCustomIcon from "../../public/assets/lmddc_logo.png";
 import { LazyWrapper } from "../common/lazy-wrapper";
 import { useTelemetry } from "../lib/telemetry";
 import { getSafeRedirectUrl } from "../lib/urls";
@@ -200,6 +202,35 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                           }}
                         >
                           Sign {verb} with Google
+                        </Button>
+                        <Button
+                          size="lg"
+                          fontSize="sm"
+                          variant="outline"
+                          shadow="0 4px 6px -1px rgba(0, 0, 0, 0.04),0 2px 4px -1px rgba(0, 0, 0, 0.01)"
+                          colorScheme="gray"
+                          leftIcon={
+                            <Image
+                              src={myCustomIcon}
+                              alt="LMDDC icon"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={async () => {
+                            if (mode == "signup") {
+                              await event("signup", {});
+                            } else {
+                              await event("login", {});
+                            }
+
+                            await signIn("authentik", {
+                              callbackUrl: safeCallbackUrl,
+                              redirect: false,
+                            });
+                          }}
+                        >
+                          Sign {verb} with LMDDC
                         </Button>
                         <Box>
                           <Stack

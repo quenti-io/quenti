@@ -1,5 +1,6 @@
 import { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import AuthentikProvider from "next-auth/providers/authentik";
 
 import { env } from "@quenti/env/server";
 import { APP_URL } from "@quenti/lib/constants/url";
@@ -66,6 +67,11 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
+    }),
+    AuthentikProvider({
+      clientId: process.env.AUTHENTIK_ID,
+      clientSecret: process.env.AUTHENTIK_SECRET,
+      issuer: process.env.AUTHENTIK_ISSUER,
     }),
     // @ts-expect-error Type '"email"' is not assignable
     {
