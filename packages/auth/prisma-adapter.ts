@@ -10,6 +10,11 @@ export function CustomPrismaAdapter(p: PrismaClient): Adapter {
   return {
     ...PrismaAdapter(p),
     createUser: async (data) => {
+      if (!data.email) {
+        throw new Error(
+          `Criar usuário falhou: e-mail indefinido. Dados recebidos: ${JSON.stringify(data)}`
+        );
+      }
       const name = data.name;
 
       let uniqueUsername = null;
