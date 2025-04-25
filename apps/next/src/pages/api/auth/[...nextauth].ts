@@ -3,4 +3,4 @@ import NextAuth from "next-auth";
 
 import { authOptions } from "@quenti/auth/next-auth-options";
 
-export default NextAuth(authOptions) as NextApiHandler;
+export default NextAuth(authOptions as any) as NextApiHandler;

@@ -2,12 +2,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import Image from "next/image";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Link } from "@quenti/components";
 import { HeadSeo } from "@quenti/components/head-seo";
 import { WEBSITE_URL } from "@quenti/lib/constants/url";
+import zitadel from "../../public/assets/zitadel.png";
 
 import {
   Box,
@@ -200,6 +202,34 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
                           }}
                         >
                           Sign {verb} with Google
+                        </Button>
+                        <Button
+                          size="lg"
+                          fontSize="sm"
+                          variant="outline"
+                          shadow="0 4px 6px -1px rgba(0, 0, 0, 0.04),0 2px 4px -1px rgba(0, 0, 0, 0.01)"
+                          colorScheme="gray"
+                          leftIcon={
+                            <Image
+                              src={zitadel}
+                              alt="Zitadel icon"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={async () => {
+                            if (mode == "signup") {
+                              await event("signup", {});
+                            } else {
+                              await event("login", {});
+                            }
+
+                            await signIn("zitadel", {
+                              callbackUrl: safeCallbackUrl,
+                            });
+                          }}
+                        >
+                          Sign {verb} with Zitadel
                         </Button>
                         <Box>
                           <Stack

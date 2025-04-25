@@ -4,6 +4,9 @@ import { z } from "zod";
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
+    ZITADEL_ISSUER:      z.string().url(),
+    ZITADEL_CLIENT_ID:    z.string(),
+    ZITADEL_CLIENT_SECRET: z.string(),
     PLANETSCALE: z.string().optional(),
     NODE_ENV: z.enum(["development", "test", "production"]).optional(),
     NEXTAUTH_SECRET:

@@ -1,9 +1,40 @@
 import { type NextAuthOptions } from "next-auth";
+import { type DefaultSession, type DefaultUser } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import ZitadelProvider from "next-auth/providers/zitadel";
 
 import { env } from "@quenti/env/server";
 import { APP_URL } from "@quenti/lib/constants/url";
 import { prisma } from "@quenti/prisma";
+
+// Extend the default session and user types
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+      username: string;
+      displayName?: string;
+      type?: string;
+      banned: boolean;
+      flags?: number;
+      completedOnboarding?: boolean;
+      organizationId?: string;
+      isOrgEligible?: boolean;
+    } & DefaultSession["user"];
+    version?: string;
+  }
+
+  interface User extends DefaultUser {
+    username?: string;
+    displayName?: string;
+    type?: string;
+    bannedAt?: Date;
+    flags?: number;
+    completedOnboarding?: boolean;
+    organizationId?: string;
+    isOrgEligible?: boolean;
+  }
+}
 
 import pjson from "../../apps/next/package.json";
 import { sendVerificationRequest } from "./magic-link";
@@ -13,7 +44,7 @@ const version = pjson.version;
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
-  callbacks: {
+  callbacks: {    
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
@@ -73,6 +104,28 @@ export const authOptions: NextAuthOptions = {
       type: "email",
       sendVerificationRequest,
     },
+    ZitadelProvider({
+      issuer: env.ZITADEL_ISSUER, 
+      clientId: env.ZITADEL_CLIENT_ID,
+      clientSecret: env.ZITADEL_CLIENT_SECRET,
+      wellKnown:     `${env.ZITADEL_ISSUER}/.well-known/openid-configuration`,
+      authorization: {
+        params: {
+          scope: `openid email profile`,
+        },
+      },
+      profile(profile) {
+        console.log("📥 ZITADEL raw profile:", profile);
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          username: profile.preferred_username,
+          type: "ZITADEL",
+        };
+      },
+    }),
     /**
      * ...add more providers here
      *

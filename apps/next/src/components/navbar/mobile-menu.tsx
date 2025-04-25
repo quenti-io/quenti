@@ -21,6 +21,7 @@ import {
   IconBooks,
   IconChevronDown,
   IconCloudDownload,
+  IconUpload,
   IconFolder,
   IconSchool,
 } from "@tabler/icons-react";
@@ -35,6 +36,7 @@ export interface MobileMenuProps {
   onFolderClick: () => void;
   onClassClick: () => void;
   onImportClick: () => void;
+  onFileImportClick: () => void;  
 }
 
 export const MobileMenu: React.FC<MobileMenuProps> = ({
@@ -43,6 +45,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onFolderClick,
   onClassClick,
   onImportClick,
+  onFileImportClick,
 }) => {
   const router = useRouter();
   React.useEffect(() => {
@@ -155,6 +158,11 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                   icon={<IconCloudDownload size={20} />}
                   label="Import from Quizlet"
                   onClick={onImportClick}
+                />
+                <MenuOption
+                  icon={<IconUpload size={20} />}
+                  label="Import from file"
+                  onClick={onFileImportClick}
                 />
                 <MenuDivider />
                 <MenuOption

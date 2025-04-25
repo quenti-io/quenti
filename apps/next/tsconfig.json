@@ -9,5 +9,5 @@
     "**/*.cjs",
     "**/*.mjs",
     "../../packages/types/next-auth.d.ts"
-  ]
+, "../../packages/trpc/server/routers/import/from-file.handler.ts"  ]
 }

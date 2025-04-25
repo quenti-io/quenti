@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -31,6 +32,12 @@ const ImportFromQuizletModal = dynamic(
   () => import("./import-from-quizlet-modal"),
   { ssr: false },
 );
+
+const ImportFromFileModal = dynamic(
+  () => import("./ImportFromFileModal"),
+  { ssr: false }
+  );  
+
 const CreateFolderModal = dynamic(() => import("./create-folder-modal"), {
   ssr: false,
 });
@@ -48,6 +55,7 @@ export const Navbar: React.FC = () => {
   const [folderChildSetId, setFolderChildSetId] = React.useState<string>();
   const [importIsEdit, setImportIsEdit] = React.useState(false);
   const [importModalOpen, setImportModalOpen] = React.useState(false);
+  const [fileImportModalOpen, setFileImportModalOpen] = useState(false);
 
   React.useEffect(() => {
     const createFolder = (setId?: string) => {
@@ -63,7 +71,7 @@ export const Navbar: React.FC = () => {
     };
 
     menuEventChannel.on("createFolder", createFolder);
-    menuEventChannel.on("openImportDialog", openImportDialog);
+    menuEventChannel.on("openImportDialog", openImportDialog);  
     menuEventChannel.on("createClass", createClass);
     return () => {
       menuEventChannel.off("createFolder", createFolder);
@@ -96,6 +104,10 @@ export const Navbar: React.FC = () => {
         }}
         edit={importIsEdit}
       />
+      <ImportFromFileModal
+        isOpen={fileImportModalOpen}
+        onClose={() => setFileImportModalOpen(false)}
+      />
       <Flex pos="relative" zIndex={1000} w="full" h="20">
         <HStack
           as="header"
@@ -112,6 +124,7 @@ export const Navbar: React.FC = () => {
               setImportIsEdit(false);
               setImportModalOpen(true);
             }}
+            onFileImportClick={() => setFileImportModalOpen(true)}
             onClassClick={onClassClick}
           />
           <Box display={["block", "block", "none"]}>
@@ -151,6 +164,7 @@ export const Navbar: React.FC = () => {
                 setImportIsEdit(false);
                 setImportModalOpen(true);
               }}
+              onFileImportClick={() => setFileImportModalOpen(true)}
             />
           </Box>
           <HStack as="nav" display={["none", "none", "flex"]} height="12">

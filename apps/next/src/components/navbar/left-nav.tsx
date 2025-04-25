@@ -24,6 +24,8 @@ import {
   IconBooks,
   IconChevronDown,
   IconCloudDownload,
+  IconDownload,
+  IconUpload,
   IconFolder,
   IconSchool,
   IconSparkles,
@@ -39,12 +41,14 @@ import { UnboundOnly } from "../unbound-only";
 export interface LeftNavProps {
   onFolderClick: () => void;
   onImportClick: () => void;
+  onFileImportClick: () => void;
   onClassClick: () => void;
 }
 
 export const LeftNav: React.FC<LeftNavProps> = ({
   onFolderClick,
   onImportClick,
+  onFileImportClick,
   onClassClick,
 }) => {
   const { data: session, status } = useSession()!;
@@ -155,6 +159,11 @@ export const LeftNav: React.FC<LeftNavProps> = ({
                 icon={<IconCloudDownload size={20} />}
                 label="Import from Quizlet"
                 onClick={onImportClick}
+              />
+              <MenuOption
+                icon={<IconUpload size={20} />}
+                label="Import from file"
+                onClick={onFileImportClick} 
               />
               <MenuDivider />
               <MenuOption
