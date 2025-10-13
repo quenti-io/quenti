@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* KaTeX CSS for LaTeX rendering */
+@import "katex/dist/katex.min.css";
+
 .betteruptime-announcement {
   position: relative !important;
   font-family: "Open Sans" !important;

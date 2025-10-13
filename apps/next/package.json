@@ -100,7 +100,9 @@
     "thumbhash": "^0.1.1",
     "use-fit-text": "^2.4.0",
     "zod": "^3.22.4",
-    "zustand": "^4.4.6"
+    "zustand": "^4.4.6",
+    "katex": "^0.16.8",
+    "react-katex": "^3.0.1"
   },
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
@@ -112,6 +114,7 @@
     "@types/lodash.throttle": "^4.1.9",
     "@types/node": "^20.10.4",
     "@types/qrcode": "^1.5.5",
+    "@types/katex": "^0.16.7",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "autoprefixer": "^10.4.16",
