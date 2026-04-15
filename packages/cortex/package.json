@@ -12,7 +12,7 @@
     "@quenti/interfaces": "workspace:*",
     "@quenti/lib": "workspace:*",
     "@quenti/prisma": "workspace:*",
-    "cohere-ai": "^6.2.2",
+    "cohere-ai": "^8.0.0",
     "ml-distance": "^4.0.1"
   }
 }
