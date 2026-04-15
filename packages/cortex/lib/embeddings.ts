@@ -1,3 +1,5 @@
+import type { EmbedFloatsResponse } from "cohere-ai/api";
+
 import { env } from "@quenti/env/server";
 import { chunkArray } from "@quenti/lib/array";
 
@@ -22,16 +24,12 @@ const generateEmbeddingsBatch = async (
   if (!env.COHERE_API_KEY) return [];
 
   const response = await cohere.embed({
-    model: "embed-multilingual-v2.0",
+    model: "embed-multilingual-v3.0",
     texts: terms,
+    inputType: "search_document",
   });
-  if (response.statusCode && response.statusCode !== 200) {
-    throw new Error(
-      "Cohere returned a status code of " + response.statusCode.toString(),
-    );
-  }
 
   const elapsed = Date.now() - start;
 
-  return response.body.embeddings;
+  return (response as EmbedFloatsResponse).embeddings;
 };
