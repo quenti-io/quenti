@@ -32,6 +32,7 @@ export const classifyClass = async (
   const classification = response.classifications[0]!;
 
   const course = classification.prediction;
+  if (!course) return null;
   const category = coursesToCategories[course]!;
 
   return { course, category };
