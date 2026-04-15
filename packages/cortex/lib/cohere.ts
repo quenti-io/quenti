@@ -1,7 +1,7 @@
-import cohere from "cohere-ai";
+import { CohereClient } from "cohere-ai";
 
 import { env } from "@quenti/env/server";
 
-if (env.COHERE_API_KEY) cohere.init(env.COHERE_API_KEY);
-
-export { cohere };
+export const cohere = new CohereClient({
+  token: env.COHERE_API_KEY,
+});

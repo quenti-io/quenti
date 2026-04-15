@@ -28,8 +28,8 @@ export const classifyClass = async (
     inputs: [name],
   });
 
-  if (!response.body.classifications.length) return null;
-  const classification = response.body.classifications[0]!;
+  if (!response.classifications.length) return null;
+  const classification = response.classifications[0]!;
 
   const course = classification.prediction;
   const category = coursesToCategories[course]!;
