@@ -17,7 +17,9 @@
     "next-seo": "^6.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "xss": "^1.0.14"
+    "xss": "^1.0.14",
+    "katex": "^0.16.8",
+    "react-katex": "^3.0.1"
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx",
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@types/lodash.merge": "^4.6.9",
     "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17"
+    "@types/react-dom": "^18.2.17",
+    "@types/katex": "^0.16.7"
   }
 }
