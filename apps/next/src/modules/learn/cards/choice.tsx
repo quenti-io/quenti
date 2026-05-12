@@ -60,14 +60,17 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
 
   const put = api.studiableTerms.put.useMutation();
 
-  const getAnswerText = (term: FacingTerm) =>{
+  const getAnswerText = (term: FacingTerm) => {
     return word(active.answerMode, term, "answer");
-  }
+  };
 
   const choose = (term: FacingTerm) => {
     const elapsed = Date.now() - start;
 
-    if (term.id === active.term.id || getAnswerText(term) === getAnswerText(active.term)) {
+    if (
+      term.id === active.term.id ||
+      getAnswerText(term) === getAnswerText(active.term)
+    ) {
       answerCorrectly(term.id);
 
       put.mutate({
