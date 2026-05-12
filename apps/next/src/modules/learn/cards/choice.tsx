@@ -110,7 +110,8 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
     if (!answered) return false;
     if (id === active.term.id) return true;
     const choice = active.choices.find((c: FacingTerm) => c.id === id);
-    return Boolean(choice) && getAnswerText(choice) === getAnswerText(active.term);
+    if (!choice) return false;
+    return getAnswerText(choice) === getAnswerText(active.term);
   };
   const isIncorrectTerm = (id: string) =>
     id === answered && status === "incorrect";
