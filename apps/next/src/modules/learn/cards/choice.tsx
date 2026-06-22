@@ -60,10 +60,17 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
 
   const put = api.studiableTerms.put.useMutation();
 
+  const getAnswerText = (term: FacingTerm) => {
+    return word(active.answerMode, term, "answer");
+  };
+
   const choose = (term: FacingTerm) => {
     const elapsed = Date.now() - start;
 
-    if (term.id === active.term.id) {
+    if (
+      term.id === active.term.id ||
+      getAnswerText(term) === getAnswerText(active.term)
+    ) {
       answerCorrectly(term.id);
 
       put.mutate({
@@ -102,7 +109,13 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
     }
   };
 
-  const isCorrectTerm = (id: string) => !!answered && id === active.term.id;
+  const isCorrectTerm = (id: string) => {
+    if (!answered) return false;
+    if (id === active.term.id) return true;
+    const choice = active.choices.find((c: FacingTerm) => c.id === id);
+    if (!choice) return false;
+    return getAnswerText(choice) === getAnswerText(active.term);
+  };
   const isIncorrectTerm = (id: string) =>
     id === answered && status === "incorrect";
   const isHighlightedTerm = (id: string) =>
@@ -184,8 +197,8 @@ export const ChoiceCard: React.FC<ChoiceCardProps> = ({ active }) => {
               h="full"
               colorScheme={colorSchemeForTerm(choice.id)}
               isDisabled={
-                !!answered &&
-                choice.id !== active.term.id &&
+                Boolean(answered) &&
+                !isCorrectTerm(choice.id) &&
                 choice.id !== answered
               }
               onClick={() => choose(choice)}
