@@ -5,9 +5,9 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: "db"
-      MYSQL_USER: "pi"
-      MYSQL_PASSWORD: "raspberry"
-      MYSQL_ROOT_PASSWORD: "raspberry"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password"
     ports:
       - "3306:3306"
     volumes:
