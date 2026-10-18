@@ -13,7 +13,7 @@ export const SortableShortcutLayer: React.FC<SortableShortcutLayer> = ({
   triggerStillLearning,
   triggerKnow,
 }) => {
-  useShortcut([" "], triggerFlip, {
+  useShortcut([" ", "ArrowUp", "ArrowDown"], triggerFlip, {
     ctrlKey: false,
     allowInput: true,
   });
