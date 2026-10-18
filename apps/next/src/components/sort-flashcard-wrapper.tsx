@@ -1,4 +1,9 @@
-import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useAnimationControls,
+  useReducedMotion,
+} from "framer-motion";
 import throttle from "lodash.throttle";
 import React from "react";
 
@@ -21,6 +26,8 @@ export const SortFlashcardWrapper = () => {
   const setIsDirty = useSetPropertiesStore((s) => s.setIsDirty);
   const { h, editTerm, starTerm } = React.useContext(RootFlashcardContext);
   const controls = useAnimationControls();
+  const reduceMotion = useReducedMotion();
+  const flippingRef = React.useRef(false);
 
   const starredTerms = useContainerContext((s) => s.starredTerms);
   const cardsAnswerWith = useContainerContext((s) => s.cardsAnswerWith);
@@ -69,26 +76,46 @@ export const SortFlashcardWrapper = () => {
 
   const flipCard = async (id: string) => {
     if (!visibleFlashcards.find((f) => f.id == id)) return;
+    // Ignore flips requested while one is already running to avoid stuttering
+    if (flippingRef.current) return;
+    flippingRef.current = true;
 
-    await controls.start({
-      rotateX: 90,
-      transition: {
-        duration: 0.15,
-      },
-    });
+    const toggle = () => {
+      visibleFlashcards[0]!.isFlipped = !visibleFlashcards[0]!.isFlipped;
+      setVisibleFlashcards(Array.from(visibleFlashcards));
+    };
 
-    controls.set({
-      rotateX: -90,
-    });
-    visibleFlashcards[0]!.isFlipped = !visibleFlashcards[0]!.isFlipped;
-    setVisibleFlashcards(Array.from(visibleFlashcards));
+    try {
+      if (reduceMotion) {
+        await controls.start({ opacity: 0, transition: { duration: 0.1 } });
+        toggle();
+        await controls.start({ opacity: 1, transition: { duration: 0.1 } });
+        return;
+      }
 
-    await controls.start({
-      rotateX: 0,
-      transition: {
-        duration: 0.15,
-      },
-    });
+      await controls.start({
+        rotateX: 90,
+        transition: {
+          duration: 0.15,
+          ease: "easeIn",
+        },
+      });
+
+      controls.set({
+        rotateX: -90,
+      });
+      toggle();
+
+      await controls.start({
+        rotateX: 0,
+        transition: {
+          duration: 0.15,
+          ease: "easeOut",
+        },
+      });
+    } finally {
+      flippingRef.current = false;
+    }
   };
 
   const markCard = (term: StudiableTerm, know: boolean) => {
@@ -200,7 +227,7 @@ export const SortFlashcardWrapper = () => {
                 top: 0,
                 left: 0,
                 width: "100%",
-                transformPerspective: 1500,
+                transformPerspective: 3000,
                 zIndex: 100,
                 borderRadius: "12px",
                 outlineWidth: "3px",
@@ -214,24 +241,30 @@ export const SortFlashcardWrapper = () => {
               }}
               onClick={() => flipCard(t.id)}
               exit={
-                hasUserEngaged
+                hasUserEngaged && reduceMotion
                   ? {
                       pointerEvents: "none",
-                      outlineColor:
-                        state == "known"
-                          ? [null, "rgba(104, 211, 145, 1)"]
-                          : [null, "rgba(252, 129, 129, 1)"],
-                      opacity: [1, 1, 0],
-                      scale: [1, 1.05, 0.8],
-                      rotateZ: [0, state == "known" ? -5 : 5, 0],
-                      translateX:
-                        state == "known" ? [0, -50, 200] : [0, 50, -200],
-                      transition: {
-                        ease: "easeIn",
-                        times: [0, 0.3, 1],
-                      },
+                      opacity: 0,
+                      transition: { duration: 0.15 },
                     }
-                  : undefined
+                  : hasUserEngaged
+                    ? {
+                        pointerEvents: "none",
+                        outlineColor:
+                          state == "known"
+                            ? [null, "rgba(104, 211, 145, 1)"]
+                            : [null, "rgba(252, 129, 129, 1)"],
+                        opacity: [1, 1, 0],
+                        scale: [1, 1.05, 0.8],
+                        rotateZ: [0, state == "known" ? -5 : 5, 0],
+                        translateX:
+                          state == "known" ? [0, -50, 200] : [0, 50, -200],
+                        transition: {
+                          ease: "easeIn",
+                          times: [0, 0.3, 1],
+                        },
+                      }
+                    : undefined
               }
             >
               <Flashcard
