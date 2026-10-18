@@ -1,4 +1,4 @@
-import { motion, useAnimationControls } from "framer-motion";
+import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
 import React from "react";
 
 import { useContainerContext } from "../stores/use-container-store";
@@ -11,6 +11,8 @@ export const DefaultFlashcardWrapper = () => {
     React.useContext(RootFlashcardContext);
 
   const controls = useAnimationControls();
+  const reduceMotion = useReducedMotion();
+  const flippingRef = React.useRef(false);
 
   const cardsAnswerWith = useContainerContext((s) => s.cardsAnswerWith);
   const autoplayFlashcards = useContainerContext((s) => s.autoplayFlashcards);
@@ -52,24 +54,41 @@ export const DefaultFlashcardWrapper = () => {
   };
 
   const flipCard = async () => {
-    await controls.start({
-      rotateX: 90,
-      transition: {
-        duration: 0.125,
-      },
-    });
+    // Ignore flips requested while one is already running to avoid stuttering
+    if (flippingRef.current) return;
+    flippingRef.current = true;
 
-    controls.set({
-      rotateX: -90,
-    });
-    setIsFlipped((f) => !f);
+    try {
+      if (reduceMotion) {
+        await controls.start({ opacity: 0, transition: { duration: 0.1 } });
+        setIsFlipped((f) => !f);
+        await controls.start({ opacity: 1, transition: { duration: 0.1 } });
+        return;
+      }
 
-    await controls.start({
-      rotateX: 0,
-      transition: {
-        duration: 0.125,
-      },
-    });
+      await controls.start({
+        rotateX: 90,
+        transition: {
+          duration: 0.15,
+          ease: "easeIn",
+        },
+      });
+
+      controls.set({
+        rotateX: -90,
+      });
+      setIsFlipped((f) => !f);
+
+      await controls.start({
+        rotateX: 0,
+        transition: {
+          duration: 0.15,
+          ease: "easeOut",
+        },
+      });
+    } finally {
+      flippingRef.current = false;
+    }
   };
 
   React.useEffect(() => {
@@ -97,11 +116,16 @@ export const DefaultFlashcardWrapper = () => {
   }, [autoplayFlashcards]);
 
   const animateTransition = async (next = true) => {
-    controls.set({ rotateY: next ? 20 : -20, translateX: next ? -50 : 50 });
+    // Slide in from the direction of travel with a fade, without any rotation
+    controls.set({
+      translateX: reduceMotion ? 0 : next ? 24 : -24,
+      opacity: 0,
+    });
     await controls.start({
-      rotateY: 0,
       translateX: 0,
+      opacity: 1,
       transition: {
+        duration: 0.2,
         ease: "easeOut",
       },
     });
@@ -112,7 +136,7 @@ export const DefaultFlashcardWrapper = () => {
       animate={controls}
       style={{
         width: "100%",
-        transformPerspective: 1500,
+        transformPerspective: 3000,
         zIndex: 100,
       }}
       onClick={flipCard}
