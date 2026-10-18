@@ -13,7 +13,7 @@ export const FlashcardShorcutLayer: React.FC<FlashcardShorcutLayerProps> = ({
   triggerPrev,
   triggerNext,
 }) => {
-  useShortcut([" "], triggerFlip, {
+  useShortcut([" ", "ArrowUp", "ArrowDown"], triggerFlip, {
     ctrlKey: false,
     allowInput: true,
   });
